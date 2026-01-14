@@ -1,0 +1,55 @@
+name: iron_split
+description: Iron Split - 分帳助手
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # 1. 導航與路由 (Master Prompt 規範)
+  go_router: ^13.0.0
+
+  # 2. Firebase 核心服務 (專案聖經指定)
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3     # 用於實作匿名登入
+  cloud_firestore: ^4.13.6   # 即時帳務同步
+  cloud_functions: ^4.5.3   # 處理邀請碼驗證與結算邏輯
+  firebase_storage: ^11.5.6 # 存放 24 小時有效結算圖檔
+
+  # 3. 多國語系與格式化 (專案聖經指定)
+  slang: ^3.26.0             # 指定使用 slang 進行 i18n
+  slang_flutter: ^3.26.0
+  intl: ^0.19.0              # 處理匯率、金額與日期格式
+
+  # 4. MVP 功能所需元件
+  share_plus: ^7.2.2         # 隊長分享邀請連結至 LINE/Email
+  qr_flutter: ^4.1.0         # 產生邀請 QR Code
+  http: ^1.1.0               # 抓取即時匯率 API
+  path_provider: ^2.1.2      # 處理 PDF 檔案存儲
+  pdf: ^3.10.7               # 生成結算報表 PDF
+  printing: ^5.11.1          # 支援 PDF 列印與預覽
+
+  # 5. UI/UX 增強
+  google_fonts: ^6.1.0       # 吉祥物品牌字體風格
+  font_awesome_flutter: ^10.6.0 # 豐富的社交與貨幣圖示
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  slang_build_runner: ^3.26.0 # slang 代碼生成工具
+  build_runner: ^2.4.7
+
+flutter:
+  uses-material-design: true # 強制開啟 Material 3
+
+  # 品牌資源路徑預留
+  assets:
+    - assets/images/
+    - assets/i18n/
