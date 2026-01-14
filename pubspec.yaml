@@ -25,7 +25,8 @@ dependencies:
   # 3. 多國語系與格式化 (專案聖經指定)
   slang: ^3.26.0             # 指定使用 slang 進行 i18n
   slang_flutter: ^3.26.0
-  intl: ^0.19.0              # 處理匯率、金額與日期格式
+  intl: ^0.20.2              # 處理匯率、金額與日期格式
+  app_links: ^7.0.0         # 支援動態連結與邀請碼解析
 
   # 4. MVP 功能所需元件
   share_plus: ^7.2.2         # 隊長分享邀請連結至 LINE/Email

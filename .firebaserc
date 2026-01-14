@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "dev": "iron-split",
+    "default": "iron-split"
+  },
+  "targets": {},
+  "etags": {}
+}
