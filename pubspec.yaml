@@ -49,6 +49,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true # 強制開啟 Material 3
+  generate: true # 確保此項開啟，以便自動生成翻譯代碼
 
   # 品牌資源路徑預留
   assets:

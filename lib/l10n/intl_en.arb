@@ -1,0 +1,32 @@
+{
+  "@@locale": "en",
+  "error_TASK_FULL_title": "Task Full",
+  "error_TASK_FULL_message": "This task has reached its limit of {limit} members. Please contact the captain.",
+  "@error_TASK_FULL_message": {
+    "placeholders": {
+      "limit": { "type": "int" }
+    }
+  },
+  "error_EXPIRED_CODE_title": "Invite Expired",
+  "error_EXPIRED_CODE_message": "This invite link has expired (TTL {minutes} min). Please request a new one from the captain.",
+  "@error_EXPIRED_CODE_message": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "error_INVALID_CODE_title": "Invalid Code",
+  "error_INVALID_CODE_message": "Invalid invite link. Please check if it's correct or has been deleted.",
+  "error_AUTH_REQUIRED_title": "Auth Required",
+  "error_AUTH_REQUIRED_message": "Please log in to join the task.",
+  "error_UNKNOWN_title": "Error Occurred",
+  "error_UNKNOWN_message": "Please try again or contact the captain. Code: {code}",
+  "@error_UNKNOWN_message": {
+    "placeholders": {
+      "code": { "type": "string" }
+    }
+  },
+  "action_confirm": "Confirm",
+  "action_retry": "Retry",
+  "action_back_home": "Back to Home",
+  "p7_invite_subtitle": "You are invited to join"
+}

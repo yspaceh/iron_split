@@ -78,8 +78,13 @@ class _IronSplitAppState extends State<IronSplitApp> {
           surface: const Color(0xFFFFFBFF),
         ),
       ),
-      // 設定多國語言支援 (針對中、日、英)
-      // localizationsDelegates: [ ... ],
+      localizationsDelegates: const [
+        S.delegate, // 自動生成的代理
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales, // 支援中、日、英
       debugShowCheckedModeBanner: false,
     );
   }
