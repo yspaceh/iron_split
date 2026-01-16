@@ -532,3 +532,74 @@ CustomKeyboard
 ## 最後編輯
 
 - Last edited: 2026-01-15 (JST)
+
+---
+
+## 7.4 Firestore Data Model（Invite Flow v2 / Ghost Member）
+
+### Collection: `tasks`
+
+| Field                 | Type       | Description                                |
+| --------------------- | ---------- | ------------------------------------------ |
+| name                  | string     | 任務名稱                                   |
+| captainUid            | string     | 隊長 UID                                   |
+| baseCurrency          | string     | 結算基準幣別                               |
+| maxMembers            | number     | 任務人數上限（建立任務時由隊長設定，<=15） |
+| memberCount           | number     | 目前佔用坑位人數（含 Ghost）               |
+| activeInviteCode      | string?    | 目前有效邀請碼                             |
+| activeInviteExpiresAt | timestamp? | 邀請碼過期時間                             |
+
+---
+
+### Sub-collection: `tasks/{taskId}/members`
+
+> **memberDocId 為帳務唯一識別，所有費用/預收皆關聯至此 ID**
+
+| Field       | Type      | Description                     |
+| ----------- | --------- | ------------------------------- |
+| uid         | string?   | 已連結使用者 UID；Ghost 為 null |
+| displayName | string    | 顯示名稱                        |
+| role        | string    | captain / member                |
+| avatar      | string    | 動物頭像 ID（任務內不可重複）   |
+| isLinked    | boolean   | 是否已連結真實帳號              |
+| hasRerolled | boolean   | 是否已使用一次重抽              |
+| joinedAt    | timestamp | 建立或加入時間                  |
+
+---
+
+### Collection: `invites`
+
+| Field        | Type      | Description            |
+| ------------ | --------- | ---------------------- |
+| code         | string    | 8 碼邀請碼（大寫英數） |
+| taskId       | string    | 對應任務 ID            |
+| expiresAt    | timestamp | 過期時間               |
+| createdAt    | timestamp | 建立時間               |
+| createdByUid | string    | 建立者（隊長）         |
+
+---
+
+## 7.5 Cloud Functions（Invite Flow v2）
+
+### createInviteCode(taskId)
+
+- 驗證隊長權限
+- 產生 8 碼邀請碼（排除 I,L,1,O,0）
+- Transaction：寫入 `invites` + 更新 `tasks.activeInviteCode`
+- 回傳：`code`, `expiresAt`
+
+### previewInviteCode(code)
+
+- 驗證邀請碼是否存在且未過期
+- 讀取任務摘要
+- 回傳尚未連結的 Ghost Members（供前端選擇）
+
+### joinByInviteCode(code, displayName, mergeMemberId?)
+
+- 驗證邀請碼、名額
+- 若提供 mergeMemberId：將該 memberDocId 綁定 uid
+- 否則建立新 member
+- Transaction：memberCount +1、avatar 分配
+- 回傳：taskId, avatar
+
+---
