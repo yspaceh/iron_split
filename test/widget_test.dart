@@ -1,30 +1,17 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+// test/widget_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ironsplit/main.dart';
+// 修正：路徑必須與 pubspec.yaml 的 name 一致，且指向正確的 iron_split
+import 'package:iron_split/main.dart'; 
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // 修正：將 MyApp() 改為你在 main.dart 定義的 IronSplitApp()
+    await tester.pumpWidget(const IronSplitApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 注意：目前的 IronSplitApp 會先進入 SplashScreen 進行匿名登入
+    // 這裡的測試邏輯仍保留原始樣板，若未來需要寫正式測試再根據 UI 調整
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }

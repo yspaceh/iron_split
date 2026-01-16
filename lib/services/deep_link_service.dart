@@ -1,8 +1,7 @@
-// lib/services/deep_link_service.dart
 import 'dart:async';
 import 'package:app_links/app_links.dart';
 
-// 保持 Sealed class，這對未來擴充極有幫助
+// 保持 Sealed class 定義，確保對應 AppRouter 的 Intent 解析
 sealed class DeepLinkIntent {
   const DeepLinkIntent();
 }
@@ -34,7 +33,8 @@ class DeepLinkService {
   }
 
   Future<void> handleInitialLink() async {
-    final uri = await _appLinks.getInitialAppLink();
+    // 修正點：將 getInitialAppLink() 改為 getInitialLink()
+    final uri = await _appLinks.getInitialLink(); 
     if (uri != null) _onNewUri(uri);
   }
 
@@ -42,7 +42,7 @@ class DeepLinkService {
     final uriString = uri.toString();
     final now = DateTime.now();
 
-    // 800ms 去重邏輯
+    // 保持你原本設定的 800ms 去重邏輯
     if (_lastUri == uriString &&
         _lastTime != null &&
         now.difference(_lastTime!).inMilliseconds < 800) {
@@ -59,6 +59,7 @@ class DeepLinkService {
     // 優先支援 HTTPS 連結 (Firebase Dynamic Links / Universal Links)
     if (uri.path == '/join' || uri.queryParameters.containsKey('code')) {
       final code = uri.queryParameters['code'];
+      // 驗證 8 位碼邏輯保持不變
       if (code != null && code.length == 8) return JoinTaskIntent(code);
     }
     

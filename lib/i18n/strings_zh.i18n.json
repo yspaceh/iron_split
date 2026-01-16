@@ -1,0 +1,89 @@
+{
+  "S00_Onboarding_Consent": {
+    "title": "歡迎使用 Iron Split",
+    "content_prefix": "歡迎使用 Iron Split，在開始算錢任務之前，請先同意我們的 ",
+    "content_suffix": "。我們僅使用匿名帳號，資料將於任務結算 30 天後清除。",
+    "agree_btn": "同意並開始使用"
+  },
+  "S01_Onboarding_Name": {
+    "title": "你是誰？",
+    "hint": "輸入你的顯示名稱",
+    "next_btn": "下一步"
+  },
+  "S04_Invite_Confirm": {
+    "title": "加入任務",
+    "subtitle": "您受邀加入以下任務：",
+    "loading_invite": "正在讀取邀請函...",
+    "join_failed_title": "哎呀！無法加入任務",
+    "identity_match_title": "請問您是以下成員嗎？",
+    "identity_match_desc": "此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。",
+    "status_linking": "將以「連結帳號」方式加入",
+    "status_new_member": "將以「新成員」身分加入",
+    "action_confirm": "加入",
+    "action_cancel": "取消",
+    "action_home": "回首頁",
+    "error_join_failed": "加入失敗：${message}",
+    "error_generic": "發生錯誤：${message}"
+  },
+  "S05_TaskCreate_Form": {
+    "title": "建立新任務",
+    "field_name_label": "任務名稱",
+    "field_name_hint": "例如：東京五日遊",
+    "field_name_error": "請輸入任務名稱",
+    "action_create": "建立並邀請成員",
+    "creating": "建立中..."
+  },
+  "D01_InviteJoin_Success": {
+    "title": "成功加入任務！",
+    "assigned_avatar": "你的隨機分配頭像為：",
+    "avatar_note": "註：頭像僅能重抽一次。",
+    "action_continue": "開始記帳"
+  },
+  "D02_InviteJoin_Error": {
+    "title": "無法加入任務",
+    "message": "連結無效、已過期或任務人數已達上限。",
+    "action_close": "關閉"
+  },
+  "D03_TaskCreate_Confirm": {
+    "title": "邀請成員",
+    "share_btn": "分享邀請連結",
+    "share_subject": "邀請加入 ${taskName}",
+    "share_text": "快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${inviteCode}\n連結：${link}",
+    "copy_toast": "已複製邀請碼",
+    "expires_hint": "有效至 ${time}（15分鐘）",
+    "done_btn": "完成",
+    "error_create_failed": "產生失敗：${message}",
+    "debug_switch_user": "切換身分測試加入",
+    "debug_switched": "已切換新身分",
+    "debug_switch_fail": "切換失敗：${message}"
+  },
+  "S19_Settings_Tos": {
+    "title": "服務條款"
+  },
+  "error": {
+    "taskFull": {
+      "title": "任務已滿",
+      "message": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
+    },
+    "expiredCode": {
+      "title": "邀請碼已過期",
+      "message": "此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。"
+    },
+    "invalidCode": {
+      "title": "連結無效",
+      "message": "無效的邀請連結，請確認是否正確或已被刪除。"
+    },
+    "authRequired": {
+      "title": "需要登入",
+      "message": "請先登入後再加入任務。"
+    },
+    "alreadyInTask": {
+      "title": "您已是成員",
+      "message": "您已經在這個任務中了。"
+    },
+    "unknown": {
+      "title": "發生錯誤",
+      "message": "發生未預期的錯誤，請稍後再試。"
+    }
+  }
+}

@@ -1,18 +1,38 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:iron_split/routing/app_router.dart';
-import 'package:iron_split/firebase_options.dart'; // 確保您已生成此檔案
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+
+// 核心配置與服務
+import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/core/router/app_router.dart';
+import 'package:iron_split/core/theme/app_theme.dart'; // 導入定義好的主題
+import 'package:iron_split/services/deep_link_service.dart';
+import 'package:iron_split/firebase_options.dart';
+
+// 狀態管理
+import 'package:iron_split/features/invite/application/pending_invite_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // 1. 初始化 Firebase
+  // 初始化 Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const IronSplitApp());
+  
+  runApp(
+    MultiProvider(
+      providers: [
+        // 註冊 PendingInviteProvider 並執行 init
+        ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
+      ],
+      // 封裝 slang 語系供應器
+      child: TranslationProvider(child: const IronSplitApp()),
+    ),
+  );
 }
 
 class IronSplitApp extends StatefulWidget {
@@ -23,42 +43,52 @@ class IronSplitApp extends StatefulWidget {
 }
 
 class _IronSplitAppState extends State<IronSplitApp> {
-  final _deepLinkService = DeepLinkService();
+  final DeepLinkService _deepLinkService = DeepLinkService();
+  late final AppRouter _appRouter;
   StreamSubscription? _linkSubscription;
 
   @override
   void initState() {
     super.initState();
-    // 在 App 啟動時掛載監聽器
+    // 修正點：現在 AppRouter 接收 deepLinkService 作為參數
+    _appRouter = AppRouter(_deepLinkService);
     _setupDeepLinkListener();
   }
 
+  /// 設置 Deep Link 監聽邏輯
   void _setupDeepLinkListener() {
-    // 1. 監聽導航意圖
+    _deepLinkService.initialize();
+    
     _linkSubscription = _deepLinkService.intentStream.listen((intent) {
       if (!mounted) return;
-
+      
       switch (intent) {
         case JoinTaskIntent(:final code):
-          // 解析到邀請碼，導向 p7
-          _router.push('/invite/confirm?code=$code');
+          // 儲存邀請碼至 Provider 中斷恢復機制
+          context.read<PendingInviteProvider>().saveInvite(code);
+          
+          // 若已登入則直接跳轉至 S04 確認頁面
+          if (FirebaseAuth.instance.currentUser != null) {
+            _appRouter.router.push('/invite/confirm?code=$code');
+          }
           break;
+          
         case SettlementIntent(:final taskId):
-          // 解析到結算 ID，導向結算頁
-          _router.push('/tasks/$taskId/settlement');
+          // 導向結算頁面
+          _appRouter.router.push('/tasks/$taskId/settlement');
           break;
-        case UnknownIntent():
+          
+        default:
           break;
       }
     });
 
-    // 2. 處理 App 徹底關閉後被點擊連結的情況 (Cold Start)
+    // 處理 App 啟動時的初始連結
     _deepLinkService.handleInitialLink();
   }
 
   @override
   void dispose() {
-    // 重要：釋放資源以符合專業開發規範
     _linkSubscription?.cancel();
     _deepLinkService.dispose();
     super.dispose();
@@ -66,90 +96,21 @@ class _IronSplitAppState extends State<IronSplitApp> {
 
   @override
   Widget build(BuildContext context) {
+    // 使用 MaterialApp.router 整合 GoRouter
     return MaterialApp.router(
       title: 'Iron Split',
-      routerConfig: AppRouter.router,
-      // 3. 設計系統：品牌色票
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF9C393F), // 品牌酒紅色
-          primary: const Color(0xFF9C393F),
-          surface: const Color(0xFFFFFBFF),
-        ),
-      ),
-      localizationsDelegates: const [
-        S.delegate, // 自動生成的代理
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales, // 支援中、日、英
+      // 設定語系支援
+      locale: TranslationProvider.of(context).flutterLocale,
+      supportedLocales: AppLocaleUtils.supportedLocales,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      
+      // 路由配置
+      routerConfig: _appRouter.router,
+      
+      // 主題配置：使用 AppTheme 中定義的 M3 酒紅色主題
+      theme: AppTheme.lightTheme,
+      
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-// 4. 關鍵畫面：處理背景匿名登入
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _handleStartupLogic();
-  }
-
-  Future<void> _handleStartupLogic() async {
-    try {
-      // 背景自動匿名登入，確保後續操作都有 UID
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        await FirebaseAuth.instance.signInAnonymously();
-      }
-
-      // 模擬加載時間（展現艾隆・魯斯特品牌意象）
-      await Future.delayed(const Duration(seconds: 2));
-
-      // 導向邏輯：此處可加入判斷使用者是否已同意 ToS
-      if (mounted) {
-        context.go('/tos'); 
-      }
-    } catch (e) {
-      debugPrint("Firebase Auth Error: $e");
-      // 錯誤處理邏輯
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // 之後替換為艾隆・魯斯特 Assets 圖片
-            const Icon(Icons.Bakery_dining, size: 80, color: Colors.white),
-            const SizedBox(height: 24),
-            Text(
-              "IRON SPLIT",
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(color: Colors.white),
-          ],
-        ),
-      ),
     );
   }
 }

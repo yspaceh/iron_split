@@ -1,0 +1,89 @@
+{
+  "S00_Onboarding_Consent": {
+    "title": "Iron Split へようこそ",
+    "content_prefix": "Iron Split へようこそ。タスクを開始する前に、",
+    "content_suffix": "に同意してください。本アプリは匿名アカウントを使用し、データは結算から30日後に削除されます。",
+    "agree_btn": "同意して開始"
+  },
+  "S01_Onboarding_Name": {
+    "title": "お名前は？",
+    "hint": "表示名を入力してください",
+    "next_btn": "次へ"
+  },
+  "S04_Invite_Confirm": {
+    "title": "タスクに参加",
+    "subtitle": "以下のタスクに招待されました：",
+    "loading_invite": "招待状を読み込んでいます...",
+    "join_failed_title": "おっと！参加できません",
+    "identity_match_title": "あなたはこのメンバーですか？",
+    "identity_match_desc": "このタスクには既定のメンバーリストがあります。該当する場合は名前を選択して連携してください。該当しない場合は、そのまま参加してください。",
+    "status_linking": "「アカウント連携」で参加します",
+    "status_new_member": "「新規メンバー」として参加します",
+    "action_confirm": "参加",
+    "action_cancel": "キャンセル",
+    "action_home": "ホームへ戻る",
+    "error_join_failed": "参加失敗：${message}",
+    "error_generic": "エラーが発生しました：${message}"
+  },
+  "S05_TaskCreate_Form": {
+    "title": "新規タスク作成",
+    "field_name_label": "タスク名",
+    "field_name_hint": "例：東京5日間の旅",
+    "field_name_error": "タスク名を入力してください",
+    "action_create": "作成して招待",
+    "creating": "作成中..."
+  },
+  "D01_InviteJoin_Success": {
+    "title": "参加完了！",
+    "assigned_avatar": "あなたの動物アイコンは：",
+    "avatar_note": "※アイコンの引き直しは1回のみ可能です。",
+    "action_continue": "記録を開始"
+  },
+  "D02_InviteJoin_Error": {
+    "title": "参加できません",
+    "message": "リンクが無効、期限切れ、または定員に達しています。",
+    "action_close": "閉じる"
+  },
+  "D03_TaskCreate_Confirm": {
+    "title": "メンバーを招待",
+    "share_btn": "招待リンクを共有",
+    "share_subject": "${taskName} に参加",
+    "share_text": "Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${inviteCode}\nリンク：${link}",
+    "copy_toast": "招待コードをコピーしました",
+    "expires_hint": "有効期限：${time}（15分）",
+    "done_btn": "完了",
+    "error_create_failed": "生成失敗：${message}",
+    "debug_switch_user": "ID切替（テスト用）",
+    "debug_switched": "新しいIDに切り替えました",
+    "debug_switch_fail": "切替失敗：${message}"
+  },
+  "S19_Settings_Tos": {
+    "title": "利用規約"
+  },
+  "error": {
+    "taskFull": {
+      "title": "定員に達しました",
+      "message": "このタスクは上限の {limit} 名に達しています。リーダーに連絡してください。"
+    },
+    "expiredCode": {
+      "title": "招待リンクの期限切れ",
+      "message": "リンクの有効期限（{minutes}分）が切れています。リーダーに再発行を依頼してください。"
+    },
+    "invalidCode": {
+      "title": "無効なリンク",
+      "message": "招待リンクが無効です。正しいか削除されていないか確認してください。"
+    },
+    "authRequired": {
+      "title": "ログインが必要です",
+      "message": "タスクに参加するにはログインが必要です。"
+    },
+    "alreadyInTask": {
+      "title": "既に参加済み",
+      "message": "あなたは既にこのタスクのメンバーです。"
+    },
+    "unknown": {
+      "title": "エラー",
+      "message": "予期しないエラーが発生しました。後でもう一度お試しください。"
+    }
+  }
+}

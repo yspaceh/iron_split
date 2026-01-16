@@ -3,5 +3,6 @@ enum AppErrorType {
   expiredCode,
   invalidCode,
   authRequired,
+  alreadyInTask,
   unknown
 }

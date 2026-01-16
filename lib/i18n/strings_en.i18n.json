@@ -1,0 +1,89 @@
+{
+  "S00_Onboarding_Consent": {
+    "title": "Welcome to Iron Split",
+    "content_prefix": "Welcome to Iron Split. Before starting, please agree to our ",
+    "content_suffix": ". We use anonymous accounts, and data is cleared 30 days after settlement.",
+    "agree_btn": "Agree and Start"
+  },
+  "S01_Onboarding_Name": {
+    "title": "Who are you?",
+    "hint": "Enter your display name",
+    "next_btn": "Next"
+  },
+  "S04_Invite_Confirm": {
+    "title": "Join Task",
+    "subtitle": "You are invited to join:",
+    "loading_invite": "Loading invitation...",
+    "join_failed_title": "Oops! Cannot join task",
+    "identity_match_title": "Are you one of these members?",
+    "identity_match_desc": "This task has pre-existing members. If you are one of them, tap the name to link; otherwise, join as a new member.",
+    "status_linking": "Joining by linking account",
+    "status_new_member": "Joining as a new member",
+    "action_confirm": "Join",
+    "action_cancel": "Cancel",
+    "action_home": "Back to Home",
+    "error_join_failed": "Join failed: ${message}",
+    "error_generic": "Error: ${message}"
+  },
+  "S05_TaskCreate_Form": {
+    "title": "Create New Task",
+    "field_name_label": "Task Name",
+    "field_name_hint": "e.g. Tokyo Trip",
+    "field_name_error": "Please enter task name",
+    "action_create": "Create & Invite",
+    "creating": "Creating..."
+  },
+  "D01_InviteJoin_Success": {
+    "title": "Task Joined!",
+    "assigned_avatar": "Your assigned animal avatar is:",
+    "avatar_note": "Note: You can redraw your avatar only once.",
+    "action_continue": "Start Tracking"
+  },
+  "D02_InviteJoin_Error": {
+    "title": "Cannot Join Task",
+    "message": "The link is invalid, expired, or the task is full.",
+    "action_close": "Close"
+  },
+  "D03_TaskCreate_Confirm": {
+    "title": "Invite Members",
+    "share_btn": "Share Invite Link",
+    "share_subject": "Join ${taskName}",
+    "share_text": "Join my Iron Split task \"${taskName}\"!\nCode: ${inviteCode}\nLink: ${link}",
+    "copy_toast": "Invite code copied",
+    "expires_hint": "Valid until ${time} (15 mins)",
+    "done_btn": "Done",
+    "error_create_failed": "Failed to generate: ${message}",
+    "debug_switch_user": "Switch Identity (Test)",
+    "debug_switched": "Switched to new identity",
+    "debug_switch_fail": "Switch failed: ${message}"
+  },
+  "S19_Settings_Tos": {
+    "title": "Terms of Service"
+  },
+  "error": {
+    "taskFull": {
+      "title": "Task Full",
+      "message": "This task has reached its limit of {limit} members. Please contact the captain."
+    },
+    "expiredCode": {
+      "title": "Invite Expired",
+      "message": "This link has expired ({minutes} min TTL). Please request a new one from the captain."
+    },
+    "invalidCode": {
+      "title": "Invalid Code",
+      "message": "Invalid invite link. Please check if it's correct or has been deleted."
+    },
+    "authRequired": {
+      "title": "Auth Required",
+      "message": "Please log in to join the task."
+    },
+    "alreadyInTask": {
+      "title": "Already a Member",
+      "message": "You are already a member of this task."
+    },
+    "unknown": {
+      "title": "Error",
+      "message": "An unexpected error occurred. Please try again later."
+    }
+  }
+}

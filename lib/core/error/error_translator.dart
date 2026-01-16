@@ -1,45 +1,44 @@
-// lib/utils/error_translator.dart
-import 'package:flutter/material.dart';
-import '../generated/l10n.dart'; // 引用生成的翻譯類別
-import '../core/error/app_error.dart';
+import 'package:iron_split/gen/strings.g.dart';
+import 'app_error.dart';
 
 class ErrorTranslator {
-  /// 第一段：邏輯映射 (與 BuildContext 無關，方便單元測試)
+  // 對齊 Firebase Functions 錯誤碼與 AppErrorType
   static AppErrorType mapBackendCode(String code) {
     switch (code) {
-      case 'TASK_FULL': return AppErrorType.taskFull;
-      case 'EXPIRED_CODE': return AppErrorType.expiredCode;
-      case 'INVALID_CODE': return AppErrorType.invalidCode;
-      case 'AUTH_REQUIRED': return AppErrorType.authRequired;
+      case 'already-exists': return AppErrorType.alreadyInTask;
+      case 'failed-precondition': return AppErrorType.taskFull;
+      case 'deadline-exceeded': return AppErrorType.expiredCode;
+      case 'unauthenticated': return AppErrorType.authRequired;
+      case 'not-found': return AppErrorType.invalidCode;
       default: return AppErrorType.unknown;
     }
   }
 
-  /// 第二段：UI 渲染 (根據 Context 與參數回傳在地化文字)
-  static String getTitle(AppErrorType type, BuildContext context) {
-    final s = S.of(context);
+  static String getTitle(AppErrorType type) {
     switch (type) {
-      case AppErrorType.taskFull: return s.error_TASK_FULL_title;
-      case AppErrorType.expiredCode: return s.error_EXPIRED_CODE_title;
-      case AppErrorType.invalidCode: return s.error_INVALID_CODE_title;
-      case AppErrorType.authRequired: return s.error_AUTH_REQUIRED_title;
-      case AppErrorType.unknown: return s.error_UNKNOWN_title;
+      case AppErrorType.alreadyInTask: return t.error.alreadyInTask.title;
+      case AppErrorType.taskFull: return t.error.taskFull.title;
+      case AppErrorType.expiredCode: return t.error.expiredCode.title;
+      case AppErrorType.invalidCode: return t.error.invalidCode.title;
+      case AppErrorType.authRequired: return t.error.authRequired.title;
+      case AppErrorType.unknown: return t.error.unknown.title;
     }
   }
 
-  static String getMessage(AppErrorType type, BuildContext context, {Map<String, dynamic>? meta}) {
-    final s = S.of(context);
+  static String getMessage(AppErrorType type, {Map<String, dynamic>? meta}) {
     switch (type) {
-      case AppErrorType.taskFull:
-        return s.error_TASK_FULL_message(meta?['limit'] ?? 15); // 使用 Placeholder
+      case AppErrorType.alreadyInTask:
+        return t.error.alreadyInTask.message;
+      case AppErrorType.taskFull: 
+        return t.error.taskFull.message(limit: meta?['limit']?.toString() ?? '15');
       case AppErrorType.expiredCode:
-        return s.error_EXPIRED_CODE_message(meta?['minutes'] ?? 15);
-      case AppErrorType.invalidCode:
-        return s.error_INVALID_CODE_message;
-      case AppErrorType.authRequired:
-        return s.error_AUTH_REQUIRED_message;
+        return t.error.expiredCode.message(minutes: meta?['minutes']?.toString() ?? '30');
       case AppErrorType.unknown:
-        return s.error_UNKNOWN_message(meta?['code'] ?? 'N/A');
+        return t.error.unknown.message;
+      case AppErrorType.invalidCode:
+        return t.error.invalidCode.message;
+      case AppErrorType.authRequired:
+        return t.error.authRequired.message;
     }
   }
 }

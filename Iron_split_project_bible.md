@@ -6,7 +6,7 @@
 
 # Iron Split Project Bible（專案聖經）
 
-## 0. 專案目標（MVP）
+## 1. 專案目標（MVP）
 
 - **交付形式**：iOS TestFlight 封閉測試
 - **截止日**：2026/02/14
@@ -18,7 +18,7 @@
 
 ---
 
-## 1. 品牌核心與角色設定（Brand & Character）
+## 2. 品牌核心與角色設定（Brand & Character）
 
 ### 1.1 專案名稱與理念
 - **Iron Split**（アイアンスプリット）
@@ -31,7 +31,7 @@
 
 ---
 
-## 2. 名詞、角色與權限（Terminology & Permissions）
+## 3. 名詞、角色與權限（Terminology & Permissions）
 
 ### 2.1 名詞
 - **任務（Task）**：一次旅遊/聚餐的共同記帳單位
@@ -57,7 +57,7 @@
 
 ---
 
-## 3. 成員頭像系統（Avatar System）
+## 4. 成員頭像系統（Avatar System）
 
 - **人數限制**：單一任務上限 15 人
 - **視覺主題**：英國鄉村農場動物（大頭 icon）
@@ -67,7 +67,7 @@
 
 ---
 
-## 4. MVP 功能範圍（以 wireframe 為準）
+## 5. MVP 功能範圍（以 wireframe 為準）
 
 ### 4.1 Onboarding / 初始設定
 - ToS 同意（p1）
@@ -153,7 +153,7 @@
 
 ---
 
-## 5. Deep Link（多 Intent，集中處理）
+## 6. Deep Link（多 Intent，集中處理）
 
 ### 5.1 Intent 列表
 - `JoinTaskIntent(code)`：`iron-split://join?code=XXXXXXXX`
@@ -173,7 +173,7 @@
 
 ---
 
-## 6. Firebase / Backend 核心策略（MVP）
+## 7. Firebase / Backend 核心策略（MVP）
 
 ### 6.1 Firebase 服務
 - Authentication：Anonymous（取得 uid）
@@ -195,7 +195,7 @@
 
 ---
 
-## 7. 設計系統（Material 3 + Brand Tokens）
+## 8. 設計系統（Material 3 + Brand Tokens）
 
 ### 7.1 色彩（v1）
 - Primary：`#9C393F`（酒紅）
@@ -214,7 +214,7 @@
 
 ---
 
-## 8. 里程碑（到 2026/02/14）
+## 9. 里程碑（到 2026/02/14）
 
 - W1：Firebase schema + anonymous auth + Invite Flow 跑通（deep link + join）
 - W2：主畫面（日期分段 + date nav）+ 新增/編輯費用/預收 + 即時同步
@@ -224,7 +224,7 @@
 
 ---
 
-## 9. 技術命名規範 (Technical Naming Conventions)
+## 10. 技術命名規範 (Technical Naming Conventions)
 
 - Git / Flutter 專案 / Dart package：`iron_split`（snake_case）
 - Firebase Project ID：`iron-split`（kebab-case，平台限制）
@@ -235,7 +235,7 @@
 
 ---
 
-## 10. 錯誤代碼（Error Codes）
+## 11. 錯誤代碼（Error Codes）
 - `TASK_FULL`
 - `EXPIRED_CODE`
 - `INVALID_CODE`
@@ -243,7 +243,7 @@
 
 ---
 
-## 11. 正式環境切換清單 (Production Readiness Checklist)
+## 12. 正式環境切換清單 (Production Readiness Checklist)
 
 > 為了確保 2026/02/14 封測時的安全性與專業度，從「測試模式」切換至「正式環境」時必須完成以下查核。
 
@@ -263,7 +263,7 @@
 
 ---
 
-## 12. 開發工具/建置備註（MVP 實務）
+## 13. 開發工具/建置備註（MVP 實務）
 
 ### 12.1 Node / Functions
 - Functions runtime：Node 20（engines.node = 20）
@@ -279,7 +279,199 @@
 
 ---
 
+
+---
+
+## 14. 檔案/資料夾管理規則（AI 協作前提）
+
+> 目的：避免 Gemini / ChatGPT 亂放檔案、亂拆層級，讓「檔案放哪裡」變成可驗收的規則。
+
+### 13.1 專案目錄總則（Feature-first）
+- `core/`：**跨所有功能共用**、且**不含業務狀態**的基礎能力（例：router/theme/error/通用 services）。
+- `features/<feature>/`：**每個功能一個模組**，所有與該功能相關的狀態、UI、資料存取都必須放在該模組內。
+- 禁止新增「大雜燴」資料夾：`utils/`, `helpers/`, `common/`（除非內容明確可歸到 `core/` 或某個 feature）。
+
+**推薦目錄：**
+```txt
+lib/
+├── core/
+│   ├── router/            # GoRouter / routes
+│   ├── theme/             # Material 3 theme + brand tokens
+│   ├── error/             # AppError / ErrorCode / ErrorTranslator（後端 code → 前端文案 key）
+│   ├── services/          # 跨功能 service：deeplink listener, analytics, remote_config 等
+│   └── di/                # 依賴注入（若需要）
+├── features/
+│   ├── invite/
+│   │   ├── presentation/  # pages/widgets
+│   │   ├── application/   # Bloc/Cubit/Notifier/Provider（狀態只放這裡）
+│   │   ├── domain/        # entities/usecases/repository interface（可選）
+│   │   └── data/          # repository impl / firebase datasource / local store(shared_prefs)
+│   ├── task/
+│   ├── expense/
+│   └── settlement/
+├── l10n/                  # ARB（或 slang translations 原始檔）
+└── gen/                   # （可選）若生成碼要放 lib/ 下；否則使用工具預設生成路徑
+```
+
+### 13.2 狀態管理（Provider/Bloc）放置規則（嚴格）
+- **任何狀態物件（Bloc/Cubit/ChangeNotifier/StateNotifier/Provider）一律放在：**  
+  `features/<feature>/application/`
+- `core/` **禁止**放任何「特定功能」的狀態（例如 invite 的 pending code）。
+- 例：邀請流程的「中斷恢復 pending deep link」：
+  - `features/invite/application/pending_invite_cubit.dart`（記憶體狀態）
+  - `features/invite/data/pending_invite_local_store.dart`（SharedPreferences 落盤保險，含 TTL & 一次性清除）
+
+### 13.3 外部系統整合（Firebase / app_links）放置規則
+- `app_links` 只能被 `core/services/deep_link_service.dart` import（UI/Router 不可直接碰）。  
+  UI / Router 只接收 `DeepLinkIntent`。參照 Deep Link 隔離策略。  
+- Firebase 初始化（Auth/Firestore/Functions client）可放 `core/services/firebase/`（跨功能共用），
+  **但**「資料存取與 repository」必須放回各 feature 的 `data/`（避免 services 變肥）。
+- 800ms dedupe 規則屬於 `DeepLinkService` 的責任。
+
+### 13.4 i18n 文案放置規則
+- 後端回傳 Error Code（不回文字），前端負責翻譯（本地化字串）。  
+- `core/error/` 放「ErrorCode enum + mapping（code → 文案 key）」；  
+  各 feature 需要的 UI 文案 key 放在 i18n 來源（`l10n/` 或 slang translations）。
+
+### 13.5 生成檔（generated）規則
+- 生成檔 **不得手改**，也不應被當成主要編輯對象。
+- 優先使用工具預設生成路徑；若要放在 `lib/` 下，統一用 `lib/gen/`，避免 `lib/generated/` 分散。
+
+### 13.6 檔名與層級命名（可驗收）
+- 檔名一律 `snake_case.dart`（已在命名規範定義）。
+- 同一個 feature 內：
+  - Page：`*_page.dart`
+  - Widget：`*_widget.dart`
+  - Bloc/Cubit：`*_bloc.dart` / `*_cubit.dart`
+  - Repository：`*_repository.dart`
+  - Datasource/Store：`*_data_source.dart` / `*_local_store.dart`
+
+### 13.7 AI 協作驗收規則（防亂放檔案）
+- 任何 PR/改動若新增檔案，必須同時回答：
+  1) 這個檔案屬於哪個 feature（或 core）？  
+  2) 為何不能放在其他層？  
+  3) 是否違反 13.2（狀態放置）或 13.3（外部整合隔離）？
+- 若無法回答 → 視為「放錯位置」，必須移動後才能合併。
+
+
+
+---
+
+## 15. App 入口與畫面命名（vLatest）
+
+> 目標：避免 AI（Gemini / ChatGPT / Figma AI）因為舊命名、重複編號、或把系統層畫面混入業務畫面而產生混亂。**本章節為最新唯一有效版本**；任何舊的/重複的/已推翻的畫面命名，視為移除。
+
+### 15.1 兩層架構（非常重要）
+- **System 層（非業務畫面）**：負責 `/` 根路由的初始化與分流（Gatekeeper）。
+  - 命名採 **標籤式**：`S_System.*`（不使用 `NN` 數字，不占用業務編號空間）
+  - 不屬於 S00～Sxx 業務 Page Key 清單（避免重編與誤解）
+- **Business 層（業務畫面）**：使用 Page Key（`S/D/B + NN`）作為穩定 ID（Single Source of Truth）。
+
+### 15.2 System Gatekeeper（根路由 `/`）
+- **Page Key**：`S_System.Bootstrap`
+- **職責**：
+  - 全域初始化（local storage / secure storage / remote config 等）
+  - 狀態判斷（是否同意 TOS、是否已設定使用者名稱）
+  - Deep Link（邀請連結）解析與中斷恢復
+  - 分流到正確的業務畫面（下方決策樹）
+- **限制**：
+  - 不承載業務 UI（不出現可操作表單/按鈕/清單）
+  - 不參與業務畫面編號（不重編、不插入 S00～）
+  - 若在 Figma 存在：僅作為「技術占位」Frame，需標註 `System-only / Non-navigable`
+
+**分流決策樹（v1）**
+```text
+IF launched_from_invite_link:
+    IF tos_not_accepted:
+        → S00_Onboarding.Consent
+    ELSE IF name_not_set:
+        → S01_Onboarding.Name
+    ELSE:
+        → S04_Invite.Confirm
+ELSE (normal app launch):
+    IF tos_not_accepted:
+        → S00_Onboarding.Consent
+    ELSE IF name_not_set:
+        → S01_Onboarding.Name
+    ELSE:
+        → S02_Home.TaskList
+```
+
+### 15.3 Business Page Key（S / D / B）
+- `S` = **Screen**（完整頁面 / route）
+- `D` = **Dialog**（彈窗）
+- `B` = **BottomSheet**（底部抽屜）
+
+命名格式（固定）
+```text
+<Prefix><NN>_<Feature>.<Page>
+```
+
+> `NN` 是 **穩定 ID**，不是流程順序；定案後不重編。
+
+### 15.4 邀請流程（今天定案的關鍵）
+- 邀請確認（wireframe p7–p8）為 **Screen**：`S04_Invite.Confirm`（不是 Dialog）
+- 加入成功 Dialog（成員看到自己在任務中的頭像）：`D01_InviteJoin.Success`
+- 加入失敗 Dialog：`D02_InviteJoin.Error`
+  - **v1 不拆 invalid/ended**（之後觀察使用者錯誤再拆）
+- TOS 不讓使用者離開 App：以 **Screen + WebView** 實作：`S19_Settings.Tos`
+
+### 15.5 Figma / 檔案命名（強制）
+- Figma Frame 名稱：**必須等於 Page Key**
+- 匯出檔名（PNG）：`<Page Key>__shared__v1.png`
+- 禁止使用：`p7`、`p10`、`invite_screen` 這種無語意命名
+
+---
+
+## 16. M3 UI Blocks（Notion options：vLatest）
+
+> 原則：不要寫「顯示文字/顯示連結」用途描述；要寫「元件型態 + 可互動性」。
+
+### Navigation（設定頁常見右側 `>`）
+```text
+NavigationList
+NavigationListItem
+ChevronIcon
+```
+
+### Segmented（M3 正名）
+```text
+SegmentedButton
+```
+
+### Text / Link
+```text
+Text
+BodyText
+CaptionText
+LabelText
+HelperText
+ErrorText
+InfoText
+KeyValueText
+ListText
+RichText
+MarkdownText
+InlineLink
+TextLink
+StandaloneLink
+```
+
+### Keyboard
+```text
+Keyboard
+SystemKeyboard
+NumericKeyboard
+CustomKeyboard
+```
+
+---
+
 ## 變更紀錄（append-only）
+- 2026-01-16: 同步更新至 vLatest：引入 `S_System.Bootstrap` 作為 `/` 根路由 Gatekeeper（不占用業務編號），並以最新 PageSpec 決策定案邀請流程（`S04_Invite.Confirm` 為 Screen、`D01_InviteJoin.Success`、`D02_InviteJoin.Error`、`S19_Settings.Tos`），同時統一 M3 UI Blocks（含 NavigationListItem/Keyboard）。
+- 2026-01-15: 依最新 Notion PageSpec/CSV 重建「畫面命名（Page Key）與 UI Blocks（vLatest）」章節，移除舊/重複命名，並統一 `SegmentedButton`、新增 NavigationListItem（右側 > 導覽列）與 Keyboard options，降低 AI 混淆。
+- 2026-01-15: 新增「畫面命名與規格鍵（Page Key / Screen Naming）」與「M3 UI Blocks（Text/Link、Keyboard）」規則，作為 wireframe / Notion / Figma / AI 協作的單一命名基準。
+- 2026-01-15: 新增「檔案/資料夾管理規則（AI 協作前提）」：定義 core vs features、Provider/Bloc 放置、SharedPreferences 落盤策略、generated 檔案規則，避免 AI 亂放檔案。
 - 2026-01-15: 補回「正式環境切換清單 (Production Readiness Checklist)」，避免後續遺漏上線前安全/權限/資料清理項目；同時保留 functions deploy 的 MVP workaround。
 - 2026-01-15: 【核心開發】後端與導航架構定案。Cloud Functions v2 以 transaction 保證加入原子性；DeepLinkService 封裝 app_links + 800ms dedupe；後端回傳 code、前端 i18n 翻譯策略；邀請碼規則確定為「多人共用 + 名額限制 + TTL 只對未加入者」；結算也將使用 deep link（隊長分享限定）。
 - 2026-01-14: 新增「正式環境切換清單」、命名補充、整理主畫面日期導覽列錨點規則、結算流程 p33→p39。
