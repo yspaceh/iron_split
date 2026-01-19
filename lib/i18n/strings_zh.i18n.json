@@ -1,14 +1,22 @@
 {
   "S00_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
-    "content_prefix": "歡迎使用 Iron Split，在開始算錢任務之前，請先同意我們的 ",
-    "content_suffix": "。我們僅使用匿名帳號，資料將於任務結算 30 天後清除。",
-    "agree_btn": "同意並開始使用"
+    "content_prefix": "歡迎使用 Iron Split。點擊開始即代表您同意我們的 ",
+    "terms_link": "服務條款",
+    "and": " 與 ",
+    "privacy_link": "隱私政策",
+    "content_suffix": "。我們採用匿名登入，保障您的隱私。",
+    "agree_btn": "開始使用"
   },
   "S01_Onboarding_Name": {
-    "title": "你是誰？",
-    "hint": "輸入你的顯示名稱",
-    "next_btn": "下一步"
+    "title": "名稱設定",
+    "description": "請輸入您在 App 內的顯示名稱（1-10 個字）。",
+    "field_hint": "輸入暱稱",
+    "field_counter": "${current}/10",
+    "error_empty": "名稱不能為空",
+    "error_too_long": "最多 10 個字",
+    "error_invalid_char": "包含無效字元",
+    "action_next": "設定完成"
   },
   "S04_Invite_Confirm": {
     "title": "加入任務",
@@ -26,12 +34,22 @@
     "error_generic": "發生錯誤：${message}"
   },
   "S05_TaskCreate_Form": {
-    "title": "建立新任務",
-    "field_name_label": "任務名稱",
+    "title": "新增任務",
+    "section_name": "任務名稱",
+    "section_period": "任務期間",
+    "section_settings": "結算設定",
     "field_name_hint": "例如：東京五日遊",
-    "field_name_error": "請輸入任務名稱",
-    "action_create": "建立並邀請成員",
-    "creating": "建立中..."
+    "field_name_counter": "${current}/20",
+    "field_start_date": "開始日期",
+    "field_end_date": "結束日期",
+    "field_currency": "結算幣別",
+    "field_member_count": "參加人數",
+    "action_save": "保存",
+    "picker_done": "確定",
+    "error_name_empty": "請輸入任務名稱",
+    "currency_twd": "新台幣 (TWD)",
+    "currency_jpy": "日圓 (JPY)",
+    "currency_usd": "美金 (USD)"
   },
   "D01_InviteJoin_Success": {
     "title": "成功加入任務！",
@@ -45,17 +63,17 @@
     "action_close": "關閉"
   },
   "D03_TaskCreate_Confirm": {
-    "title": "邀請成員",
-    "share_btn": "分享邀請連結",
-    "share_subject": "邀請加入 ${taskName}",
-    "share_text": "快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${inviteCode}\n連結：${link}",
-    "copy_toast": "已複製邀請碼",
-    "expires_hint": "有效至 ${time}（15分鐘）",
-    "done_btn": "完成",
-    "error_create_failed": "產生失敗：${message}",
-    "debug_switch_user": "切換身分測試加入",
-    "debug_switched": "已切換新身分",
-    "debug_switch_fail": "切換失敗：${message}"
+    "title": "確認任務設定",
+    "label_name": "任務名稱",
+    "label_period": "期間",
+    "label_currency": "幣別",
+    "label_members": "人數",
+    "action_confirm": "確認",
+    "action_back": "返回編輯",
+    "creating_task": "正在建立任務...",
+    "preparing_share": "準備邀請函...",
+    "share_subject": "邀請加入 Iron Split 任務",
+    "share_message": "快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}"
   },
   "S19_Settings_Tos": {
     "title": "服務條款"

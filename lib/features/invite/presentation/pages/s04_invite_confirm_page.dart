@@ -40,9 +40,10 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
 
   Future<void> _previewInvite() async {
     try {
-      final callable = FirebaseFunctions.instance.httpsCallable('previewInviteCode');
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('previewInviteCode');
       final res = await callable.call({'code': widget.inviteCode});
-      
+
       final data = Map<String, dynamic>.from(res.data);
 
       if (data['action'] == 'OPEN_TASK') {
@@ -81,15 +82,15 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
 
   Future<void> _joinTask() async {
     if (_isJoining) return;
-
     setState(() => _isJoining = true);
 
     final user = FirebaseAuth.instance.currentUser;
-    final displayName = user?.displayName ?? 'New Member';
+    final displayName = user?.displayName ?? '新成員';
 
     try {
-      final callable = FirebaseFunctions.instance.httpsCallable('joinByInviteCode');
-      
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('joinByInviteCode');
+
       final res = await callable.call({
         'code': widget.inviteCode,
         'displayName': displayName,
@@ -100,23 +101,15 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
       final taskId = data['taskId'];
 
       if (mounted) {
+        // D01 的顯示邏輯將由 Dashboard 內部判斷 (hasSeenIntro)
         context.go('/tasks/$taskId');
-      }
-    } on FirebaseFunctionsException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(t.S04_Invite_Confirm.error_join_failed(message: e.message ?? e.code)),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-        setState(() => _isJoining = false);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(t.S04_Invite_Confirm.error_generic(message: e.toString())),
+            content:
+                Text(t.S04_Invite_Confirm.error_generic(message: e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -140,7 +133,8 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text(t.S04_Invite_Confirm.loading_invite, style: textTheme.bodyMedium),
+              Text(t.S04_Invite_Confirm.loading_invite,
+                  style: textTheme.bodyMedium),
             ],
           ),
         ),
@@ -150,24 +144,28 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
     // 2. 錯誤
     if (_error != null) {
       return Scaffold(
-        appBar: AppBar(title: Text(t.S04_Invite_Confirm.join_failed_title)), // "哎呀！無法加入任務"
+        appBar: AppBar(
+            title: Text(t.S04_Invite_Confirm.join_failed_title)), // "哎呀！無法加入任務"
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.broken_image_rounded, size: 64, color: colorScheme.error),
+                Icon(Icons.broken_image_rounded,
+                    size: 64, color: colorScheme.error),
                 const SizedBox(height: 16),
                 Text(
                   t.S04_Invite_Confirm.join_failed_title,
-                  style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   _error!,
                   textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: textTheme.bodyMedium
+                      ?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 32),
                 FilledButton.tonal(
@@ -196,7 +194,8 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -204,7 +203,8 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                     Card(
                       elevation: 0,
                       color: colorScheme.surfaceContainerHighest,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Column(
@@ -215,7 +215,9 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                                 color: colorScheme.primaryContainer,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.airplane_ticket_rounded, size: 32, color: colorScheme.onPrimaryContainer),
+                              child: Icon(Icons.airplane_ticket_rounded,
+                                  size: 32,
+                                  color: colorScheme.onPrimaryContainer),
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -230,18 +232,22 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.group_outlined, size: 16, color: colorScheme.outline),
+                                Icon(Icons.group_outlined,
+                                    size: 16, color: colorScheme.outline),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$memberCount / $maxMembers', // 數字不需要翻譯
-                                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
+                                  style: textTheme.bodyMedium
+                                      ?.copyWith(color: colorScheme.outline),
                                 ),
                                 const SizedBox(width: 12),
-                                Icon(Icons.currency_exchange, size: 16, color: colorScheme.outline),
+                                Icon(Icons.currency_exchange,
+                                    size: 16, color: colorScheme.outline),
                                 const SizedBox(width: 4),
                                 Text(
                                   currency,
-                                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
+                                  style: textTheme.bodyMedium
+                                      ?.copyWith(color: colorScheme.outline),
                                 ),
                               ],
                             ),
@@ -249,33 +255,39 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
 
                     // --- 連結成員選單 ---
                     if (_unlinkedMembers.isNotEmpty) ...[
                       Text(
-                        t.S04_Invite_Confirm.identity_match_title, // "請問您是以下成員嗎？"
-                        style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        t.S04_Invite_Confirm
+                            .identity_match_title, // "請問您是以下成員嗎？"
+                        style: textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        t.S04_Invite_Confirm.identity_match_desc, // "此任務已預先建立了..."
-                        style: textTheme.bodySmall?.copyWith(color: colorScheme.outline),
+                        t.S04_Invite_Confirm
+                            .identity_match_desc, // "此任務已預先建立了..."
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.outline),
                       ),
                       const SizedBox(height: 16),
-                      
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: _unlinkedMembers.length,
-                        separatorBuilder: (ctx, index) => const SizedBox(height: 8),
+                        separatorBuilder: (ctx, index) =>
+                            const SizedBox(height: 8),
                         itemBuilder: (ctx, index) {
                           final member = _unlinkedMembers[index];
                           final memberId = member['id'];
                           final displayName = member['displayName'] as String;
                           final isSelected = _selectedMergeMemberId == memberId;
-                          final initial = displayName.isNotEmpty ? displayName.characters.first : '?';
+                          final initial = displayName.isNotEmpty
+                              ? displayName.characters.first
+                              : '?';
 
                           return InkWell(
                             onTap: () {
@@ -291,19 +303,28 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
                               decoration: BoxDecoration(
-                                color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
+                                color: isSelected
+                                    ? colorScheme.primaryContainer
+                                    : colorScheme.surface,
                                 border: Border.all(
-                                  color: isSelected ? colorScheme.primary : colorScheme.outlineVariant,
+                                  color: isSelected
+                                      ? colorScheme.primary
+                                      : colorScheme.outlineVariant,
                                   width: isSelected ? 2 : 1,
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
                               child: Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
-                                    foregroundColor: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+                                    backgroundColor: isSelected
+                                        ? colorScheme.primary
+                                        : colorScheme.surfaceContainerHighest,
+                                    foregroundColor: isSelected
+                                        ? colorScheme.onPrimary
+                                        : colorScheme.onSurfaceVariant,
                                     child: Text(initial),
                                   ),
                                   const SizedBox(width: 16),
@@ -311,36 +332,45 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                                     child: Text(
                                       displayName,
                                       style: textTheme.bodyLarge?.copyWith(
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurface,
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: isSelected
+                                            ? colorScheme.onPrimaryContainer
+                                            : colorScheme.onSurface,
                                       ),
                                     ),
                                   ),
                                   if (isSelected)
-                                    Icon(Icons.check_circle_rounded, color: colorScheme.primary)
+                                    Icon(Icons.check_circle_rounded,
+                                        color: colorScheme.primary)
                                   else
-                                    Icon(Icons.radio_button_unchecked, color: colorScheme.outline),
+                                    Icon(Icons.radio_button_unchecked,
+                                        color: colorScheme.outline),
                                 ],
                               ),
                             ),
                           );
                         },
                       ),
-                      
                       const SizedBox(height: 24),
-                      
                       Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: colorScheme.secondaryContainer.withOpacity(0.5),
+                            color:
+                                colorScheme.secondaryContainer.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             _selectedMergeMemberId != null
-                                ? t.S04_Invite_Confirm.status_linking // "將以「連結帳號」方式加入"
-                                : t.S04_Invite_Confirm.status_new_member, // "將以「新成員」身分加入"
-                            style: textTheme.labelSmall?.copyWith(color: colorScheme.onSecondaryContainer),
+                                ? t.S04_Invite_Confirm
+                                    .status_linking // "將以「連結帳號」方式加入"
+                                : t.S04_Invite_Confirm
+                                    .status_new_member, // "將以「新成員」身分加入"
+                            style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.onSecondaryContainer),
                           ),
                         ),
                       ),
@@ -359,7 +389,8 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                     child: SizedBox(
                       height: 52,
                       child: FilledButton.tonal(
-                        onPressed: _isJoining ? null : () => context.go('/tasks'),
+                        onPressed:
+                            _isJoining ? null : () => context.go('/tasks'),
                         child: Text(t.S04_Invite_Confirm.action_cancel), // "取消"
                       ),
                     ),
@@ -376,9 +407,11 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
                         ),
                         child: _isJoining
                             ? SizedBox(
-                                width: 24, 
-                                height: 24, 
-                                child: CircularProgressIndicator(strokeWidth: 2.5, color: colorScheme.onPrimary),
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: colorScheme.onPrimary),
                               )
                             : Text(t.S04_Invite_Confirm.action_confirm), // "加入"
                       ),

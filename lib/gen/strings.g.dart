@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 3
-/// Strings: 171 (57 per locale)
+/// Strings: 225 (75 per locale)
 ///
-/// Built on 2026-01-16 at 10:10 UTC
+/// Built on 2026-01-19 at 13:21 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -168,9 +168,12 @@ class _StringsS00OnboardingConsentZh {
 
 	// Translations
 	String get title => '歡迎使用 Iron Split';
-	String get content_prefix => '歡迎使用 Iron Split，在開始算錢任務之前，請先同意我們的 ';
-	String get content_suffix => '。我們僅使用匿名帳號，資料將於任務結算 30 天後清除。';
-	String get agree_btn => '同意並開始使用';
+	String get content_prefix => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
+	String get terms_link => '服務條款';
+	String get and => ' 與 ';
+	String get privacy_link => '隱私政策';
+	String get content_suffix => '。我們採用匿名登入，保障您的隱私。';
+	String get agree_btn => '開始使用';
 }
 
 // Path: S01_Onboarding_Name
@@ -180,9 +183,14 @@ class _StringsS01OnboardingNameZh {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => '你是誰？';
-	String get hint => '輸入你的顯示名稱';
-	String get next_btn => '下一步';
+	String get title => '名稱設定';
+	String get description => '請輸入您在 App 內的顯示名稱（1-10 個字）。';
+	String get field_hint => '輸入暱稱';
+	String field_counter({required Object current}) => '\$${current}/10';
+	String get error_empty => '名稱不能為空';
+	String get error_too_long => '最多 10 個字';
+	String get error_invalid_char => '包含無效字元';
+	String get action_next => '設定完成';
 }
 
 // Path: S04_Invite_Confirm
@@ -214,12 +222,22 @@ class _StringsS05TaskCreateFormZh {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => '建立新任務';
-	String get field_name_label => '任務名稱';
+	String get title => '新增任務';
+	String get section_name => '任務名稱';
+	String get section_period => '任務期間';
+	String get section_settings => '結算設定';
 	String get field_name_hint => '例如：東京五日遊';
-	String get field_name_error => '請輸入任務名稱';
-	String get action_create => '建立並邀請成員';
-	String get creating => '建立中...';
+	String field_name_counter({required Object current}) => '\$${current}/20';
+	String get field_start_date => '開始日期';
+	String get field_end_date => '結束日期';
+	String get field_currency => '結算幣別';
+	String get field_member_count => '參加人數';
+	String get action_save => '保存';
+	String get picker_done => '確定';
+	String get error_name_empty => '請輸入任務名稱';
+	String get currency_twd => '新台幣 (TWD)';
+	String get currency_jpy => '日圓 (JPY)';
+	String get currency_usd => '美金 (USD)';
 }
 
 // Path: D01_InviteJoin_Success
@@ -254,17 +272,17 @@ class _StringsD03TaskCreateConfirmZh {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => '邀請成員';
-	String get share_btn => '分享邀請連結';
-	String share_subject({required Object taskName}) => '邀請加入 \$${taskName}';
-	String share_text({required Object taskName, required Object inviteCode, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${inviteCode}\n連結：\$${link}';
-	String get copy_toast => '已複製邀請碼';
-	String expires_hint({required Object time}) => '有效至 \$${time}（15分鐘）';
-	String get done_btn => '完成';
-	String error_create_failed({required Object message}) => '產生失敗：\$${message}';
-	String get debug_switch_user => '切換身分測試加入';
-	String get debug_switched => '已切換新身分';
-	String debug_switch_fail({required Object message}) => '切換失敗：\$${message}';
+	String get title => '確認任務設定';
+	String get label_name => '任務名稱';
+	String get label_period => '期間';
+	String get label_currency => '幣別';
+	String get label_members => '人數';
+	String get action_confirm => '確認';
+	String get action_back => '返回編輯';
+	String get creating_task => '正在建立任務...';
+	String get preparing_share => '準備邀請函...';
+	String get share_subject => '邀請加入 Iron Split 任務';
+	String share_message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${code}\n連結：\$${link}';
 }
 
 // Path: S19_Settings_Tos
@@ -401,9 +419,12 @@ class _StringsS00OnboardingConsentEn implements _StringsS00OnboardingConsentZh {
 
 	// Translations
 	@override String get title => 'Welcome to Iron Split';
-	@override String get content_prefix => 'Welcome to Iron Split. Before starting, please agree to our ';
-	@override String get content_suffix => '. We use anonymous accounts, and data is cleared 30 days after settlement.';
-	@override String get agree_btn => 'Agree and Start';
+	@override String get content_prefix => 'By clicking Start, you agree to our ';
+	@override String get terms_link => 'Terms of Service';
+	@override String get and => ' and ';
+	@override String get privacy_link => 'Privacy Policy';
+	@override String get content_suffix => '. We use anonymous login to protect your privacy.';
+	@override String get agree_btn => 'Start';
 }
 
 // Path: S01_Onboarding_Name
@@ -413,9 +434,14 @@ class _StringsS01OnboardingNameEn implements _StringsS01OnboardingNameZh {
 	@override final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Who are you?';
-	@override String get hint => 'Enter your display name';
-	@override String get next_btn => 'Next';
+	@override String get title => 'Set Display Name';
+	@override String get description => 'Please enter your display name (1-10 chars).';
+	@override String get field_hint => 'Enter nickname';
+	@override String field_counter({required Object current}) => '\$${current}/10';
+	@override String get error_empty => 'Name cannot be empty';
+	@override String get error_too_long => 'Max 10 characters';
+	@override String get error_invalid_char => 'Invalid characters';
+	@override String get action_next => 'Set';
 }
 
 // Path: S04_Invite_Confirm
@@ -447,12 +473,22 @@ class _StringsS05TaskCreateFormEn implements _StringsS05TaskCreateFormZh {
 	@override final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Create New Task';
-	@override String get field_name_label => 'Task Name';
+	@override String get title => 'New Task';
+	@override String get section_name => 'Task Name';
+	@override String get section_period => 'Period';
+	@override String get section_settings => 'Settings';
 	@override String get field_name_hint => 'e.g. Tokyo Trip';
-	@override String get field_name_error => 'Please enter task name';
-	@override String get action_create => 'Create & Invite';
-	@override String get creating => 'Creating...';
+	@override String field_name_counter({required Object current}) => '\$${current}/20';
+	@override String get field_start_date => 'Start Date';
+	@override String get field_end_date => 'End Date';
+	@override String get field_currency => 'Currency';
+	@override String get field_member_count => 'Members';
+	@override String get action_save => 'Save';
+	@override String get picker_done => 'Done';
+	@override String get error_name_empty => 'Please enter task name';
+	@override String get currency_twd => 'TWD';
+	@override String get currency_jpy => 'JPY';
+	@override String get currency_usd => 'USD';
 }
 
 // Path: D01_InviteJoin_Success
@@ -487,17 +523,17 @@ class _StringsD03TaskCreateConfirmEn implements _StringsD03TaskCreateConfirmZh {
 	@override final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Invite Members';
-	@override String get share_btn => 'Share Invite Link';
-	@override String share_subject({required Object taskName}) => 'Join \$${taskName}';
-	@override String share_text({required Object taskName, required Object inviteCode, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${inviteCode}\nLink: \$${link}';
-	@override String get copy_toast => 'Invite code copied';
-	@override String expires_hint({required Object time}) => 'Valid until \$${time} (15 mins)';
-	@override String get done_btn => 'Done';
-	@override String error_create_failed({required Object message}) => 'Failed to generate: \$${message}';
-	@override String get debug_switch_user => 'Switch Identity (Test)';
-	@override String get debug_switched => 'Switched to new identity';
-	@override String debug_switch_fail({required Object message}) => 'Switch failed: \$${message}';
+	@override String get title => 'Confirm Settings';
+	@override String get label_name => 'Name';
+	@override String get label_period => 'Period';
+	@override String get label_currency => 'Currency';
+	@override String get label_members => 'Members';
+	@override String get action_confirm => 'Confirm';
+	@override String get action_back => 'Edit';
+	@override String get creating_task => 'Creating task...';
+	@override String get preparing_share => 'Preparing invite...';
+	@override String get share_subject => 'Join Iron Split Task';
+	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${code}\nLink: \$${link}';
 }
 
 // Path: S19_Settings_Tos
@@ -634,9 +670,12 @@ class _StringsS00OnboardingConsentJa implements _StringsS00OnboardingConsentZh {
 
 	// Translations
 	@override String get title => 'Iron Split へようこそ';
-	@override String get content_prefix => 'Iron Split へようこそ。タスクを開始する前に、';
-	@override String get content_suffix => 'に同意してください。本アプリは匿名アカウントを使用し、データは結算から30日後に削除されます。';
-	@override String get agree_btn => '同意して開始';
+	@override String get content_prefix => '開始することで、';
+	@override String get terms_link => '利用規約';
+	@override String get and => ' と ';
+	@override String get privacy_link => 'プライバシーポリシー';
+	@override String get content_suffix => ' に同意したものとみなされます。';
+	@override String get agree_btn => 'はじめる';
 }
 
 // Path: S01_Onboarding_Name
@@ -646,9 +685,14 @@ class _StringsS01OnboardingNameJa implements _StringsS01OnboardingNameZh {
 	@override final _StringsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'お名前は？';
-	@override String get hint => '表示名を入力してください';
-	@override String get next_btn => '次へ';
+	@override String get title => '名前設定';
+	@override String get description => 'アプリ内で表示する名前を入力してください（1-10文字）。';
+	@override String get field_hint => 'ニックネームを入力';
+	@override String field_counter({required Object current}) => '\$${current}/10';
+	@override String get error_empty => '名前を入力してください';
+	@override String get error_too_long => '10文字以内で入力してください';
+	@override String get error_invalid_char => '無効な文字が含まれています';
+	@override String get action_next => '設定';
 }
 
 // Path: S04_Invite_Confirm
@@ -680,12 +724,22 @@ class _StringsS05TaskCreateFormJa implements _StringsS05TaskCreateFormZh {
 	@override final _StringsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '新規タスク作成';
-	@override String get field_name_label => 'タスク名';
+	@override String get title => 'タスク作成';
+	@override String get section_name => 'タスク名';
+	@override String get section_period => '期間';
+	@override String get section_settings => '設定';
 	@override String get field_name_hint => '例：東京5日間の旅';
-	@override String get field_name_error => 'タスク名を入力してください';
-	@override String get action_create => '作成して招待';
-	@override String get creating => '作成中...';
+	@override String field_name_counter({required Object current}) => '\$${current}/20';
+	@override String get field_start_date => '開始日';
+	@override String get field_end_date => '終了日';
+	@override String get field_currency => '通貨';
+	@override String get field_member_count => '参加人数';
+	@override String get action_save => '保存';
+	@override String get picker_done => '完了';
+	@override String get error_name_empty => 'タスク名を入力してください';
+	@override String get currency_twd => '台湾ドル (TWD)';
+	@override String get currency_jpy => '日本円 (JPY)';
+	@override String get currency_usd => '米ドル (USD)';
 }
 
 // Path: D01_InviteJoin_Success
@@ -720,17 +774,17 @@ class _StringsD03TaskCreateConfirmJa implements _StringsD03TaskCreateConfirmZh {
 	@override final _StringsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'メンバーを招待';
-	@override String get share_btn => '招待リンクを共有';
-	@override String share_subject({required Object taskName}) => '\$${taskName} に参加';
-	@override String share_text({required Object taskName, required Object inviteCode, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${inviteCode}\nリンク：\$${link}';
-	@override String get copy_toast => '招待コードをコピーしました';
-	@override String expires_hint({required Object time}) => '有効期限：\$${time}（15分）';
-	@override String get done_btn => '完了';
-	@override String error_create_failed({required Object message}) => '生成失敗：\$${message}';
-	@override String get debug_switch_user => 'ID切替（テスト用）';
-	@override String get debug_switched => '新しいIDに切り替えました';
-	@override String debug_switch_fail({required Object message}) => '切替失敗：\$${message}';
+	@override String get title => '設定の確認';
+	@override String get label_name => 'タスク名';
+	@override String get label_period => '期間';
+	@override String get label_currency => '通貨';
+	@override String get label_members => '人数';
+	@override String get action_confirm => '確認';
+	@override String get action_back => '編集に戻る';
+	@override String get creating_task => '作成中...';
+	@override String get preparing_share => '招待を準備中...';
+	@override String get share_subject => 'Iron Split タスク招待';
+	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${code}\nリンク：\$${link}';
 }
 
 // Path: S19_Settings_Tos
@@ -831,12 +885,20 @@ extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		switch (path) {
 			case 'S00_Onboarding_Consent.title': return '歡迎使用 Iron Split';
-			case 'S00_Onboarding_Consent.content_prefix': return '歡迎使用 Iron Split，在開始算錢任務之前，請先同意我們的 ';
-			case 'S00_Onboarding_Consent.content_suffix': return '。我們僅使用匿名帳號，資料將於任務結算 30 天後清除。';
-			case 'S00_Onboarding_Consent.agree_btn': return '同意並開始使用';
-			case 'S01_Onboarding_Name.title': return '你是誰？';
-			case 'S01_Onboarding_Name.hint': return '輸入你的顯示名稱';
-			case 'S01_Onboarding_Name.next_btn': return '下一步';
+			case 'S00_Onboarding_Consent.content_prefix': return '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
+			case 'S00_Onboarding_Consent.terms_link': return '服務條款';
+			case 'S00_Onboarding_Consent.and': return ' 與 ';
+			case 'S00_Onboarding_Consent.privacy_link': return '隱私政策';
+			case 'S00_Onboarding_Consent.content_suffix': return '。我們採用匿名登入，保障您的隱私。';
+			case 'S00_Onboarding_Consent.agree_btn': return '開始使用';
+			case 'S01_Onboarding_Name.title': return '名稱設定';
+			case 'S01_Onboarding_Name.description': return '請輸入您在 App 內的顯示名稱（1-10 個字）。';
+			case 'S01_Onboarding_Name.field_hint': return '輸入暱稱';
+			case 'S01_Onboarding_Name.field_counter': return ({required Object current}) => '\$${current}/10';
+			case 'S01_Onboarding_Name.error_empty': return '名稱不能為空';
+			case 'S01_Onboarding_Name.error_too_long': return '最多 10 個字';
+			case 'S01_Onboarding_Name.error_invalid_char': return '包含無效字元';
+			case 'S01_Onboarding_Name.action_next': return '設定完成';
 			case 'S04_Invite_Confirm.title': return '加入任務';
 			case 'S04_Invite_Confirm.subtitle': return '您受邀加入以下任務：';
 			case 'S04_Invite_Confirm.loading_invite': return '正在讀取邀請函...';
@@ -850,12 +912,22 @@ extension on Translations {
 			case 'S04_Invite_Confirm.action_home': return '回首頁';
 			case 'S04_Invite_Confirm.error_join_failed': return ({required Object message}) => '加入失敗：\$${message}';
 			case 'S04_Invite_Confirm.error_generic': return ({required Object message}) => '發生錯誤：\$${message}';
-			case 'S05_TaskCreate_Form.title': return '建立新任務';
-			case 'S05_TaskCreate_Form.field_name_label': return '任務名稱';
+			case 'S05_TaskCreate_Form.title': return '新增任務';
+			case 'S05_TaskCreate_Form.section_name': return '任務名稱';
+			case 'S05_TaskCreate_Form.section_period': return '任務期間';
+			case 'S05_TaskCreate_Form.section_settings': return '結算設定';
 			case 'S05_TaskCreate_Form.field_name_hint': return '例如：東京五日遊';
-			case 'S05_TaskCreate_Form.field_name_error': return '請輸入任務名稱';
-			case 'S05_TaskCreate_Form.action_create': return '建立並邀請成員';
-			case 'S05_TaskCreate_Form.creating': return '建立中...';
+			case 'S05_TaskCreate_Form.field_name_counter': return ({required Object current}) => '\$${current}/20';
+			case 'S05_TaskCreate_Form.field_start_date': return '開始日期';
+			case 'S05_TaskCreate_Form.field_end_date': return '結束日期';
+			case 'S05_TaskCreate_Form.field_currency': return '結算幣別';
+			case 'S05_TaskCreate_Form.field_member_count': return '參加人數';
+			case 'S05_TaskCreate_Form.action_save': return '保存';
+			case 'S05_TaskCreate_Form.picker_done': return '確定';
+			case 'S05_TaskCreate_Form.error_name_empty': return '請輸入任務名稱';
+			case 'S05_TaskCreate_Form.currency_twd': return '新台幣 (TWD)';
+			case 'S05_TaskCreate_Form.currency_jpy': return '日圓 (JPY)';
+			case 'S05_TaskCreate_Form.currency_usd': return '美金 (USD)';
 			case 'D01_InviteJoin_Success.title': return '成功加入任務！';
 			case 'D01_InviteJoin_Success.assigned_avatar': return '你的隨機分配頭像為：';
 			case 'D01_InviteJoin_Success.avatar_note': return '註：頭像僅能重抽一次。';
@@ -863,17 +935,17 @@ extension on Translations {
 			case 'D02_InviteJoin_Error.title': return '無法加入任務';
 			case 'D02_InviteJoin_Error.message': return '連結無效、已過期或任務人數已達上限。';
 			case 'D02_InviteJoin_Error.action_close': return '關閉';
-			case 'D03_TaskCreate_Confirm.title': return '邀請成員';
-			case 'D03_TaskCreate_Confirm.share_btn': return '分享邀請連結';
-			case 'D03_TaskCreate_Confirm.share_subject': return ({required Object taskName}) => '邀請加入 \$${taskName}';
-			case 'D03_TaskCreate_Confirm.share_text': return ({required Object taskName, required Object inviteCode, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${inviteCode}\n連結：\$${link}';
-			case 'D03_TaskCreate_Confirm.copy_toast': return '已複製邀請碼';
-			case 'D03_TaskCreate_Confirm.expires_hint': return ({required Object time}) => '有效至 \$${time}（15分鐘）';
-			case 'D03_TaskCreate_Confirm.done_btn': return '完成';
-			case 'D03_TaskCreate_Confirm.error_create_failed': return ({required Object message}) => '產生失敗：\$${message}';
-			case 'D03_TaskCreate_Confirm.debug_switch_user': return '切換身分測試加入';
-			case 'D03_TaskCreate_Confirm.debug_switched': return '已切換新身分';
-			case 'D03_TaskCreate_Confirm.debug_switch_fail': return ({required Object message}) => '切換失敗：\$${message}';
+			case 'D03_TaskCreate_Confirm.title': return '確認任務設定';
+			case 'D03_TaskCreate_Confirm.label_name': return '任務名稱';
+			case 'D03_TaskCreate_Confirm.label_period': return '期間';
+			case 'D03_TaskCreate_Confirm.label_currency': return '幣別';
+			case 'D03_TaskCreate_Confirm.label_members': return '人數';
+			case 'D03_TaskCreate_Confirm.action_confirm': return '確認';
+			case 'D03_TaskCreate_Confirm.action_back': return '返回編輯';
+			case 'D03_TaskCreate_Confirm.creating_task': return '正在建立任務...';
+			case 'D03_TaskCreate_Confirm.preparing_share': return '準備邀請函...';
+			case 'D03_TaskCreate_Confirm.share_subject': return '邀請加入 Iron Split 任務';
+			case 'D03_TaskCreate_Confirm.share_message': return ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${code}\n連結：\$${link}';
 			case 'S19_Settings_Tos.title': return '服務條款';
 			case 'error.taskFull.title': return '任務已滿';
 			case 'error.taskFull.message': return ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。';
@@ -896,12 +968,20 @@ extension on _StringsEn {
 	dynamic _flatMapFunction(String path) {
 		switch (path) {
 			case 'S00_Onboarding_Consent.title': return 'Welcome to Iron Split';
-			case 'S00_Onboarding_Consent.content_prefix': return 'Welcome to Iron Split. Before starting, please agree to our ';
-			case 'S00_Onboarding_Consent.content_suffix': return '. We use anonymous accounts, and data is cleared 30 days after settlement.';
-			case 'S00_Onboarding_Consent.agree_btn': return 'Agree and Start';
-			case 'S01_Onboarding_Name.title': return 'Who are you?';
-			case 'S01_Onboarding_Name.hint': return 'Enter your display name';
-			case 'S01_Onboarding_Name.next_btn': return 'Next';
+			case 'S00_Onboarding_Consent.content_prefix': return 'By clicking Start, you agree to our ';
+			case 'S00_Onboarding_Consent.terms_link': return 'Terms of Service';
+			case 'S00_Onboarding_Consent.and': return ' and ';
+			case 'S00_Onboarding_Consent.privacy_link': return 'Privacy Policy';
+			case 'S00_Onboarding_Consent.content_suffix': return '. We use anonymous login to protect your privacy.';
+			case 'S00_Onboarding_Consent.agree_btn': return 'Start';
+			case 'S01_Onboarding_Name.title': return 'Set Display Name';
+			case 'S01_Onboarding_Name.description': return 'Please enter your display name (1-10 chars).';
+			case 'S01_Onboarding_Name.field_hint': return 'Enter nickname';
+			case 'S01_Onboarding_Name.field_counter': return ({required Object current}) => '\$${current}/10';
+			case 'S01_Onboarding_Name.error_empty': return 'Name cannot be empty';
+			case 'S01_Onboarding_Name.error_too_long': return 'Max 10 characters';
+			case 'S01_Onboarding_Name.error_invalid_char': return 'Invalid characters';
+			case 'S01_Onboarding_Name.action_next': return 'Set';
 			case 'S04_Invite_Confirm.title': return 'Join Task';
 			case 'S04_Invite_Confirm.subtitle': return 'You are invited to join:';
 			case 'S04_Invite_Confirm.loading_invite': return 'Loading invitation...';
@@ -915,12 +995,22 @@ extension on _StringsEn {
 			case 'S04_Invite_Confirm.action_home': return 'Back to Home';
 			case 'S04_Invite_Confirm.error_join_failed': return ({required Object message}) => 'Join failed: \$${message}';
 			case 'S04_Invite_Confirm.error_generic': return ({required Object message}) => 'Error: \$${message}';
-			case 'S05_TaskCreate_Form.title': return 'Create New Task';
-			case 'S05_TaskCreate_Form.field_name_label': return 'Task Name';
+			case 'S05_TaskCreate_Form.title': return 'New Task';
+			case 'S05_TaskCreate_Form.section_name': return 'Task Name';
+			case 'S05_TaskCreate_Form.section_period': return 'Period';
+			case 'S05_TaskCreate_Form.section_settings': return 'Settings';
 			case 'S05_TaskCreate_Form.field_name_hint': return 'e.g. Tokyo Trip';
-			case 'S05_TaskCreate_Form.field_name_error': return 'Please enter task name';
-			case 'S05_TaskCreate_Form.action_create': return 'Create & Invite';
-			case 'S05_TaskCreate_Form.creating': return 'Creating...';
+			case 'S05_TaskCreate_Form.field_name_counter': return ({required Object current}) => '\$${current}/20';
+			case 'S05_TaskCreate_Form.field_start_date': return 'Start Date';
+			case 'S05_TaskCreate_Form.field_end_date': return 'End Date';
+			case 'S05_TaskCreate_Form.field_currency': return 'Currency';
+			case 'S05_TaskCreate_Form.field_member_count': return 'Members';
+			case 'S05_TaskCreate_Form.action_save': return 'Save';
+			case 'S05_TaskCreate_Form.picker_done': return 'Done';
+			case 'S05_TaskCreate_Form.error_name_empty': return 'Please enter task name';
+			case 'S05_TaskCreate_Form.currency_twd': return 'TWD';
+			case 'S05_TaskCreate_Form.currency_jpy': return 'JPY';
+			case 'S05_TaskCreate_Form.currency_usd': return 'USD';
 			case 'D01_InviteJoin_Success.title': return 'Task Joined!';
 			case 'D01_InviteJoin_Success.assigned_avatar': return 'Your assigned animal avatar is:';
 			case 'D01_InviteJoin_Success.avatar_note': return 'Note: You can redraw your avatar only once.';
@@ -928,17 +1018,17 @@ extension on _StringsEn {
 			case 'D02_InviteJoin_Error.title': return 'Cannot Join Task';
 			case 'D02_InviteJoin_Error.message': return 'The link is invalid, expired, or the task is full.';
 			case 'D02_InviteJoin_Error.action_close': return 'Close';
-			case 'D03_TaskCreate_Confirm.title': return 'Invite Members';
-			case 'D03_TaskCreate_Confirm.share_btn': return 'Share Invite Link';
-			case 'D03_TaskCreate_Confirm.share_subject': return ({required Object taskName}) => 'Join \$${taskName}';
-			case 'D03_TaskCreate_Confirm.share_text': return ({required Object taskName, required Object inviteCode, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${inviteCode}\nLink: \$${link}';
-			case 'D03_TaskCreate_Confirm.copy_toast': return 'Invite code copied';
-			case 'D03_TaskCreate_Confirm.expires_hint': return ({required Object time}) => 'Valid until \$${time} (15 mins)';
-			case 'D03_TaskCreate_Confirm.done_btn': return 'Done';
-			case 'D03_TaskCreate_Confirm.error_create_failed': return ({required Object message}) => 'Failed to generate: \$${message}';
-			case 'D03_TaskCreate_Confirm.debug_switch_user': return 'Switch Identity (Test)';
-			case 'D03_TaskCreate_Confirm.debug_switched': return 'Switched to new identity';
-			case 'D03_TaskCreate_Confirm.debug_switch_fail': return ({required Object message}) => 'Switch failed: \$${message}';
+			case 'D03_TaskCreate_Confirm.title': return 'Confirm Settings';
+			case 'D03_TaskCreate_Confirm.label_name': return 'Name';
+			case 'D03_TaskCreate_Confirm.label_period': return 'Period';
+			case 'D03_TaskCreate_Confirm.label_currency': return 'Currency';
+			case 'D03_TaskCreate_Confirm.label_members': return 'Members';
+			case 'D03_TaskCreate_Confirm.action_confirm': return 'Confirm';
+			case 'D03_TaskCreate_Confirm.action_back': return 'Edit';
+			case 'D03_TaskCreate_Confirm.creating_task': return 'Creating task...';
+			case 'D03_TaskCreate_Confirm.preparing_share': return 'Preparing invite...';
+			case 'D03_TaskCreate_Confirm.share_subject': return 'Join Iron Split Task';
+			case 'D03_TaskCreate_Confirm.share_message': return ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${code}\nLink: \$${link}';
 			case 'S19_Settings_Tos.title': return 'Terms of Service';
 			case 'error.taskFull.title': return 'Task Full';
 			case 'error.taskFull.message': return ({required Object limit}) => 'This task has reached its limit of ${limit} members. Please contact the captain.';
@@ -961,12 +1051,20 @@ extension on _StringsJa {
 	dynamic _flatMapFunction(String path) {
 		switch (path) {
 			case 'S00_Onboarding_Consent.title': return 'Iron Split へようこそ';
-			case 'S00_Onboarding_Consent.content_prefix': return 'Iron Split へようこそ。タスクを開始する前に、';
-			case 'S00_Onboarding_Consent.content_suffix': return 'に同意してください。本アプリは匿名アカウントを使用し、データは結算から30日後に削除されます。';
-			case 'S00_Onboarding_Consent.agree_btn': return '同意して開始';
-			case 'S01_Onboarding_Name.title': return 'お名前は？';
-			case 'S01_Onboarding_Name.hint': return '表示名を入力してください';
-			case 'S01_Onboarding_Name.next_btn': return '次へ';
+			case 'S00_Onboarding_Consent.content_prefix': return '開始することで、';
+			case 'S00_Onboarding_Consent.terms_link': return '利用規約';
+			case 'S00_Onboarding_Consent.and': return ' と ';
+			case 'S00_Onboarding_Consent.privacy_link': return 'プライバシーポリシー';
+			case 'S00_Onboarding_Consent.content_suffix': return ' に同意したものとみなされます。';
+			case 'S00_Onboarding_Consent.agree_btn': return 'はじめる';
+			case 'S01_Onboarding_Name.title': return '名前設定';
+			case 'S01_Onboarding_Name.description': return 'アプリ内で表示する名前を入力してください（1-10文字）。';
+			case 'S01_Onboarding_Name.field_hint': return 'ニックネームを入力';
+			case 'S01_Onboarding_Name.field_counter': return ({required Object current}) => '\$${current}/10';
+			case 'S01_Onboarding_Name.error_empty': return '名前を入力してください';
+			case 'S01_Onboarding_Name.error_too_long': return '10文字以内で入力してください';
+			case 'S01_Onboarding_Name.error_invalid_char': return '無効な文字が含まれています';
+			case 'S01_Onboarding_Name.action_next': return '設定';
 			case 'S04_Invite_Confirm.title': return 'タスクに参加';
 			case 'S04_Invite_Confirm.subtitle': return '以下のタスクに招待されました：';
 			case 'S04_Invite_Confirm.loading_invite': return '招待状を読み込んでいます...';
@@ -980,12 +1078,22 @@ extension on _StringsJa {
 			case 'S04_Invite_Confirm.action_home': return 'ホームへ戻る';
 			case 'S04_Invite_Confirm.error_join_failed': return ({required Object message}) => '参加失敗：\$${message}';
 			case 'S04_Invite_Confirm.error_generic': return ({required Object message}) => 'エラーが発生しました：\$${message}';
-			case 'S05_TaskCreate_Form.title': return '新規タスク作成';
-			case 'S05_TaskCreate_Form.field_name_label': return 'タスク名';
+			case 'S05_TaskCreate_Form.title': return 'タスク作成';
+			case 'S05_TaskCreate_Form.section_name': return 'タスク名';
+			case 'S05_TaskCreate_Form.section_period': return '期間';
+			case 'S05_TaskCreate_Form.section_settings': return '設定';
 			case 'S05_TaskCreate_Form.field_name_hint': return '例：東京5日間の旅';
-			case 'S05_TaskCreate_Form.field_name_error': return 'タスク名を入力してください';
-			case 'S05_TaskCreate_Form.action_create': return '作成して招待';
-			case 'S05_TaskCreate_Form.creating': return '作成中...';
+			case 'S05_TaskCreate_Form.field_name_counter': return ({required Object current}) => '\$${current}/20';
+			case 'S05_TaskCreate_Form.field_start_date': return '開始日';
+			case 'S05_TaskCreate_Form.field_end_date': return '終了日';
+			case 'S05_TaskCreate_Form.field_currency': return '通貨';
+			case 'S05_TaskCreate_Form.field_member_count': return '参加人数';
+			case 'S05_TaskCreate_Form.action_save': return '保存';
+			case 'S05_TaskCreate_Form.picker_done': return '完了';
+			case 'S05_TaskCreate_Form.error_name_empty': return 'タスク名を入力してください';
+			case 'S05_TaskCreate_Form.currency_twd': return '台湾ドル (TWD)';
+			case 'S05_TaskCreate_Form.currency_jpy': return '日本円 (JPY)';
+			case 'S05_TaskCreate_Form.currency_usd': return '米ドル (USD)';
 			case 'D01_InviteJoin_Success.title': return '参加完了！';
 			case 'D01_InviteJoin_Success.assigned_avatar': return 'あなたの動物アイコンは：';
 			case 'D01_InviteJoin_Success.avatar_note': return '※アイコンの引き直しは1回のみ可能です。';
@@ -993,17 +1101,17 @@ extension on _StringsJa {
 			case 'D02_InviteJoin_Error.title': return '参加できません';
 			case 'D02_InviteJoin_Error.message': return 'リンクが無効、期限切れ、または定員に達しています。';
 			case 'D02_InviteJoin_Error.action_close': return '閉じる';
-			case 'D03_TaskCreate_Confirm.title': return 'メンバーを招待';
-			case 'D03_TaskCreate_Confirm.share_btn': return '招待リンクを共有';
-			case 'D03_TaskCreate_Confirm.share_subject': return ({required Object taskName}) => '\$${taskName} に参加';
-			case 'D03_TaskCreate_Confirm.share_text': return ({required Object taskName, required Object inviteCode, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${inviteCode}\nリンク：\$${link}';
-			case 'D03_TaskCreate_Confirm.copy_toast': return '招待コードをコピーしました';
-			case 'D03_TaskCreate_Confirm.expires_hint': return ({required Object time}) => '有効期限：\$${time}（15分）';
-			case 'D03_TaskCreate_Confirm.done_btn': return '完了';
-			case 'D03_TaskCreate_Confirm.error_create_failed': return ({required Object message}) => '生成失敗：\$${message}';
-			case 'D03_TaskCreate_Confirm.debug_switch_user': return 'ID切替（テスト用）';
-			case 'D03_TaskCreate_Confirm.debug_switched': return '新しいIDに切り替えました';
-			case 'D03_TaskCreate_Confirm.debug_switch_fail': return ({required Object message}) => '切替失敗：\$${message}';
+			case 'D03_TaskCreate_Confirm.title': return '設定の確認';
+			case 'D03_TaskCreate_Confirm.label_name': return 'タスク名';
+			case 'D03_TaskCreate_Confirm.label_period': return '期間';
+			case 'D03_TaskCreate_Confirm.label_currency': return '通貨';
+			case 'D03_TaskCreate_Confirm.label_members': return '人数';
+			case 'D03_TaskCreate_Confirm.action_confirm': return '確認';
+			case 'D03_TaskCreate_Confirm.action_back': return '編集に戻る';
+			case 'D03_TaskCreate_Confirm.creating_task': return '作成中...';
+			case 'D03_TaskCreate_Confirm.preparing_share': return '招待を準備中...';
+			case 'D03_TaskCreate_Confirm.share_subject': return 'Iron Split タスク招待';
+			case 'D03_TaskCreate_Confirm.share_message': return ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${code}\nリンク：\$${link}';
 			case 'S19_Settings_Tos.title': return '利用規約';
 			case 'error.taskFull.title': return '定員に達しました';
 			case 'error.taskFull.message': return ({required Object limit}) => 'このタスクは上限の ${limit} 名に達しています。リーダーに連絡してください。';

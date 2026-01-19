@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:iron_split/features/invite/application/pending_invite_provider.dart';
 
-/// Page Key: S01_Onboarding.Name
-/// 描述：使用者初始設定顯示名稱頁面。
+/// Page Key: S01_Onboarding.Name (CSV Page 2)
+/// 職責：輸入使用者顯示名稱 (Display Name)，並更新至 Firebase Auth Profile。
 class S01OnboardingNamePage extends StatefulWidget {
   const S01OnboardingNamePage({super.key});
 
@@ -15,8 +14,17 @@ class S01OnboardingNamePage extends StatefulWidget {
 }
 
 class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
-  final TextEditingController _nameController = TextEditingController();
-  bool _isProcessing = false;
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  bool _isSaving = false;
+  bool _isValid = false; // 控制按鈕是否啟用
+
+  @override
+  void initState() {
+    super.initState();
+    // 監聽輸入變化以更新按鈕狀態與計數器
+    _nameController.addListener(_validateInput);
+  }
 
   @override
   void dispose() {
@@ -24,96 +32,102 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
     super.dispose();
   }
 
-  /// 儲存名稱並執行導向邏輯
-  Future<void> _handleNext() async {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) return;
+  void _validateInput() {
+    final text = _nameController.text.trim();
+    final isValidLength = text.isNotEmpty && text.length <= 10;
 
-    setState(() => _isProcessing = true);
+    // 簡單的控制字元檢查 (禁止不可見字元)
+    final hasControlChars = text.contains(RegExp(r'[\x00-\x1F\x7F]'));
 
+    setState(() {
+      _isValid = isValidLength && !hasControlChars;
+    });
+  }
+
+  Future<void> _handleSave() async {
+    if (!_isValid) return;
+
+    setState(() => _isSaving = true);
     try {
-      // 更新 Firebase 使用者名稱
-      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // 更新 Firebase Auth Profile
+        await user.updateDisplayName(_nameController.text.trim());
+        await user.reload(); // 確保本地資料更新
+      }
 
       if (mounted) {
-        // 檢查是否有 15 分鐘內有效的中斷邀請
-        final pendingCode = context.read<PendingInviteProvider>().pendingCode;
-
-        if (pendingCode != null) {
-          // 若有邀請碼，引導至 S04_Invite.Confirm
-          context.go('/invite/confirm?code=$pendingCode');
-        } else {
-          // 無邀請則進入首頁 (聖經預定為 S02_Home.TaskList)
-          context.go('/tasks');
-        }
+        // 設定完成，進入首頁 S02
+        context.go('/tasks');
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isProcessing = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.error.unknown.message)),
+          SnackBar(content: Text('Error: $e')),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // 透過 Theme 獲取 M3 語義化色彩
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        // 驗收點 5：標題對齊
-        title: Text(t.S01_Onboarding_Name.title),
-        centerTitle: true,
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
+        title: Text(t.S01_Onboarding_Name.title), // "名稱設定"
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // 說明文字
+              Text(
+                t.S01_Onboarding_Name.description,
+                style: theme.textTheme.bodyLarge,
+              ),
               const SizedBox(height: 24),
-              // 輸入欄位：使用 M3 樣式
+
+              // 輸入框 (CSV 規則：1-10字，顯示 Counter)
               TextField(
                 controller: _nameController,
-                autofocus: true,
-                style: textTheme.bodyLarge,
+                maxLength: 10,
+                enabled: !_isSaving,
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.name,
+                onSubmitted: (_) => _isValid ? _handleSave() : null,
+                inputFormatters: [
+                  // 禁止輸入控制字元
+                  FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
+                ],
                 decoration: InputDecoration(
-                  hintText: t.S01_Onboarding_Name.hint,
+                  hintText: t.S01_Onboarding_Name.field_hint,
+                  border: const OutlineInputBorder(),
+                  // 自訂 Counter 顯示格式
+                  counterText: t.S01_Onboarding_Name.field_counter(
+                    current: _nameController.text.length,
+                  ),
                   filled: true,
-                  fillColor: colorScheme.onSurface.withValues(alpha: 0.05),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorScheme.primary, width: 2),
-                  ),
+                  fillColor: theme.colorScheme.surfaceContainerHighest
+                      .withOpacity(0.3),
                 ),
-                onChanged: (_) => setState(() {}),
               ),
+
               const Spacer(),
-              // 下一步按鈕：樣式繼承自 AppTheme
+
+              // 底部按鈕
               SizedBox(
-                width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: (_isProcessing || _nameController.text.trim().isEmpty)
-                      ? null
-                      : _handleNext,
-                  child: _isProcessing
-                      ? CircularProgressIndicator(color: colorScheme.onPrimary)
-                      : Text(
-                          t.S01_Onboarding_Name.next_btn,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                child: FilledButton(
+                  // 如果不符合規則 (空白或過長)，按鈕 Disabled (onPressed = null)
+                  onPressed: (_isValid && !_isSaving) ? _handleSave : null,
+                  child: _isSaving
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(t.S01_Onboarding_Name.action_next), // "設定完成"
                 ),
               ),
             ],

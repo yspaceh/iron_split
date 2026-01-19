@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-// 修正 Import 路徑
-import 'package:iron_split/gen/strings.g.dart';
+import 'package:intl/intl.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S05_TaskCreate.Form
-/// 職責：讓使用者輸入任務名稱，建立任務後彈出邀請視窗 (D03)。
+/// CSV Page 11
 class S05TaskCreateFormPage extends StatefulWidget {
   const S05TaskCreateFormPage({super.key});
 
@@ -18,7 +17,23 @@ class S05TaskCreateFormPage extends StatefulWidget {
 class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  bool _isCreating = false;
+
+  late DateTime _startDate;
+  late DateTime _endDate;
+  String _currency = 'TWD'; // MVP 預設
+  int _memberCount = 1; // 預設 1 人
+
+  @override
+  void initState() {
+    super.initState();
+    // 預設日期為今天
+    final now = DateTime.now();
+    _startDate = DateTime(now.year, now.month, now.day);
+    _endDate = _startDate;
+
+    // 監聽字數變化
+    _nameController.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -26,124 +41,240 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
     super.dispose();
   }
 
-  Future<void> _handleCreate() async {
+  void _onSave() {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isCreating = true);
+    // 開啟 D03 確認彈窗 (Page 14)
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => D03TaskCreateConfirmDialog(
+        taskName: _nameController.text.trim(),
+        startDate: _startDate,
+        endDate: _endDate,
+        currency: _currency,
+        memberCount: _memberCount,
+      ),
+    );
+  }
 
-    final user = FirebaseAuth.instance.currentUser;
-    // 理論上由 Router 擋下未登入，這裡做雙重保險
-    if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(t.error.authRequired.message)),
-        );
-      }
-      return;
-    }
+  // --- 滾輪選擇器實作 (符合 CSV: ModalBottomSheet + Wheel) ---
 
-    try {
-      // 1. 在 Firestore 建立真實任務
-      final docRef = await FirebaseFirestore.instance.collection('tasks').add({
-        'name': _nameController.text.trim(),
-        'captainUid': user.uid,
-        'memberCount': 1,
-        'maxMembers': 10, // MVP 預設值
-        'baseCurrency': 'TWD', // MVP 預設值
-        'createdAt': FieldValue.serverTimestamp(),
-        'members': {
-          user.uid: {
-            'role': 'captain',
-            'displayName': user.displayName ?? 'Captain',
-            'joinedAt': FieldValue.serverTimestamp(),
-            'avatar': 'cow', // MVP 隊長預設頭像
-            'isLinked': true,
-          }
-        },
-        // 關鍵：activeInviteCode 留空，交給 D03 自動生成
-        'activeInviteCode': null, 
-      });
-
-      if (!mounted) return;
-
-      // 2. 建立成功後，直接彈出 D03 邀請視窗
-      // barrierDismissible: false 強制使用者必須點選 D03 上的按鈕來決定下一步
-      await showDialog(
-        context: context,
-        barrierDismissible: false, 
-        builder: (ctx) => D03TaskCreateConfirmDialog(
-          taskId: docRef.id,
-          taskName: _nameController.text.trim(),
-          inviteCode: null, // 傳入 null 以觸發 D03 呼叫後端生成新碼
+  void _showWheelBottomSheet({required Widget child}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (ctx) => SizedBox(
+        height: 300,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text(t.S05_TaskCreate_Form.picker_done),
+                ),
+              ],
+            ),
+            Expanded(child: child),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
-      // 3. D03 關閉後，導向該任務的 Dashboard
-      if (mounted) {
-        context.go('/tasks/${docRef.id}');
-      }
+  void _showStartDatePicker() {
+    _showWheelBottomSheet(
+      child: CupertinoDatePicker(
+        initialDateTime: _startDate,
+        mode: CupertinoDatePickerMode.date,
+        // iOS 風格滾輪
+        onDateTimeChanged: (val) {
+          setState(() {
+            _startDate = DateTime(val.year, val.month, val.day);
+            if (_endDate.isBefore(_startDate)) {
+              _endDate = _startDate;
+            }
+          });
+        },
+      ),
+    );
+  }
 
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-        setState(() => _isCreating = false);
-      }
-    }
+  void _showEndDatePicker() {
+    _showWheelBottomSheet(
+      child: CupertinoDatePicker(
+        initialDateTime: _endDate,
+        minimumDate: _startDate,
+        mode: CupertinoDatePickerMode.date,
+        onDateTimeChanged: (val) {
+          setState(() {
+            _endDate = DateTime(val.year, val.month, val.day);
+          });
+        },
+      ),
+    );
+  }
+
+  void _showCurrencyPicker() {
+    final currencies = ['TWD', 'JPY', 'USD'];
+    final labels = [
+      t.S05_TaskCreate_Form.currency_twd,
+      t.S05_TaskCreate_Form.currency_jpy,
+      t.S05_TaskCreate_Form.currency_usd,
+    ];
+
+    _showWheelBottomSheet(
+      child: CupertinoPicker(
+        itemExtent: 40,
+        scrollController: FixedExtentScrollController(
+            initialItem: currencies.indexOf(_currency)),
+        onSelectedItemChanged: (index) {
+          setState(() => _currency = currencies[index]);
+        },
+        children: labels.map((e) => Center(child: Text(e))).toList(),
+      ),
+    );
+  }
+
+  void _showCountPicker() {
+    // 規則：1-15 人
+    _showWheelBottomSheet(
+      child: CupertinoPicker(
+        itemExtent: 40,
+        scrollController:
+            FixedExtentScrollController(initialItem: _memberCount - 1),
+        onSelectedItemChanged: (index) {
+          setState(() => _memberCount = index + 1);
+        },
+        children:
+            List.generate(15, (index) => Center(child: Text('${index + 1} 人'))),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // 依據聖經 UI Block 規則使用 Material 3 元件
+    final theme = Theme.of(context);
+    final dateFormat = DateFormat('yyyy/MM/dd');
+
     return Scaffold(
       appBar: AppBar(
         title: Text(t.S05_TaskCreate_Form.title),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => context.pop(),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+            padding: const EdgeInsets.all(24),
             children: [
-              // 任務名稱輸入框
+              // 1. 名稱
+              Text(t.S05_TaskCreate_Form.section_name,
+                  style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _nameController,
+                maxLength: 20,
                 decoration: InputDecoration(
-                  labelText: t.S05_TaskCreate_Form.field_name_label,
                   hintText: t.S05_TaskCreate_Form.field_name_hint,
+                  counterText: t.S05_TaskCreate_Form.field_name_counter(
+                    current: _nameController.text.length,
+                  ),
                   border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.airplane_ticket_outlined),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return t.S05_TaskCreate_Form.field_name_error;
-                  }
-                  return null;
-                },
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _handleCreate(),
+                validator: (val) => (val == null || val.trim().isEmpty)
+                    ? t.S05_TaskCreate_Form.error_name_empty
+                    : null,
               ),
-              
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
-              // 建立按鈕
-              FilledButton.icon(
-                onPressed: _isCreating ? null : _handleCreate,
-                icon: _isCreating 
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Icon(Icons.check),
-                label: Text(_isCreating 
-                    ? t.S05_TaskCreate_Form.creating 
-                    : t.S05_TaskCreate_Form.action_create),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+              // 2. 期間
+              Text(t.S05_TaskCreate_Form.section_period,
+                  style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildPickerField(
+                      label: t.S05_TaskCreate_Form.field_start_date,
+                      value: dateFormat.format(_startDate),
+                      icon: Icons.calendar_today,
+                      onTap: _showStartDatePicker,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildPickerField(
+                      label: t.S05_TaskCreate_Form.field_end_date,
+                      value: dateFormat.format(_endDate),
+                      icon: Icons.event_available,
+                      onTap: _showEndDatePicker,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // 3. 設定
+              Text(t.S05_TaskCreate_Form.section_settings,
+                  style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
+              _buildPickerField(
+                label: t.S05_TaskCreate_Form.field_currency,
+                value: _currency,
+                icon: Icons.currency_exchange,
+                onTap: _showCurrencyPicker,
+              ),
+              const SizedBox(height: 12),
+              _buildPickerField(
+                label: t.S05_TaskCreate_Form.field_member_count,
+                value: '$_memberCount',
+                icon: Icons.group_outlined,
+                onTap: _showCountPicker,
               ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: FilledButton(
+            onPressed: _onSave,
+            style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16)),
+            child: Text(t.S05_TaskCreate_Form.action_save),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPickerField({
+    required String label,
+    required String value,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          prefixIcon: Icon(icon, size: 20),
+        ),
+        child: Text(value, style: Theme.of(context).textTheme.bodyLarge),
       ),
     );
   }

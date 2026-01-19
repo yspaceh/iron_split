@@ -1,120 +1,151 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:url_launcher/url_launcher.dart'; // 需確認 pubspec.yaml 有加 url_launcher
 
-/// Page Key: S00_Onboarding.Consent
-/// 實作行內 RichText 連結，提升 UI 整合度
+/// Page Key: S00_Onboarding.Consent (CSV Page 1)
+/// 職責：顯示歡迎動畫與服務條款，同意後進行匿名登入。
 class S00OnboardingConsentPage extends StatefulWidget {
   const S00OnboardingConsentPage({super.key});
 
   @override
-  State<S00OnboardingConsentPage> createState() => _S00OnboardingConsentPageState();
+  State<S00OnboardingConsentPage> createState() =>
+      _S00OnboardingConsentPageState();
 }
 
 class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
-  bool _isProcessing = false;
-  
-  // 建立手勢辨識器用於處理文字內的點擊
-  late TapGestureRecognizer _tosRecognizer;
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _tosRecognizer = TapGestureRecognizer()..onTap = _handleOpenTos;
-  }
-
-  @override
-  void dispose() {
-    // 專業開發：必須銷毀手勢辨識器以避免記憶體洩漏
-    _tosRecognizer.dispose();
-    super.dispose();
-  }
-
-  void _handleOpenTos() {
-    context.push('/settings/tos'); // 跳轉至 S19
-  }
-
-  Future<void> _handleAccept() async {
-    setState(() => _isProcessing = true);
+  Future<void> _handleStart() async {
+    setState(() => _isLoading = true);
     try {
+      // 1. 匿名登入 (Firebase Auth)
       await FirebaseAuth.instance.signInAnonymously();
-      if (mounted) context.go('/onboarding/name');
+
+      if (mounted) {
+        // 2. 登入成功後，前往 S01 設定名稱
+        context.go('/onboarding/name');
+      }
     } catch (e) {
       if (mounted) {
-        setState(() => _isProcessing = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.error.unknown.message)),
+          SnackBar(content: Text('Login Failed: $e')),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _openUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: Column(
-            children: [
-              const Spacer(),
-              Icon(Icons.gavel_rounded, size: 80, color: colorScheme.primary),
-              const SizedBox(height: 32),
-              
-              Text(
-                t.S00_Onboarding_Consent.title,
-                style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-
-              // 使用 Text.rich 實作行內文字連結
-              Text.rich(
-                TextSpan(
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    height: 1.5, // 增加行高提升易讀性
-                  ),
+        child: Column(
+          children: [
+            // --- 1. 動畫區塊 (佔滿剩餘空間) ---
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextSpan(text: t.S00_Onboarding_Consent.content_prefix),
-                    TextSpan(
-                      text: t.S19_Settings_Tos.title,
-                      style: TextStyle(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
+                    // TODO: 替換為實際的 Iron Rooster Animation (Lottie or Rive)
+                    // CSV 描述：鐵公雞穿盔甲...面罩掉下來...推上去
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: colorScheme.secondaryContainer,
+                        shape: BoxShape.circle,
                       ),
-                      recognizer: _tosRecognizer, // 綁定點擊手勢
+                      child: Icon(Icons.security,
+                          size: 80, color: colorScheme.onSecondaryContainer),
                     ),
-                    TextSpan(text: t.S00_Onboarding_Consent.content_suffix),
+                    const SizedBox(height: 32),
+                    Text(
+                      t.S00_Onboarding_Consent.title,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.primary,
+                      ),
+                    ),
                   ],
                 ),
-                textAlign: TextAlign.center,
               ),
-              
-              const Spacer(),
-              
-              // 底部主按鈕
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _isProcessing ? null : _handleAccept,
-                  child: _isProcessing
-                      ? CircularProgressIndicator(color: colorScheme.onPrimary)
-                      : Text(
-                          t.S00_Onboarding_Consent.agree_btn,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+            // --- 2. 底部條款與按鈕區 ---
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 服務條款 RichText
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: colorScheme.onSurfaceVariant),
+                      children: [
+                        TextSpan(text: t.S00_Onboarding_Consent.content_prefix),
+                        // 服務條款連結
+                        TextSpan(
+                          text: t.S00_Onboarding_Consent.terms_link,
+                          style: TextStyle(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => context
+                                .push('/settings/tos'), // 導向 App 內 TOS 頁面
                         ),
-                ),
+                        TextSpan(text: t.S00_Onboarding_Consent.and),
+                        // 隱私政策連結
+                        TextSpan(
+                          text: t.S00_Onboarding_Consent.privacy_link,
+                          style: TextStyle(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => _openUrl(
+                                'https://example.com/privacy'), // 外部連結範例
+                        ),
+                        TextSpan(text: t.S00_Onboarding_Consent.content_suffix),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // 開始按鈕
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: FilledButton(
+                      onPressed: _isLoading ? null : _handleStart,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(t.S00_Onboarding_Consent.agree_btn),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,14 +1,22 @@
 {
   "S00_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
-    "content_prefix": "Welcome to Iron Split. Before starting, please agree to our ",
-    "content_suffix": ". We use anonymous accounts, and data is cleared 30 days after settlement.",
-    "agree_btn": "Agree and Start"
+    "content_prefix": "By clicking Start, you agree to our ",
+    "terms_link": "Terms of Service",
+    "and": " and ",
+    "privacy_link": "Privacy Policy",
+    "content_suffix": ". We use anonymous login to protect your privacy.",
+    "agree_btn": "Start"
   },
   "S01_Onboarding_Name": {
-    "title": "Who are you?",
-    "hint": "Enter your display name",
-    "next_btn": "Next"
+    "title": "Set Display Name",
+    "description": "Please enter your display name (1-10 chars).",
+    "field_hint": "Enter nickname",
+    "field_counter": "${current}/10",
+    "error_empty": "Name cannot be empty",
+    "error_too_long": "Max 10 characters",
+    "error_invalid_char": "Invalid characters",
+    "action_next": "Set"
   },
   "S04_Invite_Confirm": {
     "title": "Join Task",
@@ -26,13 +34,24 @@
     "error_generic": "Error: ${message}"
   },
   "S05_TaskCreate_Form": {
-    "title": "Create New Task",
-    "field_name_label": "Task Name",
+    "title": "New Task",
+    "section_name": "Task Name",
+    "section_period": "Period",
+    "section_settings": "Settings",
     "field_name_hint": "e.g. Tokyo Trip",
-    "field_name_error": "Please enter task name",
-    "action_create": "Create & Invite",
-    "creating": "Creating..."
+    "field_name_counter": "${current}/20",
+    "field_start_date": "Start Date",
+    "field_end_date": "End Date",
+    "field_currency": "Currency",
+    "field_member_count": "Members",
+    "action_save": "Save",
+    "picker_done": "Done",
+    "error_name_empty": "Please enter task name",
+    "currency_twd": "TWD",
+    "currency_jpy": "JPY",
+    "currency_usd": "USD"
   },
+  
   "D01_InviteJoin_Success": {
     "title": "Task Joined!",
     "assigned_avatar": "Your assigned animal avatar is:",
@@ -45,17 +64,17 @@
     "action_close": "Close"
   },
   "D03_TaskCreate_Confirm": {
-    "title": "Invite Members",
-    "share_btn": "Share Invite Link",
-    "share_subject": "Join ${taskName}",
-    "share_text": "Join my Iron Split task \"${taskName}\"!\nCode: ${inviteCode}\nLink: ${link}",
-    "copy_toast": "Invite code copied",
-    "expires_hint": "Valid until ${time} (15 mins)",
-    "done_btn": "Done",
-    "error_create_failed": "Failed to generate: ${message}",
-    "debug_switch_user": "Switch Identity (Test)",
-    "debug_switched": "Switched to new identity",
-    "debug_switch_fail": "Switch failed: ${message}"
+    "title": "Confirm Settings",
+    "label_name": "Name",
+    "label_period": "Period",
+    "label_currency": "Currency",
+    "label_members": "Members",
+    "action_confirm": "Confirm",
+    "action_back": "Edit",
+    "creating_task": "Creating task...",
+    "preparing_share": "Preparing invite...",
+    "share_subject": "Join Iron Split Task",
+    "share_message": "Join my Iron Split task \"${taskName}\"!\nCode: ${code}\nLink: ${link}"
   },
   "S19_Settings_Tos": {
     "title": "Terms of Service"

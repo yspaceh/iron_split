@@ -2,92 +2,168 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-// 修正 Import 路徑
+import 'package:intl/intl.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 
 /// Page Key: S02_Home.TaskList
-/// 職責：顯示使用者參與的所有任務列表
-class S02HomeTaskListPage extends StatelessWidget {
+/// CSV Page 3, 4, 5
+/// 職責：顯示任務列表，包含「進行中」與「已完成」的分頁切換。
+class S02HomeTaskListPage extends StatefulWidget {
   const S02HomeTaskListPage({super.key});
+
+  @override
+  State<S02HomeTaskListPage> createState() => _S02HomeTaskListPageState();
+}
+
+class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
+  // 0: 進行中, 1: 已完成
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    // 若未登入，顯示簡易提示 (或由 Router 重導)
     if (user == null) {
       return const Scaffold(body: Center(child: Text('Please Login')));
     }
 
     return Scaffold(
       appBar: AppBar(
-        // 暫用 title，實際可依需求增加 S02 的 i18n key
-        title: Text(t.S04_Invite_Confirm.title.replaceAll('加入', '我的')), 
+        title: const Text('我的任務'),
         centerTitle: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // TODO: 前往設定頁面
-            },
+            onPressed: () => context.push('/settings/tos'),
           ),
         ],
       ),
-      // 懸浮按鈕：導向 S05 建立頁面
+      // 懸浮按鈕：新增任務 (S05)
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // 確保您的 Router 有定義這個路徑
-          context.push('/tasks/create'); 
-        },
+        onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add),
-        label: Text(t.S05_TaskCreate_Form.title.replaceAll('建立', '')), // "新任務"
+        label: Text(t.S05_TaskCreate_Form.title),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        // 依據 user.uid 過濾任務 (MVP 先以此為例，建議建立索引)
-        stream: FirebaseFirestore.instance
-            .collection('tasks')
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-
-          final docs = snapshot.data?.docs ?? [];
-
-          if (docs.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.assignment_outlined, size: 64, color: theme.colorScheme.outline),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No tasks yet',
-                    style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.outline),
+      body: Column(
+        children: [
+          // --- 1. SegmentedButton (CSV UI Block) ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<int>(
+                segments: const [
+                  ButtonSegment(
+                    value: 0,
+                    label: Text('進行中'),
+                    icon: Icon(Icons.directions_run),
                   ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => context.push('/tasks/create'),
-                    child: Text(t.S05_TaskCreate_Form.title),
+                  ButtonSegment(
+                    value: 1,
+                    label: Text('已完成'),
+                    icon: Icon(Icons.done_all),
                   ),
                 ],
+                selected: {_selectedIndex},
+                onSelectionChanged: (Set<int> newSelection) {
+                  setState(() {
+                    _selectedIndex = newSelection.first;
+                  });
+                },
               ),
-            );
-          }
+            ),
+          ),
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: docs.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final doc = docs[index];
-              final data = doc.data() as Map<String, dynamic>;
-              return _TaskCard(taskId: doc.id, data: data);
-            },
-          );
-        },
+          const Divider(height: 1),
+
+          // --- 2. 任務列表 ---
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('tasks')
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError)
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final docs = snapshot.data?.docs ?? [];
+
+                // 過濾任務：我參與的 + 狀態篩選
+                // 註：MVP 資料庫尚未有 status 欄位，這裡暫時將所有任務視為「進行中」
+                // TODO: 未來需根據 task['status'] == 'finished' 來區分 _selectedIndex
+                final myDocs = docs.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  final members = data['members'] as Map<String, dynamic>?;
+
+                  // 1. 必須是我參與的
+                  final isMember =
+                      members != null && members.containsKey(user.uid);
+                  if (!isMember) return false;
+
+                  // 2. 狀態篩選 (MVP 暫時邏輯：全部顯示在「進行中」，「已完成」顯示為空)
+                  if (_selectedIndex == 0) return true; // 進行中
+                  return false; // 已完成 (暫無資料)
+                }).toList();
+
+                // --- 3. 空狀態 (CSV Page 3) ---
+                if (myDocs.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // TODO: 替換為鐵公雞動畫 (Iron Rooster Animation)
+                        Icon(Icons.catching_pokemon,
+                            size: 80, color: colorScheme.outlineVariant),
+                        const SizedBox(height: 16),
+                        Text(
+                          _selectedIndex == 0 ? '目前沒有進行中的任務' : '沒有已完成的任務',
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(color: colorScheme.outline),
+                        ),
+                        if (_selectedIndex == 0) ...[
+                          const SizedBox(height: 16),
+                          FilledButton.tonal(
+                            onPressed: () => context.push('/tasks/create'),
+                            child: Text(t.S05_TaskCreate_Form.title),
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }
+
+                // --- 4. 列表內容 (CSV Page 4, 5) ---
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: myDocs.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final doc = myDocs[index];
+                    final data = doc.data() as Map<String, dynamic>;
+
+                    // 取得我在這個任務中的資料 (頭像)
+                    final members = data['members'] as Map<String, dynamic>;
+                    final myData = members[user.uid] as Map<String, dynamic>;
+
+                    return _TaskCard(
+                      taskId: doc.id,
+                      data: data,
+                      myAvatar: myData['avatar'] ?? 'unknown',
+                      isCaptain: data['captainUid'] == user.uid,
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -96,29 +172,35 @@ class S02HomeTaskListPage extends StatelessWidget {
 class _TaskCard extends StatelessWidget {
   final String taskId;
   final Map<String, dynamic> data;
+  final String myAvatar;
+  final bool isCaptain;
 
-  const _TaskCard({required this.taskId, required this.data});
+  const _TaskCard({
+    required this.taskId,
+    required this.data,
+    required this.myAvatar,
+    required this.isCaptain,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final dateFormat = DateFormat('yyyy/MM/dd');
 
     final String name = data['name'] ?? 'Task';
-    final int memberCount = data['memberCount'] ?? 0;
-    final int maxMembers = data['maxMembers'] ?? 0;
-    
-    final String? activeInviteCode = data['activeInviteCode'];
-    final Timestamp? inviteExpiresAtTs = data['activeInviteExpiresAt'];
-    
-    // 檢查邀請碼有效性
-    bool isInviteValid = false;
-    if (activeInviteCode != null && activeInviteCode.isNotEmpty && inviteExpiresAtTs != null) {
-      final expiresAt = inviteExpiresAtTs.toDate();
-      if (expiresAt.isAfter(DateTime.now())) isInviteValid = true;
+
+    // 處理日期顯示
+    final Timestamp? startTs = data['startDate'];
+    final Timestamp? endTs = data['endDate'];
+    String periodText = '日期未定';
+    if (startTs != null && endTs != null) {
+      periodText =
+          '${dateFormat.format(startTs.toDate())} - ${dateFormat.format(endTs.toDate())}';
     }
 
-    return Card(
+    // 建構卡片內容
+    Widget cardContent = Card(
       elevation: 0,
       color: colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -127,71 +209,102 @@ class _TaskCard extends StatelessWidget {
         onTap: () => context.push('/tasks/$taskId'),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(Icons.airplane_ticket, color: colorScheme.onPrimaryContainer),
+              // 1. 用戶的農場動物頭像 (CSV 規格)
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                // TODO: 這裡之後要換成實際的 Animal Asset Image
+                child: Text(
+                  myAvatar.isNotEmpty ? myAvatar[0].toUpperCase() : '?',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onPrimaryContainer,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // 2. 任務名稱與期間
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
                       children: [
+                        Icon(Icons.date_range,
+                            size: 14, color: colorScheme.outline),
+                        const SizedBox(width: 4),
                         Text(
-                          name,
-                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(Icons.group_outlined, size: 14, color: colorScheme.outline),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$memberCount / $maxMembers',
-                              style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.outline),
-                            ),
-                          ],
+                          periodText,
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: colorScheme.outline),
                         ),
                       ],
                     ),
-                  ),
-                  // 既有任務的邀請按鈕
-                  IconButton.filledTonal(
-                    onPressed: () => _showInviteDialog(context, activeInviteCode, isInviteValid, name),
-                    icon: const Icon(Icons.person_add_alt_1_rounded),
-                    tooltip: 'Invite',
-                  ),
-                ],
+                  ],
+                ),
               ),
+
+              // 3. 箭頭
+              Icon(Icons.chevron_right, color: colorScheme.outlineVariant),
             ],
           ),
         ),
       ),
     );
-  }
 
-  void _showInviteDialog(BuildContext context, String? currentCode, bool isValid, String taskName) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return D03TaskCreateConfirmDialog(
-          taskId: taskId,
-          taskName: taskName,
-          inviteCode: isValid ? currentCode : null, 
-        );
-      },
-    );
+    // 實作左滑刪除 (CSV Page 4: 隊長可以左滑刪除)
+    if (isCaptain) {
+      return Dismissible(
+        key: Key(taskId),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          color: colorScheme.error,
+          child: Icon(Icons.delete_outline, color: colorScheme.onError),
+        ),
+        confirmDismiss: (direction) async {
+          // TODO: 這裡需要檢查 "未有紀錄且沒有成員" 的條件
+          // 若不符合條件應彈出提示。目前 MVP 先顯示簡單確認。
+          return await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('確認刪除'),
+              content: const Text('確定要刪除這個任務嗎？'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    child: const Text('取消')),
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    child: const Text('刪除')),
+              ],
+            ),
+          );
+        },
+        onDismissed: (direction) {
+          FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
+        },
+        child: cardContent,
+      );
+    }
+
+    return cardContent;
   }
 }

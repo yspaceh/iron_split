@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/presentation/pages/s06_task_dashboard_page.dart';
 import 'package:iron_split/services/deep_link_service.dart';
 import 'package:iron_split/features/common/presentation/pages/s_system_bootstrap_page.dart';
 import 'package:iron_split/features/auth/presentation/pages/s00_onboarding_consent_page.dart';
@@ -84,7 +85,15 @@ class AppRouter {
           return S04InviteConfirmPage(inviteCode: code);
         },
       ),
-
+      // S06: 任務儀表板
+      GoRoute(
+        path: ':taskId',
+        name: 'TaskDashboard',
+        builder: (context, state) {
+          final taskId = state.pathParameters['taskId']!;
+          return S06TaskDashboardPage(taskId: taskId);
+        },
+      ),
       // S19: 服務條款
       GoRoute(
         path: '/settings/tos',
