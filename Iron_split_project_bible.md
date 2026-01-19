@@ -9,6 +9,7 @@
 ## 1. 專案目標（MVP）
 
 - **交付形式**：iOS TestFlight 封閉測試
+- **系統需求**：iOS 15.0+ (因應 Firebase 最新 SDK 限制)
 - **截止日**：2026/02/14
 - **開發方式**：AI 協作開發（ChatGPT + Gemini Pro / Gemini CLI）
 - **技術**：Flutter（Material 3）+ Firebase（Anonymous Auth / Firestore / Cloud Functions v2）
@@ -84,6 +85,9 @@
 
 > 核心：**多人共用邀請碼**、**名額限制**、**加入順序制**、**已加入者不受 TTL 影響**
 
+- 邀請碼/邀請連結可從任務內其他入口再次分享（MVP 允許多入口共用相同邀請邏輯；僅 UI 入口不同）。
+- 所有分享入口呼叫相同的 createInviteCode / deep link 生成邏輯（避免分叉）。
+
 #### A) 分享方式
 
 - 隊長使用手機內建 **Share sheet** 分享到 LINE / Email
@@ -128,6 +132,12 @@
 
 - 欄位：任務名稱、期間（日期）、結算幣別、餘額處理方式
 - 結算前：任務內資料為「可回溯更新」
+- 任務建立成功後，系統會自動在 tasks/{taskId}/members 建立隊長的 member document：
+  - role = captain
+  - uid = captainUid
+  - avatar：建立時即分配（任務內不重複）
+  - hasRerolled 初始為 false
+  - hasSeenRoleIntro 初始為 false（用於首次進入任務時觸發角色揭曉 Dialog）
 
 ### 5.4 記錄（費用/預收）新增 / 編輯 / 刪除
 
@@ -215,6 +225,76 @@
 
 - Security Rules：確保不同任務資料隔離（A 任務成員不可讀 B 任務）
 - 個資：顯示名為使用者自訂；不依賴真實姓名
+
+---
+
+## 7.4 Firestore Data Model（Invite Flow v2 / Ghost Member）
+
+### Collection: `tasks`
+
+| Field                 | Type       | Description                                |
+| --------------------- | ---------- | ------------------------------------------ |
+| name                  | string     | 任務名稱                                   |
+| captainUid            | string     | 隊長 UID                                   |
+| baseCurrency          | string     | 結算基準幣別                               |
+| maxMembers            | number     | 任務人數上限（建立任務時由隊長設定，<=15） |
+| memberCount           | number     | 目前佔用坑位人數（含 Ghost）               |
+| activeInviteCode      | string?    | 目前有效邀請碼                             |
+| activeInviteExpiresAt | timestamp? | 邀請碼過期時間                             |
+
+---
+
+### Sub-collection: `tasks/{taskId}/members`
+
+> **memberDocId 為帳務唯一識別，所有費用/預收皆關聯至此 ID**
+
+| Field            | Type      | Description                                     |
+| ---------------- | --------- | ----------------------------------------------- |
+| uid              | string?   | 已連結使用者 UID；Ghost 為 null                 |
+| displayName      | string    | 顯示名稱                                        |
+| role             | string    | captain / member                                |
+| avatar           | string    | 動物頭像 ID（任務內不可重複）                   |
+| isLinked         | boolean   | 是否已連結真實帳號                              |
+| hasRerolled      | boolean   | 是否已使用一次重抽                              |
+| joinedAt         | timestamp | 建立或加入時間                                  |
+| hasSeenRoleIntro | boolean   | 是否已看過角色揭曉 Dialog（首次進入任務時觸發） |
+
+---
+
+### Collection: `invites`
+
+| Field        | Type      | Description            |
+| ------------ | --------- | ---------------------- |
+| code         | string    | 8 碼邀請碼（大寫英數） |
+| taskId       | string    | 對應任務 ID            |
+| expiresAt    | timestamp | 過期時間               |
+| createdAt    | timestamp | 建立時間               |
+| createdByUid | string    | 建立者（隊長）         |
+
+---
+
+## 7.5 Cloud Functions（Invite Flow v2）
+
+### createInviteCode(taskId)
+
+- 驗證隊長權限
+- 產生 8 碼邀請碼（排除 I,L,1,O,0）
+- Transaction：寫入 `invites` + 更新 `tasks.activeInviteCode`
+- 回傳：`code`, `expiresAt`
+
+### previewInviteCode(code)
+
+- 驗證邀請碼是否存在且未過期
+- 讀取任務摘要
+- 回傳尚未連結的 Ghost Members（供前端選擇）
+
+### joinByInviteCode(code, displayName, mergeMemberId?)
+
+- 驗證邀請碼、名額
+- 若提供 mergeMemberId：將該 memberDocId 綁定 uid
+- 否則建立新 member
+- Transaction：memberCount +1、avatar 分配
+- 回傳：taskId, avatar
 
 ---
 
@@ -454,7 +534,7 @@ ELSE (normal app launch):
 ### 15.4 邀請流程（今天定案的關鍵）
 
 - 邀請確認（wireframe p7–p8）為 **Screen**：`S04_Invite.Confirm`（不是 Dialog）
-- 加入成功 Dialog（成員看到自己在任務中的頭像）：`D01_InviteJoin.Success`
+- 加入成功：加入成功後直接進入 S06_TaskDashboard.Main
 - 加入失敗 Dialog：`D02_InviteJoin.Error`
   - **v1 不拆 invalid/ended**（之後觀察使用者錯誤再拆）
 - TOS 不讓使用者離開 App：以 **Screen + WebView** 實作：`S19_Settings.Tos`
@@ -515,9 +595,32 @@ CustomKeyboard
 
 ---
 
+## 17. 畫面命名與規格 (Page Spec - vLatest)
+
+| Page Key                   | 畫面名稱 | 類型   | 職責與邏輯                                                                                                                       | UI Blocks                                                                                      |
+| :------------------------- | :------- | :----- | :------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
+| **S00_Onboarding.Consent** | 歡迎/TOS | Screen | 顯示 TOS，同意後匿名登入。                                                                                                       | HeroImage (Anim), RichText (Links), FilledButton                                               |
+| **S01_Onboarding.Name**    | 設定名稱 | Screen | 輸入顯示名稱。自動 Focus，僅禁控制字元。                                                                                         | TextField (Counter inside), FilledButton                                                       |
+| **S02_Home.TaskList**      | 任務列表 | Screen | 顯示任務。支援狀態切換與隊長左滑刪除。                                                                                           | **Header (Fixed)**: Animation + SegmentedButton<br>**Body**: ListView, Stadium FAB             |
+| **S05_TaskCreate.Form**    | 建立任務 | Screen | 輸入任務資料。點背景收鍵盤。                                                                                                     | **Card Grouping Layout**<br>Inline Stepper (人數)<br>CustomWheelPicker (M3-styled) (日期/幣別) |
+| **D03_TaskCreate.Confirm** | 確認設定 | Dialog | 預覽資料 -> 寫入 DB -> 喚起 Share Sheet -> 導向 S06。寫入 DB 時同時建立 captain member（role=captain）並分配 avatar。            | Data Review List, IronIcon, Buttons                                                            |
+| **S04_Invite.Confirm**     | 加入確認 | Screen | 呼叫 `preview` API。若有 `unlinkedMembers` 顯示選單。                                                                            | Card, ListView (Selection), Buttons (Cancel/Join)                                              |
+| **D01_MemberRole.Intro**   | 角色介紹 | Dialog | 首次進入任務主畫面（S06）時顯示角色揭曉 Dialog。顯示條件：member.hasSeenRoleIntro == false（per memberDocId）；顯示後設為 true。 | Animation (Avatar), Text, TextButton (Reroll), FilledButton                                    |
+| **D02_InviteJoin.Error**   | 加入失敗 | Dialog | 錯誤提示 (過期/額滿)。                                                                                                           | Icon, Text, Button                                                                             |
+| **S06_TaskDashboard.Main** | 任務主頁 | Screen | 記帳入口、餘額顯示、成員列表。                                                                                                   | DashboardGrid, FloatingActionMenu                                                              |
+| **S19_Settings.Tos**       | 服務條款 | Screen | 顯示詳細條款內容。                                                                                                               | MarkdownText                                                                                   |
+
+---
+
 ## 變更紀錄（append-only）
 
-- 2026-01-16: 同步更新至 vLatest：引入 `S_System.Bootstrap` 作為 `/` 根路由 Gatekeeper（不占用業務編號），並以最新 PageSpec 決策定案邀請流程（`S04_Invite.Confirm` 為 Screen、`D01_InviteJoin.Success`、`D02_InviteJoin.Error`、`S19_Settings.Tos`），同時統一 M3 UI Blocks（含 NavigationListItem/Keyboard）。
+- 2026-01-19: UI 優化與架構升級。
+  - Dependency Upgrade: 升級 GoRouter v17, Firebase v12+，iOS Deployment Target 提升至 15.0。
+  - S05 UI Polish: 採用 Section Card 版面，人數改為 Inline Stepper，優化鍵盤 UX。
+  - S02 UI Polish: 實作 Fixed Header (動畫+切換器) 與 Scrollable Body 分離架構。
+  - D03 Logic: 完成 Share Sheet 原生分享整合。
+- 2026-01-17: 完成任務建立與邀請核心流程實作 (S04, S05, D03)。
+- 2026-01-16: 同步更新至 vLatest：引入 `S_System.Bootstrap` 作為 `/` 根路由 Gatekeeper（不占用業務編號），並以最新 PageSpec 決策定案邀請流程（`S04_Invite.Confirm` 為 Screen、`D01_MemberRole.Intro`、`D02_InviteJoin.Error`、`S19_Settings.Tos`），同時統一 M3 UI Blocks（含 NavigationListItem/Keyboard）。
 - 2026-01-15: 依最新 Notion PageSpec/CSV 重建「畫面命名（Page Key）與 UI Blocks（vLatest）」章節，移除舊/重複命名，並統一 `SegmentedButton`、新增 NavigationListItem（右側 > 導覽列）與 Keyboard options，降低 AI 混淆。
 - 2026-01-15: 新增「畫面命名與規格鍵（Page Key / Screen Naming）」與「M3 UI Blocks（Text/Link、Keyboard）」規則，作為 wireframe / Notion / Figma / AI 協作的單一命名基準。
 - 2026-01-15: 新增「檔案/資料夾管理規則（AI 協作前提）」：定義 core vs features、Provider/Bloc 放置、SharedPreferences 落盤策略、generated 檔案規則，避免 AI 亂放檔案。
@@ -531,75 +634,4 @@ CustomKeyboard
 
 ## 最後編輯
 
-- Last edited: 2026-01-15 (JST)
-
----
-
-## 7.4 Firestore Data Model（Invite Flow v2 / Ghost Member）
-
-### Collection: `tasks`
-
-| Field                 | Type       | Description                                |
-| --------------------- | ---------- | ------------------------------------------ |
-| name                  | string     | 任務名稱                                   |
-| captainUid            | string     | 隊長 UID                                   |
-| baseCurrency          | string     | 結算基準幣別                               |
-| maxMembers            | number     | 任務人數上限（建立任務時由隊長設定，<=15） |
-| memberCount           | number     | 目前佔用坑位人數（含 Ghost）               |
-| activeInviteCode      | string?    | 目前有效邀請碼                             |
-| activeInviteExpiresAt | timestamp? | 邀請碼過期時間                             |
-
----
-
-### Sub-collection: `tasks/{taskId}/members`
-
-> **memberDocId 為帳務唯一識別，所有費用/預收皆關聯至此 ID**
-
-| Field       | Type      | Description                     |
-| ----------- | --------- | ------------------------------- |
-| uid         | string?   | 已連結使用者 UID；Ghost 為 null |
-| displayName | string    | 顯示名稱                        |
-| role        | string    | captain / member                |
-| avatar      | string    | 動物頭像 ID（任務內不可重複）   |
-| isLinked    | boolean   | 是否已連結真實帳號              |
-| hasRerolled | boolean   | 是否已使用一次重抽              |
-| joinedAt    | timestamp | 建立或加入時間                  |
-
----
-
-### Collection: `invites`
-
-| Field        | Type      | Description            |
-| ------------ | --------- | ---------------------- |
-| code         | string    | 8 碼邀請碼（大寫英數） |
-| taskId       | string    | 對應任務 ID            |
-| expiresAt    | timestamp | 過期時間               |
-| createdAt    | timestamp | 建立時間               |
-| createdByUid | string    | 建立者（隊長）         |
-
----
-
-## 7.5 Cloud Functions（Invite Flow v2）
-
-### createInviteCode(taskId)
-
-- 驗證隊長權限
-- 產生 8 碼邀請碼（排除 I,L,1,O,0）
-- Transaction：寫入 `invites` + 更新 `tasks.activeInviteCode`
-- 回傳：`code`, `expiresAt`
-
-### previewInviteCode(code)
-
-- 驗證邀請碼是否存在且未過期
-- 讀取任務摘要
-- 回傳尚未連結的 Ghost Members（供前端選擇）
-
-### joinByInviteCode(code, displayName, mergeMemberId?)
-
-- 驗證邀請碼、名額
-- 若提供 mergeMemberId：將該 memberDocId 綁定 uid
-- 否則建立新 member
-- Transaction：memberCount +1、avatar 分配
-- 回傳：taskId, avatar
-
----
+- Last edited: 2026-01-19 (JST)

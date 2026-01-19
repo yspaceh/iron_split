@@ -57,20 +57,13 @@ class AppRouter {
             name: 'S05',
             builder: (context, state) => const S05TaskCreateFormPage(),
           ),
-
-          // ✅ S12/S17: 任務儀表板 (路徑: /tasks/:taskId)
-          // 這是 S02 點擊卡片與 S05 建立完成後會去的地方
+          // S06: 任務儀表板
           GoRoute(
             path: ':taskId',
             name: 'TaskDashboard',
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
-              // TODO: 未來請替換成真實的 S12TaskDashboardPage(taskId: taskId)
-              return Scaffold(
-                appBar: AppBar(title: Text('Task Dashboard: $taskId')),
-                body: const Center(
-                    child: Text('TODO: Implement Dashboard (S12/S17)')),
-              );
+              return S06TaskDashboardPage(taskId: taskId);
             },
           ),
         ],
@@ -85,15 +78,7 @@ class AppRouter {
           return S04InviteConfirmPage(inviteCode: code);
         },
       ),
-      // S06: 任務儀表板
-      GoRoute(
-        path: ':taskId',
-        name: 'TaskDashboard',
-        builder: (context, state) {
-          final taskId = state.pathParameters['taskId']!;
-          return S06TaskDashboardPage(taskId: taskId);
-        },
-      ),
+
       // S19: 服務條款
       GoRoute(
         path: '/settings/tos',

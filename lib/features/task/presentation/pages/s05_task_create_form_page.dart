@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S05_TaskCreate.Form
-/// CSV Page 11
 class S05TaskCreateFormPage extends StatefulWidget {
   const S05TaskCreateFormPage({super.key});
 
@@ -20,19 +20,36 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
 
   late DateTime _startDate;
   late DateTime _endDate;
-  String _currency = 'TWD'; // MVP 預設
-  int _memberCount = 1; // 預設 1 人
+  String _currency = 'TWD';
+  int _memberCount = 1;
+
+  final List<String> _currencies = [
+    'TWD',
+    'JPY',
+    'USD',
+    'KRW',
+    'EUR',
+    'CNY',
+    'HKD',
+    'GBP',
+    'AUD',
+    'CAD',
+    'SGD',
+    'THB',
+    'VND'
+  ];
 
   @override
   void initState() {
     super.initState();
-    // 預設日期為今天
     final now = DateTime.now();
     _startDate = DateTime(now.year, now.month, now.day);
     _endDate = _startDate;
 
-    // 監聽字數變化
-    _nameController.addListener(() => setState(() {}));
+    // 監聽文字變動以即時更新 Suffix 計數器
+    _nameController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -43,8 +60,8 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
 
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
+    FocusScope.of(context).unfocus();
 
-    // 開啟 D03 確認彈窗 (Page 14)
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -58,25 +75,42 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
     );
   }
 
-  // --- 滾輪選擇器實作 (符合 CSV: ModalBottomSheet + Wheel) ---
-
+  // --- Picker 邏輯 ---
   void _showWheelBottomSheet({required Widget child}) {
+    FocusScope.of(context).unfocus();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (ctx) => SizedBox(
-        height: 300,
+      builder: (ctx) => Container(
+        height: 320,
+        padding: const EdgeInsets.only(top: 8),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text(t.S05_TaskCreate_Form.picker_done),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child:
+                        const Text('取消', style: TextStyle(color: Colors.grey)),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: Text(
+                      t.S05_TaskCreate_Form.picker_done,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const Divider(height: 1),
             Expanded(child: child),
           ],
         ),
@@ -84,18 +118,16 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
     );
   }
 
+  // (以下 _showStartDatePicker, _showEndDatePicker, _showCurrencyPicker 邏輯保持不變，省略以節省篇幅)
   void _showStartDatePicker() {
     _showWheelBottomSheet(
       child: CupertinoDatePicker(
         initialDateTime: _startDate,
         mode: CupertinoDatePickerMode.date,
-        // iOS 風格滾輪
         onDateTimeChanged: (val) {
           setState(() {
             _startDate = DateTime(val.year, val.month, val.day);
-            if (_endDate.isBefore(_startDate)) {
-              _endDate = _startDate;
-            }
+            if (_endDate.isBefore(_startDate)) _endDate = _startDate;
           });
         },
       ),
@@ -108,48 +140,21 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
         initialDateTime: _endDate,
         minimumDate: _startDate,
         mode: CupertinoDatePickerMode.date,
-        onDateTimeChanged: (val) {
-          setState(() {
-            _endDate = DateTime(val.year, val.month, val.day);
-          });
-        },
+        onDateTimeChanged: (val) =>
+            setState(() => _endDate = DateTime(val.year, val.month, val.day)),
       ),
     );
   }
 
   void _showCurrencyPicker() {
-    final currencies = ['TWD', 'JPY', 'USD'];
-    final labels = [
-      t.S05_TaskCreate_Form.currency_twd,
-      t.S05_TaskCreate_Form.currency_jpy,
-      t.S05_TaskCreate_Form.currency_usd,
-    ];
-
     _showWheelBottomSheet(
       child: CupertinoPicker(
         itemExtent: 40,
         scrollController: FixedExtentScrollController(
-            initialItem: currencies.indexOf(_currency)),
-        onSelectedItemChanged: (index) {
-          setState(() => _currency = currencies[index]);
-        },
-        children: labels.map((e) => Center(child: Text(e))).toList(),
-      ),
-    );
-  }
-
-  void _showCountPicker() {
-    // 規則：1-15 人
-    _showWheelBottomSheet(
-      child: CupertinoPicker(
-        itemExtent: 40,
-        scrollController:
-            FixedExtentScrollController(initialItem: _memberCount - 1),
-        onSelectedItemChanged: (index) {
-          setState(() => _memberCount = index + 1);
-        },
-        children:
-            List.generate(15, (index) => Center(child: Text('${index + 1} 人'))),
+            initialItem: _currencies.indexOf(_currency)),
+        onSelectedItemChanged: (index) =>
+            setState(() => _currency = _currencies[index]),
+        children: _currencies.map((e) => Center(child: Text(e))).toList(),
       ),
     );
   }
@@ -157,9 +162,11 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd');
 
     return Scaffold(
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(t.S05_TaskCreate_Form.title),
         leading: IconButton(
@@ -167,79 +174,106 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              // 1. 名稱
-              Text(t.S05_TaskCreate_Form.section_name,
-                  style: theme.textTheme.titleSmall),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _nameController,
-                maxLength: 20,
-                decoration: InputDecoration(
-                  hintText: t.S05_TaskCreate_Form.field_name_hint,
-                  counterText: t.S05_TaskCreate_Form.field_name_counter(
-                    current: _nameController.text.length,
-                  ),
-                  border: const OutlineInputBorder(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                ),
-                validator: (val) => (val == null || val.trim().isEmpty)
-                    ? t.S05_TaskCreate_Form.error_name_empty
-                    : null,
-              ),
-              const SizedBox(height: 24),
+      // 1. 全局點擊偵測：點擊背景收起鍵盤
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent, // 確保點擊空白處也能觸發
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // --- 1. 名稱區塊 ---
+                Text(t.S05_TaskCreate_Form.section_name,
+                    style: theme.textTheme.titleSmall
+                        ?.copyWith(color: colorScheme.primary)),
+                const SizedBox(height: 8),
 
-              // 2. 期間
-              Text(t.S05_TaskCreate_Form.section_period,
-                  style: theme.textTheme.titleSmall),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildPickerField(
+                TextFormField(
+                  controller: _nameController,
+                  autofocus: true,
+                  maxLength: 20,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(
+                        RegExp(r'[\x00-\x1F\x7F]')),
+                  ],
+                  decoration: InputDecoration(
+                    hintText: t.S05_TaskCreate_Form.field_name_hint,
+                    // 2. 移除下方的 counterText，改用 suffixText 放在框內
+                    counterText: "",
+                    suffixText: "${_nameController.text.length}/20",
+                    suffixStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor:
+                        colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  ),
+                  validator: (val) => (val == null || val.trim().isEmpty)
+                      ? t.S05_TaskCreate_Form.error_name_empty
+                      : null,
+                ),
+
+                const SizedBox(height: 24),
+
+                // --- 2. 期間設定 (卡片分組) ---
+                Text(t.S05_TaskCreate_Form.section_period,
+                    style: theme.textTheme.titleSmall
+                        ?.copyWith(color: colorScheme.primary)),
+                const SizedBox(height: 8),
+
+                _buildSectionCard(
+                  children: [
+                    _buildRowItem(
+                      icon: Icons.calendar_today,
                       label: t.S05_TaskCreate_Form.field_start_date,
                       value: dateFormat.format(_startDate),
-                      icon: Icons.calendar_today,
                       onTap: _showStartDatePicker,
+                      showDivider: true,
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildPickerField(
+                    _buildRowItem(
+                      icon: Icons.event_available,
                       label: t.S05_TaskCreate_Form.field_end_date,
                       value: dateFormat.format(_endDate),
-                      icon: Icons.event_available,
                       onTap: _showEndDatePicker,
+                      showDivider: false,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+                  ],
+                ),
 
-              // 3. 設定
-              Text(t.S05_TaskCreate_Form.section_settings,
-                  style: theme.textTheme.titleSmall),
-              const SizedBox(height: 8),
-              _buildPickerField(
-                label: t.S05_TaskCreate_Form.field_currency,
-                value: _currency,
-                icon: Icons.currency_exchange,
-                onTap: _showCurrencyPicker,
-              ),
-              const SizedBox(height: 12),
-              _buildPickerField(
-                label: t.S05_TaskCreate_Form.field_member_count,
-                value: '$_memberCount',
-                icon: Icons.group_outlined,
-                onTap: _showCountPicker,
-              ),
-            ],
+                const SizedBox(height: 24),
+
+                // --- 3. 詳細設定 (卡片分組) ---
+                Text(t.S05_TaskCreate_Form.section_settings,
+                    style: theme.textTheme.titleSmall
+                        ?.copyWith(color: colorScheme.primary)),
+                const SizedBox(height: 8),
+
+                _buildSectionCard(
+                  children: [
+                    _buildRowItem(
+                      icon: Icons.currency_exchange,
+                      label: t.S05_TaskCreate_Form.field_currency,
+                      value: _currency,
+                      onTap: _showCurrencyPicker,
+                      showDivider: true,
+                    ),
+                    _buildStepperRow(
+                      icon: Icons.group_outlined,
+                      label: t.S05_TaskCreate_Form.field_member_count,
+                      value: _memberCount,
+                      onChanged: (val) => setState(() => _memberCount = val),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -249,7 +283,9 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
           child: FilledButton(
             onPressed: _onSave,
             style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16)),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: colorScheme.primary,
+            ),
             child: Text(t.S05_TaskCreate_Form.action_save),
           ),
         ),
@@ -257,24 +293,96 @@ class _S05TaskCreateFormPageState extends State<S05TaskCreateFormPage> {
     );
   }
 
-  Widget _buildPickerField({
+  // (以下 _buildSectionCard, _buildRowItem, _buildStepperRow 保持不變，省略以節省篇幅)
+  Widget _buildSectionCard({required List<Widget> children}) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+            color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+      ),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _buildRowItem({
+    required IconData icon,
     required String label,
     required String value,
-    required IconData icon,
     required VoidCallback onTap,
+    bool showDivider = false,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(4),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          prefixIcon: Icon(icon, size: 20),
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
+              children: [
+                Icon(icon, size: 24, color: theme.colorScheme.primary),
+                const SizedBox(width: 16),
+                Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(Icons.chevron_right,
+                    size: 20, color: theme.colorScheme.outline),
+              ],
+            ),
+          ),
         ),
-        child: Text(value, style: Theme.of(context).textTheme.bodyLarge),
+        if (showDivider)
+          Divider(
+              height: 1,
+              indent: 56,
+              color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+      ],
+    );
+  }
+
+  Widget _buildStepperRow({
+    required IconData icon,
+    required String label,
+    required int value,
+    required ValueChanged<int> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, size: 24, color: theme.colorScheme.primary),
+          const SizedBox(width: 16),
+          Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
+          IconButton.filledTonal(
+            onPressed: value > 1 ? () => onChanged(value - 1) : null,
+            icon: const Icon(Icons.remove),
+            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+          ),
+          SizedBox(
+            width: 40,
+            child: Text(
+              '$value',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          IconButton.filledTonal(
+            onPressed: value < 15 ? () => onChanged(value + 1) : null,
+            icon: const Icon(Icons.add),
+            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+          ),
+        ],
       ),
     );
   }

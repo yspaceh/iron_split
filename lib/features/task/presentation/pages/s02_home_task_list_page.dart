@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S02_Home.TaskList
-/// CSV Page 3, 4, 5
-/// 職責：顯示任務列表，包含「進行中」與「已完成」的分頁切換。
 class S02HomeTaskListPage extends StatefulWidget {
   const S02HomeTaskListPage({super.key});
 
@@ -16,8 +14,7 @@ class S02HomeTaskListPage extends StatefulWidget {
 }
 
 class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
-  // 0: 進行中, 1: 已完成
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; // 0: 進行中, 1: 已完成
 
   @override
   Widget build(BuildContext context) {
@@ -40,45 +37,83 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
           ),
         ],
       ),
-      // 懸浮按鈕：新增任務 (S05)
+      // FAB 使用 Primary 顏色與圓弧造型
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add),
         label: Text(t.S05_TaskCreate_Form.title),
+        shape: const StadiumBorder(),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
       ),
       body: Column(
         children: [
-          // --- 1. SegmentedButton (CSV UI Block) ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<int>(
-                segments: const [
-                  ButtonSegment(
-                    value: 0,
-                    label: Text('進行中'),
-                    icon: Icon(Icons.directions_run),
+          // --- 上半部固定區域 (Header) ---
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            color: colorScheme.surface, // 這裡設定背景色
+            child: Column(
+              children: [
+                // 1. 鐵公雞動畫區 (Placeholder)
+                Container(
+                  height: 120,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    // 加一個淡淡的背景讓區域更明顯 (開發測試用，之後可移除)
+                    color: colorScheme.surfaceContainerLowest,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  ButtonSegment(
-                    value: 1,
-                    label: Text('已完成'),
-                    icon: Icon(Icons.done_all),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.catching_pokemon, // 動畫暫位圖
+                        size: 64,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "鐵公雞準備中...",
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.outline),
+                      )
+                    ],
                   ),
-                ],
-                selected: {_selectedIndex},
-                onSelectionChanged: (Set<int> newSelection) {
-                  setState(() {
-                    _selectedIndex = newSelection.first;
-                  });
-                },
-              ),
+                ),
+
+                // 2. 狀態切換器 (SegmentedButton)
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<int>(
+                    segments: const [
+                      ButtonSegment(
+                        value: 0,
+                        label: Text('進行中'),
+                        icon: Icon(Icons.directions_run),
+                      ),
+                      ButtonSegment(
+                        value: 1,
+                        label: Text('已完成'),
+                        icon: Icon(Icons.done_all),
+                      ),
+                    ],
+                    selected: {_selectedIndex},
+                    onSelectionChanged: (Set<int> newSelection) {
+                      setState(() {
+                        _selectedIndex = newSelection.first;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
 
           const Divider(height: 1),
 
-          // --- 2. 任務列表 ---
+          // --- 下半部捲動區域 (List) ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -94,53 +129,41 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
 
                 final docs = snapshot.data?.docs ?? [];
 
-                // 過濾任務：我參與的 + 狀態篩選
-                // 註：MVP 資料庫尚未有 status 欄位，這裡暫時將所有任務視為「進行中」
-                // TODO: 未來需根據 task['status'] == 'finished' 來區分 _selectedIndex
+                // 過濾與篩選邏輯
                 final myDocs = docs.where((doc) {
                   final data = doc.data() as Map<String, dynamic>;
                   final members = data['members'] as Map<String, dynamic>?;
 
-                  // 1. 必須是我參與的
                   final isMember =
                       members != null && members.containsKey(user.uid);
                   if (!isMember) return false;
 
-                  // 2. 狀態篩選 (MVP 暫時邏輯：全部顯示在「進行中」，「已完成」顯示為空)
-                  if (_selectedIndex == 0) return true; // 進行中
-                  return false; // 已完成 (暫無資料)
+                  // 狀態篩選 (MVP 暫時邏輯：全部視為進行中)
+                  if (_selectedIndex == 0) return true;
+                  return false;
                 }).toList();
 
-                // --- 3. 空狀態 (CSV Page 3) ---
                 if (myDocs.isEmpty) {
                   return Center(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // TODO: 替換為鐵公雞動畫 (Iron Rooster Animation)
-                        Icon(Icons.catching_pokemon,
-                            size: 80, color: colorScheme.outlineVariant),
+                        Icon(Icons.assignment_outlined,
+                            size: 48, color: colorScheme.outlineVariant),
                         const SizedBox(height: 16),
                         Text(
                           _selectedIndex == 0 ? '目前沒有進行中的任務' : '沒有已完成的任務',
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(color: colorScheme.outline),
-                        ),
-                        if (_selectedIndex == 0) ...[
-                          const SizedBox(height: 16),
-                          FilledButton.tonal(
-                            onPressed: () => context.push('/tasks/create'),
-                            child: Text(t.S05_TaskCreate_Form.title),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.onSurfaceVariant, // 加深文字顏色
                           ),
-                        ],
+                        ),
                       ],
                     ),
                   );
                 }
 
-                // --- 4. 列表內容 (CSV Page 4, 5) ---
                 return ListView.separated(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
                   itemCount: myDocs.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 12),
@@ -148,7 +171,6 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
                     final doc = myDocs[index];
                     final data = doc.data() as Map<String, dynamic>;
 
-                    // 取得我在這個任務中的資料 (頭像)
                     final members = data['members'] as Map<String, dynamic>;
                     final myData = members[user.uid] as Map<String, dynamic>;
 
@@ -190,7 +212,6 @@ class _TaskCard extends StatelessWidget {
 
     final String name = data['name'] ?? 'Task';
 
-    // 處理日期顯示
     final Timestamp? startTs = data['startDate'];
     final Timestamp? endTs = data['endDate'];
     String periodText = '日期未定';
@@ -199,7 +220,6 @@ class _TaskCard extends StatelessWidget {
           '${dateFormat.format(startTs.toDate())} - ${dateFormat.format(endTs.toDate())}';
     }
 
-    // 建構卡片內容
     Widget cardContent = Card(
       elevation: 0,
       color: colorScheme.surfaceContainer,
@@ -211,7 +231,6 @@ class _TaskCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // 1. 用戶的農場動物頭像 (CSV 規格)
               Container(
                 width: 56,
                 height: 56,
@@ -220,7 +239,6 @@ class _TaskCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
-                // TODO: 這裡之後要換成實際的 Animal Asset Image
                 child: Text(
                   myAvatar.isNotEmpty ? myAvatar[0].toUpperCase() : '?',
                   style: theme.textTheme.titleLarge?.copyWith(
@@ -230,16 +248,16 @@ class _TaskCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-
-              // 2. 任務名稱與期間
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       name,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -247,28 +265,26 @@ class _TaskCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.date_range,
-                            size: 14, color: colorScheme.outline),
+                            size: 16, color: colorScheme.primary),
                         const SizedBox(width: 4),
                         Text(
                           periodText,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: colorScheme.outline),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-
-              // 3. 箭頭
-              Icon(Icons.chevron_right, color: colorScheme.outlineVariant),
+              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
             ],
           ),
         ),
       ),
     );
 
-    // 實作左滑刪除 (CSV Page 4: 隊長可以左滑刪除)
     if (isCaptain) {
       return Dismissible(
         key: Key(taskId),
@@ -276,12 +292,13 @@ class _TaskCard extends StatelessWidget {
         background: Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
-          color: colorScheme.error,
+          decoration: BoxDecoration(
+            color: colorScheme.error,
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Icon(Icons.delete_outline, color: colorScheme.onError),
         ),
         confirmDismiss: (direction) async {
-          // TODO: 這裡需要檢查 "未有紀錄且沒有成員" 的條件
-          // 若不符合條件應彈出提示。目前 MVP 先顯示簡單確認。
           return await showDialog(
             context: context,
             builder: (ctx) => AlertDialog(

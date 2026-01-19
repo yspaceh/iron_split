@@ -90,7 +90,7 @@ class _D03TaskCreateConfirmDialogState
             'joinedAt': FieldValue.serverTimestamp(),
             'avatar': _getRandomAvatar(),
             'isLinked': true,
-            'hasSeenIntro': false, // 關鍵：讓 Dashboard 跳出 D01
+            'hasSeenRoleIntro': false, // 關鍵：讓 Dashboard 跳出 D01
           }
         },
         'activeInviteCode': null,

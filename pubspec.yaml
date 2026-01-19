@@ -13,18 +13,18 @@ dependencies:
     sdk: flutter
 
   # 1. 導航與路由
-  go_router: ^14.2.0
+  go_router: ^17.0.1
 
   # 2. Firebase 核心服務 (專案聖經指定)
-  firebase_core: ^3.4.0
-  firebase_auth: ^5.2.0
-  cloud_firestore: ^5.4.0
-  cloud_functions: ^5.1.0
-  firebase_storage: ^12.2.0
+  firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
+  cloud_firestore: ^6.1.1
+  cloud_functions: ^6.0.5
+  firebase_storage: ^13.0.5
 
   # 3. 多國語系與格式化 (專案聖經指定使用 slang)
-  slang: ^3.26.0
-  slang_flutter: ^3.26.0
+  slang: ^4.12.0
+  slang_flutter: ^4.12.0
   intl: ^0.20.2
   app_links: ^7.0.0
 
@@ -36,7 +36,7 @@ dependencies:
   printing: ^5.13.0
 
   # 5. UI/UX 增強
-  google_fonts: ^6.2.1
+  google_fonts: ^7.0.2
   font_awesome_flutter: ^10.7.0
   
   # 6. 狀態管理
@@ -44,14 +44,14 @@ dependencies:
   shared_preferences: ^2.3.2
 
   # 7. 系統分享
-  share_plus: ^10.0.0
+  share_plus: ^12.0.1
   url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
-  slang_build_runner: ^3.26.0
+  flutter_lints: ^6.0.0
+  slang_build_runner: ^4.12.0
   build_runner: ^2.4.7
 
 flutter:
