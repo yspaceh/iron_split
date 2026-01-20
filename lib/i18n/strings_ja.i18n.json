@@ -1,4 +1,13 @@
 {
+  "common": {
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "confirm": "確認",
+    "back": "戻る",
+    "save": "保存",
+    "error_prefix": "エラー: ${message}",
+    "please_login": "ログインしてください"
+  },
   "S00_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
     "content_prefix": "開始することで、",
@@ -6,7 +15,8 @@
     "and": " と ",
     "privacy_link": "プライバシーポリシー",
     "content_suffix": " に同意したものとみなされます。",
-    "agree_btn": "はじめる"
+    "agree_btn": "はじめる",
+    "login_failed": "ログイン失敗: ${message}"
   },
   "S01_Onboarding_Name": {
     "title": "名前設定",
@@ -18,20 +28,31 @@
     "error_invalid_char": "無効な文字が含まれています",
     "action_next": "設定"
   },
+  "S02_Home_TaskList": {
+    "title": "マイタスク",
+    "tab_in_progress": "進行中",
+    "tab_completed": "完了済",
+    "mascot_preparing": "鉄の雄鶏、準備中...",
+    "empty_in_progress": "進行中のタスクはありません",
+    "empty_completed": "完了したタスクはありません",
+    "date_tbd": "日付未定",
+    "delete_confirm_title": "削除の確認",
+    "delete_confirm_content": "このタスクを削除してもよろしいですか？"
+  },
   "S04_Invite_Confirm": {
     "title": "タスクに参加",
     "subtitle": "以下のタスクに招待されました：",
-    "loading_invite": "招待状を読み込んでいます...",
-    "join_failed_title": "おっと！参加できません",
-    "identity_match_title": "あなたはこのメンバーですか？",
-    "identity_match_desc": "このタスクには既定のメンバーリストがあります。該当する場合は名前を選択して連携してください。該当しない場合は、そのまま参加してください。",
+    "loading_invite": "招待状を読み込み中...",
+    "join_failed_title": "タスクに参加できません",
+    "identity_match_title": "あなたは以下のメンバーですか？",
+    "identity_match_desc": "このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。",
     "status_linking": "「アカウント連携」で参加します",
     "status_new_member": "「新規メンバー」として参加します",
     "action_confirm": "参加",
     "action_cancel": "キャンセル",
-    "action_home": "ホームへ戻る",
-    "error_join_failed": "参加失敗：${message}",
-    "error_generic": "エラーが発生しました：${message}"
+    "action_home": "ホームへ",
+    "error_join_failed": "参加失敗: ${message}",
+    "error_generic": "エラー: ${message}"
   },
   "S05_TaskCreate_Form": {
     "title": "タスク作成",
@@ -51,15 +72,27 @@
     "currency_jpy": "日本円 (JPY)",
     "currency_usd": "米ドル (USD)"
   },
+  "S06_TaskDashboard_Main": {
+    "title": "タスクホーム",
+    "error_member_not_found": "メンバーが見つかりません",
+    "welcome_message": "ようこそ, ${name}",
+    "role_label": "役割: ${role}",
+    "avatar_label": "アバター: ${avatar}",
+    "placeholder_content": "ここにダッシュボードが表示されます..."
+  },
   "D01_InviteJoin_Success": {
-    "title": "参加完了！",
-    "assigned_avatar": "あなたの動物アイコンは：",
-    "avatar_note": "※アイコンの引き直しは1回のみ可能です。",
-    "action_continue": "記録を開始"
+    "title": "参加しました！",
+    "assigned_avatar": "割り当てられたアバター：",
+    "avatar_note": "注：アバターのリロールは1回のみです。",
+    "action_continue": "はじめる"
+  },
+  "D01_MemberRole_Intro": {
+    "action_reroll": "リロールする",
+    "error_reroll_failed": "リロール失敗: ${message}"
   },
   "D02_InviteJoin_Error": {
     "title": "参加できません",
-    "message": "リンクが無効、期限切れ、または定員に達しています。",
+    "message": "リンクが無効、期限切れ、または満員です。",
     "action_close": "閉じる"
   },
   "D03_TaskCreate_Confirm": {
@@ -75,33 +108,39 @@
     "share_subject": "Iron Split タスク招待",
     "share_message": "Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}"
   },
+  "D04_Common_UnsavedChanges": {
+    "title": "設定は完了していません",
+    "content": "現在の設定は破棄されます。本当に移動しますか？",
+    "action_leave": "ホームへ戻る",
+    "action_stay": "編集を続ける"
+  },
   "S19_Settings_Tos": {
     "title": "利用規約"
   },
   "error": {
     "taskFull": {
-      "title": "定員に達しました",
-      "message": "このタスクは上限の {limit} 名に達しています。リーダーに連絡してください。"
+      "title": "タスク満員",
+      "message": "メンバー数が上限 {limit} 人に達しています。隊長に連絡してください。"
     },
     "expiredCode": {
-      "title": "招待リンクの期限切れ",
-      "message": "リンクの有効期限（{minutes}分）が切れています。リーダーに再発行を依頼してください。"
+      "title": "招待コード期限切れ",
+      "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
     },
     "invalidCode": {
-      "title": "無効なリンク",
-      "message": "招待リンクが無効です。正しいか削除されていないか確認してください。"
+      "title": "リンク無効",
+      "message": "無効な招待リンクです。"
     },
     "authRequired": {
-      "title": "ログインが必要です",
-      "message": "タスクに参加するにはログインが必要です。"
+      "title": "ログインが必要",
+      "message": "タスクに参加するにはログインしてください。"
     },
     "alreadyInTask": {
-      "title": "既に参加済み",
-      "message": "あなたは既にこのタスクのメンバーです。"
+      "title": "既に参加済",
+      "message": "既にこのタスクのメンバーです。"
     },
     "unknown": {
       "title": "エラー",
-      "message": "予期しないエラーが発生しました。後でもう一度お試しください。"
+      "message": "予期せぬエラーが発生しました。"
     }
   }
 }

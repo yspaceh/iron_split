@@ -127,8 +127,9 @@ class _D03TaskCreateConfirmDialogState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.common.error_prefix(message: e.toString()))),
+        );
         setState(() => _isProcessing = false);
       }
     }

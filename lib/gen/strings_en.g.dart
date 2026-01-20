@@ -37,15 +37,36 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	TranslationsEn $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsEn(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _TranslationsCommonEn common = _TranslationsCommonEn._(_root);
 	@override late final _TranslationsS00OnboardingConsentEn S00_Onboarding_Consent = _TranslationsS00OnboardingConsentEn._(_root);
 	@override late final _TranslationsS01OnboardingNameEn S01_Onboarding_Name = _TranslationsS01OnboardingNameEn._(_root);
+	@override late final _TranslationsS02HomeTaskListEn S02_Home_TaskList = _TranslationsS02HomeTaskListEn._(_root);
 	@override late final _TranslationsS04InviteConfirmEn S04_Invite_Confirm = _TranslationsS04InviteConfirmEn._(_root);
 	@override late final _TranslationsS05TaskCreateFormEn S05_TaskCreate_Form = _TranslationsS05TaskCreateFormEn._(_root);
+	@override late final _TranslationsS06TaskDashboardMainEn S06_TaskDashboard_Main = _TranslationsS06TaskDashboardMainEn._(_root);
 	@override late final _TranslationsD01InviteJoinSuccessEn D01_InviteJoin_Success = _TranslationsD01InviteJoinSuccessEn._(_root);
+	@override late final _TranslationsD01MemberRoleIntroEn D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEn._(_root);
 	@override late final _TranslationsD02InviteJoinErrorEn D02_InviteJoin_Error = _TranslationsD02InviteJoinErrorEn._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEn D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEn._(_root);
+	@override late final _TranslationsD04CommonUnsavedChangesEn D04_Common_UnsavedChanges = _TranslationsD04CommonUnsavedChangesEn._(_root);
 	@override late final _TranslationsS19SettingsTosEn S19_Settings_Tos = _TranslationsS19SettingsTosEn._(_root);
 	@override late final _TranslationsErrorEn error = _TranslationsErrorEn._(_root);
+}
+
+// Path: common
+class _TranslationsCommonEn implements TranslationsCommonZh {
+	_TranslationsCommonEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get cancel => 'Cancel';
+	@override String get delete => 'Delete';
+	@override String get confirm => 'Confirm';
+	@override String get back => 'Back';
+	@override String get save => 'Save';
+	@override String error_prefix({required Object message}) => 'Error: \$${message}';
+	@override String get please_login => 'Please Login';
 }
 
 // Path: S00_Onboarding_Consent
@@ -62,6 +83,7 @@ class _TranslationsS00OnboardingConsentEn implements TranslationsS00OnboardingCo
 	@override String get privacy_link => 'Privacy Policy';
 	@override String get content_suffix => '. We use anonymous login to protect your privacy.';
 	@override String get agree_btn => 'Start';
+	@override String login_failed({required Object message}) => 'Login Failed: \$${message}';
 }
 
 // Path: S01_Onboarding_Name
@@ -81,6 +103,24 @@ class _TranslationsS01OnboardingNameEn implements TranslationsS01OnboardingNameZ
 	@override String get action_next => 'Set';
 }
 
+// Path: S02_Home_TaskList
+class _TranslationsS02HomeTaskListEn implements TranslationsS02HomeTaskListZh {
+	_TranslationsS02HomeTaskListEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'My Tasks';
+	@override String get tab_in_progress => 'Active';
+	@override String get tab_completed => 'Finished';
+	@override String get mascot_preparing => 'Iron Rooster preparing...';
+	@override String get empty_in_progress => 'No active tasks';
+	@override String get empty_completed => 'No finished tasks';
+	@override String get date_tbd => 'Date TBD';
+	@override String get delete_confirm_title => 'Delete Task';
+	@override String get delete_confirm_content => 'Are you sure you want to delete this task?';
+}
+
 // Path: S04_Invite_Confirm
 class _TranslationsS04InviteConfirmEn implements TranslationsS04InviteConfirmZh {
 	_TranslationsS04InviteConfirmEn._(this._root);
@@ -90,15 +130,15 @@ class _TranslationsS04InviteConfirmEn implements TranslationsS04InviteConfirmZh 
 	// Translations
 	@override String get title => 'Join Task';
 	@override String get subtitle => 'You are invited to join:';
-	@override String get loading_invite => 'Loading invitation...';
+	@override String get loading_invite => 'Loading invite...';
 	@override String get join_failed_title => 'Oops! Cannot join task';
 	@override String get identity_match_title => 'Are you one of these members?';
-	@override String get identity_match_desc => 'This task has pre-existing members. If you are one of them, tap the name to link; otherwise, join as a new member.';
+	@override String get identity_match_desc => 'This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.';
 	@override String get status_linking => 'Joining by linking account';
-	@override String get status_new_member => 'Joining as a new member';
+	@override String get status_new_member => 'Joining as new member';
 	@override String get action_confirm => 'Join';
 	@override String get action_cancel => 'Cancel';
-	@override String get action_home => 'Back to Home';
+	@override String get action_home => 'Home';
 	@override String error_join_failed({required Object message}) => 'Join failed: \$${message}';
 	@override String error_generic({required Object message}) => 'Error: \$${message}';
 }
@@ -128,6 +168,21 @@ class _TranslationsS05TaskCreateFormEn implements TranslationsS05TaskCreateFormZ
 	@override String get currency_usd => 'USD';
 }
 
+// Path: S06_TaskDashboard_Main
+class _TranslationsS06TaskDashboardMainEn implements TranslationsS06TaskDashboardMainZh {
+	_TranslationsS06TaskDashboardMainEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Task Dashboard';
+	@override String get error_member_not_found => 'Member not found';
+	@override String welcome_message({required Object name}) => 'Welcome, \$${name}';
+	@override String role_label({required Object role}) => 'Your Role: \$${role}';
+	@override String avatar_label({required Object avatar}) => 'Your Avatar: \$${avatar}';
+	@override String get placeholder_content => 'Dashboard content goes here...';
+}
+
 // Path: D01_InviteJoin_Success
 class _TranslationsD01InviteJoinSuccessEn implements TranslationsD01InviteJoinSuccessZh {
 	_TranslationsD01InviteJoinSuccessEn._(this._root);
@@ -135,10 +190,21 @@ class _TranslationsD01InviteJoinSuccessEn implements TranslationsD01InviteJoinSu
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Task Joined!';
-	@override String get assigned_avatar => 'Your assigned animal avatar is:';
-	@override String get avatar_note => 'Note: You can redraw your avatar only once.';
-	@override String get action_continue => 'Start Tracking';
+	@override String get title => 'Joined Successfully!';
+	@override String get assigned_avatar => 'Your assigned avatar:';
+	@override String get avatar_note => 'Note: You can reroll only once.';
+	@override String get action_continue => 'Start';
+}
+
+// Path: D01_MemberRole_Intro
+class _TranslationsD01MemberRoleIntroEn implements TranslationsD01MemberRoleIntroZh {
+	_TranslationsD01MemberRoleIntroEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get action_reroll => 'Reroll Avatar';
+	@override String error_reroll_failed({required Object message}) => 'Reroll failed: \$${message}';
 }
 
 // Path: D02_InviteJoin_Error
@@ -149,7 +215,7 @@ class _TranslationsD02InviteJoinErrorEn implements TranslationsD02InviteJoinErro
 
 	// Translations
 	@override String get title => 'Cannot Join Task';
-	@override String get message => 'The link is invalid, expired, or the task is full.';
+	@override String get message => 'Link invalid, expired, or task is full.';
 	@override String get action_close => 'Close';
 }
 
@@ -171,6 +237,19 @@ class _TranslationsD03TaskCreateConfirmEn implements TranslationsD03TaskCreateCo
 	@override String get preparing_share => 'Preparing invite...';
 	@override String get share_subject => 'Join Iron Split Task';
 	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${code}\nLink: \$${link}';
+}
+
+// Path: D04_Common_UnsavedChanges
+class _TranslationsD04CommonUnsavedChangesEn implements TranslationsD04CommonUnsavedChangesZh {
+	_TranslationsD04CommonUnsavedChangesEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Unsaved Changes';
+	@override String get content => 'Current settings will be discarded. Are you sure you want to leave?';
+	@override String get action_leave => 'Discard';
+	@override String get action_stay => 'Keep Editing';
 }
 
 // Path: S19_Settings_Tos
@@ -206,7 +285,7 @@ class _TranslationsErrorTaskFullEn implements TranslationsErrorTaskFullZh {
 
 	// Translations
 	@override String get title => 'Task Full';
-	@override String message({required Object limit}) => 'This task has reached its limit of ${limit} members. Please contact the captain.';
+	@override String message({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.';
 }
 
 // Path: error.expiredCode
@@ -217,7 +296,7 @@ class _TranslationsErrorExpiredCodeEn implements TranslationsErrorExpiredCodeZh 
 
 	// Translations
 	@override String get title => 'Invite Expired';
-	@override String message({required Object minutes}) => 'This link has expired (${minutes} min TTL). Please request a new one from the captain.';
+	@override String message({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.';
 }
 
 // Path: error.invalidCode
@@ -227,8 +306,8 @@ class _TranslationsErrorInvalidCodeEn implements TranslationsErrorInvalidCodeZh 
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Invalid Code';
-	@override String get message => 'Invalid invite link. Please check if it\'s correct or has been deleted.';
+	@override String get title => 'Invalid Link';
+	@override String get message => 'Invalid invite link.';
 }
 
 // Path: error.authRequired
@@ -238,8 +317,8 @@ class _TranslationsErrorAuthRequiredEn implements TranslationsErrorAuthRequiredZ
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Auth Required';
-	@override String get message => 'Please log in to join the task.';
+	@override String get title => 'Login Required';
+	@override String get message => 'Please login to join task.';
 }
 
 // Path: error.alreadyInTask
@@ -249,8 +328,8 @@ class _TranslationsErrorAlreadyInTaskEn implements TranslationsErrorAlreadyInTas
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Already a Member';
-	@override String get message => 'You are already a member of this task.';
+	@override String get title => 'Already Member';
+	@override String get message => 'You are already in this task.';
 }
 
 // Path: error.unknown
@@ -261,7 +340,7 @@ class _TranslationsErrorUnknownEn implements TranslationsErrorUnknownZh {
 
 	// Translations
 	@override String get title => 'Error';
-	@override String get message => 'An unexpected error occurred. Please try again later.';
+	@override String get message => 'An unexpected error occurred.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -272,6 +351,13 @@ class _TranslationsErrorUnknownEn implements TranslationsErrorUnknownZh {
 extension on TranslationsEn {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'common.cancel' => 'Cancel',
+			'common.delete' => 'Delete',
+			'common.confirm' => 'Confirm',
+			'common.back' => 'Back',
+			'common.save' => 'Save',
+			'common.error_prefix' => ({required Object message}) => 'Error: \$${message}',
+			'common.please_login' => 'Please Login',
 			'S00_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S00_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
 			'S00_Onboarding_Consent.terms_link' => 'Terms of Service',
@@ -279,6 +365,7 @@ extension on TranslationsEn {
 			'S00_Onboarding_Consent.privacy_link' => 'Privacy Policy',
 			'S00_Onboarding_Consent.content_suffix' => '. We use anonymous login to protect your privacy.',
 			'S00_Onboarding_Consent.agree_btn' => 'Start',
+			'S00_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: \$${message}',
 			'S01_Onboarding_Name.title' => 'Set Display Name',
 			'S01_Onboarding_Name.description' => 'Please enter your display name (1-10 chars).',
 			'S01_Onboarding_Name.field_hint' => 'Enter nickname',
@@ -287,17 +374,26 @@ extension on TranslationsEn {
 			'S01_Onboarding_Name.error_too_long' => 'Max 10 characters',
 			'S01_Onboarding_Name.error_invalid_char' => 'Invalid characters',
 			'S01_Onboarding_Name.action_next' => 'Set',
+			'S02_Home_TaskList.title' => 'My Tasks',
+			'S02_Home_TaskList.tab_in_progress' => 'Active',
+			'S02_Home_TaskList.tab_completed' => 'Finished',
+			'S02_Home_TaskList.mascot_preparing' => 'Iron Rooster preparing...',
+			'S02_Home_TaskList.empty_in_progress' => 'No active tasks',
+			'S02_Home_TaskList.empty_completed' => 'No finished tasks',
+			'S02_Home_TaskList.date_tbd' => 'Date TBD',
+			'S02_Home_TaskList.delete_confirm_title' => 'Delete Task',
+			'S02_Home_TaskList.delete_confirm_content' => 'Are you sure you want to delete this task?',
 			'S04_Invite_Confirm.title' => 'Join Task',
 			'S04_Invite_Confirm.subtitle' => 'You are invited to join:',
-			'S04_Invite_Confirm.loading_invite' => 'Loading invitation...',
+			'S04_Invite_Confirm.loading_invite' => 'Loading invite...',
 			'S04_Invite_Confirm.join_failed_title' => 'Oops! Cannot join task',
 			'S04_Invite_Confirm.identity_match_title' => 'Are you one of these members?',
-			'S04_Invite_Confirm.identity_match_desc' => 'This task has pre-existing members. If you are one of them, tap the name to link; otherwise, join as a new member.',
+			'S04_Invite_Confirm.identity_match_desc' => 'This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.',
 			'S04_Invite_Confirm.status_linking' => 'Joining by linking account',
-			'S04_Invite_Confirm.status_new_member' => 'Joining as a new member',
+			'S04_Invite_Confirm.status_new_member' => 'Joining as new member',
 			'S04_Invite_Confirm.action_confirm' => 'Join',
 			'S04_Invite_Confirm.action_cancel' => 'Cancel',
-			'S04_Invite_Confirm.action_home' => 'Back to Home',
+			'S04_Invite_Confirm.action_home' => 'Home',
 			'S04_Invite_Confirm.error_join_failed' => ({required Object message}) => 'Join failed: \$${message}',
 			'S04_Invite_Confirm.error_generic' => ({required Object message}) => 'Error: \$${message}',
 			'S05_TaskCreate_Form.title' => 'New Task',
@@ -316,12 +412,20 @@ extension on TranslationsEn {
 			'S05_TaskCreate_Form.currency_twd' => 'TWD',
 			'S05_TaskCreate_Form.currency_jpy' => 'JPY',
 			'S05_TaskCreate_Form.currency_usd' => 'USD',
-			'D01_InviteJoin_Success.title' => 'Task Joined!',
-			'D01_InviteJoin_Success.assigned_avatar' => 'Your assigned animal avatar is:',
-			'D01_InviteJoin_Success.avatar_note' => 'Note: You can redraw your avatar only once.',
-			'D01_InviteJoin_Success.action_continue' => 'Start Tracking',
+			'S06_TaskDashboard_Main.title' => 'Task Dashboard',
+			'S06_TaskDashboard_Main.error_member_not_found' => 'Member not found',
+			'S06_TaskDashboard_Main.welcome_message' => ({required Object name}) => 'Welcome, \$${name}',
+			'S06_TaskDashboard_Main.role_label' => ({required Object role}) => 'Your Role: \$${role}',
+			'S06_TaskDashboard_Main.avatar_label' => ({required Object avatar}) => 'Your Avatar: \$${avatar}',
+			'S06_TaskDashboard_Main.placeholder_content' => 'Dashboard content goes here...',
+			'D01_InviteJoin_Success.title' => 'Joined Successfully!',
+			'D01_InviteJoin_Success.assigned_avatar' => 'Your assigned avatar:',
+			'D01_InviteJoin_Success.avatar_note' => 'Note: You can reroll only once.',
+			'D01_InviteJoin_Success.action_continue' => 'Start',
+			'D01_MemberRole_Intro.action_reroll' => 'Reroll Avatar',
+			'D01_MemberRole_Intro.error_reroll_failed' => ({required Object message}) => 'Reroll failed: \$${message}',
 			'D02_InviteJoin_Error.title' => 'Cannot Join Task',
-			'D02_InviteJoin_Error.message' => 'The link is invalid, expired, or the task is full.',
+			'D02_InviteJoin_Error.message' => 'Link invalid, expired, or task is full.',
 			'D02_InviteJoin_Error.action_close' => 'Close',
 			'D03_TaskCreate_Confirm.title' => 'Confirm Settings',
 			'D03_TaskCreate_Confirm.label_name' => 'Name',
@@ -334,19 +438,23 @@ extension on TranslationsEn {
 			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Join Iron Split Task',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "\$${taskName}"!\nCode: \$${code}\nLink: \$${link}',
+			'D04_Common_UnsavedChanges.title' => 'Unsaved Changes',
+			'D04_Common_UnsavedChanges.content' => 'Current settings will be discarded. Are you sure you want to leave?',
+			'D04_Common_UnsavedChanges.action_leave' => 'Discard',
+			'D04_Common_UnsavedChanges.action_stay' => 'Keep Editing',
 			'S19_Settings_Tos.title' => 'Terms of Service',
 			'error.taskFull.title' => 'Task Full',
-			'error.taskFull.message' => ({required Object limit}) => 'This task has reached its limit of ${limit} members. Please contact the captain.',
+			'error.taskFull.message' => ({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.',
 			'error.expiredCode.title' => 'Invite Expired',
-			'error.expiredCode.message' => ({required Object minutes}) => 'This link has expired (${minutes} min TTL). Please request a new one from the captain.',
-			'error.invalidCode.title' => 'Invalid Code',
-			'error.invalidCode.message' => 'Invalid invite link. Please check if it\'s correct or has been deleted.',
-			'error.authRequired.title' => 'Auth Required',
-			'error.authRequired.message' => 'Please log in to join the task.',
-			'error.alreadyInTask.title' => 'Already a Member',
-			'error.alreadyInTask.message' => 'You are already a member of this task.',
+			'error.expiredCode.message' => ({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.',
+			'error.invalidCode.title' => 'Invalid Link',
+			'error.invalidCode.message' => 'Invalid invite link.',
+			'error.authRequired.title' => 'Login Required',
+			'error.authRequired.message' => 'Please login to join task.',
+			'error.alreadyInTask.title' => 'Already Member',
+			'error.alreadyInTask.message' => 'You are already in this task.',
 			'error.unknown.title' => 'Error',
-			'error.unknown.message' => 'An unexpected error occurred. Please try again later.',
+			'error.unknown.message' => 'An unexpected error occurred.',
 			_ => null,
 		};
 	}

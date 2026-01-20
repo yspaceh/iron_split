@@ -40,15 +40,50 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
+	late final TranslationsCommonZh common = TranslationsCommonZh._(_root);
 	late final TranslationsS00OnboardingConsentZh S00_Onboarding_Consent = TranslationsS00OnboardingConsentZh._(_root);
 	late final TranslationsS01OnboardingNameZh S01_Onboarding_Name = TranslationsS01OnboardingNameZh._(_root);
+	late final TranslationsS02HomeTaskListZh S02_Home_TaskList = TranslationsS02HomeTaskListZh._(_root);
 	late final TranslationsS04InviteConfirmZh S04_Invite_Confirm = TranslationsS04InviteConfirmZh._(_root);
 	late final TranslationsS05TaskCreateFormZh S05_TaskCreate_Form = TranslationsS05TaskCreateFormZh._(_root);
+	late final TranslationsS06TaskDashboardMainZh S06_TaskDashboard_Main = TranslationsS06TaskDashboardMainZh._(_root);
 	late final TranslationsD01InviteJoinSuccessZh D01_InviteJoin_Success = TranslationsD01InviteJoinSuccessZh._(_root);
+	late final TranslationsD01MemberRoleIntroZh D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZh._(_root);
 	late final TranslationsD02InviteJoinErrorZh D02_InviteJoin_Error = TranslationsD02InviteJoinErrorZh._(_root);
 	late final TranslationsD03TaskCreateConfirmZh D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZh._(_root);
+	late final TranslationsD04CommonUnsavedChangesZh D04_Common_UnsavedChanges = TranslationsD04CommonUnsavedChangesZh._(_root);
 	late final TranslationsS19SettingsTosZh S19_Settings_Tos = TranslationsS19SettingsTosZh._(_root);
 	late final TranslationsErrorZh error = TranslationsErrorZh._(_root);
+}
+
+// Path: common
+class TranslationsCommonZh {
+	TranslationsCommonZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '取消'
+	String get cancel => '取消';
+
+	/// zh: '刪除'
+	String get delete => '刪除';
+
+	/// zh: '確認'
+	String get confirm => '確認';
+
+	/// zh: '返回'
+	String get back => '返回';
+
+	/// zh: '保存'
+	String get save => '保存';
+
+	/// zh: '錯誤: ${message}'
+	String error_prefix({required Object message}) => '錯誤: \$${message}';
+
+	/// zh: '請先登入'
+	String get please_login => '請先登入';
 }
 
 // Path: S00_Onboarding_Consent
@@ -79,6 +114,9 @@ class TranslationsS00OnboardingConsentZh {
 
 	/// zh: '開始使用'
 	String get agree_btn => '開始使用';
+
+	/// zh: '登入失敗: ${message}'
+	String login_failed({required Object message}) => '登入失敗: \$${message}';
 }
 
 // Path: S01_Onboarding_Name
@@ -112,6 +150,42 @@ class TranslationsS01OnboardingNameZh {
 
 	/// zh: '設定完成'
 	String get action_next => '設定完成';
+}
+
+// Path: S02_Home_TaskList
+class TranslationsS02HomeTaskListZh {
+	TranslationsS02HomeTaskListZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '我的任務'
+	String get title => '我的任務';
+
+	/// zh: '進行中'
+	String get tab_in_progress => '進行中';
+
+	/// zh: '已完成'
+	String get tab_completed => '已完成';
+
+	/// zh: '鐵公雞準備中...'
+	String get mascot_preparing => '鐵公雞準備中...';
+
+	/// zh: '目前沒有進行中的任務'
+	String get empty_in_progress => '目前沒有進行中的任務';
+
+	/// zh: '沒有已完成的任務'
+	String get empty_completed => '沒有已完成的任務';
+
+	/// zh: '日期未定'
+	String get date_tbd => '日期未定';
+
+	/// zh: '確認刪除'
+	String get delete_confirm_title => '確認刪除';
+
+	/// zh: '確定要刪除這個任務嗎？'
+	String get delete_confirm_content => '確定要刪除這個任務嗎？';
 }
 
 // Path: S04_Invite_Confirm
@@ -219,6 +293,33 @@ class TranslationsS05TaskCreateFormZh {
 	String get currency_usd => '美金 (USD)';
 }
 
+// Path: S06_TaskDashboard_Main
+class TranslationsS06TaskDashboardMainZh {
+	TranslationsS06TaskDashboardMainZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '任務主頁'
+	String get title => '任務主頁';
+
+	/// zh: '找不到成員資料'
+	String get error_member_not_found => '找不到成員資料';
+
+	/// zh: '歡迎, ${name}'
+	String welcome_message({required Object name}) => '歡迎, \$${name}';
+
+	/// zh: '你的角色: ${role}'
+	String role_label({required Object role}) => '你的角色: \$${role}';
+
+	/// zh: '你的頭像: ${avatar}'
+	String avatar_label({required Object avatar}) => '你的頭像: \$${avatar}';
+
+	/// zh: '這裡是記帳主畫面...'
+	String get placeholder_content => '這裡是記帳主畫面...';
+}
+
 // Path: D01_InviteJoin_Success
 class TranslationsD01InviteJoinSuccessZh {
 	TranslationsD01InviteJoinSuccessZh._(this._root);
@@ -238,6 +339,21 @@ class TranslationsD01InviteJoinSuccessZh {
 
 	/// zh: '開始記帳'
 	String get action_continue => '開始記帳';
+}
+
+// Path: D01_MemberRole_Intro
+class TranslationsD01MemberRoleIntroZh {
+	TranslationsD01MemberRoleIntroZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '不喜歡？重抽一次'
+	String get action_reroll => '不喜歡？重抽一次';
+
+	/// zh: '重抽失敗: ${message}'
+	String error_reroll_failed({required Object message}) => '重抽失敗: \$${message}';
 }
 
 // Path: D02_InviteJoin_Error
@@ -298,6 +414,27 @@ class TranslationsD03TaskCreateConfirmZh {
 
 	/// zh: '快來加入我的 Iron Split 任務「${taskName}」！ 邀請碼：${code} 連結：${link}'
 	String share_message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${code}\n連結：\$${link}';
+}
+
+// Path: D04_Common_UnsavedChanges
+class TranslationsD04CommonUnsavedChangesZh {
+	TranslationsD04CommonUnsavedChangesZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '任務設定尚未完成'
+	String get title => '任務設定尚未完成';
+
+	/// zh: '目前的設定會被取消，真的要離開？'
+	String get content => '目前的設定會被取消，真的要離開？';
+
+	/// zh: '回首頁'
+	String get action_leave => '回首頁';
+
+	/// zh: '繼續編輯'
+	String get action_stay => '繼續編輯';
 }
 
 // Path: S19_Settings_Tos
@@ -425,6 +562,13 @@ class TranslationsErrorUnknownZh {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'common.cancel' => '取消',
+			'common.delete' => '刪除',
+			'common.confirm' => '確認',
+			'common.back' => '返回',
+			'common.save' => '保存',
+			'common.error_prefix' => ({required Object message}) => '錯誤: \$${message}',
+			'common.please_login' => '請先登入',
 			'S00_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S00_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S00_Onboarding_Consent.terms_link' => '服務條款',
@@ -432,6 +576,7 @@ extension on Translations {
 			'S00_Onboarding_Consent.privacy_link' => '隱私政策',
 			'S00_Onboarding_Consent.content_suffix' => '。我們採用匿名登入，保障您的隱私。',
 			'S00_Onboarding_Consent.agree_btn' => '開始使用',
+			'S00_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: \$${message}',
 			'S01_Onboarding_Name.title' => '名稱設定',
 			'S01_Onboarding_Name.description' => '請輸入您在 App 內的顯示名稱（1-10 個字）。',
 			'S01_Onboarding_Name.field_hint' => '輸入暱稱',
@@ -440,6 +585,15 @@ extension on Translations {
 			'S01_Onboarding_Name.error_too_long' => '最多 10 個字',
 			'S01_Onboarding_Name.error_invalid_char' => '包含無效字元',
 			'S01_Onboarding_Name.action_next' => '設定完成',
+			'S02_Home_TaskList.title' => '我的任務',
+			'S02_Home_TaskList.tab_in_progress' => '進行中',
+			'S02_Home_TaskList.tab_completed' => '已完成',
+			'S02_Home_TaskList.mascot_preparing' => '鐵公雞準備中...',
+			'S02_Home_TaskList.empty_in_progress' => '目前沒有進行中的任務',
+			'S02_Home_TaskList.empty_completed' => '沒有已完成的任務',
+			'S02_Home_TaskList.date_tbd' => '日期未定',
+			'S02_Home_TaskList.delete_confirm_title' => '確認刪除',
+			'S02_Home_TaskList.delete_confirm_content' => '確定要刪除這個任務嗎？',
 			'S04_Invite_Confirm.title' => '加入任務',
 			'S04_Invite_Confirm.subtitle' => '您受邀加入以下任務：',
 			'S04_Invite_Confirm.loading_invite' => '正在讀取邀請函...',
@@ -469,10 +623,18 @@ extension on Translations {
 			'S05_TaskCreate_Form.currency_twd' => '新台幣 (TWD)',
 			'S05_TaskCreate_Form.currency_jpy' => '日圓 (JPY)',
 			'S05_TaskCreate_Form.currency_usd' => '美金 (USD)',
+			'S06_TaskDashboard_Main.title' => '任務主頁',
+			'S06_TaskDashboard_Main.error_member_not_found' => '找不到成員資料',
+			'S06_TaskDashboard_Main.welcome_message' => ({required Object name}) => '歡迎, \$${name}',
+			'S06_TaskDashboard_Main.role_label' => ({required Object role}) => '你的角色: \$${role}',
+			'S06_TaskDashboard_Main.avatar_label' => ({required Object avatar}) => '你的頭像: \$${avatar}',
+			'S06_TaskDashboard_Main.placeholder_content' => '這裡是記帳主畫面...',
 			'D01_InviteJoin_Success.title' => '成功加入任務！',
 			'D01_InviteJoin_Success.assigned_avatar' => '你的隨機分配頭像為：',
 			'D01_InviteJoin_Success.avatar_note' => '註：頭像僅能重抽一次。',
 			'D01_InviteJoin_Success.action_continue' => '開始記帳',
+			'D01_MemberRole_Intro.action_reroll' => '不喜歡？重抽一次',
+			'D01_MemberRole_Intro.error_reroll_failed' => ({required Object message}) => '重抽失敗: \$${message}',
 			'D02_InviteJoin_Error.title' => '無法加入任務',
 			'D02_InviteJoin_Error.message' => '連結無效、已過期或任務人數已達上限。',
 			'D02_InviteJoin_Error.action_close' => '關閉',
@@ -487,6 +649,10 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
 			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「\$${taskName}」！\n邀請碼：\$${code}\n連結：\$${link}',
+			'D04_Common_UnsavedChanges.title' => '任務設定尚未完成',
+			'D04_Common_UnsavedChanges.content' => '目前的設定會被取消，真的要離開？',
+			'D04_Common_UnsavedChanges.action_leave' => '回首頁',
+			'D04_Common_UnsavedChanges.action_stay' => '繼續編輯',
 			'S19_Settings_Tos.title' => '服務條款',
 			'error.taskFull.title' => '任務已滿',
 			'error.taskFull.message' => ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。',

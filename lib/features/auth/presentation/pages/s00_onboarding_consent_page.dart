@@ -31,7 +31,9 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login Failed: $e')),
+          SnackBar(
+              content: Text(t.S00_Onboarding_Consent.login_failed(
+                  message: e.toString()))),
         );
       }
     } finally {

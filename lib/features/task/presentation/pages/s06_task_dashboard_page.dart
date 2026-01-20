@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: S06_TaskDashboard.Main (原 S12)
-/// 職責：任務主控台。初次進入時會觸發 D01 角色介紹。
+/// Page Key: S06_TaskDashboard.Main
 class S06TaskDashboardPage extends StatefulWidget {
   final String taskId;
 
@@ -18,21 +18,20 @@ class S06TaskDashboardPage extends StatefulWidget {
 }
 
 class _S06TaskDashboardPageState extends State<S06TaskDashboardPage> {
-  // 用來避免 Dialog 重複跳出
   bool _hasShownIntro = false;
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null)
-      return const Scaffold(body: Center(child: Text('Please Login')));
+    if (user == null) {
+      return Scaffold(body: Center(child: Text(t.common.please_login)));
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('任務主頁 (S06)'),
+        title: Text(t.S06_TaskDashboard_Main.title), // '任務主頁'
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        // 監聽「當前使用者」在該任務中的資料
         stream: FirebaseFirestore.instance
             .collection('tasks')
             .doc(widget.taskId)
@@ -41,51 +40,53 @@ class _S06TaskDashboardPageState extends State<S06TaskDashboardPage> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError)
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+                child: Text(
+                    t.common.error_prefix(message: snapshot.error.toString())));
           if (!snapshot.hasData)
             return const Center(child: CircularProgressIndicator());
 
           final memberDoc = snapshot.data!;
           if (!memberDoc.exists)
-            return const Center(child: Text('Member not found'));
+            return Center(
+                child: Text(t.S06_TaskDashboard_Main
+                    .error_member_not_found)); // '找不到成員資料'
 
           final memberData = memberDoc.data() as Map<String, dynamic>;
 
-          // --- 核心邏輯：檢查是否需要跳出 D01 ---
-          // 條件：hasSeenIntro 為 false (或不存在)，且尚未在本頁面跳出過
           final bool hasSeenIntro = memberData['hasSeenIntro'] ?? false;
 
           if (!hasSeenIntro && !_hasShownIntro) {
-            // 使用 Future.microtask 避免在 build 期間 setState
             Future.microtask(() {
               if (!mounted) return;
-              _hasShownIntro = true; // 標記為已觸發，避免重複
+              _hasShownIntro = true;
 
               showDialog(
                 context: context,
-                barrierDismissible: false, // 禁止點空白關閉
+                barrierDismissible: false,
                 builder: (ctx) => D01MemberRoleIntroDialog(
                   taskId: widget.taskId,
                   initialAvatar: memberData['avatar'] ?? 'unknown',
                   canReroll: !(memberData['hasRerolled'] ?? false),
                 ),
-              ).then((_) {
-                // Dialog 關閉後的回調 (通常 DB 已經 update 了)
-              });
+              );
             });
           }
-          // ------------------------------------
 
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('歡迎, ${memberData['displayName']}'),
+                Text(t.S06_TaskDashboard_Main.welcome_message(
+                    name: memberData['displayName'])), // '歡迎, ${name}'
                 const SizedBox(height: 16),
-                Text('你的角色: ${memberData['role']}'),
-                Text('你的頭像: ${memberData['avatar']}'),
+                Text(t.S06_TaskDashboard_Main.role_label(
+                    role: memberData['role'])), // '你的角色: ${role}'
+                Text(t.S06_TaskDashboard_Main.avatar_label(
+                    avatar: memberData['avatar'])), // '你的頭像: ${avatar}'
                 const SizedBox(height: 32),
-                const Text('這裡是記帳主畫面...'),
+                Text(t.S06_TaskDashboard_Main
+                    .placeholder_content), // '這裡是記帳主畫面...'
               ],
             ),
           );

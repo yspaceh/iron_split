@@ -63,7 +63,7 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(t.common.error_prefix(message: e.toString()))),
         );
       }
     } finally {

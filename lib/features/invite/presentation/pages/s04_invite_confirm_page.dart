@@ -2,12 +2,15 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/invite/presentation/dialogs/d02_invite_join_error_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S04_Invite.Confirm
-/// 職責：顯示任務邀請確認資訊。
+/// 職責：
+/// 1. 呼叫 previewInviteCode 顯示任務資訊
+/// 2. 呼叫 joinByInviteCode 執行加入
+/// 3. 若加入失敗，彈出 D02 Error Dialog
 class S04InviteConfirmPage extends StatefulWidget {
-  /// 由 Deep Link 或路由參數傳入的邀請碼
   final String inviteCode;
 
   const S04InviteConfirmPage({
@@ -20,17 +23,10 @@ class S04InviteConfirmPage extends StatefulWidget {
 }
 
 class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
-  // 頁面狀態
   bool _isLoading = true;
   bool _isJoining = false;
+  Map<String, dynamic>? _taskData;
   String? _error;
-
-  // 資料來源
-  Map<String, dynamic>? _taskSummary;
-  List<Map<String, dynamic>> _unlinkedMembers = [];
-
-  // 使用者操作狀態
-  String? _selectedMergeMemberId;
 
   @override
   void initState() {
@@ -38,83 +34,105 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
     _previewInvite();
   }
 
+  /// 1. 預覽邀請碼 (取得任務名稱、隊長等資訊)
   Future<void> _previewInvite() async {
     try {
       final callable =
           FirebaseFunctions.instance.httpsCallable('previewInviteCode');
       final res = await callable.call({'code': widget.inviteCode});
 
-      final data = Map<String, dynamic>.from(res.data);
-
-      if (data['action'] == 'OPEN_TASK') {
-        if (mounted) context.go('/tasks/${data['taskId']}');
-        return;
-      }
-
-      final summary = Map<String, dynamic>.from(data['taskSummary']);
-      final rawGhosts = data['unlinkedMembers'] as List<dynamic>? ?? [];
-      final List<Map<String, dynamic>> ghosts = rawGhosts.map((e) {
-        return Map<String, dynamic>.from(e);
-      }).toList();
-
       if (mounted) {
         setState(() {
-          _taskSummary = summary;
-          _unlinkedMembers = ghosts;
+          _taskData = Map<String, dynamic>.from(res.data);
           _isLoading = false;
         });
       }
-    } on FirebaseFunctionsException catch (e) {
-      _handleError('${t.S04_Invite_Confirm.loading_invite} (${e.code})');
     } catch (e) {
-      _handleError(e.toString());
+      if (mounted) {
+        setState(() {
+          _error = _mapErrorMessage(e);
+          _isLoading = false;
+        });
+        // 預覽失敗直接彈錯 (通常是無效連結)
+        _showErrorDialog(_error!);
+      }
     }
   }
 
-  void _handleError(String message) {
-    if (mounted) {
-      setState(() {
-        _error = message;
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _joinTask() async {
-    if (_isJoining) return;
+  /// 2. 執行加入動作
+  Future<void> _handleJoin() async {
     setState(() => _isJoining = true);
 
-    final user = FirebaseAuth.instance.currentUser;
-    final displayName = user?.displayName ?? '新成員';
-
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        // 理論上 System Gatekeeper 會擋，但這裡做個雙重保險
+        throw FirebaseFunctionsException(
+            code: 'unauthenticated', message: 'AUTH_REQUIRED');
+      }
+
       final callable =
           FirebaseFunctions.instance.httpsCallable('joinByInviteCode');
 
+      // 呼叫後端加入 API
       final res = await callable.call({
         'code': widget.inviteCode,
-        'displayName': displayName,
-        'mergeMemberId': _selectedMergeMemberId,
+        'displayName': user.displayName ?? 'New Member',
       });
 
       final data = Map<String, dynamic>.from(res.data);
       final taskId = data['taskId'];
 
       if (mounted) {
-        // D01 的顯示邏輯將由 Dashboard 內部判斷 (hasSeenIntro)
+        // 加入成功 -> 前往 S06 Dashboard (會自動觸發 D01 Intro)
         context.go('/tasks/$taskId');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text(t.S04_Invite_Confirm.error_generic(message: e.toString())),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-        setState(() => _isJoining = false);
+        // ✅ 3. 錯誤處理邏輯：解析錯誤並顯示 D02 Dialog
+        final errorMsg = _mapErrorMessage(e);
+        _showErrorDialog(errorMsg);
       }
+    } finally {
+      if (mounted) setState(() => _isJoining = false);
+    }
+  }
+
+  /// 顯示 D02 錯誤彈窗
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => D02InviteJoinErrorDialog(
+        errorMessage: message,
+      ),
+    );
+  }
+
+  /// 將後端 Error Code 轉換為 i18n 文字
+  String _mapErrorMessage(dynamic e) {
+    String code = 'UNKNOWN';
+
+    if (e is FirebaseFunctionsException) {
+      code = e.message ?? e.code;
+    } else {
+      code = e.toString();
+    }
+
+    // 依據 Bible 定義的 Error Codes 進行翻譯
+    switch (code) {
+      case 'TASK_FULL':
+        return t.error.taskFull.message(limit: 15);
+      case 'EXPIRED_CODE':
+        return t.error.expiredCode.message(minutes: 15);
+      case 'INVALID_CODE':
+        return t.error.invalidCode.message;
+      case 'AUTH_REQUIRED':
+        return t.error.authRequired.message;
+      case 'ALREADY_IN_TASK':
+        return t.error.alreadyInTask.message;
+      default:
+        // 如果不是預定義的代碼，顯示通用錯誤
+        return t.S04_Invite_Confirm.error_join_failed(message: code);
     }
   }
 
@@ -122,302 +140,123 @@ class _S04InviteConfirmPageState extends State<S04InviteConfirmPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
 
-    // 1. 載入中
+    // 載入中畫面
     if (_isLoading) {
       return Scaffold(
+        appBar: AppBar(title: Text(t.S04_Invite_Confirm.title)),
         body: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text(t.S04_Invite_Confirm.loading_invite,
-                  style: textTheme.bodyMedium),
+              Text(t.S04_Invite_Confirm.loading_invite),
             ],
           ),
         ),
       );
     }
 
-    // 2. 錯誤
-    if (_error != null) {
+    // 預覽失敗畫面 (顯示錯誤 + 回首頁)
+    if (_taskData == null) {
       return Scaffold(
-        appBar: AppBar(
-            title: Text(t.S04_Invite_Confirm.join_failed_title)), // "哎呀！無法加入任務"
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.broken_image_rounded,
-                    size: 64, color: colorScheme.error),
-                const SizedBox(height: 16),
-                Text(
-                  t.S04_Invite_Confirm.join_failed_title,
-                  style: textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _error!,
-                  textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(height: 32),
-                FilledButton.tonal(
-                  onPressed: () => context.go('/tasks'),
-                  child: Text(t.S04_Invite_Confirm.action_home), // "回首頁"
-                ),
-              ],
-            ),
+        appBar: AppBar(title: Text(t.S04_Invite_Confirm.join_failed_title)),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.broken_image_outlined,
+                  size: 64, color: colorScheme.error),
+              const SizedBox(height: 16),
+              Text(
+                _error ?? t.error.unknown.message,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 32),
+              FilledButton(
+                onPressed: () => context.go('/tasks'),
+                child: Text(t.S04_Invite_Confirm.action_home),
+              ),
+            ],
           ),
         ),
       );
     }
 
-    final taskName = _taskSummary?['name'] ?? 'Task';
-    final memberCount = _taskSummary?['memberCount'] ?? 0;
-    final maxMembers = _taskSummary?['maxMembers'] ?? 0;
-    final currency = _taskSummary?['baseCurrency'] ?? 'TWD';
+    // 正常顯示：任務資訊卡片
+    final taskName = _taskData!['name'] ?? 'Unknown Task';
+    final captainName = _taskData!['captainName'] ?? 'Unknown Captain';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S04_Invite_Confirm.title), // "加入任務"
-        centerTitle: true,
+        title: Text(t.S04_Invite_Confirm.title),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => context.go('/tasks'), // 取消則回首頁
+        ),
       ),
-      body: SafeArea(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            Text(
+              t.S04_Invite_Confirm.subtitle, // "您受邀加入以下任務："
+              style: theme.textTheme.bodyLarge
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 24),
+
+            // 任務資訊卡片
+            Card(
+              elevation: 0,
+              color: colorScheme.surfaceContainerHighest,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // --- 任務資訊卡片 ---
-                    Card(
-                      elevation: 0,
-                      color: colorScheme.surfaceContainerHighest,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primaryContainer,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.airplane_ticket_rounded,
-                                  size: 32,
-                                  color: colorScheme.onPrimaryContainer),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              taskName,
-                              textAlign: TextAlign.center,
-                              style: textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.group_outlined,
-                                    size: 16, color: colorScheme.outline),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '$memberCount / $maxMembers', // 數字不需要翻譯
-                                  style: textTheme.bodyMedium
-                                      ?.copyWith(color: colorScheme.outline),
-                                ),
-                                const SizedBox(width: 12),
-                                Icon(Icons.currency_exchange,
-                                    size: 16, color: colorScheme.outline),
-                                const SizedBox(width: 4),
-                                Text(
-                                  currency,
-                                  style: textTheme.bodyMedium
-                                      ?.copyWith(color: colorScheme.outline),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                    Icon(Icons.airplane_ticket,
+                        size: 48, color: colorScheme.primary),
+                    const SizedBox(height: 16),
+                    Text(
+                      taskName,
+                      style: theme.textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-
-                    const SizedBox(height: 32),
-
-                    // --- 連結成員選單 ---
-                    if (_unlinkedMembers.isNotEmpty) ...[
-                      Text(
-                        t.S04_Invite_Confirm
-                            .identity_match_title, // "請問您是以下成員嗎？"
-                        style: textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        t.S04_Invite_Confirm
-                            .identity_match_desc, // "此任務已預先建立了..."
-                        style: textTheme.bodySmall
-                            ?.copyWith(color: colorScheme.outline),
-                      ),
-                      const SizedBox(height: 16),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _unlinkedMembers.length,
-                        separatorBuilder: (ctx, index) =>
-                            const SizedBox(height: 8),
-                        itemBuilder: (ctx, index) {
-                          final member = _unlinkedMembers[index];
-                          final memberId = member['id'];
-                          final displayName = member['displayName'] as String;
-                          final isSelected = _selectedMergeMemberId == memberId;
-                          final initial = displayName.isNotEmpty
-                              ? displayName.characters.first
-                              : '?';
-
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (isSelected) {
-                                  _selectedMergeMemberId = null;
-                                } else {
-                                  _selectedMergeMemberId = memberId;
-                                }
-                              });
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? colorScheme.primaryContainer
-                                    : colorScheme.surface,
-                                border: Border.all(
-                                  color: isSelected
-                                      ? colorScheme.primary
-                                      : colorScheme.outlineVariant,
-                                  width: isSelected ? 2 : 1,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: isSelected
-                                        ? colorScheme.primary
-                                        : colorScheme.surfaceContainerHighest,
-                                    foregroundColor: isSelected
-                                        ? colorScheme.onPrimary
-                                        : colorScheme.onSurfaceVariant,
-                                    child: Text(initial),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Text(
-                                      displayName,
-                                      style: textTheme.bodyLarge?.copyWith(
-                                        fontWeight: isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                        color: isSelected
-                                            ? colorScheme.onPrimaryContainer
-                                            : colorScheme.onSurface,
-                                      ),
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    Icon(Icons.check_circle_rounded,
-                                        color: colorScheme.primary)
-                                  else
-                                    Icon(Icons.radio_button_unchecked,
-                                        color: colorScheme.outline),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color:
-                                colorScheme.secondaryContainer.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            _selectedMergeMemberId != null
-                                ? t.S04_Invite_Confirm
-                                    .status_linking // "將以「連結帳號」方式加入"
-                                : t.S04_Invite_Confirm
-                                    .status_new_member, // "將以「新成員」身分加入"
-                            style: textTheme.labelSmall?.copyWith(
-                                color: colorScheme.onSecondaryContainer),
-                          ),
-                        ),
-                      ),
-                    ],
+                    const SizedBox(height: 8),
+                    Text(
+                      "Captain: $captainName",
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    ),
                   ],
                 ),
               ),
             ),
 
-            // --- 底部按鈕 ---
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 52,
-                      child: FilledButton.tonal(
-                        onPressed:
-                            _isJoining ? null : () => context.go('/tasks'),
-                        child: Text(t.S04_Invite_Confirm.action_cancel), // "取消"
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SizedBox(
-                      height: 52,
-                      child: FilledButton(
-                        onPressed: _isJoining ? null : _joinTask,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          foregroundColor: colorScheme.onPrimary,
-                        ),
-                        child: _isJoining
-                            ? SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2.5,
-                                    color: colorScheme.onPrimary),
-                              )
-                            : Text(t.S04_Invite_Confirm.action_confirm), // "加入"
-                      ),
-                    ),
-                  ),
-                ],
+            const Spacer(),
+
+            // 加入按鈕
+            SizedBox(
+              height: 56,
+              child: FilledButton(
+                onPressed: _isJoining ? null : _handleJoin,
+                child: _isJoining
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(t.S04_Invite_Confirm.action_confirm), // "加入"
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // 取消按鈕
+            SizedBox(
+              height: 56,
+              child: TextButton(
+                onPressed: () => context.go('/tasks'),
+                child: Text(t.S04_Invite_Confirm.action_cancel),
               ),
             ),
           ],

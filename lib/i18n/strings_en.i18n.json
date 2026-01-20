@@ -1,4 +1,13 @@
 {
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "save": "Save",
+    "error_prefix": "Error: ${message}",
+    "please_login": "Please Login"
+  },
   "S00_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
     "content_prefix": "By clicking Start, you agree to our ",
@@ -6,7 +15,8 @@
     "and": " and ",
     "privacy_link": "Privacy Policy",
     "content_suffix": ". We use anonymous login to protect your privacy.",
-    "agree_btn": "Start"
+    "agree_btn": "Start",
+    "login_failed": "Login Failed: ${message}"
   },
   "S01_Onboarding_Name": {
     "title": "Set Display Name",
@@ -18,18 +28,29 @@
     "error_invalid_char": "Invalid characters",
     "action_next": "Set"
   },
+  "S02_Home_TaskList": {
+    "title": "My Tasks",
+    "tab_in_progress": "Active",
+    "tab_completed": "Finished",
+    "mascot_preparing": "Iron Rooster preparing...",
+    "empty_in_progress": "No active tasks",
+    "empty_completed": "No finished tasks",
+    "date_tbd": "Date TBD",
+    "delete_confirm_title": "Delete Task",
+    "delete_confirm_content": "Are you sure you want to delete this task?"
+  },
   "S04_Invite_Confirm": {
     "title": "Join Task",
     "subtitle": "You are invited to join:",
-    "loading_invite": "Loading invitation...",
+    "loading_invite": "Loading invite...",
     "join_failed_title": "Oops! Cannot join task",
     "identity_match_title": "Are you one of these members?",
-    "identity_match_desc": "This task has pre-existing members. If you are one of them, tap the name to link; otherwise, join as a new member.",
+    "identity_match_desc": "This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.",
     "status_linking": "Joining by linking account",
-    "status_new_member": "Joining as a new member",
+    "status_new_member": "Joining as new member",
     "action_confirm": "Join",
     "action_cancel": "Cancel",
-    "action_home": "Back to Home",
+    "action_home": "Home",
     "error_join_failed": "Join failed: ${message}",
     "error_generic": "Error: ${message}"
   },
@@ -51,16 +72,27 @@
     "currency_jpy": "JPY",
     "currency_usd": "USD"
   },
-  
+  "S06_TaskDashboard_Main": {
+    "title": "Task Dashboard",
+    "error_member_not_found": "Member not found",
+    "welcome_message": "Welcome, ${name}",
+    "role_label": "Your Role: ${role}",
+    "avatar_label": "Your Avatar: ${avatar}",
+    "placeholder_content": "Dashboard content goes here..."
+  },
   "D01_InviteJoin_Success": {
-    "title": "Task Joined!",
-    "assigned_avatar": "Your assigned animal avatar is:",
-    "avatar_note": "Note: You can redraw your avatar only once.",
-    "action_continue": "Start Tracking"
+    "title": "Joined Successfully!",
+    "assigned_avatar": "Your assigned avatar:",
+    "avatar_note": "Note: You can reroll only once.",
+    "action_continue": "Start"
+  },
+  "D01_MemberRole_Intro": {
+    "action_reroll": "Reroll Avatar",
+    "error_reroll_failed": "Reroll failed: ${message}"
   },
   "D02_InviteJoin_Error": {
     "title": "Cannot Join Task",
-    "message": "The link is invalid, expired, or the task is full.",
+    "message": "Link invalid, expired, or task is full.",
     "action_close": "Close"
   },
   "D03_TaskCreate_Confirm": {
@@ -76,33 +108,39 @@
     "share_subject": "Join Iron Split Task",
     "share_message": "Join my Iron Split task \"${taskName}\"!\nCode: ${code}\nLink: ${link}"
   },
+  "D04_Common_UnsavedChanges": {
+    "title": "Unsaved Changes",
+    "content": "Current settings will be discarded. Are you sure you want to leave?",
+    "action_leave": "Discard",
+    "action_stay": "Keep Editing"
+  },
   "S19_Settings_Tos": {
     "title": "Terms of Service"
   },
   "error": {
     "taskFull": {
       "title": "Task Full",
-      "message": "This task has reached its limit of {limit} members. Please contact the captain."
+      "message": "Task member limit ({limit}) reached. Please contact captain."
     },
     "expiredCode": {
       "title": "Invite Expired",
-      "message": "This link has expired ({minutes} min TTL). Please request a new one from the captain."
+      "message": "Invite link expired ({minutes} mins). Please ask captain for a new one."
     },
     "invalidCode": {
-      "title": "Invalid Code",
-      "message": "Invalid invite link. Please check if it's correct or has been deleted."
+      "title": "Invalid Link",
+      "message": "Invalid invite link."
     },
     "authRequired": {
-      "title": "Auth Required",
-      "message": "Please log in to join the task."
+      "title": "Login Required",
+      "message": "Please login to join task."
     },
     "alreadyInTask": {
-      "title": "Already a Member",
-      "message": "You are already a member of this task."
+      "title": "Already Member",
+      "message": "You are already in this task."
     },
     "unknown": {
       "title": "Error",
-      "message": "An unexpected error occurred. Please try again later."
+      "message": "An unexpected error occurred."
     }
   }
 }

@@ -1,4 +1,13 @@
 {
+  "common": {
+    "cancel": "取消",
+    "delete": "刪除",
+    "confirm": "確認",
+    "back": "返回",
+    "save": "保存",
+    "error_prefix": "錯誤: ${message}",
+    "please_login": "請先登入"
+  },
   "S00_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
     "content_prefix": "歡迎使用 Iron Split。點擊開始即代表您同意我們的 ",
@@ -6,7 +15,8 @@
     "and": " 與 ",
     "privacy_link": "隱私政策",
     "content_suffix": "。我們採用匿名登入，保障您的隱私。",
-    "agree_btn": "開始使用"
+    "agree_btn": "開始使用",
+    "login_failed": "登入失敗: ${message}"
   },
   "S01_Onboarding_Name": {
     "title": "名稱設定",
@@ -17,6 +27,17 @@
     "error_too_long": "最多 10 個字",
     "error_invalid_char": "包含無效字元",
     "action_next": "設定完成"
+  },
+  "S02_Home_TaskList": {
+    "title": "我的任務",
+    "tab_in_progress": "進行中",
+    "tab_completed": "已完成",
+    "mascot_preparing": "鐵公雞準備中...",
+    "empty_in_progress": "目前沒有進行中的任務",
+    "empty_completed": "沒有已完成的任務",
+    "date_tbd": "日期未定",
+    "delete_confirm_title": "確認刪除",
+    "delete_confirm_content": "確定要刪除這個任務嗎？"
   },
   "S04_Invite_Confirm": {
     "title": "加入任務",
@@ -51,11 +72,23 @@
     "currency_jpy": "日圓 (JPY)",
     "currency_usd": "美金 (USD)"
   },
+  "S06_TaskDashboard_Main": {
+    "title": "任務主頁",
+    "error_member_not_found": "找不到成員資料",
+    "welcome_message": "歡迎, ${name}",
+    "role_label": "你的角色: ${role}",
+    "avatar_label": "你的頭像: ${avatar}",
+    "placeholder_content": "這裡是記帳主畫面..."
+  },
   "D01_InviteJoin_Success": {
     "title": "成功加入任務！",
     "assigned_avatar": "你的隨機分配頭像為：",
     "avatar_note": "註：頭像僅能重抽一次。",
     "action_continue": "開始記帳"
+  },
+  "D01_MemberRole_Intro": {
+    "action_reroll": "不喜歡？重抽一次",
+    "error_reroll_failed": "重抽失敗: ${message}"
   },
   "D02_InviteJoin_Error": {
     "title": "無法加入任務",
@@ -74,6 +107,12 @@
     "preparing_share": "準備邀請函...",
     "share_subject": "邀請加入 Iron Split 任務",
     "share_message": "快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}"
+  },
+  "D04_Common_UnsavedChanges": {
+    "title": "任務設定尚未完成",
+    "content": "目前的設定會被取消，真的要離開？",
+    "action_leave": "回首頁",
+    "action_stay": "繼續編輯"
   },
   "S19_Settings_Tos": {
     "title": "服務條款"
