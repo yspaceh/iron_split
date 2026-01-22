@@ -5,17 +5,17 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart'; // 需確認 pubspec.yaml 有加 url_launcher
 
-/// Page Key: S00_Onboarding.Consent (CSV Page 1)
+/// Page Key: S50_Onboarding.Consent (CSV Page 1)
 /// 職責：顯示歡迎動畫與服務條款，同意後進行匿名登入。
-class S00OnboardingConsentPage extends StatefulWidget {
-  const S00OnboardingConsentPage({super.key});
+class S50OnboardingConsentPage extends StatefulWidget {
+  const S50OnboardingConsentPage({super.key});
 
   @override
-  State<S00OnboardingConsentPage> createState() =>
-      _S00OnboardingConsentPageState();
+  State<S50OnboardingConsentPage> createState() =>
+      _S50OnboardingConsentPageState();
 }
 
-class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
+class _S50OnboardingConsentPageState extends State<S50OnboardingConsentPage> {
   bool _isLoading = false;
 
   Future<void> _handleStart() async {
@@ -32,7 +32,7 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(t.S00_Onboarding_Consent.login_failed(
+              content: Text(t.S50_Onboarding_Consent.login_failed(
                   message: e.toString()))),
         );
       }
@@ -77,7 +77,7 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
                     ),
                     const SizedBox(height: 32),
                     Text(
-                      t.S00_Onboarding_Consent.title,
+                      t.S50_Onboarding_Consent.title,
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: colorScheme.primary,
@@ -101,10 +101,10 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: colorScheme.onSurfaceVariant),
                       children: [
-                        TextSpan(text: t.S00_Onboarding_Consent.content_prefix),
+                        TextSpan(text: t.S50_Onboarding_Consent.content_prefix),
                         // 服務條款連結
                         TextSpan(
-                          text: t.S00_Onboarding_Consent.terms_link,
+                          text: t.S50_Onboarding_Consent.terms_link,
                           style: TextStyle(
                             color: colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -114,10 +114,10 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
                             ..onTap = () => context
                                 .push('/settings/tos'), // 導向 App 內 TOS 頁面
                         ),
-                        TextSpan(text: t.S00_Onboarding_Consent.and),
+                        TextSpan(text: t.S50_Onboarding_Consent.and),
                         // 隱私政策連結
                         TextSpan(
-                          text: t.S00_Onboarding_Consent.privacy_link,
+                          text: t.S50_Onboarding_Consent.privacy_link,
                           style: TextStyle(
                             color: colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -127,7 +127,7 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
                             ..onTap = () => _openUrl(
                                 'https://example.com/privacy'), // 外部連結範例
                         ),
-                        TextSpan(text: t.S00_Onboarding_Consent.content_suffix),
+                        TextSpan(text: t.S50_Onboarding_Consent.content_suffix),
                       ],
                     ),
                   ),
@@ -141,7 +141,7 @@ class _S00OnboardingConsentPageState extends State<S00OnboardingConsentPage> {
                       onPressed: _isLoading ? null : _handleStart,
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : Text(t.S00_Onboarding_Consent.agree_btn),
+                          : Text(t.S50_Onboarding_Consent.agree_btn),
                     ),
                   ),
                 ],

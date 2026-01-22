@@ -1,0 +1,216 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "confirm": "確認",
+    "back": "戻る",
+    "save": "保存",
+    "error_prefix": "エラー: {message}",
+    "please_login": "ログインしてください",
+    "loading": "読み込み中...",
+    "edit": "編集",
+    "close": "閉じる",
+    "me": "自分"
+  },
+  "S50_Onboarding_Consent": {
+    "title": "Iron Split へようこそ",
+    "content_prefix": "開始することで、",
+    "terms_link": "利用規約",
+    "and": " と ",
+    "privacy_link": "プライバシーポリシー",
+    "content_suffix": " に同意したものとみなされます。",
+    "agree_btn": "はじめる",
+    "login_failed": "ログイン失敗: {message}"
+  },
+  "S51_Onboarding_Name": {
+    "title": "名前設定",
+    "description": "アプリ内で表示する名前を入力してください（1-10文字）。",
+    "field_hint": "ニックネームを入力",
+    "field_counter": "{current}/10",
+    "error_empty": "名前を入力してください",
+    "error_too_long": "10文字以内で入力してください",
+    "error_invalid_char": "無効な文字が含まれています",
+    "action_next": "設定"
+  },
+  "S10_Home_TaskList": {
+    "title": "マイタスク",
+    "tab_in_progress": "進行中",
+    "tab_completed": "完了済",
+    "mascot_preparing": "鉄の雄鶏、準備中...",
+    "empty_in_progress": "進行中のタスクはありません",
+    "empty_completed": "完了したタスクはありません",
+    "date_tbd": "日付未定",
+    "delete_confirm_title": "削除の確認",
+    "delete_confirm_content": "このタスクを削除してもよろしいですか？"
+  },
+  "S11_Invite_Confirm": {
+    "title": "タスクに参加",
+    "subtitle": "以下のタスクに招待されました：",
+    "loading_invite": "招待状を読み込み中...",
+    "join_failed_title": "タスクに参加できません",
+    "identity_match_title": "あなたは以下のメンバーですか？",
+    "identity_match_desc": "このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。",
+    "status_linking": "「アカウント連携」で参加します",
+    "status_new_member": "「新規メンバー」として参加します",
+    "action_confirm": "参加",
+    "action_cancel": "キャンセル",
+    "action_home": "ホームへ",
+    "error_join_failed": "参加失敗: {message}",
+    "error_generic": "エラー: {message}"
+  },
+  "S13_Task_Dashboard": {
+    "title": "ダッシュボード",
+    "tab_group": "グループ",
+    "tab_personal": "個人",
+    "label_prepay_balance": "プール残高",
+    "label_my_balance": "私の収支",
+    "label_remainder": "端数: {amount}",
+    "fab_record": "記録",
+    "empty_records": "記録がありません",
+    "rule_random": "ランダム",
+    "rule_order": "順番",
+    "rule_member": "指定",
+    "nav_to_record": "記録ページへ移動します..."
+  },
+  "S15_Record_Edit": {
+    "title_create": "記録を追加",
+    "title_edit": "記録を編集",
+    "section_split": "割り勘情報",
+    "label_date": "日付",
+    "label_title": "項目名",
+    "hint_title": "何に使いましたか？",
+    "label_payment_method": "支払方法",
+    "val_prepay": "前受金 (Prepay)",
+    "val_member_paid": "{name} が立替",
+    "label_amount": "金額",
+    "label_rate": "レート (1 {base} = ? {target})",
+    "label_memo": "メモ",
+    "hint_memo": "備考を入力...",
+    "action_save": "保存",
+    "val_split_details": "詳細を編集",
+    "val_split_summary": "計 {amount} を{method}で割り勘",
+    "method_even": "均等",
+    "method_exact": "金額指定",
+    "method_percent": "割合 (%)",
+    "info_rate_source": "レートの提供元",
+    "msg_rate_source": "為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。",
+    "btn_close": "閉じる",
+    "val_converted_amount": "≈ {base}{symbol} {amount}",
+    "val_split_remaining": "剩餘金額",
+    "err_amount_not_enough": "剩餘金額不足",
+    "msg_function_not_implemented": "功能開發中",
+    "val_mock_note": "細項說明"
+  },
+  "S16_TaskCreate_Edit": {
+    "title": "タスク作成",
+    "section_name": "タスク名",
+    "section_period": "期間",
+    "section_settings": "設定",
+    "field_name_hint": "例：東京5日間の旅",
+    "field_name_counter": "{current}/20",
+    "field_start_date": "開始日",
+    "field_end_date": "終了日",
+    "field_currency": "通貨",
+    "field_member_count": "参加人数",
+    "action_save": "保存",
+    "picker_done": "完了",
+    "error_name_empty": "タスク名を入力してください",
+    "currency_twd": "台湾ドル (TWD)",
+    "currency_jpy": "日本円 (JPY)",
+    "currency_usd": "米ドル (USD)"
+  },
+  "S71_SystemSettings_Tos": {
+    "title": "利用規約"
+  },
+  "D01_MemberRole_Intro": {
+    "title": "あなたのキャラクター",
+    "action_reroll": "動物を変える",
+    "action_enter": "タスクへ進む",
+    "desc_reroll_left": "あと1回変更可",
+    "desc_reroll_empty": "変更不可",
+    "dialog_content": "これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！"
+  },
+  "D02_Invite_Result": {
+    "title": "参加失敗",
+    "action_back": "ホームへ戻る",
+    "error_INVALID_CODE": "招待コードが無効です。リンクが正しいか確認してください。",
+    "error_EXPIRED_CODE": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
+    "error_TASK_FULL": "定員オーバーです（上限15名）。参加できません。",
+    "error_AUTH_REQUIRED": "認証に失敗しました。アプリを再起動してください。",
+    "error_UNKNOWN": "不明なエラーが発生しました。後ほどお試しください。"
+  },
+  "D03_TaskCreate_Confirm": {
+    "title": "設定の確認",
+    "label_name": "タスク名",
+    "label_period": "期間",
+    "label_currency": "通貨",
+    "label_members": "人数",
+    "action_confirm": "確認",
+    "action_back": "編集に戻る",
+    "creating_task": "作成中...",
+    "preparing_share": "招待を準備中...",
+    "share_subject": "Iron Split タスク招待",
+    "share_message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\nリンク：{link}"
+  },
+  "D04_TaskCreate_Notice": {
+    "title": "設定は完了していません",
+    "content": "現在の設定は破棄されます。本当に移動しますか？",
+    "action_leave": "ホームへ戻る",
+    "action_stay": "編集を続ける"
+  },
+  "B02_SplitExpense_Edit": {
+    "title": "詳細割り勘",
+    "section_members": "メンバー配分",
+    "label_remainder": "残り: {amount}",
+    "label_total": "合計: {current}/{target}",
+    "error_total_mismatch": "合計金額が一致しません",
+    "error_percent_mismatch": "合計は100%である必要があります",
+    "action_save": "決定",
+    "hint_amount": "金額",
+    "hint_percent": "%"
+  },
+  "B03_SplitMethod_Edit": {
+    "title": "割り勘方法",
+    "method_even": "均等 (Even)",
+    "method_exact": "金額指定 (Exact)",
+    "method_percent": "割合 (Percent)",
+    "method_share": "シェア数 (Share)",
+    "desc_even": "選択したメンバーで均等割",
+    "desc_exact": "金額を手動で入力",
+    "desc_percent": "パーセンテージで配分",
+    "desc_share": "シェア数で配分 (例: 大人2, 子供1)"
+  },
+  "B07_PaymentMethod_Edit": {
+    "title": "支払元を選択",
+    "type_member": "メンバー立替",
+    "type_prepay": "プール金から",
+    "desc_member": "メンバーが一時的に支払う",
+    "desc_prepay": "現在のプール残高から支払う"
+  },
+  "error": {
+    "taskFull": {
+      "title": "タスク満員",
+      "message": "メンバー数が上限 {limit} 人に達しています。隊長に連絡してください。"
+    },
+    "expiredCode": {
+      "title": "招待コード期限切れ",
+      "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
+    },
+    "invalidCode": {
+      "title": "リンク無効",
+      "message": "無効な招待リンクです。"
+    },
+    "authRequired": {
+      "title": "ログインが必要",
+      "message": "タスクに参加するにはログインしてください。"
+    },
+    "alreadyInTask": {
+      "title": "既に参加済",
+      "message": "既にこのタスクのメンバーです。"
+    },
+    "unknown": {
+      "title": "エラー",
+      "message": "予期せぬエラーが発生しました。"
+    }
+  }
+}

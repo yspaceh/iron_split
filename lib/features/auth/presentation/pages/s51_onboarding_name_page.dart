@@ -4,16 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: S01_Onboarding.Name (CSV Page 2)
+/// Page Key: S51_Onboarding.Name (CSV Page 2)
 /// 職責：輸入使用者顯示名稱 (Display Name)，並更新至 Firebase Auth Profile。
-class S01OnboardingNamePage extends StatefulWidget {
-  const S01OnboardingNamePage({super.key});
+class S51OnboardingNamePage extends StatefulWidget {
+  const S51OnboardingNamePage({super.key});
 
   @override
-  State<S01OnboardingNamePage> createState() => _S01OnboardingNamePageState();
+  State<S51OnboardingNamePage> createState() => _S51OnboardingNamePageState();
 }
 
-class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
+class _S51OnboardingNamePageState extends State<S51OnboardingNamePage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   bool _isSaving = false;
@@ -77,7 +77,7 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S01_Onboarding_Name.title), // "名稱設定"
+        title: Text(t.S51_Onboarding_Name.title), // "名稱設定"
       ),
       body: SafeArea(
         child: Padding(
@@ -87,7 +87,7 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
             children: [
               // 說明文字
               Text(
-                t.S01_Onboarding_Name.description,
+                t.S51_Onboarding_Name.description,
                 style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 24),
@@ -105,10 +105,10 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
                   FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
                 ],
                 decoration: InputDecoration(
-                  hintText: t.S01_Onboarding_Name.field_hint,
+                  hintText: t.S51_Onboarding_Name.field_hint,
                   border: const OutlineInputBorder(),
                   // 自訂 Counter 顯示格式
-                  counterText: t.S01_Onboarding_Name.field_counter(
+                  counterText: t.S51_Onboarding_Name.field_counter(
                     current: _nameController.text.length,
                   ),
                   filled: true,
@@ -127,7 +127,7 @@ class _S01OnboardingNamePageState extends State<S01OnboardingNamePage> {
                   onPressed: (_isValid && !_isSaving) ? _handleSave : null,
                   child: _isSaving
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(t.S01_Onboarding_Name.action_next), // "設定完成"
+                      : Text(t.S51_Onboarding_Name.action_next), // "設定完成"
                 ),
               ),
             ],

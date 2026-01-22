@@ -1,10 +1,9 @@
-> 單一真相來源（Single Source of Truth）：之後你跟 ChatGPT / Gemini CLI 溝通都以這份為準。
->
-> 更新原則：只在最下方「變更紀錄」新增一筆（append-only），避免 AI 記憶漂移。
+# Iron Split Project Bible（專案聖經）
+
+> **單一真相來源（Single Source of Truth）**
+> **版本**：v2.2 (Full Restoration & Schema Update)
 
 ---
-
-# Iron Split Project Bible（專案聖經）
 
 ## 1. 專案目標（MVP）
 
@@ -69,11 +68,31 @@
 - **視覺主題**：英國鄉村農場動物（大頭 icon）
 - **分配機制**：
   - 加入時隨機分配「不重複」頭像
-  - 每人有 1 次重抽機會（第二次即鎖定）
+  - ## 每人有 1 次重抽機會（第二次即鎖定）
+- **動物**：
+- Holstein Friesian (Dairy Cow) — 荷斯登乳牛
+- Horse (Chestnut coat) — 栗色馬
+- Domestic Goat — 家山羊
+- Suffolk Sheep — 薩福克羊（黑臉羊）
+- Domestic Pig — 家豬
+- Border Collie — 邊境牧羊犬
+- European Badger — 歐洲獾
+- European Hare — 歐洲野兔
+- Red Fox — 赤狐
+- Donkey — 驢
+- European Hedgehog — 歐洲刺蝟
+- Red Squirrel — 紅松鼠
+- Roe Deer — 狍鹿
+- Mallard — 綠頭鴨
+- House Mouse — 家鼠
+- Barn Owl — 倉鴞
+- European Robin — 歐亞知更鳥
+- Eurasian Otter — 歐亞水獺
+- Stoat — 白鼬
 
 ---
 
-## 5. MVP 功能範圍（以 wireframe 為準）
+## 5. MVP 功能範圍（核心邏輯 Updated）
 
 ### 5.1 Onboarding / 初始設定
 
@@ -81,102 +100,55 @@
 - 輸入顯示名稱（p2）
 - 未完成初始設定者：點 deep link 時必須先走完 p1 → p2 才能進入任務確認/加入流程
 
-### 5.2 邀請加入（Invite Flow）— Deep link + Share sheet + QR
+### 5.2 邀請加入（Invite Flow）— Universal Link
 
-> 核心：**多人共用邀請碼**、**名額限制**、**加入順序制**、**已加入者不受 TTL 影響**
+> 核心：**多人共用邀請碼**、**名額限制**、**加入順序制**
 
-- 邀請碼/邀請連結可從任務內其他入口再次分享（MVP 允許多入口共用相同邀請邏輯；僅 UI 入口不同）。
-- 所有分享入口呼叫相同的 createInviteCode / deep link 生成邏輯（避免分叉）。
-
-#### A) 分享方式
-
-- 隊長使用手機內建 **Share sheet** 分享到 LINE / Email
-- QR Code：同一個 deep link 的 QR 形式
-
-#### B) Deep link 規格（Join）
-
-- 格式：`iron-split://join?code=XXXXXXXX`
-- code 規格：**8 位大寫英數**（可讀、可貼到聊天中不恐怖）
-- TTL：**15 分鐘**
-  - **僅對「尚未加入任務的人」有效**
-  - 已加入成員再次點連結：**直接打開該任務**（即使已過期也不擋）
-  - 隊長點自己的分享連結：**只打開任務，不扣名額**
-
-#### C) 多人共用 + 名額規則
-
-- 邀請碼為「多人共用」：隊長分享到群組後，所有人使用同一組 code 加入同一個任務
-- 加入順序制：先到先加入
-- 若名額已滿：
-  - 顯示錯誤（TASK_FULL 專用文案）
-  - **停留在錯誤畫面**（不自動跳轉）
-  - 引導「請私訊隊長」
-
-#### D) 受邀者流程（未加入者）
-
-1. 開啟連結 → 若未完成初始設定：ToS（p1）→ 顯示名稱（p2）
-2. 進入 **確認邀請（p7）**（顯示任務基本資訊）
-3. 加入成功 → 進入任務主畫面
-
-#### E) 錯誤 UI 與錯誤代碼
-
-- token/code 無效或過期：共用 p10 UI
-  - `INVALID_CODE` / `EXPIRED_CODE`
-- 名額已滿：仍使用錯誤頁（p10）但文案依 code 顯示
-  - `TASK_FULL`
-- 其他（例如需要登入/匿名 auth 尚未完成）
-  - `AUTH_REQUIRED`
-
----
+- **格式**：`https://iron-split.app/join?code=XXXXXXXX` (Universal Link)
+- **Web Fallback**：
+  - 已安裝 App：直接開啟 App 導向 `S11_Invite.Confirm`。
+  - 未安裝 App：開啟 Landing Page 引導下載 App；安裝後 S00 還原流程。
+- **規則**：邀請碼為「多人共用」，先到先加入；名額滿時顯示 `TASK_FULL`。
 
 ### 5.3 任務建立
 
-- 欄位：任務名稱、期間（日期）、結算幣別、餘額處理方式
-- 結算前：任務內資料為「可回溯更新」
-- 任務建立成功後，系統會自動在 tasks/{taskId}/members 建立隊長的 member document：
-  - role = captain
-  - uid = captainUid
-  - avatar：建立時即分配（任務內不重複）
-  - hasRerolled 初始為 false
-  - hasSeenRoleIntro 初始為 false（用於首次進入任務時觸發角色揭曉 Dialog）
+- 欄位：任務名稱、期間（日期）、結算幣別、餘額處理方式。
+- 結算前：任務內資料為「可回溯更新」。
 
 ### 5.4 記錄（費用/預收）新增 / 編輯 / 刪除
 
-- 記錄欄位：日期、標題、原幣金額+幣別、付款人、參與成員、匯率（必要時）、備註（可選）
-- 主畫面點卡片 → 進入與新增很類似的編輯畫面
-- 編輯模式底部提供刪除入口（p19/p25）
-- 刪除失敗：顯示「刪除失敗 dialog」
+- 記錄欄位：日期、標題、原幣金額+幣別、付款人、參與成員、匯率（必要時）、備註（可選）。
+- 主畫面點卡片 → 進入編輯畫面 (S15)。
 
-### 5.5 多幣別與匯率
+### 5.5 多幣別與匯率 (Logic Updated)
 
-- 任務有結算幣別（baseCurrency）
-- 記錄可用任意 ISO 幣別輸入
-- 幣別 icon 行為：點選 → 開啟 selector list（全域一致）
-- 匯率顯示在輸入框中，使用者可手動修改
-- 匯率抓取失敗：
-  - 顯示提示文案
-  - 或使用任務內前一筆同幣別匯率（若存在）作為預填建議
+- **策略**：混合模式 (Local List + Remote Rate)。
+- **幣別清單**：使用本地白名單 (`CurrencyConstants`)，包含約 20 種常用旅遊貨幣（如 TWD, JPY, USD, KRW...），確保選單開啟無延遲。
+- **匯率來源**：使用 **Frankfurter API** (Open Source / ECB Data)。
+  - **安全性**：前端直接呼叫 (Client-side)，無 API Key 外洩風險。
+  - **錯誤處理**：若 API 請求失敗（網路問題或服務中斷），系統將靜默處理並回傳 null，UI 應自動退化為「允許使用者手動輸入匯率」的狀態，不阻擋流程。
+- **匯率鎖定原則**：
+  - 建立/編輯時，系統抓取當下匯率（或使用者手動輸入）。
+  - 寫入 DB 後，該筆記錄的 `exchangeRate` 即**鎖定**。
+  - 除非使用者手動進入編輯頁並修改，否則不隨市場波動，確保該筆消費的成本恆定。
 
-### 5.6 餘額（Remainder）策略（使用者可選）
+### 5.6 餘額（Remainder）策略 (Logic Updated)
 
-> 原則：結算前不要把餘額預先灌進個人帳；保留在費用層/餘額罐，結算時才套用規則
+> 原則：結算前不要把餘額預先灌進個人帳；保留在 `remainderBuffer`，結算時才套用規則。
 
-1. **餘數轉盤**：每筆結算餘額進餘額罐；結算時隨機挑 1 人負擔
-2. **我來請客**：每筆結算餘額進餘額罐；由自願的 1 名成員負擔
-3. **平均分攤（輪流）**：每筆餘額按加入順序輪流分攤到成員
-   - 順序固定：以加入任務順序，之後不再變更
+1. **餘數轉盤 (Random)**：每筆結算餘額進餘額罐；結算時系統隨機挑 1 人負擔。
+2. **指定成員 (Member)**：由特定成員（如隊長）概括承受。
+3. **輪流 (Order)**：每筆餘額按加入順序輪流分攤到成員。
 
-### 5.7 結算流程（wireframe p33 起）
+### 5.7 結算流程
 
-- 結算按下後：p33 → p36 → p37 → p38 → p39（回到主畫面但下方區域變換）
-- 結算完成後：任務鎖定唯讀、開始 30 天倒數（到期清除）
+- 結算按下後：進入結算預覽 -> 支付確認 -> 結果頁。
+- 結算完成後：任務鎖定唯讀、開始 30 天倒數（到期清除）。
 
 ### 5.8 匯出（PDF）
 
-- 由 App 端產生 PDF（以透明度為核心）
-- 格式：
-  - 第 1 頁：結算結果（每人應付/應收；已套用餘額規則後的最終值）
-  - 後續頁：全部明細（以「輸入的費用/預收」為主：日期、標題、金額、匯率、參與成員）
-- PDF 不包含「收款方式」資料（收款方式只用於分享/請款）
+- 由 App 端產生 PDF。
+- 內容：結算結果 + 詳細明細。
 
 ---
 
@@ -184,22 +156,13 @@
 
 ### 6.1 Intent 列表
 
-- `JoinTaskIntent(code)`：`iron-split://join?code=XXXXXXXX`
-- `OpenSettlementIntent(taskId)`：`iron-split://settlement?taskId=TASK_ID`
-  - **隊長分享限定**
-  - 非隊長開啟：MVP 規則 = 開啟該任務主畫面（或顯示權限提示；先選一個固定策略）
+- `JoinTaskIntent(code)`
+- `OpenSettlementIntent(taskId)` (隊長限定)
 
 ### 6.2 套件與隔離策略
 
-- 為了穩定監聽 deep link（冷啟動 initial link + 熱啟動 stream），採用 `app_links`
-- 但必須做「可替換」封裝：
-  - 建立 `DeepLinkService`（介面/抽象層）
-  - 只有 `DeepLinkService` 可以 import `app_links`
-  - UI / Router 只接收 `DeepLinkIntent`（不直接碰 app_links）
-
-### 6.3 Dedupe 規則（必做）
-
-- 800ms 內相同 URI 去重，避免 Android/Router 情況下重複觸發導覽
+- 使用 `app_links`，但封裝於 `DeepLinkService`。
+- Dedupe 規則：800ms 內相同 URI 去重。
 
 ---
 
@@ -213,88 +176,59 @@
 
 ### 7.2 Cloud Functions v2（邀請）
 
-- functions：
-  - `createInviteCode`
-  - `previewInviteCode`
-  - `joinByInviteCode`
-- 原子化控管：使用 Firestore Transaction
-  - 檢查名額 → 加入成員 → 更新計數 必須同一個 transaction
-- i18n 策略：後端只回傳 Error Code（不回傳文字），前端依語言顯示文案
+- `createInviteCode`, `previewInviteCode`, `joinByInviteCode`。
+- 使用 Firestore Transaction 確保名額控制原子性。
 
-### 7.3 Security / 隔離（High-level）
+### 7.3 Security / 隔離
 
-- Security Rules：確保不同任務資料隔離（A 任務成員不可讀 B 任務）
-- 個資：顯示名為使用者自訂；不依賴真實姓名
+- Firestore Rules：確保不同任務資料隔離。
 
 ---
 
-## 7.4 Firestore Data Model（Invite Flow v2 / Ghost Member）
+## 7.4 Firestore Data Model (Schema v2.0 Updated)
 
 ### Collection: `tasks`
 
-| Field                 | Type       | Description                                |
-| --------------------- | ---------- | ------------------------------------------ |
-| name                  | string     | 任務名稱                                   |
-| captainUid            | string     | 隊長 UID                                   |
-| baseCurrency          | string     | 結算基準幣別                               |
-| maxMembers            | number     | 任務人數上限（建立任務時由隊長設定，<=15） |
-| memberCount           | number     | 目前佔用坑位人數（含 Ghost）               |
-| activeInviteCode      | string?    | 目前有效邀請碼                             |
-| activeInviteExpiresAt | timestamp? | 邀請碼過期時間                             |
+| Field           | Type   | Description                       |
+| :-------------- | :----- | :-------------------------------- |
+| name            | string | 任務名稱                          |
+| captainUid      | string | 隊長 UID                          |
+| baseCurrency    | string | 結算基準幣別                      |
+| balanceRule     | string | `random` / `order` / `member`     |
+| remainderBuffer | number | **暫存零頭** (累積除不盡的小數位) |
+| totalPool       | number | **公款總額** (預收 - 公款支出)    |
+| status          | string | `active`, `settled`, `closed`     |
+| members         | map    | `{uid: {role, avatar...}}`        |
 
----
+### Sub-collection: `tasks/{taskId}/records` (New)
 
-### Sub-collection: `tasks/{taskId}/members`
+| Field        | Type      | Description                              |
+| :----------- | :-------- | :--------------------------------------- |
+| type         | string    | `expense` (支出) 或 `prepay` (預收/入金) |
+| amount       | number    | 原幣金額                                 |
+| currency     | string    | 原幣幣別                                 |
+| exchangeRate | number    | **鎖定匯率**                             |
+| payerType    | string    | `member` (代墊) 或 `pool` (公款支出)     |
+| payerId      | string    | 付款人 UID                               |
+| splitMethod  | string    | `even`, `exact`, `percent`, `share`      |
+| splitDetails | map       | `{uid: amount}`                          |
+| date         | timestamp | 消費日期                                 |
+| createdAt    | timestamp | 建立時間（server timestamp）             |
 
-> **memberDocId 為帳務唯一識別，所有費用/預收皆關聯至此 ID**
+> 註：`date` 在資料庫中以 timestamp 儲存，僅作為排序與一致性用途；
+> 畫面顯示時一律格式化為 `YYYY/MM/DD`，不呈現時區概念，亦不作為時區換算依據。
+> 補充：同一天多筆記錄排序：先以 `date`（顯示用日期）分組，再以 `createdAt` 做穩定排序。
 
-| Field            | Type      | Description                                     |
-| ---------------- | --------- | ----------------------------------------------- |
-| uid              | string?   | 已連結使用者 UID；Ghost 為 null                 |
-| displayName      | string    | 顯示名稱                                        |
-| role             | string    | captain / member                                |
-| avatar           | string    | 動物頭像 ID（任務內不可重複）                   |
-| isLinked         | boolean   | 是否已連結真實帳號                              |
-| hasRerolled      | boolean   | 是否已使用一次重抽                              |
-| joinedAt         | timestamp | 建立或加入時間                                  |
-| hasSeenRoleIntro | boolean   | 是否已看過角色揭曉 Dialog（首次進入任務時觸發） |
+### Sub-collection: `tasks/{taskId}/settlements` (New)
 
----
+| Field           | Type      | Description                       |
+| :-------------- | :-------- | :-------------------------------- |
+| transferActions | array     | `[{from: B, to: A, amount: 100}]` |
+| closedAt        | timestamp | 結算時間                          |
 
-### Collection: `invites`
+### 7.5 外部 API
 
-| Field        | Type      | Description            |
-| ------------ | --------- | ---------------------- |
-| code         | string    | 8 碼邀請碼（大寫英數） |
-| taskId       | string    | 對應任務 ID            |
-| expiresAt    | timestamp | 過期時間               |
-| createdAt    | timestamp | 建立時間               |
-| createdByUid | string    | 建立者（隊長）         |
-
----
-
-## 7.5 Cloud Functions（Invite Flow v2）
-
-### createInviteCode(taskId)
-
-- 驗證隊長權限
-- 產生 8 碼邀請碼（排除 I,L,1,O,0）
-- Transaction：寫入 `invites` + 更新 `tasks.activeInviteCode`
-- 回傳：`code`, `expiresAt`
-
-### previewInviteCode(code)
-
-- 驗證邀請碼是否存在且未過期
-- 讀取任務摘要
-- 回傳尚未連結的 Ghost Members（供前端選擇）
-
-### joinByInviteCode(code, displayName, mergeMemberId?)
-
-- 驗證邀請碼、名額
-- 若提供 mergeMemberId：將該 memberDocId 綁定 uid
-- 否則建立新 member
-- Transaction：memberCount +1、avatar 分配
-- 回傳：taskId, avatar
+- **Exchange Rate**: [Frankfurter API](https://api.frankfurter.app) (HTTPS, No Auth)
 
 ---
 
@@ -310,317 +244,167 @@
 
 - 右側：主按鈕（Filled Primary）
 - 左側：次按鈕（Tonal / Outlined）
-- 原則：避免再增加一個「很強的 Secondary 色」讓畫面變花
 
 ### 8.3 字體（建議）
 
-- Latin：Inter（或平台系統字）
-- 日文：Noto Sans JP（或平台系統字）
-- 繁中：Noto Sans TC（或平台系統字）
+- Latin: Inter
+- CJK: Noto Sans JP/TC
 
 ---
 
 ## 9. 里程碑（到 2026/02/14）
 
-- W1：Firebase schema + anonymous auth + Invite Flow 跑通（deep link + join）
-- W2：主畫面（日期分段 + date nav）+ 新增/編輯費用/預收 + 即時同步
-- W3：多幣別匯率處理 + Dashboard 計算 cache
-- W4：結算流程 + 結算後鎖定 + PDF 匯出
-- Buffer：bugfix / TestFlight / 文案與 onboarding
+- W1：Invite Flow 跑通。
+- W2：主畫面 (S13) + 記帳 (S15) + 即時同步。
+- W3：多幣別 + 匯率鎖定 + Dashboard Cache。
+- W4：結算流程 + PDF 匯出。
 
 ---
 
 ## 10. 技術命名規範 (Technical Naming Conventions)
 
-- Git / Flutter 專案 / Dart package：`iron_split`（snake_case）
-- Firebase Project ID：`iron-split`（kebab-case，平台限制）
-- iOS Bundle ID：`com.ironsplit.app`
-- 類別：`UpperCamelCase`（例：`IronSplitApp`）
-- 檔案：`snake_case.dart`（例：`deep_link_service.dart`）
-- 變數/函式：`lowerCamelCase`
+- Git / Flutter 專案：`iron_split`
+- Firebase Project ID：`iron-split`
+- 類別：`UpperCamelCase`
+- 檔案：`snake_case.dart`
 
 ---
 
 ## 11. 錯誤代碼（Error Codes）
 
-- `TASK_FULL`
-- `EXPIRED_CODE`
-- `INVALID_CODE`
-- `AUTH_REQUIRED`
+- `TASK_FULL`, `EXPIRED_CODE`, `INVALID_CODE`, `AUTH_REQUIRED`
 
 ---
 
 ## 12. 正式環境切換清單 (Production Readiness Checklist)
 
-> 為了確保 2026/02/14 封測時的安全性與專業度，從「測試模式」切換至「正式環境」時必須完成以下查核。
-
-### 12.1 安全與權限
-
-- [ ] **Firestore 安全規則切換**：將原本的 `allow read, write: if true` 修改為符合聖經規範的「匿名登入驗證與任務隔離」規則。
-- [ ] **開啟 Firebase App Check**：在 Firebase 控制台啟用 App Check，確保只有經認證的 iOS App 才能呼叫後端 API。
-- [ ] **限制 API 金鑰**：前往 Google Cloud 控制台，將 API Key 限制為僅能由 `com.ironsplit.app` 的 Bundle ID 使用。
-
-### 12.2 資料與環境
-
-- [ ] **清空測試數據**：在 TestFlight 上架前，手動刪除 Firestore 中所有測試用的任務（Tasks）與成員（Members）數據。
-- [ ] **驗證 Firebase 區域**：確認資料庫位於 `asia-northeast1 (Tokyo)` 以確保日本境內連線速度。
-- [ ] **檢查 30 天刪除邏輯**：確認結算後觸發 `deleteAt` 的 Cloud Functions 或 TTL 腳本已正確部署。
-
-### 12.3 品牌與 UI
-
-- [ ] **吉祥物 Asset 檢查**：確認所有艾隆・魯斯特（Iron Rooster）相關圖片已正確放置於生產環境路徑。
-- [ ] **版本號更新**：確認 `pubspec.yaml` 與 Xcode 內的 Version/Build 已從 1.0.0+1 更新為正確的發布版本。
+- [ ] Firestore 安全規則切換 (Auth required)。
+- [ ] 開啟 Firebase App Check。
+- [ ] 限制 API 金鑰 (Bundle ID)。
+- [ ] 清空測試數據。
+- [ ] 驗證 Firebase 區域 (Tokyo)。
+- [ ] 檢查 30 天刪除邏輯。
 
 ---
 
 ## 13. 開發工具/建置備註（MVP 實務）
 
-### 13.1 Node / Functions
-
-- Functions runtime：Node 20（engines.node = 20）
-- Functions 目錄可 `npm run lint` / `npm run build` 通過即視為基本健康
-
-### 13.2 deploy 前置檢查（目前的已知狀況）
-
-- 你遇到過：`firebase deploy --only functions` 時 predeploy 觸發 npm lint 可能出現 `Cannot read properties of undefined (reading 'stdin')`
-- **MVP workaround（可接受）**：
-  1. 先在 `functions/` 內手動執行：`npm run lint`、`npm run build`
-  2. `firebase deploy --only functions`
-  3. `firebase.json` 的 `predeploy` 若會導致 deploy 阻塞，可暫時設為空陣列（等 CI 或環境穩定再恢復）
-- 原則：MVP 先確保可 deploy + 可測試；之後再回頭把 predeploy 固化成「穩定可重現」
-
----
+- Functions runtime：Node 20。
+- 若 `predeploy` lint 失敗，可暫時繞過以確保 deploy，之後再修。
 
 ---
 
 ## 14. 檔案/資料夾管理規則（AI 協作前提）
 
-> 目的：避免 Gemini / ChatGPT 亂放檔案、亂拆層級，讓「檔案放哪裡」變成可驗收的規則。
-
 ### 14.1 專案目錄總則（Feature-first）
 
-- `core/`：**跨所有功能共用**、且**不含業務狀態**的基礎能力（例：router/theme/error/通用 services）。
-- `features/<feature>/`：**每個功能一個模組**，所有與該功能相關的狀態、UI、資料存取都必須放在該模組內。
-- 禁止新增「大雜燴」資料夾：`utils/`, `helpers/`, `common/`（除非內容明確可歸到 `core/` 或某個 feature）。
-
-**推薦目錄：**
-
-```txt
+```text
 lib/
-├── core/
-│   ├── router/            # GoRouter / routes
-│   ├── theme/             # Material 3 theme + brand tokens
-│   ├── error/             # AppError / ErrorCode / ErrorTranslator（後端 code → 前端文案 key）
-│   ├── services/          # 跨功能 service：deeplink listener, analytics, remote_config 等
-│   └── di/                # 依賴注入（若需要）
+├── core/           # router, theme, error, services
 ├── features/
-│   ├── invite/
-│   │   ├── presentation/  # pages/widgets
-│   │   ├── application/   # Bloc/Cubit/Notifier/Provider（狀態只放這裡）
-│   │   ├── domain/        # entities/usecases/repository interface（可選）
-│   │   └── data/          # repository impl / firebase datasource / local store(shared_prefs)
-│   ├── task/
-│   ├── expense/
-│   └── settlement/
-├── l10n/                  # ARB（或 slang translations 原始檔）
-└── gen/                   # （可選）若生成碼要放 lib/ 下；否則使用工具預設生成路徑
+│   ├── invite/     # S11
+│   ├── task/       # S10, S16, S13, S15
+│   └── settlement/ # S30-S32
+├── l10n/           # slang translations
+└── gen/            # generated files
 ```
 
-### 14.2 狀態管理（Provider/Bloc）放置規則（嚴格）
+### 14.2 狀態管理放置規則
 
-- **任何狀態物件（Bloc/Cubit/ChangeNotifier/StateNotifier/Provider）一律放在：**  
-  `features/<feature>/application/`
-- `core/` **禁止**放任何「特定功能」的狀態（例如 invite 的 pending code）。
-- 例：邀請流程的「中斷恢復 pending deep link」：
-  - `features/invite/application/pending_invite_cubit.dart`（記憶體狀態）
-  - `features/invite/data/pending_invite_local_store.dart`（SharedPreferences 落盤保險，含 TTL & 一次性清除）
+- 狀態物件 (Bloc/Provider) 一律放 `features/<feature>/application/`。
+- 禁止在 `core/` 放業務狀態。
 
-### 14.3 外部系統整合（Firebase / app_links）放置規則
+### 14.3 外部系統整合放置規則
 
-- `app_links` 只能被 `core/services/deep_link_service.dart` import（UI/Router 不可直接碰）。  
-  UI / Router 只接收 `DeepLinkIntent`。參照 Deep Link 隔離策略。
-- Firebase 初始化（Auth/Firestore/Functions client）可放 `core/services/firebase/`（跨功能共用），
-  **但**「資料存取與 repository」必須放回各 feature 的 `data/`（避免 services 變肥）。
-- 800ms dedupe 規則屬於 `DeepLinkService` 的責任。
+- `app_links` 只能被 `core/services/deep_link_service.dart` import。
+- Firebase 初始化放 `core/services/firebase/`。
 
 ### 14.4 i18n 文案放置規則
 
-- 後端回傳 Error Code（不回文字），前端負責翻譯（本地化字串）。
-- `core/error/` 放「ErrorCode enum + mapping（code → 文案 key）」；  
-  各 feature 需要的 UI 文案 key 放在 i18n 來源（`l10n/` 或 slang translations）。
+- 後端只回 Error Code。
+- 前端 `l10n/` 定義翻譯。
 
-### 14.5 生成檔（generated）規則
+### 14.5 檔名與層級命名
 
-- 生成檔 **不得手改**，也不應被當成主要編輯對象。
-- 優先使用工具預設生成路徑；若要放在 `lib/` 下，統一用 `lib/gen/`，避免 `lib/generated/` 分散。
-
-### 14.6 檔名與層級命名（可驗收）
-
-- 檔名一律 `snake_case.dart`（已在命名規範定義）。
-- 同一個 feature 內：
-  - Page：`*_page.dart`
-  - Widget：`*_widget.dart`
-  - Bloc/Cubit：`*_bloc.dart` / `*_cubit.dart`
-  - Repository：`*_repository.dart`
-  - Datasource/Store：`*_data_source.dart` / `*_local_store.dart`
-
-### 14.7 AI 協作驗收規則（防亂放檔案）
-
-- 任何 PR/改動若新增檔案，必須同時回答：
-  1. 這個檔案屬於哪個 feature（或 core）？
-  2. 為何不能放在其他層？
-  3. 是否違反 13.2（狀態放置）或 13.3（外部整合隔離）？
-- 若無法回答 → 視為「放錯位置」，必須移動後才能合併。
+- `*_page.dart`, `*_widget.dart`, `*_repository.dart`。
 
 ---
 
-## 15. App 入口與畫面命名（vLatest）
+## 15. App 入口與畫面命名（vLatest / CSV SoT）
 
-> 目標：避免 AI（Gemini / ChatGPT / Figma AI）因為舊命名、重複編號、或把系統層畫面混入業務畫面而產生混亂。**本章節為最新唯一有效版本**；任何舊的/重複的/已推翻的畫面命名，視為移除。
+### 15.1 PageKey
 
-### 15.1 兩層架構（非常重要）
+- **唯一真實來源**：PageSpec CSV。
+- AI 協作時以 PageKey 為溝通代碼。
+- 畫面型態以 PageKey 前綴 S/B/D 為唯一依據；類型欄位僅供人類閱讀，若衝突以 PageKey 為準。
 
-- **System 層（非業務畫面）**：負責 `/` 根路由的初始化與分流（Gatekeeper）。
-  - 命名採 **標籤式**：`S_System.*`（不使用 `NN` 數字，不占用業務編號空間）
-  - 不屬於 S00 ～ Sxx 業務 Page Key 清單（避免重編與誤解）
-- **Business 層（業務畫面）**：使用 Page Key（`S/D/B + NN`）作為穩定 ID（Single Source of Truth）。
+### 15.2 System Gatekeeper (`S00_System.Bootstrap`)
 
-### 15.2 System Gatekeeper（根路由 `/`）
+- 根路由 `/`，負責分流：
+  - Invite Link -> `S11_Invite.Confirm` (or S50_Onboarding.Consent/S51_Onboarding.Name)
+  - Normal -> `S10_Home.TaskList`
 
-- **Page Key**：`S_System.Bootstrap`
-- **職責**：
-  - 全域初始化（local storage / secure storage / remote config 等）
-  - 狀態判斷（是否同意 TOS、是否已設定使用者名稱）
-  - Deep Link（邀請連結）解析與中斷恢復
-  - 分流到正確的業務畫面（下方決策樹）
-- **限制**：
-  - 不承載業務 UI（不出現可操作表單/按鈕/清單）
-  - 不參與業務畫面編號（不重編、不插入 S00 ～）
-  - 若在 Figma 存在：僅作為「技術占位」Frame，需標註 `System-only / Non-navigable`
+### 15.3 Page Key 列表 (Refactored)
 
-**分流決策樹（v1）**
+> 以下為代表性範例，非完整列表；實際以 CSV 為準
 
-```text
-IF launched_from_invite_link:
-    IF tos_not_accepted:
-        → S00_Onboarding.Consent
-    ELSE IF name_not_set:
-        → S01_Onboarding.Name
-    ELSE:
-        → S04_Invite.Confirm
-ELSE (normal app launch):
-    IF tos_not_accepted:
-        → S00_Onboarding.Consent
-    ELSE IF name_not_set:
-        → S01_Onboarding.Name
-    ELSE:
-        → S02_Home.TaskList
-```
+**Prefix**: `S` (Screen), `D` (Dialog), `B` (Bottom Sheet)
 
-### 15.3 Business Page Key（S / D / B）
+- **System**: `S00_System.Bootstrap`, `S50_Onboarding.Consent`, `S51_Onboarding.Name`
+- **Task Loop**:
+  - `S10_Home.TaskList` (首頁)
+  - `S16_TaskCreate.Edit` (建立)
+  - `S13_Task.Dashboard` (主頁 - Date Grouping)
+  - `D03_TaskCreate.Confirm`
+- **Record**:
+  - `S15_Record.Edit` (記帳表單)
+  - `B02_SplitExpense.Edit` (細項)
+  - `B03_SplitMethod.Edit`
+  - `B07_PaymentMethod.Edit`
+- **Invite**: `S11_Invite.Confirm`
+- **Settlement**:
+  - `S30_Settlement.Confirm`
+  - `S31_Settlement.PaymentInfo`
+  - `S32_Settlement.Result`
 
-- `S` = **Screen**（完整頁面 / route）
-- `D` = **Dialog**（彈窗）
-- `B` = **BottomSheet**（底部抽屜）
+### 15.4 狀態語意
 
-命名格式（固定）
-
-```text
-<Prefix><NN>_<Feature>.<Page>
-```
-
-> `NN` 是 **穩定 ID**，不是流程順序；定案後不重編。
-
-### 15.4 邀請流程（今天定案的關鍵）
-
-- 邀請確認（wireframe p7–p8）為 **Screen**：`S04_Invite.Confirm`（不是 Dialog）
-- 加入成功：加入成功後直接進入 S06_TaskDashboard.Main
-- 加入失敗 Dialog：`D02_InviteJoin.Error`
-  - **v1 不拆 invalid/ended**（之後觀察使用者錯誤再拆）
-- TOS 不讓使用者離開 App：以 **Screen + WebView** 實作：`S19_Settings.Tos`
-
-### 15.5 Figma / 檔案命名（強制）
-
-- Figma Frame 名稱：**必須等於 Page Key**
-- 匯出檔名（PNG）：`<Page Key>__shared__v1.png`
-- 禁止使用：`p7`、`p10`、`invite_screen` 這種無語意命名
+- 狀態一律放在 Variants (`mode=active|settled`, `state=pending|cleared`)，不包含在 Page Key 中。
 
 ---
 
-## 16. M3 UI Blocks（Notion options：vLatest）
+## 16. M3 UI Blocks
 
-> 原則：不要寫「顯示文字/顯示連結」用途描述；要寫「元件型態 + 可互動性」。
-
-### Navigation（設定頁常見右側 `>`）
-
-```text
-NavigationList
-NavigationListItem
-ChevronIcon
-```
-
-### Segmented（M3 正名）
-
-```text
-SegmentedButton
-```
-
-### Text / Link
-
-```text
-Text
-BodyText
-CaptionText
-LabelText
-HelperText
-ErrorText
-InfoText
-KeyValueText
-ListText
-RichText
-MarkdownText
-InlineLink
-TextLink
-StandaloneLink
-```
-
-### Keyboard
-
-```text
-Keyboard
-SystemKeyboard
-NumericKeyboard
-CustomKeyboard
-```
+- **Navigation**: `NavigationListItem`, `ChevronIcon`
+- **Segmented**: `SegmentedButton`
+- **Text**: `HeadlineMedium` (Amount), `BodyLarge`
+- **Keyboard**: `NumericKeyboard`
 
 ---
 
-## 17. 畫面命名與規格 (Page Spec - vLatest)
+## 17. Page Spec（Single Source of Truth）
 
-| Page Key                   | 畫面名稱 | 類型   | 職責與邏輯                                                                                                                       | UI Blocks                                                                                      |
-| :------------------------- | :------- | :----- | :------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| **S00_Onboarding.Consent** | 歡迎/TOS | Screen | 顯示 TOS，同意後匿名登入。                                                                                                       | HeroImage (Anim), RichText (Links), FilledButton                                               |
-| **S01_Onboarding.Name**    | 設定名稱 | Screen | 輸入顯示名稱。自動 Focus，僅禁控制字元。                                                                                         | TextField (Counter inside), FilledButton                                                       |
-| **S02_Home.TaskList**      | 任務列表 | Screen | 顯示任務。支援狀態切換與隊長左滑刪除。                                                                                           | **Header (Fixed)**: Animation + SegmentedButton<br>**Body**: ListView, Stadium FAB             |
-| **S05_TaskCreate.Form**    | 建立任務 | Screen | 輸入任務資料。點背景收鍵盤。                                                                                                     | **Card Grouping Layout**<br>Inline Stepper (人數)<br>CustomWheelPicker (M3-styled) (日期/幣別) |
-| **D03_TaskCreate.Confirm** | 確認設定 | Dialog | 預覽資料 -> 寫入 DB -> 喚起 Share Sheet -> 導向 S06。寫入 DB 時同時建立 captain member（role=captain）並分配 avatar。            | Data Review List, IronIcon, Buttons                                                            |
-| **S04_Invite.Confirm**     | 加入確認 | Screen | 呼叫 `preview` API。若有 `unlinkedMembers` 顯示選單。                                                                            | Card, ListView (Selection), Buttons (Cancel/Join)                                              |
-| **D01_MemberRole.Intro**   | 角色介紹 | Dialog | 首次進入任務主畫面（S06）時顯示角色揭曉 Dialog。顯示條件：member.hasSeenRoleIntro == false（per memberDocId）；顯示後設為 true。 | Animation (Avatar), Text, TextButton (Reroll), FilledButton                                    |
-| **D02_InviteJoin.Error**   | 加入失敗 | Dialog | 錯誤提示 (過期/額滿)。                                                                                                           | Icon, Text, Button                                                                             |
-| **S06_TaskDashboard.Main** | 任務主頁 | Screen | 記帳入口、餘額顯示、成員列表。                                                                                                   | DashboardGrid, FloatingActionMenu                                                              |
-| **S19_Settings.Tos**       | 服務條款 | Screen | 顯示詳細條款內容。                                                                                                               | MarkdownText                                                                                   |
-
----
+- **PageSpec 的唯一真實來源：Notion / CSV**。
+- 查詢詳細 Layout / Interaction 請查閱 CSV。
 
 ## 變更紀錄（append-only）
 
+- 2026-01-21: 依最新 CSV（SoT）更新命名與 Schema。
+  - Refactor: 確認 S10/S13/S15/S16 頁面體系。
+  - Schema Update: 定義 Firestore Schema v2.0 (`remainderBuffer`, `totalPool`, `records` v2)。
+  - Logic Update: S15 匯率鎖定、餘額分配規則更新。
+- 2026-01-21: 依最新 CSV（SoT）更新「15–17 章」命名與 PageSpec 維護策略。
+  - Gatekeeper PageKey 修正為 `S00_System.Bootstrap`。
+  - 分流決策樹改為語意版（實際 PageKey 以 CSV 為準），並補上目前 CSV 示例鍵名。
+  - 明確宣告：AI 只相信 PageKey；「類型」欄位僅輔助閱讀。
+  - 第 17 章改為 SoT 說明，不再維護內嵌 PageSpec 表格（避免不同步）。
 - 2026-01-19: UI 優化與架構升級。
   - Dependency Upgrade: 升級 GoRouter v17, Firebase v12+，iOS Deployment Target 提升至 15.0。
   - S05 UI Polish: 採用 Section Card 版面，人數改為 Inline Stepper，優化鍵盤 UX。
   - S02 UI Polish: 實作 Fixed Header (動畫+切換器) 與 Scrollable Body 分離架構。
   - D03 Logic: 完成 Share Sheet 原生分享整合。
 - 2026-01-17: 完成任務建立與邀請核心流程實作 (S04, S05, D03)。
-- 2026-01-16: 同步更新至 vLatest：引入 `S_System.Bootstrap` 作為 `/` 根路由 Gatekeeper（不占用業務編號），並以最新 PageSpec 決策定案邀請流程（`S04_Invite.Confirm` 為 Screen、`D01_MemberRole.Intro`、`D02_InviteJoin.Error`、`S19_Settings.Tos`），同時統一 M3 UI Blocks（含 NavigationListItem/Keyboard）。
+- 2026-01-16: 同步更新至 vLatest：引入 `S_System.Bootstrap` 作為 `/` 根路由 Gatekeeper（不占用業務編號），並以最新 PageSpec 決策定案邀請流程（`S04_Invite.Confirm` 為 Screen、`D01_MemberRole.Intro`、`D02_InviteJoin.Error`、`S19_Settings.Tos`），同時統一 M3 UI Blocks（含 NavigationListItem/Keyboard）。「⚠️ 已由 vLatest/CSV 重編取代，請以最新 CSV PageKey 為準」
 - 2026-01-15: 依最新 Notion PageSpec/CSV 重建「畫面命名（Page Key）與 UI Blocks（vLatest）」章節，移除舊/重複命名，並統一 `SegmentedButton`、新增 NavigationListItem（右側 > 導覽列）與 Keyboard options，降低 AI 混淆。
 - 2026-01-15: 新增「畫面命名與規格鍵（Page Key / Screen Naming）」與「M3 UI Blocks（Text/Link、Keyboard）」規則，作為 wireframe / Notion / Figma / AI 協作的單一命名基準。
 - 2026-01-15: 新增「檔案/資料夾管理規則（AI 協作前提）」：定義 core vs features、Provider/Bloc 放置、SharedPreferences 落盤策略、generated 檔案規則，避免 AI 亂放檔案。
@@ -629,9 +413,3 @@ CustomKeyboard
 - 2026-01-14: 新增「正式環境切換清單」、命名補充、整理主畫面日期導覽列錨點規則、結算流程 p33→p39。
 - 2026-01-14: 定案使用 snake_case (iron_split) 作為開發基準。
 - 2026-01-13: 建立 vNext（整合 2026/02/14 封測規格）。
-
----
-
-## 最後編輯
-
-- Last edited: 2026-01-19 (JST)

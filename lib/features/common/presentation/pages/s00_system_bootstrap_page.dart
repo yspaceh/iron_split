@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/invite/application/pending_invite_provider.dart';
 
-/// Page Key: S_System.Bootstrap
-class SSystemBootstrapPage extends StatefulWidget {
-  const SSystemBootstrapPage({super.key});
+/// Page Key: S00_System.Bootstrap
+class S00SystemBootstrapPage extends StatefulWidget {
+  const S00SystemBootstrapPage({super.key});
   @override
-  State<SSystemBootstrapPage> createState() => _SSystemBootstrapPageState();
+  State<S00SystemBootstrapPage> createState() => _S00SystemBootstrapPageState();
 }
 
-class _SSystemBootstrapPageState extends State<SSystemBootstrapPage> {
+class _S00SystemBootstrapPageState extends State<S00SystemBootstrapPage> {
   @override
   void initState() {
     super.initState();

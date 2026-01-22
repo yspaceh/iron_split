@@ -38,18 +38,21 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 
 	// Translations
 	@override late final _TranslationsCommonJa common = _TranslationsCommonJa._(_root);
-	@override late final _TranslationsS00OnboardingConsentJa S00_Onboarding_Consent = _TranslationsS00OnboardingConsentJa._(_root);
-	@override late final _TranslationsS01OnboardingNameJa S01_Onboarding_Name = _TranslationsS01OnboardingNameJa._(_root);
-	@override late final _TranslationsS02HomeTaskListJa S02_Home_TaskList = _TranslationsS02HomeTaskListJa._(_root);
-	@override late final _TranslationsS04InviteConfirmJa S04_Invite_Confirm = _TranslationsS04InviteConfirmJa._(_root);
-	@override late final _TranslationsS05TaskCreateFormJa S05_TaskCreate_Form = _TranslationsS05TaskCreateFormJa._(_root);
-	@override late final _TranslationsS06TaskDashboardMainJa S06_TaskDashboard_Main = _TranslationsS06TaskDashboardMainJa._(_root);
-	@override late final _TranslationsD01InviteJoinSuccessJa D01_InviteJoin_Success = _TranslationsD01InviteJoinSuccessJa._(_root);
+	@override late final _TranslationsS50OnboardingConsentJa S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJa._(_root);
+	@override late final _TranslationsS51OnboardingNameJa S51_Onboarding_Name = _TranslationsS51OnboardingNameJa._(_root);
+	@override late final _TranslationsS10HomeTaskListJa S10_Home_TaskList = _TranslationsS10HomeTaskListJa._(_root);
+	@override late final _TranslationsS11InviteConfirmJa S11_Invite_Confirm = _TranslationsS11InviteConfirmJa._(_root);
+	@override late final _TranslationsS13TaskDashboardJa S13_Task_Dashboard = _TranslationsS13TaskDashboardJa._(_root);
+	@override late final _TranslationsS15RecordEditJa S15_Record_Edit = _TranslationsS15RecordEditJa._(_root);
+	@override late final _TranslationsS16TaskCreateEditJa S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJa._(_root);
+	@override late final _TranslationsS71SystemSettingsTosJa S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJa._(_root);
 	@override late final _TranslationsD01MemberRoleIntroJa D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJa._(_root);
-	@override late final _TranslationsD02InviteJoinErrorJa D02_InviteJoin_Error = _TranslationsD02InviteJoinErrorJa._(_root);
+	@override late final _TranslationsD02InviteResultJa D02_Invite_Result = _TranslationsD02InviteResultJa._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJa D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJa._(_root);
-	@override late final _TranslationsD04CommonUnsavedChangesJa D04_Common_UnsavedChanges = _TranslationsD04CommonUnsavedChangesJa._(_root);
-	@override late final _TranslationsS19SettingsTosJa S19_Settings_Tos = _TranslationsS19SettingsTosJa._(_root);
+	@override late final _TranslationsD04TaskCreateNoticeJa D04_TaskCreate_Notice = _TranslationsD04TaskCreateNoticeJa._(_root);
+	@override late final _TranslationsB02SplitExpenseEditJa B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJa._(_root);
+	@override late final _TranslationsB03SplitMethodEditJa B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJa._(_root);
+	@override late final _TranslationsB07PaymentMethodEditJa B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJa._(_root);
 	@override late final _TranslationsErrorJa error = _TranslationsErrorJa._(_root);
 }
 
@@ -65,13 +68,17 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get confirm => '確認';
 	@override String get back => '戻る';
 	@override String get save => '保存';
-	@override String error_prefix({required Object message}) => 'エラー: \$${message}';
+	@override String error_prefix({required Object message}) => 'エラー: ${message}';
 	@override String get please_login => 'ログインしてください';
+	@override String get loading => '読み込み中...';
+	@override String get edit => '編集';
+	@override String get close => '閉じる';
+	@override String get me => '自分';
 }
 
-// Path: S00_Onboarding_Consent
-class _TranslationsS00OnboardingConsentJa implements TranslationsS00OnboardingConsentZh {
-	_TranslationsS00OnboardingConsentJa._(this._root);
+// Path: S50_Onboarding_Consent
+class _TranslationsS50OnboardingConsentJa implements TranslationsS50OnboardingConsentZh {
+	_TranslationsS50OnboardingConsentJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -83,12 +90,12 @@ class _TranslationsS00OnboardingConsentJa implements TranslationsS00OnboardingCo
 	@override String get privacy_link => 'プライバシーポリシー';
 	@override String get content_suffix => ' に同意したものとみなされます。';
 	@override String get agree_btn => 'はじめる';
-	@override String login_failed({required Object message}) => 'ログイン失敗: \$${message}';
+	@override String login_failed({required Object message}) => 'ログイン失敗: ${message}';
 }
 
-// Path: S01_Onboarding_Name
-class _TranslationsS01OnboardingNameJa implements TranslationsS01OnboardingNameZh {
-	_TranslationsS01OnboardingNameJa._(this._root);
+// Path: S51_Onboarding_Name
+class _TranslationsS51OnboardingNameJa implements TranslationsS51OnboardingNameZh {
+	_TranslationsS51OnboardingNameJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -96,16 +103,16 @@ class _TranslationsS01OnboardingNameJa implements TranslationsS01OnboardingNameZ
 	@override String get title => '名前設定';
 	@override String get description => 'アプリ内で表示する名前を入力してください（1-10文字）。';
 	@override String get field_hint => 'ニックネームを入力';
-	@override String field_counter({required Object current}) => '\$${current}/10';
+	@override String field_counter({required Object current}) => '${current}/10';
 	@override String get error_empty => '名前を入力してください';
 	@override String get error_too_long => '10文字以内で入力してください';
 	@override String get error_invalid_char => '無効な文字が含まれています';
 	@override String get action_next => '設定';
 }
 
-// Path: S02_Home_TaskList
-class _TranslationsS02HomeTaskListJa implements TranslationsS02HomeTaskListZh {
-	_TranslationsS02HomeTaskListJa._(this._root);
+// Path: S10_Home_TaskList
+class _TranslationsS10HomeTaskListJa implements TranslationsS10HomeTaskListZh {
+	_TranslationsS10HomeTaskListJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -121,9 +128,9 @@ class _TranslationsS02HomeTaskListJa implements TranslationsS02HomeTaskListZh {
 	@override String get delete_confirm_content => 'このタスクを削除してもよろしいですか？';
 }
 
-// Path: S04_Invite_Confirm
-class _TranslationsS04InviteConfirmJa implements TranslationsS04InviteConfirmZh {
-	_TranslationsS04InviteConfirmJa._(this._root);
+// Path: S11_Invite_Confirm
+class _TranslationsS11InviteConfirmJa implements TranslationsS11InviteConfirmZh {
+	_TranslationsS11InviteConfirmJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -139,13 +146,70 @@ class _TranslationsS04InviteConfirmJa implements TranslationsS04InviteConfirmZh 
 	@override String get action_confirm => '参加';
 	@override String get action_cancel => 'キャンセル';
 	@override String get action_home => 'ホームへ';
-	@override String error_join_failed({required Object message}) => '参加失敗: \$${message}';
-	@override String error_generic({required Object message}) => 'エラー: \$${message}';
+	@override String error_join_failed({required Object message}) => '参加失敗: ${message}';
+	@override String error_generic({required Object message}) => 'エラー: ${message}';
 }
 
-// Path: S05_TaskCreate_Form
-class _TranslationsS05TaskCreateFormJa implements TranslationsS05TaskCreateFormZh {
-	_TranslationsS05TaskCreateFormJa._(this._root);
+// Path: S13_Task_Dashboard
+class _TranslationsS13TaskDashboardJa implements TranslationsS13TaskDashboardZh {
+	_TranslationsS13TaskDashboardJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'ダッシュボード';
+	@override String get tab_group => 'グループ';
+	@override String get tab_personal => '個人';
+	@override String get label_prepay_balance => 'プール残高';
+	@override String get label_my_balance => '私の収支';
+	@override String label_remainder({required Object amount}) => '端数: ${amount}';
+	@override String get fab_record => '記録';
+	@override String get empty_records => '記録がありません';
+	@override String get rule_random => 'ランダム';
+	@override String get rule_order => '順番';
+	@override String get rule_member => '指定';
+	@override String get nav_to_record => '記録ページへ移動します...';
+}
+
+// Path: S15_Record_Edit
+class _TranslationsS15RecordEditJa implements TranslationsS15RecordEditZh {
+	_TranslationsS15RecordEditJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_create => '記録を追加';
+	@override String get title_edit => '記録を編集';
+	@override String get section_split => '割り勘情報';
+	@override String get label_date => '日付';
+	@override String get label_title => '項目名';
+	@override String get hint_title => '何に使いましたか？';
+	@override String get label_payment_method => '支払方法';
+	@override String get val_prepay => '前受金 (Prepay)';
+	@override String val_member_paid({required Object name}) => '${name} が立替';
+	@override String get label_amount => '金額';
+	@override String label_rate({required Object base, required Object target}) => 'レート (1 ${base} = ? ${target})';
+	@override String get label_memo => 'メモ';
+	@override String get hint_memo => '備考を入力...';
+	@override String get action_save => '保存';
+	@override String get val_split_details => '詳細を編集';
+	@override String val_split_summary({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘';
+	@override String get method_even => '均等';
+	@override String get method_exact => '金額指定';
+	@override String get method_percent => '割合 (%)';
+	@override String get info_rate_source => 'レートの提供元';
+	@override String get msg_rate_source => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。';
+	@override String get btn_close => '閉じる';
+	@override String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
+	@override String get val_split_remaining => '剩餘金額';
+	@override String get err_amount_not_enough => '剩餘金額不足';
+	@override String get msg_function_not_implemented => '功能開發中';
+	@override String get val_mock_note => '細項說明';
+}
+
+// Path: S16_TaskCreate_Edit
+class _TranslationsS16TaskCreateEditJa implements TranslationsS16TaskCreateEditZh {
+	_TranslationsS16TaskCreateEditJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -155,7 +219,7 @@ class _TranslationsS05TaskCreateFormJa implements TranslationsS05TaskCreateFormZ
 	@override String get section_period => '期間';
 	@override String get section_settings => '設定';
 	@override String get field_name_hint => '例：東京5日間の旅';
-	@override String field_name_counter({required Object current}) => '\$${current}/20';
+	@override String field_name_counter({required Object current}) => '${current}/20';
 	@override String get field_start_date => '開始日';
 	@override String get field_end_date => '終了日';
 	@override String get field_currency => '通貨';
@@ -168,32 +232,14 @@ class _TranslationsS05TaskCreateFormJa implements TranslationsS05TaskCreateFormZ
 	@override String get currency_usd => '米ドル (USD)';
 }
 
-// Path: S06_TaskDashboard_Main
-class _TranslationsS06TaskDashboardMainJa implements TranslationsS06TaskDashboardMainZh {
-	_TranslationsS06TaskDashboardMainJa._(this._root);
+// Path: S71_SystemSettings_Tos
+class _TranslationsS71SystemSettingsTosJa implements TranslationsS71SystemSettingsTosZh {
+	_TranslationsS71SystemSettingsTosJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'タスクホーム';
-	@override String get error_member_not_found => 'メンバーが見つかりません';
-	@override String welcome_message({required Object name}) => 'ようこそ, \$${name}';
-	@override String role_label({required Object role}) => '役割: \$${role}';
-	@override String avatar_label({required Object avatar}) => 'アバター: \$${avatar}';
-	@override String get placeholder_content => 'ここにダッシュボードが表示されます...';
-}
-
-// Path: D01_InviteJoin_Success
-class _TranslationsD01InviteJoinSuccessJa implements TranslationsD01InviteJoinSuccessZh {
-	_TranslationsD01InviteJoinSuccessJa._(this._root);
-
-	final TranslationsJa _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '参加しました！';
-	@override String get assigned_avatar => '割り当てられたアバター：';
-	@override String get avatar_note => '注：アバターのリロールは1回のみです。';
-	@override String get action_continue => 'はじめる';
+	@override String get title => '利用規約';
 }
 
 // Path: D01_MemberRole_Intro
@@ -203,20 +249,28 @@ class _TranslationsD01MemberRoleIntroJa implements TranslationsD01MemberRoleIntr
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get action_reroll => 'リロールする';
-	@override String error_reroll_failed({required Object message}) => 'リロール失敗: \$${message}';
+	@override String get title => 'あなたのキャラクター';
+	@override String get action_reroll => '動物を変える';
+	@override String get action_enter => 'タスクへ進む';
+	@override String get desc_reroll_left => 'あと1回変更可';
+	@override String get desc_reroll_empty => '変更不可';
+	@override String get dialog_content => 'これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！';
 }
 
-// Path: D02_InviteJoin_Error
-class _TranslationsD02InviteJoinErrorJa implements TranslationsD02InviteJoinErrorZh {
-	_TranslationsD02InviteJoinErrorJa._(this._root);
+// Path: D02_Invite_Result
+class _TranslationsD02InviteResultJa implements TranslationsD02InviteResultZh {
+	_TranslationsD02InviteResultJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '参加できません';
-	@override String get message => 'リンクが無効、期限切れ、または満員です。';
-	@override String get action_close => '閉じる';
+	@override String get title => '参加失敗';
+	@override String get action_back => 'ホームへ戻る';
+	@override String get error_INVALID_CODE => '招待コードが無効です。リンクが正しいか確認してください。';
+	@override String get error_EXPIRED_CODE => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
+	@override String get error_TASK_FULL => '定員オーバーです（上限15名）。参加できません。';
+	@override String get error_AUTH_REQUIRED => '認証に失敗しました。アプリを再起動してください。';
+	@override String get error_UNKNOWN => '不明なエラーが発生しました。後ほどお試しください。';
 }
 
 // Path: D03_TaskCreate_Confirm
@@ -236,12 +290,12 @@ class _TranslationsD03TaskCreateConfirmJa implements TranslationsD03TaskCreateCo
 	@override String get creating_task => '作成中...';
 	@override String get preparing_share => '招待を準備中...';
 	@override String get share_subject => 'Iron Split タスク招待';
-	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${code}\nリンク：\$${link}';
+	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}';
 }
 
-// Path: D04_Common_UnsavedChanges
-class _TranslationsD04CommonUnsavedChangesJa implements TranslationsD04CommonUnsavedChangesZh {
-	_TranslationsD04CommonUnsavedChangesJa._(this._root);
+// Path: D04_TaskCreate_Notice
+class _TranslationsD04TaskCreateNoticeJa implements TranslationsD04TaskCreateNoticeZh {
+	_TranslationsD04TaskCreateNoticeJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
@@ -252,14 +306,54 @@ class _TranslationsD04CommonUnsavedChangesJa implements TranslationsD04CommonUns
 	@override String get action_stay => '編集を続ける';
 }
 
-// Path: S19_Settings_Tos
-class _TranslationsS19SettingsTosJa implements TranslationsS19SettingsTosZh {
-	_TranslationsS19SettingsTosJa._(this._root);
+// Path: B02_SplitExpense_Edit
+class _TranslationsB02SplitExpenseEditJa implements TranslationsB02SplitExpenseEditZh {
+	_TranslationsB02SplitExpenseEditJa._(this._root);
 
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '利用規約';
+	@override String get title => '詳細割り勘';
+	@override String get section_members => 'メンバー配分';
+	@override String label_remainder({required Object amount}) => '残り: ${amount}';
+	@override String label_total({required Object current, required Object target}) => '合計: ${current}/${target}';
+	@override String get error_total_mismatch => '合計金額が一致しません';
+	@override String get error_percent_mismatch => '合計は100%である必要があります';
+	@override String get action_save => '決定';
+	@override String get hint_amount => '金額';
+	@override String get hint_percent => '%';
+}
+
+// Path: B03_SplitMethod_Edit
+class _TranslationsB03SplitMethodEditJa implements TranslationsB03SplitMethodEditZh {
+	_TranslationsB03SplitMethodEditJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '割り勘方法';
+	@override String get method_even => '均等 (Even)';
+	@override String get method_exact => '金額指定 (Exact)';
+	@override String get method_percent => '割合 (Percent)';
+	@override String get method_share => 'シェア数 (Share)';
+	@override String get desc_even => '選択したメンバーで均等割';
+	@override String get desc_exact => '金額を手動で入力';
+	@override String get desc_percent => 'パーセンテージで配分';
+	@override String get desc_share => 'シェア数で配分 (例: 大人2, 子供1)';
+}
+
+// Path: B07_PaymentMethod_Edit
+class _TranslationsB07PaymentMethodEditJa implements TranslationsB07PaymentMethodEditZh {
+	_TranslationsB07PaymentMethodEditJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '支払元を選択';
+	@override String get type_member => 'メンバー立替';
+	@override String get type_prepay => 'プール金から';
+	@override String get desc_member => 'メンバーが一時的に支払う';
+	@override String get desc_prepay => '現在のプール残高から支払う';
 }
 
 // Path: error
@@ -356,77 +450,119 @@ extension on TranslationsJa {
 			'common.confirm' => '確認',
 			'common.back' => '戻る',
 			'common.save' => '保存',
-			'common.error_prefix' => ({required Object message}) => 'エラー: \$${message}',
+			'common.error_prefix' => ({required Object message}) => 'エラー: ${message}',
 			'common.please_login' => 'ログインしてください',
-			'S00_Onboarding_Consent.title' => 'Iron Split へようこそ',
-			'S00_Onboarding_Consent.content_prefix' => '開始することで、',
-			'S00_Onboarding_Consent.terms_link' => '利用規約',
-			'S00_Onboarding_Consent.and' => ' と ',
-			'S00_Onboarding_Consent.privacy_link' => 'プライバシーポリシー',
-			'S00_Onboarding_Consent.content_suffix' => ' に同意したものとみなされます。',
-			'S00_Onboarding_Consent.agree_btn' => 'はじめる',
-			'S00_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: \$${message}',
-			'S01_Onboarding_Name.title' => '名前設定',
-			'S01_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
-			'S01_Onboarding_Name.field_hint' => 'ニックネームを入力',
-			'S01_Onboarding_Name.field_counter' => ({required Object current}) => '\$${current}/10',
-			'S01_Onboarding_Name.error_empty' => '名前を入力してください',
-			'S01_Onboarding_Name.error_too_long' => '10文字以内で入力してください',
-			'S01_Onboarding_Name.error_invalid_char' => '無効な文字が含まれています',
-			'S01_Onboarding_Name.action_next' => '設定',
-			'S02_Home_TaskList.title' => 'マイタスク',
-			'S02_Home_TaskList.tab_in_progress' => '進行中',
-			'S02_Home_TaskList.tab_completed' => '完了済',
-			'S02_Home_TaskList.mascot_preparing' => '鉄の雄鶏、準備中...',
-			'S02_Home_TaskList.empty_in_progress' => '進行中のタスクはありません',
-			'S02_Home_TaskList.empty_completed' => '完了したタスクはありません',
-			'S02_Home_TaskList.date_tbd' => '日付未定',
-			'S02_Home_TaskList.delete_confirm_title' => '削除の確認',
-			'S02_Home_TaskList.delete_confirm_content' => 'このタスクを削除してもよろしいですか？',
-			'S04_Invite_Confirm.title' => 'タスクに参加',
-			'S04_Invite_Confirm.subtitle' => '以下のタスクに招待されました：',
-			'S04_Invite_Confirm.loading_invite' => '招待状を読み込み中...',
-			'S04_Invite_Confirm.join_failed_title' => 'タスクに参加できません',
-			'S04_Invite_Confirm.identity_match_title' => 'あなたは以下のメンバーですか？',
-			'S04_Invite_Confirm.identity_match_desc' => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。',
-			'S04_Invite_Confirm.status_linking' => '「アカウント連携」で参加します',
-			'S04_Invite_Confirm.status_new_member' => '「新規メンバー」として参加します',
-			'S04_Invite_Confirm.action_confirm' => '参加',
-			'S04_Invite_Confirm.action_cancel' => 'キャンセル',
-			'S04_Invite_Confirm.action_home' => 'ホームへ',
-			'S04_Invite_Confirm.error_join_failed' => ({required Object message}) => '参加失敗: \$${message}',
-			'S04_Invite_Confirm.error_generic' => ({required Object message}) => 'エラー: \$${message}',
-			'S05_TaskCreate_Form.title' => 'タスク作成',
-			'S05_TaskCreate_Form.section_name' => 'タスク名',
-			'S05_TaskCreate_Form.section_period' => '期間',
-			'S05_TaskCreate_Form.section_settings' => '設定',
-			'S05_TaskCreate_Form.field_name_hint' => '例：東京5日間の旅',
-			'S05_TaskCreate_Form.field_name_counter' => ({required Object current}) => '\$${current}/20',
-			'S05_TaskCreate_Form.field_start_date' => '開始日',
-			'S05_TaskCreate_Form.field_end_date' => '終了日',
-			'S05_TaskCreate_Form.field_currency' => '通貨',
-			'S05_TaskCreate_Form.field_member_count' => '参加人数',
-			'S05_TaskCreate_Form.action_save' => '保存',
-			'S05_TaskCreate_Form.picker_done' => '完了',
-			'S05_TaskCreate_Form.error_name_empty' => 'タスク名を入力してください',
-			'S05_TaskCreate_Form.currency_twd' => '台湾ドル (TWD)',
-			'S05_TaskCreate_Form.currency_jpy' => '日本円 (JPY)',
-			'S05_TaskCreate_Form.currency_usd' => '米ドル (USD)',
-			'S06_TaskDashboard_Main.title' => 'タスクホーム',
-			'S06_TaskDashboard_Main.error_member_not_found' => 'メンバーが見つかりません',
-			'S06_TaskDashboard_Main.welcome_message' => ({required Object name}) => 'ようこそ, \$${name}',
-			'S06_TaskDashboard_Main.role_label' => ({required Object role}) => '役割: \$${role}',
-			'S06_TaskDashboard_Main.avatar_label' => ({required Object avatar}) => 'アバター: \$${avatar}',
-			'S06_TaskDashboard_Main.placeholder_content' => 'ここにダッシュボードが表示されます...',
-			'D01_InviteJoin_Success.title' => '参加しました！',
-			'D01_InviteJoin_Success.assigned_avatar' => '割り当てられたアバター：',
-			'D01_InviteJoin_Success.avatar_note' => '注：アバターのリロールは1回のみです。',
-			'D01_InviteJoin_Success.action_continue' => 'はじめる',
-			'D01_MemberRole_Intro.action_reroll' => 'リロールする',
-			'D01_MemberRole_Intro.error_reroll_failed' => ({required Object message}) => 'リロール失敗: \$${message}',
-			'D02_InviteJoin_Error.title' => '参加できません',
-			'D02_InviteJoin_Error.message' => 'リンクが無効、期限切れ、または満員です。',
-			'D02_InviteJoin_Error.action_close' => '閉じる',
+			'common.loading' => '読み込み中...',
+			'common.edit' => '編集',
+			'common.close' => '閉じる',
+			'common.me' => '自分',
+			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
+			'S50_Onboarding_Consent.content_prefix' => '開始することで、',
+			'S50_Onboarding_Consent.terms_link' => '利用規約',
+			'S50_Onboarding_Consent.and' => ' と ',
+			'S50_Onboarding_Consent.privacy_link' => 'プライバシーポリシー',
+			'S50_Onboarding_Consent.content_suffix' => ' に同意したものとみなされます。',
+			'S50_Onboarding_Consent.agree_btn' => 'はじめる',
+			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: ${message}',
+			'S51_Onboarding_Name.title' => '名前設定',
+			'S51_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
+			'S51_Onboarding_Name.field_hint' => 'ニックネームを入力',
+			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
+			'S51_Onboarding_Name.error_empty' => '名前を入力してください',
+			'S51_Onboarding_Name.error_too_long' => '10文字以内で入力してください',
+			'S51_Onboarding_Name.error_invalid_char' => '無効な文字が含まれています',
+			'S51_Onboarding_Name.action_next' => '設定',
+			'S10_Home_TaskList.title' => 'マイタスク',
+			'S10_Home_TaskList.tab_in_progress' => '進行中',
+			'S10_Home_TaskList.tab_completed' => '完了済',
+			'S10_Home_TaskList.mascot_preparing' => '鉄の雄鶏、準備中...',
+			'S10_Home_TaskList.empty_in_progress' => '進行中のタスクはありません',
+			'S10_Home_TaskList.empty_completed' => '完了したタスクはありません',
+			'S10_Home_TaskList.date_tbd' => '日付未定',
+			'S10_Home_TaskList.delete_confirm_title' => '削除の確認',
+			'S10_Home_TaskList.delete_confirm_content' => 'このタスクを削除してもよろしいですか？',
+			'S11_Invite_Confirm.title' => 'タスクに参加',
+			'S11_Invite_Confirm.subtitle' => '以下のタスクに招待されました：',
+			'S11_Invite_Confirm.loading_invite' => '招待状を読み込み中...',
+			'S11_Invite_Confirm.join_failed_title' => 'タスクに参加できません',
+			'S11_Invite_Confirm.identity_match_title' => 'あなたは以下のメンバーですか？',
+			'S11_Invite_Confirm.identity_match_desc' => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。',
+			'S11_Invite_Confirm.status_linking' => '「アカウント連携」で参加します',
+			'S11_Invite_Confirm.status_new_member' => '「新規メンバー」として参加します',
+			'S11_Invite_Confirm.action_confirm' => '参加',
+			'S11_Invite_Confirm.action_cancel' => 'キャンセル',
+			'S11_Invite_Confirm.action_home' => 'ホームへ',
+			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '参加失敗: ${message}',
+			'S11_Invite_Confirm.error_generic' => ({required Object message}) => 'エラー: ${message}',
+			'S13_Task_Dashboard.title' => 'ダッシュボード',
+			'S13_Task_Dashboard.tab_group' => 'グループ',
+			'S13_Task_Dashboard.tab_personal' => '個人',
+			'S13_Task_Dashboard.label_prepay_balance' => 'プール残高',
+			'S13_Task_Dashboard.label_my_balance' => '私の収支',
+			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '端数: ${amount}',
+			'S13_Task_Dashboard.fab_record' => '記録',
+			'S13_Task_Dashboard.empty_records' => '記録がありません',
+			'S13_Task_Dashboard.rule_random' => 'ランダム',
+			'S13_Task_Dashboard.rule_order' => '順番',
+			'S13_Task_Dashboard.rule_member' => '指定',
+			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',
+			'S15_Record_Edit.title_create' => '記録を追加',
+			'S15_Record_Edit.title_edit' => '記録を編集',
+			'S15_Record_Edit.section_split' => '割り勘情報',
+			'S15_Record_Edit.label_date' => '日付',
+			'S15_Record_Edit.label_title' => '項目名',
+			'S15_Record_Edit.hint_title' => '何に使いましたか？',
+			'S15_Record_Edit.label_payment_method' => '支払方法',
+			'S15_Record_Edit.val_prepay' => '前受金 (Prepay)',
+			'S15_Record_Edit.val_member_paid' => ({required Object name}) => '${name} が立替',
+			'S15_Record_Edit.label_amount' => '金額',
+			'S15_Record_Edit.label_rate' => ({required Object base, required Object target}) => 'レート (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label_memo' => 'メモ',
+			'S15_Record_Edit.hint_memo' => '備考を入力...',
+			'S15_Record_Edit.action_save' => '保存',
+			'S15_Record_Edit.val_split_details' => '詳細を編集',
+			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘',
+			'S15_Record_Edit.method_even' => '均等',
+			'S15_Record_Edit.method_exact' => '金額指定',
+			'S15_Record_Edit.method_percent' => '割合 (%)',
+			'S15_Record_Edit.info_rate_source' => 'レートの提供元',
+			'S15_Record_Edit.msg_rate_source' => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。',
+			'S15_Record_Edit.btn_close' => '閉じる',
+			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
+			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
+			'S15_Record_Edit.msg_function_not_implemented' => '功能開發中',
+			'S15_Record_Edit.val_mock_note' => '細項說明',
+			'S16_TaskCreate_Edit.title' => 'タスク作成',
+			'S16_TaskCreate_Edit.section_name' => 'タスク名',
+			'S16_TaskCreate_Edit.section_period' => '期間',
+			'S16_TaskCreate_Edit.section_settings' => '設定',
+			'S16_TaskCreate_Edit.field_name_hint' => '例：東京5日間の旅',
+			'S16_TaskCreate_Edit.field_name_counter' => ({required Object current}) => '${current}/20',
+			'S16_TaskCreate_Edit.field_start_date' => '開始日',
+			'S16_TaskCreate_Edit.field_end_date' => '終了日',
+			'S16_TaskCreate_Edit.field_currency' => '通貨',
+			'S16_TaskCreate_Edit.field_member_count' => '参加人数',
+			'S16_TaskCreate_Edit.action_save' => '保存',
+			'S16_TaskCreate_Edit.picker_done' => '完了',
+			'S16_TaskCreate_Edit.error_name_empty' => 'タスク名を入力してください',
+			'S16_TaskCreate_Edit.currency_twd' => '台湾ドル (TWD)',
+			'S16_TaskCreate_Edit.currency_jpy' => '日本円 (JPY)',
+			'S16_TaskCreate_Edit.currency_usd' => '米ドル (USD)',
+			'S71_SystemSettings_Tos.title' => '利用規約',
+			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
+			'D01_MemberRole_Intro.action_reroll' => '動物を変える',
+			'D01_MemberRole_Intro.action_enter' => 'タスクへ進む',
+			'D01_MemberRole_Intro.desc_reroll_left' => 'あと1回変更可',
+			'D01_MemberRole_Intro.desc_reroll_empty' => '変更不可',
+			'D01_MemberRole_Intro.dialog_content' => 'これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！',
+			'D02_Invite_Result.title' => '参加失敗',
+			'D02_Invite_Result.action_back' => 'ホームへ戻る',
+			'D02_Invite_Result.error_INVALID_CODE' => '招待コードが無効です。リンクが正しいか確認してください。',
+			'D02_Invite_Result.error_EXPIRED_CODE' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
+			'D02_Invite_Result.error_TASK_FULL' => '定員オーバーです（上限15名）。参加できません。',
+			'D02_Invite_Result.error_AUTH_REQUIRED' => '認証に失敗しました。アプリを再起動してください。',
+			'D02_Invite_Result.error_UNKNOWN' => '不明なエラーが発生しました。後ほどお試しください。',
 			'D03_TaskCreate_Confirm.title' => '設定の確認',
 			'D03_TaskCreate_Confirm.label_name' => 'タスク名',
 			'D03_TaskCreate_Confirm.label_period' => '期間',
@@ -437,12 +573,34 @@ extension on TranslationsJa {
 			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
 			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Iron Split タスク招待',
-			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「\$${taskName}」に参加しよう！\n招待コード：\$${code}\nリンク：\$${link}',
-			'D04_Common_UnsavedChanges.title' => '設定は完了していません',
-			'D04_Common_UnsavedChanges.content' => '現在の設定は破棄されます。本当に移動しますか？',
-			'D04_Common_UnsavedChanges.action_leave' => 'ホームへ戻る',
-			'D04_Common_UnsavedChanges.action_stay' => '編集を続ける',
-			'S19_Settings_Tos.title' => '利用規約',
+			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}',
+			'D04_TaskCreate_Notice.title' => '設定は完了していません',
+			'D04_TaskCreate_Notice.content' => '現在の設定は破棄されます。本当に移動しますか？',
+			'D04_TaskCreate_Notice.action_leave' => 'ホームへ戻る',
+			'D04_TaskCreate_Notice.action_stay' => '編集を続ける',
+			'B02_SplitExpense_Edit.title' => '詳細割り勘',
+			'B02_SplitExpense_Edit.section_members' => 'メンバー配分',
+			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => '残り: ${amount}',
+			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '合計: ${current}/${target}',
+			'B02_SplitExpense_Edit.error_total_mismatch' => '合計金額が一致しません',
+			'B02_SplitExpense_Edit.error_percent_mismatch' => '合計は100%である必要があります',
+			'B02_SplitExpense_Edit.action_save' => '決定',
+			'B02_SplitExpense_Edit.hint_amount' => '金額',
+			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B03_SplitMethod_Edit.title' => '割り勘方法',
+			'B03_SplitMethod_Edit.method_even' => '均等 (Even)',
+			'B03_SplitMethod_Edit.method_exact' => '金額指定 (Exact)',
+			'B03_SplitMethod_Edit.method_percent' => '割合 (Percent)',
+			'B03_SplitMethod_Edit.method_share' => 'シェア数 (Share)',
+			'B03_SplitMethod_Edit.desc_even' => '選択したメンバーで均等割',
+			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
+			'B03_SplitMethod_Edit.desc_percent' => 'パーセンテージで配分',
+			'B03_SplitMethod_Edit.desc_share' => 'シェア数で配分 (例: 大人2, 子供1)',
+			'B07_PaymentMethod_Edit.title' => '支払元を選択',
+			'B07_PaymentMethod_Edit.type_member' => 'メンバー立替',
+			'B07_PaymentMethod_Edit.type_prepay' => 'プール金から',
+			'B07_PaymentMethod_Edit.desc_member' => 'メンバーが一時的に支払う',
+			'B07_PaymentMethod_Edit.desc_prepay' => '現在のプール残高から支払う',
 			'error.taskFull.title' => 'タスク満員',
 			'error.taskFull.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
 			'error.expiredCode.title' => '招待コード期限切れ',

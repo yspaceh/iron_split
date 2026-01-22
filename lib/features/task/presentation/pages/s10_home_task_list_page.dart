@@ -5,15 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: S02_Home.TaskList
-class S02HomeTaskListPage extends StatefulWidget {
-  const S02HomeTaskListPage({super.key});
+/// Page Key: S10_Home.TaskList
+class S10HomeTaskListPage extends StatefulWidget {
+  const S10HomeTaskListPage({super.key});
 
   @override
-  State<S02HomeTaskListPage> createState() => _S02HomeTaskListPageState();
+  State<S10HomeTaskListPage> createState() => _S10HomeTaskListPageState();
 }
 
-class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
+class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
   int _selectedIndex = 0; // 0: 進行中, 1: 已完成
 
   @override
@@ -28,7 +28,7 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S02_Home_TaskList.title), // '我的任務'
+        title: Text(t.S10_Home_TaskList.title), // '我的任務'
         centerTitle: false,
         actions: [
           IconButton(
@@ -40,7 +40,7 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add),
-        label: Text(t.S05_TaskCreate_Form.title),
+        label: Text(t.S16_TaskCreate_Edit.title),
         shape: const StadiumBorder(),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
@@ -71,7 +71,7 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        t.S02_Home_TaskList.mascot_preparing, // "鐵公雞準備中..."
+                        t.S10_Home_TaskList.mascot_preparing, // "鐵公雞準備中..."
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: colorScheme.outline),
                       )
@@ -85,12 +85,12 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
                       ButtonSegment(
                         value: 0,
                         label:
-                            Text(t.S02_Home_TaskList.tab_in_progress), // '進行中'
+                            Text(t.S10_Home_TaskList.tab_in_progress), // '進行中'
                         icon: const Icon(Icons.directions_run),
                       ),
                       ButtonSegment(
                         value: 1,
-                        label: Text(t.S02_Home_TaskList.tab_completed), // '已完成'
+                        label: Text(t.S10_Home_TaskList.tab_completed), // '已完成'
                         icon: const Icon(Icons.done_all),
                       ),
                     ],
@@ -145,9 +145,9 @@ class _S02HomeTaskListPageState extends State<S02HomeTaskListPage> {
                         const SizedBox(height: 16),
                         Text(
                           _selectedIndex == 0
-                              ? t.S02_Home_TaskList
+                              ? t.S10_Home_TaskList
                                   .empty_in_progress // '目前沒有進行中的任務'
-                              : t.S02_Home_TaskList
+                              : t.S10_Home_TaskList
                                   .empty_completed, // '沒有已完成的任務'
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color: colorScheme.onSurfaceVariant,
@@ -210,7 +210,7 @@ class _TaskCard extends StatelessWidget {
 
     final Timestamp? startTs = data['startDate'];
     final Timestamp? endTs = data['endDate'];
-    String periodText = t.S02_Home_TaskList.date_tbd; // '日期未定'
+    String periodText = t.S10_Home_TaskList.date_tbd; // '日期未定'
     if (startTs != null && endTs != null) {
       periodText =
           '${dateFormat.format(startTs.toDate())} - ${dateFormat.format(endTs.toDate())}';
@@ -298,9 +298,9 @@ class _TaskCard extends StatelessWidget {
           return await showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: Text(t.S02_Home_TaskList.delete_confirm_title), // '確認刪除'
+              title: Text(t.S10_Home_TaskList.delete_confirm_title), // '確認刪除'
               content: Text(
-                  t.S02_Home_TaskList.delete_confirm_content), // '確定要刪除這個任務嗎？'
+                  t.S10_Home_TaskList.delete_confirm_content), // '確定要刪除這個任務嗎？'
               actions: [
                 TextButton(
                     onPressed: () => Navigator.pop(ctx, false),

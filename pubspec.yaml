@@ -1,10 +1,10 @@
 name: iron_split
 description: Iron Split - 分帳助手
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -30,7 +30,7 @@ dependencies:
 
   # 4. MVP 功能所需元件
   qr_flutter: ^4.1.0
-  http: ^1.2.0
+  http: ^1.6.0
   path_provider: ^2.1.4
   pdf: ^3.10.7
   printing: ^5.13.0
@@ -38,7 +38,7 @@ dependencies:
   # 5. UI/UX 增強
   google_fonts: ^7.0.2
   font_awesome_flutter: ^10.7.0
-  
+
   # 6. 狀態管理
   provider: ^6.1.2
   shared_preferences: ^2.3.2
@@ -59,4 +59,5 @@ flutter:
   generate: true
   assets:
     - assets/images/
+    - assets/images/avatars/
     - assets/i18n/

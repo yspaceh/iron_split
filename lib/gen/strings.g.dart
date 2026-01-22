@@ -1,12 +1,12 @@
 /// Generated file. Do not edit.
 ///
-/// Source: lib/i18n
+/// Source: assets/i18n
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 3
-/// Strings: 312 (104 per locale)
+/// Strings: 504 (168 per locale)
 ///
-/// Built on 2026-01-20 at 06:49 UTC
+/// Built on 2026-01-22 at 14:04 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import

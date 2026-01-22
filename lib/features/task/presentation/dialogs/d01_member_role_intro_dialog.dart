@@ -1,9 +1,12 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
+/// Page Key: D01_MemberRole.Intro
 class D01MemberRoleIntroDialog extends StatefulWidget {
   final String taskId;
   final String initialAvatar;
@@ -13,7 +16,7 @@ class D01MemberRoleIntroDialog extends StatefulWidget {
     super.key,
     required this.taskId,
     required this.initialAvatar,
-    this.canReroll = true,
+    required this.canReroll,
   });
 
   @override
@@ -21,57 +24,88 @@ class D01MemberRoleIntroDialog extends StatefulWidget {
       _D01MemberRoleIntroDialogState();
 }
 
-class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog> {
+class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog>
+    with SingleTickerProviderStateMixin {
   late String _currentAvatar;
   late bool _canReroll;
-  bool _isProcessing = false;
+  late AnimationController _animController;
+  bool _isUpdating = false;
 
   @override
   void initState() {
     super.initState();
     _currentAvatar = widget.initialAvatar;
     _canReroll = widget.canReroll;
+
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+      lowerBound: 0.8,
+      upperBound: 1.0,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  String _getAvatarPath(String id) {
+    // ✅ 組合完整路徑: assets/images/avatars/avatar_01_cow.png
+    return 'assets/images/avatars/avatar_$id.png';
   }
 
   Future<void> _handleReroll() async {
-    setState(() => _isProcessing = true);
-    try {
-      final callable = FirebaseFunctions.instance.httpsCallable('rerollAvatar');
-      final res = await callable.call({'taskId': widget.taskId});
-      final data = Map<String, dynamic>.from(res.data);
+    if (!_canReroll || _isUpdating) return;
 
-      setState(() {
-        _currentAvatar = data['newAvatar'];
-        _canReroll = false;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(t.D01_MemberRole_Intro.error_reroll_failed(
-              message: e.toString()))));
-    } finally {
-      if (mounted) setState(() => _isProcessing = false);
-    }
-  }
+    setState(() => _isUpdating = true);
 
-  Future<void> _handleConfirm() async {
-    setState(() => _isProcessing = true);
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // 隨機選一個新的 (排除當前這個)
+      final available =
+          AvatarConstants.allAvatars.where((a) => a != _currentAvatar).toList();
+      final newAvatar = available[Random().nextInt(available.length)];
 
       await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
           .collection('members')
           .doc(uid)
-          .update({'hasSeenIntro': true});
+          .update({
+        'avatar': newAvatar,
+        'hasRerolled': true,
+      });
 
       if (mounted) {
-        Navigator.of(context).pop();
+        setState(() {
+          _currentAvatar = newAvatar;
+          _canReroll = false;
+        });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(t.common.error_prefix(message: e.toString()))));
-      setState(() => _isProcessing = false);
+      debugPrint('Reroll failed: $e');
+    } finally {
+      if (mounted) setState(() => _isUpdating = false);
+    }
+  }
+
+  Future<void> _handleEnter() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(widget.taskId)
+          .collection('members')
+          .doc(uid)
+          .update({'hasSeenRoleIntro': true});
+
+      if (mounted) context.pop();
+    } catch (e) {
+      debugPrint('Update seen status failed: $e');
+      if (mounted) context.pop();
     }
   }
 
@@ -81,50 +115,76 @@ class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog> {
 
     return PopScope(
       canPop: false,
-      child: AlertDialog(
-        title: Text(t.D01_InviteJoin_Success.title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(t.D01_InviteJoin_Success.assigned_avatar),
-            const SizedBox(height: 16),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                shape: BoxShape.circle,
+      child: Dialog(
+        backgroundColor: theme.colorScheme.surface,
+        surfaceTintColor: theme.colorScheme.surfaceTint,
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                t.D01_MemberRole_Intro.title,
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
-              child: Center(
-                child: Text(
-                  _currentAvatar.substring(0, 1).toUpperCase(),
-                  style: theme.textTheme.displayMedium,
+              const SizedBox(height: 24),
+
+              // Avatar Animation
+              ScaleTransition(
+                scale: _animController,
+                child: SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: Image.asset(
+                    _getAvatarPath(_currentAvatar),
+                    // 若圖片尚未放入 assets，顯示備用 icon
+                    errorBuilder: (_, __, ___) => CircleAvatar(
+                      radius: 60,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      child: Text(
+                          _currentAvatar.split('_').last[0].toUpperCase(),
+                          style: const TextStyle(fontSize: 40)),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(_currentAvatar, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 16),
-            if (_canReroll)
-              TextButton.icon(
-                onPressed: _isProcessing ? null : _handleReroll,
-                icon: const Icon(Icons.refresh),
-                label: Text(t.D01_MemberRole_Intro.action_reroll), // '不喜歡？重抽一次'
-              )
-            else
+              const SizedBox(height: 16),
+
               Text(
-                t.D01_InviteJoin_Success.avatar_note,
-                style: theme.textTheme.labelSmall
-                    ?.copyWith(color: theme.colorScheme.error),
+                t.D01_MemberRole_Intro.dialog_content,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium,
               ),
-          ],
-        ),
-        actions: [
-          FilledButton(
-            onPressed: _isProcessing ? null : _handleConfirm,
-            child: Text(t.D01_InviteJoin_Success.action_continue),
+              const SizedBox(height: 24),
+
+              // Reroll Button
+              TextButton.icon(
+                onPressed: _canReroll ? _handleReroll : null,
+                icon: _isUpdating
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.refresh),
+                label: Text(_canReroll
+                    ? t.D01_MemberRole_Intro.action_reroll
+                    : t.D01_MemberRole_Intro.desc_reroll_empty),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Enter Button
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: _handleEnter,
+                  child: Text(t.D01_MemberRole_Intro.action_enter),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
