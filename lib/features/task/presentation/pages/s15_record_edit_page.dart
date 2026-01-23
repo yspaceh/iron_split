@@ -4,24 +4,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_task_create_notice_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 // ==========================================
 // 1. 資料模型
 // ==========================================
+
 class SplitItemModel {
   String id;
   double amount;
   String? note;
   String splitMethod;
   List<String> memberIds;
+  // 詳細分攤數據 (Key: MemberID, Value: 權重 或 金額)
+  // exact: 存金額 { 'u1': 100, 'u2': 200 }
+  // percent: 存權重 { 'u1': 1, 'u2': 2.5 }
+  // even: 通常為空
+  Map<String, double> rawDetails;
 
   SplitItemModel({
     required this.id,
@@ -29,6 +37,7 @@ class SplitItemModel {
     this.note,
     this.splitMethod = 'even',
     required this.memberIds,
+    this.rawDetails = const {},
   });
 }
 
@@ -68,17 +77,26 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   bool _isSaving = false;
   bool _isLoadingTaskData = true;
 
+  // 記錄類型切換 (0: 支出, 1: 預收
+  int _recordTypeIndex = 0;
+
   // Payment Method
-  String _payerType = 'member';
-  String _payerId = 'me';
+  String _payerType = 'prepay';
+  String _payerId = '';
+
+  double _taskPrepayBalance = 0.0; // 任務預收款餘額
+  Map<String, dynamic>? _complexPaymentData; // 儲存 B07 回傳的混合支付資料
 
   // Data from Firestore
   List<Map<String, dynamic>> _taskMembers = [];
 
   // Split Logic State
-  List<SplitItemModel> _subItems = [];
+  final List<SplitItemModel> _subItems = [];
   String _baseSplitMethod = 'even';
   List<String> _baseMemberIds = [];
+
+  // 儲存「剩餘金額卡片」的詳細分攤設定 (權重或金額)
+  Map<String, double> _baseRawDetails = {};
 
   // Category Data
   final List<Map<String, dynamic>> _categories = [
@@ -117,6 +135,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       if (docSnapshot.exists && mounted) {
         final data = docSnapshot.data()!;
 
+        _taskPrepayBalance = (data['prepayBalance'] ?? 0).toDouble();
+
         // 1. 解析真實成員 (處理 Map 與 List 兩種格式)
         List<Map<String, dynamic>> realMembers = [];
         if (data.containsKey('members')) {
@@ -130,6 +150,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
               final memberData = e.value as Map<String, dynamic>;
               if (!memberData.containsKey('id')) {
                 memberData['id'] = e.key;
+              }
+              // 確保 name 欄位存在
+              // 如果資料庫是 displayName，就轉成 name；如果都沒有，就叫 '成員'
+              if (memberData['name'] == null) {
+                memberData['name'] =
+                    memberData['displayName'] ?? '成員'; // TODO: 之後要改掉，
               }
               return memberData;
             }).toList();
@@ -196,19 +222,74 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   double get _totalAmount => double.tryParse(_amountController.text) ?? 0.0;
 
+  bool get _hasPaymentError {
+    return _payerType == 'prepay' && _taskPrepayBalance <= 0;
+  }
+
   double get _baseRemainingAmount {
-    final subTotal = _subItems.fold(0.0, (sum, item) => sum + item.amount);
+    final subTotal = _subItems.fold(0.0, (prev, curr) => prev + curr.amount);
     final remaining = _totalAmount - subTotal;
     return remaining > 0 ? remaining : 0.0;
   }
 
   // --- Actions ---
 
+  // 點擊卡片開啟 B03 分攤方式設定
   Future<void> _handleCardTap(
       {required bool isBase, SplitItemModel? subItem}) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(t.S15_Record_Edit.msg_function_not_implemented)),
+    // 1. 準備當前卡片的數據
+    final targetAmount = isBase ? _baseRemainingAmount : subItem!.amount;
+    final currentMethod = isBase ? _baseSplitMethod : subItem!.splitMethod;
+    final currentMemberIds = isBase ? _baseMemberIds : subItem!.memberIds;
+    final currentDetails = isBase ? _baseRawDetails : subItem!.rawDetails;
+
+    // 2. 準備預設權重 (目前資料庫若無設定，預設全為 1.0)
+    // 未來可改為從 _fetchTaskData 取得的 memberWeights
+    final Map<String, double> defaultWeights = {
+      for (var m in _taskMembers) m['id']: 1.0
+    };
+
+    // 3. 取得貨幣符號
+    final currencySymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == _selectedCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
+    // 4. 開啟 B03 BottomSheet
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B03SplitMethodEditBottomSheet(
+        totalAmount: targetAmount,
+        currencySymbol: currencySymbol,
+        allMembers: _taskMembers,
+        defaultMemberWeights: defaultWeights,
+        initialSplitMethod: currentMethod,
+        initialMemberIds: currentMemberIds,
+        initialDetails: currentDetails,
+      ),
     );
+
+    // 5. 處理回傳結果，更新 UI
+    if (result != null && mounted) {
+      final newMethod = result['splitMethod'];
+      final newIds = List<String>.from(result['memberIds']);
+      final newDetails = Map<String, double>.from(result['details']);
+
+      setState(() {
+        if (isBase) {
+          // 更新「剩餘金額卡片」
+          _baseSplitMethod = newMethod;
+          _baseMemberIds = newIds;
+          _baseRawDetails = newDetails;
+        } else {
+          // 更新「拆分細項卡片」
+          subItem!.splitMethod = newMethod;
+          subItem.memberIds = newIds;
+          subItem.rawDetails = newDetails;
+        }
+      });
+    }
   }
 
   Future<void> _handleCreateSubItem() async {
@@ -251,60 +332,13 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     });
   }
 
-  // --- Wheel Picker Logic ---
-  void _showWheelBottomSheet({
-    required Widget child,
-    required VoidCallback onDone,
-  }) {
-    FocusScope.of(context).unfocus();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (ctx) => Container(
-        height: 320,
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text(t.common.cancel,
-                        style: const TextStyle(color: Colors.grey)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      onDone();
-                    },
-                    child: Text(
-                      t.S16_TaskCreate_Edit.picker_done,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(child: child),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showCurrencyPicker() {
     String tempCurrency = _selectedCurrency;
-    _showWheelBottomSheet(
-      onDone: () {
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () async {
         if (tempCurrency != _selectedCurrency) {
-          _onCurrencyChanged(tempCurrency);
+          await _onCurrencyChanged(tempCurrency);
         }
       },
       child: CupertinoPicker(
@@ -322,8 +356,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   void _showCategoryPicker() {
     int tempIndex = _selectedCategoryIndex;
-    _showWheelBottomSheet(
-      onDone: () => setState(() => _selectedCategoryIndex = tempIndex),
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () => setState(() => _selectedCategoryIndex = tempIndex),
       child: CupertinoPicker(
         itemExtent: 40,
         scrollController:
@@ -345,8 +380,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   void _showDatePicker() {
     DateTime tempDate = _selectedDate;
-    _showWheelBottomSheet(
-      onDone: () => setState(() => _selectedDate = tempDate),
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () => setState(() => _selectedDate = tempDate),
       child: CupertinoDatePicker(
         initialDateTime: _selectedDate,
         mode: CupertinoDatePickerMode.date,
@@ -397,24 +433,66 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     );
   }
 
+  // 呼叫 B07 並處理回傳
   Future<void> _handlePaymentMethod() async {
     if (_taskMembers.isEmpty) return;
 
-    final result = await showModalBottomSheet<Map<String, String>>(
+    // 防呆：必須先有金額才能開 B07
+    final totalAmount = double.tryParse(_amountController.text) ?? 0.0;
+    if (totalAmount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(t.S15_Record_Edit.err_input_amount)), // 建議補上 i18n
+      );
+      return;
+    }
+
+    final currencySymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == _selectedCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
-        currentType: _payerType,
-        currentId: _payerId == 'me' ? null : _payerId,
+        totalAmount: totalAmount,
+        prepayBalance: _taskPrepayBalance,
         members: _taskMembers,
+        currencySymbol: currencySymbol,
+        // 傳入當前狀態 (若有複雜資料優先用，否則用簡易狀態推導)
+        initialUsePrepay:
+            _complexPaymentData?['usePrepay'] ?? (_payerType == 'prepay'),
+        initialPrepayAmount: _complexPaymentData?['prepayAmount'] ??
+            (_payerType == 'prepay' ? totalAmount : 0.0),
+        initialMemberAdvance: _complexPaymentData?['memberAdvance'] != null
+            ? Map<String, double>.from(_complexPaymentData!['memberAdvance'])
+            : (_payerType == 'member' ? {_payerId: totalAmount} : {}),
       ),
     );
 
     if (result != null && mounted) {
       setState(() {
-        _payerType = result['type']!;
-        if (_payerType == 'member') {
-          _payerId = result['id']!;
+        // 1. 儲存複雜資料
+        _complexPaymentData = result;
+
+        // 2. 更新 S15 顯示邏輯
+        final bool usePrepay = result['usePrepay'];
+        final bool useAdvance = result['useAdvance'];
+        final Map<String, double> advances = result['memberAdvance'];
+
+        if (usePrepay && !useAdvance) {
+          _payerType = 'prepay';
+        } else if (!usePrepay && useAdvance) {
+          _payerType = 'member';
+          final payers = advances.entries.where((e) => e.value > 0).toList();
+          if (payers.length == 1) {
+            _payerId = payers.first.key;
+          } else {
+            _payerId = 'multiple'; // 標記為多人代墊
+          }
+        } else {
+          _payerType = 'mixed'; // 標記為混合支付
         }
       });
     }
@@ -423,6 +501,15 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
     if (_isSaving) return;
+
+    // 額外檢查：如果顯示紅框 (預收餘額不足)，禁止儲存
+    if (_hasPaymentError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(t.B07_PaymentMethod_Edit.err_balance_not_enough)),
+      );
+      return;
+    }
 
     setState(() => _isSaving = true);
 
@@ -435,6 +522,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         'categoryIndex': _selectedCategoryIndex,
         'payerType': _payerType,
         'payerId': _payerType == 'member' ? _payerId : null,
+        'paymentDetails': _complexPaymentData,
         'amount': double.parse(_amountController.text),
         'currency': _selectedCurrency,
         'exchangeRate': double.parse(_exchangeRateController.text),
@@ -482,16 +570,35 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       {required String label,
       required String value,
       required IconData icon,
-      required VoidCallback onTap}) {
+      required VoidCallback onTap,
+      bool isError = false}) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          prefixIcon:
+              Icon(icon, color: isError ? colorScheme.error : null), // Icon 變色
+          // 邊框變色邏輯
+          enabledBorder: isError
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorScheme.error),
+                )
+              : OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          focusedBorder: isError
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorScheme.error, width: 2),
+                )
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
@@ -501,7 +608,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             Expanded(
               child: Text(
                 value,
-                style: theme.textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge
+                    ?.copyWith(color: isError ? colorScheme.error : null // 文字變色
+                        ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -516,50 +625,23 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     final activeMembers =
         _taskMembers.where((m) => memberIds.contains(m['id'])).toList();
 
-    // 使用 Wrap 讓頭像自動換行，不堆疊，且限制寬度
     return Container(
       constraints: const BoxConstraints(maxWidth: 220),
       child: Wrap(
-        alignment: WrapAlignment.end, // 靠右對齊
-        spacing: 4, // 水平間距
-        runSpacing: 4, // 垂直間距 (第二行)
+        alignment: WrapAlignment.end,
+        spacing: 4,
+        runSpacing: 4,
         children: activeMembers.map((member) {
-          final avatarId = member['avatar'];
-          final name = member['name'] ?? '?';
-
-          return _buildSingleAvatar(avatarId, name);
+          // ✅ [替換] 改用 CommonAvatar
+          return CommonAvatar(
+            avatarId: member['avatar'],
+            name: member['name'],
+            radius: 11, // S15 的頭像比較小
+            fontSize: 10,
+          );
         }).toList(),
       ),
     );
-  }
-
-  Widget _buildSingleAvatar(dynamic avatarId, String name) {
-    if (avatarId != null && avatarId.toString().isNotEmpty) {
-      final String rawId = avatarId.toString();
-      // ✅ 使用共用常數取得路徑 (會自動轉換 badger -> 19_badger)
-      final String assetPath = AvatarConstants.getAssetPath(rawId);
-
-      return CircleAvatar(
-        radius: 11,
-        backgroundColor: Colors.grey.shade300,
-        backgroundImage: AssetImage(assetPath),
-        onBackgroundImageError: (_, __) {
-          // 如果真的找不到圖，也不要崩潰
-          debugPrint("❌ Failed to load avatar: $assetPath");
-        },
-      );
-    } else {
-      // 無圖片時顯示首字
-      return CircleAvatar(
-        radius: 11,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Text(
-          name.isNotEmpty ? name[0].toUpperCase() : '?',
-          style: const TextStyle(
-              fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      );
-    }
   }
 
   Widget _buildExpenseCard({
@@ -569,8 +651,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     String? note,
     required VoidCallback onTap,
     bool isBaseCard = false,
-    bool showSplitAction = false, // ✅ 新增控制參數
-    VoidCallback? onSplitTap, // ✅ 新增按鈕動作
+    bool showSplitAction = false,
+    VoidCallback? onSplitTap,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -720,8 +802,15 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     }
   }
 
+  // 支援多種支付型態顯示
   String _getPayerDisplayName(String type, String id) {
-    if (type == 'prepay') return t.S15_Record_Edit.val_prepay;
+    if (type == 'prepay') return t.B07_PaymentMethod_Edit.type_prepay;
+    if (type == 'mixed') {
+      return t.B07_PaymentMethod_Edit.type_mixed;
+    }
+    if (id == 'multiple') {
+      return t.B07_PaymentMethod_Edit.type_member;
+    }
 
     final member = _taskMembers.firstWhere(
       (m) => m['id'] == id,
@@ -730,16 +819,253 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     return t.S15_Record_Edit.val_member_paid(name: member['name']);
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildExpenseForm() {
+    // 1. 複製這些變數進來 (因為原本 build 裡的變數這裡讀不到)
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isForeign = _selectedCurrency != widget.baseCurrency;
-
     final currencyOption = kSupportedCurrencies.firstWhere(
         (e) => e.code == _selectedCurrency,
         orElse: () => kSupportedCurrencies.first);
 
+    // 2. 貼上你原本的 ListView
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        buildPickerField(
+          label: t.S15_Record_Edit.label_date,
+          value: DateFormat('yyyy/MM/dd').format(_selectedDate),
+          icon: Icons.calendar_today,
+          onTap: _showDatePicker,
+        ),
+        const SizedBox(height: 16),
+        buildPickerField(
+          label: t.S15_Record_Edit.label_payment_method,
+          value: _getPayerDisplayName(_payerType, _payerId),
+          icon: _payerType == 'prepay'
+              ? Icons.account_balance_wallet
+              : Icons.person,
+          onTap: _handlePaymentMethod,
+          isError: _hasPaymentError,
+        ),
+        // 若有錯誤顯示紅字提示 (加在欄位下方)
+        if (_hasPaymentError)
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 4),
+            child: Text(
+              t.B07_PaymentMethod_Edit.err_balance_not_enough,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.error, fontSize: 12),
+            ),
+          ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            InkWell(
+              onTap: _showCategoryPicker,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  _categories[_selectedCategoryIndex]['icon'],
+                  color: colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: t.S15_Record_Edit.label_title,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                validator: (v) => v?.isEmpty == true ? "Required" : null,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: _showCurrencyPicker,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      currencyOption.symbol,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    Text(
+                      currencyOption.code,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _amountController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: t.S15_Record_Edit.label_amount,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                validator: (v) =>
+                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
+              ),
+            ),
+          ],
+        ),
+        if (isForeign) ...[
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _exchangeRateController,
+            onChanged: (_) => setState(() {}),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: t.S15_Record_Edit.label_rate(
+                  base: widget.baseCurrency, target: _selectedCurrency),
+              prefixIcon: IconButton(
+                icon: const Icon(Icons.currency_exchange),
+                onPressed: _isRateLoading ? null : _fetchExchangeRate,
+              ),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_isRateLoading)
+                    const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
+                    onPressed: _showRateInfoDialog,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Builder(
+            builder: (context) {
+              final amount = double.tryParse(_amountController.text) ?? 0.0;
+              final rate = double.tryParse(_exchangeRateController.text) ?? 0.0;
+              final converted = amount * rate;
+              final baseSymbol = kSupportedCurrencies
+                  .firstWhere((e) => e.code == widget.baseCurrency,
+                      orElse: () => kSupportedCurrencies.first)
+                  .symbol;
+              final baseCode = widget.baseCurrency;
+              final formattedAmount =
+                  NumberFormat("#,##0.##").format(converted);
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 4, left: 4),
+                child: Text(
+                  t.S15_Record_Edit.val_converted_amount(
+                      base: baseCode,
+                      symbol: baseSymbol,
+                      amount: formattedAmount),
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                ),
+              );
+            },
+          ),
+        ],
+        const SizedBox(height: 12),
+        if (_subItems.isNotEmpty)
+          ..._subItems.map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildExpenseCard(
+                  amount: item.amount,
+                  methodLabel: item.splitMethod,
+                  memberIds: item.memberIds,
+                  note: item.note,
+                  isBaseCard: false,
+                  onTap: () => _handleCardTap(isBase: false, subItem: item),
+                ),
+              )),
+        if (_baseRemainingAmount > 0 || _subItems.isEmpty)
+          _buildExpenseCard(
+            amount: _baseRemainingAmount,
+            methodLabel: _baseSplitMethod,
+            memberIds: _baseMemberIds,
+            note: null,
+            isBaseCard: true,
+            onTap: () => _handleCardTap(isBase: true),
+            // 只有基本卡片且有餘額時，顯示分拆按鈕
+            showSplitAction: _baseRemainingAmount > 0,
+            onSplitTap: _handleCreateSubItem,
+          ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _memoController,
+          keyboardType: TextInputType.multiline,
+          // 1. 鎖定高度：最小與最大都是 2 行
+          minLines: 2,
+          maxLines: 2,
+          decoration: InputDecoration(
+            labelText: t.S15_Record_Edit.label_memo,
+            // 2. 讓 Label (提示文字) 在多行模式下也能靠左上
+            alignLabelWithHint: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            // 3. 調整內距
+            contentPadding: const EdgeInsets.all(16),
+          ),
+        ),
+        const SizedBox(height: 100),
+      ],
+    );
+  }
+
+  Widget _buildIncomeForm() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.savings, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          Text(t.S15_Record_Edit.msg_income_developing,
+              style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (_isLoadingTaskData) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -764,219 +1090,56 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           )
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            buildPickerField(
-              label: t.S15_Record_Edit.label_date,
-              value: DateFormat('yyyy/MM/dd').format(_selectedDate),
-              icon: Icons.calendar_today,
-              onTap: _showDatePicker,
-            ),
-            const SizedBox(height: 16),
-            buildPickerField(
-              label: t.S15_Record_Edit.label_payment_method,
-              value: _getPayerDisplayName(_payerType, _payerId),
-              icon: _payerType == 'prepay'
-                  ? Icons.account_balance_wallet
-                  : Icons.person,
-              onTap: _handlePaymentMethod,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                InkWell(
-                  onTap: _showCategoryPicker,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: colorScheme.outlineVariant),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      _categories[_selectedCategoryIndex]['icon'],
-                      color: colorScheme.primary,
-                      size: 24,
-                    ),
+      body: Column(
+        children: [
+          // 1. 頂部切換開關
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<int>(
+                // 1. 定義選項 (使用 i18n 變數)
+                segments: <ButtonSegment<int>>[
+                  ButtonSegment<int>(
+                    value: 0,
+                    label: Text(t.S15_Record_Edit.tab_expense), // "支出"
+                    icon: const Icon(Icons.receipt_long),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                      labelText: t.S15_Record_Edit.label_title,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
-                    ),
-                    validator: (v) => v?.isEmpty == true ? "Required" : null,
+                  ButtonSegment<int>(
+                    value: 1,
+                    label: Text(t.S15_Record_Edit.tab_income), // "預收"
+                    icon: const Icon(Icons.savings_outlined),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: _showCurrencyPicker,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: 50,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: colorScheme.outlineVariant),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          currencyOption.symbol,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                              color: colorScheme.primary,
-                              fontWeight: FontWeight.w900),
-                        ),
-                        Text(
-                          currencyOption.code,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextFormField(
-                    controller: _amountController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: t.S15_Record_Edit.label_amount,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
-                    ),
-                    validator: (v) =>
-                        (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
-                  ),
-                ),
-              ],
-            ),
-            if (isForeign) ...[
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _exchangeRateController,
-                onChanged: (_) => setState(() {}),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_rate(
-                      base: widget.baseCurrency, target: _selectedCurrency),
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.currency_exchange),
-                    onPressed: _isRateLoading ? null : _fetchExchangeRate,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (_isRateLoading)
-                        const Padding(
-                            padding: EdgeInsets.all(12),
-                            child: CircularProgressIndicator(strokeWidth: 2)),
-                      IconButton(
-                        icon: const Icon(Icons.info_outline),
-                        onPressed: _showRateInfoDialog,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Builder(
-                builder: (context) {
-                  final amount = double.tryParse(_amountController.text) ?? 0.0;
-                  final rate =
-                      double.tryParse(_exchangeRateController.text) ?? 0.0;
-                  final converted = amount * rate;
-                  final baseSymbol = kSupportedCurrencies
-                      .firstWhere((e) => e.code == widget.baseCurrency,
-                          orElse: () => kSupportedCurrencies.first)
-                      .symbol;
-                  final baseCode = widget.baseCurrency;
-                  final formattedAmount =
-                      NumberFormat("#,##0.##").format(converted);
+                ],
+                // 2. 當前選中的項目
+                selected: {_recordTypeIndex},
 
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 4),
-                    child: Text(
-                      t.S15_Record_Edit.val_converted_amount(
-                          base: baseCode,
-                          symbol: baseSymbol,
-                          amount: formattedAmount),
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: colorScheme.onSurfaceVariant),
-                    ),
-                  );
+                // 3. 切換事件
+                onSelectionChanged: (Set<int> newSelection) {
+                  setState(() {
+                    _recordTypeIndex = newSelection.first;
+                  });
                 },
-              ),
-            ],
-            const SizedBox(height: 12),
-            if (_subItems.isNotEmpty)
-              ..._subItems.map((item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: _buildExpenseCard(
-                      amount: item.amount,
-                      methodLabel: item.splitMethod,
-                      memberIds: item.memberIds,
-                      note: item.note,
-                      isBaseCard: false,
-                      onTap: () => _handleCardTap(isBase: false, subItem: item),
-                    ),
-                  )),
-            if (_baseRemainingAmount > 0 || _subItems.isEmpty)
-              _buildExpenseCard(
-                amount: _baseRemainingAmount,
-                methodLabel: _baseSplitMethod,
-                memberIds: _baseMemberIds,
-                note: null,
-                isBaseCard: true,
-                onTap: () => _handleCardTap(isBase: true),
-                // 只有基本卡片且有餘額時，顯示分拆按鈕
-                showSplitAction: _baseRemainingAmount > 0,
-                onSplitTap: _handleCreateSubItem,
-              ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _memoController,
-              keyboardType: TextInputType.multiline,
-              // 1. 鎖定高度：最小與最大都是 2 行
-              minLines: 2,
-              maxLines: 2,
-              decoration: InputDecoration(
-                labelText: t.S15_Record_Edit.label_memo,
-                // 2. 讓 Label (提示文字) 在多行模式下也能靠左上
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                // 3. 調整內距
-                contentPadding: const EdgeInsets.all(16),
+
+                showSelectedIcon: false, // 不顯示打勾圖示，保持簡潔
               ),
             ),
-            const SizedBox(height: 100),
-          ],
-        ),
+          ),
+
+          // 2. 內容區：根據切換顯示不同表單
+          Expanded(
+            child: Form(
+              key: _formKey, // Form Key 依然包在最外面，保護你的驗證邏輯
+              child: IndexedStack(
+                index: _recordTypeIndex,
+                children: [
+                  _buildExpenseForm(), // 呼叫剛剛搬出去的方法 (0: 支出)
+                  _buildIncomeForm(), // 呼叫空殼方法 (1: 預收)
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

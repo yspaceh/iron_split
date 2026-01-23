@@ -201,10 +201,14 @@ class _TranslationsS15RecordEditEn implements TranslationsS15RecordEditZh {
 	@override String get msg_rate_source => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.';
 	@override String get btn_close => 'Close';
 	@override String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
-	@override String get val_split_remaining => '剩餘金額';
-	@override String get err_amount_not_enough => '剩餘金額不足';
-	@override String get msg_function_not_implemented => '功能開發中';
-	@override String get val_mock_note => '細項說明';
+	@override String get val_split_remaining => 'Remaining Amount';
+	@override String get err_amount_not_enough => 'Insufficient remaining amount';
+	@override String get val_mock_note => 'Item Note';
+	@override String get tab_expense => 'Expense';
+	@override String get tab_income => 'Income';
+	@override String get msg_income_developing => 'Income feature coming soon...';
+	@override String get msg_not_implemented => 'Feature not implemented yet';
+	@override String get err_input_amount => 'Please enter amount first';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -331,15 +335,17 @@ class _TranslationsB03SplitMethodEditEn implements TranslationsB03SplitMethodEdi
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Split Method';
+	@override String get title => 'Choose Split Method';
 	@override String get method_even => 'Even';
-	@override String get method_exact => 'Exact Amount';
 	@override String get method_percent => 'By Percentage';
-	@override String get method_share => 'By Shares';
-	@override String get desc_even => 'Split equally among selected';
-	@override String get desc_exact => 'Enter specific amounts';
+	@override String get method_exact => 'Exact Amount';
+	@override String get desc_even => 'Selected members split equally, leftover goes to pot';
 	@override String get desc_percent => 'Distribute by percentage';
-	@override String get desc_share => 'Distribute by shares (e.g. Adult 2, Child 1)';
+	@override String get desc_exact => 'Enter specific amounts, total must match';
+	@override String msg_leftover_pot({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)';
+	@override String get label_weight => 'Weight';
+	@override String error_total_mismatch({required Object diff}) => 'Total mismatch (difference ${diff})';
+	@override String get btn_adjust_weight => 'Adjust Weight';
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -349,11 +355,20 @@ class _TranslationsB07PaymentMethodEditEn implements TranslationsB07PaymentMetho
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Fund Source';
-	@override String get type_member => 'Member Paid';
-	@override String get type_prepay => 'Paid from Pool';
-	@override String get desc_member => 'Paid by a member upfront';
-	@override String get desc_prepay => 'Deducted from pool balance';
+	@override String get title => 'Select Funding Source';
+	@override String get type_member => 'Member Advance';
+	@override String get type_prepay => 'Public Fund';
+	@override String get type_mixed => 'Mixed Payment';
+	@override String prepay_balance({required Object amount}) => 'Fund Balance: ${amount}';
+	@override String get err_balance_not_enough => 'Insufficient Balance';
+	@override String get section_payer => 'Payer';
+	@override String get label_amount => 'Payment Amount';
+	@override String get total_label => 'Total Amount';
+	@override String get total_prepay => 'Public Fund';
+	@override String get total_advance => 'Total Advance';
+	@override String get status_balanced => 'Balanced';
+	@override String status_remaining({required Object amount}) => 'Remaining: ${amount}';
+	@override String get msg_auto_fill_prepay => 'Public fund balance auto-filled';
 }
 
 // Path: error
@@ -529,10 +544,14 @@ extension on TranslationsEn {
 			'S15_Record_Edit.msg_rate_source' => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.',
 			'S15_Record_Edit.btn_close' => 'Close',
 			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
-			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
-			'S15_Record_Edit.msg_function_not_implemented' => '功能開發中',
-			'S15_Record_Edit.val_mock_note' => '細項說明',
+			'S15_Record_Edit.val_split_remaining' => 'Remaining Amount',
+			'S15_Record_Edit.err_amount_not_enough' => 'Insufficient remaining amount',
+			'S15_Record_Edit.val_mock_note' => 'Item Note',
+			'S15_Record_Edit.tab_expense' => 'Expense',
+			'S15_Record_Edit.tab_income' => 'Income',
+			'S15_Record_Edit.msg_income_developing' => 'Income feature coming soon...',
+			'S15_Record_Edit.msg_not_implemented' => 'Feature not implemented yet',
+			'S15_Record_Edit.err_input_amount' => 'Please enter amount first',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.section_name' => 'Task Name',
 			'S16_TaskCreate_Edit.section_period' => 'Period',
@@ -587,20 +606,31 @@ extension on TranslationsEn {
 			'B02_SplitExpense_Edit.action_save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.hint_amount' => 'Amount',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
-			'B03_SplitMethod_Edit.title' => 'Split Method',
+			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.method_even' => 'Even',
-			'B03_SplitMethod_Edit.method_exact' => 'Exact Amount',
 			'B03_SplitMethod_Edit.method_percent' => 'By Percentage',
-			'B03_SplitMethod_Edit.method_share' => 'By Shares',
-			'B03_SplitMethod_Edit.desc_even' => 'Split equally among selected',
-			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts',
+			'B03_SplitMethod_Edit.method_exact' => 'Exact Amount',
+			'B03_SplitMethod_Edit.desc_even' => 'Selected members split equally, leftover goes to pot',
 			'B03_SplitMethod_Edit.desc_percent' => 'Distribute by percentage',
-			'B03_SplitMethod_Edit.desc_share' => 'Distribute by shares (e.g. Adult 2, Child 1)',
-			'B07_PaymentMethod_Edit.title' => 'Fund Source',
-			'B07_PaymentMethod_Edit.type_member' => 'Member Paid',
-			'B07_PaymentMethod_Edit.type_prepay' => 'Paid from Pool',
-			'B07_PaymentMethod_Edit.desc_member' => 'Paid by a member upfront',
-			'B07_PaymentMethod_Edit.desc_prepay' => 'Deducted from pool balance',
+			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts, total must match',
+			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)',
+			'B03_SplitMethod_Edit.label_weight' => 'Weight',
+			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => 'Total mismatch (difference ${diff})',
+			'B03_SplitMethod_Edit.btn_adjust_weight' => 'Adjust Weight',
+			'B07_PaymentMethod_Edit.title' => 'Select Funding Source',
+			'B07_PaymentMethod_Edit.type_member' => 'Member Advance',
+			'B07_PaymentMethod_Edit.type_prepay' => 'Public Fund',
+			'B07_PaymentMethod_Edit.type_mixed' => 'Mixed Payment',
+			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => 'Fund Balance: ${amount}',
+			'B07_PaymentMethod_Edit.err_balance_not_enough' => 'Insufficient Balance',
+			'B07_PaymentMethod_Edit.section_payer' => 'Payer',
+			'B07_PaymentMethod_Edit.label_amount' => 'Payment Amount',
+			'B07_PaymentMethod_Edit.total_label' => 'Total Amount',
+			'B07_PaymentMethod_Edit.total_prepay' => 'Public Fund',
+			'B07_PaymentMethod_Edit.total_advance' => 'Total Advance',
+			'B07_PaymentMethod_Edit.status_balanced' => 'Balanced',
+			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => 'Remaining: ${amount}',
+			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => 'Public fund balance auto-filled',
 			'error.taskFull.title' => 'Task Full',
 			'error.taskFull.message' => ({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.',
 			'error.expiredCode.title' => 'Invite Expired',

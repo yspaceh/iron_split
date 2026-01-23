@@ -132,7 +132,7 @@ class _B02SplitExpenseEditBottomSheetState
           // Status Bar
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-            color: statusColor.withOpacity(0.1),
+            color: statusColor.withValues(alpha: 0.1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

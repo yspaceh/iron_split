@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 // ✅ 新增：引入幣別常數
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_task_create_notice_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -68,84 +69,63 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
     );
   }
 
-  // --- Picker 邏輯 ---
-  void _showWheelBottomSheet({required Widget child}) {
-    FocusScope.of(context).unfocus();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (ctx) => Container(
-        height: 320,
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text(t.common.cancel,
-                        style: const TextStyle(color: Colors.grey)), // '取消'
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text(
-                      t.S16_TaskCreate_Edit.picker_done,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(child: child),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showStartDatePicker() {
-    _showWheelBottomSheet(
+    // 1. 建立暫存變數
+    DateTime tempDate = _startDate;
+
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () {
+        // 3. 按下完成才 setState
+        setState(() {
+          _startDate = tempDate;
+          // 連動檢查：如果結束時間早於開始時間，自動推延
+          if (_endDate.isBefore(_startDate)) {
+            _endDate = _startDate;
+          }
+        });
+      },
       child: CupertinoDatePicker(
         initialDateTime: _startDate,
         mode: CupertinoDatePickerMode.date,
+        // 2. 滑動時只更新暫存
         onDateTimeChanged: (val) {
-          setState(() {
-            _startDate = DateTime(val.year, val.month, val.day);
-            if (_endDate.isBefore(_startDate)) _endDate = _startDate;
-          });
+          tempDate = DateTime(val.year, val.month, val.day);
         },
       ),
     );
   }
 
   void _showEndDatePicker() {
-    _showWheelBottomSheet(
+    DateTime tempDate = _endDate;
+
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () => setState(() => _endDate = tempDate),
       child: CupertinoDatePicker(
         initialDateTime: _endDate,
-        minimumDate: _startDate,
+        minimumDate: _startDate, // 防呆：不能選開始之前的日期
         mode: CupertinoDatePickerMode.date,
-        onDateTimeChanged: (val) =>
-            setState(() => _endDate = DateTime(val.year, val.month, val.day)),
+        onDateTimeChanged: (val) {
+          tempDate = DateTime(val.year, val.month, val.day);
+        },
       ),
     );
   }
 
   void _showCurrencyPicker() {
-    _showWheelBottomSheet(
+    String tempCurrency = _currency;
+
+    showCommonWheelPicker(
+      context: context,
+      onConfirm: () => setState(() => _currency = tempCurrency),
       child: CupertinoPicker(
         itemExtent: 40,
         scrollController: FixedExtentScrollController(
             initialItem: _currencies.indexOf(_currency)),
-        onSelectedItemChanged: (index) =>
-            setState(() => _currency = _currencies[index]),
+        onSelectedItemChanged: (index) {
+          tempCurrency = _currencies[index];
+        },
         children: _currencies.map((e) => Center(child: Text(e))).toList(),
       ),
     );
@@ -223,8 +203,8 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 16),
                       filled: true,
-                      fillColor:
-                          colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                      fillColor: colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.5),
                     ),
                     validator: (val) => (val == null || val.trim().isEmpty)
                         ? t.S16_TaskCreate_Edit.error_name_empty
@@ -312,7 +292,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(children: children),
     );
@@ -355,7 +335,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
           Divider(
               height: 1,
               indent: 56,
-              color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ],
     );
   }

@@ -96,10 +96,15 @@
     "msg_rate_source": "為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。",
     "btn_close": "閉じる",
     "val_converted_amount": "≈ {base}{symbol} {amount}",
-    "val_split_remaining": "剩餘金額",
-    "err_amount_not_enough": "剩餘金額不足",
-    "msg_function_not_implemented": "功能開發中",
-    "val_mock_note": "細項說明"
+    "val_split_remaining": "残り金額",
+    "err_amount_not_enough": "残り金額不足",
+    "val_mock_note": "項目メモ",
+    "tab_expense": "支出",
+    "tab_income": "受取",
+    "msg_income_developing": "受取機能は開発中です...",
+    "msg_not_implemented": "この機能はまだ実装されていません",
+    "err_input_amount": "先に金額を入力してください"
+
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
@@ -170,22 +175,33 @@
     "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
-    "title": "割り勘方法",
-    "method_even": "均等 (Even)",
-    "method_exact": "金額指定 (Exact)",
-    "method_percent": "割合 (Percent)",
-    "method_share": "シェア数 (Share)",
+    "title": "割り勘方法を選択",
+    "method_even": "均等分攤",
+    "method_percent": "割合分攤",
+    "method_exact": "金額指定",
     "desc_even": "選択したメンバーで均等割",
-    "desc_exact": "金額を手動で入力",
     "desc_percent": "パーセンテージで配分",
-    "desc_share": "シェア数で配分 (例: 大人2, 子供1)"
+    "desc_exact": "金額を手動で入力",
+    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）",
+    "label_weight": "比例",
+    "error_total_mismatch": "合計金額が一致しません (差額 {diff})",
+    "btn_adjust_weight": "比率を調整"
   },
   "B07_PaymentMethod_Edit": {
-    "title": "支払元を選択",
+    "title": "資金源を選択",
     "type_member": "メンバー立替",
-    "type_prepay": "プール金から",
-    "desc_member": "メンバーが一時的に支払う",
-    "desc_prepay": "現在のプール残高から支払う"
+    "type_prepay": "公費払い",
+    "type_mixed": "混合支払",
+    "prepay_balance": "公費残高: {amount}",
+    "err_balance_not_enough": "残高不足",
+    "section_payer": "支払者",
+    "label_amount": "支払金額",
+    "total_label": "合計金額",
+    "total_prepay": "公費払い",
+    "total_advance": "立替合計",
+    "status_balanced": "一致",
+    "status_remaining": "残り: {amount}",
+    "msg_auto_fill_prepay": "公費残高を自動入力しました"
   },
   "error": {
     "taskFull": {

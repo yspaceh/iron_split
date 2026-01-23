@@ -379,11 +379,23 @@ class TranslationsS15RecordEditZh {
 	/// zh: '剩餘金額不足'
 	String get err_amount_not_enough => '剩餘金額不足';
 
-	/// zh: '功能開發中'
-	String get msg_function_not_implemented => '功能開發中';
-
 	/// zh: '細項說明'
 	String get val_mock_note => '細項說明';
+
+	/// zh: '支出'
+	String get tab_expense => '支出';
+
+	/// zh: '預收'
+	String get tab_income => '預收';
+
+	/// zh: '預收功能開發中...'
+	String get msg_income_developing => '預收功能開發中...';
+
+	/// zh: '此功能尚未實作'
+	String get msg_not_implemented => '此功能尚未實作';
+
+	/// zh: '請先輸入金額'
+	String get err_input_amount => '請先輸入金額';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -622,29 +634,35 @@ class TranslationsB03SplitMethodEditZh {
 	/// zh: '選擇分攤方式'
 	String get title => '選擇分攤方式';
 
-	/// zh: '平分 (Even)'
-	String get method_even => '平分 (Even)';
+	/// zh: '平均分攤'
+	String get method_even => '平均分攤';
 
-	/// zh: '指定金額 (Exact)'
-	String get method_exact => '指定金額 (Exact)';
+	/// zh: '比例分攤'
+	String get method_percent => '比例分攤';
 
-	/// zh: '按比例 (Percent)'
-	String get method_percent => '按比例 (Percent)';
+	/// zh: '指定金額'
+	String get method_exact => '指定金額';
 
-	/// zh: '按份數 (Share)'
-	String get method_share => '按份數 (Share)';
+	/// zh: '選定成員平分，餘額存入餘額罐'
+	String get desc_even => '選定成員平分，餘額存入餘額罐';
 
-	/// zh: '所有選定成員平均分攤'
-	String get desc_even => '所有選定成員平均分攤';
+	/// zh: '依設定比例分配'
+	String get desc_percent => '依設定比例分配';
 
-	/// zh: '手動輸入每人應付金額'
-	String get desc_exact => '手動輸入每人應付金額';
+	/// zh: '手動輸入金額，總額需吻合'
+	String get desc_exact => '手動輸入金額，總額需吻合';
 
-	/// zh: '依百分比分配'
-	String get desc_percent => '依百分比分配';
+	/// zh: '餘額 {amount} 將存入餘額罐 (結算時分配)'
+	String msg_leftover_pot({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)';
 
-	/// zh: '依份數分配 (如: 大人2份, 小孩1份)'
-	String get desc_share => '依份數分配 (如: 大人2份, 小孩1份)';
+	/// zh: '比例'
+	String get label_weight => '比例';
+
+	/// zh: '總金額不符 (差額 {diff})'
+	String error_total_mismatch({required Object diff}) => '總金額不符 (差額 ${diff})';
+
+	/// zh: '調整權重'
+	String get btn_adjust_weight => '調整權重';
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -664,11 +682,38 @@ class TranslationsB07PaymentMethodEditZh {
 	/// zh: '公款支付'
 	String get type_prepay => '公款支付';
 
-	/// zh: '由某位成員先拿錢出來'
-	String get desc_member => '由某位成員先拿錢出來';
+	/// zh: '混合支付'
+	String get type_mixed => '混合支付';
 
-	/// zh: '直接從目前的公款餘額扣除'
-	String get desc_prepay => '直接從目前的公款餘額扣除';
+	/// zh: '公款餘額: {amount}'
+	String prepay_balance({required Object amount}) => '公款餘額: ${amount}';
+
+	/// zh: '餘額不足'
+	String get err_balance_not_enough => '餘額不足';
+
+	/// zh: '墊付成員'
+	String get section_payer => '墊付成員';
+
+	/// zh: '支付金額'
+	String get label_amount => '支付金額';
+
+	/// zh: '費用總額'
+	String get total_label => '費用總額';
+
+	/// zh: '公款支付'
+	String get total_prepay => '公款支付';
+
+	/// zh: '墊付總計'
+	String get total_advance => '墊付總計';
+
+	/// zh: '金額吻合'
+	String get status_balanced => '金額吻合';
+
+	/// zh: '尚差 {amount}'
+	String status_remaining({required Object amount}) => '尚差 ${amount}';
+
+	/// zh: '已自動填入公款餘額'
+	String get msg_auto_fill_prepay => '已自動填入公款餘額';
 }
 
 // Path: error
@@ -870,8 +915,12 @@ extension on Translations {
 			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
 			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
 			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
-			'S15_Record_Edit.msg_function_not_implemented' => '功能開發中',
 			'S15_Record_Edit.val_mock_note' => '細項說明',
+			'S15_Record_Edit.tab_expense' => '支出',
+			'S15_Record_Edit.tab_income' => '預收',
+			'S15_Record_Edit.msg_income_developing' => '預收功能開發中...',
+			'S15_Record_Edit.msg_not_implemented' => '此功能尚未實作',
+			'S15_Record_Edit.err_input_amount' => '請先輸入金額',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',
 			'S16_TaskCreate_Edit.section_period' => '任務期間',
@@ -927,19 +976,30 @@ extension on Translations {
 			'B02_SplitExpense_Edit.hint_amount' => '金額',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
-			'B03_SplitMethod_Edit.method_even' => '平分 (Even)',
-			'B03_SplitMethod_Edit.method_exact' => '指定金額 (Exact)',
-			'B03_SplitMethod_Edit.method_percent' => '按比例 (Percent)',
-			'B03_SplitMethod_Edit.method_share' => '按份數 (Share)',
-			'B03_SplitMethod_Edit.desc_even' => '所有選定成員平均分攤',
-			'B03_SplitMethod_Edit.desc_exact' => '手動輸入每人應付金額',
-			'B03_SplitMethod_Edit.desc_percent' => '依百分比分配',
-			'B03_SplitMethod_Edit.desc_share' => '依份數分配 (如: 大人2份, 小孩1份)',
+			'B03_SplitMethod_Edit.method_even' => '平均分攤',
+			'B03_SplitMethod_Edit.method_percent' => '比例分攤',
+			'B03_SplitMethod_Edit.method_exact' => '指定金額',
+			'B03_SplitMethod_Edit.desc_even' => '選定成員平分，餘額存入餘額罐',
+			'B03_SplitMethod_Edit.desc_percent' => '依設定比例分配',
+			'B03_SplitMethod_Edit.desc_exact' => '手動輸入金額，總額需吻合',
+			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)',
+			'B03_SplitMethod_Edit.label_weight' => '比例',
+			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '總金額不符 (差額 ${diff})',
+			'B03_SplitMethod_Edit.btn_adjust_weight' => '調整權重',
 			'B07_PaymentMethod_Edit.title' => '選擇資金來源',
 			'B07_PaymentMethod_Edit.type_member' => '成員墊付',
 			'B07_PaymentMethod_Edit.type_prepay' => '公款支付',
-			'B07_PaymentMethod_Edit.desc_member' => '由某位成員先拿錢出來',
-			'B07_PaymentMethod_Edit.desc_prepay' => '直接從目前的公款餘額扣除',
+			'B07_PaymentMethod_Edit.type_mixed' => '混合支付',
+			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '公款餘額: ${amount}',
+			'B07_PaymentMethod_Edit.err_balance_not_enough' => '餘額不足',
+			'B07_PaymentMethod_Edit.section_payer' => '墊付成員',
+			'B07_PaymentMethod_Edit.label_amount' => '支付金額',
+			'B07_PaymentMethod_Edit.total_label' => '費用總額',
+			'B07_PaymentMethod_Edit.total_prepay' => '公款支付',
+			'B07_PaymentMethod_Edit.total_advance' => '墊付總計',
+			'B07_PaymentMethod_Edit.status_balanced' => '金額吻合',
+			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '尚差 ${amount}',
+			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '已自動填入公款餘額',
 			'error.taskFull.title' => '任務已滿',
 			'error.taskFull.message' => ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。',
 			'error.expiredCode.title' => '邀請碼已過期',

@@ -98,8 +98,12 @@
     "val_converted_amount": "≈ {base}{symbol} {amount}",
     "val_split_remaining": "剩餘金額",
     "err_amount_not_enough": "剩餘金額不足",
-    "msg_function_not_implemented": "功能開發中",
-    "val_mock_note": "細項說明"
+    "val_mock_note": "細項說明",
+    "tab_expense": "支出",
+    "tab_income": "預收",
+    "msg_income_developing": "預收功能開發中...",
+    "msg_not_implemented": "此功能尚未實作",
+    "err_input_amount": "請先輸入金額"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
@@ -171,21 +175,32 @@
   },
   "B03_SplitMethod_Edit": {
     "title": "選擇分攤方式",
-    "method_even": "平分 (Even)",
-    "method_exact": "指定金額 (Exact)",
-    "method_percent": "按比例 (Percent)",
-    "method_share": "按份數 (Share)",
-    "desc_even": "所有選定成員平均分攤",
-    "desc_exact": "手動輸入每人應付金額",
-    "desc_percent": "依百分比分配",
-    "desc_share": "依份數分配 (如: 大人2份, 小孩1份)"
+    "method_even": "平均分攤",
+    "method_percent": "比例分攤",
+    "method_exact": "指定金額",
+    "desc_even": "選定成員平分，餘額存入餘額罐",
+    "desc_percent": "依設定比例分配",
+    "desc_exact": "手動輸入金額，總額需吻合",
+    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
+    "label_weight": "比例",
+    "error_total_mismatch": "總金額不符 (差額 {diff})",
+    "btn_adjust_weight": "調整權重"
   },
   "B07_PaymentMethod_Edit": {
     "title": "選擇資金來源",
     "type_member": "成員墊付",
     "type_prepay": "公款支付",
-    "desc_member": "由某位成員先拿錢出來",
-    "desc_prepay": "直接從目前的公款餘額扣除"
+    "type_mixed": "混合支付",
+    "prepay_balance": "公款餘額: {amount}",
+    "err_balance_not_enough": "餘額不足",
+    "section_payer": "墊付成員",
+    "label_amount": "支付金額",
+    "total_label": "費用總額",
+    "total_prepay": "公款支付",
+    "total_advance": "墊付總計",
+    "status_balanced": "金額吻合",
+    "status_remaining": "尚差 {amount}",
+    "msg_auto_fill_prepay": "已自動填入公款餘額"
   },
   "error": {
     "taskFull": {

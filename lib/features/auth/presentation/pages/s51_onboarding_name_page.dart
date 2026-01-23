@@ -113,7 +113,7 @@ class _S51OnboardingNamePageState extends State<S51OnboardingNamePage> {
                   ),
                   filled: true,
                   fillColor: theme.colorScheme.surfaceContainerHighest
-                      .withOpacity(0.3),
+                      .withValues(alpha: 0.3),
                 ),
               ),
 

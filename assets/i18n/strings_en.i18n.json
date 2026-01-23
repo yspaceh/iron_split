@@ -96,10 +96,14 @@
     "msg_rate_source": "Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.",
     "btn_close": "Close",
     "val_converted_amount": "≈ {base}{symbol} {amount}",
-    "val_split_remaining": "剩餘金額",
-    "err_amount_not_enough": "剩餘金額不足",
-    "msg_function_not_implemented": "功能開發中",
-    "val_mock_note": "細項說明"
+    "val_split_remaining": "Remaining Amount",
+    "err_amount_not_enough": "Insufficient remaining amount",
+    "val_mock_note": "Item Note",
+    "tab_expense": "Expense",
+    "tab_income": "Income",
+    "msg_income_developing": "Income feature coming soon...",
+    "msg_not_implemented": "Feature not implemented yet",
+    "err_input_amount": "Please enter amount first"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
@@ -171,22 +175,33 @@
     "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
-    "title": "Split Method",
+    "title": "Choose Split Method",
     "method_even": "Even",
-    "method_exact": "Exact Amount",
     "method_percent": "By Percentage",
-    "method_share": "By Shares",
-    "desc_even": "Split equally among selected",
-    "desc_exact": "Enter specific amounts",
+    "method_exact": "Exact Amount",
+    "desc_even": "Selected members split equally, leftover goes to pot",
     "desc_percent": "Distribute by percentage",
-    "desc_share": "Distribute by shares (e.g. Adult 2, Child 1)"
+    "desc_exact": "Enter specific amounts, total must match",
+    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)",
+    "label_weight": "Weight",
+    "error_total_mismatch": "Total mismatch (difference {diff})",
+    "btn_adjust_weight": "Adjust Weight"
   },
   "B07_PaymentMethod_Edit": {
-    "title": "Fund Source",
-    "type_member": "Member Paid",
-    "type_prepay": "Paid from Pool",
-    "desc_member": "Paid by a member upfront",
-    "desc_prepay": "Deducted from pool balance"
+    "title": "Select Funding Source",
+    "type_member": "Member Advance",
+    "type_prepay": "Public Fund",
+    "type_mixed": "Mixed Payment",
+    "prepay_balance": "Fund Balance: {amount}",
+    "err_balance_not_enough": "Insufficient Balance",
+    "section_payer": "Payer",
+    "label_amount": "Payment Amount",
+    "total_label": "Total Amount",
+    "total_prepay": "Public Fund",
+    "total_advance": "Total Advance",
+    "status_balanced": "Balanced",
+    "status_remaining": "Remaining: {amount}",
+    "msg_auto_fill_prepay": "Public fund balance auto-filled"
   },
   "error": {
     "taskFull": {

@@ -201,10 +201,14 @@ class _TranslationsS15RecordEditJa implements TranslationsS15RecordEditZh {
 	@override String get msg_rate_source => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。';
 	@override String get btn_close => '閉じる';
 	@override String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
-	@override String get val_split_remaining => '剩餘金額';
-	@override String get err_amount_not_enough => '剩餘金額不足';
-	@override String get msg_function_not_implemented => '功能開發中';
-	@override String get val_mock_note => '細項說明';
+	@override String get val_split_remaining => '残り金額';
+	@override String get err_amount_not_enough => '残り金額不足';
+	@override String get val_mock_note => '項目メモ';
+	@override String get tab_expense => '支出';
+	@override String get tab_income => '受取';
+	@override String get msg_income_developing => '受取機能は開発中です...';
+	@override String get msg_not_implemented => 'この機能はまだ実装されていません';
+	@override String get err_input_amount => '先に金額を入力してください';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -331,15 +335,17 @@ class _TranslationsB03SplitMethodEditJa implements TranslationsB03SplitMethodEdi
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '割り勘方法';
-	@override String get method_even => '均等 (Even)';
-	@override String get method_exact => '金額指定 (Exact)';
-	@override String get method_percent => '割合 (Percent)';
-	@override String get method_share => 'シェア数 (Share)';
+	@override String get title => '割り勘方法を選択';
+	@override String get method_even => '均等分攤';
+	@override String get method_percent => '割合分攤';
+	@override String get method_exact => '金額指定';
 	@override String get desc_even => '選択したメンバーで均等割';
-	@override String get desc_exact => '金額を手動で入力';
 	@override String get desc_percent => 'パーセンテージで配分';
-	@override String get desc_share => 'シェア数で配分 (例: 大人2, 子供1)';
+	@override String get desc_exact => '金額を手動で入力';
+	@override String msg_leftover_pot({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）';
+	@override String get label_weight => '比例';
+	@override String error_total_mismatch({required Object diff}) => '合計金額が一致しません (差額 ${diff})';
+	@override String get btn_adjust_weight => '比率を調整';
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -349,11 +355,20 @@ class _TranslationsB07PaymentMethodEditJa implements TranslationsB07PaymentMetho
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '支払元を選択';
+	@override String get title => '資金源を選択';
 	@override String get type_member => 'メンバー立替';
-	@override String get type_prepay => 'プール金から';
-	@override String get desc_member => 'メンバーが一時的に支払う';
-	@override String get desc_prepay => '現在のプール残高から支払う';
+	@override String get type_prepay => '公費払い';
+	@override String get type_mixed => '混合支払';
+	@override String prepay_balance({required Object amount}) => '公費残高: ${amount}';
+	@override String get err_balance_not_enough => '残高不足';
+	@override String get section_payer => '支払者';
+	@override String get label_amount => '支払金額';
+	@override String get total_label => '合計金額';
+	@override String get total_prepay => '公費払い';
+	@override String get total_advance => '立替合計';
+	@override String get status_balanced => '一致';
+	@override String status_remaining({required Object amount}) => '残り: ${amount}';
+	@override String get msg_auto_fill_prepay => '公費残高を自動入力しました';
 }
 
 // Path: error
@@ -529,10 +544,14 @@ extension on TranslationsJa {
 			'S15_Record_Edit.msg_rate_source' => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。',
 			'S15_Record_Edit.btn_close' => '閉じる',
 			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
-			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
-			'S15_Record_Edit.msg_function_not_implemented' => '功能開發中',
-			'S15_Record_Edit.val_mock_note' => '細項說明',
+			'S15_Record_Edit.val_split_remaining' => '残り金額',
+			'S15_Record_Edit.err_amount_not_enough' => '残り金額不足',
+			'S15_Record_Edit.val_mock_note' => '項目メモ',
+			'S15_Record_Edit.tab_expense' => '支出',
+			'S15_Record_Edit.tab_income' => '受取',
+			'S15_Record_Edit.msg_income_developing' => '受取機能は開発中です...',
+			'S15_Record_Edit.msg_not_implemented' => 'この機能はまだ実装されていません',
+			'S15_Record_Edit.err_input_amount' => '先に金額を入力してください',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.section_name' => 'タスク名',
 			'S16_TaskCreate_Edit.section_period' => '期間',
@@ -587,20 +606,31 @@ extension on TranslationsJa {
 			'B02_SplitExpense_Edit.action_save' => '決定',
 			'B02_SplitExpense_Edit.hint_amount' => '金額',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
-			'B03_SplitMethod_Edit.title' => '割り勘方法',
-			'B03_SplitMethod_Edit.method_even' => '均等 (Even)',
-			'B03_SplitMethod_Edit.method_exact' => '金額指定 (Exact)',
-			'B03_SplitMethod_Edit.method_percent' => '割合 (Percent)',
-			'B03_SplitMethod_Edit.method_share' => 'シェア数 (Share)',
+			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
+			'B03_SplitMethod_Edit.method_even' => '均等分攤',
+			'B03_SplitMethod_Edit.method_percent' => '割合分攤',
+			'B03_SplitMethod_Edit.method_exact' => '金額指定',
 			'B03_SplitMethod_Edit.desc_even' => '選択したメンバーで均等割',
-			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
 			'B03_SplitMethod_Edit.desc_percent' => 'パーセンテージで配分',
-			'B03_SplitMethod_Edit.desc_share' => 'シェア数で配分 (例: 大人2, 子供1)',
-			'B07_PaymentMethod_Edit.title' => '支払元を選択',
+			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
+			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）',
+			'B03_SplitMethod_Edit.label_weight' => '比例',
+			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '合計金額が一致しません (差額 ${diff})',
+			'B03_SplitMethod_Edit.btn_adjust_weight' => '比率を調整',
+			'B07_PaymentMethod_Edit.title' => '資金源を選択',
 			'B07_PaymentMethod_Edit.type_member' => 'メンバー立替',
-			'B07_PaymentMethod_Edit.type_prepay' => 'プール金から',
-			'B07_PaymentMethod_Edit.desc_member' => 'メンバーが一時的に支払う',
-			'B07_PaymentMethod_Edit.desc_prepay' => '現在のプール残高から支払う',
+			'B07_PaymentMethod_Edit.type_prepay' => '公費払い',
+			'B07_PaymentMethod_Edit.type_mixed' => '混合支払',
+			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '公費残高: ${amount}',
+			'B07_PaymentMethod_Edit.err_balance_not_enough' => '残高不足',
+			'B07_PaymentMethod_Edit.section_payer' => '支払者',
+			'B07_PaymentMethod_Edit.label_amount' => '支払金額',
+			'B07_PaymentMethod_Edit.total_label' => '合計金額',
+			'B07_PaymentMethod_Edit.total_prepay' => '公費払い',
+			'B07_PaymentMethod_Edit.total_advance' => '立替合計',
+			'B07_PaymentMethod_Edit.status_balanced' => '一致',
+			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '残り: ${amount}',
+			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '公費残高を自動入力しました',
 			'error.taskFull.title' => 'タスク満員',
 			'error.taskFull.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
 			'error.expiredCode.title' => '招待コード期限切れ',

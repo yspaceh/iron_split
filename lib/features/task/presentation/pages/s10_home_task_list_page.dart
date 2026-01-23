@@ -113,10 +113,11 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
                   .orderBy('createdAt', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.hasError)
+                if (snapshot.hasError) {
                   return Center(
                       child: Text(t.common
                           .error_prefix(message: snapshot.error.toString())));
+                }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }

@@ -59,8 +59,9 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    if (user == null)
+    if (user == null) {
       return Scaffold(body: Center(child: Text(t.common.please_login)));
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -112,8 +113,9 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
             });
           }
 
-          if (taskData == null)
+          if (taskData == null) {
             return const Center(child: CircularProgressIndicator());
+          }
 
           // 2. Data Preparation
           final String currency = taskData['baseCurrency'] ?? 'TWD';
@@ -210,7 +212,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                                   amount: remainderBuffer.toStringAsFixed(2)),
                               style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.textTheme.bodySmall?.color
-                                      ?.withOpacity(0.7)),
+                                      ?.withValues(alpha: 0.7)),
                             ),
                           ),
                       ],
