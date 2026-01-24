@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
+import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
@@ -22,6 +25,7 @@ import 'package:iron_split/core/models/record_model.dart';
 class S15RecordEditPage extends StatefulWidget {
   final String taskId;
   final String? recordId;
+  final RecordModel? record;
   final String baseCurrency;
   final double prepayBalance; // NEW
 
@@ -29,6 +33,7 @@ class S15RecordEditPage extends StatefulWidget {
     super.key,
     required this.taskId,
     this.recordId,
+    this.record,
     this.baseCurrency = 'TWD',
     this.prepayBalance = 0.0, // NEW
   });
@@ -49,7 +54,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   // State
   late DateTime _selectedDate;
   late String _selectedCurrency;
-  int _selectedCategoryIndex = 0;
+  String _selectedCategoryId = 'fastfood';
   bool _isRateLoading = false;
   bool _isSaving = false;
   bool _isLoadingTaskData = true;
@@ -75,18 +80,6 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   // 儲存「剩餘金額卡片」的詳細分攤設定 (權重或金額)
   Map<String, double> _baseRawDetails = {};
 
-  // Category Data
-  final List<Map<String, dynamic>> _categories = [
-    {'icon': Icons.restaurant, 'label': 'Food'},
-    {'icon': Icons.directions_bus, 'label': 'Transport'},
-    {'icon': Icons.hotel, 'label': 'Accommodation'},
-    {'icon': Icons.shopping_bag, 'label': 'Shopping'},
-    {'icon': Icons.local_activity, 'label': 'Activity'},
-    {'icon': Icons.flight, 'label': 'Flight'},
-    {'icon': Icons.local_grocery_store, 'label': 'Groceries'},
-    {'icon': Icons.more_horiz, 'label': 'Others'},
-  ];
-
   final List<String> _currencies =
       kSupportedCurrencies.map((c) => c.code).toList();
 
@@ -96,7 +89,36 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     _selectedDate = DateTime.now();
     _selectedCurrency = widget.baseCurrency;
 
-    _loadCurrencyPreference();
+    if (widget.record != null) {
+      final r = widget.record!;
+      _recordTypeIndex = r.type == 'income' ? 1 : 0;
+      _amountController.text = r.amount.truncateToDouble() == r.amount
+          ? r.amount.toInt().toString()
+          : r.amount.toString();
+      _selectedDate = r.date;
+      _selectedCurrency = r.currency;
+      _exchangeRateController.text = r.exchangeRate.toString();
+
+      if (r.type == 'expense') {
+        _titleController.text = r.title;
+        _selectedCategoryId = r.categoryId;
+      }
+      _memoController.text = r.memo ?? '';
+
+      // Payment
+      _payerType = r.payerType;
+      _payerId = r.payerId ?? '';
+      _complexPaymentData = r.paymentDetails;
+
+      // Split
+      _baseSplitMethod = r.splitMethod;
+      _baseMemberIds = List.from(r.splitMemberIds);
+      _baseRawDetails = Map.from(r.splitDetails ?? {});
+      _items.addAll(r.items);
+    } else {
+      _loadCurrencyPreference();
+    }
+
     _fetchTaskData();
 
     _amountController.addListener(() => setState(() {}));
@@ -342,23 +364,47 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     );
   }
 
+  String _getCategoryLabel(String key) {
+    switch (key) {
+      case 't.category.food':
+        return t.category.food;
+      case 't.category.transport':
+        return t.category.transport;
+      case 't.category.shopping':
+        return t.category.shopping;
+      case 't.category.entertainment':
+        return t.category.entertainment;
+      case 't.category.accommodation':
+        return t.category.accommodation;
+      case 't.category.others':
+        return t.category.others;
+      default:
+        return t.category.others;
+    }
+  }
+
   void _showCategoryPicker() {
-    int tempIndex = _selectedCategoryIndex;
+    final int initialIndex = kAppCategories
+        .indexWhere((c) => c.id == _selectedCategoryId)
+        .clamp(0, kAppCategories.length - 1);
+    int tempIndex = initialIndex;
+
     showCommonWheelPicker(
       context: context,
-      onConfirm: () => setState(() => _selectedCategoryIndex = tempIndex),
+      onConfirm: () =>
+          setState(() => _selectedCategoryId = kAppCategories[tempIndex].id),
       child: CupertinoPicker(
         itemExtent: 40,
         scrollController:
-            FixedExtentScrollController(initialItem: _selectedCategoryIndex),
+            FixedExtentScrollController(initialItem: initialIndex),
         onSelectedItemChanged: (index) => tempIndex = index,
-        children: _categories
+        children: kAppCategories
             .map((c) => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(c['icon'] as IconData, size: 20),
+                    Icon(c.icon, size: 20),
                     const SizedBox(width: 8),
-                    Text(c['label'] as String),
+                    Text(_getCategoryLabel(c.labelKey)),
                   ],
                 ))
             .toList(),
@@ -511,7 +557,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             ? t.S15_Record_Edit.type_income_title
             : _titleController.text,
         'type': isIncome ? 'income' : 'expense',
-        'categoryIndex': _selectedCategoryIndex,
+        'categoryIndex': kAppCategories
+            .indexWhere((c) => c.id == _selectedCategoryId), // Legacy support
+        'categoryId': _selectedCategoryId,
         'payerType': isIncome ? 'none' : _payerType,
         'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
         'paymentDetails': isIncome ? null : _complexPaymentData,
@@ -557,6 +605,39 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       if (shouldLeave != true) return;
     }
     if (mounted) context.pop();
+  }
+
+  Future<void> _handleDelete() async {
+    final currencySymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == _selectedCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
+    final amount = double.tryParse(_amountController.text) ?? 0.0;
+    final amountText =
+        "$currencySymbol ${NumberFormat("#,##0.##").format(amount)}";
+
+    await showDialog(
+      context: context,
+      builder: (context) => D10RecordDeleteConfirmDialog(
+        title: _titleController.text,
+        amount: amountText,
+        onConfirm: () async {
+          try {
+            await RecordService.deleteRecord(widget.taskId, widget.recordId!);
+            if (mounted) {
+              context.pop(); // Close S15
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
+              );
+            }
+          } catch (e) {
+            debugPrint("Delete failed: $e");
+          }
+        },
+      ),
+    );
   }
 
   // --- Helper Widgets ---
@@ -847,7 +928,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  _categories[_selectedCategoryIndex]['icon'],
+                  CategoryConstant.getCategoryById(_selectedCategoryId).icon,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -1208,6 +1289,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         leading:
             IconButton(icon: const Icon(Icons.close), onPressed: _handleClose),
         actions: [
+          if (widget.recordId != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              color: Theme.of(context).colorScheme.error,
+              onPressed: _handleDelete,
+            ),
           TextButton(
             onPressed: _isSaving ? null : _onSave,
             child: _isSaving

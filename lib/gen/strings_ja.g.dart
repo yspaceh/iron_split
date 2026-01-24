@@ -37,6 +37,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	TranslationsJa $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsJa(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _TranslationsCategoryJa category = _TranslationsCategoryJa._(_root);
 	@override late final _TranslationsCommonJa common = _TranslationsCommonJa._(_root);
 	@override late final _TranslationsS50OnboardingConsentJa S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJa._(_root);
 	@override late final _TranslationsS51OnboardingNameJa S51_Onboarding_Name = _TranslationsS51OnboardingNameJa._(_root);
@@ -50,10 +51,26 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD02InviteResultJa D02_Invite_Result = _TranslationsD02InviteResultJa._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJa D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJa._(_root);
 	@override late final _TranslationsD04TaskCreateNoticeJa D04_TaskCreate_Notice = _TranslationsD04TaskCreateNoticeJa._(_root);
+	@override late final _TranslationsD10RecordDeleteConfirmJa D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJa._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJa B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJa._(_root);
 	@override late final _TranslationsB03SplitMethodEditJa B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJa._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJa B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJa._(_root);
 	@override late final _TranslationsErrorJa error = _TranslationsErrorJa._(_root);
+}
+
+// Path: category
+class _TranslationsCategoryJa implements TranslationsCategoryZh {
+	_TranslationsCategoryJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get food => '食事';
+	@override String get transport => '交通';
+	@override String get shopping => '買い物';
+	@override String get entertainment => 'エンタメ';
+	@override String get accommodation => '宿泊';
+	@override String get others => 'その他';
 }
 
 // Path: common
@@ -169,6 +186,7 @@ class _TranslationsS13TaskDashboardJa implements TranslationsS13TaskDashboardZh 
 	@override String get rule_random => 'ランダム';
 	@override String get rule_order => '順番';
 	@override String get rule_member => '指定';
+	@override String get settlement_button => '精算';
 	@override String get nav_to_record => '記録ページへ移動します...';
 }
 
@@ -315,6 +333,18 @@ class _TranslationsD04TaskCreateNoticeJa implements TranslationsD04TaskCreateNot
 	@override String get content => '現在の設定は破棄されます。本当に移動しますか？';
 	@override String get action_leave => 'ホームへ戻る';
 	@override String get action_stay => '編集を続ける';
+}
+
+// Path: D10_RecordDelete_Confirm
+class _TranslationsD10RecordDeleteConfirmJa implements TranslationsD10RecordDeleteConfirmZh {
+	_TranslationsD10RecordDeleteConfirmJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get delete_record_title => '記録を削除？';
+	@override String delete_record_content({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？';
+	@override String get deleted_success => '記録を削除しました';
 }
 
 // Path: B02_SplitExpense_Edit
@@ -471,6 +501,12 @@ class _TranslationsErrorUnknownJa implements TranslationsErrorUnknownZh {
 extension on TranslationsJa {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'category.food' => '食事',
+			'category.transport' => '交通',
+			'category.shopping' => '買い物',
+			'category.entertainment' => 'エンタメ',
+			'category.accommodation' => '宿泊',
+			'category.others' => 'その他',
 			'common.cancel' => 'キャンセル',
 			'common.delete' => '削除',
 			'common.confirm' => '確認',
@@ -532,6 +568,7 @@ extension on TranslationsJa {
 			'S13_Task_Dashboard.rule_random' => 'ランダム',
 			'S13_Task_Dashboard.rule_order' => '順番',
 			'S13_Task_Dashboard.rule_member' => '指定',
+			'S13_Task_Dashboard.settlement_button' => '精算',
 			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
@@ -615,6 +652,9 @@ extension on TranslationsJa {
 			'D04_TaskCreate_Notice.content' => '現在の設定は破棄されます。本当に移動しますか？',
 			'D04_TaskCreate_Notice.action_leave' => 'ホームへ戻る',
 			'D04_TaskCreate_Notice.action_stay' => '編集を続ける',
+			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
+			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
+			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.name_label' => '項目名',
 			'B02_SplitExpense_Edit.amount_label' => '金額',

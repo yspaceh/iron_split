@@ -1,4 +1,12 @@
 {
+  "category": {
+    "food": "飲食",
+    "transport": "交通",
+    "shopping": "購物",
+    "entertainment": "娛樂",
+    "accommodation": "住宿",
+    "others": "其他"
+  },
   "common": {
     "cancel": "取消",
     "delete": "刪除",
@@ -71,6 +79,7 @@
     "rule_random": "隨機",
     "rule_order": "順序",
     "rule_member": "指定",
+    "settlement_button": "結算",
     "nav_to_record": "準備前往記帳頁面..."
   },
   "S15_Record_Edit": {
@@ -168,6 +177,11 @@
     "content": "目前的設定會被取消，真的要離開？",
     "action_leave": "回首頁",
     "action_stay": "繼續編輯"
+  },
+  "D10_RecordDelete_Confirm": {
+    "delete_record_title": "刪除紀錄？",
+    "delete_record_content": "確定要刪除 {title} ({amount}) 嗎？",
+    "deleted_success": "紀錄已刪除"
   },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",

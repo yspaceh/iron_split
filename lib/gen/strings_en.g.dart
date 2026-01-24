@@ -37,6 +37,7 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	TranslationsEn $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsEn(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _TranslationsCategoryEn category = _TranslationsCategoryEn._(_root);
 	@override late final _TranslationsCommonEn common = _TranslationsCommonEn._(_root);
 	@override late final _TranslationsS50OnboardingConsentEn S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEn._(_root);
 	@override late final _TranslationsS51OnboardingNameEn S51_Onboarding_Name = _TranslationsS51OnboardingNameEn._(_root);
@@ -50,10 +51,26 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD02InviteResultEn D02_Invite_Result = _TranslationsD02InviteResultEn._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEn D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEn._(_root);
 	@override late final _TranslationsD04TaskCreateNoticeEn D04_TaskCreate_Notice = _TranslationsD04TaskCreateNoticeEn._(_root);
+	@override late final _TranslationsD10RecordDeleteConfirmEn D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEn._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEn B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEn._(_root);
 	@override late final _TranslationsB03SplitMethodEditEn B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEn._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEn B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEn._(_root);
 	@override late final _TranslationsErrorEn error = _TranslationsErrorEn._(_root);
+}
+
+// Path: category
+class _TranslationsCategoryEn implements TranslationsCategoryZh {
+	_TranslationsCategoryEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get food => 'Food';
+	@override String get transport => 'Transport';
+	@override String get shopping => 'Shopping';
+	@override String get entertainment => 'Entertainment';
+	@override String get accommodation => 'Accommodation';
+	@override String get others => 'Others';
 }
 
 // Path: common
@@ -169,6 +186,7 @@ class _TranslationsS13TaskDashboardEn implements TranslationsS13TaskDashboardZh 
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
+	@override String get settlement_button => 'Settlement';
 	@override String get nav_to_record => 'Navigating to record page...';
 }
 
@@ -315,6 +333,18 @@ class _TranslationsD04TaskCreateNoticeEn implements TranslationsD04TaskCreateNot
 	@override String get content => 'Current settings will be discarded. Are you sure you want to leave?';
 	@override String get action_leave => 'Discard';
 	@override String get action_stay => 'Keep Editing';
+}
+
+// Path: D10_RecordDelete_Confirm
+class _TranslationsD10RecordDeleteConfirmEn implements TranslationsD10RecordDeleteConfirmZh {
+	_TranslationsD10RecordDeleteConfirmEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get delete_record_title => 'Delete Record?';
+	@override String delete_record_content({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?';
+	@override String get deleted_success => 'Record deleted';
 }
 
 // Path: B02_SplitExpense_Edit
@@ -475,6 +505,12 @@ class _TranslationsErrorUnknownEn implements TranslationsErrorUnknownZh {
 extension on TranslationsEn {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'category.food' => 'Food',
+			'category.transport' => 'Transport',
+			'category.shopping' => 'Shopping',
+			'category.entertainment' => 'Entertainment',
+			'category.accommodation' => 'Accommodation',
+			'category.others' => 'Others',
 			'common.cancel' => 'Cancel',
 			'common.delete' => 'Delete',
 			'common.confirm' => 'Confirm',
@@ -536,6 +572,7 @@ extension on TranslationsEn {
 			'S13_Task_Dashboard.rule_random' => 'Random',
 			'S13_Task_Dashboard.rule_order' => 'Order',
 			'S13_Task_Dashboard.rule_member' => 'Member',
+			'S13_Task_Dashboard.settlement_button' => 'Settlement',
 			'S13_Task_Dashboard.nav_to_record' => 'Navigating to record page...',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
@@ -619,6 +656,9 @@ extension on TranslationsEn {
 			'D04_TaskCreate_Notice.content' => 'Current settings will be discarded. Are you sure you want to leave?',
 			'D04_TaskCreate_Notice.action_leave' => 'Discard',
 			'D04_TaskCreate_Notice.action_stay' => 'Keep Editing',
+			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
+			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
+			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',
 			'B02_SplitExpense_Edit.title' => 'Edit Item',
 			'B02_SplitExpense_Edit.name_label' => 'Item Name',
 			'B02_SplitExpense_Edit.amount_label' => 'Amount',

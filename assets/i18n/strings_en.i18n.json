@@ -1,4 +1,12 @@
 {
+  "category": {
+    "food": "Food",
+    "transport": "Transport",
+    "shopping": "Shopping",
+    "entertainment": "Entertainment",
+    "accommodation": "Accommodation",
+    "others": "Others"
+  },
   "common": {
     "cancel": "Cancel",
     "delete": "Delete",
@@ -71,6 +79,7 @@
     "rule_random": "Random",
     "rule_order": "Order",
     "rule_member": "Member",
+    "settlement_button": "Settlement",
     "nav_to_record": "Navigating to record page..."
   },
   "S15_Record_Edit": {
@@ -169,6 +178,11 @@
     "content": "Current settings will be discarded. Are you sure you want to leave?",
     "action_leave": "Discard",
     "action_stay": "Keep Editing"
+  },
+  "D10_RecordDelete_Confirm": {
+    "delete_record_title": "Delete Record?",
+    "delete_record_content": "Are you sure you want to delete {title} ({amount})?",
+    "deleted_success": "Record deleted"
   },
   "B02_SplitExpense_Edit": {
     "title": "Edit Item",

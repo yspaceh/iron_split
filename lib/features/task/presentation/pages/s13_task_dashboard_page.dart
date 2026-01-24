@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/constants/category_constants.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
+import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
@@ -106,6 +109,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
             (taskData['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
         final String rule = taskData['balanceRule'] ?? 'random';
         final double myBalance = 0.0; // Mock
+        final bool isCaptain = taskData['createdBy'] == user.uid;
 
         // 3. Group Records by Date
         // ✅ 這裡現在不會報錯了，因為 records 是 List<QueryDocumentSnapshot>
@@ -125,14 +129,31 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => context.pushNamed(
-              'S15',
-              pathParameters: {'taskId': widget.taskId},
-              extra: {'prepayBalance': prepayBalance},
+          bottomNavigationBar: BottomAppBar(
+            child: Row(
+              children: [
+                if (isCaptain)
+                  OutlinedButton.icon(
+                    onPressed: () => context.pushNamed(
+                      'S30',
+                      pathParameters: {'taskId': widget.taskId},
+                    ),
+                    icon: const Icon(Icons.check),
+                    label: Text(t.S13_Task_Dashboard.settlement_button),
+                  ),
+                const Spacer(),
+                FloatingActionButton.extended(
+                  onPressed: () => context.pushNamed(
+                    'S15',
+                    pathParameters: {'taskId': widget.taskId},
+                    extra: {'prepayBalance': prepayBalance},
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: Text(t.S13_Task_Dashboard.fab_record),
+                  elevation: 0,
+                ),
+              ],
             ),
-            icon: const Icon(Icons.add),
-            label: Text(t.S13_Task_Dashboard.fab_record),
           ),
           body: Column(
             children: [
@@ -269,12 +290,9 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                                   total: dayTotal,
                                   currency: currency),
                               ...dayRecords.map((doc) {
-                                final rData =
-                                    doc.data() as Map<String, dynamic>;
                                 return _RecordItem(
                                   taskId: widget.taskId,
-                                  data: rData,
-                                  recordId: doc.id,
+                                  doc: doc,
                                   prepayBalance: prepayBalance,
                                 );
                               }),
@@ -344,30 +362,18 @@ class _DailyHeader extends StatelessWidget {
 
 class _RecordItem extends StatelessWidget {
   final String taskId;
-  final Map<String, dynamic> data;
-  final String recordId;
+  final DocumentSnapshot doc;
   final double prepayBalance;
 
   const _RecordItem({
     required this.taskId,
-    required this.data,
-    required this.recordId,
+    required this.doc,
     required this.prepayBalance,
   });
 
-  static const List<IconData> _categoryIcons = [
-    Icons.restaurant,
-    Icons.directions_bus,
-    Icons.hotel,
-    Icons.shopping_bag,
-    Icons.local_activity,
-    Icons.flight,
-    Icons.local_grocery_store,
-    Icons.more_horiz,
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final data = doc.data() as Map<String, dynamic>;
     final theme = Theme.of(context);
     final type = data['type'] ?? 'expense';
     final isIncome = type == 'income';
@@ -375,14 +381,12 @@ class _RecordItem extends StatelessWidget {
     final currency = data['currency'] ?? '';
     final title = data['title'] ?? 'Untitled';
     final date = (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
-    final categoryIndex = data['categoryIndex'] as int? ?? 0;
+    final categoryId = data['categoryId'] as String?; // New
 
     // Icon logic: Income -> Savings, Expense -> Category Icon
     final icon = isIncome
         ? Icons.savings_outlined
-        : (categoryIndex >= 0 && categoryIndex < _categoryIcons.length
-            ? _categoryIcons[categoryIndex]
-            : Icons.shopping_bag);
+        : CategoryConstant.getCategoryById(categoryId).icon;
 
     // Color logic: Income -> Green, Expense -> Red (Error)
     final color = isIncome ? const Color(0xFF4CAF50) : theme.colorScheme.error;
@@ -390,31 +394,64 @@ class _RecordItem extends StatelessWidget {
     // Text logic: Income -> "- $currency$amount", Expense -> "$currency$amount"
     final amountText = isIncome ? "- $currency$amount" : "$currency$amount";
 
-    return ListTile(
-      onTap: () => context.pushNamed(
-        'S15',
-        pathParameters: {'taskId': taskId},
-        queryParameters: {'id': recordId},
-        extra: {'prepayBalance': prepayBalance},
+    return Dismissible(
+      key: Key(doc.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        color: theme.colorScheme.error,
+        padding: const EdgeInsets.only(right: 16),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      leading: CircleAvatar(
-        backgroundColor: isIncome
-            ? const Color(0xFFE8F5E9) // Light Green
-            : theme.colorScheme.tertiaryContainer,
-        child: Icon(
-          icon,
-          color: isIncome
-              ? const Color(0xFF2E7D32)
-              : theme.colorScheme.onTertiaryContainer,
+      confirmDismiss: (direction) async {
+        bool confirmed = false;
+        await showDialog(
+          context: context,
+          builder: (context) => D10RecordDeleteConfirmDialog(
+            title: title,
+            amount: amountText,
+            onConfirm: () {
+              confirmed = true;
+            },
+          ),
+        );
+        return confirmed;
+      },
+      onDismissed: (direction) {
+        RecordService.deleteRecord(taskId, doc.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
+        );
+      },
+      child: ListTile(
+        onTap: () => context.pushNamed(
+          'S15',
+          pathParameters: {'taskId': taskId},
+          queryParameters: {'id': doc.id},
+          extra: {
+            'prepayBalance': prepayBalance,
+            'record': RecordModel.fromFirestore(doc),
+          },
         ),
-      ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(DateFormat('HH:mm').format(date)),
-      trailing: Text(
-        amountText,
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: color,
-          fontWeight: FontWeight.bold,
+        leading: CircleAvatar(
+          backgroundColor: isIncome
+              ? const Color(0xFFE8F5E9) // Light Green
+              : theme.colorScheme.tertiaryContainer,
+          child: Icon(
+            icon,
+            color: isIncome
+                ? const Color(0xFF2E7D32)
+                : theme.colorScheme.onTertiaryContainer,
+          ),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(DateFormat('HH:mm').format(date)),
+        trailing: Text(
+          amountText,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

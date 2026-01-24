@@ -74,6 +74,7 @@ class RecordModel {
   String title;
   String type; // 'expense' or 'income'
   int categoryIndex;
+  String categoryId;
   String payerType;
   String? payerId;
   Map<String, dynamic>? paymentDetails;
@@ -94,6 +95,7 @@ class RecordModel {
     required this.title,
     this.type = 'expense',
     this.categoryIndex = 0,
+    this.categoryId = 'fastfood',
     this.payerType = 'prepay',
     this.payerId,
     this.paymentDetails,
@@ -115,6 +117,7 @@ class RecordModel {
     String? title,
     String? type,
     int? categoryIndex,
+    String? categoryId,
     String? payerType,
     String? payerId,
     Map<String, dynamic>? paymentDetails,
@@ -135,6 +138,7 @@ class RecordModel {
       title: title ?? this.title,
       type: type ?? this.type,
       categoryIndex: categoryIndex ?? this.categoryIndex,
+      categoryId: categoryId ?? this.categoryId,
       payerType: payerType ?? this.payerType,
       payerId: payerId ?? this.payerId,
       paymentDetails: paymentDetails ?? this.paymentDetails,
@@ -157,6 +161,7 @@ class RecordModel {
       'title': title,
       'type': type,
       'categoryIndex': categoryIndex,
+      'categoryId': categoryId,
       'payerType': payerType,
       'payerId': payerId,
       'paymentDetails': paymentDetails,
@@ -183,6 +188,8 @@ class RecordModel {
       title: data['title'] ?? '',
       type: data['type'] ?? 'expense',
       categoryIndex: data['categoryIndex'] ?? 0,
+      categoryId:
+          data['categoryId'] ?? _mapCategoryIndexToId(data['categoryIndex']),
       payerType: data['payerType'] ?? 'prepay',
       payerId: data['payerId'],
       paymentDetails: data['paymentDetails'],
@@ -202,5 +209,26 @@ class RecordModel {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       createdBy: data['createdBy'],
     );
+  }
+
+  static String _mapCategoryIndexToId(int? index) {
+    switch (index) {
+      case 0:
+        return 'fastfood';
+      case 1:
+        return 'directions_bus';
+      case 2:
+        return 'hotel';
+      case 3:
+        return 'shopping_bag';
+      case 4:
+        return 'movie';
+      case 5:
+        return 'directions_bus';
+      case 6:
+        return 'fastfood';
+      default:
+        return 'more_horiz';
+    }
   }
 }

@@ -40,6 +40,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
+	late final TranslationsCategoryZh category = TranslationsCategoryZh._(_root);
 	late final TranslationsCommonZh common = TranslationsCommonZh._(_root);
 	late final TranslationsS50OnboardingConsentZh S50_Onboarding_Consent = TranslationsS50OnboardingConsentZh._(_root);
 	late final TranslationsS51OnboardingNameZh S51_Onboarding_Name = TranslationsS51OnboardingNameZh._(_root);
@@ -53,10 +54,38 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD02InviteResultZh D02_Invite_Result = TranslationsD02InviteResultZh._(_root);
 	late final TranslationsD03TaskCreateConfirmZh D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZh._(_root);
 	late final TranslationsD04TaskCreateNoticeZh D04_TaskCreate_Notice = TranslationsD04TaskCreateNoticeZh._(_root);
+	late final TranslationsD10RecordDeleteConfirmZh D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZh._(_root);
 	late final TranslationsB02SplitExpenseEditZh B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZh._(_root);
 	late final TranslationsB03SplitMethodEditZh B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZh._(_root);
 	late final TranslationsB07PaymentMethodEditZh B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZh._(_root);
 	late final TranslationsErrorZh error = TranslationsErrorZh._(_root);
+}
+
+// Path: category
+class TranslationsCategoryZh {
+	TranslationsCategoryZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '飲食'
+	String get food => '飲食';
+
+	/// zh: '交通'
+	String get transport => '交通';
+
+	/// zh: '購物'
+	String get shopping => '購物';
+
+	/// zh: '娛樂'
+	String get entertainment => '娛樂';
+
+	/// zh: '住宿'
+	String get accommodation => '住宿';
+
+	/// zh: '其他'
+	String get others => '其他';
 }
 
 // Path: common
@@ -294,6 +323,9 @@ class TranslationsS13TaskDashboardZh {
 
 	/// zh: '指定'
 	String get rule_member => '指定';
+
+	/// zh: '結算'
+	String get settlement_button => '結算';
 
 	/// zh: '準備前往記帳頁面...'
 	String get nav_to_record => '準備前往記帳頁面...';
@@ -608,6 +640,24 @@ class TranslationsD04TaskCreateNoticeZh {
 	String get action_stay => '繼續編輯';
 }
 
+// Path: D10_RecordDelete_Confirm
+class TranslationsD10RecordDeleteConfirmZh {
+	TranslationsD10RecordDeleteConfirmZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '刪除紀錄？'
+	String get delete_record_title => '刪除紀錄？';
+
+	/// zh: '確定要刪除 {title} ({amount}) 嗎？'
+	String delete_record_content({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？';
+
+	/// zh: '紀錄已刪除'
+	String get deleted_success => '紀錄已刪除';
+}
+
 // Path: B02_SplitExpense_Edit
 class TranslationsB02SplitExpenseEditZh {
 	TranslationsB02SplitExpenseEditZh._(this._root);
@@ -862,6 +912,12 @@ class TranslationsErrorUnknownZh {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'category.food' => '飲食',
+			'category.transport' => '交通',
+			'category.shopping' => '購物',
+			'category.entertainment' => '娛樂',
+			'category.accommodation' => '住宿',
+			'category.others' => '其他',
 			'common.cancel' => '取消',
 			'common.delete' => '刪除',
 			'common.confirm' => '確認',
@@ -923,6 +979,7 @@ extension on Translations {
 			'S13_Task_Dashboard.rule_random' => '隨機',
 			'S13_Task_Dashboard.rule_order' => '順序',
 			'S13_Task_Dashboard.rule_member' => '指定',
+			'S13_Task_Dashboard.settlement_button' => '結算',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
@@ -1006,6 +1063,9 @@ extension on Translations {
 			'D04_TaskCreate_Notice.content' => '目前的設定會被取消，真的要離開？',
 			'D04_TaskCreate_Notice.action_leave' => '回首頁',
 			'D04_TaskCreate_Notice.action_stay' => '繼續編輯',
+			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
+			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
+			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.name_label' => '項目名稱',
 			'B02_SplitExpense_Edit.amount_label' => '金額',

@@ -1,4 +1,12 @@
 {
+  "category": {
+    "food": "食事",
+    "transport": "交通",
+    "shopping": "買い物",
+    "entertainment": "エンタメ",
+    "accommodation": "宿泊",
+    "others": "その他"
+  },
   "common": {
     "cancel": "キャンセル",
     "delete": "削除",
@@ -71,6 +79,7 @@
     "rule_random": "ランダム",
     "rule_order": "順番",
     "rule_member": "指定",
+    "settlement_button": "精算",
     "nav_to_record": "記録ページへ移動します..."
   },
   "S15_Record_Edit": {
@@ -168,6 +177,11 @@
     "content": "現在の設定は破棄されます。本当に移動しますか？",
     "action_leave": "ホームへ戻る",
     "action_stay": "編集を続ける"
+  },
+  "D10_RecordDelete_Confirm": {
+    "delete_record_title": "記録を削除？",
+    "delete_record_content": "{title} ({amount}) を削除してもよろしいですか？",
+    "deleted_success": "記録を削除しました"
   },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/models/record_model.dart';
 
 // System
 import 'package:iron_split/features/system/presentation/pages/s00_system_bootstrap_page.dart';
@@ -140,10 +141,12 @@ class AppRouter {
               final extra = state.extra as Map<String, dynamic>? ?? {};
               final double prepayBalance =
                   (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
+              final record = extra['record'] as RecordModel?;
 
               return S15RecordEditPage(
                 taskId: taskId,
                 recordId: recordId,
+                record: record,
                 prepayBalance: prepayBalance,
               );
             },
