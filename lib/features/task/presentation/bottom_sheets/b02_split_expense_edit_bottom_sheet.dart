@@ -12,7 +12,7 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
   final Map<String, double> defaultWeights;
   final String currencySymbol;
   final String parentTitle;
-  final double parentTotalAmount;
+  final double availableAmount;
 
   const B02SplitExpenseEditBottomSheet({
     super.key,
@@ -21,7 +21,7 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
     required this.defaultWeights,
     required this.currencySymbol,
     required this.parentTitle,
-    required this.parentTotalAmount,
+    required this.availableAmount,
   });
 
   @override
@@ -168,7 +168,7 @@ class _B02SplitExpenseEditBottomSheetState
                   ),
                 ),
                 Text(
-                  "${widget.currencySymbol} ${numberFormat.format(widget.parentTotalAmount)}",
+                  "${widget.currencySymbol} ${numberFormat.format(widget.availableAmount)}",
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.primary,

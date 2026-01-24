@@ -297,7 +297,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         defaultWeights: defaultWeights,
         currencySymbol: currencySymbol,
         parentTitle: _titleController.text,
-        parentTotalAmount: _totalAmount,
+        availableAmount: _baseRemainingAmount,
       ),
     );
 
@@ -328,7 +328,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         defaultWeights: defaultWeights,
         currencySymbol: currencySymbol,
         parentTitle: _titleController.text,
-        parentTotalAmount: _totalAmount,
+        availableAmount: _baseRemainingAmount + item.amount,
       ),
     );
 
