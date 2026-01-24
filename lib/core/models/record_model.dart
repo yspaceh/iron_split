@@ -72,6 +72,7 @@ class RecordModel {
   String? id;
   DateTime date;
   String title;
+  String type; // 'expense' or 'income'
   int categoryIndex;
   String payerType;
   String? payerId;
@@ -91,6 +92,7 @@ class RecordModel {
     this.id,
     required this.date,
     required this.title,
+    this.type = 'expense',
     this.categoryIndex = 0,
     this.payerType = 'prepay',
     this.payerId,
@@ -111,6 +113,7 @@ class RecordModel {
     String? id,
     DateTime? date,
     String? title,
+    String? type,
     int? categoryIndex,
     String? payerType,
     String? payerId,
@@ -130,6 +133,7 @@ class RecordModel {
       id: id ?? this.id,
       date: date ?? this.date,
       title: title ?? this.title,
+      type: type ?? this.type,
       categoryIndex: categoryIndex ?? this.categoryIndex,
       payerType: payerType ?? this.payerType,
       payerId: payerId ?? this.payerId,
@@ -151,6 +155,7 @@ class RecordModel {
     return {
       'date': Timestamp.fromDate(date),
       'title': title,
+      'type': type,
       'categoryIndex': categoryIndex,
       'payerType': payerType,
       'payerId': payerId,
@@ -176,6 +181,7 @@ class RecordModel {
       id: doc.id,
       date: (data['date'] as Timestamp).toDate(),
       title: data['title'] ?? '',
+      type: data['type'] ?? 'expense',
       categoryIndex: data['categoryIndex'] ?? 0,
       payerType: data['payerType'] ?? 'prepay',
       payerId: data['payerId'],

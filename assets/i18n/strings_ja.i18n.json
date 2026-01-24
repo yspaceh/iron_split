@@ -107,7 +107,10 @@
     "err_input_amount": "先に金額を入力してください",
     "section_items": "詳細内訳",
     "add_item": "明細追加",
-    "base_card_title": "残額 (Base)"
+    "base_card_title": "残額 (Base)",
+    "type_income_title": "預り金",
+    "base_card_title_expense": "残額 (Base)",
+    "base_card_title_income": "資金提供者"
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",

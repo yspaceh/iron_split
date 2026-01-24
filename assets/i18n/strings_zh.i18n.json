@@ -107,7 +107,10 @@
     "err_input_amount": "請先輸入金額",
     "section_items": "細項分拆",
     "add_item": "新增細項",
-    "base_card_title": "剩餘金額 (Base)"
+    "base_card_title": "剩餘金額 (Base)",
+    "type_income_title": "預收款",
+    "base_card_title_expense": "剩餘金額 (Base)",
+    "base_card_title_income": "資金來源 (入金者)"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",

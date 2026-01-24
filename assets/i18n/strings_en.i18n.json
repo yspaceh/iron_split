@@ -107,7 +107,10 @@
     "err_input_amount": "Please enter amount first",
     "section_items": "Itemized Splits",
     "add_item": "Add Item",
-    "base_card_title": "Remaining Balance (Base)"
+    "base_card_title": "Remaining Balance (Base)",
+    "type_income_title": "Income",
+    "base_card_title_expense": "Remaining (Base)",
+    "base_card_title_income": "Contributors (Source)"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",

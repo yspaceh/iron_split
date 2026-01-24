@@ -8,7 +8,6 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
@@ -24,12 +23,14 @@ class S15RecordEditPage extends StatefulWidget {
   final String taskId;
   final String? recordId;
   final String baseCurrency;
+  final double prepayBalance; // NEW
 
   const S15RecordEditPage({
     super.key,
     required this.taskId,
     this.recordId,
     this.baseCurrency = 'TWD',
+    this.prepayBalance = 0.0, // NEW
   });
 
   @override
@@ -60,7 +61,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   String _payerType = 'prepay';
   String _payerId = '';
 
-  double _taskPrepayBalance = 0.0; // 任務預收款餘額
+  // REMOVED: double _taskPrepayBalance = 0.0;
   Map<String, dynamic>? _complexPaymentData; // 儲存 B07 回傳的混合支付資料
 
   // Data from Firestore
@@ -111,7 +112,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       if (docSnapshot.exists && mounted) {
         final data = docSnapshot.data()!;
 
-        _taskPrepayBalance = (data['prepayBalance'] ?? 0).toDouble();
+        // REMOVED: _taskPrepayBalance = (data['prepayBalance'] ?? 0).toDouble();
 
         // 1. 解析真實成員 (處理 Map 與 List 兩種格式)
         List<Map<String, dynamic>> realMembers = [];
@@ -199,7 +200,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   double get _totalAmount => double.tryParse(_amountController.text) ?? 0.0;
 
   bool get _hasPaymentError {
-    return _payerType == 'prepay' && _taskPrepayBalance <= 0;
+    return _payerType == 'prepay' &&
+        widget.prepayBalance <= 0; // Use widget.prepayBalance
   }
 
   double get _baseRemainingAmount {
@@ -212,6 +214,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   // 1. Base Card Action: Configure Split Method (B03)
   Future<void> _handleBaseSplitConfig() async {
+    final amountToSplit =
+        _recordTypeIndex == 1 ? _totalAmount : _baseRemainingAmount;
+
     final Map<String, double> defaultWeights = {
       for (var m in _taskMembers) m['id']: 1.0
     };
@@ -225,7 +230,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
-        totalAmount: _baseRemainingAmount,
+        totalAmount: amountToSplit,
         currencySymbol: currencySymbol,
         allMembers: _taskMembers,
         defaultMemberWeights: defaultWeights,
@@ -440,7 +445,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       isScrollControlled: true,
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
         totalAmount: totalAmount,
-        prepayBalance: _taskPrepayBalance,
+        prepayBalance: widget.prepayBalance, // Use widget.prepayBalance
         members: _taskMembers,
         currencySymbol: currencySymbol,
         // 傳入當前狀態 (若有複雜資料優先用，否則用簡易狀態推導)
@@ -485,8 +490,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     if (!_formKey.currentState!.validate()) return;
     if (_isSaving) return;
 
-    // 額外檢查：如果顯示紅框 (預收餘額不足)，禁止儲存
-    if (_hasPaymentError) {
+    // 額外檢查：如果顯示紅框 (預收餘額不足)，禁止儲存 (僅限支出模式)
+    if (_recordTypeIndex == 0 && _hasPaymentError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(t.B07_PaymentMethod_Edit.err_balance_not_enough)),
@@ -498,21 +503,25 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
-      // 注意：這裡只儲存了基本卡片資料，_subItems 需要另外處理或存入 splitDetails 結構
+      final isIncome = _recordTypeIndex == 1;
+
       final recordData = {
         'date': Timestamp.fromDate(_selectedDate),
-        'title': _titleController.text,
+        'title': isIncome
+            ? t.S15_Record_Edit.type_income_title
+            : _titleController.text,
+        'type': isIncome ? 'income' : 'expense',
         'categoryIndex': _selectedCategoryIndex,
-        'payerType': _payerType,
-        'payerId': _payerType == 'member' ? _payerId : null,
-        'paymentDetails': _complexPaymentData,
+        'payerType': isIncome ? 'none' : _payerType,
+        'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
+        'paymentDetails': isIncome ? null : _complexPaymentData,
         'amount': double.parse(_amountController.text),
         'currency': _selectedCurrency,
         'exchangeRate': double.parse(_exchangeRateController.text),
         'splitMethod': _baseSplitMethod,
         'splitMemberIds': _baseMemberIds,
         'splitDetails': _baseRawDetails,
-        'items': _items.map((x) => x.toMap()).toList(),
+        'items': isIncome ? [] : _items.map((x) => x.toMap()).toList(),
         'memo': _memoController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'createdBy': uid,
@@ -768,7 +777,10 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   // 支援多種支付型態顯示
   String _getPayerDisplayName(String type, String id) {
-    if (type == 'prepay') return t.B07_PaymentMethod_Edit.type_prepay;
+    if (type == 'prepay') {
+      final balanceStr = NumberFormat("#,##0.##").format(widget.prepayBalance);
+      return "${t.B07_PaymentMethod_Edit.type_prepay} ($balanceStr)";
+    }
     if (type == 'mixed') {
       return t.B07_PaymentMethod_Edit.type_mixed;
     }
@@ -1026,16 +1038,159 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   Widget _buildIncomeForm() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.savings, size: 64, color: Colors.grey),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isForeign = _selectedCurrency != widget.baseCurrency;
+    final currencyOption = kSupportedCurrencies.firstWhere(
+        (e) => e.code == _selectedCurrency,
+        orElse: () => kSupportedCurrencies.first);
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        buildPickerField(
+          label: t.S15_Record_Edit.label_date,
+          value: DateFormat('yyyy/MM/dd (E)').format(_selectedDate),
+          icon: Icons.calendar_today,
+          onTap: _showDatePicker,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: _showCurrencyPicker,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      currencyOption.symbol,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    Text(
+                      currencyOption.code,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _amountController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: t.S15_Record_Edit.label_amount,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                validator: (v) =>
+                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
+              ),
+            ),
+          ],
+        ),
+        if (isForeign) ...[
           const SizedBox(height: 16),
-          Text(t.S15_Record_Edit.msg_income_developing,
-              style: const TextStyle(color: Colors.grey)),
+          TextFormField(
+            controller: _exchangeRateController,
+            onChanged: (_) => setState(() {}),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: t.S15_Record_Edit.label_rate(
+                  base: widget.baseCurrency, target: _selectedCurrency),
+              prefixIcon: IconButton(
+                icon: const Icon(Icons.currency_exchange),
+                onPressed: _isRateLoading ? null : _fetchExchangeRate,
+              ),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_isRateLoading)
+                    const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
+                    onPressed: _showRateInfoDialog,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Builder(
+            builder: (context) {
+              final amount = double.tryParse(_amountController.text) ?? 0.0;
+              final rate = double.tryParse(_exchangeRateController.text) ?? 0.0;
+              final converted = amount * rate;
+              final baseSymbol = kSupportedCurrencies
+                  .firstWhere((e) => e.code == widget.baseCurrency,
+                      orElse: () => kSupportedCurrencies.first)
+                  .symbol;
+              final baseCode = widget.baseCurrency;
+              final formattedAmount =
+                  NumberFormat("#,##0.##").format(converted);
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 4, left: 4),
+                child: Text(
+                  t.S15_Record_Edit.val_converted_amount(
+                      base: baseCode,
+                      symbol: baseSymbol,
+                      amount: formattedAmount),
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                ),
+              );
+            },
+          ),
         ],
-      ),
+        const SizedBox(height: 12),
+        _buildExpenseCard(
+          amount: _totalAmount,
+          methodLabel: _baseSplitMethod,
+          memberIds: _baseMemberIds,
+          note: t.S15_Record_Edit.base_card_title_income,
+          isBaseCard: true,
+          onTap: () => _handleBaseSplitConfig(),
+          showSplitAction: false,
+          onSplitTap: null,
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _memoController,
+          keyboardType: TextInputType.multiline,
+          minLines: 2,
+          maxLines: 2,
+          decoration: InputDecoration(
+            labelText: t.S15_Record_Edit.label_memo,
+            alignLabelWithHint: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            contentPadding: const EdgeInsets.all(16),
+          ),
+        ),
+        const SizedBox(height: 100),
+      ],
     );
   }
 
@@ -1105,13 +1260,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           Expanded(
             child: Form(
               key: _formKey, // Form Key 依然包在最外面，保護你的驗證邏輯
-              child: IndexedStack(
-                index: _recordTypeIndex,
-                children: [
-                  _buildExpenseForm(), // 呼叫剛剛搬出去的方法 (0: 支出)
-                  _buildIncomeForm(), // 呼叫空殼方法 (1: 預收)
-                ],
-              ),
+              child: _recordTypeIndex == 0
+                  ? _buildExpenseForm()
+                  : _buildIncomeForm(),
             ),
           ),
         ],

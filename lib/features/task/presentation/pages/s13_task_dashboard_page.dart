@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/core/models/record_model.dart';
 
 /// Page Key: S13_Task_Dashboard (Wireframe 16)
 class S13TaskDashboardPage extends StatefulWidget {
@@ -63,76 +65,76 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
       return Scaffold(body: Center(child: Text(t.common.please_login)));
     }
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('tasks')
-              .doc(widget.taskId)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Text(t.common.loading);
-            final data = snapshot.data!.data() as Map<String, dynamic>?;
-            return Text(data?['name'] ?? t.S13_Task_Dashboard.title);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push('/tasks/${widget.taskId}/settings'),
+    return MultiStreamBuilder(
+      taskId: widget.taskId,
+      uid: user.uid,
+      builder: (context, taskData, memberData, records) {
+        // 1. D01 Intro Logic
+        final bool hasSeenRoleIntro = memberData?['hasSeenRoleIntro'] ?? false;
+        if (memberData != null && !hasSeenRoleIntro && !_hasShownIntro) {
+          Future.microtask(() {
+            if (!mounted) return;
+            _hasShownIntro = true;
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (ctx) => D01MemberRoleIntroDialog(
+                taskId: widget.taskId,
+                initialAvatar: memberData['avatar'] ?? 'unknown',
+                canReroll: !(memberData['hasRerolled'] ?? false),
+              ),
+            );
+          });
+        }
+
+        if (taskData == null) {
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        }
+
+        // Calculate Balance
+        final recordModels =
+            records.map((doc) => RecordModel.fromFirestore(doc)).toList();
+        final double prepayBalance =
+            BalanceCalculator.calculatePrepayBalance(recordModels);
+
+        // 2. Data Preparation
+        final String currency = taskData['baseCurrency'] ?? 'TWD';
+        final double totalPool =
+            (taskData['totalPool'] as num?)?.toDouble() ?? 0.0;
+        final double remainderBuffer =
+            (taskData['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
+        final String rule = taskData['balanceRule'] ?? 'random';
+        final double myBalance = 0.0; // Mock
+
+        // 3. Group Records by Date
+        // ✅ 這裡現在不會報錯了，因為 records 是 List<QueryDocumentSnapshot>
+        final groupedRecords = _groupRecords(records);
+        final sortedDates = groupedRecords.keys.toList()
+          ..sort((a, b) => b.compareTo(a));
+
+        return Scaffold(
+          backgroundColor: colorScheme.surface,
+          appBar: AppBar(
+            title: Text(taskData['name'] ?? t.S13_Task_Dashboard.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: () =>
+                    context.push('/tasks/${widget.taskId}/settings'),
+              ),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            context.pushNamed('S15', pathParameters: {'taskId': widget.taskId}),
-        icon: const Icon(Icons.add),
-        label: Text(t.S13_Task_Dashboard.fab_record),
-      ),
-      body: MultiStreamBuilder(
-        taskId: widget.taskId,
-        uid: user.uid,
-        builder: (context, taskData, memberData, records) {
-          // 1. D01 Intro Logic
-          final bool hasSeenRoleIntro =
-              memberData?['hasSeenRoleIntro'] ?? false;
-          if (memberData != null && !hasSeenRoleIntro && !_hasShownIntro) {
-            Future.microtask(() {
-              if (!mounted) return;
-              _hasShownIntro = true;
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (ctx) => D01MemberRoleIntroDialog(
-                  taskId: widget.taskId,
-                  initialAvatar: memberData['avatar'] ?? 'unknown',
-                  canReroll: !(memberData['hasRerolled'] ?? false),
-                ),
-              );
-            });
-          }
-
-          if (taskData == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          // 2. Data Preparation
-          final String currency = taskData['baseCurrency'] ?? 'TWD';
-          final double totalPool =
-              (taskData['totalPool'] as num?)?.toDouble() ?? 0.0;
-          final double remainderBuffer =
-              (taskData['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
-          final String rule = taskData['balanceRule'] ?? 'random';
-          final double myBalance = 0.0; // Mock
-
-          // 3. Group Records by Date
-          // ✅ 這裡現在不會報錯了，因為 records 是 List<QueryDocumentSnapshot>
-          final groupedRecords = _groupRecords(records);
-          final sortedDates = groupedRecords.keys.toList()
-            ..sort((a, b) => b.compareTo(a));
-
-          return Column(
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => context.pushNamed(
+              'S15',
+              pathParameters: {'taskId': widget.taskId},
+              extra: {'prepayBalance': prepayBalance},
+            ),
+            icon: const Icon(Icons.add),
+            label: Text(t.S13_Task_Dashboard.fab_record),
+          ),
+          body: Column(
             children: [
               // --- A. Segmented Control ---
               Padding(
@@ -249,9 +251,13 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                           double dayTotal = 0;
                           for (var doc in dayRecords) {
                             final d = doc.data() as Map<String, dynamic>;
-                            if (d['type'] == 'expense') {
-                              dayTotal +=
-                                  (d['amount'] as num?)?.toDouble() ?? 0.0;
+                            final type = d['type'] ?? 'expense';
+                            final amt =
+                                (d['amount'] as num?)?.toDouble() ?? 0.0;
+                            if (type == 'expense') {
+                              dayTotal += amt;
+                            } else if (type == 'income') {
+                              dayTotal -= amt;
                             }
                           }
 
@@ -266,7 +272,11 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                                 final rData =
                                     doc.data() as Map<String, dynamic>;
                                 return _RecordItem(
-                                    data: rData, recordId: doc.id);
+                                  taskId: widget.taskId,
+                                  data: rData,
+                                  recordId: doc.id,
+                                  prepayBalance: prepayBalance,
+                                );
                               }),
                             ],
                           );
@@ -274,9 +284,9 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                       ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -333,40 +343,77 @@ class _DailyHeader extends StatelessWidget {
 }
 
 class _RecordItem extends StatelessWidget {
+  final String taskId;
   final Map<String, dynamic> data;
   final String recordId;
+  final double prepayBalance;
 
-  const _RecordItem({required this.data, required this.recordId});
+  const _RecordItem({
+    required this.taskId,
+    required this.data,
+    required this.recordId,
+    required this.prepayBalance,
+  });
+
+  static const List<IconData> _categoryIcons = [
+    Icons.restaurant,
+    Icons.directions_bus,
+    Icons.hotel,
+    Icons.shopping_bag,
+    Icons.local_activity,
+    Icons.flight,
+    Icons.local_grocery_store,
+    Icons.more_horiz,
+  ];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isExpense = data['type'] == 'expense';
+    final type = data['type'] ?? 'expense';
+    final isIncome = type == 'income';
     final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
     final currency = data['currency'] ?? '';
     final title = data['title'] ?? 'Untitled';
     final date = (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
+    final categoryIndex = data['categoryIndex'] as int? ?? 0;
+
+    // Icon logic: Income -> Savings, Expense -> Category Icon
+    final icon = isIncome
+        ? Icons.savings_outlined
+        : (categoryIndex >= 0 && categoryIndex < _categoryIcons.length
+            ? _categoryIcons[categoryIndex]
+            : Icons.shopping_bag);
+
+    // Color logic: Income -> Green, Expense -> Red (Error)
+    final color = isIncome ? const Color(0xFF4CAF50) : theme.colorScheme.error;
+
+    // Text logic: Income -> "- $currency$amount", Expense -> "$currency$amount"
+    final amountText = isIncome ? "- $currency$amount" : "$currency$amount";
 
     return ListTile(
-      onTap: () => context.pushNamed('S15', queryParameters: {'id': recordId}),
+      onTap: () => context.pushNamed(
+        'S15',
+        pathParameters: {'taskId': taskId},
+        queryParameters: {'id': recordId},
+        extra: {'prepayBalance': prepayBalance},
+      ),
       leading: CircleAvatar(
-        backgroundColor: isExpense
-            ? theme.colorScheme.tertiaryContainer
-            : theme.colorScheme.primaryContainer,
+        backgroundColor: isIncome
+            ? const Color(0xFFE8F5E9) // Light Green
+            : theme.colorScheme.tertiaryContainer,
         child: Icon(
-          isExpense ? Icons.shopping_bag : Icons.savings,
-          color: isExpense
-              ? theme.colorScheme.onTertiaryContainer
-              : theme.colorScheme.onPrimaryContainer,
+          icon,
+          color: isIncome
+              ? const Color(0xFF2E7D32)
+              : theme.colorScheme.onTertiaryContainer,
         ),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(DateFormat('HH:mm').format(date)),
       trailing: Text(
-        '${isExpense ? '-' : '+'} $amount $currency',
+        amountText,
         style: theme.textTheme.titleMedium?.copyWith(
-          color:
-              isExpense ? theme.colorScheme.error : theme.colorScheme.primary,
+          color: color,
           fontWeight: FontWeight.bold,
         ),
       ),

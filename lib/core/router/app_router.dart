@@ -134,8 +134,18 @@ class AppRouter {
             name: 'S15',
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
-              final recordId = state.uri.queryParameters['recordId'];
-              return S15RecordEditPage(taskId: taskId, recordId: recordId);
+              final recordId = state.uri.queryParameters['recordId'] ??
+                  state.uri.queryParameters['id'];
+
+              final extra = state.extra as Map<String, dynamic>? ?? {};
+              final double prepayBalance =
+                  (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
+
+              return S15RecordEditPage(
+                taskId: taskId,
+                recordId: recordId,
+                prepayBalance: prepayBalance,
+              );
             },
           ),
 

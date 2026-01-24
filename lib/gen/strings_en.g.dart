@@ -213,6 +213,9 @@ class _TranslationsS15RecordEditEn implements TranslationsS15RecordEditZh {
 	@override String get section_items => 'Itemized Splits';
 	@override String get add_item => 'Add Item';
 	@override String get base_card_title => 'Remaining Balance (Base)';
+	@override String get type_income_title => 'Income';
+	@override String get base_card_title_expense => 'Remaining (Base)';
+	@override String get base_card_title_income => 'Contributors (Source)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -568,6 +571,9 @@ extension on TranslationsEn {
 			'S15_Record_Edit.section_items' => 'Itemized Splits',
 			'S15_Record_Edit.add_item' => 'Add Item',
 			'S15_Record_Edit.base_card_title' => 'Remaining Balance (Base)',
+			'S15_Record_Edit.type_income_title' => 'Income',
+			'S15_Record_Edit.base_card_title_expense' => 'Remaining (Base)',
+			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.section_name' => 'Task Name',
 			'S16_TaskCreate_Edit.section_period' => 'Period',

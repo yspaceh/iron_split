@@ -213,6 +213,9 @@ class _TranslationsS15RecordEditJa implements TranslationsS15RecordEditZh {
 	@override String get section_items => '詳細内訳';
 	@override String get add_item => '明細追加';
 	@override String get base_card_title => '残額 (Base)';
+	@override String get type_income_title => '預り金';
+	@override String get base_card_title_expense => '残額 (Base)';
+	@override String get base_card_title_income => '資金提供者';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -564,6 +567,9 @@ extension on TranslationsJa {
 			'S15_Record_Edit.section_items' => '詳細内訳',
 			'S15_Record_Edit.add_item' => '明細追加',
 			'S15_Record_Edit.base_card_title' => '残額 (Base)',
+			'S15_Record_Edit.type_income_title' => '預り金',
+			'S15_Record_Edit.base_card_title_expense' => '残額 (Base)',
+			'S15_Record_Edit.base_card_title_income' => '資金提供者',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.section_name' => 'タスク名',
 			'S16_TaskCreate_Edit.section_period' => '期間',

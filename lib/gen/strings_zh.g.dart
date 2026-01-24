@@ -408,6 +408,15 @@ class TranslationsS15RecordEditZh {
 
 	/// zh: '剩餘金額 (Base)'
 	String get base_card_title => '剩餘金額 (Base)';
+
+	/// zh: '預收款'
+	String get type_income_title => '預收款';
+
+	/// zh: '剩餘金額 (Base)'
+	String get base_card_title_expense => '剩餘金額 (Base)';
+
+	/// zh: '資金來源 (入金者)'
+	String get base_card_title_income => '資金來源 (入金者)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -949,6 +958,9 @@ extension on Translations {
 			'S15_Record_Edit.section_items' => '細項分拆',
 			'S15_Record_Edit.add_item' => '新增細項',
 			'S15_Record_Edit.base_card_title' => '剩餘金額 (Base)',
+			'S15_Record_Edit.type_income_title' => '預收款',
+			'S15_Record_Edit.base_card_title_expense' => '剩餘金額 (Base)',
+			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',
 			'S16_TaskCreate_Edit.section_period' => '任務期間',
