@@ -80,7 +80,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
       if (mounted) {
         // 加入成功，前往任務主頁
         // context.go 會清除 stack，避免按上一頁回到邀請確認頁
-        context.go('/tasks/$taskId');
+        context.go('/task/$taskId');
       }
     } on FirebaseFunctionsException catch (e) {
       // 捕捉後端定義的錯誤 (TASK_FULL, EXPIRED_CODE 等)
@@ -209,7 +209,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
               SizedBox(
                 height: 56,
                 child: TextButton(
-                  onPressed: () => context.go('/tasks'), // 回首頁
+                  onPressed: () => context.go('/landing'), // 回首頁
                   child: Text(t.S11_Invite_Confirm.action_cancel),
                 ),
               ),
