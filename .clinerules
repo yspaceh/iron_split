@@ -1,0 +1,82 @@
+# Iron Split Project Rules (Based on Project Bible v2.2)
+
+## 1. Project Identity & UI (Bible Sec 2, 8)
+
+- **App Name**: Iron Split (アイアンスプリット)
+- **Primary Color**: `#9C393F` (Wine Red).
+- **Mascot**: Iron Rooster (Old English Game).
+- **UI Style**: Material 3. Clean, trustworthy finance app.
+- **Button Layout**:
+  - Right: Primary Action (Filled).
+  - Left: Secondary Action (Tonal/Outlined).
+
+## 2. Architecture & File Structure (Bible Sec 14)
+
+- **Structure**: Feature-first.
+  - `lib/core/`: Router, services, theme.
+  - `lib/features/<feature>/`:
+    - `presentation/`: Pages, Widgets, Dialogs, BottomSheets.
+    - `application/`: State management (Bloc/Provider).
+    - `domain/` & `data/`: Models and Repositories.
+- **Naming**:
+  - Files: `snake_case.dart`
+  - Classes: `UpperCamelCase`
+  - **CRITICAL**: Use **Page Keys** (e.g., `S15`, `B02`) as the primary identifier in comments and Route Names.
+
+## 3. Navigation & Router (Bible Sec 15 & app_router.dart)
+
+- **Router**: GoRouter.
+- **Route Names**: MUST use the Page Key (e.g., `name: 'S15'`).
+- **Page Key Reference (Single Source of Truth)**:
+  - **System**: `S00` (Bootstrap), `S50` (Consent), `S51` (Name)
+  - **Home**: `S10` (Task List / Landing)
+  - **Task**: `S16` (Create/Edit), `S13` (Dashboard), `S14` (Settings)
+  - **Record**:
+    - `S15` (Record Edit - Main Page)
+    - `B02` (Split Expense Edit - Sub-item BottomSheet)
+    - `B03` (Split Method Edit - Calculator BottomSheet)
+    - `B07` (Payment Method Edit - Who Paid BottomSheet)
+  - **Invite**: `S11` (Confirm)
+  - **Settlement**: `S30` (Confirm), `S31` (Payment), `S32` (Result)
+
+## 4. Localization (I18n) (Bible Sec 1, 14.4)
+
+- **Tool**: `slang` package.
+- **Strict Rule**: NO hardcoded strings in UI.
+- **Workflow**:
+  1.  Define keys in JSON files **BEFORE** writing Dart code.
+  2.  **MANDATORY**: Update ALL 3 files simultaneously for every text change:
+      - `lib/gen/strings.i18n.json` (English)
+      - `lib/gen/strings_zh.i18n.json` (Traditional Chinese)
+      - `lib/gen/strings_ja.i18n.json` (Japanese)
+  3.  **Naming**: Use PageKey as prefix (e.g., `B02_SplitExpense_Edit.title`).
+  4.  Run `dart run slang` after JSON updates.
+
+## 5. Data Model & Schema (Bible Sec 7.4)
+
+- **Firestore Path**: `tasks/{taskId}/records/{recordId}`
+- **Record Model Fields**:
+  - `payerType`: 'prepay' (公費), 'member' (代墊), 'mixed' (混合).
+  - `paymentDetails`: Map structure for complex payments.
+  - `splitMethod`: 'even', 'percent', 'exact'.
+  - `splitDetails`: Map structure `{uid: value}`.
+  - `exchangeRate`: **Locked** upon creation (Bible Sec 5.5).
+  - `items`: List of sub-items (for S15/B02 logic).
+- **Constraint**: `receiptImageUrl` is defined in Schema but **OUT OF SCOPE** for current MVP (User Instruction).
+
+## 6. Feature Logic (Bible Sec 5)
+
+- **Currencies**: Use local whitelist (`CurrencyConstants`) + Frankfurter API.
+- **S15 (Record Edit) Logic**:
+  - Base Card = Total Amount - Sum of Sub-items.
+  - **Base Card** clicks -> Open `B03` (Split for remainder).
+  - **Sub-item Card** clicks -> Open `B02` (Edit Item) -> inside B02 open `B03`.
+- **Settlement**:
+  - Pre-settlement: Data is editable.
+  - Post-settlement: Data is ReadOnly (Bible Sec 3.3).
+
+## 7. Date & Number Formatting
+
+- Use `package:intl`.
+- Date: `DateFormat`.
+- Currency: `NumberFormat`.

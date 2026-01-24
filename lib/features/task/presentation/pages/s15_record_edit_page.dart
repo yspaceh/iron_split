@@ -9,37 +9,13 @@ import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
-
-// ==========================================
-// 1. 資料模型
-// ==========================================
-
-class SplitItemModel {
-  String id;
-  double amount;
-  String? note;
-  String splitMethod;
-  List<String> memberIds;
-  // 詳細分攤數據 (Key: MemberID, Value: 權重 或 金額)
-  // exact: 存金額 { 'u1': 100, 'u2': 200 }
-  // percent: 存權重 { 'u1': 1, 'u2': 2.5 }
-  // even: 通常為空
-  Map<String, double> rawDetails;
-
-  SplitItemModel({
-    required this.id,
-    required this.amount,
-    this.note,
-    this.splitMethod = 'even',
-    required this.memberIds,
-    this.rawDetails = const {},
-  });
-}
+import 'package:iron_split/core/models/record_model.dart';
 
 // ==========================================
 // 2. 主頁面 Widget
@@ -91,7 +67,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   List<Map<String, dynamic>> _taskMembers = [];
 
   // Split Logic State
-  final List<SplitItemModel> _subItems = [];
+  final List<RecordItem> _items = [];
   String _baseSplitMethod = 'even';
   List<String> _baseMemberIds = [];
 
@@ -227,109 +203,116 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   double get _baseRemainingAmount {
-    final subTotal = _subItems.fold(0.0, (prev, curr) => prev + curr.amount);
+    final subTotal = _items.fold(0.0, (prev, curr) => prev + curr.amount);
     final remaining = _totalAmount - subTotal;
     return remaining > 0 ? remaining : 0.0;
   }
 
   // --- Actions ---
 
-  // 點擊卡片開啟 B03 分攤方式設定
-  Future<void> _handleCardTap(
-      {required bool isBase, SplitItemModel? subItem}) async {
-    // 1. 準備當前卡片的數據
-    final targetAmount = isBase ? _baseRemainingAmount : subItem!.amount;
-    final currentMethod = isBase ? _baseSplitMethod : subItem!.splitMethod;
-    final currentMemberIds = isBase ? _baseMemberIds : subItem!.memberIds;
-    final currentDetails = isBase ? _baseRawDetails : subItem!.rawDetails;
-
-    // 2. 準備預設權重 (目前資料庫若無設定，預設全為 1.0)
-    // 未來可改為從 _fetchTaskData 取得的 memberWeights
+  // 1. Base Card Action: Configure Split Method (B03)
+  Future<void> _handleBaseSplitConfig() async {
     final Map<String, double> defaultWeights = {
       for (var m in _taskMembers) m['id']: 1.0
     };
 
-    // 3. 取得貨幣符號
     final currencySymbol = kSupportedCurrencies
         .firstWhere((e) => e.code == _selectedCurrency,
             orElse: () => kSupportedCurrencies.first)
         .symbol;
 
-    // 4. 開啟 B03 BottomSheet
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
-        totalAmount: targetAmount,
+        totalAmount: _baseRemainingAmount,
         currencySymbol: currencySymbol,
         allMembers: _taskMembers,
         defaultMemberWeights: defaultWeights,
-        initialSplitMethod: currentMethod,
-        initialMemberIds: currentMemberIds,
-        initialDetails: currentDetails,
+        initialSplitMethod: _baseSplitMethod,
+        initialMemberIds: _baseMemberIds,
+        initialDetails: _baseRawDetails,
       ),
     );
 
-    // 5. 處理回傳結果，更新 UI
     if (result != null && mounted) {
-      final newMethod = result['splitMethod'];
-      final newIds = List<String>.from(result['memberIds']);
-      final newDetails = Map<String, double>.from(result['details']);
-
       setState(() {
-        if (isBase) {
-          // 更新「剩餘金額卡片」
-          _baseSplitMethod = newMethod;
-          _baseMemberIds = newIds;
-          _baseRawDetails = newDetails;
-        } else {
-          // 更新「拆分細項卡片」
-          subItem!.splitMethod = newMethod;
-          subItem.memberIds = newIds;
-          subItem.rawDetails = newDetails;
-        }
+        _baseSplitMethod = result['splitMethod'];
+        _baseMemberIds = List<String>.from(result['memberIds']);
+        _baseRawDetails = Map<String, double>.from(result['details']);
       });
     }
   }
 
+  // 2. Add Item Action: Open B02
   Future<void> _handleCreateSubItem() async {
-    if (_baseRemainingAmount <= 0) return;
-
-    final memberIds = _taskMembers.map((m) => m['id'] as String).toList();
-
-    await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        totalAmount: _baseRemainingAmount,
-        splitMethod: 'even',
-        initialDetails: {},
-        memberIds: memberIds,
-      ),
-    );
-
-    if (mounted) {
-      _addMockSubItemForDemo();
-    }
-  }
-
-  void _addMockSubItemForDemo() {
-    final double splitAmount = 500;
-    if (_baseRemainingAmount < splitAmount) {
+    if (_baseRemainingAmount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(t.S15_Record_Edit.err_amount_not_enough)));
       return;
     }
 
-    setState(() {
-      _subItems.add(SplitItemModel(
-        id: DateTime.now().toString(),
-        amount: splitAmount,
-        note: t.S15_Record_Edit.val_mock_note,
-        splitMethod: 'even',
-        memberIds: _taskMembers.map((m) => m['id'] as String).toList(),
-      ));
-    });
+    final Map<String, double> defaultWeights = {
+      for (var m in _taskMembers) m['id']: 1.0
+    };
+
+    final currencySymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == _selectedCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
+    final result = await showModalBottomSheet<RecordItem>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B02SplitExpenseEditBottomSheet(
+        item: null,
+        allMembers: _taskMembers,
+        defaultWeights: defaultWeights,
+        currencySymbol: currencySymbol,
+        parentTitle: _titleController.text,
+        parentTotalAmount: _totalAmount,
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _items.add(result);
+      });
+    }
+  }
+
+  // 3. Edit Item Action: Open B02
+  Future<void> _handleItemEdit(RecordItem item) async {
+    final Map<String, double> defaultWeights = {
+      for (var m in _taskMembers) m['id']: 1.0
+    };
+
+    final currencySymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == _selectedCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
+    final result = await showModalBottomSheet<RecordItem>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B02SplitExpenseEditBottomSheet(
+        item: item,
+        allMembers: _taskMembers,
+        defaultWeights: defaultWeights,
+        currencySymbol: currencySymbol,
+        parentTitle: _titleController.text,
+        parentTotalAmount: _totalAmount,
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        final index = _items.indexWhere((element) => element.id == item.id);
+        if (index != -1) {
+          _items[index] = result;
+        }
+      });
+    }
   }
 
   void _showCurrencyPicker() {
@@ -527,6 +510,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         'currency': _selectedCurrency,
         'exchangeRate': double.parse(_exchangeRateController.text),
         'splitMethod': _baseSplitMethod,
+        'splitMemberIds': _baseMemberIds,
+        'splitDetails': _baseRawDetails,
+        'items': _items.map((x) => x.toMap()).toList(),
         'memo': _memoController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'createdBy': uid,
@@ -621,29 +607,6 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     );
   }
 
-  Widget _buildAvatarStack(List<String> memberIds) {
-    final activeMembers =
-        _taskMembers.where((m) => memberIds.contains(m['id'])).toList();
-
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 220),
-      child: Wrap(
-        alignment: WrapAlignment.end,
-        spacing: 4,
-        runSpacing: 4,
-        children: activeMembers.map((member) {
-          // ✅ [替換] 改用 CommonAvatar
-          return CommonAvatar(
-            avatarId: member['avatar'],
-            name: member['name'],
-            radius: 11, // S15 的頭像比較小
-            fontSize: 10,
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   Widget _buildExpenseCard({
     required double amount,
     required String methodLabel,
@@ -671,14 +634,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       // 稍微加深底色，讓卡片更明顯
       color: isBaseCard
           ? colorScheme.surfaceContainerHighest
-          : colorScheme.surfaceContainerLow,
+          : colorScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        // 如果有分拆按鈕，底部不要圓角 (或者是讓按鈕包在裡面) -> 這裡選擇包在裡面
-        side: isBaseCard
-            ? BorderSide.none
-            : BorderSide(color: colorScheme.outlineVariant),
+        side: BorderSide.none,
       ),
       child: Column(
         children: [
@@ -735,7 +695,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                                 overflow: TextOverflow.ellipsis,
                               )
                             : (isBaseCard
-                                ? Text(t.S15_Record_Edit.val_split_remaining,
+                                ? Text(t.S15_Record_Edit.base_card_title,
                                     style: TextStyle(
                                         color: colorScheme.onSurfaceVariant,
                                         fontWeight: FontWeight.w500))
@@ -747,7 +707,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                         flex: 6, // 右邊佔 60%
                         child: Align(
                           alignment: Alignment.bottomRight,
-                          child: _buildAvatarStack(memberIds),
+                          child: CommonAvatarStack(
+                            allMembers: _taskMembers,
+                            targetMemberIds: memberIds,
+                            radius: 11,
+                            fontSize: 10,
+                          ),
                         ),
                       ),
                     ],
@@ -769,11 +734,10 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.call_split,
-                        size: 18, color: colorScheme.primary),
+                    Icon(Icons.add, size: 18, color: colorScheme.primary),
                     const SizedBox(width: 8),
                     Text(
-                      t.S15_Record_Edit.val_split_details,
+                      t.S15_Record_Edit.add_item,
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.bold,
@@ -834,7 +798,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       children: [
         buildPickerField(
           label: t.S15_Record_Edit.label_date,
-          value: DateFormat('yyyy/MM/dd').format(_selectedDate),
+          value: DateFormat('yyyy/MM/dd (E)').format(_selectedDate),
           icon: Icons.calendar_today,
           onTap: _showDatePicker,
         ),
@@ -1003,26 +967,37 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           ),
         ],
         const SizedBox(height: 12),
-        if (_subItems.isNotEmpty)
-          ..._subItems.map((item) => Padding(
+        if (_items.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Text(
+              t.S15_Record_Edit.section_items,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ..._items.map((item) => Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: _buildExpenseCard(
                   amount: item.amount,
                   methodLabel: item.splitMethod,
-                  memberIds: item.memberIds,
-                  note: item.note,
+                  memberIds: item.splitMemberIds,
+                  note: item.name,
                   isBaseCard: false,
-                  onTap: () => _handleCardTap(isBase: false, subItem: item),
+                  onTap: () => _handleItemEdit(item),
                 ),
               )),
-        if (_baseRemainingAmount > 0 || _subItems.isEmpty)
+        ],
+        if (_baseRemainingAmount > 0 || _items.isEmpty)
           _buildExpenseCard(
             amount: _baseRemainingAmount,
             methodLabel: _baseSplitMethod,
             memberIds: _baseMemberIds,
             note: null,
             isBaseCard: true,
-            onTap: () => _handleCardTap(isBase: true),
+            onTap: () => _handleBaseSplitConfig(),
             // 只有基本卡片且有餘額時，顯示分拆按鈕
             showSplitAction: _baseRemainingAmount > 0,
             onSplitTap: _handleCreateSubItem,

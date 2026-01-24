@@ -99,6 +99,9 @@ class TranslationsCommonZh {
 
 	/// zh: '我'
 	String get me => '我';
+
+	/// zh: '必填'
+	String get required => '必填';
 }
 
 // Path: S50_Onboarding_Consent
@@ -396,6 +399,15 @@ class TranslationsS15RecordEditZh {
 
 	/// zh: '請先輸入金額'
 	String get err_input_amount => '請先輸入金額';
+
+	/// zh: '細項分拆'
+	String get section_items => '細項分拆';
+
+	/// zh: '新增細項'
+	String get add_item => '新增細項';
+
+	/// zh: '剩餘金額 (Base)'
+	String get base_card_title => '剩餘金額 (Base)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -595,8 +607,20 @@ class TranslationsB02SplitExpenseEditZh {
 
 	// Translations
 
-	/// zh: '細項分拆'
-	String get title => '細項分拆';
+	/// zh: '編輯細項'
+	String get title => '編輯細項';
+
+	/// zh: '項目名稱'
+	String get name_label => '項目名稱';
+
+	/// zh: '金額'
+	String get amount_label => '金額';
+
+	/// zh: '分攤設定'
+	String get split_button_prefix => '分攤設定';
+
+	/// zh: '備註'
+	String get hint_memo => '備註';
 
 	/// zh: '成員分配'
 	String get section_members => '成員分配';
@@ -840,6 +864,7 @@ extension on Translations {
 			'common.edit' => '編輯',
 			'common.close' => '關閉',
 			'common.me' => '我',
+			'common.required' => '必填',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.terms_link' => '服務條款',
@@ -921,6 +946,9 @@ extension on Translations {
 			'S15_Record_Edit.msg_income_developing' => '預收功能開發中...',
 			'S15_Record_Edit.msg_not_implemented' => '此功能尚未實作',
 			'S15_Record_Edit.err_input_amount' => '請先輸入金額',
+			'S15_Record_Edit.section_items' => '細項分拆',
+			'S15_Record_Edit.add_item' => '新增細項',
+			'S15_Record_Edit.base_card_title' => '剩餘金額 (Base)',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',
 			'S16_TaskCreate_Edit.section_period' => '任務期間',
@@ -966,7 +994,11 @@ extension on Translations {
 			'D04_TaskCreate_Notice.content' => '目前的設定會被取消，真的要離開？',
 			'D04_TaskCreate_Notice.action_leave' => '回首頁',
 			'D04_TaskCreate_Notice.action_stay' => '繼續編輯',
-			'B02_SplitExpense_Edit.title' => '細項分拆',
+			'B02_SplitExpense_Edit.title' => '編輯細項',
+			'B02_SplitExpense_Edit.name_label' => '項目名稱',
+			'B02_SplitExpense_Edit.amount_label' => '金額',
+			'B02_SplitExpense_Edit.split_button_prefix' => '分攤設定',
+			'B02_SplitExpense_Edit.hint_memo' => '備註',
 			'B02_SplitExpense_Edit.section_members' => '成員分配',
 			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => '剩餘: ${amount}',
 			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '總計: ${current}/${target}',

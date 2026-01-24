@@ -10,7 +10,8 @@
     "loading": "Loading...",
     "edit": "Edit",
     "close": "Close",
-    "me": "Me"
+    "me": "Me",
+    "required": "Required"
   },
   "S50_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
@@ -103,7 +104,10 @@
     "tab_income": "Income",
     "msg_income_developing": "Income feature coming soon...",
     "msg_not_implemented": "Feature not implemented yet",
-    "err_input_amount": "Please enter amount first"
+    "err_input_amount": "Please enter amount first",
+    "section_items": "Itemized Splits",
+    "add_item": "Add Item",
+    "base_card_title": "Remaining Balance (Base)"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
@@ -164,7 +168,11 @@
     "action_stay": "Keep Editing"
   },
   "B02_SplitExpense_Edit": {
-    "title": "Split Details",
+    "title": "Edit Item",
+    "name_label": "Item Name",
+    "amount_label": "Amount",
+    "split_button_prefix": "Split by",
+    "hint_memo": "Memo",
     "section_members": "Members",
     "label_remainder": "Remaining: {amount}",
     "label_total": "Total: {current}/{target}",
@@ -172,7 +180,11 @@
     "error_percent_mismatch": "Total must be 100%",
     "action_save": "Confirm Split",
     "hint_amount": "Amount",
-    "hint_percent": "%"
+    "hint_percent": "%",
+    "title_add": "Add Item",
+    "title_edit": "Edit Item",
+    "err_input_amount_first": "Please enter amount first",
+    "split_status": "{count} people"
   },
   "B03_SplitMethod_Edit": {
     "title": "Choose Split Method",

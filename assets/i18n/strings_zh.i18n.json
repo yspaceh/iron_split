@@ -10,7 +10,8 @@
     "loading": "讀取中...",
     "edit": "編輯",
     "close": "關閉",
-    "me": "我"
+    "me": "我",
+    "required": "必填"
   },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
@@ -103,7 +104,10 @@
     "tab_income": "預收",
     "msg_income_developing": "預收功能開發中...",
     "msg_not_implemented": "此功能尚未實作",
-    "err_input_amount": "請先輸入金額"
+    "err_input_amount": "請先輸入金額",
+    "section_items": "細項分拆",
+    "add_item": "新增細項",
+    "base_card_title": "剩餘金額 (Base)"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
@@ -163,7 +167,11 @@
     "action_stay": "繼續編輯"
   },
   "B02_SplitExpense_Edit": {
-    "title": "細項分拆",
+    "title": "編輯細項",
+    "name_label": "項目名稱",
+    "amount_label": "金額",
+    "split_button_prefix": "分攤設定",
+    "hint_memo": "備註",
     "section_members": "成員分配",
     "label_remainder": "剩餘: {amount}",
     "label_total": "總計: {current}/{target}",

@@ -10,7 +10,8 @@
     "loading": "読み込み中...",
     "edit": "編集",
     "close": "閉じる",
-    "me": "自分"
+    "me": "自分",
+    "required": "必須"
   },
   "S50_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
@@ -103,8 +104,10 @@
     "tab_income": "受取",
     "msg_income_developing": "受取機能は開発中です...",
     "msg_not_implemented": "この機能はまだ実装されていません",
-    "err_input_amount": "先に金額を入力してください"
-
+    "err_input_amount": "先に金額を入力してください",
+    "section_items": "詳細内訳",
+    "add_item": "明細追加",
+    "base_card_title": "残額 (Base)"
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
@@ -164,7 +167,11 @@
     "action_stay": "編集を続ける"
   },
   "B02_SplitExpense_Edit": {
-    "title": "詳細割り勘",
+    "title": "明細編集",
+    "name_label": "項目名",
+    "amount_label": "金額",
+    "split_button_prefix": "負担設定",
+    "hint_memo": "メモ",
     "section_members": "メンバー配分",
     "label_remainder": "残り: {amount}",
     "label_total": "合計: {current}/{target}",

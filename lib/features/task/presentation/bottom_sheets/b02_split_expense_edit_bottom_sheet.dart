@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
+import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: B02_SplitExpense.Edit
 class B02SplitExpenseEditBottomSheet extends StatefulWidget {
-  final double totalAmount;
-  final String splitMethod; // 'exact' or 'percent'
-  final Map<String, double> initialDetails; // {uid: amount_or_percent}
-  final List<String> memberIds; // 參與分攤的成員 ID 列表 (需從 S15 傳入)
+  final RecordItem? item;
+  final List<Map<String, dynamic>> allMembers;
+  final Map<String, double> defaultWeights;
+  final String currencySymbol;
+  final String parentTitle;
+  final double parentTotalAmount;
 
   const B02SplitExpenseEditBottomSheet({
     super.key,
-    required this.totalAmount,
-    required this.splitMethod,
-    required this.initialDetails,
-    required this.memberIds,
+    this.item,
+    required this.allMembers,
+    required this.defaultWeights,
+    required this.currencySymbol,
+    required this.parentTitle,
+    required this.parentTotalAmount,
   });
 
   @override
@@ -25,180 +31,245 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
 
 class _B02SplitExpenseEditBottomSheetState
     extends State<B02SplitExpenseEditBottomSheet> {
-  late Map<String, TextEditingController> _controllers;
-  double _currentTotal = 0.0;
-  bool _isValid = false;
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _amountController;
+  late TextEditingController _memoController;
+
+  late String _splitMethod;
+  late List<String> _splitMemberIds;
+  late Map<String, double>? _splitDetails;
 
   @override
   void initState() {
     super.initState();
-    _controllers = {};
-    for (var uid in widget.memberIds) {
-      final val = widget.initialDetails[uid] ?? 0.0;
-      // 若是 0 則顯示空字串方便輸入
-      _controllers[uid] =
-          TextEditingController(text: val == 0 ? '' : _formatVal(val));
-      _controllers[uid]!.addListener(_validate);
-    }
-    _validate();
+    _nameController = TextEditingController(text: widget.item?.name ?? '');
+    _amountController =
+        TextEditingController(text: widget.item?.amount.toString() ?? '');
+    _memoController = TextEditingController(text: widget.item?.memo ?? '');
+
+    _splitMethod = widget.item?.splitMethod ?? 'even';
+    _splitMemberIds = widget.item?.splitMemberIds ??
+        widget.allMembers.map((m) => m['id'] as String).toList();
+    _splitDetails = widget.item?.splitDetails;
   }
 
   @override
   void dispose() {
-    for (var c in _controllers.values) c.dispose();
+    _nameController.dispose();
+    _amountController.dispose();
+    _memoController.dispose();
     super.dispose();
   }
 
-  String _formatVal(double val) {
-    return val
-        .toStringAsFixed(widget.splitMethod == 'percent' ? 0 : 1)
-        .replaceAll(RegExp(r'\.0$'), '');
-  }
+  Future<void> _handleSplitConfig() async {
+    final amount = double.tryParse(_amountController.text) ?? 0.0;
+    // Pass the current input amount to B03
 
-  void _validate() {
-    double sum = 0.0;
-    for (var uid in widget.memberIds) {
-      final val = double.tryParse(_controllers[uid]!.text) ?? 0.0;
-      sum += val;
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B03SplitMethodEditBottomSheet(
+        totalAmount: amount,
+        currencySymbol: widget.currencySymbol,
+        allMembers: widget.allMembers,
+        defaultMemberWeights: widget.defaultWeights,
+        initialSplitMethod: _splitMethod,
+        initialMemberIds: _splitMemberIds,
+        initialDetails: _splitDetails ?? {},
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _splitMethod = result['splitMethod'];
+        _splitMemberIds = List<String>.from(result['memberIds']);
+        _splitDetails = Map<String, double>.from(result['details']);
+      });
     }
-
-    setState(() {
-      _currentTotal = sum;
-      if (widget.splitMethod == 'percent') {
-        _isValid = (sum - 100).abs() < 0.1; // 容許些微誤差
-      } else {
-        _isValid = (sum - widget.totalAmount).abs() < 0.1;
-      }
-    });
   }
 
   void _onSave() {
-    if (!_isValid) return;
-    final Map<String, double> result = {};
-    for (var uid in widget.memberIds) {
-      result[uid] = double.tryParse(_controllers[uid]!.text) ?? 0.0;
+    if (_formKey.currentState!.validate()) {
+      final amount = double.parse(_amountController.text);
+      final newItem = RecordItem(
+        id: widget.item?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        name: _nameController.text,
+        amount: amount,
+        memo: _memoController.text,
+        splitMethod: _splitMethod,
+        splitMemberIds: _splitMemberIds,
+        splitDetails: _splitDetails,
+      );
+      context.pop(newItem);
     }
-    context.pop(result);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isPercent = widget.splitMethod == 'percent';
-    final target = isPercent ? 100.0 : widget.totalAmount;
-    final remainder = target - _currentTotal;
-
-    // 狀態顏色：綠色代表剛好，紅色代表超支或不足
-    final statusColor = _isValid ? colorScheme.primary : colorScheme.error;
+    final numberFormat = NumberFormat("#,##0.##");
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85, // 佔據 85% 高度
+      height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Column(
         children: [
-          // Header
+          // 1. Top Action Bar (New)
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                   onPressed: () => context.pop(),
-                  child: Text(t.common.cancel),
+                  child: Text(t.common.cancel,
+                      style: const TextStyle(color: Colors.grey)),
                 ),
-                Text(
-                  t.B02_SplitExpense_Edit.title,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
+                Text(t.B02_SplitExpense_Edit.title,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
                 TextButton(
-                  onPressed: _isValid ? _onSave : null,
-                  child: Text(
-                    t.B02_SplitExpense_Edit.action_save,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: _isValid ? colorScheme.primary : Colors.grey),
-                  ),
+                  onPressed: _onSave,
+                  child: Text(t.B02_SplitExpense_Edit.action_save,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.primary)),
                 ),
               ],
             ),
           ),
           const Divider(height: 1),
 
-          // Status Bar
+          // 2. Context Header
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-            color: statusColor.withValues(alpha: 0.1),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  t.B02_SplitExpense_Edit.label_total(
-                      current: _formatVal(_currentTotal),
-                      target: _formatVal(target)),
-                  style: TextStyle(
-                      color: statusColor, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Text(
+                    widget.parentTitle,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Text(
-                  t.B02_SplitExpense_Edit.label_remainder(
-                      amount: _formatVal(remainder)),
-                  style: TextStyle(
-                      color: statusColor, fontWeight: FontWeight.bold),
+                  "${widget.currencySymbol} ${numberFormat.format(widget.parentTotalAmount)}",
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.primary,
+                  ),
                 ),
               ],
             ),
           ),
 
-          // Member List
+          // 3. Form Content
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: widget.memberIds.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final uid = widget.memberIds[index];
-                return Row(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    // Avatar (Mock)
-                    CircleAvatar(
-                      backgroundColor: colorScheme.primaryContainer,
-                      child: Text(uid[0].toUpperCase()),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        "Member $uid", // 這裡應顯示真實名稱
-                        style: theme.textTheme.bodyLarge,
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: t.B02_SplitExpense_Edit.name_label,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
+                      validator: (v) =>
+                          v?.isEmpty == true ? t.common.required : null,
                     ),
-                    // Input Field
-                    SizedBox(
-                      width: 100,
-                      child: TextField(
-                        controller: _controllers[uid],
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        textAlign: TextAlign.end,
-                        decoration: InputDecoration(
-                          hintText: isPercent
-                              ? t.B02_SplitExpense_Edit.hint_percent
-                              : t.B02_SplitExpense_Edit.hint_amount,
-                          suffixText: isPercent ? '%' : '',
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 12),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          isDense: true,
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _amountController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        labelText: t.B02_SplitExpense_Edit.amount_label,
+                        prefixText: "${widget.currencySymbol} ",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      validator: (v) => (double.tryParse(v ?? '') ?? 0) <= 0
+                          ? t.S15_Record_Edit.err_input_amount
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Split Configuration Button
+                    InkWell(
+                      onTap: _handleSplitConfig,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: colorScheme.outline),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.call_split,
+                                color: colorScheme.onSurfaceVariant),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                t.B02_SplitExpense_Edit.split_button_prefix,
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            // Avatar Stack
+                            CommonAvatarStack(
+                              allMembers: widget.allMembers,
+                              targetMemberIds: _splitMemberIds,
+                              radius: 12,
+                              fontSize: 10,
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.chevron_right),
+                          ],
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 16),
+                    // Memo Input (Exact Style from S15)
+                    TextFormField(
+                      controller: _memoController,
+                      keyboardType: TextInputType.multiline,
+                      minLines: 2,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: t.B02_SplitExpense_Edit.hint_memo,
+                        alignLabelWithHint: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        contentPadding: const EdgeInsets.all(16),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
                   ],
-                );
-              },
+                ),
+              ),
             ),
           ),
         ],

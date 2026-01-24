@@ -74,6 +74,7 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 	@override String get edit => 'Edit';
 	@override String get close => 'Close';
 	@override String get me => 'Me';
+	@override String get required => 'Required';
 }
 
 // Path: S50_Onboarding_Consent
@@ -209,6 +210,9 @@ class _TranslationsS15RecordEditEn implements TranslationsS15RecordEditZh {
 	@override String get msg_income_developing => 'Income feature coming soon...';
 	@override String get msg_not_implemented => 'Feature not implemented yet';
 	@override String get err_input_amount => 'Please enter amount first';
+	@override String get section_items => 'Itemized Splits';
+	@override String get add_item => 'Add Item';
+	@override String get base_card_title => 'Remaining Balance (Base)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -317,7 +321,11 @@ class _TranslationsB02SplitExpenseEditEn implements TranslationsB02SplitExpenseE
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Split Details';
+	@override String get title => 'Edit Item';
+	@override String get name_label => 'Item Name';
+	@override String get amount_label => 'Amount';
+	@override String get split_button_prefix => 'Split by';
+	@override String get hint_memo => 'Memo';
 	@override String get section_members => 'Members';
 	@override String label_remainder({required Object amount}) => 'Remaining: ${amount}';
 	@override String label_total({required Object current, required Object target}) => 'Total: ${current}/${target}';
@@ -326,6 +334,10 @@ class _TranslationsB02SplitExpenseEditEn implements TranslationsB02SplitExpenseE
 	@override String get action_save => 'Confirm Split';
 	@override String get hint_amount => 'Amount';
 	@override String get hint_percent => '%';
+	@override String get title_add => 'Add Item';
+	@override String get title_edit => 'Edit Item';
+	@override String get err_input_amount_first => 'Please enter amount first';
+	@override String split_status({required Object count}) => '${count} people';
 }
 
 // Path: B03_SplitMethod_Edit
@@ -471,6 +483,7 @@ extension on TranslationsEn {
 			'common.edit' => 'Edit',
 			'common.close' => 'Close',
 			'common.me' => 'Me',
+			'common.required' => 'Required',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
 			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',
@@ -552,6 +565,9 @@ extension on TranslationsEn {
 			'S15_Record_Edit.msg_income_developing' => 'Income feature coming soon...',
 			'S15_Record_Edit.msg_not_implemented' => 'Feature not implemented yet',
 			'S15_Record_Edit.err_input_amount' => 'Please enter amount first',
+			'S15_Record_Edit.section_items' => 'Itemized Splits',
+			'S15_Record_Edit.add_item' => 'Add Item',
+			'S15_Record_Edit.base_card_title' => 'Remaining Balance (Base)',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.section_name' => 'Task Name',
 			'S16_TaskCreate_Edit.section_period' => 'Period',
@@ -597,7 +613,11 @@ extension on TranslationsEn {
 			'D04_TaskCreate_Notice.content' => 'Current settings will be discarded. Are you sure you want to leave?',
 			'D04_TaskCreate_Notice.action_leave' => 'Discard',
 			'D04_TaskCreate_Notice.action_stay' => 'Keep Editing',
-			'B02_SplitExpense_Edit.title' => 'Split Details',
+			'B02_SplitExpense_Edit.title' => 'Edit Item',
+			'B02_SplitExpense_Edit.name_label' => 'Item Name',
+			'B02_SplitExpense_Edit.amount_label' => 'Amount',
+			'B02_SplitExpense_Edit.split_button_prefix' => 'Split by',
+			'B02_SplitExpense_Edit.hint_memo' => 'Memo',
 			'B02_SplitExpense_Edit.section_members' => 'Members',
 			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => 'Remaining: ${amount}',
 			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
@@ -606,6 +626,10 @@ extension on TranslationsEn {
 			'B02_SplitExpense_Edit.action_save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.hint_amount' => 'Amount',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.title_add' => 'Add Item',
+			'B02_SplitExpense_Edit.title_edit' => 'Edit Item',
+			'B02_SplitExpense_Edit.err_input_amount_first' => 'Please enter amount first',
+			'B02_SplitExpense_Edit.split_status' => ({required Object count}) => '${count} people',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.method_even' => 'Even',
 			'B03_SplitMethod_Edit.method_percent' => 'By Percentage',

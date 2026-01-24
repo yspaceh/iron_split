@@ -74,6 +74,7 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get edit => '編集';
 	@override String get close => '閉じる';
 	@override String get me => '自分';
+	@override String get required => '必須';
 }
 
 // Path: S50_Onboarding_Consent
@@ -209,6 +210,9 @@ class _TranslationsS15RecordEditJa implements TranslationsS15RecordEditZh {
 	@override String get msg_income_developing => '受取機能は開発中です...';
 	@override String get msg_not_implemented => 'この機能はまだ実装されていません';
 	@override String get err_input_amount => '先に金額を入力してください';
+	@override String get section_items => '詳細内訳';
+	@override String get add_item => '明細追加';
+	@override String get base_card_title => '残額 (Base)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -317,7 +321,11 @@ class _TranslationsB02SplitExpenseEditJa implements TranslationsB02SplitExpenseE
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '詳細割り勘';
+	@override String get title => '明細編集';
+	@override String get name_label => '項目名';
+	@override String get amount_label => '金額';
+	@override String get split_button_prefix => '負担設定';
+	@override String get hint_memo => 'メモ';
 	@override String get section_members => 'メンバー配分';
 	@override String label_remainder({required Object amount}) => '残り: ${amount}';
 	@override String label_total({required Object current, required Object target}) => '合計: ${current}/${target}';
@@ -471,6 +479,7 @@ extension on TranslationsJa {
 			'common.edit' => '編集',
 			'common.close' => '閉じる',
 			'common.me' => '自分',
+			'common.required' => '必須',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
 			'S50_Onboarding_Consent.content_prefix' => '開始することで、',
 			'S50_Onboarding_Consent.terms_link' => '利用規約',
@@ -552,6 +561,9 @@ extension on TranslationsJa {
 			'S15_Record_Edit.msg_income_developing' => '受取機能は開発中です...',
 			'S15_Record_Edit.msg_not_implemented' => 'この機能はまだ実装されていません',
 			'S15_Record_Edit.err_input_amount' => '先に金額を入力してください',
+			'S15_Record_Edit.section_items' => '詳細内訳',
+			'S15_Record_Edit.add_item' => '明細追加',
+			'S15_Record_Edit.base_card_title' => '残額 (Base)',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.section_name' => 'タスク名',
 			'S16_TaskCreate_Edit.section_period' => '期間',
@@ -597,7 +609,11 @@ extension on TranslationsJa {
 			'D04_TaskCreate_Notice.content' => '現在の設定は破棄されます。本当に移動しますか？',
 			'D04_TaskCreate_Notice.action_leave' => 'ホームへ戻る',
 			'D04_TaskCreate_Notice.action_stay' => '編集を続ける',
-			'B02_SplitExpense_Edit.title' => '詳細割り勘',
+			'B02_SplitExpense_Edit.title' => '明細編集',
+			'B02_SplitExpense_Edit.name_label' => '項目名',
+			'B02_SplitExpense_Edit.amount_label' => '金額',
+			'B02_SplitExpense_Edit.split_button_prefix' => '負担設定',
+			'B02_SplitExpense_Edit.hint_memo' => 'メモ',
 			'B02_SplitExpense_Edit.section_members' => 'メンバー配分',
 			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => '残り: ${amount}',
 			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '合計: ${current}/${target}',
