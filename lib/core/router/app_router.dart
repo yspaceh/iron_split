@@ -70,14 +70,14 @@ class AppRouter {
 
       // S10_Home.TaskList (Landing)
       GoRoute(
-        path: '/landing',
+        path: '/tasks',
         name: 'S10',
         builder: (context, state) => const S10HomeTaskListPage(),
       ),
 
       // S16_TaskCreate.Edit
       GoRoute(
-        path: '/task/create',
+        path: '/tasks/create',
         name: 'S16',
         builder: (context, state) => const S16TaskCreateEditPage(),
       ),
@@ -94,7 +94,7 @@ class AppRouter {
 
       // S13_Task.Dashboard (Dynamic :taskId)
       GoRoute(
-        path: '/task/:taskId',
+        path: '/tasks/:taskId',
         name: 'S13',
         builder: (context, state) {
           final taskId = state.pathParameters['taskId']!;

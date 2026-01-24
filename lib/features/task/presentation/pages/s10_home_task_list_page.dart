@@ -38,7 +38,7 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/task/create'),
+        onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add),
         label: Text(t.S16_TaskCreate_Edit.title),
         shape: const StadiumBorder(),
@@ -223,7 +223,7 @@ class _TaskCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.push('/task/$taskId'),
+        onTap: () => context.push('/tasks/$taskId'),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
