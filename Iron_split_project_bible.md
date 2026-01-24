@@ -185,46 +185,66 @@
 
 ---
 
-## 7.4 Firestore Data Model (Schema v2.0 Updated)
+## 7.4 Firestore Data Model (Schema v2.5 Privacy First)
+
+### Collection: `users` (Global Settings)
+
+| Field           | Type   | Description                            |
+| :-------------- | :----- | :------------------------------------- |
+| email           | string | 使用者 Email                           |
+| displayName     | string | 顯示名稱                               |
+| photoUrl        | string | 頭像 URL                               |
+| defaultCurrency | string | 預設偏好幣別 (e.g., "TWD")             |
+| language        | string | 介面語言 (`system`, `zh`, `ja`, `en`)  |
+| currentTaskId   | string | 上次開啟的任務 ID (App 開啟時自動導航) |
 
 ### Collection: `tasks`
 
-| Field           | Type   | Description                       |
-| :-------------- | :----- | :-------------------------------- |
-| name            | string | 任務名稱                          |
-| captainUid      | string | 隊長 UID                          |
-| baseCurrency    | string | 結算基準幣別                      |
-| balanceRule     | string | `random` / `order` / `member`     |
-| remainderBuffer | number | **暫存零頭** (累積除不盡的小數位) |
-| totalPool       | number | **公款總額** (預收 - 公款支出)    |
-| status          | string | `active`, `settled`, `closed`     |
-| members         | map    | `{uid: {role, avatar...}}`        |
+| Field           | Type      | Description                                 |
+| :-------------- | :-------- | :------------------------------------------ |
+| title           | string    | 任務名稱                                    |
+| coverEmoji      | string    | 封面 Emoji                                  |
+| date            | timestamp | 任務日期                                    |
+| status          | string    | `active`, `settled`, `archived`             |
+| baseCurrency    | string    | 結算基準幣別 (S14 設定)                     |
+| prepayBalance   | number    | **公費池餘額** (取代 totalPool，即時計算用) |
+| balanceRule     | string    | `random` / `order` / `member`               |
+| remainderBuffer | number    | **暫存零頭** (累積除不盡的小數位)           |
+| members         | list/map  | 成員資料 `{id, name, avatar, isLinked...}`  |
+| createdBy       | string    | 建立者 UID                                  |
+| createdAt       | timestamp | 建立時間                                    |
 
-### Sub-collection: `tasks/{taskId}/records` (New)
+### Sub-collection: `tasks/{taskId}/records` (MVP Core)
 
-| Field        | Type      | Description                              |
-| :----------- | :-------- | :--------------------------------------- |
-| type         | string    | `expense` (支出) 或 `prepay` (預收/入金) |
-| amount       | number    | 原幣金額                                 |
-| currency     | string    | 原幣幣別                                 |
-| exchangeRate | number    | **鎖定匯率**                             |
-| payerType    | string    | `member` (代墊) 或 `pool` (公款支出)     |
-| payerId      | string    | 付款人 UID                               |
-| splitMethod  | string    | `even`, `exact`, `percent`, `share`      |
-| splitDetails | map       | `{uid: amount}`                          |
-| date         | timestamp | 消費日期                                 |
-| createdAt    | timestamp | 建立時間（server timestamp）             |
+| Field           | Type      | Description                                      |
+| :-------------- | :-------- | :----------------------------------------------- |
+| type            | string    | `expense` (支出) 或 `income` (預收/入金)         |
+| title           | string    | 消費標題                                         |
+| categoryIndex   | number    | 類別索引值                                       |
+| amount          | number    | 原幣金額                                         |
+| currency        | string    | 原幣幣別                                         |
+| exchangeRate    | number    | **鎖定匯率** (對 Base Currency)                  |
+| memo            | string    | 備註                                             |
+| receiptImageUrl | string    | 收據照片 URL (MVP 存證功能)                      |
+| payerType       | string    | `prepay` (公費), `member` (代墊), `mixed` (混合) |
+| payerId         | string    | 付款者 UID (單人代墊時使用)                      |
+| paymentDetails  | map       | `{usePrepay: bool, memberAdvance: map}`          |
+| splitMethod     | string    | `even`, `percent`, `exact`                       |
+| splitMemberIds  | array     | 參與分攤的成員 ID 列表                           |
+| splitDetails    | map       | 詳細數據 `{uid: weight/amount}`                  |
+| date            | timestamp | 消費日期 (顯示用)                                |
+| createdBy       | string    | 建立者 UID                                       |
+| createdAt       | timestamp | 建立時間 (Server Timestamp)                      |
 
-> 註：`date` 在資料庫中以 timestamp 儲存，僅作為排序與一致性用途；
-> 畫面顯示時一律格式化為 `YYYY/MM/DD`，不呈現時區概念，亦不作為時區換算依據。
-> 補充：同一天多筆記錄排序：先以 `date`（顯示用日期）分組，再以 `createdAt` 做穩定排序。
+### Sub-collection: `tasks/{taskId}/settlements` (S30 Logic)
 
-### Sub-collection: `tasks/{taskId}/settlements` (New)
-
-| Field           | Type      | Description                       |
-| :-------------- | :-------- | :-------------------------------- |
-| transferActions | array     | `[{from: B, to: A, amount: 100}]` |
-| closedAt        | timestamp | 結算時間                          |
+| Field           | Type      | Description                                               |
+| :-------------- | :-------- | :-------------------------------------------------------- |
+| closedAt        | timestamp | 結算鎖定時間                                              |
+| transferActions | array     | `[{from: B, to: A, amount: 100, status}]`                 |
+| status          | string    | 匯款狀態 `pending` / `paid`                               |
+| receiverInfos   | map       | 暫存收款資訊 (MVP Privacy)                                |
+|                 |           | `{ "uid_A": "Bank Code 822...", "uid_B": "PayPay Link" }` |
 
 ### 7.5 外部 API
 

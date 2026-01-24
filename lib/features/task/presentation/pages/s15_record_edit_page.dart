@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
-import 'package:iron_split/features/common/presentation/dialogs/d04_task_create_notice_dialog.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';

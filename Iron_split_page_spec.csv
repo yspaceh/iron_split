@@ -1,0 +1,160 @@
+﻿Page Key,Back（請填：返回行為/返回到哪裡？如果不適用寫：無）,Data Needed - Display（請填：要顯示的資料欄位。例：任務名/幣別/金額，用•分隔）,Data Needed - Input（請填：要輸入/選擇的欄位。沒有就寫：無，用•分隔）,Entry（請填：從哪裡進來？列出來源頁/按鈕/情境，可多條，用•分隔）,Exit/Next（請填：主要完成後會去哪？列出目標頁/行為，用•分隔）,Old Page Key,Primary Actions（請填：主要操作/按鈕，最多3個，用•分隔）,Purpose（請填：這頁存在的目的/要解決的問題，1-2句）,Rules/Constraints（請填：重要規則/限制/防呆。例：單選/上限15/once-only，用•分隔）,UI Blocks（請填：畫面區塊組成。例：TopBar/列表/表單/按鈕區，用•分隔）,Variants,wireframe page,備註,頁面名稱,類型
+D03_TaskCreate.Confirm,無,"・確認任務設定(標題)
+・任務名稱
+・開始期間
+・結束期間
+・結算幣別
+・參加人數
+・返回編輯按鈕
+・確認按鈕",無,S16,S13,D03_TaskCreate.Confirm,"・Primary: 確認
+・Secondary: 返回編輯",確認新增任務的資料,"・確認按鈕
+- 參加人數超過1會跳出Share Sheet, 在SNS或Email上會有邀請訊息(系統準備好的訊息)跟邀請連結","Text,BodyText,PrimaryButton,SecondaryButton",,14,,確認新增任務,Dialog
+S10_Home.TaskList,無,"・動畫
+・任務清單(已完成)
+- 該任務中自己所代表的農場動物頭像
+- 任務名稱
+- 任務期間",無,"App啟動後,Deeplink,S51","S13,S16",S02_Home.TaskList,・Primary: 新增任務,顯示所有任務的清單(已完成),"・動畫：鐵公雞沒有穿盔甲的等候中的動畫，左右看，眼睛張大，眨眼
+・任務清單
+- 清單可以一直下滑
+- 一次最多load10個任務資料，超過再追加10個
+- 最右方顯示天數","AppTopBar,SegmentedButton,List,Divider,PrimaryButton,animation,ListItem","• bucket=ended 
+• data=present",5,,首頁：任務清單,Screen
+B06_PaymentInfo.Detail,關閉 → 關閉 BottomSheet 回上一層,收款方式(多選結果) • 轉帳資訊文字 • 其他支付App清單（每筆名稱/帳號/備註）,無,S13（mode=settled/closed）→ 點「查看收款資訊」• 或 S32 → 點「回任務」後從主畫面進入,關閉 → 回到呼叫端,B06_Payout.Detail,複製 • 編輯（隊長）,顯示隊長設定的收款方式與收款資訊，提供一鍵複製，讓成員快速付款。,可點不同 Copy 入口：依點選項目複製「整段轉帳資訊」或「特定支付資訊」• 若無任何收款資訊則顯示 empty 狀態並提供隊長編輯入口（成員僅顯示說明）,ModalBottomSheet • Header(Title/Close) • 收款方式區塊 • 轉帳資訊區塊(可複製) • 其他支付App清單(可複製) • Footer(依角色顯示編輯/關閉),data=empty,44,收款資訊空狀態/尚未填,收款資訊詳情（BottomSheet）,BottomSheet
+S13_Task.Dashboard,TopBar 左上 Home → S10（任務列表）,任務名;結算幣別(baseCurrency);Segmented狀態(大家/個人);各日紀錄清單(含旅遊期間外日期section),Segmented(大家/個人);點紀錄卡片;底部新增紀錄,使用者手動捲動到旅遊期間外日期section（例2/10）,點紀錄卡片→S15;點底部新增紀錄→S15;點餘額輪盤→B01,S06_TaskDashboard.Main,新增紀錄(底部);編輯紀錄;選擇餘額規則,允許使用者查看旅遊期間外的歷史/補登資料（chips不顯示該日期），新增改由底部入口進入。,日期chips固定只顯示旅遊期間內;旅遊期間外日期section不顯示inline「＋」;旅遊期間外新增只能透過底部新增紀錄按鈕,AppTopBar;SegmentedButton;DashboardCard;RecordCardList;BottomActionBar,"• mode=active
+• segment=group
+• trip_range=out",17,旅遊期間外：chips不含該日期；且該section不顯示「＋」。,任務 Dashboard（進行中）,Screen
+S13_Task.Dashboard,TopBar 左上 Home → S10（任務列表）,任務名;結算幣別(baseCurrency);Segmented狀態(大家/個人);個人視角對象(memberId);各日紀錄清單(日期/類型/標題/原幣金額/幣別/換算金額/付款人/參與者摘要);各日小計(結算幣別);預收總額;費用總額;差額(剩餘差額);餘額處理方式顯示文字;旅遊期間(開始日/結束日),Segmented(大家/個人);日期chips(旅遊期間內);點紀錄卡片;旅遊期間內section「＋」新增;底部新增紀錄(旅遊期間外);結算(隊長);邀請/新增成員(隊長),S10 點選任務卡片;Deep link（已加入者）直接開啟任務;S15 保存返回;S15 保存/刪除返回;S14 返回,點選紀錄卡片→;旅遊期間內點「＋」→S15(日期預填為該section日期);點右上設定→S14;點餘額輪盤→B01,S06_TaskDashboard.Main,新增紀錄;編輯紀錄;選擇餘額規則,提供任務進行中的總覽（預收/費用/差額）與依日期分段的記錄管理，讓成員快速新增、回顧與修正帳務。,Segmented切換時下方全部內容更換(Dashboard/日期chips/列表);個人模式DashboardCard僅顯示不可點擊;日期chips只顯示旅遊期間內日期;列表可捲動到旅遊期間外日期section;旅遊期間內日期section才顯示inline「＋」新增;旅遊期間外不顯示inline「＋」且新增改走底部新增紀錄;點餘額輪盤才進入B01,AppTopBar;SegmentedButton;DashboardCard;DateChipsRow;SectionHeader;RecordCardList;InlineAddButton;BottomActionBar,"• mode=active
+• segment=group
+• trip_range=in",16,旅遊期間內：日期chips點選會捲動定位到該日section。,任務 Dashboard（進行中）,Screen
+B03_SplitMethod.Edit,關閉/返回→回呼叫來源（不保存）•保存→回呼叫來源（回寫splitSetting）,當前金額•分攤方式=平均分攤•已選成員chips•成員清單(頭像/名字/選取狀態)•試算摘要,選擇/取消成員（預設全選）•（可切換分攤方式）,入口A：S15點RemainderCard•入口B：B02點「成員與分攤方式」列,保存→回呼叫來源並更新該卡片/列的分攤摘要•取消→回呼叫來源不變,B03_SplitMember.Select,保存•切換分攤方式•選擇成員,設定成員與分攤方式（平均分攤），回寫到呼叫來源（S15的RemainderCard或B02的splitItem）。,固定三選項：平均分攤/比例分攤/金額分攤（依語系）•預設=平均分攤+全員（若使用者未改）•至少需選1人•保存後回寫到來源：S15=更新RemainderCard分攤設定；B02=更新splitItem分攤設定•（兩段保存）若從B02進來：B03保存只回B02，需再按B02保存才回S15,BottomSheetHeader•SplitMethodTabs•SelectedMemberChips•MemberList•PreviewRow•PrimaryButtonRow,data=equal,24,B03：平均分攤（wireframe24）。,分攤成員選擇(平均分攤),BottomSheet
+B03_SplitMethod.Edit,關閉/返回→回呼叫來源（不保存）•保存→回呼叫來源（回寫splitSetting）,當前金額•分攤方式=比例分攤•任務default比例資訊•已選成員chips•成員清單(頭像/名字/比例控制)•試算摘要,調整各成員比例（固定集合）•比例=0視為未選取•（可切換分攤方式）,入口A：S15點RemainderCard•入口B：B15點「成員與分攤方式」列,保存→回呼叫來源並更新分攤摘要•取消→回呼叫來源不變,B03_SplitMember.Select,保存•調整比例•切換分攤方式,以比例設定分攤，回寫到呼叫來源（S15的RemainderCard或B02的splitItem）。,固定三選項•比例值固定集合：0/0.5/1/1.5/2•進入比例分攤時：載入任務default比例作為初始值（可在此筆內手動改）•比例=0→立即視為未選取（chips移除+清單取消選取+不參與試算）•至少需選1人•保存後回寫到來源•（兩段保存）若從B02進來：B03保存只回B02，需再按B02保存才回S15,BottomSheetHeader•SplitMethodTabs•SelectedMemberChips•MemberList（含比例控制）•PreviewRow•PrimaryButtonRow,data=ratio,25,B03：比例分攤（wireframe25）。,分攤成員選擇(比例分攤),BottomSheet
+B03_SplitMethod.Edit,關閉/返回→回呼叫來源（不保存）•保存→回呼叫來源（回寫splitSetting）,當前金額•分攤方式=金額分攤•已選成員chips（僅金額>0）•成員清單(頭像/名字/金額輸入)•合計/差額提示,輸入各成員分攤金額（初始全員=0）•金額=0視為未選取•（可切換分攤方式）,入口A：S15點RemainderCard•入口B：B02點「成員與分攤方式」列,保存→回呼叫來源並更新分攤摘要•取消→回呼叫來源不變,B03_SplitMember.Select,保存•輸入金額•切換分攤方式,以金額直接指定每人分攤，回寫到呼叫來源（S15的RemainderCard或B02的splitItem）。,固定三選項•進入金額分攤時初始全員金額=0→全員未選取•金額=0→視為未選取（chips移除+清單取消選取+不參與試算）•保存條件：已選成員金額合計=當前金額才可保存（否則保存disabled或提示）•保存後回寫到來源•（兩段保存）若從B02進來：B03保存只回B02，需再按B02保存才回S15,BottomSheetHeader•SplitMethodTabs•SelectedMemberChips•MemberList（含金額輸入）•TotalSummaryRow•PrimaryButtonRow,data=amount,26,B03：金額分攤（wireframe26）。,分攤成員選擇(金額分攤),BottomSheet
+S15_Record.Edit,TopBar返回→回S13（未保存則捨棄變更）,Segmented狀態(費用/預收)•(create)預填日期•(edit)既存紀錄資料•任務結算幣別•母金額(amount)•金額輸入幣別(recordCurrency)•(若幣別≠結算幣別)匯率欄位顯示與換算結果（小字）•RemainderCard（remainderAmount=amount-sum(splitItems)•remainderSplitSetting摘要）•splitItems清單（每筆：名稱/金額/各自splitSetting摘要）,日期（可點選）•類別•金額數字•金額幣別（可點擊變更）•付款者（expense）•(若幣別≠結算幣別)匯率textField（可手改/可清空）•Note•RemainderCard分攤設定（B03回寫）•新增/編輯splitItem（B02）,create：S13旅遊期間內section「＋」•create：S13底部「新增紀錄」•edit：S13點選費用紀錄卡片•B03保存後返回•B02保存後返回,保存→回S13•(edit)刪除→回S13•點日期→CustomDatePicker（Wheel M3-styled）•點幣別→幣別選擇•點RemainderCard→B03•點「細項分拆」→B02•點splitItem卡→B02,S08_RecordForm,保存•(edit)刪除•細項分拆,（費用expense）新增或編輯一筆費用紀錄；支援多幣別輸入與匯率自動帶入/可手改，以及從RemainderCard反覆切出多筆分拆細項。,mode=create|edit • type=expense（僅定義費用）•若使用者未做任何分攤設定變更：分攤預設=平均分攤+全員•輸入母金額(amount>0)後顯示RemainderCard（初始remainderAmount=amount）•RemainderCard金額=remainderAmount=amount-sum(splitItems)即時更新•RemainderCard可點進B03設定其分攤方式/成員；此設定同時作為「新增splitItem」的預設分攤設定來源•可重複分拆：每次點「細項分拆」都從remainderAmount切出新splitItem；splitItem不可再分拆但可編輯•remainderAmount=0時禁用「細項分拆」•幣別/匯率：金額欄位前的幣別可點擊變更（幣別選擇UI/行為與S12相同）；若recordCurrency≠結算幣別則顯示匯率textField並顯示換算結果；匯率預設由API取得並自動填入；使用者可手動修改；若使用者將匯率欄清空，系統會自動恢復為API取得的匯率（重新帶入）•若recordCurrency=結算幣別則不顯示匯率欄且不需匯率•日期選擇：點日期欄開CustomDatePicker（Wheel / Material3-styled）,AppTopBar•SegmentedButton•FormList•DateField（Wheel M3）•CategorySelect•AmountInput（CurrencyPicker同S16）•ConvertedAmountHint•ExchangeRateSection（條件顯示）•RemainderCard（點→B03）•AddSplitItemButton（附著在RemainderCard）•SplitItemList•SplitItemCard（點→B02）•NoteField•PrimaryButton•(edit)DeleteButton•NumericKeyboard,"• type=expense 
+• mode=create | edit",21,補：幣別選擇UI/行為同S16；日期選擇用CustomDatePicker（Wheel M3-styled）。,紀錄(費用),Screen
+S15_Record.Edit,TopBar返回→回S13（未保存則捨棄變更）,任務結算幣別•日期•類別•輸入幣別(recordCurrency)•輸入金額(amount)•(若recordCurrency≠結算幣別)換算金額提示(小字)•(若recordCurrency≠結算幣別)匯率textField顯示值(API預設)•(預收)支付來源摘要（預收款/成員代墊/金額）•(預收)預收款支付(prepayFundPayment：幣別+金額),日期（可點選）•類別（select）•金額數字•金額幣別（可點擊變更）•(若recordCurrency≠結算幣別)匯率textField（可手改/可清空）•(預收)支付來源（開B07）•Note•保存•(edit)刪除,create：S13底部「新增紀錄」(選擇預收)•edit：S13點選預收紀錄卡片•B07保存後返回,保存→回S13•(edit)刪除→回S13•點日期→CustomDatePicker（Wheel M3-styled）•點幣別→幣別選擇（同S12）•(預收)點「支付來源」→B07,S08_RecordForm,保存•(edit)刪除•(預收)支付來源,新增或編輯「預收」紀錄；可設定預收款資金來源（預收款/成員代墊/混合）並自動平衡。,mode=create|edit•type=prepay•幣別/匯率規則同費用版：recordCurrency≠結算幣別才顯示匯率textField；匯率API預設；可手改；清空→自動回復API匯率；recordCurrency=結算幣別不顯示匯率欄•日期picker同費用版•(預收)支付來源僅在預收顯示：點選開B07並回寫摘要（預收款/成員代墊/金額）•(預收)預收款支付為可輸入欄位（你更新的畫面）,AppTopBar•SegmentedButton•FormList•DateField（Wheel M3）•CategorySelect•AmountInput（CurrencyPicker同S16）•ExchangeRateSection（條件顯示）•ConvertedAmountHint•PrepaySourceRow（點→B07）•PrepayFundPaymentInput•NoteField•PrimaryButton•(edit)DeleteButton•NumericKeyboard,"• type=prepay
+• mode=create | edit",27,此列為「預收」版本（S15同Page Key用Variants區分）。,紀錄(預收),Screen
+B07_PaymentMethod.Edit,關閉或取消→回S15（不保存）•保存→回S15（回寫支付摘要）,費用總金額（totalAmount）•勾選狀態（預收款支付•成員代墊）•成員代墊總額（memberAdvanceTotal）•成員代墊明細（memberId→amount）•差額狀態（是否平衡）,勾選或取消成員代墊•成員清單每人金額輸入（0=未選取）,S15點選支付方式列,保存→回S15並更新摘要•取消→回S15不變,B07_PaymentMethod.Select,保存•取消•輸入金額,設定費用的支付方式為成員代墊。可與預收款支付混用並維持總額平衡。,method=member_advance•用在費用•輸入方式同金額分攤：每人金額欄位且金額=0視為未選取•Default：所有成員代墊金額=0•自動補差：雙方都啟用時最後編輯者為主另一側自動更新以使合計=totalAmount•你定案B：若只啟用成員代墊且未啟用預收款支付則必須分配使 memberAdvanceTotal=totalAmount 否則保存disabled,BottomSheetHeader•MemberAdvanceSection（checkbox）•MemberAmountList•SummaryFooter（總額•代墊合計•差額）•ButtonRow（取消•保存）,data=members,29,你定案B已套用：只選成員代墊且合計不足→保存disabled。,支付方式選單(成員代墊),BottomSheet
+B07_PaymentMethod.Edit,關閉或取消→回S15（不保存）•保存→回S15（回寫支付摘要）,費用總金額（totalAmount）•可用預收款餘額（prepayBalance）•勾選狀態（預收款支付•成員代墊）•預收款支付金額（prepayPayAmount）•成員代墊總額（memberAdvanceTotal）•差額狀態（是否平衡）,勾選或取消預收款支付•預收款支付金額輸入（初始自動=totalAmount）,S15點選支付方式列,保存→回S15並更新摘要•取消→回S15不變,B07_PaymentMethod.Select,保存•取消•輸入金額,設定費用的支付方式為預收款支付並可手動輸入金額。可與成員代墊混用並維持總額平衡。,method=prepay•用在費用•可同時啟用預收款支付與成員代墊•Default：預收款支付金額預設=totalAmount；成員代墊各成員預設0•自動補差：最後被使用者編輯的那一側為主另一側自動更新以使合計=totalAmount•若僅啟用預收款支付則預收款支付=totalAmount且保存可按,BottomSheetHeader•PrepaySection（checkbox與amount input）•SummaryFooter（總額•預收款支付•代墊•差額）•ButtonRow（取消•保存）,data=prepay,28,命名已定案：B07_PaymentMethod.Select。,支付方式選單(預收款),BottomSheet
+S52_TaskSettings.Log,返回到 S14,操作者頭像•操作者名稱•時間戳記(YYYY/MM/DD HH:mm)•事件文案•(可選)金額•(可選)幣別,無,S14 > 歷史紀錄,下載帳單 > Share Sheet(匯出PDF)•返回到 S14,S11_TaskHistory.Log,下載帳單•返回,提供任務內所有操作的歷史記錄，方便回溯與匯出保存。,只讀不可編輯•一次載入50筆•往下滑自動載入更多(每次+50)•事件內容固定格式僅顯示•下載範圍=全部記錄•下載以Share Sheet輸出PDF,TopBar(返回+標題)•LogList(InfiniteScroll)•BottomPrimaryButton(下載帳單),,31,下載內容為帳單PDF（依專案聖經）。,歷史紀錄,Screen
+D09_TaskSettings.CurrencyConfirm,無,目前結算幣別•變更後結算幣別•影響說明文,確認/取消,S14•使用者變更「結算幣別」時（每次變更都觸發）,取消→回復成原結算幣別(不保存)•確認→套用新結算幣別並重新計算/重抓匯率,D09_BaseCurrencyChangeConfirm,取消•確認,在使用者變更結算幣別前，明確告知影響並避免誤操作造成大幅資料變動。,每次變更結算幣別都要顯示（非 once-only）•確認後：所有換算金額重新計算•需要匯率的項目回到 API 預設值（使用者曾手動改過也會被重置）•取消則不保存此變更,AlertDialog•TitleText•BodyText(影響說明)•DialogActions(取消/確認),,,每次變更結算幣別都要顯示 dialog。,變更結算幣別確認,Dialog
+S13_Task.Dashboard,返回上一層（依導航：Home 或 上一個Screen）,任務名•結算幣別•我的結算額（可收回/需支付）•日期區塊•各紀錄摘要（類型/金額/換算）,無,S13（預設進入）•S13（個人）切換,留在本頁（切換 segment）•點某筆紀錄→ S15（費用/預收，依類型）,S06_TaskDashboard.Main,切換Segment（大家/個人）,提供任務主頁資訊總覽；此variant顯示『個人』視角（只看與自己相關的金額與紀錄）。,Segment=個人•資料同S13但篩選為個人相關•清單可往下滑 load more / infinite scroll,TopBar/SegmentedControl/DateSectionsList/RecordRow/BottomNav,"• mode=active
+• segment=personal
+• trip_range=all",19,,任務主畫面（個人）,Screen
+D08_TaskClosed.Confirm,關閉Dialog，返回 S12,任務名稱•資料保留30天提示•不可回復提示文案,無,S12•點「結束任務」,點「結束任務」→ 執行 CloseTask（強制結束）→ 前往 S13(mode=closed)•點「返回」→ 關閉Dialog,D08_TaskClose.Confirm,返回•結束任務,強制結束任務前的確認；確認後直接結束任務並進入唯讀下載模式。,確認後不可回復•結束後資料僅保留30天•結束後僅提供下載帳單,DialogTitle•DialogBodyText•ButtonRow(返回/結束任務),,47,強制結束流程：S10 → S12 → D08 → S13(mode=close)。此步即執行結束。,結束任務確認,Dialog
+S13_Task.Dashboard,返回上一層（Home）,任務名•結算幣別•結束提示文案•帳單下載狀態,無,任務已結束（close）→ 進入 S13（mode=close）,點【下載帳單】→ Share Sheet（使用者選擇存放位置）,S06_TaskDashboard.Main,下載帳單,任務結束後的唯讀主畫面：顯示結束狀態與提供帳單下載。,mode=close•唯讀（所有編輯入口灰階/不可點）•資料保留30天，逾期刪除•下載範圍=全部•下載後走 Share Sheet,TopBar/CloseStateAnimation/NoticeText/PrimaryButton,mode=closed,33,"強制結束任務後回到 Dashboard 看到的狀態（Q23=B）
+此mode下畫面只有動畫+下載按鈕；其他功能皆不可用
+任務設定入口灰階不可點。",任務主畫面（結束後）,Screen
+B04_Payment.Merge,關閉 BottomSheet（不保存任何變更）,代表成員(頭像/名稱/應付或應收金額)•可選擇成員清單(頭像/名稱/應付或應收金額/勾選狀態),勾選要合併的成員(多選),S30（成員卡右側『合併』）,合併→ 回 S14 並套用合併狀態•取消→ 關閉 BottomSheet,B04_Payment.Merge,合併•取消,讓使用者把多位成員的支付/退款行為合併到同一位代表成員，減少實際付款/退款筆數。,至少勾選 1 位成員才可按『合併』•可取消勾選(回到本 BottomSheet 並帶入目前合併狀態)•『代表成員』= 從哪張卡點『合併』進來的那個人•代表成員不可被其他人合併(全域禁止)•僅顯示尚未成為代表成員/尚未被合併的成員（依你規則）,BottomSheetHeader(標題/說明)•代表成員區塊•可選擇成員列表(checkbox)•BottomBar(取消/合併),,36,回到本頁需帶入目前合併狀態（勾選可取消）。,合併成員設定,BottomSheet
+S13_Task.Dashboard,無（此模式為結算後/結束後儀表板；任務設定 icon 灰階不可點）,任務名•結算幣別•隊長應收總額•餘額罐得主•待處理成員(頭像/名稱/應付或應收金額/狀態)•已處理成員(頭像/名稱/應付或應收金額/狀態),無,強制結束流程：S10→S12→D08→ 本頁(mode=close)•或正常結算完成後進入（依你後續定義）,通知成員→ 系統行為(分享/通知)•下載帳單→ Share Sheet(帳單CSV/檔案由使用者決定存放位置),S06_TaskDashboard.Main,通知成員•下載帳單,在任務結束後提供最終結果總覽與下載帳單入口；不再允許編輯任務資料。,此模式無『個人』頁與 Segment 切換•內容僅顯示（不可編輯）•結算額=0 仍需顯示•狀態可標示待處理/已處理（隊長可操作的行為另由流程定義）,TopBar(Home/任務名/設定icon-disabled)•結算摘要卡•提示/說明區（可選）•待處理區(列表)•已處理區(列表)•BottomBar(通知成員/下載帳單),"• mode=settled
+• state=pending",41,結算後不再有『個人』頁；只有下載與通知。,任務主畫面（結算後）,Screen
+S71_SystemSettings.Tos,返回 → 回到呼叫端（S50或 S70）,文件標題（服務條款/隱私政策） • 文件URL • Web內容,無,S50 → 點「服務條款」/「隱私政策」 • S70 → 點「服務條款」/「隱私政策」,返回 → 回到上一頁,S19_Settings.Tos,返回 • 重新整理 • 在瀏覽器開啟,在 App 內以 WebView 顯示服務條款/隱私政策，讓使用者可隨時查閱；不需要離開 App。,doc=tos / doc=privacy 依入口按鈕決定（兩個 URL） • 以 in-app WebView 顯示 • 預設載入成功時隱藏 Loading • 讀取失敗/離線時顯示 Error State（可重試/可外部瀏覽器開啟）,TopAppBar(標題/返回) • WebView • Loading Indicator • Error State(重試/外部瀏覽器開啟),• data=tos | privacy,,兩個 URL：ToS 與 PrivacyPolicy 分開。入口可能來自 Onboarding 同意頁（S50）或系統設定頁（S70），返回必須回到呼叫端；若需記錄來源，可用 route param `from=`（可選）。,服務條款 / 隱私政策（WebView）,Screen
+B01_BalanceRule.Edit,下滑/點遮罩關閉→回S13（不變更）,目前選中的餘額處理方式;3個選項文案(餘額輪盤/平均分攤/我來請客);（若為我來請客）成員清單,單選規則(3選1);（若我來請客）單選1位成員,S13 點選餘額輪盤,確認→套用並關閉回S13,B01_BalanceRule.Select,確認;選擇規則;查看說明(i),讓使用者在結算前選擇餘額處理方式（結算計算一致）。,單選3選1;點Info(i)開說明Dialog;選我來請客時必須再選1位成員才可確認(未選確認disabled),BottomSheet;RadioList;MemberRadioList;InfoIconButton;PrimaryButton,data=roulette,12,wireframe 13 為「我來請客」展開成員單選清單狀態。,餘額處理方式選擇,BottomSheet
+S00_System.Bootstrap,無,・動畫,無,"App啟動後,Deeplink","S50,S11,D02",S_System_Bootstrap,無,bootstrap,・動畫：英國農村風景插畫,animation,,,,啟動後首頁,Screen
+S51_Onboarding.Name,無,・顯示名稱(輸入在APP裡使用者的顯示名稱的說明),名稱設定,S50,"S10,S71",S01_Onboarding.Name,・Primary: 設定,請使用者輸入App內顯示的名稱,"・名稱設定
+- 長度：1-10個字
+- 輸入框右下角顯示目前的字數長度。
+- 禁止控制字元。
+- 使用者名稱空白，開始按鈕無法點選","AppTopBar,BodyText,PrimaryButton,SystemKeyboard",,2,,首次使用：輸入名字/暱稱,Screen
+S10_Home.TaskList,無,"・動畫
+・任務清單
+- 顯示現在執行中或已完成清單中無存在的任務(沒有任務)",無,"App啟動後,Deeplink,S51,S11","S11,S13",S02_Home.TaskList,・Primary: 新增任務,顯示所有任務的清單(Empty state),"・動畫：鐵公雞沒有穿盔甲的等候中的動畫，無聊托臉
+・任務清單
+- 無任務時顯示空狀態","AppTopBar,animation,PrimaryButton,List,Divider,SegmentedButton","• bucket=active 
+• data=empty",3,,首頁：任務清單,Screen
+S10_Home.TaskList,無,"・動畫
+・任務清單(執行中)
+- 該任務中自己所代表的農場動物頭像
+- 任務名稱
+- 任務期間",無,"App啟動後,Deeplink,S51","S12,S13,D08",S02_Home.TaskList,・Primary: 新增任務,顯示所有任務的清單(執行中),"・動畫：鐵公雞沒有穿盔甲的等候中的動畫，左右看，眼睛張大，眨眼
+・任務清單
+- 清單可以一直下滑
+- 一次最多load10個任務資料，超過再追加10個
+- 隊長可以左滑刪除未有紀錄且沒有成員的任務","AppTopBar,PrimaryButton,List,Divider,SegmentedButton,animation","• bucket=active 
+• data=present",4,,首頁：任務清單,Screen
+S70_System.Settings,S10,"・系統設定(標題)
+・顯示名稱
+・服務條款 / 隱私政策",名稱設定,S10,S71,S03_Settings.System,無,系統設定,"・名稱設定
+- 使用者名稱長度：1-10個字，
+- 輸入框右下角顯示目前的字數長度。
+- 禁止控制字元。
+- 使用者名稱空白，開始按鈕無法點選","AppTopBar,TextField,NavigationList,NavigationListItem,ChevronIcon",,6,,系統設定,Screen
+S11_Invite.Confirm,無,"・確認邀請(標題)
+・動畫
+・任務名稱",無,Deeplink,"S10,D01,D02",S04_Invite.Confirm,"・Primary: 確認
+・Secondary: 取消",確認任務資料,"・動畫：鐵公雞拿著名單確認中
+・成員清單
+- 不顯示
+- 按加入順序填滿任務成員名單","animation,ListText,PrimaryButton,SecondaryButton,AppTopBar",data=present,7,SNS 連結導入後：同意TOS→輸入名字→彈出確認，避免加錯群組,加入邀請：確認任務名稱,Screen
+S11_Invite.Confirm,無,"・確認邀請(標題)
+・動畫
+・任務名稱
+・成員
+- 第一個文字的頭像
+- 名稱
+- 預收款總金額
+- 預收款總金額",無,Deeplink,"S10,D02,S13",S04_Invite.Confirm,"・Primary: 確認
+・Secondary: 取消",確認任務資料,"・動畫：鐵公雞拿著名單確認中
+・成員清單
+- 只有在任務裡已有紀錄存在後，才會需要連結成員，或成員名稱被手動更改
+- 只能選1個成員(hidden radio button)","animation,ListText,PrimaryButton,SecondaryButton,List,ListItem,Divider,AppTopBar",data=members,8,・SNS 連結導入後：同意TOS→輸入名字→彈出確認，避免加錯群組,加入邀請：確認任務名稱,Screen
+D02_Invite.Result,無,"・動畫
+・說明加入任務失敗",無,"Deeplink,S11",S10,D02_InviteJoin.Error,・Secondary: 回首頁,成員加入任務失敗,"・動畫：鐵公雞拿手帕擦眼淚
+目前涵蓋：邀請無效/過期、任務已被強制結束（細項之後再拆）","Text,BodyText,animation,SecondaryButton",outcome=failure,10,,加入邀請失敗/無法加入,Dialog
+S16_TaskCreate.Edit,S10,"・回首頁(App bar)
+・新增任務(標題)
+・任務名稱(Text Field)
+・開始期間(Text Field+ModalBottomSheet + CustomDatePicker)
+・結束期間(Text Field+ModalBottomSheet + CustomDatePicker)
+・結算幣別(ModalBottomSheet + CustomFXRatePicker)
+・參加人數(ModalBottomSheet + CustomNumberPicker)
+・保存按鈕","・任務名稱(Text Field)
+・開始期間(Text Field+ModalBottomSheet + CustomDatePicker)
+・結束期間(Text Field+ModalBottomSheet + CustomDatePicker)
+・結算幣別(ModalBottomSheet + CustomFXRatePicker)
+・參加人數(ModalBottomSheet + CustomNumberPicker)",S10,D03,S05_TaskCreate.Form,・Primary: 保存,新增任務，輸入任務資料,"・名稱設定(必須)
+- 長度：1-20個字
+- 輸入框右下角顯示目前的字數長度。
+- 禁止控制字元。
+- 必須輸入資料，保存按鈕無法點選
+・開始期間(必須)
+- 日期格式為YYYY/MM/DD
+- 點選後下方出現滾輪式日期選單
+- Default日期預設為新增任務當天，開始期間可以在過去
+・結束期間(必須)
+- 日期格式為YYYY/MM/DD
+- 點選後下方出現滾輪式日期選單
+- 開始日期與結束日期可以在同一天
+- 結束日期不可以比開始日期小
+- 開始日期設定後，如果結束日期比開始日期小會自動變更到與開始日期同一天
+・結算幣別(必須)：
+- Default會依據使用者當下使用的語言，中文→新台幣，日文→日幣, 英文→美金
+- 使用者可以自由變更幣別。這個幣別會用在最後結算時，跟成員收款的幣別
+・參與人數(必須)：限制人數為1-15人","AppTopBar,PrimaryButton,Keyboard,TextField,DateFieldListItem (ReadOnly),CustomDatePicker (Wheel M3-styled),ModalBottomSheet,TextButton,Divider,CustomFXRatePicker(Wheel M3-styled)),CustomNumberPicker(Wheel M3-styled)",data=present,11,,新增任務（表單）,Screen
+D04_TaskCreate.Notice,無,"・任務設定尚未完成(標題)
+・任務設定尚未完成的說明，詢問使用者是某要離開此畫面",無,S16,S10,D04_Common.UnsavedChanges,"・Primary: 返回編輯
+・Secondary: 回首頁",從新增任務的畫面點選回首頁按鈕時，提示使用者資料建立未成功,TBD（請你補）,"Text,BodyText,PrimaryButton,SecondaryButton",data=unsaved,15,,離開提醒（未儲存）,Dialog
+S31_Settlement.PaymentInfo,回上一步 → S30,任務名 • 結算幣別 • 結算預覽摘要(每人應付/應收)（來自 Step1）,收款方式(可多選：現金/轉帳/其他支付App) • 轉帳資訊(自由輸入，可留空) • 其他支付App清單(可新增多筆，至少1筆才有效),S30→ 下一步,點「結算」→ D06,S15_Settlement.Step2Payout,回上一步 • 結算,隊長在結算前設定收款方式與收款資訊，讓成員在任務完成後知道如何付款。,收款方式可多選 • 若選「其他支付App」則至少需 1 筆 • 轉帳資訊允許不填個資，可填「私訊說」 • 按「結算」一定先跳 D06 確認,TopAppBar • 進度指示(2/2) • 收款方式(多選 Chips/Checkbox) • 轉帳資訊(自由輸入 TextField，可寫私訊說) • 其他支付App(可新增多筆) • BottomBar(結算),,38,現金/轉帳各一筆；其他支付App 可新增多筆；可同時選多種方法,結算流程：收款資訊（Payment Info）,Screen
+S32_Settlement.Result,回任務 → S13（mode=settled）,任務名 • 結算幣別 • 結算摘要(總額/每人應付應收) • 分享連結/邀請訊息（同任務分享邏輯）,無,D06 點「確定結算」後進入,點「回任務」→ S13（mode=settled）,S16_Settlement.Success,再次分享 • 回任務,顯示結算完成的成功狀態與分享入口。完成後導回任務主畫面（結算後唯讀）。,此頁僅顯示結果與分享，不提供任何編輯 • 可從此頁再次分享 • 返回後任務進入唯讀（mode=settled）,TopAppBar(可關閉) • Success Illustration/Animation • 結算摘要 • Share Section(再次分享) • PrimaryButton(回任務),outcome=success,40,Share universal link（系統 share sheet）,結算成功,Screen
+D06_Settlement.Confirm,取消/關閉 → 回到 S31_Settlement.PaymentInfo,任務名 • 結算幣別 • 費用總額/預收總額/應收應付總額(摘要) • 每人應付/應收列表(簡版),無,S31_Settlement.PaymentInfo 點「結算」後必定彈出,點「確定結算」→ S32,D06_TaskClose.ConfirmAfterSettlement,取消 • 確定結算,在正式完成結算前的最後確認。提醒結算後資料將進入唯讀且無法再新增/刪除紀錄，並要求隊長確認繼續。,此 Dialog 為結算必經 • 取消不更動任何資料 • 確定後進入結算處理並鎖定任務（不可新增/刪除/編輯紀錄）,Dialog • Title • Summary(結算金額/每人應付/應收) • WarningText(結算後不可編輯) • SecondaryButton(取消) • PrimaryButton(確定結算),,39,文字內容與未結算關閉不同,結算確認（Dialog）,Dialog
+B05_PaymentInfo.Edit,取消/關閉 → 關閉 BottomSheet 回上一層,目前已設定的收款方式 • 轉帳資訊 • 其他支付App清單,收款方式(可多選) • 轉帳資訊(自由輸入) • 其他支付App清單(可新增多筆),S13（mode=settled/closed）→ 點「編輯收款資訊」• 或 B06→ 點「編輯」,點「保存」→ 關閉 BottomSheet，回到呼叫端並更新顯示,B05_Payout.Edit,取消 • 保存,隊長在任務已完成（結算/強制結束）後，補充或更新收款方式與收款資訊，方便成員依指示付款。,收款方式可多選 • 若選「其他支付App」則至少需 1 筆 • 轉帳資訊允許不填個資，可填「私訊說」 • 保存後即時反映在 B06 詳情與任務主畫面,ModalBottomSheet • Header(Title/Close) • 收款方式(多選) • 轉帳資訊(TextField) • 其他支付App(可新增多筆) • BottomActions(取消/保存),,42,編輯 p38 輸入的資料,編輯收款資訊（BottomSheet）,BottomSheet
+B06_PaymentInfo.Detail,關閉 → 關閉 BottomSheet 回上一層,收款方式(多選結果) • 轉帳資訊文字 • 其他支付App清單（每筆名稱/帳號/備註）,無,S13（mode=settled/closed）→ 點「查看收款資訊」• 或 S32→ 點「回任務」後從主畫面進入,關閉 → 回到呼叫端,B06_Payout.Detail,複製 • 編輯（隊長）,顯示隊長設定的收款方式與收款資訊，提供一鍵複製，讓成員快速付款。,可點不同 Copy 入口：依點選項目複製「整段轉帳資訊」或「特定支付資訊」• 若無任何收款資訊則顯示 empty 狀態並提供隊長編輯入口（成員僅顯示說明）,ModalBottomSheet • Header(Title/Close) • 收款方式區塊 • 轉帳資訊區塊(可複製) • 其他支付App清單(可複製) • Footer(依角色顯示編輯/關閉),data=present,43,可複製,收款資訊詳情（BottomSheet）,BottomSheet
+S13_Task.Dashboard,回任務 → S13（mode=closed）,任務名 • 完成提示文案（強制結束/唯讀/30天下載）,無,D06（若此流程使用）或 強制結束流程完成後自動進入,自動或點「回任務」→ S13（mode=closed）,S18_TaskClose.Finalize,回任務,強制結束任務後的完成過場。顯示關閉動畫/提示，完成後導回任務主畫面（強制結束後唯讀）。,此頁為過場，無任何編輯 • 返回後任務進入唯讀（mode=closed） • 動畫與已結算完成不同（state=finalize_animation）,FullScreen • Illustration/Animation(強制結束完成) • StatusText • PrimaryButton(回任務),"• mode=settled
+• state=cleared",45,用途：顯示完成/動畫後導回任務清單（Q35=C）,強制結束：完成（動畫）,Screen
+S50_Onboarding.Consent,無,"・動畫
+・服務條款 / 隱私政策連結",無,"S00, App啟動後,Deeplink",S51,S00_Onboarding.Consent,・Primary: 開始,同意條款,"・動畫：鐵公雞穿盔甲的帥氣樣子，但盔甲面罩會突然掉下來，鐵公雞再把盔甲面罩往上推
+已同意者啟動不會看到；同意後進暱稱設定","animation,RichText,AppTopBar,PrimaryButton",,1,,首次使用：同意條款（TOS）,Screen
+D01_MemberRole.Intro,無,"・動畫
+・換個動物(文字按鈕)
+・說明這次任務中代表的農場動物",無,S13,S13,D01_MemberRole.Intro,・Primary: 任務畫面,成員加入任務後，在使用前可以在這邊看到這一次任務的農場動物頭像，最多可以更換一次農場動物頭像,"・動畫：農場動物頭像
+・換個動物
+- 只能換一次，之後文字按鈕就灰階(disabled)","TextButton,animation,BodyText,PrimaryButton",,9,"・這個Dialog只會在第一次進入任務主畫面時看到
+・農場動物頭像之後就無法再更改",動物頭像介紹,Dialog
+B01_BalanceRule.Edit,下滑/點遮罩關閉→回S13_Task.Dashboard（不變更）•點「確認」關閉→回S13_Task.Dashboard（套用選擇）,目前選中的餘額處理方式（ruleId）•規則選項清單（3選1：餘額輪盤/平均分攤/我要請客；依語系顯示中/日/英）•各規則的 info 入口•（條件）可請客的成員清單（memberId/name/avatar）,單選規則（3選1）•（條件）單選請客對象 memberId（僅在選「我要請客」時）•確認,從S13點選「餘額輪盤」進入,點「確認」→套用餘額處理方式並回S13•點遮罩/下滑→不保存直接回S13,B01_BalanceRule.Select,確認•選擇規則•查看規則說明（info）,讓使用者在結算前選擇「餘額處理方式」，並在必要時指定請客對象。,單選規則（必選）•規則選項固定只有三個（餘額輪盤/平均分攤/我要請客），文字依語系顯示（中/日/英）•點任一規則右側 info → 開啟 Dialog，且「只顯示該規則」的說明（單一）•當規則=「我要請客」時：在同一 BottomSheet 內展開「請客對象」單選列表（不是新頁）•未選請客對象時「確認」disabled•切換離開「我要請客」時：收合/隱藏請客對象列表並清空 memberId,BottomSheet•Title（餘額處理）•RadioList（規則3選1）•InfoIconButton（各規則）•ExpandableSection（我要請客）•MemberRadioList（單選）•PrimaryButton（確認）,data=members,13,B02 不存在：Owner 選擇為 B01 內的展開狀態（選「我要請客」時顯示）•info Dialog 為單一規則說明,餘額處理方式選擇：選擇成員,BottomSheet
+B02_SplitExpense.Edit,關閉/返回→回S15（不保存變更）,母金額(amount)•目前remainderAmount•（新建/編輯）splitItem：名稱/金額/splitSetting摘要/備註,splitItem名稱•splitItem金額（預設0，可立即輸入）•（跳B03）splitItem成員與分攤方式•備註,S15點「細項分拆」（新增：從remainderAmount切出）•S15點SplitItem卡（編輯）,保存→回S15並更新SplitItemList與remainderAmount•取消→回S15不變•點「成員與分攤方式」→B03並返回B02（B03保存後仍需在B02按保存才回S15）,B02_Split.Editor,保存•返回/關閉•成員與分攤方式（開B03）,建立或編輯一筆分拆細項（splitItem），其金額從RemainderCard的remainderAmount中扣除。,新增時：splitItem的分攤方式/成員預設承接「當下RemainderCard分攤設定」；若使用者未做任何變更則為平均分攤+全員•使用者可在B02內改splitItem分攤設定（透過B03）•splitItem的分攤設定修改只影響該splitItem，不回寫到RemainderCard，且不影響下一次新增splitItem的預設•防呆：splitItem金額必須>0且<remainderAmount（不可等於/大於）•兩段保存：B03保存僅回到B02；需再按B02保存才回到S15•保存後回S15：新增/更新splitItem並使remainderAmount減少•splititem不可再分拆（但可編輯）,BottomSheetHeader•SplitItemForm（名稱/金額）•OpenB03Row（splitSetting摘要+箭頭）•NoteField•PrimaryButtonRow,,22,定案：兩段保存（B03→B02→S15）。,細項分拆編輯,BottomSheet
+S14_Task.Settings,返回上一頁（任務內更多/設定入口）,任務名稱•開始日期•結束日期•結算幣別•餘額處理方式(目前選項)•成員設定入口•歷史紀錄入口•結束任務入口(隊長限定),任務名稱(文字)•開始日期(DatePicker)•結束日期(DatePicker)•結算幣別(幣別Picker)•餘額處理方式(單選),任務主畫面/更多/任務設定,返回上一頁•成員設定→S55•歷史紀錄→S53•結束任務→S12•餘額處理方式→B01•結算幣別變更確認→D09,S10_TaskSettings.Main,儲存(若有變更)•成員設定•歷史紀錄,提供任務層級設定的集中入口，允許使用者更新任務名稱/日期/結算幣別/餘額處理方式，並進入成員設定、歷史紀錄與結束任務流程。,開始/結束日期選擇器同行為S12_TaskCreate.Edit•結束日期不得早於開始日期•結算幣別可變更：變更前顯示D09確認•結算幣別變更會觸發既有資料以新幣別重算顯示(匯率重新抓API)•餘額處理方式點選後開啟B01_BalanceRule.Select•儲存按鈕：有變更才可點•結束任務入口僅隊長可見(成員隱藏),TopBar(返回/標題)•設定表單(任務名/日期/結算幣別/餘額處理方式)•導覽列表(成員設定/歷史紀錄/結束任務)•底部操作區(儲存),mode=captain | members,30,成員也可修改：結算幣別/餘額處理方式/其他欄位；差異僅在『結束任務』入口顯示與否。,任務設定,Screen
+S12_TaskClose.Notice,返回到 S13,任務名稱•結束任務說明文(不可再新增/編輯)•資料保留30天提示,無,S13 > 結束任務(僅隊長可見),點結束任務 > D08•確認結束後 > S13(close mode / wireframe33)•取消則留在本頁,S12_TaskClose.Info,結束任務•返回,在結束任務前提供明確告知與確認入口，避免誤操作並提示資料保留政策。,僅隊長可進入•按下結束任務必須二次確認(D08)•結束後任務進入close mode(唯讀僅可下載)•資料保留30天後刪除,TopBar(返回+標題)•InfoText(說明/30天提示)•BottomPrimaryButton(結束任務),,32,,結束任務,Screen
+S53_TaskSettings.Members,返回到 S13,成員頭像•顯示名稱(未連結可編輯/已連結顯示固定)•權重x(比例分攤用)•刪除可用狀態,成員顯示名稱(僅未連結)•權重x(固定集合0/0.5/1/1.5/2),S14 > 成員設定,點路線邀請 > Share Sheet(邀請連結)•返回到 S14,S13_Member.Settings,新增成員(+)•刪除成員(垃圾桶)•路線邀請,管理任務成員名單，並設定比例分攤的預設權重，提供邀請入口。,成員皆可編輯•已連結成員名稱不可修改(顯示成員自訂名)•權重為固定集合0/0.5/1/1.5/2(用- / +切換)•新增成員按+自動追加下一位(例如B後新增C)•新成員預設權重=1•刪除僅允許該成員預收=0且費用=0且結算額=0•任務成員上限15,TopBar(返回+標題)•MemberList(Row:頭像+名稱欄位+WeightStepper(-/+) +DeleteIcon)•InlineAddButton(+)•BottomPrimaryButton(路線邀請),,34,權重x為比例分攤預設值；刪除按鈕依條件可用/灰階。,成員設定,Screen
+D05_DateJump.NoResult,返回 S13_Task.Dashboard（日期跳轉BottomSheet）,搜尋日期,無,S13→ 日期跳轉（Date Jump）→ 查無結果,返回 S13（維持原狀） 或 前往 S15（費用）,D05_DateJump.NoResult,返回•紀錄,當指定日期沒有任何紀錄時，提示使用者並提供立即新增的入口。,日期查無紀錄時才顯示•選擇【紀錄】→ 進入 S15（費用），日期預填=搜尋日期,DialogTitle/Message/ActionsRow,,18,（此dialog由日期跳轉流程觸發）,查詢結果（無紀錄）,Dialog
+D07_TaskSettled.Notice,關閉 → 回到 S13（mode=settled / mode=closed）,提示文案（唯讀/30天下載）,無,隊員首次進入 S13（mode=settled / mode=closed）時自動彈出（once-only per member per task）,關閉 → 回到 S13,D07_TaskDone.Confirm,了解,隊員首次進入已完成（已結算/已關閉）的任務時，提示任務已進入唯讀且資料只保留 30 天可下載。,隊員限定（隊長不顯示） • once-only per member per task • 適用 mode=settled 與 mode=closed,Dialog • Title • Body • PrimaryButton,,46,所有成員都標記已處理後，第一次回 Dashboard 看到；同意一次後不再出現；之後才到,任務完成提醒（隊員）,Dialog
+S30_Settlement.Confirm,返回上一頁（強制結束流程：回到 S13（mode=close））,結算幣別•預收總額(負數)•費用總額•應收(或應付)總額•餘額罐金額•餘額處理方式•成員清單(頭像/名稱/應付或應收金額/狀態標示),合併操作(開啟 B04)•下一步,S13（結算預覽/中間狀態）→ 下一步（進入本頁）,下一步→ S31•取消→ 返回上一頁,S14_Settlement.Step1Preview,下一步•取消•合併(於成員卡),在結算前提供總覽並允許將多位成員的支付/退款行為合併到代表成員，以降低實際付款筆數。,成員皆可看到且操作(依流程權限)•應付卡/應收卡/結算額=0 皆需顯示且可被合併•可同時存在多組合併•代表成員不可再被別人合併(全域禁止)•合併不改變各自應付/應收總額，只集中支付/退款行為到代表成員,TopBar•摘要區(數字)•餘額資訊區•成員卡列表•BottomBar(取消/下一步),data=merged,37,強制結束流程的一部分；金額顯示皆以結算幣別為主。,最終確認 STEP1（概覽確認）,Screen
+S30_Settlement.Confirm,返回上一頁（強制結束流程：回到 S13（mode=close））,結算幣別•預收總額(負數)•費用總額•應收(或應付)總額•餘額罐金額•餘額處理方式•成員清單(頭像/名稱/應付或應收金額/狀態標示：已合併/代表成員/被合併人數)•合併組金額(結算幣別),合併操作(可編輯/取消)•下一步,B04（按『合併』完成後回到本頁）,下一步→ S31•取消→ 返回上一頁,S14_Settlement.Step1Preview,下一步•取消•編輯合併(於代表成員卡),顯示已套用合併規則後的結算總覽，並允許編輯合併狀態後再進入下一步。,合併後：原卡片不再單獨出現，顯示為一張『代表成員卡』並在卡片最上方顯示合併後總金額、下方列出被合併成員•應收卡/結算額=0 也可被合併•可同時存在多組合併•代表成員不可再被別人合併(全域禁止),TopBar•摘要區(數字)•餘額資訊區•成員卡列表(含合併群組呈現)•BottomBar(取消/下一步),data=present,35,合併群組顯示：上方=合併金額；下方=成員明細；可從代表成員卡進入 B04 編輯。,最終確認 STEP1（概覽確認）,Screen
