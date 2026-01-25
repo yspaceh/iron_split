@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/daily_statistics_helper.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
 import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 
 /// Page Key: S13_Task_Dashboard (Wireframe 16)
 class S13TaskDashboardPage extends StatefulWidget {
@@ -268,19 +270,13 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                           final date = sortedDates[index];
                           final dayRecords = groupedRecords[date]!;
 
-                          // 計算當日小計
-                          double dayTotal = 0;
-                          for (var doc in dayRecords) {
-                            final d = doc.data() as Map<String, dynamic>;
-                            final type = d['type'] ?? 'expense';
-                            final amt =
-                                (d['amount'] as num?)?.toDouble() ?? 0.0;
-                            if (type == 'expense') {
-                              dayTotal += amt;
-                            } else if (type == 'income') {
-                              dayTotal -= amt;
-                            }
-                          }
+                          // Calculate Daily Expense using Helper
+                          final dayModels = dayRecords
+                              .map((doc) => RecordModel.fromFirestore(doc))
+                              .toList();
+                          final dayTotal =
+                              DailyStatisticsHelper.calculateDailyExpense(
+                                  dayModels);
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,6 +290,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                                   taskId: widget.taskId,
                                   doc: doc,
                                   prepayBalance: prepayBalance,
+                                  baseCurrency: currency,
                                 );
                               }),
                             ],
@@ -351,7 +348,8 @@ class _DailyHeader extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant)),
             ],
           ),
-          Text("Exp: $total $currency",
+          Text(
+              "${t.S13_Task_Dashboard.daily_expense_label}: $currency ${CurrencyOption.formatAmount(total, currency)}",
               style: theme.textTheme.labelMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ],
@@ -364,11 +362,13 @@ class _RecordItem extends StatelessWidget {
   final String taskId;
   final DocumentSnapshot doc;
   final double prepayBalance;
+  final String baseCurrency;
 
   const _RecordItem({
     required this.taskId,
     required this.doc,
     required this.prepayBalance,
+    required this.baseCurrency,
   });
 
   @override
@@ -379,8 +379,9 @@ class _RecordItem extends StatelessWidget {
     final isIncome = type == 'income';
     final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
     final currency = data['currency'] ?? '';
+    final exchangeRate = (data['exchangeRate'] as num?)?.toDouble() ?? 1.0;
     final title = data['title'] ?? 'Untitled';
-    final date = (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
+    // date unused for display now
     final categoryId = data['categoryId'] as String?; // New
 
     // Icon logic: Income -> Savings, Expense -> Category Icon
@@ -391,8 +392,11 @@ class _RecordItem extends StatelessWidget {
     // Color logic: Income -> Green, Expense -> Red (Error)
     final color = isIncome ? const Color(0xFF4CAF50) : theme.colorScheme.error;
 
+    final numberFormat = NumberFormat("#,##0.##");
     // Text logic: Income -> "- $currency$amount", Expense -> "$currency$amount"
-    final amountText = isIncome ? "- $currency$amount" : "$currency$amount";
+    final amountText = isIncome
+        ? "- $currency ${numberFormat.format(amount)}"
+        : "$currency ${numberFormat.format(amount)}";
 
     return Dismissible(
       key: Key(doc.id),
@@ -445,13 +449,27 @@ class _RecordItem extends StatelessWidget {
           ),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(DateFormat('HH:mm').format(date)),
-        trailing: Text(
-          amountText,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
+        // Remove Subtitle (Time)
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              amountText,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (currency != baseCurrency)
+              Text(
+                "≈ $baseCurrency ${CurrencyOption.formatAmount(amount * exchangeRate, baseCurrency)}",
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                ),
+              ),
+          ],
         ),
       ),
     );

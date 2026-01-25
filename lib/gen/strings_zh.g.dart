@@ -329,6 +329,9 @@ class TranslationsS13TaskDashboardZh {
 
 	/// zh: '準備前往記帳頁面...'
 	String get nav_to_record => '準備前往記帳頁面...';
+
+	/// zh: '支出'
+	String get daily_expense_label => '支出';
 }
 
 // Path: S15_Record_Edit
@@ -981,6 +984,7 @@ extension on Translations {
 			'S13_Task_Dashboard.rule_member' => '指定',
 			'S13_Task_Dashboard.settlement_button' => '結算',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
+			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',

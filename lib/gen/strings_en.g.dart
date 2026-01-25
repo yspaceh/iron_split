@@ -188,6 +188,7 @@ class _TranslationsS13TaskDashboardEn implements TranslationsS13TaskDashboardZh 
 	@override String get rule_member => 'Member';
 	@override String get settlement_button => 'Settlement';
 	@override String get nav_to_record => 'Navigating to record page...';
+	@override String get daily_expense_label => 'Exp';
 }
 
 // Path: S15_Record_Edit
@@ -574,6 +575,7 @@ extension on TranslationsEn {
 			'S13_Task_Dashboard.rule_member' => 'Member',
 			'S13_Task_Dashboard.settlement_button' => 'Settlement',
 			'S13_Task_Dashboard.nav_to_record' => 'Navigating to record page...',
+			'S13_Task_Dashboard.daily_expense_label' => 'Exp',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',

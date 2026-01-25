@@ -80,7 +80,8 @@
     "rule_order": "順番",
     "rule_member": "指定",
     "settlement_button": "精算",
-    "nav_to_record": "記録ページへ移動します..."
+    "nav_to_record": "記録ページへ移動します...",
+    "daily_expense_label": "支出"
   },
   "S15_Record_Edit": {
     "title_create": "記録を追加",

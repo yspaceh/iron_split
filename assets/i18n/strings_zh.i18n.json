@@ -80,7 +80,8 @@
     "rule_order": "順序",
     "rule_member": "指定",
     "settlement_button": "結算",
-    "nav_to_record": "準備前往記帳頁面..."
+    "nav_to_record": "準備前往記帳頁面...",
+    "daily_expense_label": "支出"
   },
   "S15_Record_Edit": {
     "title_create": "記一筆",

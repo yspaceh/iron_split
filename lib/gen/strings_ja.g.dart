@@ -188,6 +188,7 @@ class _TranslationsS13TaskDashboardJa implements TranslationsS13TaskDashboardZh 
 	@override String get rule_member => '指定';
 	@override String get settlement_button => '精算';
 	@override String get nav_to_record => '記録ページへ移動します...';
+	@override String get daily_expense_label => '支出';
 }
 
 // Path: S15_Record_Edit
@@ -570,6 +571,7 @@ extension on TranslationsJa {
 			'S13_Task_Dashboard.rule_member' => '指定',
 			'S13_Task_Dashboard.settlement_button' => '精算',
 			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',
+			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',

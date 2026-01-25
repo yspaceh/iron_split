@@ -80,7 +80,8 @@
     "rule_order": "Order",
     "rule_member": "Member",
     "settlement_button": "Settlement",
-    "nav_to_record": "Navigating to record page..."
+    "nav_to_record": "Navigating to record page...",
+    "daily_expense_label": "Exp"
   },
   "S15_Record_Edit": {
     "title_create": "Add Expense",

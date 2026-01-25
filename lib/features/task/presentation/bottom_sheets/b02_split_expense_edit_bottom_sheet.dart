@@ -13,6 +13,9 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
   final String currencySymbol;
   final String parentTitle;
   final double availableAmount;
+  final double exchangeRate;
+  final String baseCurrencySymbol;
+  final String baseCurrencyCode;
 
   const B02SplitExpenseEditBottomSheet({
     super.key,
@@ -22,6 +25,9 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
     required this.currencySymbol,
     required this.parentTitle,
     required this.availableAmount,
+    this.exchangeRate = 1.0,
+    required this.baseCurrencySymbol,
+    required this.baseCurrencyCode,
   });
 
   @override
@@ -77,6 +83,9 @@ class _B02SplitExpenseEditBottomSheetState
         initialSplitMethod: _splitMethod,
         initialMemberIds: _splitMemberIds,
         initialDetails: _splitDetails ?? {},
+        exchangeRate: widget.exchangeRate,
+        baseCurrencySymbol: widget.baseCurrencySymbol,
+        baseCurrencyCode: widget.baseCurrencyCode,
       ),
     );
 

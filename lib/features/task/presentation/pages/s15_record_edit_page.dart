@@ -18,6 +18,7 @@ import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_
 import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/services/calculation_service.dart';
 
 // ==========================================
 // 2. 主頁面 Widget
@@ -248,6 +249,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             orElse: () => kSupportedCurrencies.first)
         .symbol;
 
+    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
+    final baseSymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == widget.baseCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
@@ -259,6 +266,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         initialSplitMethod: _baseSplitMethod,
         initialMemberIds: _baseMemberIds,
         initialDetails: _baseRawDetails,
+        exchangeRate: rate,
+        baseCurrencySymbol: baseSymbol,
+        baseCurrencyCode: widget.baseCurrency,
       ),
     );
 
@@ -288,6 +298,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             orElse: () => kSupportedCurrencies.first)
         .symbol;
 
+    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
+    final baseSymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == widget.baseCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
     final result = await showModalBottomSheet<RecordItem>(
       context: context,
       isScrollControlled: true,
@@ -298,6 +314,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         currencySymbol: currencySymbol,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount,
+        exchangeRate: rate,
+        baseCurrencySymbol: baseSymbol,
+        baseCurrencyCode: widget.baseCurrency,
       ),
     );
 
@@ -319,6 +338,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             orElse: () => kSupportedCurrencies.first)
         .symbol;
 
+    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
+    final baseSymbol = kSupportedCurrencies
+        .firstWhere((e) => e.code == widget.baseCurrency,
+            orElse: () => kSupportedCurrencies.first)
+        .symbol;
+
     final result = await showModalBottomSheet<RecordItem>(
       context: context,
       isScrollControlled: true,
@@ -329,6 +354,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         currencySymbol: currencySymbol,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount + item.amount,
+        exchangeRate: rate,
+        baseCurrencySymbol: baseSymbol,
+        baseCurrencyCode: widget.baseCurrency,
       ),
     );
 
@@ -1043,7 +1071,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                   .symbol;
               final baseCode = widget.baseCurrency;
               final formattedAmount =
-                  NumberFormat("#,##0.##").format(converted);
+                  CurrencyOption.formatAmount(converted, baseCode);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
@@ -1083,7 +1111,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                 ),
               )),
         ],
-        if (_baseRemainingAmount > 0 || _items.isEmpty)
+        if (_baseRemainingAmount > 0 || _items.isEmpty) ...[
           _buildExpenseCard(
             amount: _baseRemainingAmount,
             methodLabel: _baseSplitMethod,
@@ -1095,6 +1123,33 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             showSplitAction: _baseRemainingAmount > 0,
             onSplitTap: _handleCreateSubItem,
           ),
+          if (_baseSplitMethod == 'even' && _baseMemberIds.isNotEmpty)
+            Builder(
+              builder: (context) {
+                final rate =
+                    double.tryParse(_exchangeRateController.text) ?? 1.0;
+                final baseTotal = CalculationService.calculateBaseTotal(
+                    _baseRemainingAmount, rate);
+                final split = CalculationService.calculateEvenSplit(
+                    baseTotal, _baseMemberIds.length);
+                if (split.remainder > 0) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Text(
+                      t.S13_Task_Dashboard.label_remainder(
+                          amount:
+                              "${widget.baseCurrency} ${CurrencyOption.formatAmount(split.remainder, widget.baseCurrency)}"),
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: theme.colorScheme.outline),
+                      textAlign: TextAlign.end,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+        ],
         const SizedBox(height: 16),
         TextFormField(
           controller: _memoController,
@@ -1228,7 +1283,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                   .symbol;
               final baseCode = widget.baseCurrency;
               final formattedAmount =
-                  NumberFormat("#,##0.##").format(converted);
+                  CurrencyOption.formatAmount(converted, baseCode);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),

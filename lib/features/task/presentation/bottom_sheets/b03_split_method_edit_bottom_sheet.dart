@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -10,6 +11,9 @@ class B03SplitMethodEditBottomSheet extends StatefulWidget {
   final String currencySymbol;
   final List<Map<String, dynamic>> allMembers; // 任務所有成員
   final Map<String, double> defaultMemberWeights; // 任務預設權重
+  final double exchangeRate;
+  final String baseCurrencySymbol;
+  final String baseCurrencyCode;
 
   // 初始狀態
   final String initialSplitMethod;
@@ -22,6 +26,9 @@ class B03SplitMethodEditBottomSheet extends StatefulWidget {
     required this.currencySymbol,
     required this.allMembers,
     required this.defaultMemberWeights,
+    this.exchangeRate = 1.0,
+    required this.baseCurrencySymbol,
+    required this.baseCurrencyCode,
     required this.initialSplitMethod,
     required this.initialMemberIds,
     required this.initialDetails,
@@ -73,6 +80,90 @@ class _B03SplitMethodEditBottomSheetState
   }
 
   // --- Logic Helpers ---
+
+  /// 計算分攤結果
+  /// Returns:
+  /// - sourceAmounts: 每個成員應付的 Source Currency 金額 (用於 UI 顯示)
+  /// - baseAmounts: 每個成員應付的 Base Currency 金額 (用於 UI 顯示近似值)
+  /// - baseRemainder: 轉換為 Base Currency 後的餘額 (用於存入 Buffer)
+  ({
+    Map<String, double> sourceAmounts,
+    Map<String, double> baseAmounts,
+    double baseRemainder
+  }) _calculateSplit() {
+    final Map<String, double> sourceAmounts = {};
+    final Map<String, double> baseAmounts = {};
+
+    // 1. 計算 Base Total (Anchor)
+    final baseTotal =
+        (widget.totalAmount * widget.exchangeRate).roundToDouble();
+
+    // 2. 計算 Total Weight
+    double totalWeight = 0.0;
+
+    if (_splitMethod == 'even') {
+      totalWeight = _selectedMemberIds.length.toDouble();
+    } else if (_splitMethod == 'percent') {
+      // Fix Math: 只計算選中成員的權重
+      for (var id in _selectedMemberIds) {
+        totalWeight += _details[id] ?? 0.0;
+      }
+    } else if (_splitMethod == 'exact') {
+      // Exact 模式不使用權重
+      totalWeight = 1.0;
+    }
+
+    // 3. 計算每個人的 Base Share 和 Source Share
+    double allocatedBase = 0.0;
+
+    if (_splitMethod == 'exact') {
+      // Exact 模式：直接使用使用者輸入的 Source Amount
+      for (var id in _selectedMemberIds) {
+        final sourceAmount = _details[id] ?? 0.0;
+        sourceAmounts[id] = sourceAmount;
+
+        // 轉換為 Base Share (近似)
+        final baseShare = (sourceAmount * widget.exchangeRate).floorToDouble();
+        baseAmounts[id] = baseShare;
+        allocatedBase += baseShare;
+      }
+    } else {
+      // Even & Percent 模式
+      if (totalWeight > 0) {
+        for (var id in _selectedMemberIds) {
+          double weight = 0.0;
+          if (_splitMethod == 'even') {
+            weight = 1.0;
+          } else {
+            weight = _details[id] ?? 0.0;
+          }
+
+          final ratio = weight / totalWeight;
+
+          // A. Source Currency Calculation (For Display)
+          // 保留兩位小數
+          final sourceShare =
+              (widget.totalAmount * ratio * 100).floorToDouble() / 100;
+          sourceAmounts[id] = sourceShare;
+
+          // B. Base Currency Calculation (For Buffer)
+          // Project Bible 5.8: Floor(BaseTotal * Weight / TotalWeight)
+          final baseShare = (baseTotal * ratio).floorToDouble();
+          baseAmounts[id] = baseShare;
+          allocatedBase += baseShare;
+        }
+      }
+    }
+
+    // 4. 計算 Base Remainder
+    final baseRemainder = baseTotal - allocatedBase;
+
+    return (
+      sourceAmounts: sourceAmounts,
+      baseAmounts: baseAmounts,
+      baseRemainder: baseRemainder
+    );
+  }
 
   void _switchMethod(String newMethod) {
     setState(() {
@@ -213,6 +304,14 @@ class _B03SplitMethodEditBottomSheetState
                       style: theme.textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
+                    if (widget.exchangeRate != 1.0)
+                      Text(
+                        "≈ ${widget.baseCurrencySymbol} ${CurrencyOption.formatAmount(widget.totalAmount * widget.exchangeRate, widget.baseCurrencyCode)}",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                   ],
                 ),
                 InkWell(
@@ -262,13 +361,12 @@ class _B03SplitMethodEditBottomSheetState
   // --- Method 1: Even (平分) ---
   Widget _buildEvenSection() {
     final theme = Theme.of(context);
-    final count = _selectedMemberIds.length;
-    final perPerson = count > 0 ? (widget.totalAmount / count) : 0.0;
 
-    // 金額無條件捨去到小數第二位 (避免顯示金額總和超過總額)
-    final displayAmount = (perPerson * 100).floor() / 100;
-    // 計算餘額 (Leftover Pot)
-    final remainder = widget.totalAmount - (displayAmount * count);
+    // 使用新的計算邏輯
+    final result = _calculateSplit();
+    final sourceAmounts = result.sourceAmounts;
+    final baseAmounts = result.baseAmounts;
+    final baseRemainder = result.baseRemainder;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,37 +381,70 @@ class _B03SplitMethodEditBottomSheetState
         ...widget.allMembers.map((m) {
           final id = m['id'];
           final isSelected = _selectedMemberIds.contains(id);
+          final amount = sourceAmounts[id] ?? 0.0;
+          final baseAmount = baseAmounts[id] ?? 0.0;
 
-          return CheckboxListTile(
-            value: isSelected,
-            contentPadding: EdgeInsets.zero,
-            activeColor: theme.colorScheme.primary,
-            title: Row(
-              children: [
-                CommonAvatar(avatarId: m['avatar'], name: m['name']),
-                const SizedBox(width: 12),
-                Expanded(child: Text(m['name'])),
-                if (isSelected)
-                  Text(
-                    "${widget.currencySymbol} ${NumberFormat("#,##0.##").format(displayAmount)}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-              ],
-            ),
-            onChanged: (val) {
+          return InkWell(
+            onTap: () {
               setState(() {
-                if (val == true) {
-                  _selectedMemberIds.add(id);
-                } else {
+                if (isSelected) {
                   _selectedMemberIds.remove(id);
+                } else {
+                  _selectedMemberIds.add(id);
                 }
               });
             },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: isSelected,
+                    onChanged: (val) {
+                      setState(() {
+                        if (val == true) {
+                          _selectedMemberIds.add(id);
+                        } else {
+                          _selectedMemberIds.remove(id);
+                        }
+                      });
+                    },
+                  ),
+                  CommonAvatar(avatarId: m['avatar'], name: m['name']),
+                  const SizedBox(width: 8),
+                  Expanded(
+                      child: Text(m['name'], overflow: TextOverflow.ellipsis)),
+                  if (isSelected)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${widget.currencySymbol} ${NumberFormat("#,##0.##").format(amount)}",
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        if (widget.exchangeRate != 1.0)
+                          Builder(builder: (context) {
+                            final baseOption = kSupportedCurrencies.firstWhere(
+                                (e) => e.code == widget.baseCurrencyCode,
+                                orElse: () => kSupportedCurrencies.first);
+                            return Text(
+                              "≈ ${baseOption.code} ${baseOption.symbol} ${baseOption.format(baseAmount)}",
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey, fontSize: 10),
+                            );
+                          }),
+                      ],
+                    ),
+                  const SizedBox(width: 12),
+                ],
+              ),
+            ),
           );
         }),
 
-        // 餘額提示 (Leftover Pot)
-        if (remainder > 0.001)
+        // 餘額提示 (Base Currency Remainder)
+        if (baseRemainder > 0)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Container(
@@ -330,7 +461,8 @@ class _B03SplitMethodEditBottomSheetState
                   Expanded(
                     child: Text(
                       t.B03_SplitMethod_Edit.msg_leftover_pot(
-                          amount: NumberFormat("#,##0.##").format(remainder)),
+                          amount:
+                              "$baseRemainder ${widget.baseCurrencySymbol}"),
                       style: TextStyle(
                           fontSize: 12,
                           color: theme.colorScheme.onTertiaryContainer),
@@ -345,27 +477,14 @@ class _B03SplitMethodEditBottomSheetState
   }
 
   // --- Method 2: Percent (比例) ---
-  // --- Method 2: Percent (比例) ---
   Widget _buildPercentSection() {
     final theme = Theme.of(context);
-    final totalWeight = _details.values.fold(0.0, (prev, curr) => prev + curr);
 
-    // 計算總分配金額 (無條件捨去，避免超發)
-    // 算法： sum( floor(總額 * (權重/總權重) * 100) / 100 )
-    double totalAllocated = 0.0;
-    for (var m in widget.allMembers) {
-      final id = m['id'];
-      final weight = _details[id] ?? 0.0;
-      if (weight > 0 && totalWeight > 0) {
-        final percent = weight / totalWeight;
-        // 這裡採用與 S30 結算一致的邏輯：先算出每個人應付多少，累加後看剩多少
-        final amount = (widget.totalAmount * percent * 100).floor() / 100;
-        totalAllocated += amount;
-      }
-    }
-
-    // 計算餘額 (Leftover Pot)
-    final remainder = widget.totalAmount - totalAllocated;
+    // 使用新的計算邏輯
+    final result = _calculateSplit();
+    final sourceAmounts = result.sourceAmounts;
+    final baseAmounts = result.baseAmounts;
+    final baseRemainder = result.baseRemainder;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,11 +499,8 @@ class _B03SplitMethodEditBottomSheetState
           final id = m['id'];
           final weight = _details[id] ?? 0.0;
           final isSelected = weight > 0;
-
-          final percent = totalWeight > 0 ? (weight / totalWeight) : 0.0;
-
-          // 計算顯示金額 (floor to 2 decimal)
-          final amount = (widget.totalAmount * percent * 100).floor() / 100;
+          final amount = sourceAmounts[id] ?? 0.0;
+          final baseAmount = baseAmounts[id] ?? 0.0;
 
           // 顯示 1x, 1.5x
           // 移除 .0 結尾 (1.0x -> 1x)
@@ -414,64 +530,100 @@ class _B03SplitMethodEditBottomSheetState
                   },
                 ),
                 CommonAvatar(avatarId: m['avatar'], name: m['name']),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Text(m['name'], overflow: TextOverflow.ellipsis)),
+
+                // Amounts Column
+                if (isSelected)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(m['name']),
-                      if (isSelected)
-                        // ✅ 修正 UI：下方顯示金額
-                        Text(
-                          "${widget.currencySymbol}${NumberFormat("#,##0.##").format(amount)}", // 顯示實際金額
-                          style: TextStyle(
-                              fontSize: 12, color: theme.colorScheme.outline),
-                        ),
+                      Text(
+                        "${widget.currencySymbol} ${NumberFormat("#,##0.##").format(amount)}",
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      if (widget.exchangeRate != 1.0)
+                        Builder(builder: (context) {
+                          final baseOption = kSupportedCurrencies.firstWhere(
+                              (e) => e.code == widget.baseCurrencyCode,
+                              orElse: () => kSupportedCurrencies.first);
+                          return Text(
+                            "≈ ${baseOption.code} ${baseOption.symbol} ${baseOption.format(baseAmount)}",
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey, fontSize: 10),
+                          );
+                        }),
                     ],
                   ),
-                ),
+
+                const SizedBox(width: 12),
 
                 // 調整權重區
                 if (isSelected) ...[
-                  IconButton.filledTonal(
-                    icon: const Icon(Icons.remove, size: 16),
-                    constraints:
-                        const BoxConstraints(minWidth: 32, minHeight: 32),
-                    onPressed: () {
-                      setState(() {
-                        double newW = (weight - 0.5);
-                        if (newW <= 0) {
-                          _details[id] = 0.0;
-                          _selectedMemberIds.remove(id);
-                        } else {
-                          _details[id] = newW;
-                        }
-                      });
-                    },
-                  ),
-
-                  // 顯示倍數 (1x)
-                  SizedBox(
-                    width: 50,
-                    child: Text(
-                      weightStr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "${weight.toStringAsFixed(1)}x",
+                        style: theme.textTheme.labelLarge?.copyWith(
                           color: theme.colorScheme.primary,
-                          fontSize: 16),
-                    ),
-                  ),
-
-                  IconButton.filledTonal(
-                    icon: const Icon(Icons.add, size: 16),
-                    constraints:
-                        const BoxConstraints(minWidth: 32, minHeight: 32),
-                    onPressed: () {
-                      setState(() {
-                        _details[id] = weight + 0.5;
-                      });
-                    },
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: theme.colorScheme.outlineVariant),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  double newW = (weight - 0.5).clamp(0.0, 2.0);
+                                  if (newW == 0.0) {
+                                    _details[id] = 0.0;
+                                    _selectedMemberIds.remove(id);
+                                  } else {
+                                    _details[id] = newW;
+                                  }
+                                });
+                              },
+                              borderRadius: const BorderRadius.horizontal(
+                                  left: Radius.circular(8)),
+                              child: const Padding(
+                                padding: EdgeInsets.all(7.0),
+                                child: Icon(Icons.remove, size: 18),
+                              ),
+                            ),
+                            Container(
+                              width: 1,
+                              height: 16,
+                              color: theme.colorScheme.outlineVariant,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  double newW = (weight + 0.5).clamp(0.0, 2.0);
+                                  _details[id] = newW;
+                                });
+                              },
+                              borderRadius: const BorderRadius.horizontal(
+                                  right: Radius.circular(8)),
+                              child: const Padding(
+                                padding: EdgeInsets.all(7.0),
+                                child: Icon(Icons.add, size: 18),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ] else ...[
                   // 未勾選時顯示 0x
@@ -485,9 +637,8 @@ class _B03SplitMethodEditBottomSheetState
           );
         }),
 
-        // 餘額提示 (Leftover Pot)
-        // 即使是比例分攤，也可能除不盡，需要顯示
-        if (remainder > 0.001)
+        // 餘額提示 (Base Currency Remainder)
+        if (baseRemainder > 0)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Container(
@@ -504,7 +655,8 @@ class _B03SplitMethodEditBottomSheetState
                   Expanded(
                     child: Text(
                       t.B03_SplitMethod_Edit.msg_leftover_pot(
-                          amount: NumberFormat("#,##0.##").format(remainder)),
+                          amount:
+                              "$baseRemainder ${widget.baseCurrencySymbol}"),
                       style: TextStyle(
                           fontSize: 12,
                           color: theme.colorScheme.onTertiaryContainer),
@@ -589,33 +741,60 @@ class _B03SplitMethodEditBottomSheetState
                 Expanded(child: Text(m['name'])),
                 SizedBox(
                   width: 100,
-                  child: TextFormField(
-                    controller: _amountControllers[id],
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    textAlign: TextAlign.end,
-                    decoration: InputDecoration(
-                      hintText: '0',
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8),
-                      border: const OutlineInputBorder(),
-                      enabled: isSelected, // 沒勾選不能打字
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        final amount = double.tryParse(val) ?? 0.0;
-                        if (amount > 0) {
-                          _details[id] = amount;
-                          if (!_selectedMemberIds.contains(id)) {
-                            _selectedMemberIds.add(id);
-                          }
-                        } else {
-                          _details.remove(id);
-                          // 金額為0時這裡選擇不自動取消勾選，讓使用者自己決定
-                        }
-                      });
-                    },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextFormField(
+                        controller: _amountControllers[id],
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        textAlign: TextAlign.end,
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          prefixText: widget.currencySymbol,
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
+                          border: const OutlineInputBorder(),
+                          enabled: isSelected, // 沒勾選不能打字
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            final amount = double.tryParse(val) ?? 0.0;
+                            if (amount > 0) {
+                              _details[id] = amount;
+                              if (!_selectedMemberIds.contains(id)) {
+                                _selectedMemberIds.add(id);
+                              }
+                            } else {
+                              _details.remove(id);
+                            }
+                          });
+                        },
+                      ),
+                      if (isSelected && widget.exchangeRate != 1.0)
+                        Builder(
+                          builder: (context) {
+                            final val = double.tryParse(
+                                    _amountControllers[id]?.text ?? '') ??
+                                0.0;
+                            final converted = val * widget.exchangeRate;
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                "≈ ${widget.baseCurrencySymbol} ${CurrencyOption.formatAmount(converted, widget.baseCurrencyCode)}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                              ),
+                            );
+                          },
+                        ),
+                    ],
                   ),
                 ),
               ],
