@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 // ✅ 新增：引入幣別常數
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -135,7 +135,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   Future<void> _handleClose() async {
     final shouldLeave = await showDialog<bool>(
       context: context,
-      builder: (context) => const D04TaskCreateNoticeDialog(),
+      builder: (context) => const D04CommonUnsavedConfirmDialog(),
     );
 
     if (shouldLeave == true && mounted) {

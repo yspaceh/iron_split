@@ -39,6 +39,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	// Translations
 	@override late final _TranslationsCategoryJa category = _TranslationsCategoryJa._(_root);
 	@override late final _TranslationsCommonJa common = _TranslationsCommonJa._(_root);
+	@override late final _TranslationsDialogJa dialog = _TranslationsDialogJa._(_root);
 	@override late final _TranslationsS50OnboardingConsentJa S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJa._(_root);
 	@override late final _TranslationsS51OnboardingNameJa S51_Onboarding_Name = _TranslationsS51OnboardingNameJa._(_root);
 	@override late final _TranslationsS10HomeTaskListJa S10_Home_TaskList = _TranslationsS10HomeTaskListJa._(_root);
@@ -50,7 +51,6 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD01MemberRoleIntroJa D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJa._(_root);
 	@override late final _TranslationsD02InviteResultJa D02_Invite_Result = _TranslationsD02InviteResultJa._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJa D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJa._(_root);
-	@override late final _TranslationsD04TaskCreateNoticeJa D04_TaskCreate_Notice = _TranslationsD04TaskCreateNoticeJa._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJa D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJa._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJa B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJa._(_root);
 	@override late final _TranslationsB03SplitMethodEditJa B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJa._(_root);
@@ -92,6 +92,19 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get close => '閉じる';
 	@override String get me => '自分';
 	@override String get required => '必須';
+	@override String get discard => '破棄';
+	@override String get keep_editing => '編集を続ける';
+}
+
+// Path: dialog
+class _TranslationsDialogJa implements TranslationsDialogZh {
+	_TranslationsDialogJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get unsaved_changes_title => '未保存の変更';
+	@override String get unsaved_changes_content => '変更内容は保存されません。';
 }
 
 // Path: S50_Onboarding_Consent
@@ -323,19 +336,6 @@ class _TranslationsD03TaskCreateConfirmJa implements TranslationsD03TaskCreateCo
 	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}';
 }
 
-// Path: D04_TaskCreate_Notice
-class _TranslationsD04TaskCreateNoticeJa implements TranslationsD04TaskCreateNoticeZh {
-	_TranslationsD04TaskCreateNoticeJa._(this._root);
-
-	final TranslationsJa _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '設定は完了していません';
-	@override String get content => '現在の設定は破棄されます。本当に移動しますか？';
-	@override String get action_leave => 'ホームへ戻る';
-	@override String get action_stay => '編集を続ける';
-}
-
 // Path: D10_RecordDelete_Confirm
 class _TranslationsD10RecordDeleteConfirmJa implements TranslationsD10RecordDeleteConfirmZh {
 	_TranslationsD10RecordDeleteConfirmJa._(this._root);
@@ -520,6 +520,10 @@ extension on TranslationsJa {
 			'common.close' => '閉じる',
 			'common.me' => '自分',
 			'common.required' => '必須',
+			'common.discard' => '破棄',
+			'common.keep_editing' => '編集を続ける',
+			'dialog.unsaved_changes_title' => '未保存の変更',
+			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
 			'S50_Onboarding_Consent.content_prefix' => '開始することで、',
 			'S50_Onboarding_Consent.terms_link' => '利用規約',
@@ -650,10 +654,6 @@ extension on TranslationsJa {
 			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Iron Split タスク招待',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}',
-			'D04_TaskCreate_Notice.title' => '設定は完了していません',
-			'D04_TaskCreate_Notice.content' => '現在の設定は破棄されます。本当に移動しますか？',
-			'D04_TaskCreate_Notice.action_leave' => 'ホームへ戻る',
-			'D04_TaskCreate_Notice.action_stay' => '編集を続ける',
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
 			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',

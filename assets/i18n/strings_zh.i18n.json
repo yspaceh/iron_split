@@ -19,7 +19,13 @@
     "edit": "編輯",
     "close": "關閉",
     "me": "我",
-    "required": "必填"
+    "required": "必填",
+    "discard": "放棄變更",
+    "keep_editing": "繼續編輯"
+  },
+  "dialog": {
+    "unsaved_changes_title": "尚未儲存",
+    "unsaved_changes_content": "變更將不會被儲存，確定要離開嗎？"
   },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
@@ -172,12 +178,6 @@
     "preparing_share": "準備邀請函...",
     "share_subject": "邀請加入 Iron Split 任務",
     "share_message": "快來加入我的 Iron Split 任務「{taskName}」！\n邀請碼：{code}\n連結：{link}"
-  },
-  "D04_TaskCreate_Notice": {
-    "title": "任務設定尚未完成",
-    "content": "目前的設定會被取消，真的要離開？",
-    "action_leave": "回首頁",
-    "action_stay": "繼續編輯"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "刪除紀錄？",

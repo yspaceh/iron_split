@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +9,8 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d04_task_create_notice_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
@@ -59,6 +60,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   bool _isRateLoading = false;
   bool _isSaving = false;
   bool _isLoadingTaskData = true;
+  double _lastKnownAmount = 0.0;
 
   // 記錄類型切換 (0: 支出, 1: 預收
   int _recordTypeIndex = 0;
@@ -120,9 +122,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       _loadCurrencyPreference();
     }
 
+    _lastKnownAmount = double.tryParse(_amountController.text) ?? 0.0;
+
     _fetchTaskData();
 
-    _amountController.addListener(() => setState(() {}));
+    _amountController.addListener(_onAmountChanged);
   }
 
   Future<void> _fetchTaskData() async {
@@ -187,7 +191,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       // 4. 初始化分攤成員 (確保畫面更新)
       if (mounted) {
         setState(() {
-          _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
+          // FIX: Only reset default members in Create Mode.
+          // In Edit Mode, keep the IDs loaded from widget.record in initState.
+          if (widget.record == null) {
+            _baseMemberIds =
+                _taskMembers.map((m) => m['id'] as String).toList();
+          }
         });
       }
     } catch (e) {
@@ -218,6 +227,27 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     _titleController.dispose();
     _memoController.dispose();
     super.dispose();
+  }
+
+  void _onAmountChanged() {
+    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
+    if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
+      setState(() {
+        _lastKnownAmount = currentAmount;
+        // RESET LOGIC
+        if (_items.isNotEmpty || _baseSplitMethod != 'even') {
+          _items.clear();
+          _baseSplitMethod = 'even';
+          if (_taskMembers.isNotEmpty) {
+            _baseMemberIds =
+                _taskMembers.map((m) => m['id'] as String).toList();
+          }
+          _baseRawDetails.clear();
+        }
+      });
+    } else {
+      setState(() {});
+    }
   }
 
   double get _totalAmount => double.tryParse(_amountController.text) ?? 0.0;
@@ -344,7 +374,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             orElse: () => kSupportedCurrencies.first)
         .symbol;
 
-    final result = await showModalBottomSheet<RecordItem>(
+    final result = await showModalBottomSheet<dynamic>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B02SplitExpenseEditBottomSheet(
@@ -360,7 +390,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       ),
     );
 
-    if (result != null && mounted) {
+    if (result == 'DELETE' && mounted) {
+      setState(() {
+        _items.removeWhere((element) => element.id == item.id);
+      });
+    } else if (result is RecordItem && mounted) {
       setState(() {
         final index = _items.indexWhere((element) => element.id == item.id);
         if (index != -1) {
@@ -624,15 +658,95 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     }
   }
 
-  Future<void> _handleClose() async {
-    if (_titleController.text.isNotEmpty || _amountController.text.isNotEmpty) {
-      final shouldLeave = await showDialog<bool>(
-        context: context,
-        builder: (context) => const D04TaskCreateNoticeDialog(),
-      );
-      if (shouldLeave != true) return;
+  bool _hasUnsavedChanges() {
+    // 1. Create Mode
+    if (widget.record == null) {
+      final amount = double.tryParse(_amountController.text) ?? 0.0;
+      // For Income, title is not input, so only check amount
+      if (_recordTypeIndex == 1) return amount > 0;
+      return amount > 0 || _titleController.text.trim().isNotEmpty;
     }
-    if (mounted) context.pop();
+
+    // 2. Edit Mode
+    final r = widget.record!;
+
+    // Check Type Change
+    final currentType = _recordTypeIndex == 0 ? 'expense' : 'income';
+    if (currentType != r.type) return true;
+
+    // --- Common Fields (Checked for BOTH) ---
+    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
+    if ((currentAmount - r.amount).abs() > 0.001) return true;
+
+    if (!_isSameDay(_selectedDate, r.date)) return true;
+    if (_selectedCurrency != r.currency) return true;
+
+    final currentRate = double.tryParse(_exchangeRateController.text) ?? 1.0;
+    if ((currentRate - (r.exchangeRate ?? 1.0)).abs() > 0.000001) return true;
+
+    if (_memoController.text != (r.memo ?? '')) return true;
+
+    // Split Logic (Income ALSO has split members)
+    if (_baseSplitMethod != r.splitMethod) return true;
+    if (!listEquals(_baseMemberIds, r.splitMemberIds)) return true;
+    // Optional: Deep compare splitDetails if needed
+    // if (!mapEquals(_baseRawDetails, r.splitDetails)) return true;
+
+    // --- Mode Specific Checks ---
+    if (_recordTypeIndex == 0) {
+      // [Expense Only]
+      if (_titleController.text != r.title) return true;
+      if (_selectedCategoryId != r.categoryId) return true;
+
+      // Payer
+      if (_payerType != r.payerType) return true;
+      if (_payerId != (r.payerId ?? '')) return true;
+
+      // Items (Sub-items)
+      if (_items.length != r.items.length) return true;
+      for (int i = 0; i < _items.length; i++) {
+        if (!_isItemEqual(_items[i], r.items[i])) return true;
+      }
+    } else {
+      // [Income Only]
+      // Skip Title (auto-generated)
+      // Skip Category (hidden)
+      // Skip Payer (always none)
+      // Skip Items (always empty)
+    }
+
+    return false;
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  bool _isItemEqual(RecordItem a, RecordItem b) {
+    if (a.id != b.id)
+      return false; // Usually ID matches if editing same item, but here comparing by index
+    if (a.name != b.name) return false;
+    if (a.amount != b.amount) return false;
+    if (a.splitMethod != b.splitMethod) return false;
+    if (!listEquals(a.splitMemberIds, b.splitMemberIds)) return false;
+    // Note: splitDetails comparison if needed, but usually derived from method/ids or manual
+    return true;
+  }
+
+  Future<void> _handleClose() async {
+    if (!_hasUnsavedChanges()) {
+      if (mounted) context.pop();
+      return;
+    }
+
+    final shouldDiscard = await showDialog<bool>(
+      context: context,
+      builder: (context) => const D04CommonUnsavedConfirmDialog(),
+    );
+
+    if (shouldDiscard == true && mounted) {
+      context.pop();
+    }
   }
 
   Future<void> _handleDelete() async {

@@ -39,6 +39,7 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	// Translations
 	@override late final _TranslationsCategoryEn category = _TranslationsCategoryEn._(_root);
 	@override late final _TranslationsCommonEn common = _TranslationsCommonEn._(_root);
+	@override late final _TranslationsDialogEn dialog = _TranslationsDialogEn._(_root);
 	@override late final _TranslationsS50OnboardingConsentEn S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEn._(_root);
 	@override late final _TranslationsS51OnboardingNameEn S51_Onboarding_Name = _TranslationsS51OnboardingNameEn._(_root);
 	@override late final _TranslationsS10HomeTaskListEn S10_Home_TaskList = _TranslationsS10HomeTaskListEn._(_root);
@@ -50,7 +51,6 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD01MemberRoleIntroEn D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEn._(_root);
 	@override late final _TranslationsD02InviteResultEn D02_Invite_Result = _TranslationsD02InviteResultEn._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEn D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEn._(_root);
-	@override late final _TranslationsD04TaskCreateNoticeEn D04_TaskCreate_Notice = _TranslationsD04TaskCreateNoticeEn._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEn D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEn._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEn B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEn._(_root);
 	@override late final _TranslationsB03SplitMethodEditEn B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEn._(_root);
@@ -92,6 +92,19 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 	@override String get close => 'Close';
 	@override String get me => 'Me';
 	@override String get required => 'Required';
+	@override String get discard => 'Discard';
+	@override String get keep_editing => 'Keep Editing';
+}
+
+// Path: dialog
+class _TranslationsDialogEn implements TranslationsDialogZh {
+	_TranslationsDialogEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get unsaved_changes_title => 'Unsaved Changes?';
+	@override String get unsaved_changes_content => 'Changes you made will not be saved.';
 }
 
 // Path: S50_Onboarding_Consent
@@ -323,19 +336,6 @@ class _TranslationsD03TaskCreateConfirmEn implements TranslationsD03TaskCreateCo
 	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}';
 }
 
-// Path: D04_TaskCreate_Notice
-class _TranslationsD04TaskCreateNoticeEn implements TranslationsD04TaskCreateNoticeZh {
-	_TranslationsD04TaskCreateNoticeEn._(this._root);
-
-	final TranslationsEn _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Unsaved Changes';
-	@override String get content => 'Current settings will be discarded. Are you sure you want to leave?';
-	@override String get action_leave => 'Discard';
-	@override String get action_stay => 'Keep Editing';
-}
-
 // Path: D10_RecordDelete_Confirm
 class _TranslationsD10RecordDeleteConfirmEn implements TranslationsD10RecordDeleteConfirmZh {
 	_TranslationsD10RecordDeleteConfirmEn._(this._root);
@@ -524,6 +524,10 @@ extension on TranslationsEn {
 			'common.close' => 'Close',
 			'common.me' => 'Me',
 			'common.required' => 'Required',
+			'common.discard' => 'Discard',
+			'common.keep_editing' => 'Keep Editing',
+			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
+			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
 			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',
@@ -654,10 +658,6 @@ extension on TranslationsEn {
 			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Join Iron Split Task',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
-			'D04_TaskCreate_Notice.title' => 'Unsaved Changes',
-			'D04_TaskCreate_Notice.content' => 'Current settings will be discarded. Are you sure you want to leave?',
-			'D04_TaskCreate_Notice.action_leave' => 'Discard',
-			'D04_TaskCreate_Notice.action_stay' => 'Keep Editing',
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
 			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',

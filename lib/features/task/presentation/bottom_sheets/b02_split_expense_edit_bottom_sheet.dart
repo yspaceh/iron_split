@@ -142,12 +142,22 @@ class _B02SplitExpenseEditBottomSheetState
                 Text(t.B02_SplitExpense_Edit.title,
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold)),
-                TextButton(
-                  onPressed: _onSave,
-                  child: Text(t.B02_SplitExpense_Edit.action_save,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.primary)),
+                Row(
+                  children: [
+                    if (widget.item != null)
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        color: colorScheme.error,
+                        onPressed: () => context.pop('DELETE'),
+                      ),
+                    TextButton(
+                      onPressed: _onSave,
+                      child: Text(t.B02_SplitExpense_Edit.action_save,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.primary)),
+                    ),
+                  ],
                 ),
               ],
             ),

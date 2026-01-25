@@ -19,7 +19,13 @@
     "edit": "Edit",
     "close": "Close",
     "me": "Me",
-    "required": "Required"
+    "required": "Required",
+    "discard": "Discard",
+    "keep_editing": "Keep Editing"
+  },
+  "dialog": {
+    "unsaved_changes_title": "Unsaved Changes?",
+    "unsaved_changes_content": "Changes you made will not be saved."
   },
   "S50_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
@@ -173,12 +179,6 @@
     "preparing_share": "Preparing invite...",
     "share_subject": "Join Iron Split Task",
     "share_message": "Join my Iron Split task \"{taskName}\"!\nCode: {code}\nLink: {link}"
-  },
-  "D04_TaskCreate_Notice": {
-    "title": "Unsaved Changes",
-    "content": "Current settings will be discarded. Are you sure you want to leave?",
-    "action_leave": "Discard",
-    "action_stay": "Keep Editing"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "Delete Record?",

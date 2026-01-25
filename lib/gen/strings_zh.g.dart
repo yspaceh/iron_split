@@ -42,6 +42,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	// Translations
 	late final TranslationsCategoryZh category = TranslationsCategoryZh._(_root);
 	late final TranslationsCommonZh common = TranslationsCommonZh._(_root);
+	late final TranslationsDialogZh dialog = TranslationsDialogZh._(_root);
 	late final TranslationsS50OnboardingConsentZh S50_Onboarding_Consent = TranslationsS50OnboardingConsentZh._(_root);
 	late final TranslationsS51OnboardingNameZh S51_Onboarding_Name = TranslationsS51OnboardingNameZh._(_root);
 	late final TranslationsS10HomeTaskListZh S10_Home_TaskList = TranslationsS10HomeTaskListZh._(_root);
@@ -53,7 +54,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD01MemberRoleIntroZh D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZh._(_root);
 	late final TranslationsD02InviteResultZh D02_Invite_Result = TranslationsD02InviteResultZh._(_root);
 	late final TranslationsD03TaskCreateConfirmZh D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZh._(_root);
-	late final TranslationsD04TaskCreateNoticeZh D04_TaskCreate_Notice = TranslationsD04TaskCreateNoticeZh._(_root);
 	late final TranslationsD10RecordDeleteConfirmZh D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZh._(_root);
 	late final TranslationsB02SplitExpenseEditZh B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZh._(_root);
 	late final TranslationsB03SplitMethodEditZh B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZh._(_root);
@@ -131,6 +131,27 @@ class TranslationsCommonZh {
 
 	/// zh: '必填'
 	String get required => '必填';
+
+	/// zh: '放棄變更'
+	String get discard => '放棄變更';
+
+	/// zh: '繼續編輯'
+	String get keep_editing => '繼續編輯';
+}
+
+// Path: dialog
+class TranslationsDialogZh {
+	TranslationsDialogZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '尚未儲存'
+	String get unsaved_changes_title => '尚未儲存';
+
+	/// zh: '變更將不會被儲存，確定要離開嗎？'
+	String get unsaved_changes_content => '變更將不會被儲存，確定要離開嗎？';
 }
 
 // Path: S50_Onboarding_Consent
@@ -622,27 +643,6 @@ class TranslationsD03TaskCreateConfirmZh {
 	String share_message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}';
 }
 
-// Path: D04_TaskCreate_Notice
-class TranslationsD04TaskCreateNoticeZh {
-	TranslationsD04TaskCreateNoticeZh._(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh: '任務設定尚未完成'
-	String get title => '任務設定尚未完成';
-
-	/// zh: '目前的設定會被取消，真的要離開？'
-	String get content => '目前的設定會被取消，真的要離開？';
-
-	/// zh: '回首頁'
-	String get action_leave => '回首頁';
-
-	/// zh: '繼續編輯'
-	String get action_stay => '繼續編輯';
-}
-
 // Path: D10_RecordDelete_Confirm
 class TranslationsD10RecordDeleteConfirmZh {
 	TranslationsD10RecordDeleteConfirmZh._(this._root);
@@ -933,6 +933,10 @@ extension on Translations {
 			'common.close' => '關閉',
 			'common.me' => '我',
 			'common.required' => '必填',
+			'common.discard' => '放棄變更',
+			'common.keep_editing' => '繼續編輯',
+			'dialog.unsaved_changes_title' => '尚未儲存',
+			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.terms_link' => '服務條款',
@@ -1063,10 +1067,6 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
 			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
-			'D04_TaskCreate_Notice.title' => '任務設定尚未完成',
-			'D04_TaskCreate_Notice.content' => '目前的設定會被取消，真的要離開？',
-			'D04_TaskCreate_Notice.action_leave' => '回首頁',
-			'D04_TaskCreate_Notice.action_stay' => '繼續編輯',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',

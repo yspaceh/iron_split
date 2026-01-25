@@ -19,7 +19,13 @@
     "edit": "編集",
     "close": "閉じる",
     "me": "自分",
-    "required": "必須"
+    "required": "必須",
+    "discard": "破棄",
+    "keep_editing": "編集を続ける"
+  },
+  "dialog": {
+    "unsaved_changes_title": "未保存の変更",
+    "unsaved_changes_content": "変更内容は保存されません。"
   },
   "S50_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
@@ -172,12 +178,6 @@
     "preparing_share": "招待を準備中...",
     "share_subject": "Iron Split タスク招待",
     "share_message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\nリンク：{link}"
-  },
-  "D04_TaskCreate_Notice": {
-    "title": "設定は完了していません",
-    "content": "現在の設定は破棄されます。本当に移動しますか？",
-    "action_leave": "ホームへ戻る",
-    "action_stay": "編集を続ける"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "記録を削除？",
