@@ -30,6 +30,7 @@ class S15RecordEditPage extends StatefulWidget {
   final RecordModel? record;
   final String baseCurrency;
   final double prepayBalance; // NEW
+  final DateTime? initialDate;
 
   const S15RecordEditPage({
     super.key,
@@ -38,6 +39,7 @@ class S15RecordEditPage extends StatefulWidget {
     this.record,
     this.baseCurrency = 'TWD',
     this.prepayBalance = 0.0, // NEW
+    this.initialDate,
   });
 
   @override
@@ -89,7 +91,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+    _selectedDate = widget.initialDate ?? DateTime.now();
     _selectedCurrency = widget.baseCurrency;
 
     if (widget.record != null) {

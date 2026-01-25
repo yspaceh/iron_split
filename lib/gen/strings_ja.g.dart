@@ -51,6 +51,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD01MemberRoleIntroJa D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJa._(_root);
 	@override late final _TranslationsD02InviteResultJa D02_Invite_Result = _TranslationsD02InviteResultJa._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJa D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJa._(_root);
+	@override late final _TranslationsD05DateJumpNoResultJa D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJa._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJa D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJa._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJa B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJa._(_root);
 	@override late final _TranslationsB03SplitMethodEditJa B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJa._(_root);
@@ -95,6 +96,7 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get discard => '破棄';
 	@override String get keep_editing => '編集を続ける';
 	@override String get member_prefix => 'メンバー';
+	@override String get no_record => '記録なし';
 }
 
 // Path: dialog
@@ -337,7 +339,19 @@ class _TranslationsD03TaskCreateConfirmJa implements TranslationsD03TaskCreateCo
 	@override String get creating_task => '作成中...';
 	@override String get preparing_share => '招待を準備中...';
 	@override String get share_subject => 'Iron Split タスク招待';
-	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}';
+	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}';
+}
+
+// Path: D05_DateJump_NoResult
+class _TranslationsD05DateJumpNoResultJa implements TranslationsD05DateJumpNoResultZh {
+	_TranslationsD05DateJumpNoResultJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '記録なし';
+	@override String get content => 'この日付の記録は見つかりませんでした。';
+	@override String get action_ok => 'OK';
 }
 
 // Path: D10_RecordDelete_Confirm
@@ -527,6 +541,7 @@ extension on TranslationsJa {
 			'common.discard' => '破棄',
 			'common.keep_editing' => '編集を続ける',
 			'common.member_prefix' => 'メンバー',
+			'common.no_record' => '記録なし',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
@@ -661,7 +676,10 @@ extension on TranslationsJa {
 			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
 			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Iron Split タスク招待',
-			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\nリンク：${link}',
+			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
+			'D05_DateJump_NoResult.title' => '記録なし',
+			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。',
+			'D05_DateJump_NoResult.action_ok' => 'OK',
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
 			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',

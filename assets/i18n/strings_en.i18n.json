@@ -22,7 +22,8 @@
     "required": "Required",
     "discard": "Discard",
     "keep_editing": "Keep Editing",
-    "member_prefix": "Member"
+    "member_prefix": "Member",
+    "no_record": "No Record"
   },
   "dialog": {
     "unsaved_changes_title": "Unsaved Changes?",
@@ -183,6 +184,11 @@
     "preparing_share": "Preparing invite...",
     "share_subject": "Join Iron Split Task",
     "share_message": "Join my Iron Split task \"{taskName}\"!\nCode: {code}\nLink: {link}"
+  },
+  "D05_DateJump_NoResult": {
+    "title": "No Record",
+    "content": "No records found for this date.",
+    "action_ok": "OK"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "Delete Record?",

@@ -54,6 +54,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD01MemberRoleIntroZh D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZh._(_root);
 	late final TranslationsD02InviteResultZh D02_Invite_Result = TranslationsD02InviteResultZh._(_root);
 	late final TranslationsD03TaskCreateConfirmZh D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZh._(_root);
+	late final TranslationsD05DateJumpNoResultZh D05_DateJump_NoResult = TranslationsD05DateJumpNoResultZh._(_root);
 	late final TranslationsD10RecordDeleteConfirmZh D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZh._(_root);
 	late final TranslationsB02SplitExpenseEditZh B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZh._(_root);
 	late final TranslationsB03SplitMethodEditZh B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZh._(_root);
@@ -140,6 +141,9 @@ class TranslationsCommonZh {
 
 	/// zh: '成員'
 	String get member_prefix => '成員';
+
+	/// zh: '無紀錄'
+	String get no_record => '無紀錄';
 }
 
 // Path: dialog
@@ -655,6 +659,24 @@ class TranslationsD03TaskCreateConfirmZh {
 	String share_message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}';
 }
 
+// Path: D05_DateJump_NoResult
+class TranslationsD05DateJumpNoResultZh {
+	TranslationsD05DateJumpNoResultZh._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh: '無紀錄'
+	String get title => '無紀錄';
+
+	/// zh: '找不到此日期的紀錄。'
+	String get content => '找不到此日期的紀錄。';
+
+	/// zh: '確定'
+	String get action_ok => '確定';
+}
+
 // Path: D10_RecordDelete_Confirm
 class TranslationsD10RecordDeleteConfirmZh {
 	TranslationsD10RecordDeleteConfirmZh._(this._root);
@@ -948,6 +970,7 @@ extension on Translations {
 			'common.discard' => '放棄變更',
 			'common.keep_editing' => '繼續編輯',
 			'common.member_prefix' => '成員',
+			'common.no_record' => '無紀錄',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
@@ -1083,6 +1106,9 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
 			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
+			'D05_DateJump_NoResult.title' => '無紀錄',
+			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄。',
+			'D05_DateJump_NoResult.action_ok' => '確定',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',

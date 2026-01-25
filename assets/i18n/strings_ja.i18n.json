@@ -22,7 +22,8 @@
     "required": "必須",
     "discard": "破棄",
     "keep_editing": "編集を続ける",
-    "member_prefix": "メンバー"
+    "member_prefix": "メンバー",
+    "no_record": "記録なし"
   },
   "dialog": {
     "unsaved_changes_title": "未保存の変更",
@@ -181,7 +182,12 @@
     "creating_task": "作成中...",
     "preparing_share": "招待を準備中...",
     "share_subject": "Iron Split タスク招待",
-    "share_message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\nリンク：{link}"
+    "share_message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\n連結：{link}"
+  },
+  "D05_DateJump_NoResult": {
+    "title": "記録なし",
+    "content": "この日付の記録は見つかりませんでした。",
+    "action_ok": "OK"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "記録を削除？",

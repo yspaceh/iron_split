@@ -51,6 +51,7 @@ class TranslationsEn with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsD01MemberRoleIntroEn D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEn._(_root);
 	@override late final _TranslationsD02InviteResultEn D02_Invite_Result = _TranslationsD02InviteResultEn._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEn D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEn._(_root);
+	@override late final _TranslationsD05DateJumpNoResultEn D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEn._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEn D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEn._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEn B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEn._(_root);
 	@override late final _TranslationsB03SplitMethodEditEn B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEn._(_root);
@@ -95,6 +96,7 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 	@override String get discard => 'Discard';
 	@override String get keep_editing => 'Keep Editing';
 	@override String get member_prefix => 'Member';
+	@override String get no_record => 'No Record';
 }
 
 // Path: dialog
@@ -340,6 +342,18 @@ class _TranslationsD03TaskCreateConfirmEn implements TranslationsD03TaskCreateCo
 	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}';
 }
 
+// Path: D05_DateJump_NoResult
+class _TranslationsD05DateJumpNoResultEn implements TranslationsD05DateJumpNoResultZh {
+	_TranslationsD05DateJumpNoResultEn._(this._root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'No Record';
+	@override String get content => 'No records found for this date.';
+	@override String get action_ok => 'OK';
+}
+
 // Path: D10_RecordDelete_Confirm
 class _TranslationsD10RecordDeleteConfirmEn implements TranslationsD10RecordDeleteConfirmZh {
 	_TranslationsD10RecordDeleteConfirmEn._(this._root);
@@ -531,6 +545,7 @@ extension on TranslationsEn {
 			'common.discard' => 'Discard',
 			'common.keep_editing' => 'Keep Editing',
 			'common.member_prefix' => 'Member',
+			'common.no_record' => 'No Record',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
@@ -666,6 +681,9 @@ extension on TranslationsEn {
 			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
 			'D03_TaskCreate_Confirm.share_subject' => 'Join Iron Split Task',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
+			'D05_DateJump_NoResult.title' => 'No Record',
+			'D05_DateJump_NoResult.content' => 'No records found for this date.',
+			'D05_DateJump_NoResult.action_ok' => 'OK',
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
 			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',

@@ -142,12 +142,14 @@ class AppRouter {
               final double prepayBalance =
                   (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
               final record = extra['record'] as RecordModel?;
+              final date = extra['date'] as DateTime?;
 
               return S15RecordEditPage(
                 taskId: taskId,
                 recordId: recordId,
                 record: record,
                 prepayBalance: prepayBalance,
+                initialDate: date,
               );
             },
           ),
