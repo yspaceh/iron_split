@@ -670,11 +670,14 @@ class TranslationsD05DateJumpNoResultZh {
 	/// zh: '無紀錄'
 	String get title => '無紀錄';
 
-	/// zh: '找不到此日期的紀錄。'
-	String get content => '找不到此日期的紀錄。';
+	/// zh: '找不到此日期的紀錄，要新增一筆嗎？'
+	String get content => '找不到此日期的紀錄，要新增一筆嗎？';
 
-	/// zh: '確定'
-	String get action_ok => '確定';
+	/// zh: '返回'
+	String get action_cancel => '返回';
+
+	/// zh: '新增紀錄'
+	String get action_add => '新增紀錄';
 }
 
 // Path: D10_RecordDelete_Confirm
@@ -1107,8 +1110,9 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'D05_DateJump_NoResult.title' => '無紀錄',
-			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄。',
-			'D05_DateJump_NoResult.action_ok' => '確定',
+			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄，要新增一筆嗎？',
+			'D05_DateJump_NoResult.action_cancel' => '返回',
+			'D05_DateJump_NoResult.action_add' => '新增紀錄',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',

@@ -186,8 +186,9 @@
   },
   "D05_DateJump_NoResult": {
     "title": "記録なし",
-    "content": "この日付の記録は見つかりませんでした。",
-    "action_ok": "OK"
+    "content": "この日付の記録は見つかりませんでした。追加しますか？",
+    "action_cancel": "戻る",
+    "action_add": "記録を追加"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "記録を削除？",

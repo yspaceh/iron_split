@@ -25,11 +25,21 @@ class S13TaskDashboardPage extends StatefulWidget {
 }
 
 class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
+  List<QueryDocumentSnapshot> _allRecords = [];
+  bool _hasPerformedInitialScroll = false;
   int _segmentIndex = 0; // 0: Group, 1: Personal
   bool _isShowingIntro = false;
   final Map<String, GlobalKey> _dateKeys = {};
   DateTime _selectedDateInStrip = DateTime.now();
   final ScrollController _scrollController = ScrollController();
+
+  // Keys to measure actual height of sticky headers
+  final GlobalKey _dashboardHeaderKey = GlobalKey();
+  final GlobalKey _dateStripKey = GlobalKey();
+
+  // Keep the constants ONLY for the Delegates' maxExtent (UI Layout)
+  final double _dashboardHeaderHeight = 260.0;
+  final double _dateStripHeight = 72.0;
   Map<String, dynamic>? _taskData;
 
   String _mapRuleName(String? rule) {
@@ -74,77 +84,94 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
         days + 1, (index) => end.subtract(Duration(days: index)));
   }
 
-  void _handleDateJump(BuildContext context, DateTime targetDate) {
-    if (_taskData == null) return;
+  Future<void> _handleDateJump(DateTime date) async {
+    final dTarget = DateTime(date.year, date.month, date.day);
 
-    // 1. Parse Dates
-    DateTime start = DateTime.now();
-    DateTime end = DateTime.now();
-
-    if (_taskData!['startDate'] is Timestamp) {
-      start = (_taskData!['startDate'] as Timestamp).toDate();
-    } else if (_taskData!['startDate'] is String) {
-      start = DateTime.tryParse(_taskData!['startDate']) ?? start;
-    }
-
-    if (_taskData!['endDate'] is Timestamp) {
-      end = (_taskData!['endDate'] as Timestamp).toDate();
-    } else if (_taskData!['endDate'] is String) {
-      end = DateTime.tryParse(_taskData!['endDate']) ?? end;
-    }
-
-    // Normalize (strip time)
-    final normalize = (DateTime d) => DateTime(d.year, d.month, d.day);
-    final dTarget = normalize(targetDate);
-    final dStart = normalize(start);
-    final dEnd = normalize(end);
-
-    // 2. Logic Check: Range
-    // Note: Since list is Descending (End -> Start), range check is same.
-    final isWithinRange = !dTarget.isBefore(dStart) && !dTarget.isAfter(dEnd);
-
-    if (!isWithinRange) {
-      showDialog(
-        context: context,
-        builder: (ctx) => const D05DateJumpNoResultDialog(),
-      );
+    final startTs = _taskData?['startDate'] as Timestamp?;
+    final endTs = _taskData?['endDate'] as Timestamp?;
+    if (startTs == null || endTs == null) {
+      debugPrint('❌ Missing Start/End Date');
       return;
     }
 
-    // Update strip selection
-    setState(() {
-      _selectedDateInStrip = dTarget;
-    });
+    final dStart = startTs.toDate().toLocal();
+    final dEnd = endTs.toDate().toLocal();
+    final dEndNormalized = DateTime(dEnd.year, dEnd.month, dEnd.day);
 
-    // 3. Scroll Logic
-    final dateStr = DateFormat('yyyyMMdd').format(dTarget);
-    final key = _dateKeys[dateStr];
+    final key = _dateKeys[DateFormat('yyyyMMdd').format(dTarget)];
+
+    // 1. MEASURE HEADERS
+    double headerH = 0.0;
+    double stripH = 0.0;
+
+    // Check Header
+    final headerCtx = _dashboardHeaderKey.currentContext;
+    if (headerCtx != null) {
+      final box = headerCtx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        headerH = box.size.height;
+      }
+    } else {
+      headerH = 260.0;
+    }
+
+    // Check Strip
+    final stripCtx = _dateStripKey.currentContext;
+    if (stripCtx != null) {
+      final box = stripCtx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        stripH = box.size.height;
+      }
+    } else {
+      stripH = 72.0;
+    }
+
+    final totalHeaderCorrection = headerH + stripH;
 
     if (key != null && key.currentContext != null) {
-      // Scenario A: On-screen
       Scrollable.ensureVisible(
         key.currentContext!,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
         alignment: 0.04,
       );
     } else {
-      // Scenario B: Off-screen (Lazy Loaded)
-      // Since list is Descending (Top = EndDate), calculate index from End
-      final dayIndex = dEnd.difference(dTarget).inDays.abs();
+      double calculatedListHeight = 0.0;
+      DateTime current = dEndNormalized;
 
-      // Estimate offset
-      final estimatedOffset = dayIndex * 140.0;
+      // 2. CALCULATION LOOP
+      while (current.isAfter(dTarget)) {
+        int count = 0;
+        for (var doc in _allRecords) {
+          final data = doc.data() as Map<String, dynamic>;
+          if (data['date'] != null) {
+            final rDate = (data['date'] as Timestamp).toDate().toLocal();
+            if (rDate.year == current.year &&
+                rDate.month == current.month &&
+                rDate.day == current.day) {
+              count++;
+            }
+          }
+        }
 
-      final maxScroll = _scrollController.position.maxScrollExtent;
-      final targetOffset =
-          estimatedOffset > maxScroll ? maxScroll : estimatedOffset;
+        // Formula: Empty=85, Normal=45 + N*105 + 10
+        double dayHeight = (count == 0) ? 85.0 : (45.0 + count * 105.0 + 10.0);
 
-      _scrollController.animateTo(
-        targetOffset,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+        calculatedListHeight += dayHeight;
+        current = current.subtract(const Duration(days: 1));
+      }
+
+      // 3. FINAL TARGET
+      final targetWithCorrection = calculatedListHeight + totalHeaderCorrection;
+
+      if (_scrollController.hasClients) {
+        final max = _scrollController.position.maxScrollExtent;
+
+        final finalDest =
+            targetWithCorrection > max ? max : targetWithCorrection;
+
+        _scrollController.jumpTo(finalDest);
+      }
     }
   }
 
@@ -161,8 +188,54 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
     return MultiStreamBuilder(
       taskId: widget.taskId,
       uid: user.uid,
-      builder: (context, taskData, memberData, records) {
+      builder: (context, taskData, memberData, records, isLoading) {
+        if (isLoading) {
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        }
+
         _taskData = taskData; // Capture for Date Jump Logic
+        _allRecords = records; // Capture for Auto-Scroll Calculation
+
+        // Auto-Scroll Logic (Run Once)
+        if (!_hasPerformedInitialScroll && taskData != null && !isLoading) {
+          _hasPerformedInitialScroll = true; // Lock immediately
+
+          // Extract dates
+          final startTs = taskData['startDate'] as Timestamp?;
+          final endTs = taskData['endDate'] as Timestamp?;
+
+          if (startTs != null && endTs != null) {
+            final start = startTs.toDate();
+            final end = endTs.toDate();
+            final now = DateTime.now();
+
+            // Normalize (remove time) for comparison
+            final dStart = DateTime(start.year, start.month, start.day);
+            final dEnd = DateTime(end.year, end.month, end.day);
+            final dNow = DateTime(now.year, now.month, now.day);
+
+            // Determine Target
+            DateTime targetDate;
+            if (dNow.isBefore(dStart) || dNow.isAfter(dEnd)) {
+              targetDate = start; // Out of range -> Go to Start
+            } else {
+              targetDate = now; // In range -> Go to Today
+            }
+
+            // Schedule Jump after frame (to allow list to build)
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                // 🩹 FIX: Add small delay to ensure SliverList has layout size
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  if (mounted) {
+                    _handleDateJump(targetDate);
+                  }
+                });
+              }
+            });
+          }
+        }
 
         // 1. D01 Intro Logic
         final bool hasSeen = memberData?['hasSeenRoleIntro'] ?? true;
@@ -276,101 +349,18 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
           body: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              // --- A. Segmented Control & B. Dashboard Card ---
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: SegmentedButton<int>(
-                          segments: [
-                            ButtonSegment(
-                                value: 0,
-                                label: Text(t.S13_Task_Dashboard.tab_group),
-                                icon: const Icon(Icons.groups)),
-                            ButtonSegment(
-                                value: 1,
-                                label: Text(t.S13_Task_Dashboard.tab_personal),
-                                icon: const Icon(Icons.person)),
-                          ],
-                          selected: {_segmentIndex},
-                          onSelectionChanged: (Set<int> newSelection) =>
-                              setState(
-                                  () => _segmentIndex = newSelection.first),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Card(
-                        color: _segmentIndex == 0
-                            ? colorScheme.primaryContainer
-                            : colorScheme.secondaryContainer,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    _segmentIndex == 0
-                                        ? t.S13_Task_Dashboard
-                                            .label_prepay_balance
-                                        : t.S13_Task_Dashboard.label_my_balance,
-                                    style: theme.textTheme.titleMedium,
-                                  ),
-                                  if (_segmentIndex == 0)
-                                    Chip(
-                                        label: Text(_mapRuleName(rule)),
-                                        padding: EdgeInsets.zero,
-                                        visualDensity: VisualDensity.compact),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  Text(currency,
-                                      style: theme.textTheme.titleLarge),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    _segmentIndex == 0
-                                        ? totalPool.toStringAsFixed(1)
-                                        : myBalance.toStringAsFixed(1),
-                                    style: theme.textTheme.displayMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: _segmentIndex == 0
-                                                ? colorScheme.onPrimaryContainer
-                                                : colorScheme
-                                                    .onSecondaryContainer),
-                                  ),
-                                ],
-                              ),
-                              if (_segmentIndex == 0 && remainderBuffer > 0)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    t.S13_Task_Dashboard.label_remainder(
-                                        amount:
-                                            remainderBuffer.toStringAsFixed(2)),
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.textTheme.bodySmall?.color
-                                            ?.withValues(alpha: 0.7)),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+              // --- A. Segmented Control & B. Dashboard Card (Sticky) ---
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _DashboardHeaderDelegate(
+                  key: _dashboardHeaderKey,
+                  height: _dashboardHeaderHeight,
+                  taskData: taskData,
+                  memberData: memberData,
+                  records: records,
+                  segmentIndex: _segmentIndex,
+                  onSegmentChanged: (val) =>
+                      setState(() => _segmentIndex = val),
                 ),
               ),
 
@@ -378,10 +368,12 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _DateStripDelegate(
+                  key: _dateStripKey,
+                  height: _dateStripHeight,
                   startDate: startDate,
                   endDate: endDate,
                   selectedDate: _selectedDateInStrip,
-                  onDateSelected: (date) => _handleDateJump(context, date),
+                  onDateSelected: (date) => _handleDateJump(date),
                 ),
               ),
 
@@ -456,13 +448,177 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
   }
 }
 
+class _DashboardHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final GlobalKey key;
+  final double height;
+  final Map<String, dynamic>? taskData;
+  final Map<String, dynamic>? memberData;
+  final List<QueryDocumentSnapshot> records;
+  final int segmentIndex;
+  final ValueChanged<int> onSegmentChanged;
+
+  _DashboardHeaderDelegate({
+    required this.key,
+    required this.height,
+    required this.taskData,
+    required this.memberData,
+    required this.records,
+    required this.segmentIndex,
+    required this.onSegmentChanged,
+  });
+
+  String _mapRuleName(String? rule) {
+    switch (rule) {
+      case 'order':
+        return t.S13_Task_Dashboard.rule_order;
+      case 'member':
+        return t.S13_Task_Dashboard.rule_member;
+      case 'random':
+      default:
+        return t.S13_Task_Dashboard.rule_random;
+    }
+  }
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Derived data
+    final String currency = taskData?['baseCurrency'] ?? 'TWD';
+    final double totalPool =
+        (taskData?['totalPool'] as num?)?.toDouble() ?? 0.0;
+    final double remainderBuffer =
+        (taskData?['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
+    final String rule = taskData?['balanceRule'] ?? 'random';
+    final double myBalance = 0.0; // Mock
+
+    return Container(
+      color: theme.scaffoldBackgroundColor,
+      alignment: Alignment.topCenter,
+      child: Column(
+        key: key,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 1. Toggle
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<int>(
+                segments: [
+                  ButtonSegment(
+                      value: 0,
+                      label: Text(t.S13_Task_Dashboard.tab_group),
+                      icon: const Icon(Icons.groups)),
+                  ButtonSegment(
+                      value: 1,
+                      label: Text(t.S13_Task_Dashboard.tab_personal),
+                      icon: const Icon(Icons.person)),
+                ],
+                selected: {segmentIndex},
+                onSelectionChanged: (Set<int> newSelection) {
+                  onSegmentChanged(newSelection.first);
+                },
+                showSelectedIcon: false,
+              ),
+            ),
+          ),
+
+          // 2. Info Card
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              color: segmentIndex == 0
+                  ? colorScheme.primaryContainer
+                  : colorScheme.secondaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          segmentIndex == 0
+                              ? t.S13_Task_Dashboard.label_prepay_balance
+                              : t.S13_Task_Dashboard.label_my_balance,
+                          style: theme.textTheme.titleMedium,
+                        ),
+                        if (segmentIndex == 0)
+                          Chip(
+                              label: Text(_mapRuleName(rule)),
+                              padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(currency, style: theme.textTheme.titleLarge),
+                        const SizedBox(width: 8),
+                        Text(
+                          segmentIndex == 0
+                              ? totalPool.toStringAsFixed(1)
+                              : myBalance.toStringAsFixed(1),
+                          style: theme.textTheme.displayMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: segmentIndex == 0
+                                  ? colorScheme.onPrimaryContainer
+                                  : colorScheme.onSecondaryContainer),
+                        ),
+                      ],
+                    ),
+                    if (segmentIndex == 0 && remainderBuffer > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          t.S13_Task_Dashboard.label_remainder(
+                              amount: remainderBuffer.toStringAsFixed(2)),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.textTheme.bodySmall?.color
+                                  ?.withValues(alpha: 0.7)),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  bool shouldRebuild(_DashboardHeaderDelegate oldDelegate) {
+    return oldDelegate.segmentIndex != segmentIndex ||
+        oldDelegate.taskData != taskData ||
+        oldDelegate.records != records;
+  }
+}
+
 class _DateStripDelegate extends SliverPersistentHeaderDelegate {
+  final GlobalKey key;
+  final double height;
   final DateTime startDate;
   final DateTime endDate;
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
 
   _DateStripDelegate({
+    required this.key,
+    required this.height,
     required this.startDate,
     required this.endDate,
     required this.selectedDate,
@@ -478,8 +634,9 @@ class _DateStripDelegate extends SliverPersistentHeaderDelegate {
         days > 0 ? days : 1, (index) => startDate.add(Duration(days: index)));
 
     return Container(
+      key: key,
       color: theme.colorScheme.surface, // Solid background
-      height: 72, // Increased height for padding
+      height: height,
       child: Column(
         children: [
           Expanded(
@@ -590,10 +747,10 @@ class _DateStripDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 72;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => 72;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant _DateStripDelegate oldDelegate) {
@@ -780,7 +937,8 @@ class MultiStreamBuilder extends StatelessWidget {
       BuildContext context,
       Map<String, dynamic>? task,
       Map<String, dynamic>? member,
-      List<QueryDocumentSnapshot> records) builder;
+      List<QueryDocumentSnapshot> records,
+      bool isLoading) builder;
 
   const MultiStreamBuilder(
       {super.key,
@@ -816,7 +974,10 @@ class MultiStreamBuilder extends StatelessWidget {
               .snapshots(),
           builder: (context, recordSnapshot) {
             final records = recordSnapshot.data?.docs ?? [];
-            return builder(context, taskData, memberData, records);
+            final bool isLoading =
+                recordSnapshot.connectionState == ConnectionState.waiting ||
+                    taskSnapshot.connectionState == ConnectionState.waiting;
+            return builder(context, taskData, memberData, records, isLoading);
           },
         );
       },

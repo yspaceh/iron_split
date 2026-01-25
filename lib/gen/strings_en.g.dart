@@ -350,8 +350,9 @@ class _TranslationsD05DateJumpNoResultEn implements TranslationsD05DateJumpNoRes
 
 	// Translations
 	@override String get title => 'No Record';
-	@override String get content => 'No records found for this date.';
-	@override String get action_ok => 'OK';
+	@override String get content => 'No record found for this date. Would you like to add one?';
+	@override String get action_cancel => 'Back';
+	@override String get action_add => 'Add Record';
 }
 
 // Path: D10_RecordDelete_Confirm
@@ -682,8 +683,9 @@ extension on TranslationsEn {
 			'D03_TaskCreate_Confirm.share_subject' => 'Join Iron Split Task',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
 			'D05_DateJump_NoResult.title' => 'No Record',
-			'D05_DateJump_NoResult.content' => 'No records found for this date.',
-			'D05_DateJump_NoResult.action_ok' => 'OK',
+			'D05_DateJump_NoResult.content' => 'No record found for this date. Would you like to add one?',
+			'D05_DateJump_NoResult.action_cancel' => 'Back',
+			'D05_DateJump_NoResult.action_add' => 'Add Record',
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
 			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',

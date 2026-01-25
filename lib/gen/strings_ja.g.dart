@@ -350,8 +350,9 @@ class _TranslationsD05DateJumpNoResultJa implements TranslationsD05DateJumpNoRes
 
 	// Translations
 	@override String get title => '記録なし';
-	@override String get content => 'この日付の記録は見つかりませんでした。';
-	@override String get action_ok => 'OK';
+	@override String get content => 'この日付の記録は見つかりませんでした。追加しますか？';
+	@override String get action_cancel => '戻る';
+	@override String get action_add => '記録を追加';
 }
 
 // Path: D10_RecordDelete_Confirm
@@ -678,8 +679,9 @@ extension on TranslationsJa {
 			'D03_TaskCreate_Confirm.share_subject' => 'Iron Split タスク招待',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
 			'D05_DateJump_NoResult.title' => '記録なし',
-			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。',
-			'D05_DateJump_NoResult.action_ok' => 'OK',
+			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
+			'D05_DateJump_NoResult.action_cancel' => '戻る',
+			'D05_DateJump_NoResult.action_add' => '記録を追加',
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
 			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',

@@ -187,8 +187,9 @@
   },
   "D05_DateJump_NoResult": {
     "title": "No Record",
-    "content": "No records found for this date.",
-    "action_ok": "OK"
+    "content": "No record found for this date. Would you like to add one?",
+    "action_cancel": "Back",
+    "action_add": "Add Record"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "Delete Record?",

@@ -186,8 +186,9 @@
   },
   "D05_DateJump_NoResult": {
     "title": "無紀錄",
-    "content": "找不到此日期的紀錄。",
-    "action_ok": "確定"
+    "content": "找不到此日期的紀錄，要新增一筆嗎？",
+    "action_cancel": "返回",
+    "action_add": "新增紀錄"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "刪除紀錄？",
