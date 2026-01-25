@@ -72,7 +72,10 @@
     "action_cancel": "Cancel",
     "action_home": "Home",
     "error_join_failed": "Join failed: {message}",
-    "error_generic": "Error: {message}"
+    "error_generic": "Error: {message}",
+    "label_select_ghost": "Select Member to Inherit",
+    "label_prepaid": "Prepaid",
+    "label_expense": "Expense"
   },
   "S13_Task_Dashboard": {
     "title": "Dashboard",

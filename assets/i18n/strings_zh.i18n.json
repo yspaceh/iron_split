@@ -72,7 +72,10 @@
     "action_cancel": "取消",
     "action_home": "回首頁",
     "error_join_failed": "加入失敗：{message}",
-    "error_generic": "發生錯誤：{message}"
+    "error_generic": "發生錯誤：{message}",
+    "label_select_ghost": "選擇要繼承的成員",
+    "label_prepaid": "已墊付",
+    "label_expense": "應分攤"
   },
     "S13_Task_Dashboard": {
     "title": "任務主頁",

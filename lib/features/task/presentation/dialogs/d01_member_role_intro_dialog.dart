@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: D01_MemberRole.Intro
@@ -51,11 +52,6 @@ class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog>
     super.dispose();
   }
 
-  String _getAvatarPath(String id) {
-    // ✅ 組合完整路徑: assets/images/avatars/avatar_01_cow.png
-    return 'assets/images/avatars/avatar_$id.png';
-  }
-
   Future<void> _handleReroll() async {
     if (!_canReroll || _isUpdating) return;
 
@@ -72,11 +68,9 @@ class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog>
       await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
-          .collection('members')
-          .doc(uid)
           .update({
-        'avatar': newAvatar,
-        'hasRerolled': true,
+        'members.$uid.avatar': newAvatar,
+        'members.$uid.hasRerolled': true,
       });
 
       if (mounted) {
@@ -98,9 +92,7 @@ class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog>
       await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
-          .collection('members')
-          .doc(uid)
-          .update({'hasSeenRoleIntro': true});
+          .update({'members.$uid.hasSeenRoleIntro': true});
 
       if (mounted) context.pop();
     } catch (e) {
@@ -133,20 +125,11 @@ class _D01MemberRoleIntroDialogState extends State<D01MemberRoleIntroDialog>
               // Avatar Animation
               ScaleTransition(
                 scale: _animController,
-                child: SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: Image.asset(
-                    _getAvatarPath(_currentAvatar),
-                    // 若圖片尚未放入 assets，顯示備用 icon
-                    errorBuilder: (_, __, ___) => CircleAvatar(
-                      radius: 60,
-                      backgroundColor: theme.colorScheme.primaryContainer,
-                      child: Text(
-                          _currentAvatar.split('_').last[0].toUpperCase(),
-                          style: const TextStyle(fontSize: 40)),
-                    ),
-                  ),
+                child: CommonAvatar(
+                  avatarId: _currentAvatar,
+                  name: null,
+                  radius: 55,
+                  isLinked: true,
                 ),
               ),
               const SizedBox(height: 16),

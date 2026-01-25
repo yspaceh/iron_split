@@ -180,6 +180,9 @@ class _TranslationsS11InviteConfirmEn implements TranslationsS11InviteConfirmZh 
 	@override String get action_home => 'Home';
 	@override String error_join_failed({required Object message}) => 'Join failed: ${message}';
 	@override String error_generic({required Object message}) => 'Error: ${message}';
+	@override String get label_select_ghost => 'Select Member to Inherit';
+	@override String get label_prepaid => 'Prepaid';
+	@override String get label_expense => 'Expense';
 }
 
 // Path: S13_Task_Dashboard
@@ -568,6 +571,9 @@ extension on TranslationsEn {
 			'S11_Invite_Confirm.action_home' => 'Home',
 			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => 'Join failed: ${message}',
 			'S11_Invite_Confirm.error_generic' => ({required Object message}) => 'Error: ${message}',
+			'S11_Invite_Confirm.label_select_ghost' => 'Select Member to Inherit',
+			'S11_Invite_Confirm.label_prepaid' => 'Prepaid',
+			'S11_Invite_Confirm.label_expense' => 'Expense',
 			'S13_Task_Dashboard.title' => 'Dashboard',
 			'S13_Task_Dashboard.tab_group' => 'Group',
 			'S13_Task_Dashboard.tab_personal' => 'Personal',

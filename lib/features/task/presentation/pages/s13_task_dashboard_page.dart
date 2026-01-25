@@ -25,7 +25,7 @@ class S13TaskDashboardPage extends StatefulWidget {
 
 class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
   int _segmentIndex = 0; // 0: Group, 1: Personal
-  bool _hasShownIntro = false;
+  bool _isShowingIntro = false;
 
   String _mapRuleName(String? rule) {
     switch (rule) {
@@ -75,20 +75,23 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
       uid: user.uid,
       builder: (context, taskData, memberData, records) {
         // 1. D01 Intro Logic
-        final bool hasSeenRoleIntro = memberData?['hasSeenRoleIntro'] ?? false;
-        if (memberData != null && !hasSeenRoleIntro && !_hasShownIntro) {
-          Future.microtask(() {
+        final bool hasSeen = memberData?['hasSeenRoleIntro'] ?? true;
+        if (memberData != null && !hasSeen && !_isShowingIntro) {
+          _isShowingIntro = true; // Lock immediately
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
             if (!mounted) return;
-            _hasShownIntro = true;
-            showDialog(
+            await showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (ctx) => D01MemberRoleIntroDialog(
+              builder: (context) => D01MemberRoleIntroDialog(
                 taskId: widget.taskId,
-                initialAvatar: memberData['avatar'] ?? 'unknown',
-                canReroll: !(memberData['hasRerolled'] ?? false),
+                initialAvatar: memberData!['avatar'] ?? 'pig',
+                canReroll: true,
               ),
             );
+            if (mounted) {
+              setState(() => _isShowingIntro = false); // Unlock
+            }
           });
         }
 
@@ -502,29 +505,27 @@ class MultiStreamBuilder extends StatelessWidget {
           .snapshots(),
       builder: (context, taskSnapshot) {
         final taskData = taskSnapshot.data?.data() as Map<String, dynamic>?;
-        return StreamBuilder<DocumentSnapshot>(
+
+        // Derive memberData from the Map
+        Map<String, dynamic>? memberData;
+        if (taskData != null && taskData.containsKey('members')) {
+          final membersMap = taskData['members'] as Map<String, dynamic>;
+          if (membersMap.containsKey(uid)) {
+            memberData = membersMap[uid] as Map<String, dynamic>;
+          }
+        }
+
+        return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('tasks')
               .doc(taskId)
-              .collection('members')
-              .doc(uid)
+              .collection('records')
+              .orderBy('date', descending: true)
               .snapshots(),
-          builder: (context, memberSnapshot) {
-            final memberData =
-                memberSnapshot.data?.data() as Map<String, dynamic>?;
-            return StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('tasks')
-                  .doc(taskId)
-                  .collection('records')
-                  .orderBy('date', descending: true)
-                  .snapshots(),
-              builder: (context, recordSnapshot) {
-                // recordSnapshot.data.docs 本身就是 List<QueryDocumentSnapshot>
-                final records = recordSnapshot.data?.docs ?? [];
-                return builder(context, taskData, memberData, records);
-              },
-            );
+          builder: (context, recordSnapshot) {
+            // recordSnapshot.data.docs 本身就是 List<QueryDocumentSnapshot>
+            final records = recordSnapshot.data?.docs ?? [];
+            return builder(context, taskData, memberData, records);
           },
         );
       },

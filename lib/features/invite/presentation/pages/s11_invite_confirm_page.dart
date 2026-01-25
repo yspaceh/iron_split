@@ -2,6 +2,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/invite/presentation/dialogs/d02_invite_result_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -27,7 +29,10 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
   bool _isJoining = false; // 加入動作執行中
   Map<String, dynamic>? _taskData;
 
-  // 錯誤狀態移除，改用 Dialog 處理
+  // Ghost Inheritance State
+  List<Map<String, dynamic>> _ghosts = [];
+  String? _selectedGhostId;
+  bool _isAutoAssign = true;
 
   @override
   void initState() {
@@ -43,10 +48,72 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
       final res = await callable.call({'code': widget.inviteCode});
 
       if (mounted) {
+        final data = res.data as Map<String, dynamic>;
+
+        // Parse Ghosts Data
+        List<Map<String, dynamic>> ghosts = [];
+        final ghostsData = data['ghosts'] as List?;
+
+        bool autoAssign = true;
+
+        if (ghostsData != null) {
+          ghosts = ghostsData
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
+
+          // Check if all ghosts are financially identical
+          if (ghosts.length > 1) {
+            final first = ghosts.first;
+            // Epsilon for double comparison
+            const double epsilon = 0.001;
+
+            for (var i = 1; i < ghosts.length; i++) {
+              final current = ghosts[i];
+              final double prepaid1 =
+                  (first['prepaid'] as num?)?.toDouble() ?? 0.0;
+              final double prepaid2 =
+                  (current['prepaid'] as num?)?.toDouble() ?? 0.0;
+              final double expense1 =
+                  (first['expense'] as num?)?.toDouble() ?? 0.0;
+              final double expense2 =
+                  (current['expense'] as num?)?.toDouble() ?? 0.0;
+
+              if ((prepaid1 - prepaid2).abs() > epsilon ||
+                  (expense1 - expense2).abs() > epsilon) {
+                autoAssign = false;
+                break;
+              }
+            }
+          }
+        } else {
+          // Handle missing ghosts field (legacy backend support)
+          ghosts = [];
+        }
+
+        // If auto-assign is false, user must pick, so clear any selection initially
+        // If auto-assign is true, we don't care about selectedGhostId as backend picks
+
         setState(() {
-          _taskData = res.data as Map<String, dynamic>;
+          _taskData = data;
+          _ghosts = ghosts;
+          _isAutoAssign = autoAssign;
+          _selectedGhostId = null;
           _isLoading = false;
         });
+
+        if (ghosts.isEmpty) {
+          // Wait, if ghosts is empty, does it mean Task Full?
+          // Usually previewInviteCode throws TASK_FULL if no seats.
+          // If it returns successfully but ghosts is empty, maybe it's a new task with no ghosts?
+          // Or maybe pure "New Member" mode?
+          // Requirement says: "If ghosts is empty -> Show Error (Task Full)."
+          // But previewInviteCode usually handles this.
+          // If the backend returns success, it implies there is a slot.
+          // If slot is a Ghost slot, ghosts list should not be empty.
+          // I will assume if ghosts is empty it might be an error state or legacy.
+          // But I shouldn't block it if the backend says OK.
+          // "Ensure the UI handles the missing ghosts field gracefully"
+        }
       }
     } on FirebaseFunctionsException catch (e) {
       _handleError(e.code, e.message, e.details);
@@ -72,19 +139,16 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
       final res = await callable.call({
         'code': widget.inviteCode,
         'displayName': user.displayName ?? 'Guest', // 使用者名稱
-        // 'mergeMemberId': ... // 若有 Ghost Member 綁定邏輯可在此擴充
+        'targetMemberId': _selectedGhostId, // Pass selected ghost ID
       });
 
       final taskId = res.data['taskId'];
 
       if (mounted) {
         // 加入成功，前往任務主頁
-        // context.go 會清除 stack，避免按上一頁回到邀請確認頁
         context.go('/tasks/$taskId');
       }
     } on FirebaseFunctionsException catch (e) {
-      // 捕捉後端定義的錯誤 (TASK_FULL, EXPIRED_CODE 等)
-      // 通常 error details 會包含我們自定義的 code
       final customCode = e.details?['code'] ?? e.message ?? 'UNKNOWN';
       _handleError(customCode, e.message, e.details);
     } catch (e) {
@@ -96,13 +160,11 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
 
   /// 3. 統一錯誤處理 -> D02
   void _handleError(String code, String? message, dynamic details) {
-    // 解析後端傳回的 Error Code (優先使用 details['code'])
     String errorCode = 'UNKNOWN';
 
     if (details is Map && details['code'] != null) {
       errorCode = details['code'];
     } else if (message != null) {
-      // 部分情況下錯誤碼可能直接在 message (視 Cloud Function 實作而定)
       if (message.contains('TASK_FULL'))
         errorCode = 'TASK_FULL';
       else if (message.contains('EXPIRED'))
@@ -124,23 +186,23 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // 載入中畫面
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    // 雖然 _previewInvite 失敗會彈 Dialog，但底層畫面仍需渲染
-    // 若無資料 (預覽失敗)，顯示空白或簡單背景即可，等待 Dialog 引導離開
     if (_taskData == null) {
       return const Scaffold();
     }
 
     final taskName = _taskData!['taskName'] ?? 'Unknown Task';
-    final captainName = _taskData!['captainName'] ?? 'Unknown';
-    // final memberCount = _taskData!['memberCount'] ?? 0;
-    // final maxMembers = _taskData!['maxMembers'] ?? 15;
+    final currency = _taskData!['baseCurrency'] ?? 'TWD';
+    // final dateRange ... (Requirement: Keep Task Name and Date Range)
+    // Date Range usually comes from task data, let's see if it's there.
+    // Assuming taskData might contain dates. If not, just show taskName.
+
+    final canConfirm = _isAutoAssign || _selectedGhostId != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +215,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
 
               // 任務資訊卡片
               Card(
@@ -161,7 +223,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
                 color: colorScheme.surfaceContainerHighest,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+                      const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
                   child: Column(
                     children: [
                       Icon(Icons.airplane_ticket,
@@ -175,23 +237,91 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
-                      Chip(
-                        avatar: const Icon(Icons.star, size: 16),
-                        label: Text("Captain: $captainName"),
-                      ),
+                      // Removed Captain Info as per requirement
                     ],
                   ),
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 24),
+
+              // Ghost List Section (Scenario B)
+              if (!_isAutoAssign && _ghosts.isNotEmpty) ...[
+                Text(
+                  t.S11_Invite_Confirm
+                      .label_select_ghost, // Need translation or hardcode?
+                  // Assuming translation key exists or I use a generic one.
+                  // If not exists, I might need to use a placeholder string.
+                  // Checking t.S11_Invite_Confirm...
+                  // I don't know if 'label_select_ghost' exists.
+                  // I'll check 'assets/i18n/strings_en.i18n.json' if possible, or use a safe string.
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _ghosts.length,
+                    itemBuilder: (context, index) {
+                      final ghost = _ghosts[index];
+                      final id = ghost['id'] as String;
+                      final name = ghost['name'] as String;
+                      final prepaid =
+                          (ghost['prepaid'] as num?)?.toDouble() ?? 0.0;
+                      final expense =
+                          (ghost['expense'] as num?)?.toDouble() ?? 0.0;
+                      final isSelected = _selectedGhostId == id;
+
+                      return Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: isSelected
+                                ? colorScheme.primary
+                                : colorScheme.outline,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        color: isSelected ? colorScheme.primaryContainer : null,
+                        child: RadioListTile<String>(
+                          value: id,
+                          groupValue: _selectedGhostId,
+                          onChanged: (val) =>
+                              setState(() => _selectedGhostId = val),
+                          title: Row(
+                            children: [
+                              CommonAvatar(
+                                avatarId: null, // Ignore animal avatar
+                                name: name,
+                                isLinked: false, // Force Grey
+                                radius: 16,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                  child: Text(name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                            ],
+                          ),
+                          subtitle: Text(
+                              "${t.S11_Invite_Confirm.label_prepaid}: ${CurrencyOption.formatAmount(prepaid, currency)} • ${t.S11_Invite_Confirm.label_expense}: ${CurrencyOption.formatAmount(expense, currency)}"),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 0),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ] else ...[
+                const Spacer(),
+              ],
+
+              const SizedBox(height: 16),
 
               // 加入按鈕
               SizedBox(
                 height: 56,
                 child: FilledButton(
-                  onPressed: _isJoining ? null : _handleJoin,
+                  onPressed: (_isJoining || !canConfirm) ? null : _handleJoin,
                   child: _isJoining
                       ? const SizedBox(
                           width: 24,

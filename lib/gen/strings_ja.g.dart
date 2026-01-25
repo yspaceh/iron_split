@@ -180,6 +180,9 @@ class _TranslationsS11InviteConfirmJa implements TranslationsS11InviteConfirmZh 
 	@override String get action_home => 'ホームへ';
 	@override String error_join_failed({required Object message}) => '参加失敗: ${message}';
 	@override String error_generic({required Object message}) => 'エラー: ${message}';
+	@override String get label_select_ghost => '引き継ぐメンバーを選択';
+	@override String get label_prepaid => '立替';
+	@override String get label_expense => '支出';
 }
 
 // Path: S13_Task_Dashboard
@@ -564,6 +567,9 @@ extension on TranslationsJa {
 			'S11_Invite_Confirm.action_home' => 'ホームへ',
 			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '参加失敗: ${message}',
 			'S11_Invite_Confirm.error_generic' => ({required Object message}) => 'エラー: ${message}',
+			'S11_Invite_Confirm.label_select_ghost' => '引き継ぐメンバーを選択',
+			'S11_Invite_Confirm.label_prepaid' => '立替',
+			'S11_Invite_Confirm.label_expense' => '支出',
 			'S13_Task_Dashboard.title' => 'ダッシュボード',
 			'S13_Task_Dashboard.tab_group' => 'グループ',
 			'S13_Task_Dashboard.tab_personal' => '個人',

@@ -305,6 +305,15 @@ class TranslationsS11InviteConfirmZh {
 
 	/// zh: '發生錯誤：{message}'
 	String error_generic({required Object message}) => '發生錯誤：${message}';
+
+	/// zh: '選擇要繼承的成員'
+	String get label_select_ghost => '選擇要繼承的成員';
+
+	/// zh: '已墊付'
+	String get label_prepaid => '已墊付';
+
+	/// zh: '應分攤'
+	String get label_expense => '應分攤';
 }
 
 // Path: S13_Task_Dashboard
@@ -979,6 +988,9 @@ extension on Translations {
 			'S11_Invite_Confirm.action_home' => '回首頁',
 			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '加入失敗：${message}',
 			'S11_Invite_Confirm.error_generic' => ({required Object message}) => '發生錯誤：${message}',
+			'S11_Invite_Confirm.label_select_ghost' => '選擇要繼承的成員',
+			'S11_Invite_Confirm.label_prepaid' => '已墊付',
+			'S11_Invite_Confirm.label_expense' => '應分攤',
 			'S13_Task_Dashboard.title' => '任務主頁',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',

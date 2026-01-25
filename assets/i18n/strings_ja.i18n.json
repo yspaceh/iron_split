@@ -72,7 +72,10 @@
     "action_cancel": "キャンセル",
     "action_home": "ホームへ",
     "error_join_failed": "参加失敗: {message}",
-    "error_generic": "エラー: {message}"
+    "error_generic": "エラー: {message}",
+    "label_select_ghost": "引き継ぐメンバーを選択",
+    "label_prepaid": "立替",
+    "label_expense": "支出"
   },
   "S13_Task_Dashboard": {
     "title": "ダッシュボード",
