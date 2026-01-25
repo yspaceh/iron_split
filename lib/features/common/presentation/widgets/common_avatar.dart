@@ -6,6 +6,7 @@ class CommonAvatar extends StatelessWidget {
   final String? name;
   final double radius;
   final double? fontSize;
+  final bool isLinked;
 
   const CommonAvatar({
     super.key,
@@ -13,6 +14,7 @@ class CommonAvatar extends StatelessWidget {
     required this.name,
     this.radius = 20, // 預設半徑
     this.fontSize,
+    this.isLinked = true,
   });
 
   @override
@@ -22,25 +24,36 @@ class CommonAvatar extends StatelessWidget {
     // 1. 處理資料
     final String rawId = avatarId?.toString() ?? '';
     final String assetPath = AvatarConstants.getAssetPath(rawId);
-    final bool hasImage = assetPath.isNotEmpty;
     final String displayName = (name != null && name!.isNotEmpty) ? name! : '?';
+
+    final bool isGhost = !isLinked;
+    final bool showImage = isLinked && assetPath.isNotEmpty;
+
+    // Background Color Logic
+    Color bgColor;
+    if (isGhost) {
+      bgColor = Colors.grey;
+    } else if (showImage) {
+      bgColor = Colors.grey.shade300;
+    } else {
+      bgColor = theme.colorScheme.primary;
+    }
 
     // 2. 建構 UI
     return CircleAvatar(
       radius: radius,
-      backgroundColor:
-          hasImage ? Colors.grey.shade300 : theme.colorScheme.primary, // 沒圖時用主色
+      backgroundColor: bgColor,
 
-      backgroundImage: hasImage ? AssetImage(assetPath) : null,
+      backgroundImage: showImage ? AssetImage(assetPath) : null,
 
-      onBackgroundImageError: hasImage
+      onBackgroundImageError: showImage
           ? (exception, stackTrace) {
               debugPrint("❌ CommonAvatar Error: Failed to load $assetPath");
             }
           : null,
 
       // 3. Fallback 文字 (首字)
-      child: hasImage
+      child: showImage
           ? null
           : Text(
               displayName[0].toUpperCase(),

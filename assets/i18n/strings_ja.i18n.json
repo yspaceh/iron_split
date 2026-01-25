@@ -21,7 +21,8 @@
     "me": "自分",
     "required": "必須",
     "discard": "破棄",
-    "keep_editing": "編集を続ける"
+    "keep_editing": "編集を続ける",
+    "member_prefix": "メンバー"
   },
   "dialog": {
     "unsaved_changes_title": "未保存の変更",

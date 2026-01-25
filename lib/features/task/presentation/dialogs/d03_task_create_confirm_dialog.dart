@@ -73,7 +73,36 @@ class _D03TaskCreateConfirmDialogState
     if (user == null) return;
 
     try {
-      // 1. 寫入 DB
+      // 1. Prepare Members Map
+      final Map<String, dynamic> membersMap = {};
+
+      // A. Add Captain (Real User)
+      membersMap[user.uid] = {
+        'role': 'captain',
+        'displayName': user.displayName ?? 'Captain',
+        'joinedAt': FieldValue.serverTimestamp(),
+        'avatar': _getRandomAvatar(),
+        'isLinked': true,
+        'hasSeenRoleIntro': false, // 關鍵：讓 Dashboard 跳出 D01
+      };
+
+      // B. Add Ghost Members (Placeholders)
+      // Start from 1 because Captain is 0 (conceptually)
+      for (int i = 1; i < widget.memberCount; i++) {
+        final ghostId = 'virtual_member_$i'; // Stable ID
+        final prefix = t.common.member_prefix;
+
+        membersMap[ghostId] = {
+          'role': 'member',
+          'displayName': '$prefix ${i + 1}', // e.g. "Member 2"
+          'joinedAt': FieldValue.serverTimestamp(),
+          'avatar': _getRandomAvatar(),
+          'isLinked': false,
+          'hasSeenRoleIntro': false,
+        };
+      }
+
+      // 2. 寫入 DB
       final docRef = await FirebaseFirestore.instance.collection('tasks').add({
         'name': widget.taskName,
         'captainUid': user.uid,
@@ -83,16 +112,7 @@ class _D03TaskCreateConfirmDialogState
         'startDate': Timestamp.fromDate(widget.startDate),
         'endDate': Timestamp.fromDate(widget.endDate),
         'createdAt': FieldValue.serverTimestamp(),
-        'members': {
-          user.uid: {
-            'role': 'captain',
-            'displayName': user.displayName ?? 'Captain',
-            'joinedAt': FieldValue.serverTimestamp(),
-            'avatar': _getRandomAvatar(),
-            'isLinked': true,
-            'hasSeenRoleIntro': false, // 關鍵：讓 Dashboard 跳出 D01
-          }
-        },
+        'members': membersMap,
         'activeInviteCode': null,
       });
 

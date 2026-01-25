@@ -410,7 +410,10 @@ class _B03SplitMethodEditBottomSheetState
                       });
                     },
                   ),
-                  CommonAvatar(avatarId: m['avatar'], name: m['name']),
+                  CommonAvatar(
+                      avatarId: m['avatar'],
+                      name: m['name'],
+                      isLinked: m['isLinked'] ?? false),
                   const SizedBox(width: 8),
                   Expanded(
                       child: Text(m['name'], overflow: TextOverflow.ellipsis)),
@@ -529,7 +532,10 @@ class _B03SplitMethodEditBottomSheetState
                     });
                   },
                 ),
-                CommonAvatar(avatarId: m['avatar'], name: m['name']),
+                CommonAvatar(
+                    avatarId: m['avatar'],
+                    name: m['name'],
+                    isLinked: m['isLinked'] ?? false),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(m['name'], overflow: TextOverflow.ellipsis)),
@@ -736,7 +742,10 @@ class _B03SplitMethodEditBottomSheetState
                     });
                   },
                 ),
-                CommonAvatar(avatarId: m['avatar'], name: m['name']),
+                CommonAvatar(
+                    avatarId: m['avatar'],
+                    name: m['name'],
+                    isLinked: m['isLinked'] ?? false),
                 const SizedBox(width: 12),
                 Expanded(child: Text(m['name'])),
                 SizedBox(

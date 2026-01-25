@@ -94,6 +94,7 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 	@override String get required => 'Required';
 	@override String get discard => 'Discard';
 	@override String get keep_editing => 'Keep Editing';
+	@override String get member_prefix => 'Member';
 }
 
 // Path: dialog
@@ -526,6 +527,7 @@ extension on TranslationsEn {
 			'common.required' => 'Required',
 			'common.discard' => 'Discard',
 			'common.keep_editing' => 'Keep Editing',
+			'common.member_prefix' => 'Member',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',

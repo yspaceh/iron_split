@@ -137,6 +137,9 @@ class TranslationsCommonZh {
 
 	/// zh: '繼續編輯'
 	String get keep_editing => '繼續編輯';
+
+	/// zh: '成員'
+	String get member_prefix => '成員';
 }
 
 // Path: dialog
@@ -935,6 +938,7 @@ extension on Translations {
 			'common.required' => '必填',
 			'common.discard' => '放棄變更',
 			'common.keep_editing' => '繼續編輯',
+			'common.member_prefix' => '成員',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',

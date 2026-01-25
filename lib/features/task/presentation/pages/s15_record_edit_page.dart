@@ -131,6 +131,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   Future<void> _fetchTaskData() async {
     try {
+      if (mounted) setState(() => _isLoadingTaskData = true);
+
       final docSnapshot = await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
@@ -139,9 +141,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       if (docSnapshot.exists && mounted) {
         final data = docSnapshot.data()!;
 
-        // REMOVED: _taskPrepayBalance = (data['prepayBalance'] ?? 0).toDouble();
-
-        // 1. 解析真實成員 (處理 Map 與 List 兩種格式)
+        // 1. Parse Members from Firestore (Handle Map or List)
         List<Map<String, dynamic>> realMembers = [];
         if (data.containsKey('members')) {
           final dynamic rawMembers = data['members'];
@@ -149,50 +149,49 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             realMembers =
                 rawMembers.map((m) => m as Map<String, dynamic>).toList();
           } else if (rawMembers is Map) {
-            // 如果是 Map，轉成 List 並確保 ID 存在
             realMembers = (rawMembers as Map<String, dynamic>).entries.map((e) {
               final memberData = e.value as Map<String, dynamic>;
               if (!memberData.containsKey('id')) {
                 memberData['id'] = e.key;
               }
-              // 確保 name 欄位存在
-              // 如果資料庫是 displayName，就轉成 name；如果都沒有，就叫 '成員'
+              // Fallback name if missing
               if (memberData['name'] == null) {
-                memberData['name'] =
-                    memberData['displayName'] ?? '成員'; // TODO: 之後要改掉，
+                memberData['name'] = memberData['displayName'] ?? 'Member';
               }
               return memberData;
             }).toList();
           }
         }
 
-        // 2. 取得最大人數設定 (預設 1)
-        final int maxMembers = data['maxMembers'] ?? 1;
+        // 2. Sort Members: Captain -> Linked -> Ghosts (by ID)
+        realMembers.sort((a, b) {
+          // Rule 1: Captain first
+          final bool aIsCaptain = a['role'] == 'captain';
+          final bool bIsCaptain = b['role'] == 'captain';
+          if (aIsCaptain && !bIsCaptain) return -1;
+          if (!aIsCaptain && bIsCaptain) return 1;
 
-        // 3. 自動補齊空位 (產生暫時的虛擬成員)
-        if (realMembers.length < maxMembers) {
-          final int missingCount = maxMembers - realMembers.length;
-          for (int i = 0; i < missingCount; i++) {
-            final int index = realMembers.length + 1;
-            realMembers.add({
-              'id': 'temp_member_${DateTime.now().millisecondsSinceEpoch}_$i',
-              'name': '成員 $index',
-              'avatar': null,
-              'isLinked': false,
-            });
-          }
-        }
+          // Rule 2: Linked Users before Ghosts
+          final bool aLinked = a['isLinked'] ?? false;
+          final bool bLinked = b['isLinked'] ?? false;
+          if (aLinked && !bLinked) return -1;
+          if (!aLinked && bLinked) return 1;
 
+          // Rule 3: Stable Sort by ID for Ghosts (virtual_member_1 vs 2)
+          final String idA = a['id'] as String? ?? '';
+          final String idB = b['id'] as String? ?? '';
+          return idA.compareTo(idB);
+        });
+
+        // 3. Assign to State (No more fake generation!)
         _taskMembers = realMembers;
       } else {
         debugPrint("⚠️ Document does not exist: tasks/${widget.taskId}");
       }
 
-      // 4. 初始化分攤成員 (確保畫面更新)
+      // 4. Init Split Members (Only Reset in Create Mode)
       if (mounted) {
         setState(() {
-          // FIX: Only reset default members in Create Mode.
-          // In Edit Mode, keep the IDs loaded from widget.record in initState.
           if (widget.record == null) {
             _baseMemberIds =
                 _taskMembers.map((m) => m['id'] as String).toList();

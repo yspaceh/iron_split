@@ -94,6 +94,7 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get required => '必須';
 	@override String get discard => '破棄';
 	@override String get keep_editing => '編集を続ける';
+	@override String get member_prefix => 'メンバー';
 }
 
 // Path: dialog
@@ -522,6 +523,7 @@ extension on TranslationsJa {
 			'common.required' => '必須',
 			'common.discard' => '破棄',
 			'common.keep_editing' => '編集を続ける',
+			'common.member_prefix' => 'メンバー',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',

@@ -330,6 +330,7 @@ class _B07PaymentMethodEditBottomSheetState
                                 name: m['name'],
                                 radius: 16,
                                 fontSize: 14,
+                                isLinked: m['isLinked'] ?? false,
                               ),
                               const SizedBox(width: 12),
                               Expanded(

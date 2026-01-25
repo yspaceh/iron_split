@@ -21,7 +21,8 @@
     "me": "Me",
     "required": "Required",
     "discard": "Discard",
-    "keep_editing": "Keep Editing"
+    "keep_editing": "Keep Editing",
+    "member_prefix": "Member"
   },
   "dialog": {
     "unsaved_changes_title": "Unsaved Changes?",

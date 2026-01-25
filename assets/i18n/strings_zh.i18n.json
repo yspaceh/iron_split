@@ -21,7 +21,8 @@
     "me": "我",
     "required": "必填",
     "discard": "放棄變更",
-    "keep_editing": "繼續編輯"
+    "keep_editing": "繼續編輯",
+    "member_prefix": "成員"
   },
   "dialog": {
     "unsaved_changes_title": "尚未儲存",

@@ -34,6 +34,7 @@ class CommonAvatarStack extends StatelessWidget {
             name: member['name'],
             radius: radius,
             fontSize: fontSize,
+            isLinked: member['isLinked'] ?? false,
           );
         }).toList(),
       ),
