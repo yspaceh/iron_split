@@ -505,11 +505,6 @@ class _B03SplitMethodEditBottomSheetState
           final amount = sourceAmounts[id] ?? 0.0;
           final baseAmount = baseAmounts[id] ?? 0.0;
 
-          // 顯示 1x, 1.5x
-          // 移除 .0 結尾 (1.0x -> 1x)
-          final weightStr =
-              "${weight.toString().replaceAll(RegExp(r'\.0$'), '')}x";
-
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
