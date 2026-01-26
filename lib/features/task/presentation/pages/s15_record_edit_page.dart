@@ -9,6 +9,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
@@ -37,7 +38,7 @@ class S15RecordEditPage extends StatefulWidget {
     required this.taskId,
     this.recordId,
     this.record,
-    this.baseCurrency = 'TWD',
+    this.baseCurrency = CurrencyOption.defaultCode,
     this.prepayBalance = 0.0, // NEW
     this.initialDate,
   });
@@ -88,20 +89,22 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   final List<String> _currencies =
       kSupportedCurrencies.map((c) => c.code).toList();
 
+  bool _isCurrencyInitialized = false;
+
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate ?? DateTime.now();
-    _selectedCurrency = widget.baseCurrency;
 
+    // 1. 基本數據初始化
     if (widget.record != null) {
+      // === 編輯模式 (以既有紀錄內容為主) ===
       final r = widget.record!;
       _recordTypeIndex = r.type == 'income' ? 1 : 0;
       _amountController.text = r.amount.truncateToDouble() == r.amount
           ? r.amount.toInt().toString()
           : r.amount.toString();
       _selectedDate = r.date;
-      _selectedCurrency = r.currency;
+      _selectedCurrency = r.currency; // 編輯模式直接鎖定紀錄幣別
       _exchangeRateController.text = r.exchangeRate.toString();
 
       if (r.type == 'expense') {
@@ -109,26 +112,45 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         _selectedCategoryId = r.categoryId;
       }
       _memoController.text = r.memo ?? '';
-
-      // Payment
       _payerType = r.payerType;
       _payerId = r.payerId ?? '';
       _complexPaymentData = r.paymentDetails;
-
-      // Split
       _baseSplitMethod = r.splitMethod;
       _baseMemberIds = List.from(r.splitMemberIds);
       _baseRawDetails = Map.from(r.splitDetails ?? {});
       _items.addAll(r.items);
     } else {
+      // === 新建模式 ===
+      _selectedDate = widget.initialDate ?? DateTime.now();
+      // 這裡先給一個安全值，真正的偵測放在 didChangeDependencies
+      _selectedCurrency = widget.baseCurrency;
       _loadCurrencyPreference();
     }
 
     _lastKnownAmount = double.tryParse(_amountController.text) ?? 0.0;
-
     _fetchTaskData();
-
     _amountController.addListener(_onAmountChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // 只有在「新建模式」且「尚未初始化過幣別」時才執行
+    if (widget.record == null && !_isCurrencyInitialized) {
+      _isCurrencyInitialized = true;
+
+      // 現在呼叫 localeOf(context) 是安全的
+      final String suggestedCurrency =
+          CurrencyOption.detectSystemCurrency(context);
+
+      setState(() {
+        // 邏輯：有偵測到就用偵測的，否則用任務預設的 (widget.baseCurrency)
+        _selectedCurrency = suggestedCurrency != CurrencyOption.defaultCode
+            ? suggestedCurrency
+            : widget.baseCurrency;
+      });
+    }
   }
 
   Future<void> _fetchTaskData() async {
@@ -406,24 +428,14 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   void _showCurrencyPicker() {
-    String tempCurrency = _selectedCurrency;
-    showCommonWheelPicker(
+    CurrencyPickerSheet.show(
       context: context,
-      onConfirm: () async {
-        if (tempCurrency != _selectedCurrency) {
-          await _onCurrencyChanged(tempCurrency);
+      initialCode: _selectedCurrency,
+      onSelected: (currency) async {
+        if (currency.code != _selectedCurrency) {
+          await _onCurrencyChanged(currency.code);
         }
       },
-      child: CupertinoPicker(
-        itemExtent: 40,
-        scrollController: FixedExtentScrollController(
-            initialItem: _currencies.indexOf(_selectedCurrency)),
-        onSelectedItemChanged: (index) => tempCurrency = _currencies[index],
-        children: _currencies.map((code) {
-          final option = kSupportedCurrencies.firstWhere((e) => e.code == code);
-          return Center(child: Text("${option.code} - ${option.name}"));
-        }).toList(),
-      ),
     );
   }
 
@@ -683,7 +695,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     if (_selectedCurrency != r.currency) return true;
 
     final currentRate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-    if ((currentRate - (r.exchangeRate ?? 1.0)).abs() > 0.000001) return true;
+    if ((currentRate - (r.exchangeRate)).abs() > 0.000001) return true;
 
     if (_memoController.text != (r.memo ?? '')) return true;
 

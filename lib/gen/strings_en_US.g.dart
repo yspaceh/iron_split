@@ -11,59 +11,61 @@ import 'package:slang/generated.dart';
 import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsEn with BaseTranslations<AppLocale, Translations> implements Translations {
+class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Translations> {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
-	TranslationsEn({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
+	TranslationsEnUs({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
 		: assert(overrides == null, 'Set "translation_overrides: true" in order to enable this feature.'),
 		  $meta = meta ?? TranslationMetadata(
-		    locale: AppLocale.en,
+		    locale: AppLocale.enUs,
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		  ) {
+		  ),
+		  super(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
+		super.$meta.setFlatMapFunction($meta.getTranslation); // copy base translations to super.$meta
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
 
-	/// Metadata for the translations of <en>.
+	/// Metadata for the translations of <en-US>.
 	@override final TranslationMetadata<AppLocale, Translations> $meta;
 
 	/// Access flat map
-	@override dynamic operator[](String key) => $meta.getTranslation(key);
+	@override dynamic operator[](String key) => $meta.getTranslation(key) ?? super.$meta.getTranslation(key);
 
-	late final TranslationsEn _root = this; // ignore: unused_field
+	late final TranslationsEnUs _root = this; // ignore: unused_field
 
 	@override 
-	TranslationsEn $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsEn(meta: meta ?? this.$meta);
+	TranslationsEnUs $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsEnUs(meta: meta ?? this.$meta);
 
 	// Translations
-	@override late final _TranslationsCategoryEn category = _TranslationsCategoryEn._(_root);
-	@override late final _TranslationsCommonEn common = _TranslationsCommonEn._(_root);
-	@override late final _TranslationsDialogEn dialog = _TranslationsDialogEn._(_root);
-	@override late final _TranslationsS50OnboardingConsentEn S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEn._(_root);
-	@override late final _TranslationsS51OnboardingNameEn S51_Onboarding_Name = _TranslationsS51OnboardingNameEn._(_root);
-	@override late final _TranslationsS10HomeTaskListEn S10_Home_TaskList = _TranslationsS10HomeTaskListEn._(_root);
-	@override late final _TranslationsS11InviteConfirmEn S11_Invite_Confirm = _TranslationsS11InviteConfirmEn._(_root);
-	@override late final _TranslationsS13TaskDashboardEn S13_Task_Dashboard = _TranslationsS13TaskDashboardEn._(_root);
-	@override late final _TranslationsS15RecordEditEn S15_Record_Edit = _TranslationsS15RecordEditEn._(_root);
-	@override late final _TranslationsS16TaskCreateEditEn S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEn._(_root);
-	@override late final _TranslationsS71SystemSettingsTosEn S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEn._(_root);
-	@override late final _TranslationsD01MemberRoleIntroEn D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEn._(_root);
-	@override late final _TranslationsD02InviteResultEn D02_Invite_Result = _TranslationsD02InviteResultEn._(_root);
-	@override late final _TranslationsD03TaskCreateConfirmEn D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEn._(_root);
-	@override late final _TranslationsD05DateJumpNoResultEn D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEn._(_root);
-	@override late final _TranslationsD10RecordDeleteConfirmEn D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEn._(_root);
-	@override late final _TranslationsB02SplitExpenseEditEn B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEn._(_root);
-	@override late final _TranslationsB03SplitMethodEditEn B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEn._(_root);
-	@override late final _TranslationsB07PaymentMethodEditEn B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEn._(_root);
-	@override late final _TranslationsErrorEn error = _TranslationsErrorEn._(_root);
+	@override late final _TranslationsCategoryEnUs category = _TranslationsCategoryEnUs._(_root);
+	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
+	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
+	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
+	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
+	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
+	@override late final _TranslationsS11InviteConfirmEnUs S11_Invite_Confirm = _TranslationsS11InviteConfirmEnUs._(_root);
+	@override late final _TranslationsS13TaskDashboardEnUs S13_Task_Dashboard = _TranslationsS13TaskDashboardEnUs._(_root);
+	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
+	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
+	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
+	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
+	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
+	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
+	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
+	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
+	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
+	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
+	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
+	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
 }
 
 // Path: category
-class _TranslationsCategoryEn implements TranslationsCategoryZh {
-	_TranslationsCategoryEn._(this._root);
+class _TranslationsCategoryEnUs extends TranslationsCategoryZhTw {
+	_TranslationsCategoryEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get food => 'Food';
@@ -75,10 +77,10 @@ class _TranslationsCategoryEn implements TranslationsCategoryZh {
 }
 
 // Path: common
-class _TranslationsCommonEn implements TranslationsCommonZh {
-	_TranslationsCommonEn._(this._root);
+class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
+	_TranslationsCommonEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get cancel => 'Cancel';
@@ -102,10 +104,10 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 }
 
 // Path: dialog
-class _TranslationsDialogEn implements TranslationsDialogZh {
-	_TranslationsDialogEn._(this._root);
+class _TranslationsDialogEnUs extends TranslationsDialogZhTw {
+	_TranslationsDialogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get unsaved_changes_title => 'Unsaved Changes?';
@@ -113,10 +115,10 @@ class _TranslationsDialogEn implements TranslationsDialogZh {
 }
 
 // Path: S50_Onboarding_Consent
-class _TranslationsS50OnboardingConsentEn implements TranslationsS50OnboardingConsentZh {
-	_TranslationsS50OnboardingConsentEn._(this._root);
+class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingConsentZhTw {
+	_TranslationsS50OnboardingConsentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Welcome to Iron Split';
@@ -130,10 +132,10 @@ class _TranslationsS50OnboardingConsentEn implements TranslationsS50OnboardingCo
 }
 
 // Path: S51_Onboarding_Name
-class _TranslationsS51OnboardingNameEn implements TranslationsS51OnboardingNameZh {
-	_TranslationsS51OnboardingNameEn._(this._root);
+class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZhTw {
+	_TranslationsS51OnboardingNameEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Set Display Name';
@@ -147,10 +149,10 @@ class _TranslationsS51OnboardingNameEn implements TranslationsS51OnboardingNameZ
 }
 
 // Path: S10_Home_TaskList
-class _TranslationsS10HomeTaskListEn implements TranslationsS10HomeTaskListZh {
-	_TranslationsS10HomeTaskListEn._(this._root);
+class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
+	_TranslationsS10HomeTaskListEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'My Tasks';
@@ -165,10 +167,10 @@ class _TranslationsS10HomeTaskListEn implements TranslationsS10HomeTaskListZh {
 }
 
 // Path: S11_Invite_Confirm
-class _TranslationsS11InviteConfirmEn implements TranslationsS11InviteConfirmZh {
-	_TranslationsS11InviteConfirmEn._(this._root);
+class _TranslationsS11InviteConfirmEnUs extends TranslationsS11InviteConfirmZhTw {
+	_TranslationsS11InviteConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Join Task';
@@ -190,10 +192,10 @@ class _TranslationsS11InviteConfirmEn implements TranslationsS11InviteConfirmZh 
 }
 
 // Path: S13_Task_Dashboard
-class _TranslationsS13TaskDashboardEn implements TranslationsS13TaskDashboardZh {
-	_TranslationsS13TaskDashboardEn._(this._root);
+class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw {
+	_TranslationsS13TaskDashboardEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Dashboard';
@@ -221,10 +223,10 @@ class _TranslationsS13TaskDashboardEn implements TranslationsS13TaskDashboardZh 
 }
 
 // Path: S15_Record_Edit
-class _TranslationsS15RecordEditEn implements TranslationsS15RecordEditZh {
-	_TranslationsS15RecordEditEn._(this._root);
+class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
+	_TranslationsS15RecordEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title_create => 'Add Expense';
@@ -267,10 +269,10 @@ class _TranslationsS15RecordEditEn implements TranslationsS15RecordEditZh {
 }
 
 // Path: S16_TaskCreate_Edit
-class _TranslationsS16TaskCreateEditEn implements TranslationsS16TaskCreateEditZh {
-	_TranslationsS16TaskCreateEditEn._(this._root);
+class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZhTw {
+	_TranslationsS16TaskCreateEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'New Task';
@@ -292,20 +294,20 @@ class _TranslationsS16TaskCreateEditEn implements TranslationsS16TaskCreateEditZ
 }
 
 // Path: S71_SystemSettings_Tos
-class _TranslationsS71SystemSettingsTosEn implements TranslationsS71SystemSettingsTosZh {
-	_TranslationsS71SystemSettingsTosEn._(this._root);
+class _TranslationsS71SystemSettingsTosEnUs extends TranslationsS71SystemSettingsTosZhTw {
+	_TranslationsS71SystemSettingsTosEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Terms of Service';
 }
 
 // Path: D01_MemberRole_Intro
-class _TranslationsD01MemberRoleIntroEn implements TranslationsD01MemberRoleIntroZh {
-	_TranslationsD01MemberRoleIntroEn._(this._root);
+class _TranslationsD01MemberRoleIntroEnUs extends TranslationsD01MemberRoleIntroZhTw {
+	_TranslationsD01MemberRoleIntroEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Your Character';
@@ -317,10 +319,10 @@ class _TranslationsD01MemberRoleIntroEn implements TranslationsD01MemberRoleIntr
 }
 
 // Path: D02_Invite_Result
-class _TranslationsD02InviteResultEn implements TranslationsD02InviteResultZh {
-	_TranslationsD02InviteResultEn._(this._root);
+class _TranslationsD02InviteResultEnUs extends TranslationsD02InviteResultZhTw {
+	_TranslationsD02InviteResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Join Failed';
@@ -333,10 +335,10 @@ class _TranslationsD02InviteResultEn implements TranslationsD02InviteResultZh {
 }
 
 // Path: D03_TaskCreate_Confirm
-class _TranslationsD03TaskCreateConfirmEn implements TranslationsD03TaskCreateConfirmZh {
-	_TranslationsD03TaskCreateConfirmEn._(this._root);
+class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateConfirmZhTw {
+	_TranslationsD03TaskCreateConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Confirm Settings';
@@ -353,10 +355,10 @@ class _TranslationsD03TaskCreateConfirmEn implements TranslationsD03TaskCreateCo
 }
 
 // Path: D05_DateJump_NoResult
-class _TranslationsD05DateJumpNoResultEn implements TranslationsD05DateJumpNoResultZh {
-	_TranslationsD05DateJumpNoResultEn._(this._root);
+class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResultZhTw {
+	_TranslationsD05DateJumpNoResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'No Record';
@@ -366,10 +368,10 @@ class _TranslationsD05DateJumpNoResultEn implements TranslationsD05DateJumpNoRes
 }
 
 // Path: D10_RecordDelete_Confirm
-class _TranslationsD10RecordDeleteConfirmEn implements TranslationsD10RecordDeleteConfirmZh {
-	_TranslationsD10RecordDeleteConfirmEn._(this._root);
+class _TranslationsD10RecordDeleteConfirmEnUs extends TranslationsD10RecordDeleteConfirmZhTw {
+	_TranslationsD10RecordDeleteConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get delete_record_title => 'Delete Record?';
@@ -378,10 +380,10 @@ class _TranslationsD10RecordDeleteConfirmEn implements TranslationsD10RecordDele
 }
 
 // Path: B02_SplitExpense_Edit
-class _TranslationsB02SplitExpenseEditEn implements TranslationsB02SplitExpenseEditZh {
-	_TranslationsB02SplitExpenseEditEn._(this._root);
+class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEditZhTw {
+	_TranslationsB02SplitExpenseEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Edit Item';
@@ -404,10 +406,10 @@ class _TranslationsB02SplitExpenseEditEn implements TranslationsB02SplitExpenseE
 }
 
 // Path: B03_SplitMethod_Edit
-class _TranslationsB03SplitMethodEditEn implements TranslationsB03SplitMethodEditZh {
-	_TranslationsB03SplitMethodEditEn._(this._root);
+class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEditZhTw {
+	_TranslationsB03SplitMethodEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Choose Split Method';
@@ -424,10 +426,10 @@ class _TranslationsB03SplitMethodEditEn implements TranslationsB03SplitMethodEdi
 }
 
 // Path: B07_PaymentMethod_Edit
-class _TranslationsB07PaymentMethodEditEn implements TranslationsB07PaymentMethodEditZh {
-	_TranslationsB07PaymentMethodEditEn._(this._root);
+class _TranslationsB07PaymentMethodEditEnUs extends TranslationsB07PaymentMethodEditZhTw {
+	_TranslationsB07PaymentMethodEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Select Funding Source';
@@ -447,25 +449,25 @@ class _TranslationsB07PaymentMethodEditEn implements TranslationsB07PaymentMetho
 }
 
 // Path: error
-class _TranslationsErrorEn implements TranslationsErrorZh {
-	_TranslationsErrorEn._(this._root);
+class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
+	_TranslationsErrorEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsErrorTaskFullEn taskFull = _TranslationsErrorTaskFullEn._(_root);
-	@override late final _TranslationsErrorExpiredCodeEn expiredCode = _TranslationsErrorExpiredCodeEn._(_root);
-	@override late final _TranslationsErrorInvalidCodeEn invalidCode = _TranslationsErrorInvalidCodeEn._(_root);
-	@override late final _TranslationsErrorAuthRequiredEn authRequired = _TranslationsErrorAuthRequiredEn._(_root);
-	@override late final _TranslationsErrorAlreadyInTaskEn alreadyInTask = _TranslationsErrorAlreadyInTaskEn._(_root);
-	@override late final _TranslationsErrorUnknownEn unknown = _TranslationsErrorUnknownEn._(_root);
+	@override late final _TranslationsErrorTaskFullEnUs taskFull = _TranslationsErrorTaskFullEnUs._(_root);
+	@override late final _TranslationsErrorExpiredCodeEnUs expiredCode = _TranslationsErrorExpiredCodeEnUs._(_root);
+	@override late final _TranslationsErrorInvalidCodeEnUs invalidCode = _TranslationsErrorInvalidCodeEnUs._(_root);
+	@override late final _TranslationsErrorAuthRequiredEnUs authRequired = _TranslationsErrorAuthRequiredEnUs._(_root);
+	@override late final _TranslationsErrorAlreadyInTaskEnUs alreadyInTask = _TranslationsErrorAlreadyInTaskEnUs._(_root);
+	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
 }
 
 // Path: error.taskFull
-class _TranslationsErrorTaskFullEn implements TranslationsErrorTaskFullZh {
-	_TranslationsErrorTaskFullEn._(this._root);
+class _TranslationsErrorTaskFullEnUs extends TranslationsErrorTaskFullZhTw {
+	_TranslationsErrorTaskFullEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Task Full';
@@ -473,10 +475,10 @@ class _TranslationsErrorTaskFullEn implements TranslationsErrorTaskFullZh {
 }
 
 // Path: error.expiredCode
-class _TranslationsErrorExpiredCodeEn implements TranslationsErrorExpiredCodeZh {
-	_TranslationsErrorExpiredCodeEn._(this._root);
+class _TranslationsErrorExpiredCodeEnUs extends TranslationsErrorExpiredCodeZhTw {
+	_TranslationsErrorExpiredCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Invite Expired';
@@ -484,10 +486,10 @@ class _TranslationsErrorExpiredCodeEn implements TranslationsErrorExpiredCodeZh 
 }
 
 // Path: error.invalidCode
-class _TranslationsErrorInvalidCodeEn implements TranslationsErrorInvalidCodeZh {
-	_TranslationsErrorInvalidCodeEn._(this._root);
+class _TranslationsErrorInvalidCodeEnUs extends TranslationsErrorInvalidCodeZhTw {
+	_TranslationsErrorInvalidCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Invalid Link';
@@ -495,10 +497,10 @@ class _TranslationsErrorInvalidCodeEn implements TranslationsErrorInvalidCodeZh 
 }
 
 // Path: error.authRequired
-class _TranslationsErrorAuthRequiredEn implements TranslationsErrorAuthRequiredZh {
-	_TranslationsErrorAuthRequiredEn._(this._root);
+class _TranslationsErrorAuthRequiredEnUs extends TranslationsErrorAuthRequiredZhTw {
+	_TranslationsErrorAuthRequiredEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Login Required';
@@ -506,10 +508,10 @@ class _TranslationsErrorAuthRequiredEn implements TranslationsErrorAuthRequiredZ
 }
 
 // Path: error.alreadyInTask
-class _TranslationsErrorAlreadyInTaskEn implements TranslationsErrorAlreadyInTaskZh {
-	_TranslationsErrorAlreadyInTaskEn._(this._root);
+class _TranslationsErrorAlreadyInTaskEnUs extends TranslationsErrorAlreadyInTaskZhTw {
+	_TranslationsErrorAlreadyInTaskEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Already Member';
@@ -517,22 +519,22 @@ class _TranslationsErrorAlreadyInTaskEn implements TranslationsErrorAlreadyInTas
 }
 
 // Path: error.unknown
-class _TranslationsErrorUnknownEn implements TranslationsErrorUnknownZh {
-	_TranslationsErrorUnknownEn._(this._root);
+class _TranslationsErrorUnknownEnUs extends TranslationsErrorUnknownZhTw {
+	_TranslationsErrorUnknownEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
 	@override String get title => 'Error';
 	@override String get message => 'An unexpected error occurred.';
 }
 
-/// The flat map containing all translations for locale <en>.
+/// The flat map containing all translations for locale <en-US>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
 /// The Dart AOT compiler has issues with very large switch statements,
 /// so the map is split into smaller functions (512 entries each).
-extension on TranslationsEn {
+extension on TranslationsEnUs {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'category.food' => 'Food',

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-// ✅ 新增：引入幣別常數
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
@@ -24,14 +24,9 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
 
   late DateTime _startDate;
   late DateTime _endDate;
-  // TODO: 預設幣別跟隨語言環境
-  String _currency = 'TWD';
+  String _currency = CurrencyOption.defaultCode;
+  bool _isCurrencyInitialized = false;
   int _memberCount = 1;
-
-  // ✅ 修改點：使用常數表產生幣別清單，取代原本的 Hardcode List
-  // 原本佔用 15 行，現在改為 1 行動態生成
-  final List<String> _currencies =
-      kSupportedCurrencies.map((c) => c.code).toList();
 
   @override
   void initState() {
@@ -40,7 +35,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
     _startDate = DateTime(now.year, now.month, now.day);
     _endDate = _startDate;
 
-    // ✅ 補回遺漏：監聽文字變動以即時更新 Suffix 計數器
+    // 監聽文字變動以即時更新 Suffix 計數器
     _nameController.addListener(() {
       setState(() {});
     });
@@ -50,6 +45,23 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // 只有在「尚未初始化過幣別」時才執行自動偵測
+    if (!_isCurrencyInitialized) {
+      _isCurrencyInitialized = true;
+
+      final String suggestedCurrency =
+          CurrencyOption.detectSystemCurrency(context);
+
+      setState(() {
+        _currency = suggestedCurrency;
+      });
+    }
   }
 
   void _onSave() {
@@ -114,20 +126,12 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   }
 
   void _showCurrencyPicker() {
-    String tempCurrency = _currency;
-
-    showCommonWheelPicker(
+    CurrencyPickerSheet.show(
       context: context,
-      onConfirm: () => setState(() => _currency = tempCurrency),
-      child: CupertinoPicker(
-        itemExtent: 40,
-        scrollController: FixedExtentScrollController(
-            initialItem: _currencies.indexOf(_currency)),
-        onSelectedItemChanged: (index) {
-          tempCurrency = _currencies[index];
-        },
-        children: _currencies.map((e) => Center(child: Text(e))).toList(),
-      ),
+      initialCode: _currency,
+      onSelected: (currency) {
+        setState(() => _currency = currency.code);
+      },
     );
   }
 

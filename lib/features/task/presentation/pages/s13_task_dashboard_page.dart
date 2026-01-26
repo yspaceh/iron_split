@@ -267,7 +267,9 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
         final String currency = taskData['baseCurrency'] ??
             (systemCurrency.isNotEmpty
                 ? systemCurrency
-                : kSupportedCurrencies.firstWhere((e) => e.code == 'USD').code);
+                : kSupportedCurrencies
+                    .firstWhere((e) => e.code == CurrencyOption.defaultCode)
+                    .code);
         final bool isCaptain = taskData['createdBy'] == user.uid;
 
         // Parse Start/End Date
@@ -642,7 +644,7 @@ class _DateStripDelegate extends SliverPersistentHeaderDelegate {
                               // B. Today 圓點 (固定底部)
                               if (isToday)
                                 Positioned(
-                                  bottom: 4, // 固定距離底部 4px
+                                  bottom: 6, // 固定距離底部 4px
                                   left: 0,
                                   right: 0,
                                   child: Center(
@@ -665,8 +667,7 @@ class _DateStripDelegate extends SliverPersistentHeaderDelegate {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 8), // Padding bottom
+          ), // Padding bottom
         ],
       ),
     );

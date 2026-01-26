@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
 class CurrencyOption {
   final String code; // ISO Code (USD)
@@ -19,12 +21,34 @@ class CurrencyOption {
     }
   }
 
+  static const String defaultCode = 'USD';
+
+  static String detectSystemCurrency(BuildContext context) {
+    // 取得完整的 Locale (包含語言與地區，如 zh_TW, zh_CN)
+    final Locale currentAppLocale =
+        TranslationProvider.of(context).flutterLocale;
+
+    // 根據完整 Locale 取得幣別名稱
+    final String detected = NumberFormat.simpleCurrency(
+          locale: currentAppLocale.toString(),
+        ).currencyName ??
+        '';
+
+    // 檢查偵測到的幣別是否在我們的支援清單內
+    final bool isSupported =
+        kSupportedCurrencies.any((e) => e.code == detected);
+
+    // 如果支援則回傳偵測值，不支援或抓不到則回傳美金
+    return isSupported ? detected : defaultCode;
+  }
+
   /// 靜態 helper：根據 currency code 查找設定並格式化
   static String formatAmount(double amount, String code) {
     // Find the option by code, default to USD if not found
     final option = kSupportedCurrencies.firstWhere(
       (e) => e.code == code,
-      orElse: () => kSupportedCurrencies.firstWhere((e) => e.code == 'USD'),
+      orElse: () =>
+          kSupportedCurrencies.firstWhere((e) => e.code == defaultCode),
     );
 
     return option.format(amount);
