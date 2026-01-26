@@ -8,6 +8,7 @@ import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/core/services/record_service.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
@@ -39,7 +40,6 @@ class _S13GroupViewState extends State<S13GroupView> {
   final Map<String, GlobalKey> _dateKeys = {};
   DateTime _selectedDateInStrip = DateTime.now();
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _dateStripKey = GlobalKey();
 
   // State for one-time scroll logic
   bool _hasPerformedInitialScroll = false;
@@ -242,8 +242,7 @@ class _S13GroupViewState extends State<S13GroupView> {
             // Sticky Header 2 (Date Strip)
             SliverPersistentHeader(
               pinned: true,
-              delegate: _DateStripDelegate(
-                key: _dateStripKey,
+              delegate: CommonDateStripDelegate(
                 height: _kDateStripHeight,
                 startDate: startDate,
                 endDate: endDate,
@@ -296,9 +295,10 @@ class _S13GroupViewState extends State<S13GroupView> {
                         )
                       else
                         ...dayRecords.map((doc) {
+                          final recordModel = RecordModel.fromFirestore(doc);
                           return _RecordItem(
                             taskId: widget.taskId,
-                            doc: doc,
+                            record: recordModel,
                             prepayBalance: widget.prepayBalance,
                             baseCurrency: widget.currency,
                           );
@@ -345,159 +345,6 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
     return oldDelegate.height != height || oldDelegate.child != child;
-  }
-}
-
-class _DateStripDelegate extends SliverPersistentHeaderDelegate {
-  final GlobalKey key;
-  final double height;
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime selectedDate;
-  final Function(DateTime) onDateSelected;
-
-  _DateStripDelegate({
-    required this.key,
-    required this.height,
-    required this.startDate,
-    required this.endDate,
-    required this.selectedDate,
-    required this.onDateSelected,
-  });
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final theme = Theme.of(context);
-    final days = endDate.difference(startDate).inDays + 1;
-    final dates = List.generate(
-        days > 0 ? days : 1, (index) => startDate.add(Duration(days: index)));
-
-    return Container(
-      key: key,
-      color: theme.colorScheme.surface,
-      height: height,
-      child: Column(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.calendar_month),
-                  onPressed: () async {
-                    Locale activeLocale =
-                        TranslationProvider.of(context).flutterLocale;
-
-                    if (activeLocale.languageCode == 'zh') {
-                      activeLocale = const Locale.fromSubtags(
-                        languageCode: 'zh',
-                        scriptCode: 'Hant',
-                        countryCode: 'TW',
-                      );
-                    }
-
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate,
-                      firstDate: startDate.subtract(const Duration(days: 365)),
-                      lastDate: endDate.add(const Duration(days: 365)),
-                      locale: activeLocale,
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: Theme.of(context).colorScheme,
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (picked != null) {
-                      onDateSelected(picked);
-                    }
-                  },
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: dates.length,
-                    itemBuilder: (context, index) {
-                      final date = dates[index];
-                      final isToday = DateUtils.isSameDay(date, DateTime.now());
-                      final isSelected =
-                          DateUtils.isSameDay(date, selectedDate);
-                      final dateStr = DateFormat('MM/dd').format(date);
-
-                      return InkWell(
-                        onTap: () => onDateSelected(date),
-                        child: Container(
-                          width: 60,
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : Colors.transparent,
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Text(dateStr,
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: isSelected
-                                                  ? theme.colorScheme.onPrimary
-                                                  : theme
-                                                      .colorScheme.onSurface)),
-                                ),
-                              ),
-                              if (isToday)
-                                Positioned(
-                                  bottom: 6,
-                                  left: 0,
-                                  right: 0,
-                                  child: Center(
-                                    child: Container(
-                                      width: 4,
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.primary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(covariant _DateStripDelegate oldDelegate) {
-    return oldDelegate.startDate != startDate ||
-        oldDelegate.endDate != endDate ||
-        oldDelegate.selectedDate != selectedDate;
   }
 }
 
@@ -553,32 +400,30 @@ class _DailyHeader extends StatelessWidget {
 
 class _RecordItem extends StatelessWidget {
   final String taskId;
-  final DocumentSnapshot doc;
+  final RecordModel record;
   final double prepayBalance;
   final String baseCurrency;
 
   const _RecordItem({
     required this.taskId,
-    required this.doc,
+    required this.record,
     required this.prepayBalance,
     required this.baseCurrency,
   });
 
   @override
   Widget build(BuildContext context) {
-    final data = doc.data() as Map<String, dynamic>;
+    final t = Translations.of(context);
     final theme = Theme.of(context);
-    final type = data['type'] ?? 'expense';
-    final isIncome = type == 'income';
-    final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
-    final currency = data['currency'] ?? '';
-    final exchangeRate = (data['exchangeRate'] as num?)?.toDouble() ?? 1.0;
-    final title = data['title'] ?? t.common.untitled;
-    final categoryId = data['categoryId'] as String?;
+    final isIncome = record.type == 'income';
+    final amount = record.amount;
+    final currency = record.currency;
+    final exchangeRate = record.exchangeRate;
+    final category = CategoryConstant.getCategoryById(record.categoryId);
+    final title =
+        (record.title.isNotEmpty) ? record.title : category.getName(t);
 
-    final icon = isIncome
-        ? Icons.savings_outlined
-        : CategoryConstant.getCategoryById(categoryId).icon;
+    final icon = isIncome ? Icons.savings_outlined : category.icon;
 
     final color =
         isIncome ? theme.colorScheme.tertiary : theme.colorScheme.error;
@@ -597,7 +442,7 @@ class _RecordItem extends StatelessWidget {
         : "$currency ${numberFormat.format(amount)}";
 
     return Dismissible(
-      key: Key(doc.id),
+      key: Key(record.id ?? ''),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
@@ -620,7 +465,7 @@ class _RecordItem extends StatelessWidget {
         return confirmed;
       },
       onDismissed: (direction) {
-        RecordService.deleteRecord(taskId, doc.id);
+        RecordService.deleteRecord(taskId, record.id ?? '');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
         );
@@ -629,10 +474,10 @@ class _RecordItem extends StatelessWidget {
         onTap: () => context.pushNamed(
           'S15',
           pathParameters: {'taskId': taskId},
-          queryParameters: {'id': doc.id},
+          queryParameters: {'id': record.id},
           extra: {
             'prepayBalance': prepayBalance,
-            'record': RecordModel.fromFirestore(doc),
+            'record': record,
           },
         ),
         leading: CircleAvatar(

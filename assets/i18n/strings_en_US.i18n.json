@@ -102,7 +102,11 @@
     "dialog_balance_detail": "Balance Details",
     "section_expense": "Expense Details",
     "section_income": "Income Details",
-    "daily_stats_title": "Today's Stats"
+    "daily_stats_title": "Daily Total Expense",
+    "personal_daily_total": "Personal Daily Total Expense",
+    "personal_to_receive": "To Receive",
+    "personal_to_pay": "To Pay",
+    "personal_empty_desc": "No records related to you on this day"
   },
   "S15_Record_Edit": {
     "title_create": "Add Expense",

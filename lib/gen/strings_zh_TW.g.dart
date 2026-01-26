@@ -399,6 +399,18 @@ class TranslationsS13TaskDashboardZhTw {
 
 	/// zh-TW: '本日支出'
 	String get daily_stats_title => '本日支出';
+
+	/// zh-TW: '個人本日支出'
+	String get personal_daily_total => '個人本日支出';
+
+	/// zh-TW: '應收'
+	String get personal_to_receive => '應收';
+
+	/// zh-TW: '應付'
+	String get personal_to_pay => '應付';
+
+	/// zh-TW: '這天沒有與你有關的紀錄'
+	String get personal_empty_desc => '這天沒有與你有關的紀錄';
 }
 
 // Path: S15_Record_Edit
@@ -1071,6 +1083,10 @@ extension on Translations {
 			'S13_Task_Dashboard.section_expense' => '支出明細',
 			'S13_Task_Dashboard.section_income' => '預收明細',
 			'S13_Task_Dashboard.daily_stats_title' => '本日支出',
+			'S13_Task_Dashboard.personal_daily_total' => '個人本日支出',
+			'S13_Task_Dashboard.personal_to_receive' => '應收',
+			'S13_Task_Dashboard.personal_to_pay' => '應付',
+			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',

@@ -102,7 +102,11 @@
     "dialog_balance_detail": "通貨別内訳",
     "section_expense": "支払い通貨",
     "section_income": "預り金通貨",
-    "daily_stats_title": "本日の統計"
+    "daily_stats_title": "本日の支出",
+    "personal_daily_total": "本日の個人支出",
+    "personal_to_receive": "受取",
+    "personal_to_pay": "支払",
+    "personal_empty_desc": "この日のあなたに関連する記録はありません"
   },
   "S15_Record_Edit": {
     "title_create": "記録を追加",

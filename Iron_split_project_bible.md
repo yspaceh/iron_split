@@ -89,6 +89,7 @@
 - European Robin — 歐亞知更鳥
 - Eurasian Otter — 歐亞水獺
 - Stoat — 白鼬
+- Cat — 貓
 
 ---
 

@@ -219,7 +219,11 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override String get dialog_balance_detail => '通貨別内訳';
 	@override String get section_expense => '支払い通貨';
 	@override String get section_income => '預り金通貨';
-	@override String get daily_stats_title => '本日の統計';
+	@override String get daily_stats_title => '本日の支出';
+	@override String get personal_daily_total => '本日の個人支出';
+	@override String get personal_to_receive => '受取';
+	@override String get personal_to_pay => '支払';
+	@override String get personal_empty_desc => 'この日のあなたに関連する記録はありません';
 }
 
 // Path: S15_Record_Edit
@@ -621,7 +625,11 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.dialog_balance_detail' => '通貨別内訳',
 			'S13_Task_Dashboard.section_expense' => '支払い通貨',
 			'S13_Task_Dashboard.section_income' => '預り金通貨',
-			'S13_Task_Dashboard.daily_stats_title' => '本日の統計',
+			'S13_Task_Dashboard.daily_stats_title' => '本日の支出',
+			'S13_Task_Dashboard.personal_daily_total' => '本日の個人支出',
+			'S13_Task_Dashboard.personal_to_receive' => '受取',
+			'S13_Task_Dashboard.personal_to_pay' => '支払',
+			'S13_Task_Dashboard.personal_empty_desc' => 'この日のあなたに関連する記録はありません',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',

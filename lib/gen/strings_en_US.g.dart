@@ -219,7 +219,11 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override String get dialog_balance_detail => 'Balance Details';
 	@override String get section_expense => 'Expense Details';
 	@override String get section_income => 'Income Details';
-	@override String get daily_stats_title => 'Today\'s Stats';
+	@override String get daily_stats_title => 'Daily Total Expense';
+	@override String get personal_daily_total => 'Personal Daily Total Expense';
+	@override String get personal_to_receive => 'To Receive';
+	@override String get personal_to_pay => 'To Pay';
+	@override String get personal_empty_desc => 'No records related to you on this day';
 }
 
 // Path: S15_Record_Edit
@@ -625,7 +629,11 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.dialog_balance_detail' => 'Balance Details',
 			'S13_Task_Dashboard.section_expense' => 'Expense Details',
 			'S13_Task_Dashboard.section_income' => 'Income Details',
-			'S13_Task_Dashboard.daily_stats_title' => 'Today\'s Stats',
+			'S13_Task_Dashboard.daily_stats_title' => 'Daily Total Expense',
+			'S13_Task_Dashboard.personal_daily_total' => 'Personal Daily Total Expense',
+			'S13_Task_Dashboard.personal_to_receive' => 'To Receive',
+			'S13_Task_Dashboard.personal_to_pay' => 'To Pay',
+			'S13_Task_Dashboard.personal_empty_desc' => 'No records related to you on this day',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',

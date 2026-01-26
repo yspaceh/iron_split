@@ -168,6 +168,12 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                       )
                     : S13PersonalView(
                         taskId: widget.taskId,
+                        taskData: taskData, // [新增] 傳入資料
+                        memberData: memberData, // [新增] 傳入資料
+                        records: records, // [新增] 傳入資料
+                        currency: currency, // [新增] 傳入資料
+                        uid: user.uid, // [新增] 傳入 UID 做過濾
+                        prepayBalance: prepayBalance, // [新增] 傳入預付款
                       ),
               ),
             ],

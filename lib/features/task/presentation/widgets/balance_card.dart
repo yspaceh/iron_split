@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:iron_split/core/constants/category_constants.dart';
+import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'dart:ui' as ui;
 
 class BalanceCard extends StatelessWidget {
   final String taskId;
@@ -40,52 +44,50 @@ class BalanceCard extends StatelessWidget {
 
     final t = Translations.of(context);
     final theme = Theme.of(context);
-
     // 1. Data Parsing
-    final currency = taskData!['baseCurrency'] ?? 'TWD';
+    final String systemCurrency = NumberFormat.simpleCurrency(
+                locale: Localizations.localeOf(context).toString())
+            .currencyName ??
+        '';
+
+    final currency = taskData!['baseCurrency'] ??
+        (systemCurrency.isNotEmpty
+            ? systemCurrency
+            : CurrencyOption.defaultCode);
     final balanceRule = taskData!['balanceRule'] ?? 'random';
 
-    // 2. Calculation Logic
-    double totalExpenses = 0.0;
-    double potIncome = 0.0;
-    double potRemainder = 0.0;
+    // 2. 轉換為 Model
+    final recordModels =
+        records.map((doc) => RecordModel.fromFirestore(doc)).toList();
 
-    // Grouping for Dialog
+    // 3. 使用 Calculator 計算
+    final double potRemainder =
+        BalanceCalculator.calculateRemainderBuffer(recordModels);
+    final double netBalance =
+        BalanceCalculator.calculatePrepayBalance(recordModels);
+
+    // 統計支出與收入 (用於圖表)
+    double potIncome = 0.0;
+    double totalExpenses = 0.0;
     final Map<String, double> expenseByCurrency = {};
     final Map<String, double> incomeByCurrency = {};
 
-    for (var doc in records) {
-      final data = doc.data() as Map<String, dynamic>;
-      final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
-      final type = data['type'] as String?;
-      final recCurrency = data['currency'] as String? ?? currency;
-
-      // A. Pot Remainder
-      double allocated = 0.0;
-      if (data.containsKey('splitDetails')) {
-        final splits = data['splitDetails'] as Map<String, dynamic>;
-        splits.forEach((_, val) => allocated += (val as num).toDouble());
-      }
-      potRemainder += (amount - allocated);
-
-      // B. Fund & Expense
-      if (type == 'income') {
-        potIncome += amount;
-        incomeByCurrency.update(recCurrency, (val) => val + amount,
-            ifAbsent: () => amount);
+    for (var r in recordModels) {
+      final recCurrency = r.currency;
+      if (r.type == 'income') {
+        potIncome += r.amount;
+        incomeByCurrency.update(recCurrency, (val) => val + r.amount,
+            ifAbsent: () => r.amount);
       } else {
-        totalExpenses += amount;
-        expenseByCurrency.update(recCurrency, (val) => val + amount,
-            ifAbsent: () => amount);
+        totalExpenses += r.amount;
+        expenseByCurrency.update(recCurrency, (val) => val + r.amount,
+            ifAbsent: () => r.amount);
       }
     }
-
-    final netBalance = potIncome - totalExpenses;
 
     // Chart Scaling
     final maxVal = (totalExpenses > potIncome) ? totalExpenses : potIncome;
     final scaleBase = maxVal == 0 ? 1.0 : maxVal;
-
     int getFlex(double val) => (val / scaleBase * 1000).toInt();
 
     String mapRuleName(String rule) {
@@ -312,7 +314,7 @@ class BalanceCard extends StatelessWidget {
                           // Left Bar (Expenses - Red)
                           Expanded(
                             child: Directionality(
-                              textDirection: TextDirection.rtl,
+                              textDirection: ui.TextDirection.rtl,
                               child: totalExpenses > 0
                                   ? Row(
                                       children: [

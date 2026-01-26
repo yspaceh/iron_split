@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
 class CategoryConstant {
   final String id;
@@ -16,6 +17,24 @@ class CategoryConstant {
       (category) => category.id == id,
       orElse: () => kAppCategories.last, // Default to 'others'
     );
+  }
+
+  String getName(Translations t) {
+    switch (id) {
+      case 'fastfood':
+        return t.category.food;
+      case 'directions_bus':
+        return t.category.transport;
+      case 'shopping_bag':
+        return t.category.shopping;
+      case 'movie':
+        return t.category.entertainment;
+      case 'hotel':
+        return t.category.accommodation;
+      case 'more_horiz':
+      default:
+        return t.category.others;
+    }
   }
 }
 
