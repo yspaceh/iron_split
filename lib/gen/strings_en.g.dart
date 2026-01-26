@@ -97,6 +97,8 @@ class _TranslationsCommonEn implements TranslationsCommonZh {
 	@override String get keep_editing => 'Keep Editing';
 	@override String get member_prefix => 'Member';
 	@override String get no_record => 'No Record';
+	@override String get today => 'Today';
+	@override String get untitled => 'Untitled';
 }
 
 // Path: dialog
@@ -200,14 +202,22 @@ class _TranslationsS13TaskDashboardEn implements TranslationsS13TaskDashboardZh 
 	@override String get label_prepay_balance => 'Pool Balance';
 	@override String get label_my_balance => 'My Balance';
 	@override String label_remainder({required Object amount}) => 'Buffer: ${amount}';
+	@override String get label_balance => 'Balance';
+	@override String get label_total_expense => 'Total Expense';
+	@override String get label_total_prepay => 'Total Pre-collected';
+	@override String get label_remainder_pot => 'Remainder Pot';
 	@override String get fab_record => 'Record';
-	@override String get empty_records => 'No records yet';
+	@override String get empty_records => 'No records';
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
 	@override String get settlement_button => 'Settlement';
 	@override String get nav_to_record => 'Navigating to record page...';
 	@override String get daily_expense_label => 'Exp';
+	@override String get dialog_balance_detail => 'Balance Details';
+	@override String get section_expense => 'Expense Details';
+	@override String get section_income => 'Income Details';
+	@override String get daily_stats_title => 'Today\'s Stats';
 }
 
 // Path: S15_Record_Edit
@@ -547,6 +557,8 @@ extension on TranslationsEn {
 			'common.keep_editing' => 'Keep Editing',
 			'common.member_prefix' => 'Member',
 			'common.no_record' => 'No Record',
+			'common.today' => 'Today',
+			'common.untitled' => 'Untitled',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
@@ -596,14 +608,22 @@ extension on TranslationsEn {
 			'S13_Task_Dashboard.label_prepay_balance' => 'Pool Balance',
 			'S13_Task_Dashboard.label_my_balance' => 'My Balance',
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => 'Buffer: ${amount}',
+			'S13_Task_Dashboard.label_balance' => 'Balance',
+			'S13_Task_Dashboard.label_total_expense' => 'Total Expense',
+			'S13_Task_Dashboard.label_total_prepay' => 'Total Pre-collected',
+			'S13_Task_Dashboard.label_remainder_pot' => 'Remainder Pot',
 			'S13_Task_Dashboard.fab_record' => 'Record',
-			'S13_Task_Dashboard.empty_records' => 'No records yet',
+			'S13_Task_Dashboard.empty_records' => 'No records',
 			'S13_Task_Dashboard.rule_random' => 'Random',
 			'S13_Task_Dashboard.rule_order' => 'Order',
 			'S13_Task_Dashboard.rule_member' => 'Member',
 			'S13_Task_Dashboard.settlement_button' => 'Settlement',
 			'S13_Task_Dashboard.nav_to_record' => 'Navigating to record page...',
 			'S13_Task_Dashboard.daily_expense_label' => 'Exp',
+			'S13_Task_Dashboard.dialog_balance_detail' => 'Balance Details',
+			'S13_Task_Dashboard.section_expense' => 'Expense Details',
+			'S13_Task_Dashboard.section_income' => 'Income Details',
+			'S13_Task_Dashboard.daily_stats_title' => 'Today\'s Stats',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',

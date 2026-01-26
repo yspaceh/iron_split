@@ -97,6 +97,8 @@ class _TranslationsCommonJa implements TranslationsCommonZh {
 	@override String get keep_editing => '編集を続ける';
 	@override String get member_prefix => 'メンバー';
 	@override String get no_record => '記録なし';
+	@override String get today => '今日';
+	@override String get untitled => '無題';
 }
 
 // Path: dialog
@@ -200,6 +202,10 @@ class _TranslationsS13TaskDashboardJa implements TranslationsS13TaskDashboardZh 
 	@override String get label_prepay_balance => 'プール残高';
 	@override String get label_my_balance => '私の収支';
 	@override String label_remainder({required Object amount}) => '端数: ${amount}';
+	@override String get label_balance => '残高';
+	@override String get label_total_expense => '総費用';
+	@override String get label_total_prepay => '総預り金';
+	@override String get label_remainder_pot => '端数ポット';
 	@override String get fab_record => '記録';
 	@override String get empty_records => '記録がありません';
 	@override String get rule_random => 'ランダム';
@@ -208,6 +214,10 @@ class _TranslationsS13TaskDashboardJa implements TranslationsS13TaskDashboardZh 
 	@override String get settlement_button => '精算';
 	@override String get nav_to_record => '記録ページへ移動します...';
 	@override String get daily_expense_label => '支出';
+	@override String get dialog_balance_detail => '通貨別内訳';
+	@override String get section_expense => '支払い通貨';
+	@override String get section_income => '預り金通貨';
+	@override String get daily_stats_title => '本日の統計';
 }
 
 // Path: S15_Record_Edit
@@ -543,6 +553,8 @@ extension on TranslationsJa {
 			'common.keep_editing' => '編集を続ける',
 			'common.member_prefix' => 'メンバー',
 			'common.no_record' => '記録なし',
+			'common.today' => '今日',
+			'common.untitled' => '無題',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
@@ -592,6 +604,10 @@ extension on TranslationsJa {
 			'S13_Task_Dashboard.label_prepay_balance' => 'プール残高',
 			'S13_Task_Dashboard.label_my_balance' => '私の収支',
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '端数: ${amount}',
+			'S13_Task_Dashboard.label_balance' => '残高',
+			'S13_Task_Dashboard.label_total_expense' => '総費用',
+			'S13_Task_Dashboard.label_total_prepay' => '総預り金',
+			'S13_Task_Dashboard.label_remainder_pot' => '端数ポット',
 			'S13_Task_Dashboard.fab_record' => '記録',
 			'S13_Task_Dashboard.empty_records' => '記録がありません',
 			'S13_Task_Dashboard.rule_random' => 'ランダム',
@@ -600,6 +616,10 @@ extension on TranslationsJa {
 			'S13_Task_Dashboard.settlement_button' => '精算',
 			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
+			'S13_Task_Dashboard.dialog_balance_detail' => '通貨別内訳',
+			'S13_Task_Dashboard.section_expense' => '支払い通貨',
+			'S13_Task_Dashboard.section_income' => '預り金通貨',
+			'S13_Task_Dashboard.daily_stats_title' => '本日の統計',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',

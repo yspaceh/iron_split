@@ -23,7 +23,9 @@
     "discard": "Discard",
     "keep_editing": "Keep Editing",
     "member_prefix": "Member",
-    "no_record": "No Record"
+    "no_record": "No Record",
+    "today": "Today",
+    "untitled": "Untitled"
   },
   "dialog": {
     "unsaved_changes_title": "Unsaved Changes?",
@@ -85,14 +87,22 @@
     "label_prepay_balance": "Pool Balance",
     "label_my_balance": "My Balance",
     "label_remainder": "Buffer: {amount}",
+    "label_balance": "Balance",
+    "label_total_expense": "Total Expense",
+    "label_total_prepay": "Total Pre-collected",
+    "label_remainder_pot": "Remainder Pot",
     "fab_record": "Record",
-    "empty_records": "No records yet",
+    "empty_records": "No records",
     "rule_random": "Random",
     "rule_order": "Order",
     "rule_member": "Member",
     "settlement_button": "Settlement",
     "nav_to_record": "Navigating to record page...",
-    "daily_expense_label": "Exp"
+    "daily_expense_label": "Exp",
+    "dialog_balance_detail": "Balance Details",
+    "section_expense": "Expense Details",
+    "section_income": "Income Details",
+    "daily_stats_title": "Today's Stats"
   },
   "S15_Record_Edit": {
     "title_create": "Add Expense",

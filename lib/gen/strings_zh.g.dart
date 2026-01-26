@@ -144,6 +144,12 @@ class TranslationsCommonZh {
 
 	/// zh: '無紀錄'
 	String get no_record => '無紀錄';
+
+	/// zh: '今天'
+	String get today => '今天';
+
+	/// zh: '未命名'
+	String get untitled => '未命名';
 }
 
 // Path: dialog
@@ -346,20 +352,32 @@ class TranslationsS13TaskDashboardZh {
 	/// zh: '暫存零頭: {amount}'
 	String label_remainder({required Object amount}) => '暫存零頭: ${amount}';
 
+	/// zh: '結餘'
+	String get label_balance => '結餘';
+
+	/// zh: '總費用'
+	String get label_total_expense => '總費用';
+
+	/// zh: '總預收'
+	String get label_total_prepay => '總預收';
+
+	/// zh: '零頭罐'
+	String get label_remainder_pot => '零頭罐';
+
 	/// zh: '記一筆'
 	String get fab_record => '記一筆';
 
-	/// zh: '還沒有任何紀錄'
-	String get empty_records => '還沒有任何紀錄';
+	/// zh: '尚無收支紀錄'
+	String get empty_records => '尚無收支紀錄';
 
-	/// zh: '隨機'
-	String get rule_random => '隨機';
+	/// zh: '餘額輪盤'
+	String get rule_random => '餘額輪盤';
 
-	/// zh: '順序'
-	String get rule_order => '順序';
+	/// zh: '順序輪替'
+	String get rule_order => '順序輪替';
 
-	/// zh: '指定'
-	String get rule_member => '指定';
+	/// zh: '指定成員'
+	String get rule_member => '指定成員';
 
 	/// zh: '結算'
 	String get settlement_button => '結算';
@@ -369,6 +387,18 @@ class TranslationsS13TaskDashboardZh {
 
 	/// zh: '支出'
 	String get daily_expense_label => '支出';
+
+	/// zh: '收支幣別明細'
+	String get dialog_balance_detail => '收支幣別明細';
+
+	/// zh: '支出明細'
+	String get section_expense => '支出明細';
+
+	/// zh: '預收明細'
+	String get section_income => '預收明細';
+
+	/// zh: '本日支出'
+	String get daily_stats_title => '本日支出';
 }
 
 // Path: S15_Record_Edit
@@ -974,6 +1004,8 @@ extension on Translations {
 			'common.keep_editing' => '繼續編輯',
 			'common.member_prefix' => '成員',
 			'common.no_record' => '無紀錄',
+			'common.today' => '今天',
+			'common.untitled' => '未命名',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
@@ -1023,14 +1055,22 @@ extension on Translations {
 			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額 (Pool)',
 			'S13_Task_Dashboard.label_my_balance' => '我的收支',
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
+			'S13_Task_Dashboard.label_balance' => '結餘',
+			'S13_Task_Dashboard.label_total_expense' => '總費用',
+			'S13_Task_Dashboard.label_total_prepay' => '總預收',
+			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
 			'S13_Task_Dashboard.fab_record' => '記一筆',
-			'S13_Task_Dashboard.empty_records' => '還沒有任何紀錄',
-			'S13_Task_Dashboard.rule_random' => '隨機',
-			'S13_Task_Dashboard.rule_order' => '順序',
-			'S13_Task_Dashboard.rule_member' => '指定',
+			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
+			'S13_Task_Dashboard.rule_random' => '餘額輪盤',
+			'S13_Task_Dashboard.rule_order' => '順序輪替',
+			'S13_Task_Dashboard.rule_member' => '指定成員',
 			'S13_Task_Dashboard.settlement_button' => '結算',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
+			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
+			'S13_Task_Dashboard.section_expense' => '支出明細',
+			'S13_Task_Dashboard.section_income' => '預收明細',
+			'S13_Task_Dashboard.daily_stats_title' => '本日支出',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',

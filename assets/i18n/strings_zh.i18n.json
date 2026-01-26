@@ -23,7 +23,9 @@
     "discard": "放棄變更",
     "keep_editing": "繼續編輯",
     "member_prefix": "成員",
-    "no_record": "無紀錄"
+    "no_record": "無紀錄",
+    "today": "今天",
+    "untitled": "未命名"
   },
   "dialog": {
     "unsaved_changes_title": "尚未儲存",
@@ -85,14 +87,22 @@
     "label_prepay_balance": "公款餘額 (Pool)",
     "label_my_balance": "我的收支",
     "label_remainder": "暫存零頭: {amount}",
+    "label_balance": "結餘",
+    "label_total_expense": "總費用",
+    "label_total_prepay": "總預收",
+    "label_remainder_pot": "零頭罐",
     "fab_record": "記一筆",
-    "empty_records": "還沒有任何紀錄",
-    "rule_random": "隨機",
-    "rule_order": "順序",
-    "rule_member": "指定",
+    "empty_records": "尚無收支紀錄",
+    "rule_random": "餘額輪盤",
+    "rule_order": "順序輪替",
+    "rule_member": "指定成員",
     "settlement_button": "結算",
     "nav_to_record": "準備前往記帳頁面...",
-    "daily_expense_label": "支出"
+    "daily_expense_label": "支出",
+    "dialog_balance_detail": "收支幣別明細",
+    "section_expense": "支出明細",
+    "section_income": "預收明細",
+    "daily_stats_title": "本日支出"
   },
   "S15_Record_Edit": {
     "title_create": "記一筆",

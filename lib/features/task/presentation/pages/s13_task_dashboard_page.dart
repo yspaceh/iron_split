@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -13,6 +14,7 @@ import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/task/presentation/widgets/balance_card.dart';
 
 /// Page Key: S13_Task_Dashboard (Wireframe 16)
 class S13TaskDashboardPage extends StatefulWidget {
@@ -33,26 +35,16 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
   DateTime _selectedDateInStrip = DateTime.now();
   final ScrollController _scrollController = ScrollController();
 
-  // Keys to measure actual height of sticky headers
-  final GlobalKey _dashboardHeaderKey = GlobalKey();
   final GlobalKey _dateStripKey = GlobalKey();
-
-  // Keep the constants ONLY for the Delegates' maxExtent (UI Layout)
-  final double _dashboardHeaderHeight = 260.0;
-  final double _dateStripHeight = 72.0;
   Map<String, dynamic>? _taskData;
 
-  String _mapRuleName(String? rule) {
-    switch (rule) {
-      case 'order':
-        return t.S13_Task_Dashboard.rule_order;
-      case 'member':
-        return t.S13_Task_Dashboard.rule_member;
-      case 'random':
-      default:
-        return t.S13_Task_Dashboard.rule_random;
-    }
-  }
+  // Constants for Sticky Header
+  static const double _kTabSectionHeight = 64.0; // Corrected to match actual UI
+  static const double _kCardHeight = 176.0; // MATCHING CURRENT CARD UI
+  static const double _kDateStripHeight = 56.0;
+
+  // Total Sticky Height for SliverPersistentHeader
+  double get _dashboardStickyHeight => _kTabSectionHeight + _kCardHeight;
 
   Map<DateTime, List<QueryDocumentSnapshot>> _groupRecords(
       List<QueryDocumentSnapshot> records) {
@@ -85,94 +77,92 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
   }
 
   Future<void> _handleDateJump(DateTime date) async {
+    // 1. Immediate UI Update
+    setState(() {
+      _selectedDateInStrip = date;
+    });
+
     final dTarget = DateTime(date.year, date.month, date.day);
+    final keyStr = DateFormat('yyyyMMdd').format(dTarget);
 
-    final startTs = _taskData?['startDate'] as Timestamp?;
-    final endTs = _taskData?['endDate'] as Timestamp?;
-    if (startTs == null || endTs == null) {
-      debugPrint('❌ Missing Start/End Date');
-      return;
-    }
+    // 2. Scroll Helper with Retry
+    void attemptScroll([int attempt = 0]) {
+      final key = _dateKeys[keyStr];
+      final context = key?.currentContext;
 
-    final dStart = startTs.toDate().toLocal();
-    final dEnd = endTs.toDate().toLocal();
-    final dEndNormalized = DateTime(dEnd.year, dEnd.month, dEnd.day);
+      if (context != null) {
+        // --- FIX: Absolute Position Scrolling ---
+        // 診斷結果證實 revealedOffset 已經是正確的目標位置
+        // 直接捲動到該位置，不需要再扣除 Header 高度
+        final renderObject = context.findRenderObject();
 
-    final key = _dateKeys[DateFormat('yyyyMMdd').format(dTarget)];
+        if (renderObject != null) {
+          final viewport = RenderAbstractViewport.of(renderObject);
+          final revealedOffset =
+              viewport.getOffsetToReveal(renderObject, 0.0).offset;
 
-    // 1. MEASURE HEADERS
-    double headerH = 0.0;
-    double stripH = 0.0;
+          final targetOffset = revealedOffset;
 
-    // Check Header
-    final headerCtx = _dashboardHeaderKey.currentContext;
-    if (headerCtx != null) {
-      final box = headerCtx.findRenderObject() as RenderBox?;
-      if (box != null) {
-        headerH = box.size.height;
-      }
-    } else {
-      headerH = 260.0;
-    }
+          _scrollController.animateTo(
+            targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOutCubic,
+          );
+        }
+      } else {
+        // Retry if failed (Layout settling)
+        if (attempt < 5) {
+          Future.delayed(const Duration(milliseconds: 50),
+              () => attemptScroll(attempt + 1));
+          return;
+        }
 
-    // Check Strip
-    final stripCtx = _dateStripKey.currentContext;
-    if (stripCtx != null) {
-      final box = stripCtx.findRenderObject() as RenderBox?;
-      if (box != null) {
-        stripH = box.size.height;
-      }
-    } else {
-      stripH = 72.0;
-    }
+        // 3. Fallback: Range Check (保留您的 Code 原封不動)
+        bool isInRange = false;
+        if (_taskData != null) {
+          final start = _parseDate(_taskData!['startDate'], DateTime(2000));
+          final end = _parseDate(_taskData!['endDate'], DateTime(2100));
 
-    final totalHeaderCorrection = headerH + stripH;
+          final dStart = DateTime(start.year, start.month, start.day);
+          final dEnd = DateTime(end.year, end.month, end.day);
 
-    if (key != null && key.currentContext != null) {
-      Scrollable.ensureVisible(
-        key.currentContext!,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-        alignment: 0.04,
-      );
-    } else {
-      double calculatedListHeight = 0.0;
-      DateTime current = dEndNormalized;
-
-      // 2. CALCULATION LOOP
-      while (current.isAfter(dTarget)) {
-        int count = 0;
-        for (var doc in _allRecords) {
-          final data = doc.data() as Map<String, dynamic>;
-          if (data['date'] != null) {
-            final rDate = (data['date'] as Timestamp).toDate().toLocal();
-            if (rDate.year == current.year &&
-                rDate.month == current.month &&
-                rDate.day == current.day) {
-              count++;
-            }
+          if (!dTarget.isBefore(dStart) && !dTarget.isAfter(dEnd)) {
+            isInRange = true;
           }
         }
 
-        // Formula: Empty=85, Normal=45 + N*105 + 10
-        double dayHeight = (count == 0) ? 85.0 : (45.0 + count * 105.0 + 10.0);
+        // If date is valid, STOP. Do not show dialog.
+        if (isInRange) return;
 
-        calculatedListHeight += dayHeight;
-        current = current.subtract(const Duration(days: 1));
-      }
+        // Fallback: Check records
+        final hasRecords = _allRecords.any((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          if (data['date'] == null) return false;
+          final rDate = (data['date'] as Timestamp).toDate();
+          return rDate.year == dTarget.year &&
+              rDate.month == dTarget.month &&
+              rDate.day == dTarget.day;
+        });
 
-      // 3. FINAL TARGET
-      final targetWithCorrection = calculatedListHeight + totalHeaderCorrection;
-
-      if (_scrollController.hasClients) {
-        final max = _scrollController.position.maxScrollExtent;
-
-        final finalDest =
-            targetWithCorrection > max ? max : targetWithCorrection;
-
-        _scrollController.jumpTo(finalDest);
+        if (!hasRecords) {
+          showDialog(
+            context: context ?? this.context,
+            builder: (context) => D05DateJumpNoResultDialog(
+              targetDate: dTarget,
+              taskId: widget.taskId,
+            ),
+          );
+        }
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => attemptScroll());
+  }
+
+  DateTime _parseDate(dynamic input, DateTime fallback) {
+    if (input is Timestamp) return input.toDate();
+    if (input is String) return DateTime.tryParse(input) ?? fallback;
+    return fallback;
   }
 
   @override
@@ -226,8 +216,8 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
             // Schedule Jump after frame (to allow list to build)
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) {
-                // 🩹 FIX: Add small delay to ensure SliverList has layout size
-                Future.delayed(const Duration(milliseconds: 100), () {
+                // Add delay to ensure layout is ready
+                Future.delayed(const Duration(milliseconds: 300), () {
                   if (mounted) {
                     _handleDateJump(targetDate);
                   }
@@ -248,7 +238,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
               barrierDismissible: false,
               builder: (context) => D01MemberRoleIntroDialog(
                 taskId: widget.taskId,
-                initialAvatar: memberData!['avatar'] ?? 'pig',
+                initialAvatar: memberData['avatar'] ?? 'pig',
                 canReroll: true,
               ),
             );
@@ -270,13 +260,14 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
             BalanceCalculator.calculatePrepayBalance(recordModels);
 
         // 2. Data Preparation
-        final String currency = taskData['baseCurrency'] ?? 'TWD';
-        final double totalPool =
-            (taskData['totalPool'] as num?)?.toDouble() ?? 0.0;
-        final double remainderBuffer =
-            (taskData['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
-        final String rule = taskData['balanceRule'] ?? 'random';
-        final double myBalance = 0.0; // Mock
+        final String systemCurrency = NumberFormat.simpleCurrency(
+                    locale: Localizations.localeOf(context).toString())
+                .currencyName ??
+            '';
+        final String currency = taskData['baseCurrency'] ??
+            (systemCurrency.isNotEmpty
+                ? systemCurrency
+                : kSupportedCurrencies.firstWhere((e) => e.code == 'USD').code);
         final bool isCaptain = taskData['createdBy'] == user.uid;
 
         // Parse Start/End Date
@@ -346,101 +337,159 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
               ],
             ),
           ),
-          body: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              // --- A. Segmented Control & B. Dashboard Card (Sticky) ---
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _DashboardHeaderDelegate(
-                  key: _dashboardHeaderKey,
-                  height: _dashboardHeaderHeight,
-                  taskData: taskData,
-                  memberData: memberData,
-                  records: records,
-                  segmentIndex: _segmentIndex,
-                  onSegmentChanged: (val) =>
-                      setState(() => _segmentIndex = val),
-                ),
-              ),
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              // Calculate padding dynamically
+              final double visibleHeight = constraints.maxHeight;
+              // Force full screen padding for safety
+              final double bottomPadding = visibleHeight;
 
-              // --- Date Strip (Pinned) ---
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _DateStripDelegate(
-                  key: _dateStripKey,
-                  height: _dateStripHeight,
-                  startDate: startDate,
-                  endDate: endDate,
-                  selectedDate: _selectedDateInStrip,
-                  onDateSelected: (date) => _handleDateJump(date),
-                ),
-              ),
-
-              // --- C. Full Date Record List ---
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final date = fullDateList[index];
-                    final dayRecords = groupedRecords[date] ?? [];
-
-                    // Calculate Daily Expense using Helper
-                    final dayModels = dayRecords
-                        .map((doc) => RecordModel.fromFirestore(doc))
-                        .toList();
-                    final dayTotal =
-                        DailyStatisticsHelper.calculateDailyExpense(dayModels);
-
-                    final dateKeyStr = DateFormat('yyyyMMdd').format(date);
-                    if (!_dateKeys.containsKey(dateKeyStr)) {
-                      _dateKeys[dateKeyStr] = GlobalKey();
-                    }
-
-                    return Column(
-                      key: _dateKeys[dateKeyStr], // Key attached here
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _DailyHeader(
-                            date: date, total: dayTotal, currency: currency),
-
-                        // Records or Quick Add
-                        if (dayRecords.isEmpty)
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  // --- A. Sticky Header 1 (Tab + Card) ---
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StickyHeaderDelegate(
+                      height: _dashboardStickyHeight,
+                      child: Column(
+                        children: [
+                          // Tab Section (Standard M3 padding)
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: OutlinedButton.icon(
-                                onPressed: () => context.pushNamed(
-                                  'S15',
-                                  pathParameters: {'taskId': widget.taskId},
-                                  extra: {
-                                    'prepayBalance': prepayBalance,
-                                    'date': date, // Pass date
-                                  },
-                                ),
-                                icon: const Icon(Icons.add),
-                                label: Text(t.S15_Record_Edit.title_create),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: SegmentedButton<int>(
+                                segments: [
+                                  ButtonSegment(
+                                      value: 0,
+                                      label:
+                                          Text(t.S13_Task_Dashboard.tab_group),
+                                      icon: const Icon(Icons.groups)),
+                                  ButtonSegment(
+                                      value: 1,
+                                      label: Text(
+                                          t.S13_Task_Dashboard.tab_personal),
+                                      icon: const Icon(Icons.person)),
+                                ],
+                                selected: {_segmentIndex},
+                                onSelectionChanged: (Set<int> newSelection) {
+                                  setState(
+                                      () => _segmentIndex = newSelection.first);
+                                },
+                                showSelectedIcon: false,
                               ),
                             ),
-                          )
-                        else
-                          ...dayRecords.map((doc) {
-                            return _RecordItem(
-                              taskId: widget.taskId,
-                              doc: doc,
-                              prepayBalance: prepayBalance,
-                              baseCurrency: currency,
-                            );
-                          }),
-                      ],
-                    );
-                  },
-                  childCount: fullDateList.length,
-                ),
-              ),
+                          ),
 
-              // Extra padding at bottom
-              const SliverToBoxAdapter(child: SizedBox(height: 80)),
-            ],
+                          // Card Section (Enforced Height)
+                          SizedBox(
+                            height: _kCardHeight,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: _segmentIndex == 0
+                                  ? BalanceCard(
+                                      taskId: widget.taskId,
+                                      taskData: taskData,
+                                      memberData: memberData,
+                                      records: records,
+                                    )
+                                  : S13DailyStatsCard(
+                                      records: records,
+                                      targetDate: DateTime.now(),
+                                      currency: currency,
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // --- B. Sticky Header 2 (Date Strip) ---
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _DateStripDelegate(
+                      key: _dateStripKey,
+                      height: _kDateStripHeight,
+                      startDate: startDate,
+                      endDate: endDate,
+                      selectedDate: _selectedDateInStrip,
+                      onDateSelected: (date) => _handleDateJump(date),
+                    ),
+                  ),
+
+                  // --- C. Full Date Record List (Render All) ---
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: fullDateList.map((date) {
+                        final dayRecords = groupedRecords[date] ?? [];
+
+                        // Calculate Daily Expense using Helper
+                        final dayModels = dayRecords
+                            .map((doc) => RecordModel.fromFirestore(doc))
+                            .toList();
+                        final dayTotal =
+                            DailyStatisticsHelper.calculateDailyExpense(
+                                dayModels);
+
+                        final dateKeyStr = DateFormat('yyyyMMdd').format(date);
+                        if (!_dateKeys.containsKey(dateKeyStr)) {
+                          _dateKeys[dateKeyStr] = GlobalKey();
+                        }
+
+                        return Column(
+                          key: _dateKeys[dateKeyStr], // Key attached here
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _DailyHeader(
+                                date: date,
+                                total: dayTotal,
+                                currency: currency),
+
+                            // Records or Quick Add
+                            if (dayRecords.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Center(
+                                  child: OutlinedButton.icon(
+                                    onPressed: () => context.pushNamed(
+                                      'S15',
+                                      pathParameters: {'taskId': widget.taskId},
+                                      extra: {
+                                        'prepayBalance': prepayBalance,
+                                        'date': date, // Pass date
+                                      },
+                                    ),
+                                    icon: const Icon(Icons.add),
+                                    label: Text(t.S15_Record_Edit.title_create),
+                                  ),
+                                ),
+                              )
+                            else
+                              ...dayRecords.map((doc) {
+                                return _RecordItem(
+                                  taskId: widget.taskId,
+                                  doc: doc,
+                                  prepayBalance: prepayBalance,
+                                  baseCurrency: currency,
+                                );
+                              }),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  // --- D. Dynamic Bottom Padding ---
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: bottomPadding),
+                  ),
+                ],
+              );
+            },
           ),
         );
       },
@@ -448,149 +497,19 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
   }
 }
 
-class _DashboardHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final GlobalKey key;
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
   final double height;
-  final Map<String, dynamic>? taskData;
-  final Map<String, dynamic>? memberData;
-  final List<QueryDocumentSnapshot> records;
-  final int segmentIndex;
-  final ValueChanged<int> onSegmentChanged;
 
-  _DashboardHeaderDelegate({
-    required this.key,
-    required this.height,
-    required this.taskData,
-    required this.memberData,
-    required this.records,
-    required this.segmentIndex,
-    required this.onSegmentChanged,
-  });
-
-  String _mapRuleName(String? rule) {
-    switch (rule) {
-      case 'order':
-        return t.S13_Task_Dashboard.rule_order;
-      case 'member':
-        return t.S13_Task_Dashboard.rule_member;
-      case 'random':
-      default:
-        return t.S13_Task_Dashboard.rule_random;
-    }
-  }
+  _StickyHeaderDelegate({required this.child, required this.height});
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    // Derived data
-    final String currency = taskData?['baseCurrency'] ?? 'TWD';
-    final double totalPool =
-        (taskData?['totalPool'] as num?)?.toDouble() ?? 0.0;
-    final double remainderBuffer =
-        (taskData?['remainderBuffer'] as num?)?.toDouble() ?? 0.0;
-    final String rule = taskData?['balanceRule'] ?? 'random';
-    final double myBalance = 0.0; // Mock
-
     return Container(
-      color: theme.scaffoldBackgroundColor,
-      alignment: Alignment.topCenter,
-      child: Column(
-        key: key,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 1. Toggle
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<int>(
-                segments: [
-                  ButtonSegment(
-                      value: 0,
-                      label: Text(t.S13_Task_Dashboard.tab_group),
-                      icon: const Icon(Icons.groups)),
-                  ButtonSegment(
-                      value: 1,
-                      label: Text(t.S13_Task_Dashboard.tab_personal),
-                      icon: const Icon(Icons.person)),
-                ],
-                selected: {segmentIndex},
-                onSelectionChanged: (Set<int> newSelection) {
-                  onSegmentChanged(newSelection.first);
-                },
-                showSelectedIcon: false,
-              ),
-            ),
-          ),
-
-          // 2. Info Card
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Card(
-              color: segmentIndex == 0
-                  ? colorScheme.primaryContainer
-                  : colorScheme.secondaryContainer,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          segmentIndex == 0
-                              ? t.S13_Task_Dashboard.label_prepay_balance
-                              : t.S13_Task_Dashboard.label_my_balance,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                        if (segmentIndex == 0)
-                          Chip(
-                              label: Text(_mapRuleName(rule)),
-                              padding: EdgeInsets.zero,
-                              visualDensity: VisualDensity.compact),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(currency, style: theme.textTheme.titleLarge),
-                        const SizedBox(width: 8),
-                        Text(
-                          segmentIndex == 0
-                              ? totalPool.toStringAsFixed(1)
-                              : myBalance.toStringAsFixed(1),
-                          style: theme.textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: segmentIndex == 0
-                                  ? colorScheme.onPrimaryContainer
-                                  : colorScheme.onSecondaryContainer),
-                        ),
-                      ],
-                    ),
-                    if (segmentIndex == 0 && remainderBuffer > 0)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          t.S13_Task_Dashboard.label_remainder(
-                              amount: remainderBuffer.toStringAsFixed(2)),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.textTheme.bodySmall?.color
-                                  ?.withValues(alpha: 0.7)),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-        ],
-      ),
+      height: height,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: child,
     );
   }
 
@@ -601,10 +520,8 @@ class _DashboardHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => height;
 
   @override
-  bool shouldRebuild(_DashboardHeaderDelegate oldDelegate) {
-    return oldDelegate.segmentIndex != segmentIndex ||
-        oldDelegate.taskData != taskData ||
-        oldDelegate.records != records;
+  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 
@@ -697,39 +614,48 @@ class _DateStripDelegate extends SliverPersistentHeaderDelegate {
                           width: 60,
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           // Padding handled by alignment
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Stack(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : Colors.transparent,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Text(dateStr,
-                                    style: theme.textTheme.labelMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: isSelected
-                                                ? theme.colorScheme.onPrimary
-                                                : theme.colorScheme.onSurface)),
-                              ),
-                              const SizedBox(height: 4),
-                              if (isToday)
-                                Container(
-                                  width: 4,
-                                  height: 4,
+                              // A. 日期數字 (絕對置中)
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary,
-                                    shape: BoxShape.circle,
+                                    color: isSelected
+                                        ? theme.colorScheme.primary
+                                        : Colors.transparent,
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                )
-                              else
-                                const SizedBox(height: 4),
+                                  child: Text(dateStr,
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: isSelected
+                                                  ? theme.colorScheme.onPrimary
+                                                  : theme
+                                                      .colorScheme.onSurface)),
+                                ),
+                              ),
+                              // B. Today 圓點 (固定底部)
+                              if (isToday)
+                                Positioned(
+                                  bottom: 4, // 固定距離底部 4px
+                                  left: 0,
+                                  right: 0,
+                                  child: Center(
+                                    child: Container(
+                                      width: 4,
+                                      height: 4,
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -792,7 +718,7 @@ class _DailyHeader extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       borderRadius: BorderRadius.circular(4)),
-                  child: Text("Today",
+                  child: Text(t.common.today,
                       style: theme.textTheme.labelSmall
                           ?.copyWith(color: theme.colorScheme.onPrimary)),
                 ),
@@ -834,7 +760,7 @@ class _RecordItem extends StatelessWidget {
     final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
     final currency = data['currency'] ?? '';
     final exchangeRate = (data['exchangeRate'] as num?)?.toDouble() ?? 1.0;
-    final title = data['title'] ?? 'Untitled';
+    final title = data['title'] ?? t.common.untitled;
     // date unused for display now
     final categoryId = data['categoryId'] as String?; // New
 
@@ -844,7 +770,19 @@ class _RecordItem extends StatelessWidget {
         : CategoryConstant.getCategoryById(categoryId).icon;
 
     // Color logic: Income -> Green, Expense -> Red (Error)
-    final color = isIncome ? const Color(0xFF4CAF50) : theme.colorScheme.error;
+    // Income 使用 Tertiary (綠), Expense 使用 Error (紅)
+    final color =
+        isIncome ? theme.colorScheme.tertiary : theme.colorScheme.error;
+
+    // Income 背景使用 TertiaryContainer (淺綠), Expense 背景使用 ErrorContainer (淺紅)
+    final bgColor = isIncome
+        ? theme.colorScheme.tertiaryContainer
+        : theme.colorScheme.errorContainer;
+
+    // Icon/文字顏色
+    final iconColor = isIncome
+        ? theme.colorScheme.onTertiaryContainer
+        : theme.colorScheme.onError;
 
     final numberFormat = NumberFormat("#,##0.##");
     // Text logic: Income -> "- $currency$amount", Expense -> "$currency$amount"
@@ -893,13 +831,11 @@ class _RecordItem extends StatelessWidget {
         ),
         leading: CircleAvatar(
           backgroundColor: isIncome
-              ? const Color(0xFFE8F5E9) // Light Green
+              ? bgColor // Light Green
               : theme.colorScheme.tertiaryContainer,
           child: Icon(
             icon,
-            color: isIncome
-                ? const Color(0xFF2E7D32)
-                : theme.colorScheme.onTertiaryContainer,
+            color: isIncome ? iconColor : theme.colorScheme.onTertiaryContainer,
           ),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -981,6 +917,72 @@ class MultiStreamBuilder extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class S13DailyStatsCard extends StatelessWidget {
+  final List<QueryDocumentSnapshot> records;
+  final DateTime targetDate;
+  final String currency;
+
+  const S13DailyStatsCard({
+    super.key,
+    required this.records,
+    required this.targetDate,
+    required this.currency,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Filter records for targetDate
+    final dailyRecords = records.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      final ts = data['date'] as Timestamp?;
+      if (ts == null) return false;
+      final date = ts.toDate().toLocal();
+      return date.year == targetDate.year &&
+          date.month == targetDate.month &&
+          date.day == targetDate.day;
+    }).toList();
+
+    final recordModels =
+        dailyRecords.map((doc) => RecordModel.fromFirestore(doc)).toList();
+    final dailyTotal =
+        DailyStatisticsHelper.calculateDailyExpense(recordModels);
+
+    return Card(
+      color: colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              t.S13_Task_Dashboard.daily_stats_title,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(currency, style: theme.textTheme.titleLarge),
+                const SizedBox(width: 8),
+                Text(
+                  dailyTotal.toStringAsFixed(1),
+                  style: theme.textTheme.displayMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSecondaryContainer),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

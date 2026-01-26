@@ -23,7 +23,9 @@
     "discard": "破棄",
     "keep_editing": "編集を続ける",
     "member_prefix": "メンバー",
-    "no_record": "記録なし"
+    "no_record": "記録なし",
+    "today": "今日",
+    "untitled": "無題"
   },
   "dialog": {
     "unsaved_changes_title": "未保存の変更",
@@ -85,6 +87,10 @@
     "label_prepay_balance": "プール残高",
     "label_my_balance": "私の収支",
     "label_remainder": "端数: {amount}",
+    "label_balance": "残高",
+    "label_total_expense": "総費用",
+    "label_total_prepay": "総預り金",
+    "label_remainder_pot": "端数ポット",
     "fab_record": "記録",
     "empty_records": "記録がありません",
     "rule_random": "ランダム",
@@ -92,7 +98,11 @@
     "rule_member": "指定",
     "settlement_button": "精算",
     "nav_to_record": "記録ページへ移動します...",
-    "daily_expense_label": "支出"
+    "daily_expense_label": "支出",
+    "dialog_balance_detail": "通貨別内訳",
+    "section_expense": "支払い通貨",
+    "section_income": "預り金通貨",
+    "daily_stats_title": "本日の統計"
   },
   "S15_Record_Edit": {
     "title_create": "記録を追加",
