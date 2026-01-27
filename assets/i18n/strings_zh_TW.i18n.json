@@ -84,7 +84,7 @@
     "title": "任務主頁",
     "tab_group": "大家",
     "tab_personal": "個人",
-    "label_prepay_balance": "公款餘額 (Pool)",
+    "label_prepay_balance": "公款餘額",
     "label_my_balance": "我的收支",
     "label_remainder": "暫存零頭: {amount}",
     "label_balance": "結餘",

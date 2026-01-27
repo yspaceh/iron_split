@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/daily_statistics_helper.dart';
-import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
-import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
-import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
-import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
+import 'package:iron_split/features/task/presentation/widgets/record_block.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/presentation/widgets/balance_card.dart';
+import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 
 class S13GroupView extends StatefulWidget {
   final String taskId;
@@ -20,7 +20,7 @@ class S13GroupView extends StatefulWidget {
   final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
   final double prepayBalance;
-  final String currency;
+  final CurrencyOption currency;
 
   const S13GroupView({
     super.key,
@@ -214,6 +214,10 @@ class _S13GroupViewState extends State<S13GroupView> {
       builder: (context, constraints) {
         final double visibleHeight = constraints.maxHeight;
         final double bottomPadding = visibleHeight;
+        // 假設 widget.records 是 List<QueryDocumentSnapshot>
+        final List<RecordModel> recordModels = widget.records.map((doc) {
+          return RecordModel.fromFirestore(doc);
+        }).toList();
 
         return CustomScrollView(
           controller: _scrollController,
@@ -221,7 +225,7 @@ class _S13GroupViewState extends State<S13GroupView> {
             // Sticky Header 1 (Card only)
             SliverPersistentHeader(
               pinned: true,
-              delegate: _StickyHeaderDelegate(
+              delegate: StickyHeaderDelegate(
                 height: _kCardHeight,
                 child: Container(
                   color: Theme.of(context).scaffoldBackgroundColor,
@@ -233,6 +237,9 @@ class _S13GroupViewState extends State<S13GroupView> {
                       taskData: widget.taskData,
                       memberData: widget.memberData,
                       records: widget.records,
+                      remainderBuffer:
+                          BalanceCalculator.calculateRemainderBuffer(
+                              recordModels),
                     ),
                   ),
                 ),
@@ -271,13 +278,15 @@ class _S13GroupViewState extends State<S13GroupView> {
                     key: _dateKeys[dateKeyStr],
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _DailyHeader(
-                          date: date,
-                          total: dayTotal,
-                          currency: widget.currency),
+                      DailyHeader(
+                        date: date,
+                        total: dayTotal,
+                        currency: widget.currency,
+                        isPersonal: false,
+                      ),
                       ...dayRecords.map((doc) {
                         final recordModel = RecordModel.fromFirestore(doc);
-                        return _RecordItem(
+                        return RecordBlock(
                           taskId: widget.taskId,
                           record: recordModel,
                           prepayBalance: widget.prepayBalance,
@@ -340,202 +349,6 @@ class _S13GroupViewState extends State<S13GroupView> {
           ],
         );
       },
-    );
-  }
-}
-
-class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  final double height;
-
-  _StickyHeaderDelegate({required this.child, required this.height});
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      height: height,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: child,
-    );
-  }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
-    return oldDelegate.height != height || oldDelegate.child != child;
-  }
-}
-
-class _DailyHeader extends StatelessWidget {
-  final DateTime date;
-  final double total;
-  final String currency;
-
-  const _DailyHeader(
-      {required this.date, required this.total, required this.currency});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isToday = DateUtils.isSameDay(date, DateTime.now());
-    final dateStr = DateFormat('MM/dd (E)').format(date);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: theme.colorScheme.surfaceContainerLow,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              if (isToday)
-                Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadius.circular(4)),
-                  child: Text(t.common.today,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: theme.colorScheme.onPrimary)),
-                ),
-              Text(dateStr,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurfaceVariant)),
-            ],
-          ),
-          Text(
-              "${t.S13_Task_Dashboard.daily_expense_label}: $currency ${CurrencyOption.formatAmount(total, currency)}",
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        ],
-      ),
-    );
-  }
-}
-
-class _RecordItem extends StatelessWidget {
-  final String taskId;
-  final RecordModel record;
-  final double prepayBalance;
-  final String baseCurrency;
-
-  const _RecordItem({
-    required this.taskId,
-    required this.record,
-    required this.prepayBalance,
-    required this.baseCurrency,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final isIncome = record.type == 'income';
-    final amount = record.amount;
-    final currency = record.currency;
-    final exchangeRate = record.exchangeRate;
-    final category = CategoryConstant.getCategoryById(record.categoryId);
-    final title =
-        (record.title.isNotEmpty) ? record.title : category.getName(t);
-
-    final icon = isIncome ? Icons.savings_outlined : category.icon;
-
-    final color =
-        isIncome ? theme.colorScheme.tertiary : theme.colorScheme.error;
-
-    final bgColor = isIncome
-        ? theme.colorScheme.tertiaryContainer
-        : theme.colorScheme.errorContainer;
-
-    final iconColor = isIncome
-        ? theme.colorScheme.onTertiaryContainer
-        : theme.colorScheme.onError;
-
-    final numberFormat = NumberFormat("#,##0.##");
-    final amountText = isIncome
-        ? "- $currency ${numberFormat.format(amount)}"
-        : "$currency ${numberFormat.format(amount)}";
-
-    return Dismissible(
-      key: Key(record.id ?? ''),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        color: theme.colorScheme.error,
-        padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete_outline, color: Colors.white),
-      ),
-      confirmDismiss: (direction) async {
-        bool confirmed = false;
-        await showDialog(
-          context: context,
-          builder: (context) => D10RecordDeleteConfirmDialog(
-            title: title,
-            amount: amountText,
-            onConfirm: () {
-              confirmed = true;
-            },
-          ),
-        );
-        return confirmed;
-      },
-      onDismissed: (direction) {
-        RecordService.deleteRecord(taskId, record.id ?? '');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
-        );
-      },
-      child: ListTile(
-        onTap: () => context.pushNamed(
-          'S15',
-          pathParameters: {'taskId': taskId},
-          queryParameters: {'id': record.id},
-          extra: {
-            'prepayBalance': prepayBalance,
-            'baseCurrency': baseCurrency,
-            'record': record,
-          },
-        ),
-        leading: CircleAvatar(
-          backgroundColor:
-              isIncome ? bgColor : theme.colorScheme.tertiaryContainer,
-          child: Icon(
-            icon,
-            color: isIncome ? iconColor : theme.colorScheme.onTertiaryContainer,
-          ),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              amountText,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            if (currency != baseCurrency)
-              Text(
-                "≈ $baseCurrency ${CurrencyOption.formatAmount(amount * exchangeRate, baseCurrency)}",
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

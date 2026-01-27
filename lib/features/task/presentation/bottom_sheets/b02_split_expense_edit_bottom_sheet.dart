@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
@@ -10,24 +10,21 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
   final RecordItem? item;
   final List<Map<String, dynamic>> allMembers;
   final Map<String, double> defaultWeights;
-  final String currencySymbol;
+  final CurrencyOption selectedCurrency;
   final String parentTitle;
   final double availableAmount;
   final double exchangeRate;
-  final String baseCurrencySymbol;
-  final String baseCurrencyCode;
-
+  final CurrencyOption baseCurrency;
   const B02SplitExpenseEditBottomSheet({
     super.key,
     this.item,
     required this.allMembers,
     required this.defaultWeights,
-    required this.currencySymbol,
+    required this.selectedCurrency,
     required this.parentTitle,
     required this.availableAmount,
     this.exchangeRate = 1.0,
-    required this.baseCurrencySymbol,
-    required this.baseCurrencyCode,
+    required this.baseCurrency,
   });
 
   @override
@@ -77,15 +74,14 @@ class _B02SplitExpenseEditBottomSheetState
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
         totalAmount: amount,
-        currencySymbol: widget.currencySymbol,
+        selectedCurrency: widget.selectedCurrency,
         allMembers: widget.allMembers,
         defaultMemberWeights: widget.defaultWeights,
         initialSplitMethod: _splitMethod,
         initialMemberIds: _splitMemberIds,
         initialDetails: _splitDetails ?? {},
         exchangeRate: widget.exchangeRate,
-        baseCurrencySymbol: widget.baseCurrencySymbol,
-        baseCurrencyCode: widget.baseCurrencyCode,
+        baseCurrency: widget.baseCurrency,
       ),
     );
 
@@ -118,7 +114,6 @@ class _B02SplitExpenseEditBottomSheetState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final numberFormat = NumberFormat("#,##0.##");
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -187,7 +182,7 @@ class _B02SplitExpenseEditBottomSheetState
                   ),
                 ),
                 Text(
-                  "${widget.currencySymbol} ${numberFormat.format(widget.availableAmount)}",
+                  "${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(widget.availableAmount, widget.selectedCurrency.code)}",
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.primary,
@@ -222,7 +217,7 @@ class _B02SplitExpenseEditBottomSheetState
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         labelText: t.B02_SplitExpense_Edit.amount_label,
-                        prefixText: "${widget.currencySymbol} ",
+                        prefixText: "${widget.selectedCurrency.symbol} ",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
@@ -27,8 +26,8 @@ class S15RecordEditPage extends StatefulWidget {
   final String taskId;
   final String? recordId;
   final RecordModel? record;
-  final String baseCurrency;
-  final double prepayBalance; // NEW
+  final CurrencyOption baseCurrency;
+  final double prepayBalance;
   final DateTime? initialDate;
 
   const S15RecordEditPage({
@@ -36,8 +35,8 @@ class S15RecordEditPage extends StatefulWidget {
     required this.taskId,
     this.recordId,
     this.record,
-    this.baseCurrency = CurrencyOption.defaultCode,
-    this.prepayBalance = 0.0, // NEW
+    this.baseCurrency = CurrencyOption.defaultCurrencyOption,
+    this.prepayBalance = 0.0,
     this.initialDate,
   });
 
@@ -56,7 +55,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   // State
   late DateTime _selectedDate;
-  late String _selectedCurrency;
+  late CurrencyOption _selectedCurrency;
   String _selectedCategoryId = 'fastfood';
   bool _isRateLoading = false;
   bool _isSaving = false;
@@ -102,7 +101,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           ? r.amount.toInt().toString()
           : r.amount.toString();
       _selectedDate = r.date;
-      _selectedCurrency = r.currency; // 編輯模式直接鎖定紀錄幣別
+      _selectedCurrency = kSupportedCurrencies.firstWhere(
+          (e) => e.code == r.currency,
+          orElse: () => kSupportedCurrencies.first); // 編輯模式直接鎖定紀錄幣別
       _exchangeRateController.text = r.exchangeRate.toString();
 
       if (r.type == 'expense') {
@@ -139,14 +140,15 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       _isCurrencyInitialized = true;
 
       // 現在呼叫 localeOf(context) 是安全的
-      final String suggestedCurrency =
-          CurrencyOption.detectSystemCurrency(context);
+      final CurrencyOption suggestedCurrency =
+          CurrencyOption.detectSystemCurrency();
 
       setState(() {
         // 邏輯：有偵測到就用偵測的，否則用任務預設的 (widget.baseCurrency)
-        _selectedCurrency = suggestedCurrency != CurrencyOption.defaultCode
-            ? suggestedCurrency
-            : widget.baseCurrency;
+        _selectedCurrency =
+            suggestedCurrency != CurrencyOption.defaultCurrencyOption
+                ? suggestedCurrency
+                : widget.baseCurrency;
       });
     }
   }
@@ -233,10 +235,12 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     final lastCurrency = await PreferencesService.getLastCurrency();
     if (lastCurrency != null && _currencies.contains(lastCurrency)) {
       setState(() {
-        _selectedCurrency = lastCurrency;
+        _selectedCurrency = kSupportedCurrencies.firstWhere(
+            (e) => e.code == lastCurrency,
+            orElse: () => kSupportedCurrencies.first);
       });
       if (_selectedCurrency != widget.baseCurrency) {
-        _onCurrencyChanged(_selectedCurrency);
+        _onCurrencyChanged(_selectedCurrency.code);
       }
     }
   }
@@ -295,31 +299,21 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       for (var m in _taskMembers) m['id']: 1.0
     };
 
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
     final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-    final baseSymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == widget.baseCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
 
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
         totalAmount: amountToSplit,
-        currencySymbol: currencySymbol,
+        selectedCurrency: _selectedCurrency,
         allMembers: _taskMembers,
         defaultMemberWeights: defaultWeights,
         initialSplitMethod: _baseSplitMethod,
         initialMemberIds: _baseMemberIds,
         initialDetails: _baseRawDetails,
         exchangeRate: rate,
-        baseCurrencySymbol: baseSymbol,
-        baseCurrencyCode: widget.baseCurrency,
+        baseCurrency: widget.baseCurrency,
       ),
     );
 
@@ -344,16 +338,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       for (var m in _taskMembers) m['id']: 1.0
     };
 
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
     final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-    final baseSymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == widget.baseCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
 
     final result = await showModalBottomSheet<RecordItem>(
       context: context,
@@ -362,12 +347,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         item: null,
         allMembers: _taskMembers,
         defaultWeights: defaultWeights,
-        currencySymbol: currencySymbol,
+        selectedCurrency: _selectedCurrency,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount,
         exchangeRate: rate,
-        baseCurrencySymbol: baseSymbol,
-        baseCurrencyCode: widget.baseCurrency,
+        baseCurrency: widget.baseCurrency,
       ),
     );
 
@@ -384,16 +368,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       for (var m in _taskMembers) m['id']: 1.0
     };
 
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
     final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-    final baseSymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == widget.baseCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
 
     final result = await showModalBottomSheet<dynamic>(
       context: context,
@@ -402,12 +377,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         item: item,
         allMembers: _taskMembers,
         defaultWeights: defaultWeights,
-        currencySymbol: currencySymbol,
+        selectedCurrency: _selectedCurrency,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount + item.amount,
         exchangeRate: rate,
-        baseCurrencySymbol: baseSymbol,
-        baseCurrencyCode: widget.baseCurrency,
+        baseCurrency: widget.baseCurrency,
       ),
     );
 
@@ -440,9 +414,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   void _showCurrencyPicker() {
     CurrencyPickerSheet.show(
       context: context,
-      initialCode: _selectedCurrency,
+      initialCode: _selectedCurrency.code,
       onSelected: (currency) async {
-        if (currency.code != _selectedCurrency) {
+        if (currency.code != _selectedCurrency.code) {
           await _onCurrencyChanged(currency.code);
         }
       },
@@ -463,7 +437,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   Future<void> _onCurrencyChanged(String newCurrency) async {
-    setState(() => _selectedCurrency = newCurrency);
+    setState(() => _selectedCurrency = kSupportedCurrencies.firstWhere(
+        (e) => e.code == newCurrency,
+        orElse: () => kSupportedCurrencies.first));
     await PreferencesService.saveLastCurrency(newCurrency);
     await _fetchExchangeRate();
   }
@@ -476,7 +452,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
     setState(() => _isRateLoading = true);
     final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrency, to: widget.baseCurrency);
+        from: _selectedCurrency.code, to: widget.baseCurrency.code);
 
     if (mounted) {
       setState(() {
@@ -518,19 +494,15 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       return;
     }
 
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
         totalAmount: totalAmount,
         prepayBalance: widget.prepayBalance, // Use widget.prepayBalance
+        selectedCurrency: _selectedCurrency,
+        baseCurrency: widget.baseCurrency,
         members: _taskMembers,
-        currencySymbol: currencySymbol,
         // 傳入當前狀態 (若有複雜資料優先用，否則用簡易狀態推導)
         initialUsePrepay:
             _complexPaymentData?['usePrepay'] ?? (_payerType == 'prepay'),
@@ -601,7 +573,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
         'paymentDetails': isIncome ? null : _complexPaymentData,
         'amount': double.parse(_amountController.text),
-        'currency': _selectedCurrency,
+        'currency': _selectedCurrency.code,
         'exchangeRate': double.parse(_exchangeRateController.text),
         'splitMethod': _baseSplitMethod,
         'splitMemberIds': _baseMemberIds,
@@ -654,7 +626,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     if ((currentAmount - r.amount).abs() > 0.001) return true;
 
     if (!_isSameDay(_selectedDate, r.date)) return true;
-    if (_selectedCurrency != r.currency) return true;
+    if (_selectedCurrency.code != r.currency) return true;
 
     final currentRate = double.tryParse(_exchangeRateController.text) ?? 1.0;
     if ((currentRate - (r.exchangeRate)).abs() > 0.000001) return true;
@@ -725,14 +697,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   Future<void> _handleDelete() async {
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
     final amount = double.tryParse(_amountController.text) ?? 0.0;
     final amountText =
-        "$currencySymbol ${NumberFormat("#,##0.##").format(amount)}";
+        "${_selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, _selectedCurrency.code)}";
 
     await showDialog(
       context: context,

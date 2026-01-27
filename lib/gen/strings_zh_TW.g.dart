@@ -343,8 +343,8 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '個人'
 	String get tab_personal => '個人';
 
-	/// zh-TW: '公款餘額 (Pool)'
-	String get label_prepay_balance => '公款餘額 (Pool)';
+	/// zh-TW: '公款餘額'
+	String get label_prepay_balance => '公款餘額';
 
 	/// zh-TW: '我的收支'
 	String get label_my_balance => '我的收支';
@@ -1067,7 +1067,7 @@ extension on Translations {
 			'S13_Task_Dashboard.title' => '任務主頁',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',
-			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額 (Pool)',
+			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額',
 			'S13_Task_Dashboard.label_my_balance' => '我的收支',
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
 			'S13_Task_Dashboard.label_balance' => '結餘',

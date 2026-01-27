@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -15,7 +16,7 @@ class D03TaskCreateConfirmDialog extends StatefulWidget {
   final String taskName;
   final DateTime startDate;
   final DateTime endDate;
-  final String currency;
+  final CurrencyOption currency;
   final int memberCount;
 
   const D03TaskCreateConfirmDialog({
@@ -187,7 +188,8 @@ class _D03TaskCreateConfirmDialogState
             _buildRow(t.D03_TaskCreate_Confirm.label_period,
                 '${dateFormat.format(widget.startDate)} - ${dateFormat.format(widget.endDate)}'),
             const SizedBox(height: 8),
-            _buildRow(t.D03_TaskCreate_Confirm.label_currency, widget.currency),
+            _buildRow(
+                t.D03_TaskCreate_Confirm.label_currency, widget.currency.code),
             const SizedBox(height: 8),
             _buildRow(t.D03_TaskCreate_Confirm.label_members,
                 '${widget.memberCount}'),

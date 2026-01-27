@@ -24,7 +24,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
 
   late DateTime _startDate;
   late DateTime _endDate;
-  String _currency = CurrencyOption.defaultCode;
+  CurrencyOption _currency = CurrencyOption.defaultCurrencyOption;
   bool _isCurrencyInitialized = false;
   int _memberCount = 1;
 
@@ -55,8 +55,8 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
     if (!_isCurrencyInitialized) {
       _isCurrencyInitialized = true;
 
-      final String suggestedCurrency =
-          CurrencyOption.detectSystemCurrency(context);
+      final CurrencyOption suggestedCurrency =
+          CurrencyOption.detectSystemCurrency();
 
       setState(() {
         _currency = suggestedCurrency;
@@ -128,9 +128,9 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   void _showCurrencyPicker() {
     CurrencyPickerSheet.show(
       context: context,
-      initialCode: _currency,
+      initialCode: _currency.code,
       onSelected: (currency) {
-        setState(() => _currency = currency.code);
+        setState(() => _currency = currency);
       },
     );
   }
@@ -255,7 +255,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                       _buildRowItem(
                         icon: Icons.currency_exchange,
                         label: t.S16_TaskCreate_Edit.field_currency,
-                        value: _currency,
+                        value: _currency.code,
                         onTap: _showCurrencyPicker,
                         showDivider: true,
                       ),

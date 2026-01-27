@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B07PaymentMethodEditBottomSheet extends StatefulWidget {
   final double totalAmount; // 該筆費用的總金額
-  final double prepayBalance; // 目前任務的預收款總餘額
+  final double prepayBalance;
   final List<Map<String, dynamic>> members; // 成員清單
-  final String currencySymbol;
+  final CurrencyOption selectedCurrency;
+  final CurrencyOption baseCurrency;
 
   // 初始狀態
   final bool initialUsePrepay;
@@ -19,10 +21,11 @@ class B07PaymentMethodEditBottomSheet extends StatefulWidget {
     required this.totalAmount,
     required this.prepayBalance,
     required this.members,
-    required this.currencySymbol,
     this.initialUsePrepay = true,
     this.initialPrepayAmount = 0.0,
     this.initialMemberAdvance = const {},
+    required this.selectedCurrency,
+    required this.baseCurrency,
   });
 
   @override
@@ -209,8 +212,6 @@ class _B07PaymentMethodEditBottomSheetState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final formattedBalance =
-        NumberFormat("#,##0.##").format(widget.prepayBalance);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -273,7 +274,7 @@ class _B07PaymentMethodEditBottomSheetState
                         Text(
                           t.B07_PaymentMethod_Edit.prepay_balance(
                               amount:
-                                  "${widget.currencySymbol} $formattedBalance"),
+                                  "≈ ${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyOption.formatAmount(widget.prepayBalance, widget.selectedCurrency.code)}"),
                           style: TextStyle(
                             color: widget.prepayBalance < widget.totalAmount &&
                                     _usePrepay
@@ -291,7 +292,7 @@ class _B07PaymentMethodEditBottomSheetState
                           onChanged: _onPrepayAmountChanged,
                           decoration: InputDecoration(
                             labelText: t.B07_PaymentMethod_Edit.label_amount,
-                            prefixText: "${widget.currencySymbol} ",
+                            prefixText: "${widget.selectedCurrency.symbol} ",
                             prefixIcon:
                                 const Icon(Icons.account_balance_wallet),
                             border: OutlineInputBorder(
@@ -348,7 +349,8 @@ class _B07PaymentMethodEditBottomSheetState
                                   decoration: InputDecoration(
                                     hintText: '0',
                                     isDense: true,
-                                    prefixText: "${widget.currencySymbol} ",
+                                    prefixText:
+                                        "${widget.selectedCurrency.symbol} ",
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 8),
                                     border: const OutlineInputBorder(),

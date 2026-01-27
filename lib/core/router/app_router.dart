@@ -144,8 +144,8 @@ class AppRouter {
                   (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
               final record = extra['record'] as RecordModel?;
               final date = extra['date'] as DateTime?;
-              final baseCurrency = extra['baseCurrency'] as String? ??
-                  CurrencyOption.defaultCode;
+              final baseCurrency = extra['baseCurrency'] as CurrencyOption? ??
+                  CurrencyOption.defaultCurrencyOption;
 
               return S15RecordEditPage(
                 taskId: taskId,

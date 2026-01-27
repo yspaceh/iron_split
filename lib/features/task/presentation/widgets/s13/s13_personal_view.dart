@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart'; // 引入修正後的 Calculator
-import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
-import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
-import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
+import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
+import 'package:iron_split/features/task/presentation/widgets/record_block.dart';
+import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
@@ -20,7 +19,7 @@ class S13PersonalView extends StatefulWidget {
   final Map<String, dynamic>? taskData;
   final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
-  final String currency;
+  final CurrencyOption currency;
   final String uid;
   final double prepayBalance;
 
@@ -222,7 +221,7 @@ class _S13PersonalViewState extends State<S13PersonalView> {
             // Sticky Header 1 (Personal Balance)
             SliverPersistentHeader(
               pinned: true,
-              delegate: _StickyHeaderDelegate(
+              delegate: StickyHeaderDelegate(
                 height: _kCardHeight,
                 child: Container(
                   color: Theme.of(context).scaffoldBackgroundColor,
@@ -280,7 +279,7 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                     key: _dateKeys[dateKeyStr],
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _DailyHeader(
+                      DailyHeader(
                           date: date,
                           total: dayMyDebit, // 顯示我的消費
                           currency: widget.currency,
@@ -297,7 +296,7 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                         )
                       else
                         ...dayRecords.map((record) {
-                          return _RecordItem(
+                          return RecordBlock(
                             taskId: widget.taskId,
                             record: record,
                             prepayBalance: widget.prepayBalance,
@@ -321,32 +320,10 @@ class _S13PersonalViewState extends State<S13PersonalView> {
   }
 }
 
-// ... _StickyHeaderDelegate, _DateStripDelegate (保持不變) ...
-
-class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  final double height;
-  _StickyHeaderDelegate({required this.child, required this.height});
-  @override
-  Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-          height: height,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: child);
-  @override
-  double get maxExtent => height;
-  @override
-  double get minExtent => height;
-  @override
-  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) =>
-      oldDelegate.height != height || oldDelegate.child != child;
-}
-
 // ----------------------------------------------------
 
 class _PersonalBalanceCard extends StatelessWidget {
-  final String currency;
+  final CurrencyOption currency;
   final List<RecordModel> allRecords;
   final String uid;
   final Map<String, dynamic>? memberData;
@@ -363,7 +340,6 @@ class _PersonalBalanceCard extends StatelessWidget {
     final theme = Theme.of(context);
     final t = Translations.of(context);
 
-    // [修正] 完全依賴 Calculator，不再手動計算
     final netBalance = BalanceCalculator.calculatePersonalNetBalance(
       allRecords: allRecords,
       uid: uid,
@@ -400,12 +376,6 @@ class _PersonalBalanceCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    isPositive
-                        ? t.S13_Task_Dashboard.personal_to_receive
-                        : t.S13_Task_Dashboard.personal_to_pay,
-                    style: theme.textTheme.bodySmall,
-                  ),
                 ],
               ),
             ),
@@ -413,9 +383,14 @@ class _PersonalBalanceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(currency, style: theme.textTheme.labelMedium),
                 Text(
-                  CurrencyOption.formatAmount(netBalance.abs(), currency),
+                  isPositive
+                      ? t.S13_Task_Dashboard.personal_to_receive
+                      : t.S13_Task_Dashboard.personal_to_pay,
+                  style: theme.textTheme.bodySmall,
+                ),
+                Text(
+                  '${currency.code}${currency.symbol} ${CurrencyOption.formatAmount(netBalance.abs(), currency.code)}',
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.bold,
@@ -423,184 +398,6 @@ class _PersonalBalanceCard extends StatelessWidget {
                 ),
               ],
             )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DailyHeader extends StatelessWidget {
-  final DateTime date;
-  final double total;
-  final String currency;
-  final bool isPersonal;
-
-  const _DailyHeader(
-      {required this.date,
-      required this.total,
-      required this.currency,
-      this.isPersonal = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final isToday = DateUtils.isSameDay(date, DateTime.now());
-    final dateStr = DateFormat('MM/dd (E)').format(date);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: theme.colorScheme.surfaceContainerLow,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              if (isToday)
-                Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(t.common.today,
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: theme.colorScheme.onPrimary))),
-              Text(dateStr,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurfaceVariant)),
-            ],
-          ),
-          Text(
-              isPersonal
-                  ? "${t.S13_Task_Dashboard.personal_daily_total}: $currency ${CurrencyOption.formatAmount(total, currency)}"
-                  : "${t.S13_Task_Dashboard.daily_expense_label}: $currency ${CurrencyOption.formatAmount(total, currency)}",
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        ],
-      ),
-    );
-  }
-}
-
-class _RecordItem extends StatelessWidget {
-  final String taskId;
-  final RecordModel record;
-  final double prepayBalance;
-  final String baseCurrency;
-  final String uid; // [維持] 必須傳入 uid
-
-  const _RecordItem({
-    required this.taskId,
-    required this.record,
-    required this.prepayBalance,
-    required this.baseCurrency,
-    required this.uid,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
-    final isIncome = record.type == 'income';
-    final amount = record.amount;
-    final currency = record.currency;
-
-    final category = CategoryConstant.getCategoryById(record.categoryId);
-    final title =
-        (record.title.isNotEmpty) ? record.title : category.getName(t);
-    final icon = isIncome ? Icons.savings_outlined : category.icon;
-
-    final color =
-        isIncome ? theme.colorScheme.tertiary : theme.colorScheme.error;
-    final bgColor = isIncome
-        ? theme.colorScheme.tertiaryContainer
-        : theme.colorScheme.errorContainer;
-    final iconColor = isIncome
-        ? theme.colorScheme.onTertiaryContainer
-        : theme.colorScheme.onTertiaryContainer;
-
-    final numberFormat = NumberFormat("#,##0.##");
-    final amountText = isIncome
-        ? "- $currency ${numberFormat.format(amount)}"
-        : "$currency ${numberFormat.format(amount)}";
-
-    return Dismissible(
-      key: Key(record.id ?? ''),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        color: theme.colorScheme.error,
-        padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete_outline, color: Colors.white),
-      ),
-      confirmDismiss: (direction) async {
-        bool confirmed = false;
-        await showDialog(
-          context: context,
-          builder: (context) => D10RecordDeleteConfirmDialog(
-            title: title,
-            amount: amountText,
-            onConfirm: () {
-              confirmed = true;
-            },
-          ),
-        );
-        return confirmed;
-      },
-      onDismissed: (direction) {
-        RecordService.deleteRecord(taskId, record.id ?? '');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
-        );
-      },
-      child: ListTile(
-        onTap: () => context.pushNamed(
-          'S15',
-          pathParameters: {'taskId': taskId},
-          queryParameters: {'id': record.id ?? ''},
-          extra: {
-            'prepayBalance': prepayBalance,
-            'baseCurrency': baseCurrency,
-            'record': record,
-          },
-        ),
-        leading: CircleAvatar(
-          backgroundColor:
-              isIncome ? bgColor : theme.colorScheme.tertiaryContainer,
-          child: Icon(
-            icon,
-            color: isIncome ? iconColor : theme.colorScheme.onTertiaryContainer,
-          ),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        // [修正] 移除了原本導致錯誤的 subtitle: isPayer ? Text(...) : null
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              // Display "My Share"
-              (record.type == 'income')
-                  ? "$currency ${CurrencyOption.formatAmount(BalanceCalculator.calculatePersonalCredit(record, uid), currency)}"
-                  : "$currency ${CurrencyOption.formatAmount(BalanceCalculator.calculatePersonalDebit(record, uid), currency)}",
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // Display "Total Bill" as subtitle
-            Text(
-              "${t.S13_Task_Dashboard.total_amount_label}: $currency ${CurrencyOption.formatAmount(amount, currency)}",
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-              ),
-            ),
           ],
         ),
       ),

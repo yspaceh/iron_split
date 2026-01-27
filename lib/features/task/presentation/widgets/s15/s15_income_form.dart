@@ -13,8 +13,8 @@ class S15IncomeForm extends StatelessWidget {
 
   // 2. State (顯示用資料)
   final DateTime selectedDate;
-  final String selectedCurrency;
-  final String baseCurrency;
+  final CurrencyOption selectedCurrency;
+  final CurrencyOption baseCurrency;
   final bool isRateLoading;
 
   // 3. Income Specific State (收入相關)
@@ -159,20 +159,16 @@ class S15IncomeForm extends StatelessWidget {
               final amount = double.tryParse(amountController.text) ?? 0.0;
               final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
               final converted = amount * rate;
-              final baseSymbol = kSupportedCurrencies
-                  .firstWhere((e) => e.code == baseCurrency,
-                      orElse: () => kSupportedCurrencies.first)
-                  .symbol;
-              final baseCode = baseCurrency;
+
               final formattedAmount =
-                  CurrencyOption.formatAmount(converted, baseCode);
+                  CurrencyOption.formatAmount(converted, baseCurrency.code);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
                   t.S15_Record_Edit.val_converted_amount(
-                      base: baseCode,
-                      symbol: baseSymbol,
+                      base: baseCurrency.code,
+                      symbol: baseCurrency.symbol,
                       amount: formattedAmount),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),

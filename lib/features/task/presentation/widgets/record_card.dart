@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -14,7 +13,7 @@ class RecordCard extends StatelessWidget {
   final bool isBaseCard;
   final bool showSplitAction;
   final VoidCallback? onSplitTap;
-  final String selectedCurrency;
+  final CurrencyOption selectedCurrency;
   final List<Map<String, dynamic>> members;
 
   const RecordCard({
@@ -49,10 +48,6 @@ class RecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
     return Card(
       clipBehavior: Clip.antiAlias,
       // 稍微加深底色，讓卡片更明顯
@@ -78,7 +73,7 @@ class RecordCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "$currencySymbol ${NumberFormat("#,##0.##").format(amount)}",
+                        "${selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, selectedCurrency.code)}",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w800, // 加粗
                           color: colorScheme.onSurface, // 深黑色

@@ -13,6 +13,7 @@ class BalanceCard extends StatelessWidget {
   final Map<String, dynamic>? taskData;
   final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
+  final double remainderBuffer;
 
   const BalanceCard({
     super.key,
@@ -20,6 +21,7 @@ class BalanceCard extends StatelessWidget {
     required this.taskData,
     required this.memberData,
     required this.records,
+    required this.remainderBuffer,
   });
 
   /// ! CRITICAL LAYOUT CONFIGURATION !
@@ -54,21 +56,32 @@ class BalanceCard extends StatelessWidget {
         (systemCurrency.isNotEmpty
             ? systemCurrency
             : CurrencyOption.defaultCode);
+
+    final currencyOption = kSupportedCurrencies.firstWhere(
+      (e) => e.code == currency,
+      orElse: () => kSupportedCurrencies.first,
+    );
     final balanceRule = taskData!['balanceRule'] ?? 'random';
 
     // 2. 轉換為 Model
     final recordModels =
         records.map((doc) => RecordModel.fromFirestore(doc)).toList();
 
+    final financials = BalanceCalculator.calculateBaseTotals(recordModels,
+        exchangeToBaseCurrency: true);
+
+    final double totalIncomeBase = financials.totalIncome;
+    final double totalExpensesBase = financials.totalExpense;
+    final double netPoolBalance = financials.netBalance;
+
     // 3. 使用 Calculator 計算
     final double potRemainder =
         BalanceCalculator.calculateRemainderBuffer(recordModels);
-    final double netBalance =
-        BalanceCalculator.calculatePrepayBalance(recordModels);
 
     // 統計支出與收入 (用於圖表)
     double potIncome = 0.0;
     double totalExpenses = 0.0;
+
     final Map<String, double> expenseByCurrency = {};
     final Map<String, double> incomeByCurrency = {};
 
@@ -204,7 +217,7 @@ class BalanceCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(currency,
+                          Text(currencyOption.code,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
@@ -224,15 +237,26 @@ class BalanceCard extends StatelessWidget {
                     children: [
                       Text(t.S13_Task_Dashboard.label_balance,
                           style: theme.textTheme.labelSmall),
-                      Text(
-                        '${netBalance >= 0 ? "+" : ""}${netBalance.toStringAsFixed(0)}',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: netBalance >= 0
-                              ? Colors.green
-                              : theme.colorScheme.error,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          fontFamily: 'RobotoMono',
+                      Text.rich(
+                        TextSpan(
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontFamily: 'RobotoMono',
+                          ),
+                          children: [
+                            TextSpan(
+                              text:
+                                  "${currencyOption.symbol} ${CurrencyOption.formatAmount(netPoolBalance.abs(), currency)}",
+                              style: TextStyle(
+                                color: netPoolBalance > 0
+                                    ? theme.colorScheme.tertiary
+                                    : netPoolBalance < 0
+                                        ? theme.colorScheme.error
+                                        : theme.colorScheme.outline,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -262,7 +286,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${t.S13_Task_Dashboard.label_total_expense} : \$ ${totalExpenses.toStringAsFixed(0)}",
+                        "${t.S13_Task_Dashboard.label_total_expense} : ${currencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), currency)}",
                         style: theme.textTheme.labelSmall,
                       ),
                     ],
@@ -279,7 +303,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${t.S13_Task_Dashboard.label_total_prepay} : \$ ${potIncome.toStringAsFixed(0)}",
+                        "${t.S13_Task_Dashboard.label_total_prepay} : ${currencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), currency)}",
                         style: theme.textTheme.labelSmall,
                       ),
                     ],
@@ -391,12 +415,17 @@ class BalanceCard extends StatelessWidget {
                         child: Icon(Icons.info_outline,
                             size: 16, color: theme.colorScheme.outline),
                       ),
-                      const SizedBox(width: 4),
                       Text(" : ", style: theme.textTheme.bodyMedium),
                       Text(
-                        potRemainder.toStringAsFixed(2),
-                        style: theme.textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        "${currencyOption.symbol} ${CurrencyOption.formatAmount(potRemainder.abs(), currency)}",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: potRemainder > 0
+                              ? Colors.green // 剩餘資金 (正數)
+                              : (potRemainder < 0
+                                  ? Theme.of(context).colorScheme.error
+                                  : Colors.grey), // 💡 套用顏色
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
