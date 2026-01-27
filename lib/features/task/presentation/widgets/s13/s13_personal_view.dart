@@ -261,11 +261,14 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                 children: fullDateList.map((date) {
                   final dayRecords = groupedRecords[date] ?? [];
 
-                  // [修正] 使用 Calculator 計算我的當日消費
+                  // [Fix] Convert each record's share to Base Currency before summing
                   double dayMyDebit = 0;
                   for (var r in dayRecords) {
-                    dayMyDebit +=
+                    // 1. Get personal share in original currency (e.g. JPY)
+                    double myShareOriginal =
                         BalanceCalculator.calculatePersonalDebit(r, widget.uid);
+                    // 2. Convert to Base Currency using the record's exchange rate (e.g. TWD)
+                    dayMyDebit += myShareOriginal * r.exchangeRate;
                   }
 
                   final dateKeyStr = DateFormat('yyyyMMdd').format(date);
@@ -506,7 +509,6 @@ class _RecordItem extends StatelessWidget {
     final isIncome = record.type == 'income';
     final amount = record.amount;
     final currency = record.currency;
-    final exchangeRate = record.exchangeRate;
 
     final category = CategoryConstant.getCategoryById(record.categoryId);
     final title =
@@ -583,19 +585,22 @@ class _RecordItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              amountText,
+              // Display "My Share"
+              (record.type == 'income')
+                  ? "$currency ${CurrencyOption.formatAmount(BalanceCalculator.calculatePersonalCredit(record, uid), currency)}"
+                  : "$currency ${CurrencyOption.formatAmount(BalanceCalculator.calculatePersonalDebit(record, uid), currency)}",
               style: theme.textTheme.titleMedium?.copyWith(
                 color: color,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (currency != baseCurrency)
-              Text(
-                "≈ $baseCurrency ${CurrencyOption.formatAmount(amount * exchangeRate, baseCurrency)}",
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            // Display "Total Bill" as subtitle
+            Text(
+              "${t.S13_Task_Dashboard.total_amount_label}: $currency ${CurrencyOption.formatAmount(amount, currency)}",
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.grey,
               ),
+            ),
           ],
         ),
       ),

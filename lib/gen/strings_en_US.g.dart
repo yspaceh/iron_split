@@ -224,6 +224,7 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override String get personal_to_receive => 'To Receive';
 	@override String get personal_to_pay => 'To Pay';
 	@override String get personal_empty_desc => 'No records related to you on this day';
+	@override String get total_amount_label => 'Total Bill';
 }
 
 // Path: S15_Record_Edit
@@ -634,6 +635,7 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.personal_to_receive' => 'To Receive',
 			'S13_Task_Dashboard.personal_to_pay' => 'To Pay',
 			'S13_Task_Dashboard.personal_empty_desc' => 'No records related to you on this day',
+			'S13_Task_Dashboard.total_amount_label' => 'Total Bill',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',

@@ -224,6 +224,7 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override String get personal_to_receive => '受取';
 	@override String get personal_to_pay => '支払';
 	@override String get personal_empty_desc => 'この日のあなたに関連する記録はありません';
+	@override String get total_amount_label => '合計金額';
 }
 
 // Path: S15_Record_Edit
@@ -630,6 +631,7 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.personal_to_receive' => '受取',
 			'S13_Task_Dashboard.personal_to_pay' => '支払',
 			'S13_Task_Dashboard.personal_empty_desc' => 'この日のあなたに関連する記録はありません',
+			'S13_Task_Dashboard.total_amount_label' => '合計金額',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',

@@ -106,7 +106,8 @@
     "personal_daily_total": "本日の個人支出",
     "personal_to_receive": "受取",
     "personal_to_pay": "支払",
-    "personal_empty_desc": "この日のあなたに関連する記録はありません"
+    "personal_empty_desc": "この日のあなたに関連する記録はありません",
+    "total_amount_label": "合計金額"
   },
   "S15_Record_Edit": {
     "title_create": "記録を追加",

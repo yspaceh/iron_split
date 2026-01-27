@@ -411,6 +411,9 @@ class TranslationsS13TaskDashboardZhTw {
 
 	/// zh-TW: '這天沒有與你有關的紀錄'
 	String get personal_empty_desc => '這天沒有與你有關的紀錄';
+
+	/// zh-TW: '總金額'
+	String get total_amount_label => '總金額';
 }
 
 // Path: S15_Record_Edit
@@ -1087,6 +1090,7 @@ extension on Translations {
 			'S13_Task_Dashboard.personal_to_receive' => '應收',
 			'S13_Task_Dashboard.personal_to_pay' => '應付',
 			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
+			'S13_Task_Dashboard.total_amount_label' => '總金額',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',

@@ -11,8 +11,8 @@ class BalanceCalculator {
     double totalConsumed = 0.0;
 
     for (var record in allRecords) {
-      totalPaid += _calculateCredit(record, uid);
-      totalConsumed += _calculateDebit(record, uid);
+      totalPaid += calculatePersonalCredit(record, uid);
+      totalConsumed += calculatePersonalDebit(record, uid);
     }
 
     return totalPaid - totalConsumed;
@@ -20,8 +20,8 @@ class BalanceCalculator {
 
   /// 判斷使用者是否與此紀錄有關
   static bool isUserInvolved(RecordModel record, String uid) {
-    if (_calculateCredit(record, uid) > 0) return true;
-    if (_calculateDebit(record, uid) > 0) return true;
+    if (calculatePersonalCredit(record, uid) > 0) return true;
+    if (calculatePersonalDebit(record, uid) > 0) return true;
 
     // 邊緣情況：金額為 0 但在名單內 (例如被請客)
     if (record.items.isNotEmpty) {
@@ -47,7 +47,8 @@ class BalanceCalculator {
   // --- 內部輔助方法 ---
 
   // 計算「貢獻/支付」(Credit)
-  static double _calculateCredit(RecordModel record, String uid) {
+  // 計算「貢獻/支付」(Credit)
+  static double calculatePersonalCredit(RecordModel record, String uid) {
     // 1. 收入 (Income/預收)
     // S15 邏輯：Income 的 payerId 為 null，"入金者" 存在 splitMemberIds/splitDetails 中
     if (record.type == 'income') {
@@ -115,10 +116,15 @@ class BalanceCalculator {
       if (record.splitDetails != null &&
           record.splitDetails!.containsKey(uid)) {
         // 詳細分攤 (Percent/Exact)
-        // 注意：如果 splitDetails 存的是 "金額"，通常是針對 totalAmount 的。
-        // 但如果 S15 邏輯是 "Base Card 只設定剩餘金額"，則這裡直接加。
-        // 假設 S15 的 splitDetails 是針對 remainingBase 的分攤結果。
-        myDebit += (record.splitDetails![uid] as num).toDouble();
+        final double myWeight =
+            (record.splitDetails![uid] as num? ?? 0.0).toDouble();
+        // Calculate total weights of all members in this split
+        final double totalWeights = record.splitDetails!.values
+            .fold(0.0, (sum, w) => sum + (w as num).toDouble());
+
+        if (totalWeights > 0) {
+          myDebit += remainingBase * (myWeight / totalWeights);
+        }
       } else if (record.splitMemberIds.contains(uid)) {
         // 平均分攤 (Even)
         myDebit += (remainingBase / record.splitMemberIds.length);
