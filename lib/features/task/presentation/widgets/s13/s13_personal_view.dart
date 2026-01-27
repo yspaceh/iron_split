@@ -563,6 +563,7 @@ class _RecordItem extends StatelessWidget {
           queryParameters: {'id': record.id ?? ''},
           extra: {
             'prepayBalance': prepayBalance,
+            'baseCurrency': baseCurrency,
             'record': record,
           },
         ),

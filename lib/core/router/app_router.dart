@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
@@ -143,12 +144,15 @@ class AppRouter {
                   (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
               final record = extra['record'] as RecordModel?;
               final date = extra['date'] as DateTime?;
+              final baseCurrency = extra['baseCurrency'] as String? ??
+                  CurrencyOption.defaultCode;
 
               return S15RecordEditPage(
                 taskId: taskId,
                 recordId: recordId,
                 record: record,
                 prepayBalance: prepayBalance,
+                baseCurrency: baseCurrency,
                 initialDate: date,
               );
             },

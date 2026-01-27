@@ -9,22 +9,20 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/category_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
 import 'package:iron_split/core/services/record_service.dart';
+import 'package:iron_split/features/task/presentation/widgets/s15/s15_expense_form.dart';
+import 'package:iron_split/features/task/presentation/widgets/s15/s15_income_form.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/core/services/calculation_service.dart';
 
-// ==========================================
-// 2. 主頁面 Widget
-// ==========================================
 class S15RecordEditPage extends StatefulWidget {
   final String taskId;
   final String? recordId;
@@ -427,6 +425,18 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     }
   }
 
+  void _showCategoryPicker() {
+    CategoryPickerSheet.show(
+      context: context,
+      initialCategoryId: _selectedCategoryId,
+      onSelected: (CategoryConstant selected) {
+        setState(() {
+          _selectedCategoryId = selected.id;
+        });
+      },
+    );
+  }
+
   void _showCurrencyPicker() {
     CurrencyPickerSheet.show(
       context: context,
@@ -436,54 +446,6 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           await _onCurrencyChanged(currency.code);
         }
       },
-    );
-  }
-
-  String _getCategoryLabel(String key) {
-    switch (key) {
-      case 't.category.food':
-        return t.category.food;
-      case 't.category.transport':
-        return t.category.transport;
-      case 't.category.shopping':
-        return t.category.shopping;
-      case 't.category.entertainment':
-        return t.category.entertainment;
-      case 't.category.accommodation':
-        return t.category.accommodation;
-      case 't.category.others':
-        return t.category.others;
-      default:
-        return t.category.others;
-    }
-  }
-
-  void _showCategoryPicker() {
-    final int initialIndex = kAppCategories
-        .indexWhere((c) => c.id == _selectedCategoryId)
-        .clamp(0, kAppCategories.length - 1);
-    int tempIndex = initialIndex;
-
-    showCommonWheelPicker(
-      context: context,
-      onConfirm: () =>
-          setState(() => _selectedCategoryId = kAppCategories[tempIndex].id),
-      child: CupertinoPicker(
-        itemExtent: 40,
-        scrollController:
-            FixedExtentScrollController(initialItem: initialIndex),
-        onSelectedItemChanged: (index) => tempIndex = index,
-        children: kAppCategories
-            .map((c) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(c.icon, size: 20),
-                    const SizedBox(width: 8),
-                    Text(_getCategoryLabel(c.labelKey)),
-                  ],
-                ))
-            .toList(),
-      ),
     );
   }
 
@@ -795,668 +757,6 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     );
   }
 
-  // --- Helper Widgets ---
-
-  Widget buildPickerField(
-      {required String label,
-      required String value,
-      required IconData icon,
-      required VoidCallback onTap,
-      bool isError = false}) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon:
-              Icon(icon, color: isError ? colorScheme.error : null), // Icon 變色
-          // 邊框變色邏輯
-          enabledBorder: isError
-              ? OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: colorScheme.error),
-                )
-              : OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          focusedBorder: isError
-              ? OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: colorScheme.error, width: 2),
-                )
-              : OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: colorScheme.primary, width: 2),
-                ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                value,
-                style: theme.textTheme.bodyLarge
-                    ?.copyWith(color: isError ? colorScheme.error : null // 文字變色
-                        ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const Icon(Icons.arrow_drop_down),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpenseCard({
-    required double amount,
-    required String methodLabel,
-    required List<String> memberIds,
-    String? note,
-    required VoidCallback onTap,
-    bool isBaseCard = false,
-    bool showSplitAction = false,
-    VoidCallback? onSplitTap,
-  }) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final currencySymbol = kSupportedCurrencies
-        .firstWhere((e) => e.code == _selectedCurrency,
-            orElse: () => kSupportedCurrencies.first)
-        .symbol;
-
-    if (_isLoadingTaskData) {
-      return const SizedBox(
-          height: 100, child: Center(child: CircularProgressIndicator()));
-    }
-
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      // 稍微加深底色，讓卡片更明顯
-      color: isBaseCard
-          ? colorScheme.surfaceContainerHighest
-          : colorScheme.surfaceContainer,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide.none,
-      ),
-      child: Column(
-        children: [
-          // 上半部：可點擊的資訊區
-          InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "$currencySymbol ${NumberFormat("#,##0.##").format(amount)}",
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800, // 加粗
-                          color: colorScheme.onSurface, // 深黑色
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary, // 改用實心主色
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          _getSplitMethodLabel(methodLabel),
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onPrimary, // 白字
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end, // 底部對齊
-                    children: [
-                      // 左邊：說明文字 (給予彈性空間，但保留右邊給頭像)
-                      Expanded(
-                        flex: 4, // 左邊佔 40%
-                        child: note != null
-                            ? Text(
-                                note,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w500),
-                                maxLines: 2, // 允許換行
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : (isBaseCard
-                                ? Text(t.S15_Record_Edit.base_card_title,
-                                    style: TextStyle(
-                                        color: colorScheme.onSurfaceVariant,
-                                        fontWeight: FontWeight.w500))
-                                : const SizedBox.shrink()),
-                      ),
-                      const SizedBox(width: 8),
-                      // 右邊：頭像區 (給予更多空間顯示兩行)
-                      Expanded(
-                        flex: 6, // 右邊佔 60%
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: CommonAvatarStack(
-                            allMembers: _taskMembers,
-                            targetMemberIds: memberIds,
-                            radius: 11,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 下半部：分拆按鈕 (黏在卡片底部)
-          if (showSplitAction && onSplitTap != null) ...[
-            Divider(height: 1, color: colorScheme.outlineVariant),
-            InkWell(
-              onTap: onSplitTap,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, size: 18, color: colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text(
-                      t.S15_Record_Edit.add_item,
-                      style: TextStyle(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  String _getSplitMethodLabel(String method) {
-    switch (method) {
-      case 'even':
-        return t.S15_Record_Edit.method_even;
-      case 'exact':
-        return t.S15_Record_Edit.method_exact;
-      case 'percent':
-        return t.S15_Record_Edit.method_percent;
-      default:
-        return method;
-    }
-  }
-
-  // 支援多種支付型態顯示
-  String _getPayerDisplayName(String type, String id) {
-    if (type == 'prepay') {
-      final balanceStr = NumberFormat("#,##0.##").format(widget.prepayBalance);
-      return "${t.B07_PaymentMethod_Edit.type_prepay} ($balanceStr)";
-    }
-    if (type == 'mixed') {
-      return t.B07_PaymentMethod_Edit.type_mixed;
-    }
-    if (id == 'multiple') {
-      return t.B07_PaymentMethod_Edit.type_member;
-    }
-
-    final member = _taskMembers.firstWhere(
-      (m) => m['id'] == id,
-      orElse: () => {'name': '?'},
-    );
-    return t.S15_Record_Edit.val_member_paid(name: member['name']);
-  }
-
-  Widget _buildExpenseForm() {
-    // 1. 複製這些變數進來 (因為原本 build 裡的變數這裡讀不到)
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isForeign = _selectedCurrency != widget.baseCurrency;
-    final currencyOption = kSupportedCurrencies.firstWhere(
-        (e) => e.code == _selectedCurrency,
-        orElse: () => kSupportedCurrencies.first);
-
-    // 2. 貼上你原本的 ListView
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        buildPickerField(
-          label: t.S15_Record_Edit.label_date,
-          value: DateFormat('yyyy/MM/dd (E)').format(_selectedDate),
-          icon: Icons.calendar_today,
-          onTap: _showDatePicker,
-        ),
-        const SizedBox(height: 16),
-        buildPickerField(
-          label: t.S15_Record_Edit.label_payment_method,
-          value: _getPayerDisplayName(_payerType, _payerId),
-          icon: _payerType == 'prepay'
-              ? Icons.account_balance_wallet
-              : Icons.person,
-          onTap: _handlePaymentMethod,
-          isError: _hasPaymentError,
-        ),
-        // 若有錯誤顯示紅字提示 (加在欄位下方)
-        if (_hasPaymentError)
-          Padding(
-            padding: const EdgeInsets.only(left: 12, top: 4),
-            child: Text(
-              t.B07_PaymentMethod_Edit.err_balance_not_enough,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.error, fontSize: 12),
-            ),
-          ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            InkWell(
-              onTap: _showCategoryPicker,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  CategoryConstant.getCategoryById(_selectedCategoryId).icon,
-                  color: colorScheme.primary,
-                  size: 24,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_title,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) => v?.isEmpty == true ? "Required" : null,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: _showCurrencyPicker,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      currencyOption.symbol,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    Text(
-                      currencyOption.code,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: _amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_amount,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) =>
-                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
-              ),
-            ),
-          ],
-        ),
-        if (isForeign) ...[
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: _exchangeRateController,
-            onChanged: (_) => setState(() {}),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label_rate(
-                  base: widget.baseCurrency, target: _selectedCurrency),
-              prefixIcon: IconButton(
-                icon: const Icon(Icons.currency_exchange),
-                onPressed: _isRateLoading ? null : _fetchExchangeRate,
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_isRateLoading)
-                    const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator(strokeWidth: 2)),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline),
-                    onPressed: _showRateInfoDialog,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Builder(
-            builder: (context) {
-              final amount = double.tryParse(_amountController.text) ?? 0.0;
-              final rate = double.tryParse(_exchangeRateController.text) ?? 0.0;
-              final converted = amount * rate;
-              final baseSymbol = kSupportedCurrencies
-                  .firstWhere((e) => e.code == widget.baseCurrency,
-                      orElse: () => kSupportedCurrencies.first)
-                  .symbol;
-              final baseCode = widget.baseCurrency;
-              final formattedAmount =
-                  CurrencyOption.formatAmount(converted, baseCode);
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 4, left: 4),
-                child: Text(
-                  t.S15_Record_Edit.val_converted_amount(
-                      base: baseCode,
-                      symbol: baseSymbol,
-                      amount: formattedAmount),
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-              );
-            },
-          ),
-        ],
-        const SizedBox(height: 12),
-        if (_items.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            child: Text(
-              t.S15_Record_Edit.section_items,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ..._items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: _buildExpenseCard(
-                  amount: item.amount,
-                  methodLabel: item.splitMethod,
-                  memberIds: item.splitMemberIds,
-                  note: item.name,
-                  isBaseCard: false,
-                  onTap: () => _handleItemEdit(item),
-                ),
-              )),
-        ],
-        if (_baseRemainingAmount > 0 || _items.isEmpty) ...[
-          _buildExpenseCard(
-            amount: _baseRemainingAmount,
-            methodLabel: _baseSplitMethod,
-            memberIds: _baseMemberIds,
-            note: null,
-            isBaseCard: true,
-            onTap: () => _handleBaseSplitConfig(),
-            // 只有基本卡片且有餘額時，顯示分拆按鈕
-            showSplitAction: _baseRemainingAmount > 0,
-            onSplitTap: _handleCreateSubItem,
-          ),
-          if (_baseSplitMethod == 'even' && _baseMemberIds.isNotEmpty)
-            Builder(
-              builder: (context) {
-                final rate =
-                    double.tryParse(_exchangeRateController.text) ?? 1.0;
-                final baseTotal = CalculationService.calculateBaseTotal(
-                    _baseRemainingAmount, rate);
-                final split = CalculationService.calculateEvenSplit(
-                    baseTotal, _baseMemberIds.length);
-                if (split.remainder > 0) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: Text(
-                      t.S13_Task_Dashboard.label_remainder(
-                          amount:
-                              "${widget.baseCurrency} ${CurrencyOption.formatAmount(split.remainder, widget.baseCurrency)}"),
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: theme.colorScheme.outline),
-                      textAlign: TextAlign.end,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-        ],
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _memoController,
-          keyboardType: TextInputType.multiline,
-          // 1. 鎖定高度：最小與最大都是 2 行
-          minLines: 2,
-          maxLines: 2,
-          decoration: InputDecoration(
-            labelText: t.S15_Record_Edit.label_memo,
-            // 2. 讓 Label (提示文字) 在多行模式下也能靠左上
-            alignLabelWithHint: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            // 3. 調整內距
-            contentPadding: const EdgeInsets.all(16),
-          ),
-        ),
-        const SizedBox(height: 100),
-      ],
-    );
-  }
-
-  Widget _buildIncomeForm() {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isForeign = _selectedCurrency != widget.baseCurrency;
-    final currencyOption = kSupportedCurrencies.firstWhere(
-        (e) => e.code == _selectedCurrency,
-        orElse: () => kSupportedCurrencies.first);
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        buildPickerField(
-          label: t.S15_Record_Edit.label_date,
-          value: DateFormat('yyyy/MM/dd (E)').format(_selectedDate),
-          icon: Icons.calendar_today,
-          onTap: _showDatePicker,
-        ),
-        const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: _showCurrencyPicker,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      currencyOption.symbol,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    Text(
-                      currencyOption.code,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: _amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_amount,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) =>
-                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
-              ),
-            ),
-          ],
-        ),
-        if (isForeign) ...[
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: _exchangeRateController,
-            onChanged: (_) => setState(() {}),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label_rate(
-                  base: widget.baseCurrency, target: _selectedCurrency),
-              prefixIcon: IconButton(
-                icon: const Icon(Icons.currency_exchange),
-                onPressed: _isRateLoading ? null : _fetchExchangeRate,
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_isRateLoading)
-                    const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator(strokeWidth: 2)),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline),
-                    onPressed: _showRateInfoDialog,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Builder(
-            builder: (context) {
-              final amount = double.tryParse(_amountController.text) ?? 0.0;
-              final rate = double.tryParse(_exchangeRateController.text) ?? 0.0;
-              final converted = amount * rate;
-              final baseSymbol = kSupportedCurrencies
-                  .firstWhere((e) => e.code == widget.baseCurrency,
-                      orElse: () => kSupportedCurrencies.first)
-                  .symbol;
-              final baseCode = widget.baseCurrency;
-              final formattedAmount =
-                  CurrencyOption.formatAmount(converted, baseCode);
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 4, left: 4),
-                child: Text(
-                  t.S15_Record_Edit.val_converted_amount(
-                      base: baseCode,
-                      symbol: baseSymbol,
-                      amount: formattedAmount),
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-              );
-            },
-          ),
-        ],
-        const SizedBox(height: 12),
-        _buildExpenseCard(
-          amount: _totalAmount,
-          methodLabel: _baseSplitMethod,
-          memberIds: _baseMemberIds,
-          note: t.S15_Record_Edit.base_card_title_income,
-          isBaseCard: true,
-          onTap: () => _handleBaseSplitConfig(),
-          showSplitAction: false,
-          onSplitTap: null,
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _memoController,
-          keyboardType: TextInputType.multiline,
-          minLines: 2,
-          maxLines: 2,
-          decoration: InputDecoration(
-            labelText: t.S15_Record_Edit.label_memo,
-            alignLabelWithHint: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            contentPadding: const EdgeInsets.all(16),
-          ),
-        ),
-        const SizedBox(height: 100),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_isLoadingTaskData) {
@@ -1530,8 +830,59 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
             child: Form(
               key: _formKey, // Form Key 依然包在最外面，保護你的驗證邏輯
               child: _recordTypeIndex == 0
-                  ? _buildExpenseForm()
-                  : _buildIncomeForm(),
+                  ? S15ExpenseForm(
+                      // Controllers
+                      amountController: _amountController,
+                      titleController: _titleController,
+                      memoController: _memoController,
+                      exchangeRateController: _exchangeRateController,
+                      // State
+                      selectedDate: _selectedDate,
+                      selectedCurrency: _selectedCurrency,
+                      baseCurrency: widget.baseCurrency,
+                      selectedCategoryId: _selectedCategoryId,
+                      isRateLoading: _isRateLoading,
+                      prepayBalance: widget.prepayBalance,
+                      members: _taskMembers,
+                      items: _items,
+                      baseRemainingAmount: _baseRemainingAmount,
+                      baseSplitMethod: _baseSplitMethod,
+                      baseMemberIds: _baseMemberIds,
+                      payerType: _payerType,
+                      payerId: _payerId,
+                      hasPaymentError: _hasPaymentError,
+                      // Callbacks
+                      onDateTap: _showDatePicker,
+                      onPaymentMethodTap: _handlePaymentMethod,
+                      onCategoryTap: _showCategoryPicker,
+                      onCurrencyTap: _showCurrencyPicker,
+                      onFetchExchangeRate: _fetchExchangeRate,
+                      onShowRateInfo: _showRateInfoDialog,
+                      onBaseSplitConfigTap: _handleBaseSplitConfig,
+                      onAddItemTap: _handleCreateSubItem,
+                      onItemEditTap: _handleItemEdit,
+                    )
+                  : S15IncomeForm(
+                      // Controllers
+                      amountController: _amountController,
+                      memoController: _memoController,
+                      exchangeRateController: _exchangeRateController,
+                      // State
+                      selectedDate: _selectedDate,
+                      selectedCurrency: _selectedCurrency,
+                      baseCurrency: widget.baseCurrency,
+                      isRateLoading: _isRateLoading,
+                      members: _taskMembers,
+                      baseRemainingAmount: _totalAmount, // 收入時，總金額即為要分配的金額
+                      baseSplitMethod: _baseSplitMethod,
+                      baseMemberIds: _baseMemberIds,
+                      // Callbacks
+                      onDateTap: _showDatePicker,
+                      onCurrencyTap: _showCurrencyPicker,
+                      onFetchExchangeRate: _fetchExchangeRate,
+                      onShowRateInfo: _showRateInfoDialog,
+                      onBaseSplitConfigTap: _handleBaseSplitConfig,
+                    ),
             ),
           ),
         ],

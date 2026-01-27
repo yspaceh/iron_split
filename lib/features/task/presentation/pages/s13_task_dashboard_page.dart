@@ -118,7 +118,10 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                   onPressed: () => context.pushNamed(
                     'S15',
                     pathParameters: {'taskId': widget.taskId},
-                    extra: {'prepayBalance': prepayBalance},
+                    extra: {
+                      'prepayBalance': prepayBalance,
+                      'baseCurrency': currency,
+                    },
                   ),
                   icon: const Icon(Icons.add),
                   label: Text(t.S13_Task_Dashboard.fab_record),

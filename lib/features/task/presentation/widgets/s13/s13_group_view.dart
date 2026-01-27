@@ -275,34 +275,58 @@ class _S13GroupViewState extends State<S13GroupView> {
                           date: date,
                           total: dayTotal,
                           currency: widget.currency),
-                      if (dayRecords.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(
-                            child: OutlinedButton.icon(
-                              onPressed: () => context.pushNamed(
-                                'S15',
-                                pathParameters: {'taskId': widget.taskId},
-                                extra: {
-                                  'prepayBalance': widget.prepayBalance,
-                                  'date': date,
-                                },
-                              ),
-                              icon: const Icon(Icons.add),
-                              label: Text(t.S15_Record_Edit.title_create),
+                      ...dayRecords.map((doc) {
+                        final recordModel = RecordModel.fromFirestore(doc);
+                        return _RecordItem(
+                          taskId: widget.taskId,
+                          record: recordModel,
+                          prepayBalance: widget.prepayBalance,
+                          baseCurrency: widget.currency,
+                        );
+                      }),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            16, 4, 16, 16), // 調整間距，讓下面空一點
+                        child: SizedBox(
+                          width: double.infinity, // 1. 讓按鈕撐滿寬度
+                          height: 48, // 2. 設定固定高度，讓它看起來像個卡片區塊
+                          child: OutlinedButton(
+                            onPressed: () => context.pushNamed(
+                              'S15',
+                              pathParameters: {'taskId': widget.taskId},
+                              extra: {
+                                'prepayBalance': widget.prepayBalance,
+                                'baseCurrency': widget.currency,
+                                'date': date,
+                              },
                             ),
+                            style: OutlinedButton.styleFrom(
+                              // 按鈕內容顏色 (Icon 顏色) - 使用較淡的灰色
+                              foregroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                              // 邊框樣式 - 使用細且淡的邊框 (模擬虛線框的視覺感)
+                              side: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant
+                                    .withValues(alpha: 0.5),
+                                width: 1,
+                                // 注意：Flutter 原生 OutlinedButton 不支援虛線，若需虛線需用 CustomPaint，
+                                // 但通常淡色實線邊框在 UI 上已足夠達到「新增區塊」的視覺效果。
+                              ),
+                              // 圓角設定 - 設定為 16 或 20
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              // 移除預設的背景色 (變透明)
+                              backgroundColor: Colors.transparent,
+                            ),
+                            // 3. 中間只放 Icon
+                            child: const Icon(Icons.add),
                           ),
-                        )
-                      else
-                        ...dayRecords.map((doc) {
-                          final recordModel = RecordModel.fromFirestore(doc);
-                          return _RecordItem(
-                            taskId: widget.taskId,
-                            record: recordModel,
-                            prepayBalance: widget.prepayBalance,
-                            baseCurrency: widget.currency,
-                          );
-                        }),
+                        ),
+                      ),
                     ],
                   );
                 }).toList(),
@@ -477,6 +501,7 @@ class _RecordItem extends StatelessWidget {
           queryParameters: {'id': record.id},
           extra: {
             'prepayBalance': prepayBalance,
+            'baseCurrency': baseCurrency,
             'record': record,
           },
         ),
