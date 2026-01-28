@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S10_Home.TaskList
@@ -185,8 +186,8 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
                     return _TaskCard(
                       taskId: doc.id,
                       data: data,
-                      myAvatar: myData['avatar'] ?? 'unknown',
-                      // Fix 3: Use createdBy instead of captainUid
+                      myAvatar: myData['avatar'] ?? 'cow',
+                      myDisplayName: myData['displayName'] as String?,
                       isCaptain: data['createdBy'] == user.uid,
                     );
                   },
@@ -204,6 +205,7 @@ class _TaskCard extends StatelessWidget {
   final String taskId;
   final Map<String, dynamic> data;
   final String myAvatar;
+  final String? myDisplayName;
   final bool isCaptain;
 
   const _TaskCard({
@@ -211,6 +213,7 @@ class _TaskCard extends StatelessWidget {
     required this.data,
     required this.myAvatar,
     required this.isCaptain,
+    required this.myDisplayName,
   });
 
   @override
@@ -240,21 +243,10 @@ class _TaskCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  myAvatar.isNotEmpty ? myAvatar[0].toUpperCase() : '?',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                ),
+              CommonAvatar(
+                avatarId: myAvatar,
+                name: myDisplayName,
+                radius: 28, // 56x56 -> radius 28
               ),
               const SizedBox(width: 16),
               Expanded(

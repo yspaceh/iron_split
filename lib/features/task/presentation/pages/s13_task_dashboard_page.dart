@@ -55,7 +55,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
               barrierDismissible: false,
               builder: (context) => D01MemberRoleIntroDialog(
                 taskId: widget.taskId,
-                initialAvatar: memberData['avatar'] ?? 'pig',
+                initialAvatar: memberData['avatar'] ?? 'cow',
                 canReroll: true,
               ),
             );
