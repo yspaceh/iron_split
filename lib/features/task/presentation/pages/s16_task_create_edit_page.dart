@@ -5,6 +5,7 @@ import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsav
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_date_range_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_member_count_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
@@ -167,6 +168,17 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                         onCurrencyChanged: (currency) =>
                             setState(() => _baseCurrencyOption = currency),
                         enabled: _isCurrencyEnabled,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                            height: 1,
+                            width: double.infinity,
+                            color: theme.dividerColor),
+                      ),
+                      TaskMemberCountInput(
+                        value: _memberCount,
+                        onChanged: (val) => setState(() => _memberCount = val),
                       ),
                     ],
                   ),

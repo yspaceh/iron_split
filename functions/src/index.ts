@@ -6,10 +6,28 @@ const db = admin.firestore();
 
 // 20 隻英國農場動物清單 (聖經定義)
 const ALL_AVATARS = [
-  "cow", "pig", "chicken", "horse", "sheep", "goat", "duck", "goose", 
-  "rabbit", "mouse", "cat", "dog", "frog", "fox", "owl", "badger", 
-  "hedgehog", "deer", "turkey", "donkey"
+      "cow",
+      "pig",
+      "deer",
+      "horse",
+      "sheep",
+      "goat",
+      "duck",
+      "stoat",
+      "rabbit",
+      "mouse",
+      "cat",
+      "dog",
+      "otter",
+      "owl",
+      "fox",
+      "hedgehog",
+      "donkey",
+      "squirrel",
+      "badger",
+      "robin",
 ];
+
 
 // 輔助：隨機產生 8 碼大寫英數 (排除易混淆字元 I, L, 1, O, 0)
 const generateCode = (): string => {
@@ -49,7 +67,7 @@ export const createInviteCode = onCall(async (request) => {
   if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
   
   // 檢查是否為隊長
-  if (taskDoc.data()?.captainUid !== uid) {
+  if (taskDoc.data()?.createdBy !== uid) {
     throw new HttpsError("permission-denied", "NOT_CAPTAIN");
   }
 

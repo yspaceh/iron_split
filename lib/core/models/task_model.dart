@@ -3,85 +3,100 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 
 class TaskModel {
   final String id;
-  final String title;
+  final String name; // Was 'title'
   final String baseCurrency;
   final Map<String, dynamic> members;
-  final bool isPrepay;
-  final String mode;
-  final String state;
-  final String ownerId;
+  final String status; // Was 'mode'/'state', now 'ongoing' etc.
+  final String createdBy; // Was 'ownerId'
+  final String remainderRule; // Added to match S14
   final DateTime createdAt;
-  final DateTime? startDate; // [新增] 支援日期軸
-  final DateTime? endDate; // [新增] 支援日期軸
+  final DateTime updatedAt; // Added
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final int memberCount; // Added for convenience
 
   TaskModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.baseCurrency,
     required this.members,
-    required this.isPrepay,
-    required this.mode,
-    required this.state,
-    required this.ownerId,
+    required this.status,
+    required this.createdBy,
+    required this.remainderRule,
     required this.createdAt,
+    required this.updatedAt,
     this.startDate,
     this.endDate,
+    this.memberCount = 1,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>?;
 
     if (data == null) {
+      // Fallback for empty/error docs
       return TaskModel(
         id: doc.id,
-        title: 'Unknown Task',
+        name: 'Error Task',
         baseCurrency: CurrencyOption.defaultCode,
         members: {},
-        isPrepay: false,
-        mode: 'active',
-        state: 'pending',
-        ownerId: '',
+        status: 'unknown',
+        createdBy: '',
+        remainderRule: 'random',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
     }
 
-    // Helper to parse dates
-    DateTime? parseDate(dynamic val) {
+    // Helper to parse dates safely
+    DateTime parseDate(dynamic val, {DateTime? fallback}) {
       if (val is Timestamp) return val.toDate();
-      if (val is String) return DateTime.tryParse(val);
-      return null;
+      if (val is String)
+        return DateTime.tryParse(val) ?? fallback ?? DateTime.now();
+      return fallback ?? DateTime.now();
     }
 
     return TaskModel(
       id: doc.id,
-      title: data['title'] as String? ?? '',
+      name: data['name'] as String? ?? '', // Matches D03 write
       baseCurrency:
           data['baseCurrency'] as String? ?? CurrencyOption.defaultCode,
       members: data['members'] is Map
           ? Map<String, dynamic>.from(data['members'])
           : {},
-      isPrepay: data['isPrepay'] as bool? ?? false,
-      mode: data['mode'] as String? ?? 'active',
-      state: data['state'] as String? ?? 'pending',
-      ownerId: data['ownerId'] as String? ?? '',
-      createdAt: parseDate(data['createdAt']) ?? DateTime.now(),
-      startDate: parseDate(data['startDate']),
-      endDate: parseDate(data['endDate']),
+
+      // Status handling (Bible: ongoing, closed, archived)
+      status: data['status'] as String? ?? 'ongoing',
+
+      // Captain/Owner handling (Bible: createdBy)
+      createdBy: data['createdBy'] as String? ?? '',
+
+      // Rule handling (S14: remainderRule)
+      remainderRule: data['remainderRule'] as String? ?? 'random',
+
+      createdAt: parseDate(data['createdAt']),
+      updatedAt: parseDate(data['updatedAt']),
+      startDate:
+          data['startDate'] != null ? parseDate(data['startDate']) : null,
+      endDate: data['endDate'] != null ? parseDate(data['endDate']) : null,
+
+      memberCount: (data['memberCount'] as num?)?.toInt() ?? 1,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
+      'name': name,
       'baseCurrency': baseCurrency,
       'members': members,
-      'isPrepay': isPrepay,
-      'mode': mode,
-      'state': state,
-      'ownerId': ownerId,
+      'status': status,
+      'createdBy': createdBy,
+      'remainderRule': remainderRule,
       'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
       'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+      'memberCount': memberCount,
     };
   }
 }

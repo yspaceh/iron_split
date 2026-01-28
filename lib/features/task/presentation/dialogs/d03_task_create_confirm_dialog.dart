@@ -42,24 +42,24 @@ class _D03TaskCreateConfirmDialogState
     const avatars = [
       "cow",
       "pig",
-      "chicken",
+      "deer",
       "horse",
       "sheep",
       "goat",
       "duck",
-      "goose",
+      "stoat",
       "rabbit",
       "mouse",
       "cat",
       "dog",
-      "frog",
-      "fox",
+      "otter",
       "owl",
-      "badger",
+      "fox",
       "hedgehog",
-      "deer",
-      "turkey",
-      "donkey"
+      "donkey",
+      "squirrel",
+      "badger",
+      "robin",
     ];
     return avatars[Random().nextInt(avatars.length)];
   }
@@ -106,12 +106,14 @@ class _D03TaskCreateConfirmDialogState
       // 2. 寫入 DB
       final docRef = await FirebaseFirestore.instance.collection('tasks').add({
         'name': widget.taskName,
-        'captainUid': user.uid,
-        'memberCount': 1,
+        'createdBy': user.uid,
+        'memberCount': widget.memberCount,
         'maxMembers': widget.memberCount,
         'baseCurrency': widget.baseCurrencyOption.code,
         'startDate': Timestamp.fromDate(widget.startDate),
         'endDate': Timestamp.fromDate(widget.endDate),
+        'status': 'ongoing',
+        'updatedAt': FieldValue.serverTimestamp(),
         'createdAt': FieldValue.serverTimestamp(),
         'members': membersMap,
         'activeInviteCode': null,
@@ -130,13 +132,15 @@ class _D03TaskCreateConfirmDialogState
 
         // 3. 觸發原生 Share Sheet
         if (mounted) {
-          await Share.share(
-            t.D03_TaskCreate_Confirm.share_message(
-              taskName: widget.taskName,
-              code: code,
-              link: inviteLink,
+          await SharePlus.instance.share(
+            ShareParams(
+              text: t.D03_TaskCreate_Confirm.share_message(
+                taskName: widget.taskName,
+                code: code,
+                link: inviteLink,
+              ),
+              subject: t.D03_TaskCreate_Confirm.share_subject,
             ),
-            subject: t.D03_TaskCreate_Confirm.share_subject,
           );
         }
       }
@@ -147,6 +151,7 @@ class _D03TaskCreateConfirmDialogState
         context.go('/tasks/${docRef.id}');
       }
     } catch (e) {
+      print('${e.toString()}');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(t.common.error_prefix(message: e.toString()))),

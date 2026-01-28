@@ -14,7 +14,7 @@ class S10HomeTaskListPage extends StatefulWidget {
 }
 
 class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
-  int _selectedIndex = 0; // 0: 進行中, 1: 已完成
+  int _selectedIndex = 0; // 0: 進行中 (ongoing), 1: 已完成 (settled/closed)
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,8 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('tasks')
-                  .orderBy('createdAt', descending: true)
+                  // Fix 1: Sort by updatedAt so newest activity shows first
+                  .orderBy('updatedAt', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -128,12 +129,22 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
                   final data = doc.data() as Map<String, dynamic>;
                   final members = data['members'] as Map<String, dynamic>?;
 
+                  // 1. Membership Check
                   final isMember =
                       members != null && members.containsKey(user.uid);
                   if (!isMember) return false;
 
-                  if (_selectedIndex == 0) return true;
-                  return false;
+                  // 2. Status Check (Fix 2)
+                  // Default to 'ongoing' for legacy data that misses this field
+                  final String status = data['status'] ?? 'ongoing';
+
+                  if (_selectedIndex == 0) {
+                    // Tab 0: Show 'ongoing'
+                    return status == 'ongoing';
+                  } else {
+                    // Tab 1: Show anything else ('settled', 'closed', etc.)
+                    return status != 'ongoing';
+                  }
                 }).toList();
 
                 if (myDocs.isEmpty) {
@@ -175,7 +186,8 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
                       taskId: doc.id,
                       data: data,
                       myAvatar: myData['avatar'] ?? 'unknown',
-                      isCaptain: data['captainUid'] == user.uid,
+                      // Fix 3: Use createdBy instead of captainUid
+                      isCaptain: data['createdBy'] == user.uid,
                     );
                   },
                 );
@@ -314,6 +326,7 @@ class _TaskCard extends StatelessWidget {
           );
         },
         onDismissed: (direction) {
+          // TODO: Implement Logic Delete (Soft delete) in future
           FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
         },
         child: cardContent,
