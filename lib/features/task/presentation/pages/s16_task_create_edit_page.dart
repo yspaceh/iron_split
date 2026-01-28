@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_date_range_input.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S16_TaskCreate.Edit
@@ -27,6 +29,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   CurrencyOption _currency = CurrencyOption.defaultCurrencyOption;
   bool _isCurrencyInitialized = false;
   int _memberCount = 1;
+  bool _isCurrencyEnabled = true;
 
   @override
   void initState() {
@@ -184,36 +187,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                           ?.copyWith(color: colorScheme.primary)),
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _nameController,
-                    autofocus: true,
-                    maxLength: 20,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(
-                          RegExp(r'[\x00-\x1F\x7F]')),
-                    ],
-                    decoration: InputDecoration(
-                      hintText: t.S16_TaskCreate_Edit.field_name_hint,
-                      // 2. 移除下方的 counterText，改用 suffixText 放在框內
-                      counterText: "",
-                      suffixText: "${_nameController.text.length}/20",
-                      suffixStyle:
-                          TextStyle(color: colorScheme.onSurfaceVariant),
-
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      filled: true,
-                      fillColor: colorScheme.surfaceContainerHighest
-                          .withValues(alpha: 0.5),
-                    ),
-                    validator: (val) => (val == null || val.trim().isEmpty)
-                        ? t.S16_TaskCreate_Edit.error_name_empty
-                        : null,
-                  ),
+                  TaskNameInput(controller: _nameController),
 
                   const SizedBox(height: 24),
 
@@ -225,19 +199,13 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
 
                   _buildSectionCard(
                     children: [
-                      _buildRowItem(
-                        icon: Icons.calendar_today,
-                        label: t.S16_TaskCreate_Edit.field_start_date,
-                        value: dateFormat.format(_startDate),
-                        onTap: _showStartDatePicker,
-                        showDivider: true,
-                      ),
-                      _buildRowItem(
-                        icon: Icons.event_available,
-                        label: t.S16_TaskCreate_Edit.field_end_date,
-                        value: dateFormat.format(_endDate),
-                        onTap: _showEndDatePicker,
-                        showDivider: false,
+                      TaskDateRangeInput(
+                        startDate: _startDate,
+                        endDate: _endDate,
+                        onStartDateChanged: (date) =>
+                            setState(() => _startDate = date),
+                        onEndDateChanged: (date) =>
+                            setState(() => _endDate = date),
                       ),
                     ],
                   ),
@@ -252,12 +220,11 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
 
                   _buildSectionCard(
                     children: [
-                      _buildRowItem(
-                        icon: Icons.currency_exchange,
-                        label: t.S16_TaskCreate_Edit.field_currency,
-                        value: _currency.code,
-                        onTap: _showCurrencyPicker,
-                        showDivider: true,
+                      TaskCurrencyInput(
+                        currency: _currency,
+                        onCurrencyChanged: (currency) =>
+                            setState(() => _currency = currency),
+                        enabled: _isCurrencyEnabled,
                       ),
                       _buildStepperRow(
                         icon: Icons.group_outlined,
@@ -299,48 +266,6 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
             color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(children: children),
-    );
-  }
-
-  Widget _buildRowItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-    bool showDivider = false,
-  }) {
-    final theme = Theme.of(context);
-    return Column(
-      children: [
-        InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Row(
-              children: [
-                Icon(icon, size: 24, color: theme.colorScheme.primary),
-                const SizedBox(width: 16),
-                Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
-                Text(
-                  value,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(Icons.chevron_right,
-                    size: 20, color: theme.colorScheme.outline),
-              ],
-            ),
-          ),
-        ),
-        if (showDivider)
-          Divider(
-              height: 1,
-              indent: 56,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-      ],
     );
   }
 
