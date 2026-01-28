@@ -93,9 +93,6 @@
     "label_remainder_pot": "Remainder Pot",
     "fab_record": "Record",
     "empty_records": "No records",
-    "rule_random": "Random",
-    "rule_order": "Order",
-    "rule_member": "Member",
     "settlement_button": "Settlement",
     "nav_to_record": "Navigating to record page...",
     "daily_expense_label": "Exp",
@@ -107,7 +104,10 @@
     "personal_to_receive": "To Receive",
     "personal_to_pay": "To Pay",
     "personal_empty_desc": "No records related to you on this day",
-    "total_amount_label": "Total Bill"
+    "total_amount_label": "Total Bill",
+    "rule_random": "Random",
+    "rule_order": "Order",
+    "rule_member": "Member"
   },
   "S15_Record_Edit": {
     "title_create": "Add Expense",

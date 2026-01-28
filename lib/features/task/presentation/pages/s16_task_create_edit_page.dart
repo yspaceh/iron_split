@@ -1,14 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_date_range_input.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -26,10 +22,10 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
 
   late DateTime _startDate;
   late DateTime _endDate;
-  CurrencyOption _currency = CurrencyOption.defaultCurrencyOption;
+  CurrencyOption _baseCurrencyOption = CurrencyOption.defaultCurrencyOption;
   bool _isCurrencyInitialized = false;
   int _memberCount = 1;
-  bool _isCurrencyEnabled = true;
+  final bool _isCurrencyEnabled = true;
 
   @override
   void initState() {
@@ -62,7 +58,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
           CurrencyOption.detectSystemCurrency();
 
       setState(() {
-        _currency = suggestedCurrency;
+        _baseCurrencyOption = suggestedCurrency;
       });
     }
   }
@@ -78,63 +74,9 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
         taskName: _nameController.text.trim(),
         startDate: _startDate,
         endDate: _endDate,
-        currency: _currency,
+        baseCurrencyOption: _baseCurrencyOption,
         memberCount: _memberCount,
       ),
-    );
-  }
-
-  void _showStartDatePicker() {
-    // 1. 建立暫存變數
-    DateTime tempDate = _startDate;
-
-    showCommonWheelPicker(
-      context: context,
-      onConfirm: () {
-        // 3. 按下完成才 setState
-        setState(() {
-          _startDate = tempDate;
-          // 連動檢查：如果結束時間早於開始時間，自動推延
-          if (_endDate.isBefore(_startDate)) {
-            _endDate = _startDate;
-          }
-        });
-      },
-      child: CupertinoDatePicker(
-        initialDateTime: _startDate,
-        mode: CupertinoDatePickerMode.date,
-        // 2. 滑動時只更新暫存
-        onDateTimeChanged: (val) {
-          tempDate = DateTime(val.year, val.month, val.day);
-        },
-      ),
-    );
-  }
-
-  void _showEndDatePicker() {
-    DateTime tempDate = _endDate;
-
-    showCommonWheelPicker(
-      context: context,
-      onConfirm: () => setState(() => _endDate = tempDate),
-      child: CupertinoDatePicker(
-        initialDateTime: _endDate,
-        minimumDate: _startDate, // 防呆：不能選開始之前的日期
-        mode: CupertinoDatePickerMode.date,
-        onDateTimeChanged: (val) {
-          tempDate = DateTime(val.year, val.month, val.day);
-        },
-      ),
-    );
-  }
-
-  void _showCurrencyPicker() {
-    CurrencyPickerSheet.show(
-      context: context,
-      initialCode: _currency.code,
-      onSelected: (currency) {
-        setState(() => _currency = currency);
-      },
     );
   }
 
@@ -154,7 +96,6 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final dateFormat = DateFormat('yyyy/MM/dd');
 
     return PopScope(
       canPop: false, // 設為 false 表示手動控制返回邏輯
@@ -221,9 +162,9 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                   _buildSectionCard(
                     children: [
                       TaskCurrencyInput(
-                        currency: _currency,
+                        currency: _baseCurrencyOption,
                         onCurrencyChanged: (currency) =>
-                            setState(() => _currency = currency),
+                            setState(() => _baseCurrencyOption = currency),
                         enabled: _isCurrencyEnabled,
                       ),
                       _buildStepperRow(

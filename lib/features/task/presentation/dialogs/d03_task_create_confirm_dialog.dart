@@ -16,7 +16,7 @@ class D03TaskCreateConfirmDialog extends StatefulWidget {
   final String taskName;
   final DateTime startDate;
   final DateTime endDate;
-  final CurrencyOption currency;
+  final CurrencyOption baseCurrencyOption;
   final int memberCount;
 
   const D03TaskCreateConfirmDialog({
@@ -24,7 +24,7 @@ class D03TaskCreateConfirmDialog extends StatefulWidget {
     required this.taskName,
     required this.startDate,
     required this.endDate,
-    required this.currency,
+    required this.baseCurrencyOption,
     required this.memberCount,
   });
 
@@ -109,7 +109,7 @@ class _D03TaskCreateConfirmDialogState
         'captainUid': user.uid,
         'memberCount': 1,
         'maxMembers': widget.memberCount,
-        'baseCurrency': widget.currency,
+        'baseCurrency': widget.baseCurrencyOption.code,
         'startDate': Timestamp.fromDate(widget.startDate),
         'endDate': Timestamp.fromDate(widget.endDate),
         'createdAt': FieldValue.serverTimestamp(),
@@ -188,8 +188,8 @@ class _D03TaskCreateConfirmDialogState
             _buildRow(t.D03_TaskCreate_Confirm.label_period,
                 '${dateFormat.format(widget.startDate)} - ${dateFormat.format(widget.endDate)}'),
             const SizedBox(height: 8),
-            _buildRow(
-                t.D03_TaskCreate_Confirm.label_currency, widget.currency.code),
+            _buildRow(t.D03_TaskCreate_Confirm.label_currency,
+                widget.baseCurrencyOption.code),
             const SizedBox(height: 8),
             _buildRow(t.D03_TaskCreate_Confirm.label_members,
                 '${widget.memberCount}'),

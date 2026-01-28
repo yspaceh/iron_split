@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Ensure this is imported for the update
+import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart'; // Import the new picker
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
@@ -58,7 +58,6 @@ class BalanceCard extends StatelessWidget {
             : CurrencyOption.defaultCode);
 
     final baseCurrencyOption = CurrencyOption.getCurrencyOption(basrCurrency);
-    final balanceRule = taskData!['balanceRule'] ?? 'random';
 
     // 2. 轉換為 Model
     final recordModels =
@@ -115,43 +114,20 @@ class BalanceCard extends StatelessWidget {
       }
     }
 
+    // Get current rule from taskData
+    final balanceRule = taskData?['remainderRule'] ?? 'random';
+
     void showRulePicker() {
-      showModalBottomSheet(
+      RemainderRulePickerSheet.show(
         context: context,
-        builder: (context) => Container(
-          height: 250,
-          color: theme.colorScheme.surface,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(t.common.confirm),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: CupertinoPicker(
-                  itemExtent: 32,
-                  onSelectedItemChanged: (int index) {
-                    final newRule = ['random', 'order', 'member'][index];
-                    FirebaseFirestore.instance
-                        .collection('tasks')
-                        .doc(taskId)
-                        .update({'balanceRule': newRule});
-                  },
-                  children: [
-                    Text(t.S13_Task_Dashboard.rule_random),
-                    Text(t.S13_Task_Dashboard.rule_order),
-                    Text(t.S13_Task_Dashboard.rule_member),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        initialRule: balanceRule,
+        onSelected: (selectedRule) {
+          // Update Firestore
+          FirebaseFirestore.instance
+              .collection('tasks')
+              .doc(taskId)
+              .update({'remainderRule': selectedRule});
+        },
       );
     }
 
