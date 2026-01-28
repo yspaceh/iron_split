@@ -7,6 +7,7 @@ import 'package:iron_split/features/task/presentation/widgets/form/task_currency
 import 'package:iron_split/features/task/presentation/widgets/form/task_date_range_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
 
 /// Page Key: S16_TaskCreate.Edit
 class S16TaskCreateEditPage extends StatefulWidget {
@@ -138,7 +139,7 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                           ?.copyWith(color: colorScheme.primary)),
                   const SizedBox(height: 8),
 
-                  _buildSectionCard(
+                  TaskFormSectionCard(
                     children: [
                       TaskDateRangeInput(
                         startDate: _startDate,
@@ -159,19 +160,13 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
                           ?.copyWith(color: colorScheme.primary)),
                   const SizedBox(height: 8),
 
-                  _buildSectionCard(
+                  TaskFormSectionCard(
                     children: [
                       TaskCurrencyInput(
                         currency: _baseCurrencyOption,
                         onCurrencyChanged: (currency) =>
                             setState(() => _baseCurrencyOption = currency),
                         enabled: _isCurrencyEnabled,
-                      ),
-                      _buildStepperRow(
-                        icon: Icons.group_outlined,
-                        label: t.S16_TaskCreate_Edit.field_member_count,
-                        value: _memberCount,
-                        onChanged: (val) => setState(() => _memberCount = val),
                       ),
                     ],
                   ),
@@ -193,57 +188,6 @@ class _S16TaskCreateEditPageState extends State<S16TaskCreateEditPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionCard({required List<Widget> children}) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-      ),
-      child: Column(children: children),
-    );
-  }
-
-  Widget _buildStepperRow({
-    required IconData icon,
-    required String label,
-    required int value,
-    required ValueChanged<int> onChanged,
-  }) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 24, color: theme.colorScheme.primary),
-          const SizedBox(width: 16),
-          Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
-          IconButton.filledTonal(
-            onPressed: value > 1 ? () => onChanged(value - 1) : null,
-            icon: const Icon(Icons.remove),
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-          ),
-          SizedBox(
-            width: 40,
-            child: Text(
-              '$value',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          IconButton.filledTonal(
-            onPressed: value < 15 ? () => onChanged(value + 1) : null,
-            icon: const Icon(Icons.add),
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-          ),
-        ],
       ),
     );
   }

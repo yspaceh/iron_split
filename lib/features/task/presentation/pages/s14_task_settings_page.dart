@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
+import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_date_range_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_name_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_remainder_rule_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S14_Task.Settings
@@ -65,10 +66,10 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
         setState(() {
           _startDate = (data['startDate'] as Timestamp?)?.toDate();
           _endDate = (data['endDate'] as Timestamp?)?.toDate();
-          _currency =
-              CurrencyOption.getCurrencyOption(data['baseCurrency'] ?? 'TWD');
+          _currency = CurrencyOption.getCurrencyOption(
+              data['baseCurrency'] ?? CurrencyOption.defaultCode);
           _remainderRule = data['remainderRule'] ?? 'random';
-          _createdBy = data['createdBy'];
+          _createdBy = data['createdBy'] as String?;
           _isLoading = false;
         });
       }
@@ -123,21 +124,14 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
     }
   }
 
-  void _handleRuleChange() {
-    RemainderRulePickerSheet.show(
-      context: context,
-      initialRule: _remainderRule,
-      onSelected: (rule) async {
-        setState(() => _remainderRule = rule);
-        // Immediate Save
-        await FirebaseFirestore.instance
-            .collection('tasks')
-            .doc(widget.taskId)
-            .update({
-          'remainderRule': rule,
-        });
-      },
-    );
+  Future<void> _handleRuleChange(String newRule) async {
+    setState(() => _remainderRule = newRule);
+    await FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(widget.taskId)
+        .update({
+      'remainderRule': newRule,
+    });
   }
 
   // --- Build UI ---
@@ -145,6 +139,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
     final isOwner = currentUid != null && currentUid == _createdBy;
 
@@ -159,38 +155,68 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // 1. Basic Info (Reuse S16 Key)
-          _buildSectionHeader(context, t.S16_TaskCreate_Edit.section_name),
+          // --- 1. 名稱區塊 ---
+          Text(t.S16_TaskCreate_Edit.section_name,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(color: colorScheme.primary)),
+          const SizedBox(height: 8),
+
           Focus(
             onFocusChange: (hasFocus) {
               if (!hasFocus) _updateName();
             },
             child: TaskNameInput(controller: _nameController),
           ),
-          const SizedBox(height: 16),
-          TaskDateRangeInput(
-            startDate: _startDate!,
-            endDate: _endDate!,
-            onStartDateChanged: (val) => _updateDateRange(val, _endDate!),
-            onEndDateChanged: (val) => _updateDateRange(_startDate!, val),
-          ),
+
           const SizedBox(height: 24),
 
-          // 2. Finance Settings (Reuse S16 Currency Label as Header)
-          _buildSectionHeader(context, t.S16_TaskCreate_Edit.section_settings),
-          TaskCurrencyInput(
-            currency: _currency!,
-            onCurrencyChanged: _handleCurrencyChange,
-            enabled: true,
+          // --- 2. 期間設定 (卡片分組) ---
+          Text(t.S16_TaskCreate_Edit.section_period,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(color: colorScheme.primary)),
+          const SizedBox(height: 8),
+
+          TaskFormSectionCard(
+            children: [
+              TaskDateRangeInput(
+                startDate: _startDate!,
+                endDate: _endDate!,
+                onStartDateChanged: (val) => _updateDateRange(val, _endDate!),
+                onEndDateChanged: (val) => _updateDateRange(_startDate!, val),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          _buildSettingsTile(
-            context: context,
-            icon: Icons.calculate_outlined,
-            title: t.S14_Task_Settings.field_remainder_rule, // Reuse S13 Key
-            value: _getRuleName(t, _remainderRule),
-            onTap: _handleRuleChange,
+
+          const SizedBox(height: 24),
+
+          // --- 3. 詳細設定 (卡片分組) ---
+          Text(t.S16_TaskCreate_Edit.section_settings,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(color: colorScheme.primary)),
+          const SizedBox(height: 8),
+
+          TaskFormSectionCard(
+            children: [
+              TaskCurrencyInput(
+                currency: _currency!,
+                onCurrencyChanged: _handleCurrencyChange,
+                enabled: true,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: theme.dividerColor),
+              ),
+              TaskRemainderRuleInput(
+                rule: _getRuleName(t, _remainderRule),
+                onRuleChanged: _handleRuleChange,
+                enabled: true,
+              ),
+            ],
           ),
+
           const SizedBox(height: 24),
 
           // 3. Settings Navigation (Use S14 Keys)
@@ -231,51 +257,6 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
 
           const SizedBox(height: 40),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12, left: 4),
-      child: Text(title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary)),
-    );
-  }
-
-  Widget _buildSettingsTile({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: theme.colorScheme.outlineVariant),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: theme.colorScheme.primary),
-            const SizedBox(width: 16),
-            Expanded(child: Text(title, style: theme.textTheme.bodyLarge)),
-            Text(value,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface)),
-            const SizedBox(width: 8),
-            Icon(Icons.chevron_right,
-                size: 20, color: theme.colorScheme.outline),
-          ],
-        ),
       ),
     );
   }

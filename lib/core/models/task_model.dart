@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 
 class TaskModel {
   final String id;
@@ -34,7 +35,7 @@ class TaskModel {
       return TaskModel(
         id: doc.id,
         title: 'Unknown Task',
-        baseCurrency: 'TWD',
+        baseCurrency: CurrencyOption.defaultCode,
         members: {},
         isPrepay: false,
         mode: 'active',
@@ -54,7 +55,8 @@ class TaskModel {
     return TaskModel(
       id: doc.id,
       title: data['title'] as String? ?? '',
-      baseCurrency: data['baseCurrency'] as String? ?? 'TWD',
+      baseCurrency:
+          data['baseCurrency'] as String? ?? CurrencyOption.defaultCode,
       members: data['members'] is Map
           ? Map<String, dynamic>.from(data['members'])
           : {},

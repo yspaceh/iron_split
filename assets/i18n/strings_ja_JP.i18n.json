@@ -198,10 +198,7 @@
     "field_member_count": "参加人数",
     "action_save": "保存",
     "picker_done": "完了",
-    "error_name_empty": "タスク名を入力してください",
-    "currency_twd": "台湾ドル (TWD)",
-    "currency_jpy": "日本円 (JPY)",
-    "currency_usd": "米ドル (USD)"
+    "error_name_empty": "タスク名を入力してください"
   },
   "S71_SystemSettings_Tos": {
     "title": "利用規約"

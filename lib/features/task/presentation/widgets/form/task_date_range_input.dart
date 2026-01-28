@@ -87,6 +87,7 @@ class _TaskDateRangeInputState extends State<TaskDateRangeInput> {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd');
+    final theme = Theme.of(context);
 
     return Column(
       children: [
@@ -95,14 +96,17 @@ class _TaskDateRangeInputState extends State<TaskDateRangeInput> {
           label: t.S16_TaskCreate_Edit.field_start_date,
           value: dateFormat.format(_startDate),
           onTap: _showStartDatePicker,
-          showDivider: true,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+              height: 1, width: double.infinity, color: theme.dividerColor),
         ),
         _buildRowItem(
           icon: Icons.event_available,
           label: t.S16_TaskCreate_Edit.field_end_date,
           value: dateFormat.format(_endDate),
           onTap: _showEndDatePicker,
-          showDivider: false,
         ),
       ],
     );
@@ -113,7 +117,6 @@ class _TaskDateRangeInputState extends State<TaskDateRangeInput> {
     required String label,
     required String value,
     required VoidCallback onTap,
-    bool showDivider = false,
   }) {
     final theme = Theme.of(context);
     return Column(
@@ -141,11 +144,6 @@ class _TaskDateRangeInputState extends State<TaskDateRangeInput> {
             ),
           ),
         ),
-        if (showDivider)
-          Divider(
-              height: 1,
-              indent: 56,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ],
     );
   }

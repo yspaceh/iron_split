@@ -371,10 +371,6 @@ class BalanceCard extends StatelessWidget {
                           color: theme.colorScheme.surfaceContainer,
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text(t.S13_Task_Dashboard.empty_records,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.outline,
-                                fontSize: 10)),
                       )
                     : Row(
                         children: [

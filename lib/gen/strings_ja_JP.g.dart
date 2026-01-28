@@ -347,9 +347,6 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override String get action_save => '保存';
 	@override String get picker_done => '完了';
 	@override String get error_name_empty => 'タスク名を入力してください';
-	@override String get currency_twd => '台湾ドル (TWD)';
-	@override String get currency_jpy => '日本円 (JPY)';
-	@override String get currency_usd => '米ドル (USD)';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -780,9 +777,6 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '完了',
 			'S16_TaskCreate_Edit.error_name_empty' => 'タスク名を入力してください',
-			'S16_TaskCreate_Edit.currency_twd' => '台湾ドル (TWD)',
-			'S16_TaskCreate_Edit.currency_jpy' => '日本円 (JPY)',
-			'S16_TaskCreate_Edit.currency_usd' => '米ドル (USD)',
 			'S71_SystemSettings_Tos.title' => '利用規約',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.action_reroll' => '動物を変える',

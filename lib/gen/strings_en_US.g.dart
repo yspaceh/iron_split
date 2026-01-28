@@ -347,9 +347,6 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override String get action_save => 'Save';
 	@override String get picker_done => 'Done';
 	@override String get error_name_empty => 'Please enter task name';
-	@override String get currency_twd => 'TWD';
-	@override String get currency_jpy => 'JPY';
-	@override String get currency_usd => 'USD';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -784,9 +781,6 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.action_save' => 'Save',
 			'S16_TaskCreate_Edit.picker_done' => 'Done',
 			'S16_TaskCreate_Edit.error_name_empty' => 'Please enter task name',
-			'S16_TaskCreate_Edit.currency_twd' => 'TWD',
-			'S16_TaskCreate_Edit.currency_jpy' => 'JPY',
-			'S16_TaskCreate_Edit.currency_usd' => 'USD',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.action_reroll' => 'Change Animal',

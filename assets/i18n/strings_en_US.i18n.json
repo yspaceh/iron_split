@@ -198,10 +198,7 @@
     "field_member_count": "Members",
     "action_save": "Save",
     "picker_done": "Done",
-    "error_name_empty": "Please enter task name",
-    "currency_twd": "TWD",
-    "currency_jpy": "JPY",
-    "currency_usd": "USD"
+    "error_name_empty": "Please enter task name"
   },
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"

@@ -96,7 +96,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
             title: Text(taskData['name'] ?? t.S13_Task_Dashboard.title),
             actions: [
               IconButton(
-                icon: const Icon(Icons.settings),
+                icon: const Icon(Icons.settings_outlined),
                 onPressed: () {
                   context.pushNamed('S14',
                       pathParameters: {'taskId': widget.taskId});
