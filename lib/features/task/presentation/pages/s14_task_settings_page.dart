@@ -171,12 +171,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
           const SizedBox(height: 24),
 
           // --- 2. 期間設定 (卡片分組) ---
-          Text(t.S16_TaskCreate_Edit.section_period,
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(color: colorScheme.primary)),
-          const SizedBox(height: 8),
-
           TaskFormSectionCard(
+            title: t.S16_TaskCreate_Edit.section_period,
             children: [
               TaskDateRangeInput(
                 startDate: _startDate!,
@@ -190,12 +186,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
           const SizedBox(height: 24),
 
           // --- 3. 詳細設定 (卡片分組) ---
-          Text(t.S16_TaskCreate_Edit.section_settings,
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(color: colorScheme.primary)),
-          const SizedBox(height: 8),
-
           TaskFormSectionCard(
+            title: t.S16_TaskCreate_Edit.section_settings,
             children: [
               TaskCurrencyInput(
                 currency: _currency!,
