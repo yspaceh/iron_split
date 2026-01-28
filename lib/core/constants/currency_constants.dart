@@ -20,11 +20,17 @@ class CurrencyOption {
   static const CurrencyOption defaultCurrencyOption = CurrencyOption(
       code: 'USD', symbol: '\$', decimalDigits: 2, name: 'US Dollar');
 
-  static String formatAmount(double amount, String currencyCode) {
+  static CurrencyOption getCurrencyOption(String currencyCode) {
     final currency = kSupportedCurrencies.firstWhere(
       (e) => e.code == currencyCode,
       orElse: () => kSupportedCurrencies.first,
     );
+
+    return currency;
+  }
+
+  static String formatAmount(double amount, String currencyCode) {
+    final currency = getCurrencyOption(currencyCode);
 
     final decimalDigits = currency.decimalDigits;
 

@@ -52,27 +52,25 @@ class BalanceCard extends StatelessWidget {
             .currencyName ??
         '';
 
-    final currency = taskData!['baseCurrency'] ??
+    final basrCurrency = taskData!['baseCurrency'] ??
         (systemCurrency.isNotEmpty
             ? systemCurrency
             : CurrencyOption.defaultCode);
 
-    final currencyOption = kSupportedCurrencies.firstWhere(
-      (e) => e.code == currency,
-      orElse: () => kSupportedCurrencies.first,
-    );
+    final baseCurrencyOption = CurrencyOption.getCurrencyOption(basrCurrency);
     final balanceRule = taskData!['balanceRule'] ?? 'random';
 
     // 2. 轉換為 Model
     final recordModels =
         records.map((doc) => RecordModel.fromFirestore(doc)).toList();
 
-    final financials = BalanceCalculator.calculateBaseTotals(recordModels,
-        exchangeToBaseCurrency: true);
+    final baseTotal = BalanceCalculator.calculateBaseTotals(recordModels,
+        isBaseCurrency: true);
+    final poolBalanceByBaseCurrency =
+        BalanceCalculator.calculatePoolBalanceByBaseCurrency(recordModels);
 
-    final double totalIncomeBase = financials.totalIncome;
-    final double totalExpensesBase = financials.totalExpense;
-    final double netPoolBalance = financials.netBalance;
+    final double totalIncomeBase = baseTotal.totalIncome;
+    final double totalExpensesBase = baseTotal.totalExpense;
 
     // 3. 使用 Calculator 計算
     final double potRemainder =
@@ -86,15 +84,15 @@ class BalanceCard extends StatelessWidget {
     final Map<String, double> incomeByCurrency = {};
 
     for (var r in recordModels) {
-      final recCurrency = r.currency;
+      final recCurrency = r.originalCurrencyCode;
       if (r.type == 'income') {
-        potIncome += r.amount;
-        incomeByCurrency.update(recCurrency, (val) => val + r.amount,
-            ifAbsent: () => r.amount);
+        potIncome += r.originalAmount;
+        incomeByCurrency.update(recCurrency, (val) => val + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
       } else {
-        totalExpenses += r.amount;
-        expenseByCurrency.update(recCurrency, (val) => val + r.amount,
-            ifAbsent: () => r.amount);
+        totalExpenses += r.originalAmount;
+        expenseByCurrency.update(recCurrency, (val) => val + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
       }
     }
 
@@ -115,7 +113,7 @@ class BalanceCard extends StatelessWidget {
       }
     }
 
-    void _showRulePicker() {
+    void showRulePicker() {
       showModalBottomSheet(
         context: context,
         builder: (context) => Container(
@@ -155,7 +153,7 @@ class BalanceCard extends StatelessWidget {
       );
     }
 
-    void _showBalanceDetails() {
+    void showBalanceDetails() {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -167,14 +165,14 @@ class BalanceCard extends StatelessWidget {
               Text(t.S13_Task_Dashboard.section_expense,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: theme.colorScheme.error)),
-              ...expenseByCurrency.entries.map(
-                  (e) => Text("${e.key} \$ ${e.value.toStringAsFixed(1)}")),
+              ...expenseByCurrency.entries.map((e) => Text(
+                  "${e.key} ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(e.value, baseCurrencyOption.code)}")),
               const Divider(),
               Text(t.S13_Task_Dashboard.section_income,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: Colors.green)),
-              ...incomeByCurrency.entries.map(
-                  (e) => Text("${e.key} \$ ${e.value.toStringAsFixed(1)}")),
+              ...incomeByCurrency.entries.map((e) => Text(
+                  "${e.key} ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(e.value, baseCurrencyOption.code)}")),
             ],
           ),
           actions: [
@@ -217,7 +215,7 @@ class BalanceCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(currencyOption.code,
+                          Text(baseCurrencyOption.code,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
@@ -247,11 +245,11 @@ class BalanceCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text:
-                                  "${currencyOption.symbol} ${CurrencyOption.formatAmount(netPoolBalance.abs(), currency)}",
+                                  "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(poolBalanceByBaseCurrency.abs(), baseCurrencyOption.code)}",
                               style: TextStyle(
-                                color: netPoolBalance > 0
+                                color: poolBalanceByBaseCurrency > 0
                                     ? theme.colorScheme.tertiary
-                                    : netPoolBalance < 0
+                                    : poolBalanceByBaseCurrency < 0
                                         ? theme.colorScheme.error
                                         : theme.colorScheme.outline,
                               ),
@@ -286,7 +284,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${t.S13_Task_Dashboard.label_total_expense} : ${currencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), currency)}",
+                        "${t.S13_Task_Dashboard.label_total_expense} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), baseCurrencyOption.code)}",
                         style: theme.textTheme.labelSmall,
                       ),
                     ],
@@ -303,7 +301,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${t.S13_Task_Dashboard.label_total_prepay} : ${currencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), currency)}",
+                        "${t.S13_Task_Dashboard.label_total_prepay} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), baseCurrencyOption.code)}",
                         style: theme.textTheme.labelSmall,
                       ),
                     ],
@@ -317,7 +315,7 @@ class BalanceCard extends StatelessWidget {
 
             // --- Row 3: Chart (12.0) ---
             InkWell(
-              onTap: _showBalanceDetails,
+              onTap: showBalanceDetails,
               child: SizedBox(
                 height: 12.0,
                 child: (totalExpenses == 0 && potIncome == 0)
@@ -417,7 +415,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       Text(" : ", style: theme.textTheme.bodyMedium),
                       Text(
-                        "${currencyOption.symbol} ${CurrencyOption.formatAmount(potRemainder.abs(), currency)}",
+                        "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(potRemainder.abs(), baseCurrencyOption.code)}",
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: potRemainder > 0
                               ? Colors.green // 剩餘資金 (正數)
@@ -431,7 +429,7 @@ class BalanceCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   InkWell(
-                    onTap: _showRulePicker,
+                    onTap: showRulePicker,
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       padding: const EdgeInsets.symmetric(

@@ -138,21 +138,21 @@ class AppRouter {
               final taskId = state.pathParameters['taskId']!;
               final recordId = state.uri.queryParameters['recordId'] ??
                   state.uri.queryParameters['id'];
-
               final extra = state.extra as Map<String, dynamic>? ?? {};
-              final double prepayBalance =
-                  (extra['prepayBalance'] as num?)?.toDouble() ?? 0.0;
+              final poolBalancesByCurrency =
+                  extra['poolBalancesByCurrency'] as Map<String, double>? ?? {};
               final record = extra['record'] as RecordModel?;
               final date = extra['date'] as DateTime?;
-              final baseCurrency = extra['baseCurrency'] as CurrencyOption? ??
-                  CurrencyOption.defaultCurrencyOption;
+              final baseCurrencyOption =
+                  extra['baseCurrencyOption'] as CurrencyOption? ??
+                      CurrencyOption.defaultCurrencyOption;
 
               return S15RecordEditPage(
                 taskId: taskId,
                 recordId: recordId,
                 record: record,
-                prepayBalance: prepayBalance,
-                baseCurrency: baseCurrency,
+                poolBalancesByCurrency: poolBalancesByCurrency,
+                baseCurrencyOption: baseCurrencyOption,
                 initialDate: date,
               );
             },

@@ -197,7 +197,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
     }
 
     final taskName = _taskData!['taskName'] ?? 'Unknown Task';
-    final currency = _taskData!['baseCurrency'] ?? 'TWD';
+    final currency = _taskData!['baseCurrency'] ?? CurrencyOption.defaultCode;
     // final dateRange ... (Requirement: Keep Task Name and Date Range)
     // Date Range usually comes from task data, let's see if it's there.
     // Assuming taskData might contain dates. If not, just show taskName.

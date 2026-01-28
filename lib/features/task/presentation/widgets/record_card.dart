@@ -13,7 +13,7 @@ class RecordCard extends StatelessWidget {
   final bool isBaseCard;
   final bool showSplitAction;
   final VoidCallback? onSplitTap;
-  final CurrencyOption selectedCurrency;
+  final CurrencyOption selectedCurrencyOption;
   final List<Map<String, dynamic>> members;
 
   const RecordCard({
@@ -25,7 +25,7 @@ class RecordCard extends StatelessWidget {
     this.note,
     required this.onTap,
     this.onSplitTap,
-    required this.selectedCurrency,
+    required this.selectedCurrencyOption,
     required this.members,
     this.isBaseCard = false,
     this.showSplitAction = false,
@@ -73,7 +73,7 @@ class RecordCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, selectedCurrency.code)}",
+                        "${selectedCurrencyOption.symbol} ${CurrencyOption.formatAmount(amount, selectedCurrencyOption.code)}",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w800, // 加粗
                           color: colorScheme.onSurface, // 深黑色

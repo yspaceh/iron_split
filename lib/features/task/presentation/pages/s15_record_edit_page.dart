@@ -26,8 +26,8 @@ class S15RecordEditPage extends StatefulWidget {
   final String taskId;
   final String? recordId;
   final RecordModel? record;
-  final CurrencyOption baseCurrency;
-  final double prepayBalance;
+  final CurrencyOption baseCurrencyOption;
+  final Map<String, double> poolBalancesByCurrency;
   final DateTime? initialDate;
 
   const S15RecordEditPage({
@@ -35,8 +35,8 @@ class S15RecordEditPage extends StatefulWidget {
     required this.taskId,
     this.recordId,
     this.record,
-    this.baseCurrency = CurrencyOption.defaultCurrencyOption,
-    this.prepayBalance = 0.0,
+    this.baseCurrencyOption = CurrencyOption.defaultCurrencyOption,
+    this.poolBalancesByCurrency = const {},
     this.initialDate,
   });
 
@@ -55,7 +55,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
   // State
   late DateTime _selectedDate;
-  late CurrencyOption _selectedCurrency;
+  late CurrencyOption _selectedCurrencyOption;
   String _selectedCategoryId = 'fastfood';
   bool _isRateLoading = false;
   bool _isSaving = false;
@@ -97,13 +97,13 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       // === 編輯模式 (以既有紀錄內容為主) ===
       final r = widget.record!;
       _recordTypeIndex = r.type == 'income' ? 1 : 0;
-      _amountController.text = r.amount.truncateToDouble() == r.amount
-          ? r.amount.toInt().toString()
-          : r.amount.toString();
+      _amountController.text =
+          r.originalAmount.truncateToDouble() == r.originalAmount
+              ? r.originalAmount.toInt().toString()
+              : r.originalAmount.toString();
       _selectedDate = r.date;
-      _selectedCurrency = kSupportedCurrencies.firstWhere(
-          (e) => e.code == r.currency,
-          orElse: () => kSupportedCurrencies.first); // 編輯模式直接鎖定紀錄幣別
+      _selectedCurrencyOption = CurrencyOption.getCurrencyOption(
+          r.originalCurrencyCode); // 編輯模式直接鎖定紀錄幣別
       _exchangeRateController.text = r.exchangeRate.toString();
 
       if (r.type == 'expense') {
@@ -122,7 +122,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       // === 新建模式 ===
       _selectedDate = widget.initialDate ?? DateTime.now();
       // 這裡先給一個安全值，真正的偵測放在 didChangeDependencies
-      _selectedCurrency = widget.baseCurrency;
+      _selectedCurrencyOption = widget.baseCurrencyOption;
       _loadCurrencyPreference();
     }
 
@@ -145,10 +145,10 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
       setState(() {
         // 邏輯：有偵測到就用偵測的，否則用任務預設的 (widget.baseCurrency)
-        _selectedCurrency =
+        _selectedCurrencyOption =
             suggestedCurrency != CurrencyOption.defaultCurrencyOption
                 ? suggestedCurrency
-                : widget.baseCurrency;
+                : widget.baseCurrencyOption;
       });
     }
   }
@@ -235,12 +235,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
     final lastCurrency = await PreferencesService.getLastCurrency();
     if (lastCurrency != null && _currencies.contains(lastCurrency)) {
       setState(() {
-        _selectedCurrency = kSupportedCurrencies.firstWhere(
-            (e) => e.code == lastCurrency,
-            orElse: () => kSupportedCurrencies.first);
+        _selectedCurrencyOption =
+            CurrencyOption.getCurrencyOption(lastCurrency);
       });
-      if (_selectedCurrency != widget.baseCurrency) {
-        _onCurrencyChanged(_selectedCurrency.code);
+      if (_selectedCurrencyOption != widget.baseCurrencyOption) {
+        _onCurrencyChanged(_selectedCurrencyOption.code);
       }
     }
   }
@@ -278,8 +277,19 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   double get _totalAmount => double.tryParse(_amountController.text) ?? 0.0;
 
   bool get _hasPaymentError {
-    return _payerType == 'prepay' &&
-        widget.prepayBalance <= 0; // Use widget.prepayBalance
+    // 只有在選擇「公款支付」時才檢查
+    if (_payerType != 'prepay') return false;
+
+    // 1. 取得當前輸入金額
+    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
+    if (currentAmount <= 0) return false;
+
+    // 2. 取得當前幣別的庫存餘額
+    final currentCurrency = _selectedCurrencyOption.code;
+    final balance = widget.poolBalancesByCurrency[currentCurrency] ?? 0.0;
+
+    // 3. 檢查餘額是否不足 (允許極小誤差)
+    return balance < (currentAmount - 0.01);
   }
 
   double get _baseRemainingAmount {
@@ -306,14 +316,14 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
         totalAmount: amountToSplit,
-        selectedCurrency: _selectedCurrency,
+        selectedCurrency: _selectedCurrencyOption,
         allMembers: _taskMembers,
         defaultMemberWeights: defaultWeights,
         initialSplitMethod: _baseSplitMethod,
         initialMemberIds: _baseMemberIds,
         initialDetails: _baseRawDetails,
         exchangeRate: rate,
-        baseCurrency: widget.baseCurrency,
+        baseCurrency: widget.baseCurrencyOption,
       ),
     );
 
@@ -347,11 +357,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         item: null,
         allMembers: _taskMembers,
         defaultWeights: defaultWeights,
-        selectedCurrency: _selectedCurrency,
+        selectedCurrency: _selectedCurrencyOption,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount,
         exchangeRate: rate,
-        baseCurrency: widget.baseCurrency,
+        baseCurrency: widget.baseCurrencyOption,
       ),
     );
 
@@ -377,11 +387,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         item: item,
         allMembers: _taskMembers,
         defaultWeights: defaultWeights,
-        selectedCurrency: _selectedCurrency,
+        selectedCurrency: _selectedCurrencyOption,
         parentTitle: _titleController.text,
         availableAmount: _baseRemainingAmount + item.amount,
         exchangeRate: rate,
-        baseCurrency: widget.baseCurrency,
+        baseCurrency: widget.baseCurrencyOption,
       ),
     );
 
@@ -414,9 +424,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   void _showCurrencyPicker() {
     CurrencyPickerSheet.show(
       context: context,
-      initialCode: _selectedCurrency.code,
+      initialCode: _selectedCurrencyOption.code,
       onSelected: (currency) async {
-        if (currency.code != _selectedCurrency.code) {
+        if (currency.code != _selectedCurrencyOption.code) {
           await _onCurrencyChanged(currency.code);
         }
       },
@@ -437,22 +447,21 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   }
 
   Future<void> _onCurrencyChanged(String newCurrency) async {
-    setState(() => _selectedCurrency = kSupportedCurrencies.firstWhere(
-        (e) => e.code == newCurrency,
-        orElse: () => kSupportedCurrencies.first));
+    setState(() => _selectedCurrencyOption =
+        CurrencyOption.getCurrencyOption(newCurrency));
     await PreferencesService.saveLastCurrency(newCurrency);
     await _fetchExchangeRate();
   }
 
   Future<void> _fetchExchangeRate() async {
-    if (_selectedCurrency == widget.baseCurrency) {
+    if (_selectedCurrencyOption == widget.baseCurrencyOption) {
       _exchangeRateController.text = '1.0';
       return;
     }
 
     setState(() => _isRateLoading = true);
     final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrency.code, to: widget.baseCurrency.code);
+        from: _selectedCurrencyOption.code, to: widget.baseCurrencyOption.code);
 
     if (mounted) {
       setState(() {
@@ -499,9 +508,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       isScrollControlled: true,
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
         totalAmount: totalAmount,
-        prepayBalance: widget.prepayBalance, // Use widget.prepayBalance
-        selectedCurrency: _selectedCurrency,
-        baseCurrency: widget.baseCurrency,
+        poolBalancesByCurrency: widget.poolBalancesByCurrency,
+        selectedCurrency: _selectedCurrencyOption,
+        baseCurrency: widget.baseCurrencyOption,
         members: _taskMembers,
         // 傳入當前狀態 (若有複雜資料優先用，否則用簡易狀態推導)
         initialUsePrepay:
@@ -573,7 +582,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
         'paymentDetails': isIncome ? null : _complexPaymentData,
         'amount': double.parse(_amountController.text),
-        'currency': _selectedCurrency.code,
+        'currency': _selectedCurrencyOption.code,
         'exchangeRate': double.parse(_exchangeRateController.text),
         'splitMethod': _baseSplitMethod,
         'splitMemberIds': _baseMemberIds,
@@ -623,10 +632,10 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
 
     // --- Common Fields (Checked for BOTH) ---
     final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
-    if ((currentAmount - r.amount).abs() > 0.001) return true;
+    if ((currentAmount - r.originalAmount).abs() > 0.001) return true;
 
     if (!_isSameDay(_selectedDate, r.date)) return true;
-    if (_selectedCurrency.code != r.currency) return true;
+    if (_selectedCurrencyOption.code != r.originalCurrencyCode) return true;
 
     final currentRate = double.tryParse(_exchangeRateController.text) ?? 1.0;
     if ((currentRate - (r.exchangeRate)).abs() > 0.000001) return true;
@@ -699,7 +708,7 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
   Future<void> _handleDelete() async {
     final amount = double.tryParse(_amountController.text) ?? 0.0;
     final amountText =
-        "${_selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, _selectedCurrency.code)}";
+        "${_selectedCurrencyOption.symbol} ${CurrencyOption.formatAmount(amount, _selectedCurrencyOption.code)}";
 
     await showDialog(
       context: context,
@@ -805,11 +814,11 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                       exchangeRateController: _exchangeRateController,
                       // State
                       selectedDate: _selectedDate,
-                      selectedCurrency: _selectedCurrency,
-                      baseCurrency: widget.baseCurrency,
+                      selectedCurrencyOption: _selectedCurrencyOption,
+                      baseCurrencyOption: widget.baseCurrencyOption,
                       selectedCategoryId: _selectedCategoryId,
                       isRateLoading: _isRateLoading,
-                      prepayBalance: widget.prepayBalance,
+                      poolBalancesByCurrency: widget.poolBalancesByCurrency,
                       members: _taskMembers,
                       items: _items,
                       baseRemainingAmount: _baseRemainingAmount,
@@ -836,8 +845,8 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                       exchangeRateController: _exchangeRateController,
                       // State
                       selectedDate: _selectedDate,
-                      selectedCurrency: _selectedCurrency,
-                      baseCurrency: widget.baseCurrency,
+                      selectedCurrencyOption: _selectedCurrencyOption,
+                      baseCurrencyOption: widget.baseCurrencyOption,
                       isRateLoading: _isRateLoading,
                       members: _taskMembers,
                       baseRemainingAmount: _totalAmount, // 收入時，總金額即為要分配的金額

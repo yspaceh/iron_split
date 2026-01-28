@@ -6,14 +6,14 @@ import 'package:iron_split/gen/strings.g.dart';
 class DailyHeader extends StatelessWidget {
   final DateTime date;
   final double total;
-  final CurrencyOption currency;
+  final CurrencyOption baseCurrencyOption;
   final bool isPersonal;
 
   const DailyHeader(
       {super.key,
       required this.date,
       required this.total,
-      required this.currency,
+      required this.baseCurrencyOption,
       this.isPersonal = false});
 
   @override
@@ -50,8 +50,8 @@ class DailyHeader extends StatelessWidget {
           ),
           Text(
               isPersonal
-                  ? "${t.S13_Task_Dashboard.personal_daily_total}: ${currency.code}${currency.symbol} ${CurrencyOption.formatAmount(total, currency.code)}"
-                  : "${t.S13_Task_Dashboard.daily_expense_label}: ${currency.code}${currency.symbol} ${CurrencyOption.formatAmount(total, currency.code)}",
+                  ? "${t.S13_Task_Dashboard.personal_daily_total}: ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(total, baseCurrencyOption.code)}"
+                  : "${t.S13_Task_Dashboard.daily_expense_label}: ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(total, baseCurrencyOption.code)}",
               style: theme.textTheme.labelMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ],

@@ -18,12 +18,12 @@ class S15ExpenseForm extends StatelessWidget {
 
   // 2. 接收狀態資料 (顯示用)
   final DateTime selectedDate;
-  final CurrencyOption selectedCurrency;
-  final CurrencyOption baseCurrency;
+  final CurrencyOption selectedCurrencyOption;
+  final CurrencyOption baseCurrencyOption;
   final String selectedCategoryId;
   final bool isRateLoading;
 
-  final double prepayBalance;
+  final Map<String, double> poolBalancesByCurrency;
 
   // 3. 接收複雜邏輯資料
   final List<Map<String, dynamic>> members; // 從 parent 傳入 members
@@ -55,8 +55,8 @@ class S15ExpenseForm extends StatelessWidget {
     required this.memoController,
     required this.exchangeRateController,
     required this.selectedDate,
-    required this.selectedCurrency,
-    required this.baseCurrency,
+    required this.selectedCurrencyOption,
+    required this.baseCurrencyOption,
     required this.selectedCategoryId,
     required this.isRateLoading,
     required this.members,
@@ -76,14 +76,22 @@ class S15ExpenseForm extends StatelessWidget {
     required this.onBaseSplitConfigTap,
     required this.onAddItemTap,
     required this.onItemEditTap,
-    required this.prepayBalance,
+    required this.poolBalancesByCurrency,
   });
 
   // 支援多種支付型態顯示
   String _getPayerDisplayName(Translations t, String type, String id) {
     if (type == 'prepay') {
-      return "${t.B07_PaymentMethod_Edit.type_prepay} (≈${baseCurrency.code}${baseCurrency.symbol} ${CurrencyOption.formatAmount(prepayBalance, selectedCurrency.code)})";
+      // 1. 取得當前選擇幣別的公款餘額
+      final currentCode = selectedCurrencyOption.code;
+      final balance = poolBalancesByCurrency[currentCode] ?? 0.0;
+
+      // 2. 智慧顯示：直接顯示該幣別的餘額 (例如: JPY 30,000)
+      // 不再強制換算回 Base Currency，這樣更符合物理錢包直覺
+      return "${selectedCurrencyOption.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyOption.symbol} ${CurrencyOption.formatAmount(balance, currentCode)})";
     }
+
+    // ... (混合支付與成員代墊的邏輯保持不變)
     if (type == 'mixed') {
       return t.B07_PaymentMethod_Edit.type_mixed;
     }
@@ -106,7 +114,7 @@ class S15ExpenseForm extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
-    final isForeign = selectedCurrency != baseCurrency;
+    final isForeign = selectedCurrencyOption != baseCurrencyOption;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -191,13 +199,13 @@ class S15ExpenseForm extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      selectedCurrency.symbol,
+                      selectedCurrencyOption.symbol,
                       style: theme.textTheme.titleLarge?.copyWith(
                           color: colorScheme.primary,
                           fontWeight: FontWeight.w900),
                     ),
                     Text(
-                      selectedCurrency.code,
+                      selectedCurrencyOption.code,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -232,7 +240,8 @@ class S15ExpenseForm extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: t.S15_Record_Edit.label_rate(
-                  base: baseCurrency, target: selectedCurrency),
+                  base: baseCurrencyOption.code,
+                  target: selectedCurrencyOption.code),
               prefixIcon: IconButton(
                 icon: const Icon(Icons.currency_exchange),
                 onPressed: isRateLoading ? null : onFetchExchangeRate,
@@ -259,15 +268,15 @@ class S15ExpenseForm extends StatelessWidget {
               final amount = double.tryParse(amountController.text) ?? 0.0;
               final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
               final converted = amount * rate;
-              final formattedAmount =
-                  CurrencyOption.formatAmount(converted, baseCurrency.code);
+              final formattedAmount = CurrencyOption.formatAmount(
+                  converted, baseCurrencyOption.code);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
                   t.S15_Record_Edit.val_converted_amount(
-                      base: baseCurrency.code,
-                      symbol: baseCurrency.symbol,
+                      base: baseCurrencyOption.code,
+                      symbol: baseCurrencyOption.symbol,
                       amount: formattedAmount),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
@@ -292,7 +301,7 @@ class S15ExpenseForm extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: RecordCard(
                   t: t,
-                  selectedCurrency: selectedCurrency,
+                  selectedCurrencyOption: selectedCurrencyOption,
                   members: members,
                   amount: item.amount,
                   methodLabel: item.splitMethod,
@@ -306,7 +315,7 @@ class S15ExpenseForm extends StatelessWidget {
         if (baseRemainingAmount > 0 || items.isEmpty) ...[
           RecordCard(
             t: t,
-            selectedCurrency: selectedCurrency,
+            selectedCurrencyOption: selectedCurrencyOption,
             members: members,
             amount: baseRemainingAmount,
             methodLabel: baseSplitMethod,
@@ -334,7 +343,7 @@ class S15ExpenseForm extends StatelessWidget {
                     child: Text(
                       t.S13_Task_Dashboard.label_remainder(
                           amount:
-                              "${baseCurrency.symbol} ${CurrencyOption.formatAmount(split.remainder, baseCurrency.code)}"),
+                              "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(split.remainder, baseCurrencyOption.code)}"),
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: theme.colorScheme.outline),
                       textAlign: TextAlign.end,

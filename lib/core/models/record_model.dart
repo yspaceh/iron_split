@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 
 class RecordItem {
   String id;
@@ -20,26 +21,6 @@ class RecordItem {
     required this.splitMemberIds,
     this.splitDetails,
   });
-
-  RecordItem copyWith({
-    String? id,
-    String? name,
-    double? amount,
-    String? memo,
-    String? splitMethod,
-    List<String>? splitMemberIds,
-    Map<String, double>? splitDetails,
-  }) {
-    return RecordItem(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      amount: amount ?? this.amount,
-      memo: memo ?? this.memo,
-      splitMethod: splitMethod ?? this.splitMethod,
-      splitMemberIds: splitMemberIds ?? this.splitMemberIds,
-      splitDetails: splitDetails ?? this.splitDetails,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -69,25 +50,29 @@ class RecordItem {
 }
 
 class RecordModel {
-  String? id;
-  DateTime date;
-  String title;
-  String type; // 'expense' or 'income'
-  int categoryIndex;
-  String categoryId;
-  String payerType;
-  String? payerId;
-  Map<String, dynamic>? paymentDetails;
-  double amount;
-  String currency;
-  double exchangeRate;
-  String splitMethod;
-  List<String> splitMemberIds;
-  Map<String, double>? splitDetails;
-  String? memo;
-  List<RecordItem> items;
-  DateTime? createdAt;
-  String? createdBy;
+  final String? id;
+  final DateTime date;
+  final String title;
+  final String type; // 'expense' or 'income'
+  final int categoryIndex;
+  final String categoryId;
+  final String payerType; // 'member', 'prepay'
+  final String? payerId;
+  final Map<String, dynamic>? paymentDetails;
+
+  // --- 資料庫原始欄位 (保持不變以相容 Firestore) ---
+  final double amount; // 存入 DB 的金額
+  final String currencyCode; // 存入 DB 的幣別代碼 (String)
+  final double exchangeRate; // 匯率
+  // ----------------------------------------------
+
+  final String splitMethod;
+  final List<String> splitMemberIds;
+  final Map<String, double>? splitDetails;
+  final String? memo;
+  final List<RecordItem> items;
+  final DateTime? createdAt;
+  final String? createdBy;
 
   RecordModel({
     this.id,
@@ -95,12 +80,12 @@ class RecordModel {
     required this.title,
     this.type = 'expense',
     this.categoryIndex = 0,
-    this.categoryId = 'fastfood',
+    this.categoryId = 'other',
     this.payerType = 'prepay',
     this.payerId,
     this.paymentDetails,
     required this.amount,
-    this.currency = 'TWD',
+    required this.currencyCode,
     this.exchangeRate = 1.0,
     this.splitMethod = 'even',
     this.splitMemberIds = const [],
@@ -110,6 +95,24 @@ class RecordModel {
     this.createdAt,
     this.createdBy,
   });
+
+  // --- [新增] 語意化 Getters (核心邏輯) ---
+
+  /// [原始金額]
+  /// 對應單據/發票上的金額 (Transaction Amount)。
+  /// UI 顯示單據詳情或編輯時使用此值。
+  double get originalAmount => amount;
+
+  /// [原始幣別]
+  /// 對應單據/發票上的幣別代碼 (Transaction Currency)。
+  String get originalCurrencyCode => currencyCode;
+
+  /// [結算幣別價值]
+  /// 用於：計算總帳、BalanceCard 加總、比例圖表。
+  /// 邏輯：原始金額 * 匯率
+  double get baseAmount => amount * exchangeRate;
+
+  // ----------------------------------------
 
   RecordModel copyWith({
     String? id,
@@ -122,7 +125,7 @@ class RecordModel {
     String? payerId,
     Map<String, dynamic>? paymentDetails,
     double? amount,
-    String? currency,
+    String? currencyCode,
     double? exchangeRate,
     String? splitMethod,
     List<String>? splitMemberIds,
@@ -143,7 +146,7 @@ class RecordModel {
       payerId: payerId ?? this.payerId,
       paymentDetails: paymentDetails ?? this.paymentDetails,
       amount: amount ?? this.amount,
-      currency: currency ?? this.currency,
+      currencyCode: currencyCode ?? this.currencyCode,
       exchangeRate: exchangeRate ?? this.exchangeRate,
       splitMethod: splitMethod ?? this.splitMethod,
       splitMemberIds: splitMemberIds ?? this.splitMemberIds,
@@ -165,8 +168,9 @@ class RecordModel {
       'payerType': payerType,
       'payerId': payerId,
       'paymentDetails': paymentDetails,
+      // 存入資料庫時使用原始欄位名稱
       'amount': amount,
-      'currency': currency,
+      'currency': currencyCode,
       'exchangeRate': exchangeRate,
       'splitMethod': splitMethod,
       'splitMemberIds': splitMemberIds,
@@ -193,9 +197,12 @@ class RecordModel {
       payerType: data['payerType'] ?? 'prepay',
       payerId: data['payerId'],
       paymentDetails: data['paymentDetails'],
+
+      // 從 DB 讀取原始欄位
       amount: (data['amount'] ?? 0).toDouble(),
-      currency: data['currency'] ?? 'TWD',
+      currencyCode: data['currency'] ?? CurrencyOption.defaultCode,
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
+
       splitMethod: data['splitMethod'] ?? 'even',
       splitMemberIds: List<String>.from(data['splitMemberIds'] ?? []),
       splitDetails: data['splitDetails'] != null
@@ -212,6 +219,7 @@ class RecordModel {
   }
 
   static String _mapCategoryIndexToId(int? index) {
+    // 簡單的 mapping，維持原樣
     switch (index) {
       case 0:
         return 'fastfood';

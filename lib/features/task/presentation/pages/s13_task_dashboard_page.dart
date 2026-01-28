@@ -73,22 +73,21 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
         // Calculate Balance
         final recordModels =
             records.map((doc) => RecordModel.fromFirestore(doc)).toList();
-        final double prepayBalance = BalanceCalculator.calculatePrepayBalance(
-            allRecords: recordModels, exchangeToBaseCurrency: true);
+        final Map<String, double> poolBalancesByCurrency =
+            BalanceCalculator.calculatePoolBalancesByOriginalCurrency(
+                recordModels);
 
         // 2. Data Preparation
         final String systemCurrency = NumberFormat.simpleCurrency(
                     locale: Localizations.localeOf(context).toString())
                 .currencyName ??
             '';
-        final String currency = taskData['baseCurrency'] ??
+        final String baseCurrencyCode = taskData['baseCurrency'] ??
             (systemCurrency.isNotEmpty
                 ? systemCurrency
                 : CurrencyOption.defaultCode);
-        final CurrencyOption currencyOption = kSupportedCurrencies.firstWhere(
-          (e) => e.code == currency,
-          orElse: () => kSupportedCurrencies.first,
-        );
+        final baseCurrencyOption =
+            CurrencyOption.getCurrencyOption(baseCurrencyCode);
         final bool isCaptain = taskData['createdBy'] == user.uid;
 
         return Scaffold(
@@ -121,8 +120,8 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                     'S15',
                     pathParameters: {'taskId': widget.taskId},
                     extra: {
-                      'prepayBalance': prepayBalance,
-                      'baseCurrency': currencyOption,
+                      'poolBalancesByCurrency': poolBalancesByCurrency,
+                      'baseCurrencyOption': baseCurrencyOption,
                     },
                   ),
                   icon: const Icon(Icons.add),
@@ -168,17 +167,18 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
                         taskData: taskData,
                         memberData: memberData,
                         records: records,
-                        prepayBalance: prepayBalance,
-                        currency: currencyOption,
+                        poolBalancesByCurrency: poolBalancesByCurrency,
+                        baseCurrencyOption: baseCurrencyOption,
                       )
                     : S13PersonalView(
                         taskId: widget.taskId,
                         taskData: taskData, // [新增] 傳入資料
                         memberData: memberData, // [新增] 傳入資料
                         records: records, // [新增] 傳入資料
-                        currency: currencyOption, // [新增] 傳入資料
+                        baseCurrencyOption: baseCurrencyOption, // [新增] 傳入資料
                         uid: user.uid, // [新增] 傳入 UID 做過濾
-                        prepayBalance: prepayBalance, // [新增] 傳入預付款
+                        poolBalancesByCurrency:
+                            poolBalancesByCurrency, // [新增] 傳入預付款
                       ),
               ),
             ],

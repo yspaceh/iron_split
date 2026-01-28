@@ -11,16 +11,16 @@ import 'package:iron_split/gen/strings.g.dart';
 class RecordBlock extends StatelessWidget {
   final String taskId;
   final RecordModel record;
-  final double prepayBalance;
-  final CurrencyOption baseCurrency;
+  final Map<String, double> poolBalancesByCurrency;
+  final CurrencyOption baseCurrencyOption;
   final String? uid; // 個人用
 
   const RecordBlock({
     super.key,
     required this.taskId,
     required this.record,
-    required this.prepayBalance,
-    required this.baseCurrency,
+    required this.poolBalancesByCurrency,
+    required this.baseCurrencyOption,
     this.uid,
   });
 
@@ -29,13 +29,17 @@ class RecordBlock extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final isIncome = record.type == 'income';
-    final amount = uid != null
+    final originalAmount = uid != null
         ? isIncome
-            ? BalanceCalculator.calculatePersonalCredit(record, uid ?? '')
-            : BalanceCalculator.calculatePersonalDebit(record, uid ?? '')
-        : record.amount;
+            ? BalanceCalculator.calculatePersonalCredit(record, uid ?? '',
+                isBaseCurrency: false)
+            : BalanceCalculator.calculatePersonalDebit(record, uid ?? '',
+                isBaseCurrency: false)
+        : record.originalAmount;
 
-    final currency = record.currency;
+    final originalCurrencyOption =
+        CurrencyOption.getCurrencyOption(record.originalCurrencyCode);
+
     final exchangeRate = record.exchangeRate;
     final category = CategoryConstant.getCategoryById(record.categoryId);
     final title =
@@ -54,9 +58,8 @@ class RecordBlock extends StatelessWidget {
         ? theme.colorScheme.onTertiaryContainer
         : theme.colorScheme.onError;
 
-    final amountText = isIncome
-        ? "$currency ${CurrencyOption.formatAmount(amount, currency)}"
-        : "$currency ${CurrencyOption.formatAmount(amount, currency)}";
+    final amountText =
+        "${originalCurrencyOption.symbol} ${CurrencyOption.formatAmount(originalAmount, originalCurrencyOption.code)}";
 
     return Dismissible(
       key: Key(record.id ?? ''),
@@ -93,8 +96,8 @@ class RecordBlock extends StatelessWidget {
           pathParameters: {'taskId': taskId},
           queryParameters: {'id': record.id},
           extra: {
-            'prepayBalance': prepayBalance,
-            'baseCurrency': baseCurrency,
+            'poolBalancesByCurrency': poolBalancesByCurrency,
+            'baseCurrencyOption': baseCurrencyOption,
             'record': record,
           },
         ),
@@ -118,9 +121,9 @@ class RecordBlock extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (currency != baseCurrency.code)
+            if (originalCurrencyOption != baseCurrencyOption)
               Text(
-                "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyOption.formatAmount(amount * exchangeRate, baseCurrency.code)}",
+                "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(originalAmount * exchangeRate, baseCurrencyOption.code)}",
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.grey,
                 ),

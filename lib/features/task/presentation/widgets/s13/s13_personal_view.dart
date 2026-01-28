@@ -19,9 +19,9 @@ class S13PersonalView extends StatefulWidget {
   final Map<String, dynamic>? taskData;
   final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
-  final CurrencyOption currency;
+  final CurrencyOption baseCurrencyOption;
   final String uid;
-  final double prepayBalance;
+  final Map<String, double> poolBalancesByCurrency;
 
   const S13PersonalView({
     super.key,
@@ -29,9 +29,9 @@ class S13PersonalView extends StatefulWidget {
     required this.taskData,
     required this.memberData,
     required this.records,
-    required this.currency,
+    required this.baseCurrencyOption,
     required this.uid,
-    required this.prepayBalance,
+    required this.poolBalancesByCurrency,
   });
 
   @override
@@ -229,7 +229,7 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _PersonalBalanceCard(
-                      currency: widget.currency,
+                      baseCurrencyOption: widget.baseCurrencyOption,
                       // [重要] 傳入原始全部紀錄，才能算總帳
                       allRecords: widget.records
                           .map((d) => RecordModel.fromFirestore(d))
@@ -265,7 +265,8 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                   for (var r in dayRecords) {
                     // 1. Get personal share in original currency (e.g. JPY)
                     double myShareOriginal =
-                        BalanceCalculator.calculatePersonalDebit(r, widget.uid);
+                        BalanceCalculator.calculatePersonalDebit(r, widget.uid,
+                            isBaseCurrency: false);
                     // 2. Convert to Base Currency using the record's exchange rate (e.g. TWD)
                     dayMyDebit += myShareOriginal * r.exchangeRate;
                   }
@@ -282,7 +283,7 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                       DailyHeader(
                           date: date,
                           total: dayMyDebit, // 顯示我的消費
-                          currency: widget.currency,
+                          baseCurrencyOption: widget.baseCurrencyOption,
                           isPersonal: true),
                       if (dayRecords.isEmpty)
                         Padding(
@@ -299,8 +300,9 @@ class _S13PersonalViewState extends State<S13PersonalView> {
                           return RecordBlock(
                             taskId: widget.taskId,
                             record: record,
-                            prepayBalance: widget.prepayBalance,
-                            baseCurrency: widget.currency,
+                            poolBalancesByCurrency:
+                                widget.poolBalancesByCurrency,
+                            baseCurrencyOption: widget.baseCurrencyOption,
                             uid: widget.uid, // 傳入 UID 判斷顯示方式
                           );
                         }),
@@ -323,13 +325,13 @@ class _S13PersonalViewState extends State<S13PersonalView> {
 // ----------------------------------------------------
 
 class _PersonalBalanceCard extends StatelessWidget {
-  final CurrencyOption currency;
+  final CurrencyOption baseCurrencyOption;
   final List<RecordModel> allRecords;
   final String uid;
   final Map<String, dynamic>? memberData;
 
   const _PersonalBalanceCard({
-    required this.currency,
+    required this.baseCurrencyOption,
     required this.allRecords,
     required this.uid,
     required this.memberData,
@@ -341,9 +343,7 @@ class _PersonalBalanceCard extends StatelessWidget {
     final t = Translations.of(context);
 
     final netBalance = BalanceCalculator.calculatePersonalNetBalance(
-      allRecords: allRecords,
-      uid: uid,
-    );
+        allRecords: allRecords, uid: uid, isBaseCurrency: true);
 
     final isPositive = netBalance >= 0;
     final statusColor = isPositive ? Colors.green : theme.colorScheme.error;
@@ -390,7 +390,7 @@ class _PersonalBalanceCard extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 ),
                 Text(
-                  '${currency.code}${currency.symbol} ${CurrencyOption.formatAmount(netBalance.abs(), currency.code)}',
+                  '${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(netBalance.abs(), baseCurrencyOption.code)}',
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.bold,

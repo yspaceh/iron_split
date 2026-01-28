@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
-import 'package:iron_split/core/utils/daily_statistics_helper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
@@ -19,8 +18,8 @@ class S13GroupView extends StatefulWidget {
   final Map<String, dynamic>? taskData;
   final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
-  final double prepayBalance;
-  final CurrencyOption currency;
+  final Map<String, double> poolBalancesByCurrency;
+  final CurrencyOption baseCurrencyOption;
 
   const S13GroupView({
     super.key,
@@ -28,8 +27,8 @@ class S13GroupView extends StatefulWidget {
     required this.taskData,
     required this.memberData,
     required this.records,
-    required this.prepayBalance,
-    required this.currency,
+    required this.poolBalancesByCurrency,
+    required this.baseCurrencyOption,
   });
 
   @override
@@ -266,8 +265,9 @@ class _S13GroupViewState extends State<S13GroupView> {
                   final dayModels = dayRecords
                       .map((doc) => RecordModel.fromFirestore(doc))
                       .toList();
-                  final dayTotal =
-                      DailyStatisticsHelper.calculateDailyExpense(dayModels);
+                  final dayTotal = BalanceCalculator.calculateExpenseTotal(
+                      dayModels,
+                      isBaseCurrency: true);
 
                   final dateKeyStr = DateFormat('yyyyMMdd').format(date);
                   if (!_dateKeys.containsKey(dateKeyStr)) {
@@ -281,7 +281,7 @@ class _S13GroupViewState extends State<S13GroupView> {
                       DailyHeader(
                         date: date,
                         total: dayTotal,
-                        currency: widget.currency,
+                        baseCurrencyOption: widget.baseCurrencyOption,
                         isPersonal: false,
                       ),
                       ...dayRecords.map((doc) {
@@ -289,13 +289,13 @@ class _S13GroupViewState extends State<S13GroupView> {
                         return RecordBlock(
                           taskId: widget.taskId,
                           record: recordModel,
-                          prepayBalance: widget.prepayBalance,
-                          baseCurrency: widget.currency,
+                          poolBalancesByCurrency: widget.poolBalancesByCurrency,
+                          baseCurrencyOption: widget.baseCurrencyOption,
                         );
                       }),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            16, 4, 16, 16), // 調整間距，讓下面空一點
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16), // 調整間距，讓下面空一點
                         child: SizedBox(
                           width: double.infinity, // 1. 讓按鈕撐滿寬度
                           height: 48, // 2. 設定固定高度，讓它看起來像個卡片區塊
@@ -304,8 +304,9 @@ class _S13GroupViewState extends State<S13GroupView> {
                               'S15',
                               pathParameters: {'taskId': widget.taskId},
                               extra: {
-                                'prepayBalance': widget.prepayBalance,
-                                'baseCurrency': widget.currency,
+                                'poolBalancesByCurrency':
+                                    widget.poolBalancesByCurrency,
+                                'baseCurrencyOption': widget.baseCurrencyOption,
                                 'date': date,
                               },
                             ),

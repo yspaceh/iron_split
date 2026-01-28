@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
@@ -58,7 +57,9 @@ class _B03SplitMethodEditBottomSheetState
       final id = m['id'];
       final val = _details[id] ?? 0.0;
       _amountControllers[id] = TextEditingController(
-        text: val > 0 ? val.toStringAsFixed(1) : '',
+        text: val > 0
+            ? CurrencyOption.formatAmount(val, widget.selectedCurrency.code)
+            : '',
       );
     }
 
@@ -426,11 +427,11 @@ class _B03SplitMethodEditBottomSheetState
                         ),
                         if (widget.exchangeRate != 1.0)
                           Builder(builder: (context) {
-                            final baseOption = kSupportedCurrencies.firstWhere(
-                                (e) => e.code == widget.baseCurrency.code,
-                                orElse: () => kSupportedCurrencies.first);
+                            final baseCurrencyOption =
+                                CurrencyOption.getCurrencyOption(
+                                    widget.baseCurrency.code);
                             return Text(
-                              "≈ ${baseOption.code} ${baseOption.symbol} ${CurrencyOption.formatAmount(baseAmount, widget.baseCurrency.code)}",
+                              "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(baseAmount, baseCurrencyOption.code)}",
                               style: theme.textTheme.bodySmall
                                   ?.copyWith(color: Colors.grey, fontSize: 10),
                             );
@@ -545,11 +546,11 @@ class _B03SplitMethodEditBottomSheetState
                       ),
                       if (widget.exchangeRate != 1.0)
                         Builder(builder: (context) {
-                          final baseOption = kSupportedCurrencies.firstWhere(
-                              (e) => e.code == widget.baseCurrency.code,
-                              orElse: () => kSupportedCurrencies.first);
+                          final baseCurrencyOption =
+                              CurrencyOption.getCurrencyOption(
+                                  widget.baseCurrency.code);
                           return Text(
-                            "≈ ${baseOption.code} ${baseOption.symbol} ${CurrencyOption.formatAmount(baseAmount, widget.baseCurrency.code)}",
+                            "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(baseAmount, baseCurrencyOption.code)}",
                             style: theme.textTheme.bodySmall
                                 ?.copyWith(color: Colors.grey, fontSize: 10),
                           );
@@ -691,13 +692,16 @@ class _B03SplitMethodEditBottomSheetState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.B02_SplitExpense_Edit.label_total(
-                  current: NumberFormat("#,##0.#").format(currentSum),
-                  target: NumberFormat("#,##0.#").format(widget.totalAmount))),
+                  current: CurrencyOption.formatAmount(
+                      currentSum, widget.selectedCurrency.code),
+                  target: CurrencyOption.formatAmount(
+                      widget.totalAmount, widget.selectedCurrency.code))),
               Text(
                 isMatched
                     ? "OK"
                     : t.B03_SplitMethod_Edit.error_total_mismatch(
-                        diff: NumberFormat("#,##0.#").format(remaining)),
+                        diff: CurrencyOption.formatAmount(
+                            remaining, widget.selectedCurrency.code)),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: isMatched ? Colors.green : Colors.red,
@@ -725,7 +729,8 @@ class _B03SplitMethodEditBottomSheetState
                         if (remaining > 0) {
                           _details[id] = remaining;
                           _amountControllers[id]?.text =
-                              remaining.toStringAsFixed(1);
+                              CurrencyOption.formatAmount(
+                                  remaining, widget.selectedCurrency.code);
                         }
                       } else {
                         _selectedMemberIds.remove(id);

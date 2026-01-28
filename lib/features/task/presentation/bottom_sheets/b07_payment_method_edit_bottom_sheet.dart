@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B07PaymentMethodEditBottomSheet extends StatefulWidget {
   final double totalAmount; // 該筆費用的總金額
-  final double prepayBalance;
+  final Map<String, double> poolBalancesByCurrency;
   final List<Map<String, dynamic>> members; // 成員清單
   final CurrencyOption selectedCurrency;
   final CurrencyOption baseCurrency;
@@ -19,7 +19,7 @@ class B07PaymentMethodEditBottomSheet extends StatefulWidget {
   const B07PaymentMethodEditBottomSheet({
     super.key,
     required this.totalAmount,
-    required this.prepayBalance,
+    required this.poolBalancesByCurrency,
     required this.members,
     this.initialUsePrepay = true,
     this.initialPrepayAmount = 0.0,
@@ -73,14 +73,19 @@ class _B07PaymentMethodEditBottomSheetState
 
     // ✅ 初始化預收 Controller
     _prepayController = TextEditingController(
-        text: _prepayAmount == 0 ? '' : _prepayAmount.toStringAsFixed(1));
+        text: _prepayAmount == 0
+            ? ''
+            : CurrencyOption.formatAmount(
+                _prepayAmount, widget.selectedCurrency.code));
 
     // 初始化成員 Controller
     for (var m in widget.members) {
       final id = m['id'];
       final val = _memberAdvance[id] ?? 0.0;
-      _memberControllers[id] =
-          TextEditingController(text: val == 0 ? '' : val.toStringAsFixed(1));
+      _memberControllers[id] = TextEditingController(
+          text: val == 0
+              ? ''
+              : CurrencyOption.formatAmount(val, widget.selectedCurrency.code));
     }
   }
 
@@ -106,10 +111,20 @@ class _B07PaymentMethodEditBottomSheetState
 
   bool get _isValid => (_remaining.abs() < 0.01);
 
+  // 在 State 中新增一個 helper getter
+  double get _currentCurrencyPoolBalance {
+    return widget.poolBalancesByCurrency[widget.selectedCurrency.code] ?? 0.0;
+  }
+
+  // _calculateAutoPrepay
   double _calculateAutoPrepay(double advanceTotal) {
     double needed = widget.totalAmount - advanceTotal;
     if (needed < 0) needed = 0;
-    return needed > widget.prepayBalance ? widget.prepayBalance : needed;
+
+    // 上限是當前幣別的餘額，而不是 widget.prepayBalance (總資產)
+    return needed > _currentCurrencyPoolBalance
+        ? _currentCurrencyPoolBalance
+        : needed;
   }
 
   void _onPrepayToggle(bool? val) {
@@ -118,8 +133,10 @@ class _B07PaymentMethodEditBottomSheetState
       if (_usePrepay) {
         // 自動計算並更新 Controller
         _prepayAmount = _calculateAutoPrepay(_currentAdvanceTotal);
-        _prepayController.text =
-            _prepayAmount == 0 ? '' : _prepayAmount.toStringAsFixed(1);
+        _prepayController.text = _prepayAmount == 0
+            ? ''
+            : CurrencyOption.formatAmount(
+                _prepayAmount, widget.selectedCurrency.code);
       } else {
         _prepayAmount = 0.0;
         _prepayController.text = '';
@@ -144,7 +161,8 @@ class _B07PaymentMethodEditBottomSheetState
         if (!_usePrepay) {
           _usePrepay = true;
           _prepayAmount = _calculateAutoPrepay(0);
-          _prepayController.text = _prepayAmount.toStringAsFixed(1);
+          _prepayController.text = CurrencyOption.formatAmount(
+              _prepayAmount, widget.selectedCurrency.code);
         }
       }
     });
@@ -170,8 +188,10 @@ class _B07PaymentMethodEditBottomSheetState
 
         // ✅ 關鍵：因為是「系統自動調整」，所以要同步更新預收的 Controller 文字
         // 這樣使用者才會看到預收金額變了
-        String newText =
-            _prepayAmount == 0 ? '' : _prepayAmount.toStringAsFixed(1);
+        String newText = _prepayAmount == 0
+            ? ''
+            : CurrencyOption.formatAmount(
+                _prepayAmount, widget.selectedCurrency.code);
 
         // 只有當數值真的變了，且使用者目前沒有正在編輯預收欄位(簡單判斷)才更新
         // 這裡直接更新通常沒問題，因為使用者的焦點現在是在「成員代墊」欄位上
@@ -212,6 +232,7 @@ class _B07PaymentMethodEditBottomSheetState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final bool allowDecimal = widget.selectedCurrency.decimalDigits > 0;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -223,7 +244,7 @@ class _B07PaymentMethodEditBottomSheetState
         children: [
           // 1. Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -255,7 +276,7 @@ class _B07PaymentMethodEditBottomSheetState
           // 2. 內容捲動區
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               children: [
                 // --- 區塊 A: 預收公款 ---
                 _buildSectionHeader(
@@ -265,8 +286,8 @@ class _B07PaymentMethodEditBottomSheetState
                 ),
                 if (_usePrepay) ...[
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, top: 8, bottom: 16),
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 0, bottom: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -274,22 +295,30 @@ class _B07PaymentMethodEditBottomSheetState
                         Text(
                           t.B07_PaymentMethod_Edit.prepay_balance(
                               amount:
-                                  "≈ ${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyOption.formatAmount(widget.prepayBalance, widget.selectedCurrency.code)}"),
+                                  "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
                           style: TextStyle(
-                            color: widget.prepayBalance < widget.totalAmount &&
+                            // 如果餘額小於總金額，顯示警告色
+                            color: _currentCurrencyPoolBalance <
+                                        widget.totalAmount &&
                                     _usePrepay
                                 ? colorScheme.error
-                                : colorScheme.outline,
+                                : colorScheme.onSurface,
                             fontSize: 12,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        // ✅ 修正：改用 Controller，移除 Key，解決焦點遺失問題
+                        const SizedBox(height: 16),
                         TextFormField(
                           controller: _prepayController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: allowDecimal),
                           onChanged: _onPrepayAmountChanged,
+                          inputFormatters: [
+                            allowDecimal
+                                ? FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d*')) // 允許小數
+                                : FilteringTextInputFormatter
+                                    .digitsOnly, // 只允許整數
+                          ],
                           decoration: InputDecoration(
                             labelText: t.B07_PaymentMethod_Edit.label_amount,
                             prefixText: "${widget.selectedCurrency.symbol} ",
@@ -297,10 +326,11 @@ class _B07PaymentMethodEditBottomSheetState
                                 const Icon(Icons.account_balance_wallet),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8)),
-                            errorText: _prepayAmount > widget.prepayBalance
-                                ? t.B07_PaymentMethod_Edit
-                                    .err_balance_not_enough
-                                : null,
+                            errorText:
+                                _prepayAmount > _currentCurrencyPoolBalance
+                                    ? t.B07_PaymentMethod_Edit
+                                        .err_balance_not_enough
+                                    : null,
                           ),
                         ),
                       ],
@@ -342,10 +372,16 @@ class _B07PaymentMethodEditBottomSheetState
                                 width: 100,
                                 child: TextFormField(
                                   controller: _memberControllers[id],
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      decimal: allowDecimal),
                                   textAlign: TextAlign.end,
+                                  inputFormatters: [
+                                    allowDecimal
+                                        ? FilteringTextInputFormatter.allow(
+                                            RegExp(r'^\d+\.?\d*')) // 允許小數
+                                        : FilteringTextInputFormatter
+                                            .digitsOnly, // 只允許整數
+                                  ],
                                   decoration: InputDecoration(
                                     hintText: '0',
                                     isDense: true,
@@ -372,7 +408,12 @@ class _B07PaymentMethodEditBottomSheetState
 
           // 3. 底部總結區
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              top: 16,
+              left: 16,
+              right: 16,
+              bottom: 16 + MediaQuery.of(context).padding.bottom,
+            ),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
               border:
@@ -380,24 +421,31 @@ class _B07PaymentMethodEditBottomSheetState
             ),
             child: Column(
               children: [
-                _buildSummaryRow(
-                    t.B07_PaymentMethod_Edit.total_label, widget.totalAmount,
+                _buildSummaryRow(t.B07_PaymentMethod_Edit.total_label,
+                    widget.totalAmount, widget.selectedCurrency,
                     isBold: true),
                 const SizedBox(height: 8),
                 if (_usePrepay)
                   _buildSummaryRow(
-                      t.B07_PaymentMethod_Edit.total_prepay, _prepayAmount),
+                    t.B07_PaymentMethod_Edit.total_prepay,
+                    _prepayAmount,
+                    widget.selectedCurrency,
+                  ),
                 if (_useAdvance)
-                  _buildSummaryRow(t.B07_PaymentMethod_Edit.total_advance,
-                      _currentAdvanceTotal),
+                  _buildSummaryRow(
+                    t.B07_PaymentMethod_Edit.total_advance,
+                    _currentAdvanceTotal,
+                    widget.selectedCurrency,
+                  ),
                 const Divider(),
                 _buildSummaryRow(
                   _isValid
                       ? t.B07_PaymentMethod_Edit.status_balanced
                       : t.B07_PaymentMethod_Edit.status_remaining(
-                          amount: NumberFormat("#,##0.##")
-                              .format(_remaining.abs())),
+                          amount: CurrencyOption.formatAmount(
+                              _remaining.abs(), widget.selectedCurrency.code)),
                   _remaining,
+                  widget.selectedCurrency,
                   hideAmount: true,
                   color: _isValid ? Colors.green : colorScheme.error,
                   isBold: true,
@@ -432,7 +480,8 @@ class _B07PaymentMethodEditBottomSheetState
     );
   }
 
-  Widget _buildSummaryRow(String label, double amount,
+  Widget _buildSummaryRow(
+      String label, double amount, CurrencyOption currencyOption,
       {Color? color,
       bool isBold = false,
       bool hideAmount = false,
@@ -444,7 +493,8 @@ class _B07PaymentMethodEditBottomSheetState
             style: TextStyle(
                 color: color, fontWeight: isBold ? FontWeight.bold : null)),
         Text(
-          customValueText ?? NumberFormat("#,##0.##").format(amount),
+          customValueText ??
+              CurrencyOption.formatAmount(amount, currencyOption.code),
           style: TextStyle(
               color: color, fontWeight: isBold ? FontWeight.bold : null),
         ),
