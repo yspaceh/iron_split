@@ -41,12 +41,14 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCategoryEnUs category = _TranslationsCategoryEnUs._(_root);
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
+	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
 	@override late final _TranslationsS11InviteConfirmEnUs S11_Invite_Confirm = _TranslationsS11InviteConfirmEnUs._(_root);
 	@override late final _TranslationsS13TaskDashboardEnUs S13_Task_Dashboard = _TranslationsS13TaskDashboardEnUs._(_root);
+	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
@@ -54,12 +56,12 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
 	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
+	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
-	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
 }
 
 // Path: category
@@ -102,6 +104,43 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override String get no_record => 'No Record';
 	@override String get today => 'Today';
 	@override String get untitled => 'Untitled';
+}
+
+// Path: currency
+class _TranslationsCurrencyEnUs extends TranslationsCurrencyZhTw {
+	_TranslationsCurrencyEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get twd => 'New Taiwan Dollar';
+	@override String get jpy => 'Japanese Yen';
+	@override String get usd => 'US Dollar';
+	@override String get eur => 'Euro';
+	@override String get krw => 'South Korean Won';
+	@override String get cny => 'Chinese Yuan';
+	@override String get gbp => 'British Pound';
+	@override String get cad => 'Canadian Dollar';
+	@override String get aud => 'Australian Dollar';
+	@override String get chf => 'Swiss Franc';
+	@override String get dkk => 'Danish Krone';
+	@override String get hkd => 'Hong Kong Dollar';
+	@override String get nok => 'Norwegian Krone';
+	@override String get nzd => 'New Zealand Dollar';
+	@override String get sgd => 'Singapore Dollar';
+	@override String get thb => 'Thai Baht';
+	@override String get zar => 'South African Rand';
+	@override String get rub => 'Russian Ruble';
+	@override String get vnd => 'Vietnamese Dong';
+	@override String get idr => 'Indonesian Rupiah';
+	@override String get myr => 'Malaysian Ringgit';
+	@override String get php => 'Philippine Peso';
+	@override String get mop => 'Macanese Pataca';
+	@override String get sek => 'Swedish Krone';
+	@override String get aed => 'UAE Dirham';
+	@override String get sar => 'Saudi Riyal';
+	@override String get try_ => 'Turkish Lira';
+	@override String get inr => 'Indian Rupee';
 }
 
 // Path: dialog
@@ -226,6 +265,20 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
+}
+
+// Path: S14_Task_Settings
+class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
+	_TranslationsS14TaskSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Task Settings';
+	@override String get menu_member_settings => 'Member Settings';
+	@override String get menu_history => 'History';
+	@override String get menu_end_task => 'End Task';
+	@override String get field_remainder_rule => 'Remainder Rule';
 }
 
 // Path: S15_Record_Edit
@@ -373,6 +426,17 @@ class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResu
 	@override String get action_add => 'Add Record';
 }
 
+// Path: D09_TaskSettings_CurrencyConfirm
+class _TranslationsD09TaskSettingsCurrencyConfirmEnUs extends TranslationsD09TaskSettingsCurrencyConfirmZhTw {
+	_TranslationsD09TaskSettingsCurrencyConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Change Base Currency?';
+	@override String get content => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?';
+}
+
 // Path: D10_RecordDelete_Confirm
 class _TranslationsD10RecordDeleteConfirmEnUs extends TranslationsD10RecordDeleteConfirmZhTw {
 	_TranslationsD10RecordDeleteConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -467,28 +531,6 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredEnUs authRequired = _TranslationsErrorAuthRequiredEnUs._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskEnUs alreadyInTask = _TranslationsErrorAlreadyInTaskEnUs._(_root);
 	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
-}
-
-// Path: S14_Task_Settings
-class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
-	_TranslationsS14TaskSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Task Settings';
-	@override String get section_basic => 'Basic Info';
-	@override String get section_finance => 'Finance';
-	@override String get section_members => 'Members';
-	@override String get section_danger => 'Danger Zone';
-	@override String get d09_title => 'Change Base Currency?';
-	@override String get d09_content => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?';
-	@override String get btn_invite_member => 'Invite Member';
-	@override String get btn_delete_task => 'Delete Task';
-	@override String get error_member_has_records => 'Cannot remove member. This member has related financial records. Please delete records first.';
-	@override String get msg_update_success => 'Settings saved';
-	@override String get confirm_delete_title => 'Delete Task?';
-	@override String get confirm_delete_content => 'This action cannot be undone. All data will be permanently deleted.';
 }
 
 // Path: error.taskFull
@@ -589,6 +631,34 @@ extension on TranslationsEnUs {
 			'common.no_record' => 'No Record',
 			'common.today' => 'Today',
 			'common.untitled' => 'Untitled',
+			'currency.twd' => 'New Taiwan Dollar',
+			'currency.jpy' => 'Japanese Yen',
+			'currency.usd' => 'US Dollar',
+			'currency.eur' => 'Euro',
+			'currency.krw' => 'South Korean Won',
+			'currency.cny' => 'Chinese Yuan',
+			'currency.gbp' => 'British Pound',
+			'currency.cad' => 'Canadian Dollar',
+			'currency.aud' => 'Australian Dollar',
+			'currency.chf' => 'Swiss Franc',
+			'currency.dkk' => 'Danish Krone',
+			'currency.hkd' => 'Hong Kong Dollar',
+			'currency.nok' => 'Norwegian Krone',
+			'currency.nzd' => 'New Zealand Dollar',
+			'currency.sgd' => 'Singapore Dollar',
+			'currency.thb' => 'Thai Baht',
+			'currency.zar' => 'South African Rand',
+			'currency.rub' => 'Russian Ruble',
+			'currency.vnd' => 'Vietnamese Dong',
+			'currency.idr' => 'Indonesian Rupiah',
+			'currency.myr' => 'Malaysian Ringgit',
+			'currency.php' => 'Philippine Peso',
+			'currency.mop' => 'Macanese Pataca',
+			'currency.sek' => 'Swedish Krone',
+			'currency.aed' => 'UAE Dirham',
+			'currency.sar' => 'Saudi Riyal',
+			'currency.try_' => 'Turkish Lira',
+			'currency.inr' => 'Indian Rupee',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
@@ -659,6 +729,11 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.rule_random' => 'Random',
 			'S13_Task_Dashboard.rule_order' => 'Order',
 			'S13_Task_Dashboard.rule_member' => 'Member',
+			'S14_Task_Settings.title' => 'Task Settings',
+			'S14_Task_Settings.menu_member_settings' => 'Member Settings',
+			'S14_Task_Settings.menu_history' => 'History',
+			'S14_Task_Settings.menu_end_task' => 'End Task',
+			'S14_Task_Settings.field_remainder_rule' => 'Remainder Rule',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',
@@ -741,6 +816,8 @@ extension on TranslationsEnUs {
 			'D05_DateJump_NoResult.content' => 'No record found for this date. Would you like to add one?',
 			'D05_DateJump_NoResult.action_cancel' => 'Back',
 			'D05_DateJump_NoResult.action_add' => 'Add Record',
+			'D09_TaskSettings_CurrencyConfirm.title' => 'Change Base Currency?',
+			'D09_TaskSettings_CurrencyConfirm.content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
 			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',
@@ -798,19 +875,6 @@ extension on TranslationsEnUs {
 			'error.alreadyInTask.message' => 'You are already in this task.',
 			'error.unknown.title' => 'Error',
 			'error.unknown.message' => 'An unexpected error occurred.',
-			'S14_Task_Settings.title' => 'Task Settings',
-			'S14_Task_Settings.section_basic' => 'Basic Info',
-			'S14_Task_Settings.section_finance' => 'Finance',
-			'S14_Task_Settings.section_members' => 'Members',
-			'S14_Task_Settings.section_danger' => 'Danger Zone',
-			'S14_Task_Settings.d09_title' => 'Change Base Currency?',
-			'S14_Task_Settings.d09_content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
-			'S14_Task_Settings.btn_invite_member' => 'Invite Member',
-			'S14_Task_Settings.btn_delete_task' => 'Delete Task',
-			'S14_Task_Settings.error_member_has_records' => 'Cannot remove member. This member has related financial records. Please delete records first.',
-			'S14_Task_Settings.msg_update_success' => 'Settings saved',
-			'S14_Task_Settings.confirm_delete_title' => 'Delete Task?',
-			'S14_Task_Settings.confirm_delete_content' => 'This action cannot be undone. All data will be permanently deleted.',
 			_ => null,
 		};
 	}

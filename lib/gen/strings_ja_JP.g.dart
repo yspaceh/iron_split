@@ -41,12 +41,14 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCategoryJaJp category = _TranslationsCategoryJaJp._(_root);
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
+	@override late final _TranslationsCurrencyJaJp currency = _TranslationsCurrencyJaJp._(_root);
 	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
 	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS10HomeTaskListJaJp S10_Home_TaskList = _TranslationsS10HomeTaskListJaJp._(_root);
 	@override late final _TranslationsS11InviteConfirmJaJp S11_Invite_Confirm = _TranslationsS11InviteConfirmJaJp._(_root);
 	@override late final _TranslationsS13TaskDashboardJaJp S13_Task_Dashboard = _TranslationsS13TaskDashboardJaJp._(_root);
+	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
@@ -54,12 +56,12 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
 	@override late final _TranslationsD05DateJumpNoResultJaJp D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJaJp._(_root);
+	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
-	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
 }
 
 // Path: category
@@ -102,6 +104,43 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override String get no_record => '記録なし';
 	@override String get today => '今日';
 	@override String get untitled => '無題';
+}
+
+// Path: currency
+class _TranslationsCurrencyJaJp extends TranslationsCurrencyZhTw {
+	_TranslationsCurrencyJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get twd => '新台湾ドル';
+	@override String get jpy => '日本円';
+	@override String get usd => 'USドル';
+	@override String get eur => 'ユーロ';
+	@override String get krw => '韓国ウォン';
+	@override String get cny => '人民元';
+	@override String get gbp => '英ポンド';
+	@override String get cad => 'カナダドル';
+	@override String get aud => 'オーストラリアドル';
+	@override String get chf => 'スイスフラン';
+	@override String get dkk => 'デンマーククローネ';
+	@override String get hkd => '香港ドル';
+	@override String get nok => 'ノルウェークローネ';
+	@override String get nzd => 'ニュージーランドドル';
+	@override String get sgd => 'シンガポールドル';
+	@override String get thb => 'タイバーツ';
+	@override String get zar => '南アフリカランド';
+	@override String get rub => 'ロシアルーブル';
+	@override String get vnd => 'ベトナムドン';
+	@override String get idr => 'インドネシアルピア';
+	@override String get myr => 'マレーシアリンギット';
+	@override String get php => 'フィリピンペソ';
+	@override String get mop => 'マカオパタカ';
+	@override String get sek => 'スウェーデンクローナ';
+	@override String get aed => 'UAEディルハム';
+	@override String get sar => 'サウジアラビアリヤル';
+	@override String get try_ => 'トルコリラ';
+	@override String get inr => 'インドルピー';
 }
 
 // Path: dialog
@@ -226,6 +265,20 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override String get personal_to_pay => '支払';
 	@override String get personal_empty_desc => 'この日のあなたに関連する記録はありません';
 	@override String get total_amount_label => '合計金額';
+}
+
+// Path: S14_Task_Settings
+class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
+	_TranslationsS14TaskSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク設定';
+	@override String get menu_member_settings => 'メンバー設定';
+	@override String get menu_history => '履歴';
+	@override String get menu_end_task => 'タスク終了';
+	@override String get field_remainder_rule => '端数処理';
 }
 
 // Path: S15_Record_Edit
@@ -373,6 +426,17 @@ class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResu
 	@override String get action_add => '記録を追加';
 }
 
+// Path: D09_TaskSettings_CurrencyConfirm
+class _TranslationsD09TaskSettingsCurrencyConfirmJaJp extends TranslationsD09TaskSettingsCurrencyConfirmZhTw {
+	_TranslationsD09TaskSettingsCurrencyConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '決済通貨を変更しますか？';
+	@override String get content => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？';
+}
+
 // Path: D10_RecordDelete_Confirm
 class _TranslationsD10RecordDeleteConfirmJaJp extends TranslationsD10RecordDeleteConfirmZhTw {
 	_TranslationsD10RecordDeleteConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -463,28 +527,6 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredJaJp authRequired = _TranslationsErrorAuthRequiredJaJp._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskJaJp alreadyInTask = _TranslationsErrorAlreadyInTaskJaJp._(_root);
 	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
-}
-
-// Path: S14_Task_Settings
-class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
-	_TranslationsS14TaskSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'タスク設定';
-	@override String get section_basic => '基本情報';
-	@override String get section_finance => '財務設定';
-	@override String get section_members => 'メンバー管理';
-	@override String get section_danger => '危険エリア';
-	@override String get d09_title => '決済通貨を変更しますか？';
-	@override String get d09_content => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？';
-	@override String get btn_invite_member => 'メンバーを招待';
-	@override String get btn_delete_task => 'タスクを削除';
-	@override String get error_member_has_records => 'このメンバーは削除できません。関連する記録が存在します。先に記録を削除してください。';
-	@override String get msg_update_success => '設定を保存しました';
-	@override String get confirm_delete_title => 'タスクを削除しますか？';
-	@override String get confirm_delete_content => 'この操作は取り消せません。すべてのデータが永久に削除されます。';
 }
 
 // Path: error.taskFull
@@ -585,6 +627,34 @@ extension on TranslationsJaJp {
 			'common.no_record' => '記録なし',
 			'common.today' => '今日',
 			'common.untitled' => '無題',
+			'currency.twd' => '新台湾ドル',
+			'currency.jpy' => '日本円',
+			'currency.usd' => 'USドル',
+			'currency.eur' => 'ユーロ',
+			'currency.krw' => '韓国ウォン',
+			'currency.cny' => '人民元',
+			'currency.gbp' => '英ポンド',
+			'currency.cad' => 'カナダドル',
+			'currency.aud' => 'オーストラリアドル',
+			'currency.chf' => 'スイスフラン',
+			'currency.dkk' => 'デンマーククローネ',
+			'currency.hkd' => '香港ドル',
+			'currency.nok' => 'ノルウェークローネ',
+			'currency.nzd' => 'ニュージーランドドル',
+			'currency.sgd' => 'シンガポールドル',
+			'currency.thb' => 'タイバーツ',
+			'currency.zar' => '南アフリカランド',
+			'currency.rub' => 'ロシアルーブル',
+			'currency.vnd' => 'ベトナムドン',
+			'currency.idr' => 'インドネシアルピア',
+			'currency.myr' => 'マレーシアリンギット',
+			'currency.php' => 'フィリピンペソ',
+			'currency.mop' => 'マカオパタカ',
+			'currency.sek' => 'スウェーデンクローナ',
+			'currency.aed' => 'UAEディルハム',
+			'currency.sar' => 'サウジアラビアリヤル',
+			'currency.try_' => 'トルコリラ',
+			'currency.inr' => 'インドルピー',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
@@ -655,6 +725,11 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.personal_to_pay' => '支払',
 			'S13_Task_Dashboard.personal_empty_desc' => 'この日のあなたに関連する記録はありません',
 			'S13_Task_Dashboard.total_amount_label' => '合計金額',
+			'S14_Task_Settings.title' => 'タスク設定',
+			'S14_Task_Settings.menu_member_settings' => 'メンバー設定',
+			'S14_Task_Settings.menu_history' => '履歴',
+			'S14_Task_Settings.menu_end_task' => 'タスク終了',
+			'S14_Task_Settings.field_remainder_rule' => '端数処理',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',
@@ -737,6 +812,8 @@ extension on TranslationsJaJp {
 			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
 			'D05_DateJump_NoResult.action_cancel' => '戻る',
 			'D05_DateJump_NoResult.action_add' => '記録を追加',
+			'D09_TaskSettings_CurrencyConfirm.title' => '決済通貨を変更しますか？',
+			'D09_TaskSettings_CurrencyConfirm.content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
 			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',
@@ -790,19 +867,6 @@ extension on TranslationsJaJp {
 			'error.alreadyInTask.message' => '既にこのタスクのメンバーです。',
 			'error.unknown.title' => 'エラー',
 			'error.unknown.message' => '予期せぬエラーが発生しました。',
-			'S14_Task_Settings.title' => 'タスク設定',
-			'S14_Task_Settings.section_basic' => '基本情報',
-			'S14_Task_Settings.section_finance' => '財務設定',
-			'S14_Task_Settings.section_members' => 'メンバー管理',
-			'S14_Task_Settings.section_danger' => '危険エリア',
-			'S14_Task_Settings.d09_title' => '決済通貨を変更しますか？',
-			'S14_Task_Settings.d09_content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
-			'S14_Task_Settings.btn_invite_member' => 'メンバーを招待',
-			'S14_Task_Settings.btn_delete_task' => 'タスクを削除',
-			'S14_Task_Settings.error_member_has_records' => 'このメンバーは削除できません。関連する記録が存在します。先に記録を削除してください。',
-			'S14_Task_Settings.msg_update_success' => '設定を保存しました',
-			'S14_Task_Settings.confirm_delete_title' => 'タスクを削除しますか？',
-			'S14_Task_Settings.confirm_delete_content' => 'この操作は取り消せません。すべてのデータが永久に削除されます。',
 			_ => null,
 		};
 	}

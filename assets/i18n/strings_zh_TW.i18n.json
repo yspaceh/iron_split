@@ -27,6 +27,37 @@
     "today": "今天",
     "untitled": "未命名"
   },
+  "currency": {
+    "twd": "新台幣",
+    "jpy": "日圓",
+    "usd": "美金",
+    "eur": "歐元",
+    "krw": "韓元",
+    "cny": "人民幣",
+    "gbp": "英鎊",
+    "cad": "加拿大幣",
+    "aud": "澳幣",
+    "chf": "瑞士法郎",
+    "dkk": "丹麥幣",
+    "hkd": "港幣",
+    "nok": "挪威幣",
+    "nzd": "紐西蘭幣",
+    "sgd": "新加坡幣",
+    "thb": "泰幣",
+    "zar": "南非幣",
+    "rub": "俄羅斯幣",
+    "vnd": "越南盾",
+    "idr": "印尼盾",
+    "myr": "馬來幣",
+    "php": "菲律賓幣",
+    "mop": "澳門幣",
+    "sek": "瑞典克朗",
+    "aed": "阿聯酋迪拉姆",
+    "sar": "沙烏地里亞爾",
+    "try_": "土耳其里拉",
+    "inr": "印度盧比"
+  },
+
   "dialog": {
     "unsaved_changes_title": "尚未儲存",
     "unsaved_changes_content": "變更將不會被儲存，確定要離開嗎？"
@@ -109,6 +140,13 @@
     "personal_empty_desc": "這天沒有與你有關的紀錄",
     "total_amount_label": "總金額"
   },
+  "S14_Task_Settings": {
+    "title": "任務設定",
+    "menu_member_settings": "成員設定",
+    "menu_history": "歷史紀錄",
+    "menu_end_task": "結束任務",
+    "field_remainder_rule": "零頭處理"
+  },
   "S15_Record_Edit": {
     "title_create": "記一筆",
     "title_edit": "編輯紀錄",
@@ -161,10 +199,7 @@
     "field_member_count": "參加人數",
     "action_save": "保存",
     "picker_done": "確定",
-    "error_name_empty": "請輸入任務名稱",
-    "currency_twd": "新台幣 (TWD)",
-    "currency_jpy": "日圓 (JPY)",
-    "currency_usd": "美金 (USD)"
+    "error_name_empty": "請輸入任務名稱"
   },
   "S71_SystemSettings_Tos": {
     "title": "服務條款"
@@ -204,6 +239,10 @@
     "content": "找不到此日期的紀錄，要新增一筆嗎？",
     "action_cancel": "返回",
     "action_add": "新增紀錄"
+  },
+  "D09_TaskSettings_CurrencyConfirm": {
+    "title": "變更結算幣別？",
+    "content": "變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？"
   },
   "D10_RecordDelete_Confirm": {
     "delete_record_title": "刪除紀錄？",
@@ -279,20 +318,5 @@
       "title": "發生錯誤",
       "message": "發生未預期的錯誤，請稍後再試。"
     }
-  },
-"S14_Task_Settings": {
-    "title": "任務設定",
-    "section_basic": "基本資訊",
-    "section_finance": "財務設定",
-    "section_members": "成員管理",
-    "section_danger": "危險區域",
-    "d09_title": "變更結算幣別？",
-    "d09_content": "變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？",
-    "btn_invite_member": "邀請成員",
-    "btn_delete_task": "刪除任務",
-    "error_member_has_records": "無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。",
-    "msg_update_success": "設定已更新",
-    "confirm_delete_title": "刪除任務？",
-    "confirm_delete_content": "此動作無法復原。所有帳目資料將被永久刪除。"
-}
+  }
 }

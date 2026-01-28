@@ -42,12 +42,14 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	// Translations
 	late final TranslationsCategoryZhTw category = TranslationsCategoryZhTw.internal(_root);
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
+	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
 	late final TranslationsS11InviteConfirmZhTw S11_Invite_Confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
 	late final TranslationsS13TaskDashboardZhTw S13_Task_Dashboard = TranslationsS13TaskDashboardZhTw.internal(_root);
+	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS71SystemSettingsTosZhTw S71_SystemSettings_Tos = TranslationsS71SystemSettingsTosZhTw.internal(_root);
@@ -55,12 +57,12 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
 	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
 	late final TranslationsD05DateJumpNoResultZhTw D05_DateJump_NoResult = TranslationsD05DateJumpNoResultZhTw.internal(_root);
+	late final TranslationsD09TaskSettingsCurrencyConfirmZhTw D09_TaskSettings_CurrencyConfirm = TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(_root);
 	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
-	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 }
 
 // Path: category
@@ -151,6 +153,99 @@ class TranslationsCommonZhTw {
 
 	/// zh-TW: '未命名'
 	String get untitled => '未命名';
+}
+
+// Path: currency
+class TranslationsCurrencyZhTw {
+	TranslationsCurrencyZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '新台幣'
+	String get twd => '新台幣';
+
+	/// zh-TW: '日圓'
+	String get jpy => '日圓';
+
+	/// zh-TW: '美金'
+	String get usd => '美金';
+
+	/// zh-TW: '歐元'
+	String get eur => '歐元';
+
+	/// zh-TW: '韓元'
+	String get krw => '韓元';
+
+	/// zh-TW: '人民幣'
+	String get cny => '人民幣';
+
+	/// zh-TW: '英鎊'
+	String get gbp => '英鎊';
+
+	/// zh-TW: '加拿大幣'
+	String get cad => '加拿大幣';
+
+	/// zh-TW: '澳幣'
+	String get aud => '澳幣';
+
+	/// zh-TW: '瑞士法郎'
+	String get chf => '瑞士法郎';
+
+	/// zh-TW: '丹麥幣'
+	String get dkk => '丹麥幣';
+
+	/// zh-TW: '港幣'
+	String get hkd => '港幣';
+
+	/// zh-TW: '挪威幣'
+	String get nok => '挪威幣';
+
+	/// zh-TW: '紐西蘭幣'
+	String get nzd => '紐西蘭幣';
+
+	/// zh-TW: '新加坡幣'
+	String get sgd => '新加坡幣';
+
+	/// zh-TW: '泰幣'
+	String get thb => '泰幣';
+
+	/// zh-TW: '南非幣'
+	String get zar => '南非幣';
+
+	/// zh-TW: '俄羅斯幣'
+	String get rub => '俄羅斯幣';
+
+	/// zh-TW: '越南盾'
+	String get vnd => '越南盾';
+
+	/// zh-TW: '印尼盾'
+	String get idr => '印尼盾';
+
+	/// zh-TW: '馬來幣'
+	String get myr => '馬來幣';
+
+	/// zh-TW: '菲律賓幣'
+	String get php => '菲律賓幣';
+
+	/// zh-TW: '澳門幣'
+	String get mop => '澳門幣';
+
+	/// zh-TW: '瑞典克朗'
+	String get sek => '瑞典克朗';
+
+	/// zh-TW: '阿聯酋迪拉姆'
+	String get aed => '阿聯酋迪拉姆';
+
+	/// zh-TW: '沙烏地里亞爾'
+	String get sar => '沙烏地里亞爾';
+
+	/// zh-TW: '土耳其里拉'
+	String get try_ => '土耳其里拉';
+
+	/// zh-TW: '印度盧比'
+	String get inr => '印度盧比';
 }
 
 // Path: dialog
@@ -417,6 +512,30 @@ class TranslationsS13TaskDashboardZhTw {
 	String get total_amount_label => '總金額';
 }
 
+// Path: S14_Task_Settings
+class TranslationsS14TaskSettingsZhTw {
+	TranslationsS14TaskSettingsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務設定'
+	String get title => '任務設定';
+
+	/// zh-TW: '成員設定'
+	String get menu_member_settings => '成員設定';
+
+	/// zh-TW: '歷史紀錄'
+	String get menu_history => '歷史紀錄';
+
+	/// zh-TW: '結束任務'
+	String get menu_end_task => '結束任務';
+
+	/// zh-TW: '零頭處理'
+	String get field_remainder_rule => '零頭處理';
+}
+
 // Path: S15_Record_Edit
 class TranslationsS15RecordEditZhTw {
 	TranslationsS15RecordEditZhTw.internal(this._root);
@@ -583,15 +702,6 @@ class TranslationsS16TaskCreateEditZhTw {
 
 	/// zh-TW: '請輸入任務名稱'
 	String get error_name_empty => '請輸入任務名稱';
-
-	/// zh-TW: '新台幣 (TWD)'
-	String get currency_twd => '新台幣 (TWD)';
-
-	/// zh-TW: '日圓 (JPY)'
-	String get currency_jpy => '日圓 (JPY)';
-
-	/// zh-TW: '美金 (USD)'
-	String get currency_usd => '美金 (USD)';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -724,6 +834,21 @@ class TranslationsD05DateJumpNoResultZhTw {
 
 	/// zh-TW: '新增紀錄'
 	String get action_add => '新增紀錄';
+}
+
+// Path: D09_TaskSettings_CurrencyConfirm
+class TranslationsD09TaskSettingsCurrencyConfirmZhTw {
+	TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '變更結算幣別？'
+	String get title => '變更結算幣別？';
+
+	/// zh-TW: '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？'
+	String get content => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？';
 }
 
 // Path: D10_RecordDelete_Confirm
@@ -900,54 +1025,6 @@ class TranslationsErrorZhTw {
 	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
 }
 
-// Path: S14_Task_Settings
-class TranslationsS14TaskSettingsZhTw {
-	TranslationsS14TaskSettingsZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '任務設定'
-	String get title => '任務設定';
-
-	/// zh-TW: '基本資訊'
-	String get section_basic => '基本資訊';
-
-	/// zh-TW: '財務設定'
-	String get section_finance => '財務設定';
-
-	/// zh-TW: '成員管理'
-	String get section_members => '成員管理';
-
-	/// zh-TW: '危險區域'
-	String get section_danger => '危險區域';
-
-	/// zh-TW: '變更結算幣別？'
-	String get d09_title => '變更結算幣別？';
-
-	/// zh-TW: '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？'
-	String get d09_content => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？';
-
-	/// zh-TW: '邀請成員'
-	String get btn_invite_member => '邀請成員';
-
-	/// zh-TW: '刪除任務'
-	String get btn_delete_task => '刪除任務';
-
-	/// zh-TW: '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。'
-	String get error_member_has_records => '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。';
-
-	/// zh-TW: '設定已更新'
-	String get msg_update_success => '設定已更新';
-
-	/// zh-TW: '刪除任務？'
-	String get confirm_delete_title => '刪除任務？';
-
-	/// zh-TW: '此動作無法復原。所有帳目資料將被永久刪除。'
-	String get confirm_delete_content => '此動作無法復原。所有帳目資料將被永久刪除。';
-}
-
 // Path: error.taskFull
 class TranslationsErrorTaskFullZhTw {
 	TranslationsErrorTaskFullZhTw.internal(this._root);
@@ -1070,6 +1147,34 @@ extension on Translations {
 			'common.no_record' => '無紀錄',
 			'common.today' => '今天',
 			'common.untitled' => '未命名',
+			'currency.twd' => '新台幣',
+			'currency.jpy' => '日圓',
+			'currency.usd' => '美金',
+			'currency.eur' => '歐元',
+			'currency.krw' => '韓元',
+			'currency.cny' => '人民幣',
+			'currency.gbp' => '英鎊',
+			'currency.cad' => '加拿大幣',
+			'currency.aud' => '澳幣',
+			'currency.chf' => '瑞士法郎',
+			'currency.dkk' => '丹麥幣',
+			'currency.hkd' => '港幣',
+			'currency.nok' => '挪威幣',
+			'currency.nzd' => '紐西蘭幣',
+			'currency.sgd' => '新加坡幣',
+			'currency.thb' => '泰幣',
+			'currency.zar' => '南非幣',
+			'currency.rub' => '俄羅斯幣',
+			'currency.vnd' => '越南盾',
+			'currency.idr' => '印尼盾',
+			'currency.myr' => '馬來幣',
+			'currency.php' => '菲律賓幣',
+			'currency.mop' => '澳門幣',
+			'currency.sek' => '瑞典克朗',
+			'currency.aed' => '阿聯酋迪拉姆',
+			'currency.sar' => '沙烏地里亞爾',
+			'currency.try_' => '土耳其里拉',
+			'currency.inr' => '印度盧比',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
@@ -1140,6 +1245,11 @@ extension on Translations {
 			'S13_Task_Dashboard.personal_to_pay' => '應付',
 			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
 			'S13_Task_Dashboard.total_amount_label' => '總金額',
+			'S14_Task_Settings.title' => '任務設定',
+			'S14_Task_Settings.menu_member_settings' => '成員設定',
+			'S14_Task_Settings.menu_history' => '歷史紀錄',
+			'S14_Task_Settings.menu_end_task' => '結束任務',
+			'S14_Task_Settings.field_remainder_rule' => '零頭處理',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',
@@ -1190,9 +1300,6 @@ extension on Translations {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '確定',
 			'S16_TaskCreate_Edit.error_name_empty' => '請輸入任務名稱',
-			'S16_TaskCreate_Edit.currency_twd' => '新台幣 (TWD)',
-			'S16_TaskCreate_Edit.currency_jpy' => '日圓 (JPY)',
-			'S16_TaskCreate_Edit.currency_usd' => '美金 (USD)',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.action_reroll' => '換個動物',
@@ -1222,6 +1329,8 @@ extension on Translations {
 			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄，要新增一筆嗎？',
 			'D05_DateJump_NoResult.action_cancel' => '返回',
 			'D05_DateJump_NoResult.action_add' => '新增紀錄',
+			'D09_TaskSettings_CurrencyConfirm.title' => '變更結算幣別？',
+			'D09_TaskSettings_CurrencyConfirm.content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',
@@ -1275,19 +1384,6 @@ extension on Translations {
 			'error.alreadyInTask.message' => '您已經在這個任務中了。',
 			'error.unknown.title' => '發生錯誤',
 			'error.unknown.message' => '發生未預期的錯誤，請稍後再試。',
-			'S14_Task_Settings.title' => '任務設定',
-			'S14_Task_Settings.section_basic' => '基本資訊',
-			'S14_Task_Settings.section_finance' => '財務設定',
-			'S14_Task_Settings.section_members' => '成員管理',
-			'S14_Task_Settings.section_danger' => '危險區域',
-			'S14_Task_Settings.d09_title' => '變更結算幣別？',
-			'S14_Task_Settings.d09_content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
-			'S14_Task_Settings.btn_invite_member' => '邀請成員',
-			'S14_Task_Settings.btn_delete_task' => '刪除任務',
-			'S14_Task_Settings.error_member_has_records' => '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。',
-			'S14_Task_Settings.msg_update_success' => '設定已更新',
-			'S14_Task_Settings.confirm_delete_title' => '刪除任務？',
-			'S14_Task_Settings.confirm_delete_content' => '此動作無法復原。所有帳目資料將被永久刪除。',
 			_ => null,
 		};
 	}

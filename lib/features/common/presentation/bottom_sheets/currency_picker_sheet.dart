@@ -33,7 +33,7 @@ class CurrencyPickerSheet {
         children: kSupportedCurrencies.map((e) {
           return Center(
             child: Text(
-              "${e.code} (${e.symbol}) - ${e.name}",
+              "${e.code} (${e.symbol}) - ${e.getLocalizedName(context)}",
               style: const TextStyle(fontSize: 16),
             ),
           );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/presentation/pages/s14_task_settings_page.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/models/record_model.dart';
@@ -107,7 +108,10 @@ class AppRouter {
           GoRoute(
             path: 'settings', // Full: /task/:taskId/settings
             name: 'S14',
-            builder: (context, state) => const S14TaskSettingsPage(),
+            builder: (context, state) {
+              final taskId = state.pathParameters['taskId']!;
+              return S14TaskSettingsPage(taskId: taskId);
+            },
             routes: [
               // S53_TaskSettings.Members
               GoRoute(
