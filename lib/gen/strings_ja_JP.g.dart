@@ -59,6 +59,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
+	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
 }
 
 // Path: category
@@ -464,6 +465,28 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
 }
 
+// Path: S14_Task_Settings
+class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
+	_TranslationsS14TaskSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク設定';
+	@override String get section_basic => '基本情報';
+	@override String get section_finance => '財務設定';
+	@override String get section_members => 'メンバー管理';
+	@override String get section_danger => '危険エリア';
+	@override String get d09_title => '決済通貨を変更しますか？';
+	@override String get d09_content => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？';
+	@override String get btn_invite_member => 'メンバーを招待';
+	@override String get btn_delete_task => 'タスクを削除';
+	@override String get error_member_has_records => 'このメンバーは削除できません。関連する記録が存在します。先に記録を削除してください。';
+	@override String get msg_update_success => '設定を保存しました';
+	@override String get confirm_delete_title => 'タスクを削除しますか？';
+	@override String get confirm_delete_content => 'この操作は取り消せません。すべてのデータが永久に削除されます。';
+}
+
 // Path: error.taskFull
 class _TranslationsErrorTaskFullJaJp extends TranslationsErrorTaskFullZhTw {
 	_TranslationsErrorTaskFullJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -493,7 +516,7 @@ class _TranslationsErrorInvalidCodeJaJp extends TranslationsErrorInvalidCodeZhTw
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'リンク無効';
+	@override String get title => 'Invalid Link';
 	@override String get message => '無効な招待リンクです。';
 }
 
@@ -759,7 +782,7 @@ extension on TranslationsJaJp {
 			'error.taskFull.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
 			'error.expiredCode.title' => '招待コード期限切れ',
 			'error.expiredCode.message' => ({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。',
-			'error.invalidCode.title' => 'リンク無効',
+			'error.invalidCode.title' => 'Invalid Link',
 			'error.invalidCode.message' => '無効な招待リンクです。',
 			'error.authRequired.title' => 'ログインが必要',
 			'error.authRequired.message' => 'タスクに参加するにはログインしてください。',
@@ -767,6 +790,19 @@ extension on TranslationsJaJp {
 			'error.alreadyInTask.message' => '既にこのタスクのメンバーです。',
 			'error.unknown.title' => 'エラー',
 			'error.unknown.message' => '予期せぬエラーが発生しました。',
+			'S14_Task_Settings.title' => 'タスク設定',
+			'S14_Task_Settings.section_basic' => '基本情報',
+			'S14_Task_Settings.section_finance' => '財務設定',
+			'S14_Task_Settings.section_members' => 'メンバー管理',
+			'S14_Task_Settings.section_danger' => '危険エリア',
+			'S14_Task_Settings.d09_title' => '決済通貨を変更しますか？',
+			'S14_Task_Settings.d09_content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
+			'S14_Task_Settings.btn_invite_member' => 'メンバーを招待',
+			'S14_Task_Settings.btn_delete_task' => 'タスクを削除',
+			'S14_Task_Settings.error_member_has_records' => 'このメンバーは削除できません。関連する記録が存在します。先に記録を削除してください。',
+			'S14_Task_Settings.msg_update_success' => '設定を保存しました',
+			'S14_Task_Settings.confirm_delete_title' => 'タスクを削除しますか？',
+			'S14_Task_Settings.confirm_delete_content' => 'この操作は取り消せません。すべてのデータが永久に削除されます。',
 			_ => null,
 		};
 	}

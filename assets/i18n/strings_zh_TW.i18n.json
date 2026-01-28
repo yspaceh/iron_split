@@ -279,5 +279,20 @@
       "title": "發生錯誤",
       "message": "發生未預期的錯誤，請稍後再試。"
     }
-  }
+  },
+"S14_Task_Settings": {
+    "title": "任務設定",
+    "section_basic": "基本資訊",
+    "section_finance": "財務設定",
+    "section_members": "成員管理",
+    "section_danger": "危險區域",
+    "d09_title": "變更結算幣別？",
+    "d09_content": "變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？",
+    "btn_invite_member": "邀請成員",
+    "btn_delete_task": "刪除任務",
+    "error_member_has_records": "無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。",
+    "msg_update_success": "設定已更新",
+    "confirm_delete_title": "刪除任務？",
+    "confirm_delete_content": "此動作無法復原。所有帳目資料將被永久刪除。"
+}
 }

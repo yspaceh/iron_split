@@ -60,6 +60,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
+	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 }
 
 // Path: category
@@ -899,6 +900,54 @@ class TranslationsErrorZhTw {
 	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
 }
 
+// Path: S14_Task_Settings
+class TranslationsS14TaskSettingsZhTw {
+	TranslationsS14TaskSettingsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務設定'
+	String get title => '任務設定';
+
+	/// zh-TW: '基本資訊'
+	String get section_basic => '基本資訊';
+
+	/// zh-TW: '財務設定'
+	String get section_finance => '財務設定';
+
+	/// zh-TW: '成員管理'
+	String get section_members => '成員管理';
+
+	/// zh-TW: '危險區域'
+	String get section_danger => '危險區域';
+
+	/// zh-TW: '變更結算幣別？'
+	String get d09_title => '變更結算幣別？';
+
+	/// zh-TW: '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？'
+	String get d09_content => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？';
+
+	/// zh-TW: '邀請成員'
+	String get btn_invite_member => '邀請成員';
+
+	/// zh-TW: '刪除任務'
+	String get btn_delete_task => '刪除任務';
+
+	/// zh-TW: '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。'
+	String get error_member_has_records => '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。';
+
+	/// zh-TW: '設定已更新'
+	String get msg_update_success => '設定已更新';
+
+	/// zh-TW: '刪除任務？'
+	String get confirm_delete_title => '刪除任務？';
+
+	/// zh-TW: '此動作無法復原。所有帳目資料將被永久刪除。'
+	String get confirm_delete_content => '此動作無法復原。所有帳目資料將被永久刪除。';
+}
+
 // Path: error.taskFull
 class TranslationsErrorTaskFullZhTw {
 	TranslationsErrorTaskFullZhTw.internal(this._root);
@@ -1226,6 +1275,19 @@ extension on Translations {
 			'error.alreadyInTask.message' => '您已經在這個任務中了。',
 			'error.unknown.title' => '發生錯誤',
 			'error.unknown.message' => '發生未預期的錯誤，請稍後再試。',
+			'S14_Task_Settings.title' => '任務設定',
+			'S14_Task_Settings.section_basic' => '基本資訊',
+			'S14_Task_Settings.section_finance' => '財務設定',
+			'S14_Task_Settings.section_members' => '成員管理',
+			'S14_Task_Settings.section_danger' => '危險區域',
+			'S14_Task_Settings.d09_title' => '變更結算幣別？',
+			'S14_Task_Settings.d09_content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
+			'S14_Task_Settings.btn_invite_member' => '邀請成員',
+			'S14_Task_Settings.btn_delete_task' => '刪除任務',
+			'S14_Task_Settings.error_member_has_records' => '無法移除成員，因為該成員尚有相關的帳目紀錄。請先手動刪除相關紀錄。',
+			'S14_Task_Settings.msg_update_success' => '設定已更新',
+			'S14_Task_Settings.confirm_delete_title' => '刪除任務？',
+			'S14_Task_Settings.confirm_delete_content' => '此動作無法復原。所有帳目資料將被永久刪除。',
 			_ => null,
 		};
 	}

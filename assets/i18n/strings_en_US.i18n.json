@@ -169,7 +169,6 @@
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"
   },
-
   "D01_MemberRole_Intro": {
     "title": "Your Character",
     "action_reroll": "Change Animal",
@@ -284,5 +283,20 @@
       "title": "Error",
       "message": "An unexpected error occurred."
     }
+  },
+  "S14_Task_Settings": {
+    "title": "Task Settings",
+    "section_basic": "Basic Info",
+    "section_finance": "Finance",
+    "section_members": "Members",
+    "section_danger": "Danger Zone",
+    "d09_title": "Change Base Currency?",
+    "d09_content": "Changing currency will reset all exchange rates. This may affect current balances. Are you sure?",
+    "btn_invite_member": "Invite Member",
+    "btn_delete_task": "Delete Task",
+    "error_member_has_records": "Cannot remove member. This member has related financial records. Please delete records first.",
+    "msg_update_success": "Settings saved",
+    "confirm_delete_title": "Delete Task?",
+    "confirm_delete_content": "This action cannot be undone. All data will be permanently deleted."
   }
 }

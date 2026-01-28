@@ -264,7 +264,7 @@
       "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
     },
     "invalidCode": {
-      "title": "リンク無効",
+      "title": "Invalid Link",
       "message": "無効な招待リンクです。"
     },
     "authRequired": {
@@ -279,5 +279,20 @@
       "title": "エラー",
       "message": "予期せぬエラーが発生しました。"
     }
+  },
+  "S14_Task_Settings": {
+    "title": "タスク設定",
+    "section_basic": "基本情報",
+    "section_finance": "財務設定",
+    "section_members": "メンバー管理",
+    "section_danger": "危険エリア",
+    "d09_title": "決済通貨を変更しますか？",
+    "d09_content": "通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？",
+    "btn_invite_member": "メンバーを招待",
+    "btn_delete_task": "タスクを削除",
+    "error_member_has_records": "このメンバーは削除できません。関連する記録が存在します。先に記録を削除してください。",
+    "msg_update_success": "設定を保存しました",
+    "confirm_delete_title": "タスクを削除しますか？",
+    "confirm_delete_content": "この操作は取り消せません。すべてのデータが永久に削除されます。"
   }
 }

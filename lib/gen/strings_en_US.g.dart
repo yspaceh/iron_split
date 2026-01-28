@@ -59,6 +59,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
+	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
 }
 
 // Path: category
@@ -468,6 +469,28 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
 }
 
+// Path: S14_Task_Settings
+class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
+	_TranslationsS14TaskSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Task Settings';
+	@override String get section_basic => 'Basic Info';
+	@override String get section_finance => 'Finance';
+	@override String get section_members => 'Members';
+	@override String get section_danger => 'Danger Zone';
+	@override String get d09_title => 'Change Base Currency?';
+	@override String get d09_content => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?';
+	@override String get btn_invite_member => 'Invite Member';
+	@override String get btn_delete_task => 'Delete Task';
+	@override String get error_member_has_records => 'Cannot remove member. This member has related financial records. Please delete records first.';
+	@override String get msg_update_success => 'Settings saved';
+	@override String get confirm_delete_title => 'Delete Task?';
+	@override String get confirm_delete_content => 'This action cannot be undone. All data will be permanently deleted.';
+}
+
 // Path: error.taskFull
 class _TranslationsErrorTaskFullEnUs extends TranslationsErrorTaskFullZhTw {
 	_TranslationsErrorTaskFullEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -775,6 +798,19 @@ extension on TranslationsEnUs {
 			'error.alreadyInTask.message' => 'You are already in this task.',
 			'error.unknown.title' => 'Error',
 			'error.unknown.message' => 'An unexpected error occurred.',
+			'S14_Task_Settings.title' => 'Task Settings',
+			'S14_Task_Settings.section_basic' => 'Basic Info',
+			'S14_Task_Settings.section_finance' => 'Finance',
+			'S14_Task_Settings.section_members' => 'Members',
+			'S14_Task_Settings.section_danger' => 'Danger Zone',
+			'S14_Task_Settings.d09_title' => 'Change Base Currency?',
+			'S14_Task_Settings.d09_content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
+			'S14_Task_Settings.btn_invite_member' => 'Invite Member',
+			'S14_Task_Settings.btn_delete_task' => 'Delete Task',
+			'S14_Task_Settings.error_member_has_records' => 'Cannot remove member. This member has related financial records. Please delete records first.',
+			'S14_Task_Settings.msg_update_success' => 'Settings saved',
+			'S14_Task_Settings.confirm_delete_title' => 'Delete Task?',
+			'S14_Task_Settings.confirm_delete_content' => 'This action cannot be undone. All data will be permanently deleted.',
 			_ => null,
 		};
 	}
