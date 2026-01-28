@@ -68,6 +68,8 @@ class BalanceCard extends StatelessWidget {
         isBaseCurrency: true);
     final poolBalanceByBaseCurrency =
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(recordModels);
+    final poolBalancesByOriginalCurrency =
+        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(recordModels);
 
     final double totalIncomeBase = baseTotal.totalIncome;
     final double totalExpensesBase = baseTotal.totalExpense;
@@ -185,6 +187,67 @@ class BalanceCard extends StatelessWidget {
       );
     }
 
+    void showPoolBreakdown() {
+      // 過濾掉餘額為 0 的幣別
+      final activeBalances = poolBalancesByOriginalCurrency.entries
+          .where((e) => e.value.abs() > 0.01)
+          .toList();
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(t.S13_Task_Dashboard.dialog_balance_detail), // 或 "公款餘額明細"
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (activeBalances.isEmpty)
+                Text(t.S13_Task_Dashboard.empty_records,
+                    style: TextStyle(color: Colors.grey)),
+              ...activeBalances.map((e) {
+                final currency = CurrencyOption.getCurrencyOption(e.key);
+                final amount = e.value;
+                final isNegative = amount < 0;
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          // 可以加國旗或 Icon
+                          Text(currency.code,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Text(
+                        "${currency.symbol} ${CurrencyOption.formatAmount(amount, currency.code)}",
+                        style: TextStyle(
+                          color: isNegative
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'RobotoMono',
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(t.common.close),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainerLow,
@@ -229,35 +292,38 @@ class BalanceCard extends StatelessWidget {
                   ),
 
                   // Right: Balance
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(t.S13_Task_Dashboard.label_balance,
-                          style: theme.textTheme.labelSmall),
-                      Text.rich(
-                        TextSpan(
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            fontFamily: 'RobotoMono',
-                          ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(poolBalanceByBaseCurrency.abs(), baseCurrencyOption.code)}",
-                              style: TextStyle(
-                                color: poolBalanceByBaseCurrency > 0
-                                    ? theme.colorScheme.tertiary
-                                    : poolBalanceByBaseCurrency < 0
-                                        ? theme.colorScheme.error
-                                        : theme.colorScheme.outline,
-                              ),
+                  InkWell(
+                    onTap: showPoolBreakdown, // <--- 綁定事件
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(t.S13_Task_Dashboard.label_balance,
+                            style: theme.textTheme.labelSmall),
+                        Text.rich(
+                          TextSpan(
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              fontFamily: 'RobotoMono',
                             ),
-                          ],
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(poolBalanceByBaseCurrency.abs(), baseCurrencyOption.code)}",
+                                style: TextStyle(
+                                  color: poolBalanceByBaseCurrency > 0
+                                      ? theme.colorScheme.tertiary
+                                      : poolBalanceByBaseCurrency < 0
+                                          ? theme.colorScheme.error
+                                          : theme.colorScheme.outline,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -267,46 +333,49 @@ class BalanceCard extends StatelessWidget {
             const SizedBox(height: 8.0),
 
             // --- Row 2: Legend (20.0) ---
-            SizedBox(
-              height: 20.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.errorContainer,
-                          shape: BoxShape.circle,
+            InkWell(
+              onTap: showPoolBreakdown,
+              child: SizedBox(
+                height: 20.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.errorContainer,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${t.S13_Task_Dashboard.label_total_expense} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), baseCurrencyOption.code)}",
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade400,
-                          shape: BoxShape.circle,
+                        const SizedBox(width: 4),
+                        Text(
+                          "${t.S13_Task_Dashboard.label_total_expense} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), baseCurrencyOption.code)}",
+                          style: theme.textTheme.labelSmall,
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${t.S13_Task_Dashboard.label_total_prepay} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), baseCurrencyOption.code)}",
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade400,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "${t.S13_Task_Dashboard.label_total_prepay} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), baseCurrencyOption.code)}",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 
