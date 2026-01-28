@@ -197,6 +197,25 @@
   2. **Step 2 (Split)**: `211 / 3 = 70.33...` -> 取 `70` (每人付 70)。
   3. **Step 3 (Buffer)**: `211 - (70 * 3) = 1` -> **1 元** 進入餘額罐。
 
+### 5.9.3 公款水位與庫存計算 (Pool Balance & Inventory)
+
+系統需同時維護「總資產價值」與「物理庫存」兩種觀點：
+
+1.  **分幣別物理庫存 (Physical Inventory)**：
+    - **定義**：計算公款包中實際持有的各國貨幣現金。
+    - **用途**：S15 記帳時的支付能力檢查 (Smart Picker)、S13 餘額明細 Dialog。
+    - **公式**：`Sum(Income Original Amount) - Sum(Expense Prepay Portion Original Amount)` (依幣別分組)。
+    - **混合支付處理**：若 `payerType == 'mixed'`，僅扣除 `paymentDetails['prepayAmount']` 指定的金額。
+
+2.  **總資產價值 (Total Value in Base)**：
+    - **定義**：將所有外幣庫存按「該筆交易當下匯率」換算回結算幣別後的總價值。
+    - **用途**：S13 Dashboard 主視覺餘額 (Big Number)。
+    - **公式**：
+      - Income: `originalAmount * exchangeRate`
+      - Expense (Prepay): `originalAmount * exchangeRate`
+      - Expense (Mixed): `paymentDetails['prepayAmount'] * exchangeRate`
+    - **注意**：成員代墊 (`member` or `mixed.memberAdvance`) **不減少** 公款水位。
+
 ---
 
 ## 6. Deep Link（多 Intent，集中處理）
@@ -263,25 +282,36 @@
 
 ### Sub-collection: `tasks/{taskId}/records` (MVP Core)
 
-| Field           | Type      | Description                                      |
-| :-------------- | :-------- | :----------------------------------------------- |
-| type            | string    | `expense` (支出) 或 `income` (預收/入金)         |
-| title           | string    | 消費標題                                         |
-| categoryIndex   | number    | 類別索引值                                       |
-| amount          | number    | 原幣金額                                         |
-| currency        | string    | 原幣幣別                                         |
-| exchangeRate    | number    | **鎖定匯率** (對 Base Currency)                  |
-| memo            | string    | 備註                                             |
-| receiptImageUrl | string    | 收據照片 URL (MVP 存證功能)                      |
-| payerType       | string    | `prepay` (公費), `member` (代墊), `mixed` (混合) |
-| payerId         | string    | 付款者 UID (單人代墊時使用)                      |
-| paymentDetails  | map       | `{usePrepay: bool, memberAdvance: map}`          |
-| splitMethod     | string    | `even`, `percent`, `exact`                       |
-| splitMemberIds  | array     | 參與分攤的成員 ID 列表                           |
-| splitDetails    | map       | 詳細數據 `{uid: weight/amount}`                  |
-| date            | timestamp | 消費日期 (顯示用)                                |
-| createdBy       | string    | 建立者 UID                                       |
-| createdAt       | timestamp | 建立時間 (Server Timestamp)                      |
+| Field           | Type      | Description                                              |
+| :-------------- | :-------- | :------------------------------------------------------- |
+| type            | string    | `expense` (支出) 或 `income` (預收/入金)                 |
+| title           | string    | 消費標題                                                 |
+| categoryIndex   | number    | 類別索引值                                               |
+| amount          | number    | 原幣金額                                                 |
+| currency        | string    | 原幣幣別代碼 (DB存 `currency`, Model轉為 `currencyCode`) |
+| exchangeRate    | number    | **鎖定匯率** (對 Base Currency)                          |
+| memo            | string    | 備註                                                     |
+| receiptImageUrl | string    | 收據照片 URL (MVP 存證功能)                              |
+| payerType       | string    | `prepay` (公費), `member` (代墊), `mixed` (混合)         |
+| payerId         | string    | 付款者 UID (單人代墊時使用)                              |
+| paymentDetails  | map       | 混合支付結構 (見下方定義)                                |
+| splitMethod     | string    | `even`, `percent`, `exact`                               |
+| splitMemberIds  | array     | 參與分攤的成員 ID 列表                                   |
+| splitDetails    | map       | 詳細數據 `{uid: weight/amount}`                          |
+| date            | timestamp | 消費日期 (顯示用)                                        |
+| createdBy       | string    | 建立者 UID                                               |
+| createdAt       | timestamp | 建立時間 (Server Timestamp)                              |
+
+**`paymentDetails` 結構定義 (Mixed Payment):**
+{
+"usePrepay": boolean,
+"prepayAmount": number, // 使用公款的原幣金額
+"useAdvance": boolean,
+"memberAdvance": { // 成員代墊明細 (UID: Amount)
+"uid_A": number,
+"uid_B": number
+}
+}
 
 ### Sub-collection: `tasks/{taskId}/settlements` (S30 Logic)
 
@@ -438,6 +468,22 @@ lib/
 
 - 狀態一律放在 Variants (`mode=active|settled`, `state=pending|cleared`)，不包含在 Page Key 中。
 
+## 15.5 記帳與餘額顯示規範 (Record & Balance UX)
+
+1.  **S13 Dashboard - 餘額顯示**：
+    - 主數字顯示 **「公款總價值 (Cash on Hand)」**，而非會計淨額。
+    - 點擊餘額區域，彈出 `Dialog` 顯示 **「分幣別庫存明細」** (e.g., JPY 20,000, TWD 500)。
+
+2.  **S15 Record Edit - 智慧支付選單 (Smart Picker)**：
+    - 當使用者切換「消費幣別」時，支付方式選單應動態排序。
+    - **優先顯示**：與消費幣別相同的公款餘額 (e.g., 選 JPY 時顯示 `公款 JPY (¥30,000)` )。
+    - **次要顯示**：其他幣別的公款餘額。
+    - **檢查機制**：若輸入金額 > 該幣別公款餘額，應顯示紅色錯誤提示，並阻擋儲存 (僅限純公款支付模式)。
+
+3.  **M3 Safe Area 規範 (Edge-to-Edge)**：
+    - 所有 Bottom Sheet (B02, B03, B07) 的底部 Action/Summary 區塊，必須加上 `MediaQuery.padding.bottom`。
+    - 背景色需延伸至螢幕最底端，內容則避開 Home Indicator，確保原生手勢操作流暢。
+
 ---
 
 ## 16. M3 UI Blocks
@@ -454,8 +500,30 @@ lib/
 - **PageSpec 的唯一真實來源：Notion / CSV**。
 - 查詢詳細 Layout / Interaction 請查閱 CSV。
 
+---
+
+## 待確認規格 (Pending Definitions)
+
+1.  **混合支付的結算邏輯 (Settlement for Mixed Payments)**：
+    - 需補完 S30 結算公式：`Credit = (PayerType == 'member' ? Total : 0) + (PayerType == 'mixed' ? memberAdvance[uid] : 0)`。
+2.  **多幣別餘額的匯率波動處理**：
+    - 需定義「換匯 (Transfer/Exchange)」行為：目前的 Record Model 是否足以表達「使用 USD 公款換取 JPY 公款」的損益紀錄？(MVP 暫定為一收一支)。
+3.  **Firestore 索引 (Indexes)**：
+    - 需建立 `firestore.indexes.json`，特別是針對 `tasks/{id}/records` 的 `date` (desc) + `member` 複合查詢。
+
 ## 變更紀錄（append-only）
 
+- **2026-01-28: 多幣別公款水位與混合支付邏輯修正 (v2.3)**
+  - **Logic Update (Calculator)**:
+    - 確立「公款水位 (Cash on Hand)」與「會計淨值 (Net Balance)」分離原則。
+    - 修正 `calculatePersonalCredit`: 納入 Expense 中的成員代墊 (Member Advance) 貢獻。
+    - 修正 `calculatePoolBalanceByBaseCurrency`: 支援 `mixed` 支付，精確扣除混合支付中的公款部分。
+    - 新增 `calculatePoolBalancesByOriginalCurrency`: 計算分幣別的物理庫存 (用於 S15 Smart Picker)。
+  - **Model Update**: `RecordModel` 新增 `originalAmount`, `originalCurrencyCode`, `amountInBase` Getters；資料庫讀寫維持 `currency` 欄位以相容舊資料。
+  - **UI Update**:
+    - S13: 餘額改為顯示「公款總價值」，並支援點擊查看分幣別庫存明細 (Breakdown Dialog)。
+    - S15: 實作 Smart Picker，支付選單優先顯示當前幣別餘額。
+    - B0X: 修正 BottomSheet Safe Area (Edge-to-Edge) 與小數點輸入限制。
 - 2026-01-21: 依最新 CSV（SoT）更新命名與 Schema。
   - Refactor: 確認 S10/S13/S15/S16 頁面體系。
   - Schema Update: 定義 Firestore Schema v2.0 (`remainderBuffer`, `totalPool`, `records` v2)。
