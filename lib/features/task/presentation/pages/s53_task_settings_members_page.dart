@@ -25,14 +25,13 @@ class _S53TaskSettingsMembersPageState
     extends State<S53TaskSettingsMembersPage> {
   bool _isProcessing = false;
 
-  /// 新增未連結成員 (Unlinked Member) - 寫入 Map
+  /// 新增未連結成員
   Future<void> _handleAddMember(Map<String, dynamic> currentMembersMap) async {
     final t = Translations.of(context);
     setState(() => _isProcessing = true);
 
     try {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      // 使用 timestamp 作為 Key，確保唯一性
       final newId = 'temp_$timestamp';
 
       final newMember = {
@@ -47,7 +46,6 @@ class _S53TaskSettingsMembersPageState
         'createdAt': timestamp,
       };
 
-      // 複製舊 Map 並新增一筆 (確保是 Map 操作)
       final updatedMap = Map<String, dynamic>.from(currentMembersMap);
       updatedMap[newId] = newMember;
 
@@ -73,17 +71,58 @@ class _S53TaskSettingsMembersPageState
     }
   }
 
-  /// 修改預設比例 - 更新 Map
+  /// 修改成員名稱 (Rename) - 使用 Dialog 觸發
+  Future<void> _handleRenameMember(Map<String, dynamic> currentMembersMap,
+      String memberId, String newName) async {
+    final trimmedName = newName.trim();
+    if (trimmedName.isEmpty) return;
+
+    // 1. 取得舊資料
+    final oldData = currentMembersMap[memberId] as Map<String, dynamic>?;
+    if (oldData == null) return;
+
+    // 如果名字沒變，不執行寫入
+    if (oldData['name'] == trimmedName) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      // 2. 準備更新資料 (深拷貝以避免 Reference Error)
+      final updatedMap = Map<String, dynamic>.from(currentMembersMap);
+
+      // 複製單個成員資料
+      final updatedMemberData = Map<String, dynamic>.from(oldData);
+      updatedMemberData['name'] = trimmedName;
+
+      // 放回大 Map
+      updatedMap[memberId] = updatedMemberData;
+
+      // 3. 寫入 Firestore
+      await FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(widget.taskId)
+          .update({'members': updatedMap});
+    } catch (e) {
+      debugPrint("Rename failed: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Rename failed: $e")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isProcessing = false);
+    }
+  }
+
+  /// 修改預設比例
   Future<void> _handleRatioChange(Map<String, dynamic> currentMembersMap,
       String memberId, double newRatio) async {
+    // 這裡也要確保 Deep Copy，防止 Immutable 錯誤
     final updatedMap = Map<String, dynamic>.from(currentMembersMap);
 
-    // 確保該 Key 存在
     if (updatedMap.containsKey(memberId)) {
-      // 需要先轉成 Map 才能修改內部欄位
       final memberData = Map<String, dynamic>.from(updatedMap[memberId] as Map);
       memberData['defaultSplitRatio'] = newRatio;
-
       updatedMap[memberId] = memberData;
 
       await FirebaseFirestore.instance
@@ -93,19 +132,17 @@ class _S53TaskSettingsMembersPageState
     }
   }
 
-  /// 刪除成員 - 從 Map 移除 Key
+  /// 刪除成員
   Future<void> _handleDeleteMember(
       Map<String, dynamic> currentMembersMap, String memberId) async {
     final t = Translations.of(context);
-
-    // 取得要刪除的成員資料 (用於 Log)
     final memberToDelete = currentMembersMap[memberId] as Map<String, dynamic>?;
     if (memberToDelete == null) return;
 
     setState(() => _isProcessing = true);
 
     try {
-      // 1. 髒檢查 (Dirty Check)
+      // 1. 髒檢查
       final recordsSnapshot = await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
@@ -116,25 +153,18 @@ class _S53TaskSettingsMembersPageState
 
       for (var doc in recordsSnapshot.docs) {
         final data = doc.data();
-
-        // A. 檢查付款人 (payerId)
         if (data['payerId'] == memberId) {
           hasData = true;
           break;
         }
-
-        // B. 檢查多重付款人
         if (data['payment'] != null &&
             data['payment']['contributors'] is List) {
           final contributors = data['payment']['contributors'] as List;
-          // 這裡檢查 contributors 裡面有沒有這個 uid
           if (contributors.any((c) => (c as Map)['uid'] == memberId)) {
             hasData = true;
             break;
           }
         }
-
-        // C. 檢查分帳對象 (簡單字串檢查 ID 是否存在於文件內容中)
         final jsonString = data.toString();
         if (jsonString.contains(memberId)) {
           hasData = true;
@@ -152,7 +182,7 @@ class _S53TaskSettingsMembersPageState
         return;
       }
 
-      // 2. 執行刪除 (Map Remove)
+      // 2. 執行刪除
       final updatedMap = Map<String, dynamic>.from(currentMembersMap);
       updatedMap.remove(memberId);
 
@@ -184,14 +214,51 @@ class _S53TaskSettingsMembersPageState
       );
     } catch (e) {
       debugPrint("Invite Error: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to generate invite code")),
-        );
-      }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
     }
+  }
+
+  /// 顯示更名 Dialog [UI 優化]
+  void _showRenameDialog(
+      Map<String, dynamic> membersMap, String memberId, String currentName) {
+    final t = Translations.of(context);
+    final controller = TextEditingController(text: currentName);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(t.S53_TaskSettings_Members.title), // 或 "編輯名稱"
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              labelText: t.S53_TaskSettings_Members.member_name,
+              border: OutlineInputBorder(),
+            ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (val) {
+              Navigator.pop(context);
+              _handleRenameMember(membersMap, memberId, val);
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(t.common.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _handleRenameMember(membersMap, memberId, controller.text);
+              },
+              child: Text(t.common.confirm),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -220,7 +287,7 @@ class _S53TaskSettingsMembersPageState
           final taskData = snapshot.data!.data() as Map<String, dynamic>?;
           if (taskData == null) return const SizedBox();
 
-          // 1. 安全讀取 members Map
+          // 1. 讀取成員
           final rawMembers = taskData['members'];
           final Map<String, dynamic> membersMap = (rawMembers is Map)
               ? Map<String, dynamic>.from(rawMembers)
@@ -229,26 +296,20 @@ class _S53TaskSettingsMembersPageState
           final createdBy = taskData['createdBy'] as String?;
           final taskName = taskData['name'] as String? ?? 'Task';
 
-          // 2. 轉換為 List<MapEntry> (解決 getter key 錯誤的關鍵)
-          // Explicitly typing helps debugging and type safety
+          // 2. 轉換為 List
           final List<MapEntry<String, dynamic>> membersList =
               membersMap.entries.toList();
 
-          // 3. 排序邏輯
+          // 3. 排序
           membersList.sort((a, b) {
             final dataA = a.value as Map<String, dynamic>;
             final dataB = b.value as Map<String, dynamic>;
-
-            // A. 已連結優先
             final bool isALinked =
                 dataA['status'] == 'linked' || (dataA['isLinked'] == true);
             final bool isBLinked =
                 dataB['status'] == 'linked' || (dataB['isLinked'] == true);
-
             if (isALinked && !isBLinked) return -1;
             if (!isALinked && isBLinked) return 1;
-
-            // B. 建立時間排序
             final int tA = dataA['createdAt'] as int? ?? 0;
             final int tB = dataB['createdAt'] as int? ?? 0;
             return tA.compareTo(tB);
@@ -256,7 +317,6 @@ class _S53TaskSettingsMembersPageState
 
           return Column(
             children: [
-              // 成員列表
               Expanded(
                 child: ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -264,10 +324,9 @@ class _S53TaskSettingsMembersPageState
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final entry = membersList[index];
-                    final memberId = entry.key; // 這是 Map 的 Key，絕對安全
+                    final memberId = entry.key;
                     final memberData = entry.value as Map<String, dynamic>;
 
-                    // 判斷邏輯：ID 是否等於 createdBy
                     final bool isOwner =
                         (createdBy != null && memberId == createdBy);
 
@@ -278,13 +337,14 @@ class _S53TaskSettingsMembersPageState
                       onRatioChanged: (val) =>
                           _handleRatioChange(membersMap, memberId, val),
                       onDelete: () => _handleDeleteMember(membersMap, memberId),
+                      // [UI優化] 傳入 onEdit callback 觸發 Dialog
+                      onEdit: () => _showRenameDialog(
+                          membersMap, memberId, memberData['name'] ?? ''),
                       isProcessing: _isProcessing,
                     );
                   },
                 ),
               ),
-
-              // 底部按鈕區 (左右並排)
               SafeArea(
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -300,7 +360,6 @@ class _S53TaskSettingsMembersPageState
                   ),
                   child: Row(
                     children: [
-                      // 左邊：邀請
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: _isProcessing
@@ -314,7 +373,6 @@ class _S53TaskSettingsMembersPageState
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // 右邊：新增
                       Expanded(
                         child: FilledButton.icon(
                           onPressed: _isProcessing
@@ -344,6 +402,7 @@ class _MemberTile extends StatelessWidget {
   final bool isOwner;
   final ValueChanged<double> onRatioChanged;
   final VoidCallback onDelete;
+  final VoidCallback onEdit; // [修改] 改為無參數 callback，點擊觸發 Dialog
   final bool isProcessing;
 
   const _MemberTile({
@@ -352,6 +411,7 @@ class _MemberTile extends StatelessWidget {
     required this.isOwner,
     required this.onRatioChanged,
     required this.onDelete,
+    required this.onEdit,
     required this.isProcessing,
   });
 
@@ -360,11 +420,17 @@ class _MemberTile extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
-    final name = member['displayName'] ?? member['name'] ?? 'Unknown';
     final isLinked =
         member['status'] == 'linked' || (member['isLinked'] == true);
     final avatarId = member['avatar'];
     final ratio = (member['defaultSplitRatio'] as num? ?? 1.0).toDouble();
+
+    String displayLabel;
+    if (isLinked) {
+      displayLabel = member['displayName'] ?? member['name'] ?? 'Unknown';
+    } else {
+      displayLabel = member['name'] ?? 'Unknown';
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -378,7 +444,7 @@ class _MemberTile extends StatelessWidget {
         children: [
           CommonAvatar(
             avatarId: avatarId,
-            name: name,
+            name: displayLabel,
             radius: 20,
             isLinked: isLinked,
           ),
@@ -387,28 +453,49 @@ class _MemberTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                // [UI優化] 名字顯示區
+                GestureDetector(
+                  // 只有未連結成員可以點擊修改
+                  onTap: (!isLinked && !isProcessing) ? onEdit : null,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min, // 讓 Row 緊貼內容
+                    children: [
+                      Flexible(
+                        child: Text(
+                          displayLabel,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            // 如果可編輯，加一點底線提示 (可選)
+                            decoration:
+                                (!isLinked) ? TextDecoration.underline : null,
+                            decorationStyle: TextDecorationStyle.dotted,
+                            decorationColor: theme.colorScheme.outline,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    if (isOwner) ...[
-                      const SizedBox(width: 4),
-                      Icon(Icons.star,
-                          size: 14, color: theme.colorScheme.primary),
+                      // 標記區：隊長星號 OR 編輯鉛筆
+                      if (isOwner) ...[
+                        const SizedBox(width: 8),
+                        Icon(Icons.star_rounded,
+                            size: 14, color: theme.colorScheme.primary),
+                      ] else if (!isLinked) ...[
+                        // [新增] 顯性的編輯按鈕
+                        const SizedBox(width: 8),
+                        Icon(Icons.edit_rounded,
+                            size: 14,
+                            color: theme.colorScheme.primary
+                                .withValues(alpha: 0.7)),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
+
+          // 比例控制區
           Row(
             children: [
               Text(
@@ -428,15 +515,9 @@ class _MemberTile extends StatelessWidget {
           ),
           const SizedBox(width: 8),
 
-          // 隊長顯示鎖頭，其他人顯示刪除
+          // 刪除按鈕 / 佔位符
           if (isOwner)
-            SizedBox(
-              width: 40,
-              height: 40,
-              child: Icon(Icons.lock_outline,
-                  size: 18,
-                  color: theme.colorScheme.outline.withValues(alpha: 0.5)),
-            )
+            const SizedBox(width: 40, height: 40)
           else
             IconButton(
               onPressed: isProcessing ? null : onDelete,

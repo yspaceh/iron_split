@@ -45,14 +45,14 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
-	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
-	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
 	late final TranslationsS11InviteConfirmZhTw S11_Invite_Confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
 	late final TranslationsS13TaskDashboardZhTw S13_Task_Dashboard = TranslationsS13TaskDashboardZhTw.internal(_root);
 	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
+	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
+	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
 	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
 	late final TranslationsS71SystemSettingsTosZhTw S71_SystemSettings_Tos = TranslationsS71SystemSettingsTosZhTw.internal(_root);
@@ -300,72 +300,6 @@ class TranslationsDialogZhTw {
 
 	/// zh-TW: '變更將不會被儲存，確定要離開嗎？'
 	String get unsaved_changes_content => '變更將不會被儲存，確定要離開嗎？';
-}
-
-// Path: S50_Onboarding_Consent
-class TranslationsS50OnboardingConsentZhTw {
-	TranslationsS50OnboardingConsentZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '歡迎使用 Iron Split'
-	String get title => '歡迎使用 Iron Split';
-
-	/// zh-TW: '歡迎使用 Iron Split。點擊開始即代表您同意我們的 '
-	String get content_prefix => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
-
-	/// zh-TW: '服務條款'
-	String get terms_link => '服務條款';
-
-	/// zh-TW: ' 與 '
-	String get and => ' 與 ';
-
-	/// zh-TW: '隱私政策'
-	String get privacy_link => '隱私政策';
-
-	/// zh-TW: '。我們採用匿名登入，保障您的隱私。'
-	String get content_suffix => '。我們採用匿名登入，保障您的隱私。';
-
-	/// zh-TW: '開始使用'
-	String get agree_btn => '開始使用';
-
-	/// zh-TW: '登入失敗: {message}'
-	String login_failed({required Object message}) => '登入失敗: ${message}';
-}
-
-// Path: S51_Onboarding_Name
-class TranslationsS51OnboardingNameZhTw {
-	TranslationsS51OnboardingNameZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '名稱設定'
-	String get title => '名稱設定';
-
-	/// zh-TW: '請輸入您在 App 內的顯示名稱（1-10 個字）。'
-	String get description => '請輸入您在 App 內的顯示名稱（1-10 個字）。';
-
-	/// zh-TW: '輸入暱稱'
-	String get field_hint => '輸入暱稱';
-
-	/// zh-TW: '{current}/10'
-	String field_counter({required Object current}) => '${current}/10';
-
-	/// zh-TW: '名稱不能為空'
-	String get error_empty => '名稱不能為空';
-
-	/// zh-TW: '最多 10 個字'
-	String get error_too_long => '最多 10 個字';
-
-	/// zh-TW: '包含無效字元'
-	String get error_invalid_char => '包含無效字元';
-
-	/// zh-TW: '設定完成'
-	String get action_next => '設定完成';
 }
 
 // Path: S10_Home_TaskList
@@ -764,6 +698,72 @@ class TranslationsS16TaskCreateEditZhTw {
 	String get label_currency => '貨幣';
 }
 
+// Path: S50_Onboarding_Consent
+class TranslationsS50OnboardingConsentZhTw {
+	TranslationsS50OnboardingConsentZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '歡迎使用 Iron Split'
+	String get title => '歡迎使用 Iron Split';
+
+	/// zh-TW: '歡迎使用 Iron Split。點擊開始即代表您同意我們的 '
+	String get content_prefix => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
+
+	/// zh-TW: '服務條款'
+	String get terms_link => '服務條款';
+
+	/// zh-TW: ' 與 '
+	String get and => ' 與 ';
+
+	/// zh-TW: '隱私政策'
+	String get privacy_link => '隱私政策';
+
+	/// zh-TW: '。我們採用匿名登入，保障您的隱私。'
+	String get content_suffix => '。我們採用匿名登入，保障您的隱私。';
+
+	/// zh-TW: '開始使用'
+	String get agree_btn => '開始使用';
+
+	/// zh-TW: '登入失敗: {message}'
+	String login_failed({required Object message}) => '登入失敗: ${message}';
+}
+
+// Path: S51_Onboarding_Name
+class TranslationsS51OnboardingNameZhTw {
+	TranslationsS51OnboardingNameZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '名稱設定'
+	String get title => '名稱設定';
+
+	/// zh-TW: '請輸入您在 App 內的顯示名稱（1-10 個字）。'
+	String get description => '請輸入您在 App 內的顯示名稱（1-10 個字）。';
+
+	/// zh-TW: '輸入暱稱'
+	String get field_hint => '輸入暱稱';
+
+	/// zh-TW: '{current}/10'
+	String field_counter({required Object current}) => '${current}/10';
+
+	/// zh-TW: '名稱不能為空'
+	String get error_empty => '名稱不能為空';
+
+	/// zh-TW: '最多 10 個字'
+	String get error_too_long => '最多 10 個字';
+
+	/// zh-TW: '包含無效字元'
+	String get error_invalid_char => '包含無效字元';
+
+	/// zh-TW: '設定完成'
+	String get action_next => '設定完成';
+}
+
 // Path: S52_TaskSettings_Log
 class TranslationsS52TaskSettingsLogZhTw {
 	TranslationsS52TaskSettingsLogZhTw.internal(this._root);
@@ -842,6 +842,9 @@ class TranslationsS53TaskSettingsMembersZhTw {
 
 	/// zh-TW: '成員'
 	String get member_default_name => '成員';
+
+	/// zh-TW: '成員名稱'
+	String get member_name => '成員名稱';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -1347,22 +1350,6 @@ extension on Translations {
 			'log_action.unknown' => '未知操作',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
-			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
-			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
-			'S50_Onboarding_Consent.terms_link' => '服務條款',
-			'S50_Onboarding_Consent.and' => ' 與 ',
-			'S50_Onboarding_Consent.privacy_link' => '隱私政策',
-			'S50_Onboarding_Consent.content_suffix' => '。我們採用匿名登入，保障您的隱私。',
-			'S50_Onboarding_Consent.agree_btn' => '開始使用',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
-			'S51_Onboarding_Name.title' => '名稱設定',
-			'S51_Onboarding_Name.description' => '請輸入您在 App 內的顯示名稱（1-10 個字）。',
-			'S51_Onboarding_Name.field_hint' => '輸入暱稱',
-			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
-			'S51_Onboarding_Name.error_empty' => '名稱不能為空',
-			'S51_Onboarding_Name.error_too_long' => '最多 10 個字',
-			'S51_Onboarding_Name.error_invalid_char' => '包含無效字元',
-			'S51_Onboarding_Name.action_next' => '設定完成',
 			'S10_Home_TaskList.title' => '我的任務',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '已完成',
@@ -1477,6 +1464,22 @@ extension on Translations {
 			'S16_TaskCreate_Edit.label_name' => '任務名稱',
 			'S16_TaskCreate_Edit.label_date' => '日期',
 			'S16_TaskCreate_Edit.label_currency' => '貨幣',
+			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
+			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
+			'S50_Onboarding_Consent.terms_link' => '服務條款',
+			'S50_Onboarding_Consent.and' => ' 與 ',
+			'S50_Onboarding_Consent.privacy_link' => '隱私政策',
+			'S50_Onboarding_Consent.content_suffix' => '。我們採用匿名登入，保障您的隱私。',
+			'S50_Onboarding_Consent.agree_btn' => '開始使用',
+			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
+			'S51_Onboarding_Name.title' => '名稱設定',
+			'S51_Onboarding_Name.description' => '請輸入您在 App 內的顯示名稱（1-10 個字）。',
+			'S51_Onboarding_Name.field_hint' => '輸入暱稱',
+			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
+			'S51_Onboarding_Name.error_empty' => '名稱不能為空',
+			'S51_Onboarding_Name.error_too_long' => '最多 10 個字',
+			'S51_Onboarding_Name.error_invalid_char' => '包含無效字元',
+			'S51_Onboarding_Name.action_next' => '設定完成',
 			'S52_TaskSettings_Log.title' => '活動紀錄',
 			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
 			'S52_TaskSettings_Log.action_export_csv' => '匯出 CSV',
@@ -1501,6 +1504,7 @@ extension on Translations {
 			'S53_TaskSettings_Members.dialog_delete_error_title' => '無法刪除成員',
 			'S53_TaskSettings_Members.dialog_delete_error_content' => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。',
 			'S53_TaskSettings_Members.member_default_name' => '成員',
+			'S53_TaskSettings_Members.member_name' => '成員名稱',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.action_reroll' => '換個動物',

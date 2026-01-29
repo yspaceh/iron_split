@@ -414,6 +414,7 @@ class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSetting
 	@override String get dialog_delete_error_title => 'Member Deletion Error';
 	@override String get dialog_delete_error_content => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.';
 	@override String get member_default_name => 'Member';
+	@override String get member_name => 'Member Name';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -901,6 +902,7 @@ extension on TranslationsEnUs {
 			'S53_TaskSettings_Members.dialog_delete_error_title' => 'Member Deletion Error',
 			'S53_TaskSettings_Members.dialog_delete_error_content' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
+			'S53_TaskSettings_Members.member_name' => 'Member Name',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.action_reroll' => 'Change Animal',

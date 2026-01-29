@@ -246,7 +246,8 @@
     "label_default_ratio": "Default Ratio",
     "dialog_delete_error_title": "Member Deletion Error",
     "dialog_delete_error_content": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.",
-    "member_default_name": "Member"
+    "member_default_name": "Member",
+    "member_name": "Member Name"
   },
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"

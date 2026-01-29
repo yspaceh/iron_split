@@ -414,6 +414,7 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	@override String get dialog_delete_error_title => 'メンバー削除エラー';
 	@override String get dialog_delete_error_content => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 	@override String get member_default_name => 'メンバー';
+	@override String get member_name => 'メンバー名';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -897,6 +898,7 @@ extension on TranslationsJaJp {
 			'S53_TaskSettings_Members.dialog_delete_error_title' => 'メンバー削除エラー',
 			'S53_TaskSettings_Members.dialog_delete_error_content' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
+			'S53_TaskSettings_Members.member_name' => 'メンバー名',
 			'S71_SystemSettings_Tos.title' => '利用規約',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.action_reroll' => '動物を変える',
