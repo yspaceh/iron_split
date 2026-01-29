@@ -155,7 +155,8 @@
     "menu_member_settings": "成員設定",
     "menu_history": "歷史紀錄",
     "menu_end_task": "結束任務",
-    "field_remainder_rule": "零頭處理"
+    "field_remainder_rule": "零頭處理",
+    "section_remainder": "剩餘款"
   },
   "S15_Record_Edit": {
     "title_create": "記一筆",
@@ -194,7 +195,10 @@
     "base_card_title": "剩餘金額 (Base)",
     "type_income_title": "預收款",
     "base_card_title_expense": "剩餘金額 (Base)",
-    "base_card_title_income": "資金來源 (入金者)"
+    "base_card_title_income": "資金來源 (入金者)",
+    "method_share": "份數",
+    "method_adjustment": "調整",
+    "payer_multiple" : "多人"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
@@ -209,7 +213,10 @@
     "field_member_count": "參加人數",
     "action_save": "保存",
     "picker_done": "確定",
-    "error_name_empty": "請輸入任務名稱"
+    "error_name_empty": "請輸入任務名稱",
+    "label_name": "任務名稱",
+    "label_date": "日期",
+    "label_currency": "貨幣"
   },
   "S52_TaskSettings_Log": {
     "title": "活動紀錄",
@@ -221,7 +228,16 @@
       "user": "操作者",
       "action": "動作",
       "details": "內容"
-    }
+    },
+    "type_income": "預收",
+    "type_expense": "支出",
+    "label_payment": "支付",
+    "payment_income": "預收款",
+    "payment_pool": "公款支付",
+    "payment_single_suffix": "代墊",
+    "payment_multiple": "多人代墊",
+    "unit_members": "人",
+    "unit_items": "細項"
   },
   "S71_SystemSettings_Tos": {
     "title": "服務條款"

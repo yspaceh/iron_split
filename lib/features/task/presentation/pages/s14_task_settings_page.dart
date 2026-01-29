@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
+import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
+import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
@@ -32,6 +35,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
   String? _createdBy;
   bool _isLoading = true;
   Map<String, dynamic> _membersData = {};
+  String? _initialName;
 
   @override
   void initState() {
@@ -64,6 +68,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
       if (doc.exists && mounted) {
         final data = doc.data()!;
         _nameController.text = data['name'] ?? '';
+        _initialName = data['name'] ?? '';
 
         setState(() {
           _startDate = (data['startDate'] as Timestamp?)?.toDate();
@@ -86,12 +91,22 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
   Future<void> _updateName() async {
     final newName = _nameController.text.trim();
     if (newName.isEmpty) return;
+    if (newName == _initialName) return;
+    _initialName = newName;
     await FirebaseFirestore.instance
         .collection('tasks')
         .doc(widget.taskId)
         .update({
       'name': newName,
     });
+    ActivityLogService.log(
+      taskId: widget.taskId,
+      action: LogAction.updateSettings,
+      details: {
+        'settingType': 'task_name', // 代碼
+        'newValue': newName, // 原文 (e.g., "大阪之旅")
+      },
+    );
   }
 
   Future<void> _updateDateRange(DateTime start, DateTime end) async {
@@ -106,6 +121,17 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
       'startDate': Timestamp.fromDate(start),
       'endDate': Timestamp.fromDate(end),
     });
+    final dateStr =
+        "${DateFormat('yyyy/MM/dd').format(start)} - ${DateFormat('yyyy/MM/dd').format(end)}";
+    // [Log] Update Date
+    ActivityLogService.log(
+      taskId: widget.taskId,
+      action: LogAction.updateSettings,
+      details: {
+        'settingType': 'date_range',
+        'newValue': dateStr,
+      },
+    );
   }
 
   Future<void> _handleCurrencyChange(CurrencyOption newCurrency) async {
@@ -124,6 +150,15 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
           .update({
         'baseCurrency': newCurrency.code,
       });
+      // [Log] Update Currency
+      ActivityLogService.log(
+        taskId: widget.taskId,
+        action: LogAction.updateSettings,
+        details: {
+          'settingType': 'currency',
+          'newValue': newCurrency.code, // e.g., "TWD"
+        },
+      );
     }
   }
 
@@ -135,6 +170,15 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
         .update({
       'remainderRule': newRule,
     });
+    // [Log] Update Remainder Rule
+    ActivityLogService.log(
+      taskId: widget.taskId,
+      action: LogAction.updateSettings,
+      details: {
+        'settingType': 'remainder_rule',
+        'newValue': newRule, // e.g., "random" (Model will translate this)
+      },
+    );
   }
 
   // --- Build UI ---

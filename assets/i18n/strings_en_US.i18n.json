@@ -155,7 +155,8 @@
     "menu_member_settings": "Member Settings",
     "menu_history": "History",
     "menu_end_task": "End Task",
-    "field_remainder_rule": "Remainder Rule"
+    "field_remainder_rule": "Remainder Rule",
+    "section_remainder": "Remainder"
   },
   "S15_Record_Edit": {
     "title_create": "Add Expense",
@@ -194,7 +195,10 @@
     "base_card_title": "Remaining Balance (Base)",
     "type_income_title": "Income",
     "base_card_title_expense": "Remaining (Base)",
-    "base_card_title_income": "Contributors (Source)"
+    "base_card_title_income": "Contributors (Source)",
+    "method_share": "Share",
+    "method_adjustment": "Adjustment",
+    "payer_multiple" : "Multiple Payers"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
@@ -209,7 +213,10 @@
     "field_member_count": "Members",
     "action_save": "Save",
     "picker_done": "Done",
-    "error_name_empty": "Please enter task name"
+    "error_name_empty": "Please enter task name",
+    "label_name": "Task Name",
+    "label_date": "Date",
+    "label_currency": "Currency"
   },
   "S52_TaskSettings_Log": {
     "title": "Activity Log",
@@ -221,7 +228,16 @@
       "user": "User",
       "action": "Action",
       "details": "Details"
-    }
+    },
+    "type_income": "Income",
+    "type_expense": "Expense",
+    "label_payment": "Payment",
+    "payment_income": "Advance",
+    "payment_pool": "Paid from Pool",
+    "payment_single_suffix": " paid",
+    "payment_multiple": "Multiple Payers",
+    "unit_members": "ppl",
+    "unit_items": "items"
   },
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"

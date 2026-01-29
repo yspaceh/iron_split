@@ -299,6 +299,7 @@ class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
 	@override String get menu_history => '履歴';
 	@override String get menu_end_task => 'タスク終了';
 	@override String get field_remainder_rule => '端数処理';
+	@override String get section_remainder => '残高';
 }
 
 // Path: S15_Record_Edit
@@ -345,6 +346,9 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get type_income_title => '預り金';
 	@override String get base_card_title_expense => '残額 (Base)';
 	@override String get base_card_title_income => '資金提供者';
+	@override String get method_share => '人数';
+	@override String get method_adjustment => '調整';
+	@override String get payer_multiple => '複数人';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -367,6 +371,9 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override String get action_save => '保存';
 	@override String get picker_done => '完了';
 	@override String get error_name_empty => 'タスク名を入力してください';
+	@override String get label_name => 'タスク名';
+	@override String get label_date => '日付';
+	@override String get label_currency => '通貨';
 }
 
 // Path: S52_TaskSettings_Log
@@ -381,6 +388,15 @@ class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLog
 	@override String get action_export_csv => 'CSVエクスポート';
 	@override String get export_file_prefix => '活動履歴';
 	@override late final _TranslationsS52TaskSettingsLogCsvHeaderJaJp csv_header = _TranslationsS52TaskSettingsLogCsvHeaderJaJp._(_root);
+	@override String get type_income => '収入';
+	@override String get type_expense => '支出';
+	@override String get label_payment => '支払';
+	@override String get payment_income => '前受金';
+	@override String get payment_pool => '共益費払';
+	@override String get payment_single_suffix => '立替';
+	@override String get payment_multiple => '複数立替';
+	@override String get unit_members => '名';
+	@override String get unit_items => '項目';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -783,6 +799,7 @@ extension on TranslationsJaJp {
 			'S14_Task_Settings.menu_history' => '履歴',
 			'S14_Task_Settings.menu_end_task' => 'タスク終了',
 			'S14_Task_Settings.field_remainder_rule' => '端数処理',
+			'S14_Task_Settings.section_remainder' => '残高',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',
 			'S15_Record_Edit.section_split' => '割り勘情報',
@@ -820,6 +837,9 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.type_income_title' => '預り金',
 			'S15_Record_Edit.base_card_title_expense' => '残額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金提供者',
+			'S15_Record_Edit.method_share' => '人数',
+			'S15_Record_Edit.method_adjustment' => '調整',
+			'S15_Record_Edit.payer_multiple' => '複数人',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.section_name' => 'タスク名',
 			'S16_TaskCreate_Edit.section_period' => '期間',
@@ -833,6 +853,9 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '完了',
 			'S16_TaskCreate_Edit.error_name_empty' => 'タスク名を入力してください',
+			'S16_TaskCreate_Edit.label_name' => 'タスク名',
+			'S16_TaskCreate_Edit.label_date' => '日付',
+			'S16_TaskCreate_Edit.label_currency' => '通貨',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
 			'S52_TaskSettings_Log.action_export_csv' => 'CSVエクスポート',
@@ -841,6 +864,15 @@ extension on TranslationsJaJp {
 			'S52_TaskSettings_Log.csv_header.user' => '操作者',
 			'S52_TaskSettings_Log.csv_header.action' => '操作',
 			'S52_TaskSettings_Log.csv_header.details' => '詳細',
+			'S52_TaskSettings_Log.type_income' => '収入',
+			'S52_TaskSettings_Log.type_expense' => '支出',
+			'S52_TaskSettings_Log.label_payment' => '支払',
+			'S52_TaskSettings_Log.payment_income' => '前受金',
+			'S52_TaskSettings_Log.payment_pool' => '共益費払',
+			'S52_TaskSettings_Log.payment_single_suffix' => '立替',
+			'S52_TaskSettings_Log.payment_multiple' => '複数立替',
+			'S52_TaskSettings_Log.unit_members' => '名',
+			'S52_TaskSettings_Log.unit_items' => '項目',
 			'S71_SystemSettings_Tos.title' => '利用規約',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.action_reroll' => '動物を変える',

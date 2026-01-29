@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/features/task/presentation/widgets/activity_log_block.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -65,7 +66,7 @@ class _S52TaskSettingsLogPageState extends State<S52TaskSettingsLogPage> {
         // Resolve Action & Details using Model
         final timeStr = dateFormat.format(log.createdAt);
         final actionStr = log.getLocalizedAction(context);
-        final detailsStr = log.getFormattedDetails(); // 包含金額幣別格式化
+        final detailsStr = log.getFormattedDetails(context); // 包含金額幣別格式化
 
         // Escape CSV fields (handle commas in content)
         String escape(String s) {
@@ -165,41 +166,11 @@ class _S52TaskSettingsLogPageState extends State<S52TaskSettingsLogPage> {
                   separatorBuilder: (context, index) =>
                       const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    // Convert to Model
                     final log = ActivityLogModel.fromFirestore(docs[index]);
 
-                    // Resolve Operator Info
-                    final member = widget.membersData[log.operatorUid]
-                        as Map<String, dynamic>?;
-                    final displayName =
-                        member?['displayName'] as String? ?? 'Unknown';
-                    final avatarId = member?['avatar'] as dynamic;
-
-                    // Format Data
-                    final actionStr = log.getLocalizedAction(context);
-                    final detailsStr = log.getFormattedDetails();
-                    final timeStr =
-                        DateFormat('yyyy/MM/dd HH:mm').format(log.createdAt);
-
-                    return ListTile(
-                      leading: CommonAvatar(
-                        avatarId: avatarId,
-                        name: displayName,
-                        radius: 20,
-                      ),
-                      title: Text(
-                        '$actionStr: $detailsStr',
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        '$displayName • $timeStr',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
+                    return ActivityLogBlock(
+                      log: log,
+                      memberData: widget.membersData, // 直接傳入整包資料
                     );
                   },
                 );

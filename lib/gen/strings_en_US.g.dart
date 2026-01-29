@@ -299,6 +299,7 @@ class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
 	@override String get menu_history => 'History';
 	@override String get menu_end_task => 'End Task';
 	@override String get field_remainder_rule => 'Remainder Rule';
+	@override String get section_remainder => 'Remainder';
 }
 
 // Path: S15_Record_Edit
@@ -345,6 +346,9 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get type_income_title => 'Income';
 	@override String get base_card_title_expense => 'Remaining (Base)';
 	@override String get base_card_title_income => 'Contributors (Source)';
+	@override String get method_share => 'Share';
+	@override String get method_adjustment => 'Adjustment';
+	@override String get payer_multiple => 'Multiple Payers';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -367,6 +371,9 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override String get action_save => 'Save';
 	@override String get picker_done => 'Done';
 	@override String get error_name_empty => 'Please enter task name';
+	@override String get label_name => 'Task Name';
+	@override String get label_date => 'Date';
+	@override String get label_currency => 'Currency';
 }
 
 // Path: S52_TaskSettings_Log
@@ -381,6 +388,15 @@ class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLog
 	@override String get action_export_csv => 'Export CSV';
 	@override String get export_file_prefix => 'Activity_Log';
 	@override late final _TranslationsS52TaskSettingsLogCsvHeaderEnUs csv_header = _TranslationsS52TaskSettingsLogCsvHeaderEnUs._(_root);
+	@override String get type_income => 'Income';
+	@override String get type_expense => 'Expense';
+	@override String get label_payment => 'Payment';
+	@override String get payment_income => 'Advance';
+	@override String get payment_pool => 'Paid from Pool';
+	@override String get payment_single_suffix => ' paid';
+	@override String get payment_multiple => 'Multiple Payers';
+	@override String get unit_members => 'ppl';
+	@override String get unit_items => 'items';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -787,6 +803,7 @@ extension on TranslationsEnUs {
 			'S14_Task_Settings.menu_history' => 'History',
 			'S14_Task_Settings.menu_end_task' => 'End Task',
 			'S14_Task_Settings.field_remainder_rule' => 'Remainder Rule',
+			'S14_Task_Settings.section_remainder' => 'Remainder',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',
 			'S15_Record_Edit.section_split' => 'Split Info',
@@ -824,6 +841,9 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.type_income_title' => 'Income',
 			'S15_Record_Edit.base_card_title_expense' => 'Remaining (Base)',
 			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
+			'S15_Record_Edit.method_share' => 'Share',
+			'S15_Record_Edit.method_adjustment' => 'Adjustment',
+			'S15_Record_Edit.payer_multiple' => 'Multiple Payers',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.section_name' => 'Task Name',
 			'S16_TaskCreate_Edit.section_period' => 'Period',
@@ -837,6 +857,9 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.action_save' => 'Save',
 			'S16_TaskCreate_Edit.picker_done' => 'Done',
 			'S16_TaskCreate_Edit.error_name_empty' => 'Please enter task name',
+			'S16_TaskCreate_Edit.label_name' => 'Task Name',
+			'S16_TaskCreate_Edit.label_date' => 'Date',
+			'S16_TaskCreate_Edit.label_currency' => 'Currency',
 			'S52_TaskSettings_Log.title' => 'Activity Log',
 			'S52_TaskSettings_Log.empty_log' => 'No activity logs found',
 			'S52_TaskSettings_Log.action_export_csv' => 'Export CSV',
@@ -845,6 +868,15 @@ extension on TranslationsEnUs {
 			'S52_TaskSettings_Log.csv_header.user' => 'User',
 			'S52_TaskSettings_Log.csv_header.action' => 'Action',
 			'S52_TaskSettings_Log.csv_header.details' => 'Details',
+			'S52_TaskSettings_Log.type_income' => 'Income',
+			'S52_TaskSettings_Log.type_expense' => 'Expense',
+			'S52_TaskSettings_Log.label_payment' => 'Payment',
+			'S52_TaskSettings_Log.payment_income' => 'Advance',
+			'S52_TaskSettings_Log.payment_pool' => 'Paid from Pool',
+			'S52_TaskSettings_Log.payment_single_suffix' => ' paid',
+			'S52_TaskSettings_Log.payment_multiple' => 'Multiple Payers',
+			'S52_TaskSettings_Log.unit_members' => 'ppl',
+			'S52_TaskSettings_Log.unit_items' => 'items',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.action_reroll' => 'Change Animal',

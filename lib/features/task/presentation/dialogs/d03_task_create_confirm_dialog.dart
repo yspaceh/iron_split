@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
+import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -118,6 +120,20 @@ class _D03TaskCreateConfirmDialogState
         'members': membersMap,
         'activeInviteCode': null,
       });
+
+      final dateStr =
+          "${DateFormat('yyyy/MM/dd').format(widget.startDate)} - ${DateFormat('yyyy/MM/dd').format(widget.endDate)}";
+
+      await ActivityLogService.log(
+        taskId: docRef.id,
+        action: LogAction.createTask,
+        details: {
+          'recordName': widget.taskName,
+          'currency': widget.baseCurrencyOption.code,
+          'memberCount': widget.memberCount,
+          'dateRange': dateStr,
+        },
+      );
 
       // 2. 若有邀請需求 (人數 > 1) -> 產生 Invite Code 並分享
       if (widget.memberCount > 1) {

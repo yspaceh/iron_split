@@ -155,7 +155,8 @@
     "menu_member_settings": "メンバー設定",
     "menu_history": "履歴",
     "menu_end_task": "タスク終了",
-    "field_remainder_rule": "端数処理"
+    "field_remainder_rule": "端数処理",
+    "section_remainder": "残高"
   },
   "S15_Record_Edit": {
     "title_create": "記録を追加",
@@ -194,7 +195,10 @@
     "base_card_title": "残額 (Base)",
     "type_income_title": "預り金",
     "base_card_title_expense": "残額 (Base)",
-    "base_card_title_income": "資金提供者"
+    "base_card_title_income": "資金提供者",
+    "method_share": "人数",
+    "method_adjustment": "調整",
+    "payer_multiple" : "複数人"
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
@@ -209,7 +213,10 @@
     "field_member_count": "参加人数",
     "action_save": "保存",
     "picker_done": "完了",
-    "error_name_empty": "タスク名を入力してください"
+    "error_name_empty": "タスク名を入力してください",
+    "label_name": "タスク名",
+    "label_date": "日付",
+    "label_currency": "通貨"
   },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
@@ -221,7 +228,16 @@
       "user": "操作者",
       "action": "操作",
       "details": "詳細"
-    }
+    },
+    "type_income": "収入",
+    "type_expense": "支出",
+    "label_payment": "支払",
+    "payment_income": "前受金",
+    "payment_pool": "共益費払",
+    "payment_single_suffix": "立替",
+    "payment_multiple": "複数立替",
+    "unit_members": "名",
+    "unit_items": "項目"
   },
   "S71_SystemSettings_Tos": {
     "title": "利用規約"

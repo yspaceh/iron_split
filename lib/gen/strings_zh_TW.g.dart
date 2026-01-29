@@ -572,6 +572,9 @@ class TranslationsS14TaskSettingsZhTw {
 
 	/// zh-TW: '零頭處理'
 	String get field_remainder_rule => '零頭處理';
+
+	/// zh-TW: '剩餘款'
+	String get section_remainder => '剩餘款';
 }
 
 // Path: S15_Record_Edit
@@ -692,6 +695,15 @@ class TranslationsS15RecordEditZhTw {
 
 	/// zh-TW: '資金來源 (入金者)'
 	String get base_card_title_income => '資金來源 (入金者)';
+
+	/// zh-TW: '份數'
+	String get method_share => '份數';
+
+	/// zh-TW: '調整'
+	String get method_adjustment => '調整';
+
+	/// zh-TW: '多人'
+	String get payer_multiple => '多人';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -740,6 +752,15 @@ class TranslationsS16TaskCreateEditZhTw {
 
 	/// zh-TW: '請輸入任務名稱'
 	String get error_name_empty => '請輸入任務名稱';
+
+	/// zh-TW: '任務名稱'
+	String get label_name => '任務名稱';
+
+	/// zh-TW: '日期'
+	String get label_date => '日期';
+
+	/// zh-TW: '貨幣'
+	String get label_currency => '貨幣';
 }
 
 // Path: S52_TaskSettings_Log
@@ -763,6 +784,33 @@ class TranslationsS52TaskSettingsLogZhTw {
 	String get export_file_prefix => '活動紀錄';
 
 	late final TranslationsS52TaskSettingsLogCsvHeaderZhTw csv_header = TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(_root);
+
+	/// zh-TW: '預收'
+	String get type_income => '預收';
+
+	/// zh-TW: '支出'
+	String get type_expense => '支出';
+
+	/// zh-TW: '支付'
+	String get label_payment => '支付';
+
+	/// zh-TW: '預收款'
+	String get payment_income => '預收款';
+
+	/// zh-TW: '公款支付'
+	String get payment_pool => '公款支付';
+
+	/// zh-TW: '代墊'
+	String get payment_single_suffix => '代墊';
+
+	/// zh-TW: '多人代墊'
+	String get payment_multiple => '多人代墊';
+
+	/// zh-TW: '人'
+	String get unit_members => '人';
+
+	/// zh-TW: '細項'
+	String get unit_items => '細項';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -1341,6 +1389,7 @@ extension on Translations {
 			'S14_Task_Settings.menu_history' => '歷史紀錄',
 			'S14_Task_Settings.menu_end_task' => '結束任務',
 			'S14_Task_Settings.field_remainder_rule' => '零頭處理',
+			'S14_Task_Settings.section_remainder' => '剩餘款',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
 			'S15_Record_Edit.section_split' => '分攤資訊',
@@ -1378,6 +1427,9 @@ extension on Translations {
 			'S15_Record_Edit.type_income_title' => '預收款',
 			'S15_Record_Edit.base_card_title_expense' => '剩餘金額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
+			'S15_Record_Edit.method_share' => '份數',
+			'S15_Record_Edit.method_adjustment' => '調整',
+			'S15_Record_Edit.payer_multiple' => '多人',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',
 			'S16_TaskCreate_Edit.section_period' => '任務期間',
@@ -1391,6 +1443,9 @@ extension on Translations {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '確定',
 			'S16_TaskCreate_Edit.error_name_empty' => '請輸入任務名稱',
+			'S16_TaskCreate_Edit.label_name' => '任務名稱',
+			'S16_TaskCreate_Edit.label_date' => '日期',
+			'S16_TaskCreate_Edit.label_currency' => '貨幣',
 			'S52_TaskSettings_Log.title' => '活動紀錄',
 			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
 			'S52_TaskSettings_Log.action_export_csv' => '匯出 CSV',
@@ -1399,6 +1454,15 @@ extension on Translations {
 			'S52_TaskSettings_Log.csv_header.user' => '操作者',
 			'S52_TaskSettings_Log.csv_header.action' => '動作',
 			'S52_TaskSettings_Log.csv_header.details' => '內容',
+			'S52_TaskSettings_Log.type_income' => '預收',
+			'S52_TaskSettings_Log.type_expense' => '支出',
+			'S52_TaskSettings_Log.label_payment' => '支付',
+			'S52_TaskSettings_Log.payment_income' => '預收款',
+			'S52_TaskSettings_Log.payment_pool' => '公款支付',
+			'S52_TaskSettings_Log.payment_single_suffix' => '代墊',
+			'S52_TaskSettings_Log.payment_multiple' => '多人代墊',
+			'S52_TaskSettings_Log.unit_members' => '人',
+			'S52_TaskSettings_Log.unit_items' => '細項',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.action_reroll' => '換個動物',

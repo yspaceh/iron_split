@@ -13,8 +13,10 @@ import 'package:iron_split/features/common/presentation/bottom_sheets/currency_p
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
+import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
 import 'package:iron_split/core/services/record_service.dart';
 import 'package:iron_split/features/task/presentation/widgets/s15/s15_expense_form.dart';
@@ -598,11 +600,140 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           .doc(widget.taskId)
           .collection('records');
 
+      // ... (前面是 recordsRef 定義) ...
+
+      // --- [修正開始] 準備結構化的 Log 資料 ---
+
+      // 1. 建構 Payment (支付資訊)
+      Map<String, dynamic> paymentLogData = {};
+
+      if (isIncome) {
+        // 預收模式
+        paymentLogData = {
+          'type': 'income', // 對應顯示「預收款」
+          'contributors': []
+        };
+      } else {
+        // 支出模式：根據 _payerType 判斷
+        if (_payerType == 'prepay') {
+          // 公款支付
+          paymentLogData = {
+            'type': 'pool', // 對應顯示「公款支付」
+            'contributors': []
+          };
+        } else if (_payerType == 'member' && _payerId.isNotEmpty) {
+          // 單人代墊
+          final payer = _taskMembers.firstWhere((m) => m['id'] == _payerId,
+              orElse: () => {'displayName': 'Unknown', 'name': 'Unknown'});
+          final name = payer['displayName'] ?? payer['name'];
+          paymentLogData = {
+            'type': 'single',
+            'contributors': [
+              {'name': name, 'amount': double.parse(_amountController.text)}
+            ]
+          };
+        } else if (_payerType == 'multiple' && _complexPaymentData != null) {
+          // 多人代墊 (從 B07 回傳的 _complexPaymentData 取得資料)
+          final advances =
+              _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
+          List<Map<String, dynamic>> contributors = [];
+
+          advances.forEach((uid, amount) {
+            if ((amount as num) > 0) {
+              final member = _taskMembers.firstWhere((m) => m['id'] == uid,
+                  orElse: () => {'displayName': 'Unknown', 'name': 'Unknown'});
+              contributors.add({
+                'name': member['displayName'] ?? member['name'],
+                'amount': amount
+              });
+            }
+          });
+
+          paymentLogData = {'type': 'multiple', 'contributors': contributors};
+        } else {
+          // 混合或其他 (Fallback)
+          paymentLogData = {'type': 'unknown', 'contributors': []};
+        }
+      }
+
+      // 2. 建構 Allocation (分帳資訊：包含細項與主分帳)
+      List<Map<String, dynamic>> splitGroups = [];
+
+      // A. 加入細項 (Items)
+      for (var item in _items) {
+        splitGroups.add({
+          'type': 'item',
+          'label': item.name,
+          'amount': item.amount,
+          'method': item.splitMethod, // 'even', 'exact', etc.
+          'count': item.splitMemberIds.length,
+        });
+      }
+
+      // B. 加入主分帳 (Base Split)
+      // 如果是預收(Income)，整筆都是 Base；如果是支出，剩餘金額才是 Base
+      double baseAmountForLog = isIncome
+          ? double.parse(_amountController.text)
+          : _baseRemainingAmount;
+
+      if (baseAmountForLog > 0) {
+        splitGroups.add({
+          'type': 'base',
+          'label': isIncome
+              ? t.S15_Record_Edit.type_income_title // "預收款"
+              : t.S15_Record_Edit.base_card_title_expense, // "剩餘金額"
+          'amount': baseAmountForLog,
+          'method': _baseSplitMethod,
+          'count': _baseMemberIds.length,
+        });
+      }
+
+      final allocationLogData = {
+        'mode': _items.isNotEmpty ? 'hybrid' : 'basic', // 混合模式才顯示細項折疊
+        'groups': splitGroups,
+      };
+
+      // 3. 寫入 Log
       if (widget.recordId == null) {
         await recordsRef.add(recordData);
+        // [Log] Create
+        ActivityLogService.log(
+          taskId: widget.taskId,
+          action: LogAction.createRecord,
+          details: {
+            'recordName': isIncome
+                ? t.S15_Record_Edit.type_income_title
+                : _titleController.text,
+            'amount': double.parse(_amountController.text),
+            'currency': _selectedCurrencyOption.code,
+            'recordType': isIncome ? 'income' : 'expense',
+            // [關鍵] 存入結構化資料
+            'payment': paymentLogData,
+            'allocation': allocationLogData,
+          },
+        );
       } else {
+        final oldAmount = widget.record?.amount;
         await recordsRef.doc(widget.recordId).update(recordData);
+        // [Log] Update
+        ActivityLogService.log(
+          taskId: widget.taskId,
+          action: LogAction.updateRecord,
+          details: {
+            'recordName': isIncome
+                ? t.S15_Record_Edit.type_income_title
+                : _titleController.text,
+            'oldAmount': oldAmount,
+            'newAmount': double.parse(_amountController.text),
+            'currency': _selectedCurrencyOption.code,
+            'recordType': isIncome ? 'income' : 'expense',
+            // [關鍵] 存入結構化資料
+            'payment': paymentLogData,
+            'allocation': allocationLogData,
+          },
+        );
       }
+      // --- [修正結束] ---
 
       if (mounted) context.pop();
     } catch (e) {
@@ -728,6 +859,20 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           } catch (e) {
             debugPrint("Delete failed: $e");
           }
+          // [Log] Delete Record
+          // Retrieve info from controllers or widget.recordData for the log
+          final amount = double.tryParse(_amountController.text) ?? 0;
+
+          ActivityLogService.log(
+            taskId: widget.taskId,
+            action: LogAction.deleteRecord,
+            details: {
+              'recordName':
+                  _titleController.text, // or widget.recordData?['title']
+              'amount': amount,
+              'currency': _selectedCurrencyOption.code,
+            },
+          );
         },
       ),
     );

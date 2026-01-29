@@ -209,7 +209,16 @@ class _S13PersonalViewState extends State<S13PersonalView> {
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     final groupedRecords = _groupRecords(_personalRecords);
-    final fullDateList = _generateFullDateRangeDescending(startDate, endDate);
+    // 1. 先取得原本的任務期間列表
+    final rangeDates = _generateFullDateRangeDescending(startDate, endDate);
+
+    // 2. 使用 Set 來合併日期 (Set 會自動去除重複的日期)
+    final Set<DateTime> uniqueDates = {};
+    uniqueDates.addAll(rangeDates);
+    uniqueDates.addAll(groupedRecords.keys);
+
+    // 3. 轉回 List 並由新到舊排序
+    final fullDateList = uniqueDates.toList()..sort((a, b) => b.compareTo(a));
 
     return LayoutBuilder(
       builder: (context, constraints) {
