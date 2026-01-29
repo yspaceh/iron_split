@@ -116,7 +116,10 @@ class AppRouter {
               GoRoute(
                 path: 'members', // Full: /task/:taskId/settings/members
                 name: 'S53',
-                builder: (context, state) => const S53TaskSettingsMembersPage(),
+                builder: (context, state) {
+                  final taskId = state.pathParameters['taskId']!;
+                  return S53TaskSettingsMembersPage(taskId: taskId);
+                },
               ),
               // S52_TaskSettings.Log
               GoRoute(

@@ -268,7 +268,10 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
             icon: Icons.people_outline,
             title: t.S14_Task_Settings.menu_member_settings,
             onTap: () {
-              context.push('/task/${widget.taskId}/settings/members');
+              context.pushNamed(
+                'S53',
+                pathParameters: {'taskId': widget.taskId},
+              );
             },
           ),
           const SizedBox(height: 12),
