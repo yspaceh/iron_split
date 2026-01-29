@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:iron_split/features/task/presentation/widgets/activity_log_block.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
 import 'package:iron_split/gen/strings.g.dart';
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/calculation_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_item_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -147,92 +149,15 @@ class S15ExpenseForm extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            InkWell(
-              onTap: onCategoryTap,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  CategoryConstant.getCategoryById(selectedCategoryId).icon,
-                  color: colorScheme.primary,
-                  size: 24,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_title,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) => v?.isEmpty == true ? "Required" : null,
-              ),
-            ),
-          ],
-        ),
+        TaskItemInput(
+            onCategoryTap: onCategoryTap,
+            titleController: titleController,
+            selectedCategoryId: selectedCategoryId),
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: onCurrencyTap,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      selectedCurrencyOption.symbol,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    Text(
-                      selectedCurrencyOption.code,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_amount,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) =>
-                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
-              ),
-            ),
-          ],
-        ),
+        TaskAmountInput(
+            onCurrencyTap: onCurrencyTap,
+            amountController: amountController,
+            selectedCurrencyOption: selectedCurrencyOption),
         if (isForeign) ...[
           const SizedBox(height: 16),
           TextFormField(
@@ -355,22 +280,8 @@ class S15ExpenseForm extends StatelessWidget {
             ),
         ],
         const SizedBox(height: 16),
-        TextFormField(
-          controller: memoController,
-          keyboardType: TextInputType.multiline,
-          // 1. 鎖定高度：最小與最大都是 2 行
-          minLines: 2,
-          maxLines: 2,
-          decoration: InputDecoration(
-            labelText: t.S15_Record_Edit.label_memo,
-            // 2. 讓 Label (提示文字) 在多行模式下也能靠左上
-            alignLabelWithHint: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            // 3. 調整內距
-            contentPadding: const EdgeInsets.all(16),
-          ),
+        TaskMemoInput(
+          memoController: memoController,
         ),
         const SizedBox(height: 100),
       ],

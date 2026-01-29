@@ -134,31 +134,33 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
     );
   }
 
-  Future<void> _handleCurrencyChange(CurrencyOption newCurrency) async {
-    // Show D09 Confirm
-    final confirm = await showDialog<bool>(
+  Future<void> _handleCurrencyChange(
+      CurrencyOption selectedCurrencyOption) async {
+    // 髒檢查：如果選了一樣的幣別，直接結束，不做任何事
+    if (selectedCurrencyOption.code == _currency?.code) return;
+
+    // 等待 BottomSheet 關閉動畫完成
+    // 如果不加這行，Dialog 會因為 Sheet 還在關閉而被「吃掉」
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // 3. 檢查頁面是否還活著 (防呆)
+    if (!mounted) return;
+
+    // 2. 呼叫 D09 Dialog (傳入 TaskId 與 新幣別)
+    // D09 會負責執行 update 和 log
+    final bool? success = await showDialog<bool>(
       context: context,
-      builder: (context) => const D09TaskSettingsCurrencyConfirmDialog(),
+      builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
+        taskId: widget.taskId,
+        newCurrency: selectedCurrencyOption,
+      ),
     );
 
-    if (confirm == true) {
-      setState(() => _currency = newCurrency);
-      // Immediate Save
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .update({
-        'baseCurrency': newCurrency.code,
+    // 3. 根據結果更新 UI
+    if (success == true && mounted) {
+      setState(() {
+        _currency = selectedCurrencyOption;
       });
-      // [Log] Update Currency
-      ActivityLogService.log(
-        taskId: widget.taskId,
-        action: LogAction.updateSettings,
-        details: {
-          'settingType': 'currency',
-          'newValue': newCurrency.code, // e.g., "TWD"
-        },
-      );
     }
   }
 

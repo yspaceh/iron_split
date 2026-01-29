@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Ensure this is imported for the update
+import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart'; // Import the new picker
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'dart:ui' as ui;
 
@@ -246,7 +248,37 @@ class BalanceCard extends StatelessWidget {
                 children: [
                   // Left: Currency Selector
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      CurrencyPickerSheet.show(
+                        context: context,
+                        initialCode:
+                            baseCurrencyOption.code, // 需確保 BalanceCard 有此參數
+                        onSelected: (CurrencyOption selected) async {
+                          print(selected.code);
+                          print(baseCurrencyOption.code);
+                          if (selected.code == baseCurrencyOption.code) return;
+
+                          // 等待 BottomSheet 關閉動畫完成
+                          // 如果不加這行，Dialog 會因為 Sheet 還在關閉而被「吃掉」
+                          await Future.delayed(
+                              const Duration(milliseconds: 300));
+
+                          // 重複使用 D09，完全符合 DRY 原則
+                          await showDialog(
+                            context: context,
+                            builder: (context) =>
+                                D09TaskSettingsCurrencyConfirmDialog(
+                              taskId: taskId,
+                              newCurrency: selected,
+                            ),
+                          );
+
+                          // S13 通常是 StreamBuilder 監聽的，
+                          // 所以 D09 更新完資料庫後，S13 頁面會自動刷新，
+                          // 這裡不需要額外的 setState。
+                        },
+                      );
+                    },
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

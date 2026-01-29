@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/task/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -71,57 +73,10 @@ class S15IncomeForm extends StatelessWidget {
           onTap: onDateTap,
         ),
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: onCurrencyTap,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      selectedCurrencyOption.symbol,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    Text(
-                      selectedCurrencyOption.code,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextFormField(
-                controller: amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.S15_Record_Edit.label_amount,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                ),
-                validator: (v) =>
-                    (double.tryParse(v ?? '') ?? 0) <= 0 ? "Invalid" : null,
-              ),
-            ),
-          ],
-        ),
+        TaskAmountInput(
+            onCurrencyTap: onCurrencyTap,
+            amountController: amountController,
+            selectedCurrencyOption: selectedCurrencyOption),
         if (isForeign) ...[
           const SizedBox(height: 16),
           TextFormField(
@@ -190,19 +145,8 @@ class S15IncomeForm extends StatelessWidget {
           onSplitTap: null,
         ),
         const SizedBox(height: 16),
-        TextFormField(
-          controller: memoController,
-          keyboardType: TextInputType.multiline,
-          minLines: 2,
-          maxLines: 2,
-          decoration: InputDecoration(
-            labelText: t.S15_Record_Edit.label_memo,
-            alignLabelWithHint: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            contentPadding: const EdgeInsets.all(16),
-          ),
+        TaskMemoInput(
+          memoController: memoController,
         ),
         const SizedBox(height: 100),
       ],
