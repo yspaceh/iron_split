@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';
@@ -30,6 +31,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
   String _remainderRule = 'random';
   String? _createdBy;
   bool _isLoading = true;
+  Map<String, dynamic> _membersData = {};
 
   @override
   void initState() {
@@ -70,6 +72,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
               data['baseCurrency'] ?? CurrencyOption.defaultCode);
           _remainderRule = data['remainderRule'] ?? 'random';
           _createdBy = data['createdBy'] as String?;
+          _membersData = data['members'] as Map<String, dynamic>? ?? {};
           _isLoading = false;
         });
       }
@@ -202,7 +205,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
                     color: theme.dividerColor),
               ),
               TaskRemainderRuleInput(
-                rule: _getRuleName(t, _remainderRule),
+                rule: RemainderRulePickerSheet.getRuleName(
+                    context, _remainderRule),
                 onRuleChanged: _handleRuleChange,
                 enabled: true,
               ),
@@ -229,7 +233,11 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
             icon: Icons.history,
             title: t.S14_Task_Settings.menu_history,
             onTap: () {
-              context.push('/task/${widget.taskId}/settings/log');
+              context.pushNamed(
+                'S52',
+                pathParameters: {'taskId': widget.taskId},
+                extra: _membersData, // 透過 extra 傳遞 Map 資料
+              );
             },
           ),
 
@@ -275,8 +283,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
               color: isDestructive
-                  ? theme.colorScheme.error.withOpacity(0.3)
-                  : theme.colorScheme.outlineVariant.withOpacity(0.3)),
+                  ? theme.colorScheme.error.withValues(alpha: 0.3)
+                  : theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
@@ -294,12 +302,5 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
         ),
       ),
     );
-  }
-
-  String _getRuleName(Translations t, String rule) {
-    if (rule == 'random') return t.S13_Task_Dashboard.rule_random;
-    if (rule == 'order') return t.S13_Task_Dashboard.rule_order;
-    if (rule == 'member') return t.S13_Task_Dashboard.rule_member;
-    return rule;
   }
 }

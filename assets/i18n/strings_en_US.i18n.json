@@ -57,6 +57,17 @@
     "try_": "Turkish Lira",
     "inr": "Indian Rupee"
   },
+  "log_action": {
+    "create_task": "Create Task",
+    "update_settings": "Update Settings",
+    "add_member": "Add Member",
+    "remove_member": "Remove Member",
+    "create_record": "Create Record",
+    "update_record": "Edit Record",
+    "delete_record": "Delete Record",
+    "settle_up": "Settle Up",
+    "unknown": "Unknown Action"
+  },
   "dialog": {
     "unsaved_changes_title": "Unsaved Changes?",
     "unsaved_changes_content": "Changes you made will not be saved."
@@ -199,6 +210,18 @@
     "action_save": "Save",
     "picker_done": "Done",
     "error_name_empty": "Please enter task name"
+  },
+  "S52_TaskSettings_Log": {
+    "title": "Activity Log",
+    "empty_log": "No activity logs found",
+    "action_export_csv": "Export CSV",
+    "export_file_prefix": "Activity_Log",
+    "csv_header": {
+      "time": "Time",
+      "user": "User",
+      "action": "Action",
+      "details": "Details"
+    }
   },
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"

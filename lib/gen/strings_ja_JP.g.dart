@@ -42,6 +42,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCategoryJaJp category = _TranslationsCategoryJaJp._(_root);
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsCurrencyJaJp currency = _TranslationsCurrencyJaJp._(_root);
+	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
 	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
 	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
@@ -51,6 +52,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
+	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
 	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
@@ -141,6 +143,24 @@ class _TranslationsCurrencyJaJp extends TranslationsCurrencyZhTw {
 	@override String get sar => 'サウジアラビアリヤル';
 	@override String get try_ => 'トルコリラ';
 	@override String get inr => 'インドルピー';
+}
+
+// Path: log_action
+class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
+	_TranslationsLogActionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get create_task => 'タスク作成';
+	@override String get update_settings => '設定更新';
+	@override String get add_member => 'メンバー追加';
+	@override String get remove_member => 'メンバー削除';
+	@override String get create_record => '記録追加';
+	@override String get update_record => '記録編集';
+	@override String get delete_record => '記録削除';
+	@override String get settle_up => '精算実行';
+	@override String get unknown => '不明な操作';
 }
 
 // Path: dialog
@@ -349,6 +369,20 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override String get error_name_empty => 'タスク名を入力してください';
 }
 
+// Path: S52_TaskSettings_Log
+class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLogZhTw {
+	_TranslationsS52TaskSettingsLogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '活動履歴';
+	@override String get empty_log => '活動履歴はありません';
+	@override String get action_export_csv => 'CSVエクスポート';
+	@override String get export_file_prefix => '活動履歴';
+	@override late final _TranslationsS52TaskSettingsLogCsvHeaderJaJp csv_header = _TranslationsS52TaskSettingsLogCsvHeaderJaJp._(_root);
+}
+
 // Path: S71_SystemSettings_Tos
 class _TranslationsS71SystemSettingsTosJaJp extends TranslationsS71SystemSettingsTosZhTw {
 	_TranslationsS71SystemSettingsTosJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -526,6 +560,19 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
 }
 
+// Path: S52_TaskSettings_Log.csv_header
+class _TranslationsS52TaskSettingsLogCsvHeaderJaJp extends TranslationsS52TaskSettingsLogCsvHeaderZhTw {
+	_TranslationsS52TaskSettingsLogCsvHeaderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get time => '日時';
+	@override String get user => '操作者';
+	@override String get action => '操作';
+	@override String get details => '詳細';
+}
+
 // Path: error.taskFull
 class _TranslationsErrorTaskFullJaJp extends TranslationsErrorTaskFullZhTw {
 	_TranslationsErrorTaskFullJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -652,6 +699,15 @@ extension on TranslationsJaJp {
 			'currency.sar' => 'サウジアラビアリヤル',
 			'currency.try_' => 'トルコリラ',
 			'currency.inr' => 'インドルピー',
+			'log_action.create_task' => 'タスク作成',
+			'log_action.update_settings' => '設定更新',
+			'log_action.add_member' => 'メンバー追加',
+			'log_action.remove_member' => 'メンバー削除',
+			'log_action.create_record' => '記録追加',
+			'log_action.update_record' => '記録編集',
+			'log_action.delete_record' => '記録削除',
+			'log_action.settle_up' => '精算実行',
+			'log_action.unknown' => '不明な操作',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
@@ -777,6 +833,14 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '完了',
 			'S16_TaskCreate_Edit.error_name_empty' => 'タスク名を入力してください',
+			'S52_TaskSettings_Log.title' => '活動履歴',
+			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
+			'S52_TaskSettings_Log.action_export_csv' => 'CSVエクスポート',
+			'S52_TaskSettings_Log.export_file_prefix' => '活動履歴',
+			'S52_TaskSettings_Log.csv_header.time' => '日時',
+			'S52_TaskSettings_Log.csv_header.user' => '操作者',
+			'S52_TaskSettings_Log.csv_header.action' => '操作',
+			'S52_TaskSettings_Log.csv_header.details' => '詳細',
 			'S71_SystemSettings_Tos.title' => '利用規約',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.action_reroll' => '動物を変える',

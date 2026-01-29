@@ -39,7 +39,8 @@ class TaskNameInput extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             filled: true,
-            fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            fillColor:
+                colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           ),
           validator: (val) => (val == null || val.trim().isEmpty)
               ? t.S16_TaskCreate_Edit.error_name_empty

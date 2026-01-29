@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCategoryZhTw category = TranslationsCategoryZhTw.internal(_root);
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
+	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
@@ -52,6 +53,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
+	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
 	late final TranslationsS71SystemSettingsTosZhTw S71_SystemSettings_Tos = TranslationsS71SystemSettingsTosZhTw.internal(_root);
 	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
@@ -246,6 +248,42 @@ class TranslationsCurrencyZhTw {
 
 	/// zh-TW: '印度盧比'
 	String get inr => '印度盧比';
+}
+
+// Path: log_action
+class TranslationsLogActionZhTw {
+	TranslationsLogActionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '建立任務'
+	String get create_task => '建立任務';
+
+	/// zh-TW: '更新設定'
+	String get update_settings => '更新設定';
+
+	/// zh-TW: '新增成員'
+	String get add_member => '新增成員';
+
+	/// zh-TW: '移除成員'
+	String get remove_member => '移除成員';
+
+	/// zh-TW: '新增記帳'
+	String get create_record => '新增記帳';
+
+	/// zh-TW: '修改記帳'
+	String get update_record => '修改記帳';
+
+	/// zh-TW: '刪除記帳'
+	String get delete_record => '刪除記帳';
+
+	/// zh-TW: '執行結算'
+	String get settle_up => '執行結算';
+
+	/// zh-TW: '未知操作'
+	String get unknown => '未知操作';
 }
 
 // Path: dialog
@@ -704,6 +742,29 @@ class TranslationsS16TaskCreateEditZhTw {
 	String get error_name_empty => '請輸入任務名稱';
 }
 
+// Path: S52_TaskSettings_Log
+class TranslationsS52TaskSettingsLogZhTw {
+	TranslationsS52TaskSettingsLogZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '活動紀錄'
+	String get title => '活動紀錄';
+
+	/// zh-TW: '目前沒有任何活動紀錄'
+	String get empty_log => '目前沒有任何活動紀錄';
+
+	/// zh-TW: '匯出 CSV'
+	String get action_export_csv => '匯出 CSV';
+
+	/// zh-TW: '活動紀錄'
+	String get export_file_prefix => '活動紀錄';
+
+	late final TranslationsS52TaskSettingsLogCsvHeaderZhTw csv_header = TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(_root);
+}
+
 // Path: S71_SystemSettings_Tos
 class TranslationsS71SystemSettingsTosZhTw {
 	TranslationsS71SystemSettingsTosZhTw.internal(this._root);
@@ -1025,6 +1086,27 @@ class TranslationsErrorZhTw {
 	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
 }
 
+// Path: S52_TaskSettings_Log.csv_header
+class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
+	TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '時間'
+	String get time => '時間';
+
+	/// zh-TW: '操作者'
+	String get user => '操作者';
+
+	/// zh-TW: '動作'
+	String get action => '動作';
+
+	/// zh-TW: '內容'
+	String get details => '內容';
+}
+
 // Path: error.taskFull
 class TranslationsErrorTaskFullZhTw {
 	TranslationsErrorTaskFullZhTw.internal(this._root);
@@ -1175,6 +1257,15 @@ extension on Translations {
 			'currency.sar' => '沙烏地里亞爾',
 			'currency.try_' => '土耳其里拉',
 			'currency.inr' => '印度盧比',
+			'log_action.create_task' => '建立任務',
+			'log_action.update_settings' => '更新設定',
+			'log_action.add_member' => '新增成員',
+			'log_action.remove_member' => '移除成員',
+			'log_action.create_record' => '新增記帳',
+			'log_action.update_record' => '修改記帳',
+			'log_action.delete_record' => '刪除記帳',
+			'log_action.settle_up' => '執行結算',
+			'log_action.unknown' => '未知操作',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
@@ -1300,6 +1391,14 @@ extension on Translations {
 			'S16_TaskCreate_Edit.action_save' => '保存',
 			'S16_TaskCreate_Edit.picker_done' => '確定',
 			'S16_TaskCreate_Edit.error_name_empty' => '請輸入任務名稱',
+			'S52_TaskSettings_Log.title' => '活動紀錄',
+			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
+			'S52_TaskSettings_Log.action_export_csv' => '匯出 CSV',
+			'S52_TaskSettings_Log.export_file_prefix' => '活動紀錄',
+			'S52_TaskSettings_Log.csv_header.time' => '時間',
+			'S52_TaskSettings_Log.csv_header.user' => '操作者',
+			'S52_TaskSettings_Log.csv_header.action' => '動作',
+			'S52_TaskSettings_Log.csv_header.details' => '內容',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.action_reroll' => '換個動物',

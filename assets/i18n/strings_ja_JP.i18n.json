@@ -57,6 +57,17 @@
     "try_": "トルコリラ",
     "inr": "インドルピー"
   },
+  "log_action": {
+    "create_task": "タスク作成",
+    "update_settings": "設定更新",
+    "add_member": "メンバー追加",
+    "remove_member": "メンバー削除",
+    "create_record": "記録追加",
+    "update_record": "記録編集",
+    "delete_record": "記録削除",
+    "settle_up": "精算実行",
+    "unknown": "不明な操作"
+  },
   "dialog": {
     "unsaved_changes_title": "未保存の変更",
     "unsaved_changes_content": "変更内容は保存されません。"
@@ -199,6 +210,18 @@
     "action_save": "保存",
     "picker_done": "完了",
     "error_name_empty": "タスク名を入力してください"
+  },
+  "S52_TaskSettings_Log": {
+    "title": "活動履歴",
+    "empty_log": "活動履歴はありません",
+    "action_export_csv": "CSVエクスポート",
+    "export_file_prefix": "活動履歴",
+    "csv_header": {
+      "time": "日時",
+      "user": "操作者",
+      "action": "操作",
+      "details": "詳細"
+    }
   },
   "S71_SystemSettings_Tos": {
     "title": "利用規約"

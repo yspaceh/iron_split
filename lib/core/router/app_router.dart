@@ -120,9 +120,17 @@ class AppRouter {
               ),
               // S52_TaskSettings.Log
               GoRoute(
-                path: 'log', // Full: /task/:taskId/settings/log
+                path: 'log', // full path: /tasks/:taskId/settings/log
                 name: 'S52',
-                builder: (context, state) => const S52TaskSettingsLogPage(),
+                builder: (context, state) {
+                  final taskId = state.pathParameters['taskId']!;
+                  // Retrieve complex data passed via 'extra'
+                  final membersData =
+                      state.extra as Map<String, dynamic>? ?? {};
+
+                  return S52TaskSettingsLogPage(
+                      taskId: taskId, membersData: membersData);
+                },
               ),
               // S12_TaskClose.Notice
               GoRoute(

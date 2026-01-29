@@ -57,7 +57,17 @@
     "try_": "土耳其里拉",
     "inr": "印度盧比"
   },
-
+  "log_action": {
+    "create_task": "建立任務",
+    "update_settings": "更新設定",
+    "add_member": "新增成員",
+    "remove_member": "移除成員",
+    "create_record": "新增記帳",
+    "update_record": "修改記帳",
+    "delete_record": "刪除記帳",
+    "settle_up": "執行結算",
+    "unknown": "未知操作"
+  },
   "dialog": {
     "unsaved_changes_title": "尚未儲存",
     "unsaved_changes_content": "變更將不會被儲存，確定要離開嗎？"
@@ -200,6 +210,18 @@
     "action_save": "保存",
     "picker_done": "確定",
     "error_name_empty": "請輸入任務名稱"
+  },
+  "S52_TaskSettings_Log": {
+    "title": "活動紀錄",
+    "empty_log": "目前沒有任何活動紀錄",
+    "action_export_csv": "匯出 CSV",
+    "export_file_prefix": "活動紀錄",
+    "csv_header": {
+      "time": "時間",
+      "user": "操作者",
+      "action": "動作",
+      "details": "內容"
+    }
   },
   "S71_SystemSettings_Tos": {
     "title": "服務條款"

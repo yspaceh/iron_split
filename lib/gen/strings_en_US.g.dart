@@ -42,6 +42,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCategoryEnUs category = _TranslationsCategoryEnUs._(_root);
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
+	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
@@ -51,6 +52,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
+	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
 	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
 	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
@@ -141,6 +143,24 @@ class _TranslationsCurrencyEnUs extends TranslationsCurrencyZhTw {
 	@override String get sar => 'Saudi Riyal';
 	@override String get try_ => 'Turkish Lira';
 	@override String get inr => 'Indian Rupee';
+}
+
+// Path: log_action
+class _TranslationsLogActionEnUs extends TranslationsLogActionZhTw {
+	_TranslationsLogActionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get create_task => 'Create Task';
+	@override String get update_settings => 'Update Settings';
+	@override String get add_member => 'Add Member';
+	@override String get remove_member => 'Remove Member';
+	@override String get create_record => 'Create Record';
+	@override String get update_record => 'Edit Record';
+	@override String get delete_record => 'Delete Record';
+	@override String get settle_up => 'Settle Up';
+	@override String get unknown => 'Unknown Action';
 }
 
 // Path: dialog
@@ -349,6 +369,20 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override String get error_name_empty => 'Please enter task name';
 }
 
+// Path: S52_TaskSettings_Log
+class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLogZhTw {
+	_TranslationsS52TaskSettingsLogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Activity Log';
+	@override String get empty_log => 'No activity logs found';
+	@override String get action_export_csv => 'Export CSV';
+	@override String get export_file_prefix => 'Activity_Log';
+	@override late final _TranslationsS52TaskSettingsLogCsvHeaderEnUs csv_header = _TranslationsS52TaskSettingsLogCsvHeaderEnUs._(_root);
+}
+
 // Path: S71_SystemSettings_Tos
 class _TranslationsS71SystemSettingsTosEnUs extends TranslationsS71SystemSettingsTosZhTw {
 	_TranslationsS71SystemSettingsTosEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -530,6 +564,19 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
 }
 
+// Path: S52_TaskSettings_Log.csv_header
+class _TranslationsS52TaskSettingsLogCsvHeaderEnUs extends TranslationsS52TaskSettingsLogCsvHeaderZhTw {
+	_TranslationsS52TaskSettingsLogCsvHeaderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get time => 'Time';
+	@override String get user => 'User';
+	@override String get action => 'Action';
+	@override String get details => 'Details';
+}
+
 // Path: error.taskFull
 class _TranslationsErrorTaskFullEnUs extends TranslationsErrorTaskFullZhTw {
 	_TranslationsErrorTaskFullEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -656,6 +703,15 @@ extension on TranslationsEnUs {
 			'currency.sar' => 'Saudi Riyal',
 			'currency.try_' => 'Turkish Lira',
 			'currency.inr' => 'Indian Rupee',
+			'log_action.create_task' => 'Create Task',
+			'log_action.update_settings' => 'Update Settings',
+			'log_action.add_member' => 'Add Member',
+			'log_action.remove_member' => 'Remove Member',
+			'log_action.create_record' => 'Create Record',
+			'log_action.update_record' => 'Edit Record',
+			'log_action.delete_record' => 'Delete Record',
+			'log_action.settle_up' => 'Settle Up',
+			'log_action.unknown' => 'Unknown Action',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
@@ -781,6 +837,14 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.action_save' => 'Save',
 			'S16_TaskCreate_Edit.picker_done' => 'Done',
 			'S16_TaskCreate_Edit.error_name_empty' => 'Please enter task name',
+			'S52_TaskSettings_Log.title' => 'Activity Log',
+			'S52_TaskSettings_Log.empty_log' => 'No activity logs found',
+			'S52_TaskSettings_Log.action_export_csv' => 'Export CSV',
+			'S52_TaskSettings_Log.export_file_prefix' => 'Activity_Log',
+			'S52_TaskSettings_Log.csv_header.time' => 'Time',
+			'S52_TaskSettings_Log.csv_header.user' => 'User',
+			'S52_TaskSettings_Log.csv_header.action' => 'Action',
+			'S52_TaskSettings_Log.csv_header.details' => 'Details',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.action_reroll' => 'Change Animal',
