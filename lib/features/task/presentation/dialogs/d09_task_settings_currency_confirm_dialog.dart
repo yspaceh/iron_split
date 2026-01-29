@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
 import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: D09_TaskSettings.CurrencyConfirm
-/// 負責執行：防呆確認 -> 更新資料庫 -> 寫入 Log -> 回傳 true
+/// 負責執行：防呆確認 -> 更新資料庫(含紀錄匯率重算) -> 寫入 Log -> 回傳 true
 class D09TaskSettingsCurrencyConfirmDialog extends StatefulWidget {
   final String taskId;
   final CurrencyOption newCurrency;
@@ -33,13 +34,54 @@ class _D09TaskSettingsCurrencyConfirmDialogState
     });
 
     try {
+      final firestore = FirebaseFirestore.instance;
+      final taskRef = firestore.collection('tasks').doc(widget.taskId);
+      final newBaseCode = widget.newCurrency.code;
+
       // 1. 更新資料庫 (Tasks Collection)
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .update({
-        'currency': widget.newCurrency.code, // 或 'baseCurrency'，請確認您的資料庫欄位
+      await taskRef.update({
+        'baseCurrency': newBaseCode,
       });
+
+      // 2. [關鍵修正] 批次更新所有紀錄的匯率 (Re-calculate Exchange Rates)
+      final recordsSnapshot = await taskRef.collection('records').get();
+
+      if (recordsSnapshot.docs.isNotEmpty) {
+        // 優化：先找出所有出現過的幣別，一次查完匯率，避免迴圈內瘋狂打 API
+        final uniqueRecordCurrencies = recordsSnapshot.docs
+            .map((doc) => doc.data()['currency'] as String? ?? 'TWD')
+            .toSet();
+
+        final Map<String, double> rateMap = {};
+
+        for (final currencyCode in uniqueRecordCurrencies) {
+          if (currencyCode == newBaseCode) {
+            rateMap[currencyCode] = 1.0;
+          } else {
+            // 呼叫 API 取得最新匯率 (Record Currency -> New Base Currency)
+            final rate = await CurrencyService.fetchRate(
+                from: currencyCode, to: newBaseCode);
+            rateMap[currencyCode] = rate ?? 1.0; // 若 API 失敗則暫定 1.0
+          }
+        }
+
+        // 執行批次寫入
+        final batch = firestore.batch();
+
+        for (final doc in recordsSnapshot.docs) {
+          final data = doc.data();
+          final recordCurrency =
+              data['currency'] as String? ?? CurrencyOption.defaultCode;
+          final newRate = rateMap[recordCurrency] ?? 1.0;
+
+          // 只有當匯率真的不同時才更新 (節省寫入)
+          if ((data['exchangeRate'] as num? ?? 0) != newRate) {
+            batch.update(doc.reference, {'exchangeRate': newRate});
+          }
+        }
+
+        await batch.commit();
+      }
 
       // 2. 寫入 Activity Log
       // 這裡集中管理 Log，符合 DRY
