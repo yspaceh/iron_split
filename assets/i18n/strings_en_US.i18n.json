@@ -239,6 +239,15 @@
     "unit_members": "ppl",
     "unit_items": "items"
   },
+  "S53_TaskSettings_Members": {
+    "title": "Member Management",
+    "action_add": "Add Member",
+    "action_invite": "Invite",
+    "label_default_ratio": "Default Ratio",
+    "dialog_delete_error_title": "Member Deletion Error",
+    "dialog_delete_error_content": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.",
+    "member_default_name": "Member"
+  },
   "S71_SystemSettings_Tos": {
     "title": "Terms of Service"
   },

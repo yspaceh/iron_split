@@ -54,6 +54,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
+	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
 	late final TranslationsS71SystemSettingsTosZhTw S71_SystemSettings_Tos = TranslationsS71SystemSettingsTosZhTw.internal(_root);
 	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
@@ -813,6 +814,36 @@ class TranslationsS52TaskSettingsLogZhTw {
 	String get unit_items => '細項';
 }
 
+// Path: S53_TaskSettings_Members
+class TranslationsS53TaskSettingsMembersZhTw {
+	TranslationsS53TaskSettingsMembersZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '成員管理'
+	String get title => '成員管理';
+
+	/// zh-TW: '新增成員'
+	String get action_add => '新增成員';
+
+	/// zh-TW: '發送邀請'
+	String get action_invite => '發送邀請';
+
+	/// zh-TW: '預設比例'
+	String get label_default_ratio => '預設比例';
+
+	/// zh-TW: '無法刪除成員'
+	String get dialog_delete_error_title => '無法刪除成員';
+
+	/// zh-TW: '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。'
+	String get dialog_delete_error_content => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。';
+
+	/// zh-TW: '成員'
+	String get member_default_name => '成員';
+}
+
 // Path: S71_SystemSettings_Tos
 class TranslationsS71SystemSettingsTosZhTw {
 	TranslationsS71SystemSettingsTosZhTw.internal(this._root);
@@ -1463,6 +1494,13 @@ extension on Translations {
 			'S52_TaskSettings_Log.payment_multiple' => '多人代墊',
 			'S52_TaskSettings_Log.unit_members' => '人',
 			'S52_TaskSettings_Log.unit_items' => '細項',
+			'S53_TaskSettings_Members.title' => '成員管理',
+			'S53_TaskSettings_Members.action_add' => '新增成員',
+			'S53_TaskSettings_Members.action_invite' => '發送邀請',
+			'S53_TaskSettings_Members.label_default_ratio' => '預設比例',
+			'S53_TaskSettings_Members.dialog_delete_error_title' => '無法刪除成員',
+			'S53_TaskSettings_Members.dialog_delete_error_content' => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。',
+			'S53_TaskSettings_Members.member_default_name' => '成員',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.action_reroll' => '換個動物',

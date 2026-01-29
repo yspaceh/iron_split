@@ -239,6 +239,15 @@
     "unit_members": "人",
     "unit_items": "細項"
   },
+  "S53_TaskSettings_Members": {
+    "title": "成員管理",
+    "action_add": "新增成員",
+    "action_invite": "發送邀請",
+    "label_default_ratio": "預設比例",
+    "dialog_delete_error_title": "無法刪除成員",
+    "dialog_delete_error_content": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
+    "member_default_name": "成員"
+  },
   "S71_SystemSettings_Tos": {
     "title": "服務條款"
   },

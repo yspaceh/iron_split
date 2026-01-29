@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
+import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:share_plus/share_plus.dart';
 

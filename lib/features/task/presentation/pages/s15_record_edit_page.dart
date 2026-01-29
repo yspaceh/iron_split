@@ -13,7 +13,7 @@ import 'package:iron_split/features/common/presentation/bottom_sheets/currency_p
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
-import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
+import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';

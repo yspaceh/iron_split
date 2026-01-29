@@ -53,6 +53,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
+	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
 	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
 	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
@@ -397,6 +398,22 @@ class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLog
 	@override String get payment_multiple => 'Multiple Payers';
 	@override String get unit_members => 'ppl';
 	@override String get unit_items => 'items';
+}
+
+// Path: S53_TaskSettings_Members
+class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSettingsMembersZhTw {
+	_TranslationsS53TaskSettingsMembersEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Member Management';
+	@override String get action_add => 'Add Member';
+	@override String get action_invite => 'Invite';
+	@override String get label_default_ratio => 'Default Ratio';
+	@override String get dialog_delete_error_title => 'Member Deletion Error';
+	@override String get dialog_delete_error_content => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.';
+	@override String get member_default_name => 'Member';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -877,6 +894,13 @@ extension on TranslationsEnUs {
 			'S52_TaskSettings_Log.payment_multiple' => 'Multiple Payers',
 			'S52_TaskSettings_Log.unit_members' => 'ppl',
 			'S52_TaskSettings_Log.unit_items' => 'items',
+			'S53_TaskSettings_Members.title' => 'Member Management',
+			'S53_TaskSettings_Members.action_add' => 'Add Member',
+			'S53_TaskSettings_Members.action_invite' => 'Invite',
+			'S53_TaskSettings_Members.label_default_ratio' => 'Default Ratio',
+			'S53_TaskSettings_Members.dialog_delete_error_title' => 'Member Deletion Error',
+			'S53_TaskSettings_Members.dialog_delete_error_content' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
+			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.action_reroll' => 'Change Animal',

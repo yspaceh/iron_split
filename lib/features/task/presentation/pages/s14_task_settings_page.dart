@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/service/activity_log_service.dart';
+import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/common/task_form_section_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/form/task_currency_input.dart';

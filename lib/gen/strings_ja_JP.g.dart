@@ -53,6 +53,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
+	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
 	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
@@ -397,6 +398,22 @@ class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLog
 	@override String get payment_multiple => '複数立替';
 	@override String get unit_members => '名';
 	@override String get unit_items => '項目';
+}
+
+// Path: S53_TaskSettings_Members
+class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSettingsMembersZhTw {
+	_TranslationsS53TaskSettingsMembersJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'メンバー管理';
+	@override String get action_add => 'メンバー追加';
+	@override String get action_invite => '招待送信';
+	@override String get label_default_ratio => 'デフォルト比率';
+	@override String get dialog_delete_error_title => 'メンバー削除エラー';
+	@override String get dialog_delete_error_content => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
+	@override String get member_default_name => 'メンバー';
 }
 
 // Path: S71_SystemSettings_Tos
@@ -873,6 +890,13 @@ extension on TranslationsJaJp {
 			'S52_TaskSettings_Log.payment_multiple' => '複数立替',
 			'S52_TaskSettings_Log.unit_members' => '名',
 			'S52_TaskSettings_Log.unit_items' => '項目',
+			'S53_TaskSettings_Members.title' => 'メンバー管理',
+			'S53_TaskSettings_Members.action_add' => 'メンバー追加',
+			'S53_TaskSettings_Members.action_invite' => '招待送信',
+			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',
+			'S53_TaskSettings_Members.dialog_delete_error_title' => 'メンバー削除エラー',
+			'S53_TaskSettings_Members.dialog_delete_error_content' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
+			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S71_SystemSettings_Tos.title' => '利用規約',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.action_reroll' => '動物を変える',
