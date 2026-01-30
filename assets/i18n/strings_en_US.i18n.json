@@ -72,26 +72,6 @@
     "unsaved_changes_title": "Unsaved Changes?",
     "unsaved_changes_content": "Changes you made will not be saved."
   },
-  "S50_Onboarding_Consent": {
-    "title": "Welcome to Iron Split",
-    "content_prefix": "By clicking Start, you agree to our ",
-    "terms_link": "Terms of Service",
-    "and": " and ",
-    "privacy_link": "Privacy Policy",
-    "content_suffix": ". We use anonymous login to protect your privacy.",
-    "agree_btn": "Start",
-    "login_failed": "Login Failed: {message}"
-  },
-  "S51_Onboarding_Name": {
-    "title": "Set Display Name",
-    "description": "Please enter your display name (1-10 chars).",
-    "field_hint": "Enter nickname",
-    "field_counter": "{current}/10",
-    "error_empty": "Name cannot be empty",
-    "error_too_long": "Max 10 characters",
-    "error_invalid_char": "Invalid characters",
-    "action_next": "Set"
-  },
   "S10_Home_TaskList": {
     "title": "My Tasks",
     "tab_in_progress": "Active",
@@ -121,8 +101,13 @@
     "label_prepaid": "Prepaid",
     "label_expense": "Expense"
   },
+  "S12_TaskClose_Notice": {
+    "title": "Close Task",
+    "content": "Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.",
+    "action_close": "Close Task"
+  },
   "S13_Task_Dashboard": {
-    "title": "Dashboard",
+    "title_active": "Dashboard",
     "tab_group": "Group",
     "tab_personal": "Personal",
     "label_prepay_balance": "Pool Balance",
@@ -218,6 +203,39 @@
     "label_date": "Date",
     "label_currency": "Currency"
   },
+  "S17_Task_Locked": {
+    "retention_notice": "Data will be retained for 30 days. Please download your records.",
+    "action_download": "Download Records",
+    "action_notify_members": "Notify Members",
+    "label_remainder_absorbed_by": "Remainder {amount} absorbed by {name}",
+    "action_view_payment_details": "View Payment Details",
+    "section_pending": "Pending",
+    "section_cleared": "Cleared",
+    "member_payment_status_pay": "To Pay",
+    "member_payment_status_receive": "To Receive",
+    "dialog_mark_cleared_title": "Mark as Cleared",
+    "dialog_mark_cleared_content": "Mark {name} as cleared?"
+  },
+  "S50_Onboarding_Consent": {
+    "title": "Welcome to Iron Split",
+    "content_prefix": "By clicking Start, you agree to our ",
+    "terms_link": "Terms of Service",
+    "and": " and ",
+    "privacy_link": "Privacy Policy",
+    "content_suffix": ". We use anonymous login to protect your privacy.",
+    "agree_btn": "Start",
+    "login_failed": "Login Failed: {message}"
+  },
+  "S51_Onboarding_Name": {
+    "title": "Set Display Name",
+    "description": "Please enter your display name (1-10 chars).",
+    "field_hint": "Enter nickname",
+    "field_counter": "{current}/10",
+    "error_empty": "Name cannot be empty",
+    "error_too_long": "Max 10 characters",
+    "error_invalid_char": "Invalid characters",
+    "action_next": "Set"
+  },
   "S52_TaskSettings_Log": {
     "title": "Activity Log",
     "empty_log": "No activity logs found",
@@ -288,6 +306,11 @@
     "action_cancel": "Back",
     "action_add": "Add Record"
   },
+  "D08_TaskClosed_Confirm": {
+    "title": "Confirm Close",
+    "content": "This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?",
+    "action_confirm": "Confirm"
+  },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "Change Base Currency?",
     "content": "Changing currency will reset all exchange rates. This may affect current balances. Are you sure?"
@@ -310,11 +333,7 @@
     "error_percent_mismatch": "Total must be 100%",
     "action_save": "Confirm Split",
     "hint_amount": "Amount",
-    "hint_percent": "%",
-    "title_add": "Add Item",
-    "title_edit": "Edit Item",
-    "err_input_amount_first": "Please enter amount first",
-    "split_status": "{count} people"
+    "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
     "title": "Choose Split Method",

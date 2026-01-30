@@ -4,8 +4,11 @@ import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_block.dart';
 import 'package:iron_split/core/models/record_model.dart';
@@ -216,6 +219,52 @@ class _S13GroupViewState extends State<S13GroupView> {
     // 3. 轉回 List 並由新到舊排序
     final fullDateList = uniqueDates.toList()..sort((a, b) => b.compareTo(a));
 
+    // Get current rule from taskData
+    final balanceRule = widget.taskData?['remainderRule'] ?? 'random';
+
+    void showRulePicker() {
+      RemainderRulePickerSheet.show(
+        context: context,
+        initialRule: balanceRule,
+        onSelected: (selectedRule) {
+          // Update Firestore
+          FirebaseFirestore.instance
+              .collection('tasks')
+              .doc(widget.taskId)
+              .update({'remainderRule': selectedRule});
+        },
+      );
+    }
+
+    void showCurrencyPicker() {
+      CurrencyPickerSheet.show(
+        context: context,
+        initialCode: widget.baseCurrencyOption.code, // 需確保 BalanceCard 有此參數
+        onSelected: (CurrencyOption selected) async {
+          if (selected.code == widget.baseCurrencyOption.code) {
+            return;
+          }
+
+          // 等待 BottomSheet 關閉動畫完成
+          // 如果不加這行，Dialog 會因為 Sheet 還在關閉而被「吃掉」
+          await Future.delayed(const Duration(milliseconds: 300));
+
+          // 重複使用 D09，完全符合 DRY 原則
+          await showDialog(
+            context: context,
+            builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
+              taskId: widget.taskId,
+              newCurrency: selected,
+            ),
+          );
+
+          // S13 通常是 StreamBuilder 監聽的，
+          // 所以 D09 更新完資料庫後，S13 頁面會自動刷新，
+          // 這裡不需要額外的 setState。
+        },
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double visibleHeight = constraints.maxHeight;
@@ -241,11 +290,12 @@ class _S13GroupViewState extends State<S13GroupView> {
                     child: BalanceCard(
                       taskId: widget.taskId,
                       taskData: widget.taskData,
-                      memberData: widget.memberData,
                       records: widget.records,
                       remainderBuffer:
                           BalanceCalculator.calculateRemainderBuffer(
                               recordModels),
+                      onCurrencyTap: showCurrencyPicker,
+                      onRuleTap: showRulePicker,
                     ),
                   ),
                 ),

@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Ensure this is imported for the update
-import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart'; // Import the new picker
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'dart:ui' as ui;
 
 class BalanceCard extends StatelessWidget {
   final String taskId;
   final Map<String, dynamic>? taskData;
-  final Map<String, dynamic>? memberData;
   final List<QueryDocumentSnapshot> records;
   final double remainderBuffer;
+  final VoidCallback? onCurrencyTap;
+  final VoidCallback? onRuleTap;
 
   const BalanceCard({
     super.key,
     required this.taskId,
     required this.taskData,
-    required this.memberData,
     required this.records,
     required this.remainderBuffer,
+    this.onCurrencyTap,
+    this.onRuleTap,
   });
 
   /// ! CRITICAL LAYOUT CONFIGURATION !
@@ -48,6 +47,7 @@ class BalanceCard extends StatelessWidget {
 
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final bool isLocked = onCurrencyTap == null;
     // 1. Data Parsing
     final String systemCurrency = NumberFormat.simpleCurrency(
                 locale: Localizations.localeOf(context).toString())
@@ -118,20 +118,6 @@ class BalanceCard extends StatelessWidget {
 
     // Get current rule from taskData
     final balanceRule = taskData?['remainderRule'] ?? 'random';
-
-    void showRulePicker() {
-      RemainderRulePickerSheet.show(
-        context: context,
-        initialRule: balanceRule,
-        onSelected: (selectedRule) {
-          // Update Firestore
-          FirebaseFirestore.instance
-              .collection('tasks')
-              .doc(taskId)
-              .update({'remainderRule': selectedRule});
-        },
-      );
-    }
 
     void showBalanceDetails() {
       showDialog(
@@ -248,37 +234,7 @@ class BalanceCard extends StatelessWidget {
                 children: [
                   // Left: Currency Selector
                   InkWell(
-                    onTap: () {
-                      CurrencyPickerSheet.show(
-                        context: context,
-                        initialCode:
-                            baseCurrencyOption.code, // 需確保 BalanceCard 有此參數
-                        onSelected: (CurrencyOption selected) async {
-                          print(selected.code);
-                          print(baseCurrencyOption.code);
-                          if (selected.code == baseCurrencyOption.code) return;
-
-                          // 等待 BottomSheet 關閉動畫完成
-                          // 如果不加這行，Dialog 會因為 Sheet 還在關閉而被「吃掉」
-                          await Future.delayed(
-                              const Duration(milliseconds: 300));
-
-                          // 重複使用 D09，完全符合 DRY 原則
-                          await showDialog(
-                            context: context,
-                            builder: (context) =>
-                                D09TaskSettingsCurrencyConfirmDialog(
-                              taskId: taskId,
-                              newCurrency: selected,
-                            ),
-                          );
-
-                          // S13 通常是 StreamBuilder 監聽的，
-                          // 所以 D09 更新完資料庫後，S13 頁面會自動刷新，
-                          // 這裡不需要額外的 setState。
-                        },
-                      );
-                    },
+                    onTap: onCurrencyTap,
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -291,9 +247,15 @@ class BalanceCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               )),
-                          const SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_down,
-                              size: 20, color: theme.colorScheme.primary),
+                          Visibility(
+                            visible: isLocked == false,
+                            child: const SizedBox(width: 4),
+                          ),
+                          Visibility(
+                            visible: isLocked == false,
+                            child: Icon(Icons.keyboard_arrow_down,
+                                size: 20, color: theme.colorScheme.primary),
+                          ),
                         ],
                       ),
                     ),
@@ -502,7 +464,7 @@ class BalanceCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   InkWell(
-                    onTap: showRulePicker,
+                    onTap: onRuleTap,
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -521,10 +483,16 @@ class BalanceCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_down,
-                              size: 16,
-                              color: theme.colorScheme.onSurfaceVariant),
+                          Visibility(
+                            visible: isLocked == false,
+                            child: const SizedBox(width: 4),
+                          ),
+                          Visibility(
+                            visible: isLocked == false,
+                            child: Icon(Icons.keyboard_arrow_down,
+                                size: 16,
+                                color: theme.colorScheme.onSurfaceVariant),
+                          ),
                         ],
                       ),
                     ),
@@ -532,7 +500,24 @@ class BalanceCard extends StatelessWidget {
                 ],
               ),
             ),
-
+            Visibility(
+              visible: onRuleTap != null,
+              child: const SizedBox(height: 12.0),
+            ),
+            Visibility(
+              visible: onRuleTap != null,
+              child: Text(
+                // 這裡使用 i18n key，需替換具體金額與人名
+                // 暫時範例：
+                t.S17_Task_Locked.label_remainder_absorbed_by(
+                  amount: "${baseCurrencyOption.symbol} 0", // TODO: 接真實餘額
+                  name: "Owner", // TODO: 接真實吸收者
+                ),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
+              ),
+            ),
             // Pad Bottom: 16
             const SizedBox(height: 16.0),
           ],

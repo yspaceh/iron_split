@@ -139,7 +139,10 @@ class AppRouter {
               GoRoute(
                 path: 'close', // Full: /task/:taskId/settings/close
                 name: 'S12',
-                builder: (context, state) => const S12TaskCloseNoticePage(),
+                builder: (context, state) {
+                  final taskId = state.pathParameters['taskId']!;
+                  return S12TaskCloseNoticePage(taskId: taskId);
+                },
               ),
             ],
           ),

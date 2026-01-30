@@ -121,8 +121,13 @@
     "label_prepaid": "立替",
     "label_expense": "支出"
   },
+  "S12_TaskClose_Notice": {
+    "title": "タスク終了",
+    "content": "このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。",
+    "action_close": "タスク終了"
+  },
   "S13_Task_Dashboard": {
-    "title": "ダッシュボード",
+    "title_active": "ダッシュボード",
     "tab_group": "グループ",
     "tab_personal": "個人",
     "label_prepay_balance": "プール残高",
@@ -218,6 +223,19 @@
     "label_date": "日付",
     "label_currency": "通貨"
   },
+  "S17_Task_Locked": {
+    "retention_notice": "このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。",
+    "action_download": "記録をダウンロード",
+    "action_notify_members": "メンバーに通知",
+    "label_remainder_absorbed_by": "端数 {amount} は {name} が負担",
+    "action_view_payment_details": "支払/受取口座を確認",
+    "section_pending": "未完了",
+    "section_cleared": "完了",
+    "member_payment_status_pay": "支払",
+    "member_payment_status_receive": "受取",
+    "dialog_mark_cleared_title": "完了確認",
+    "dialog_mark_cleared_content": "{name} を完了としてマークしますか？"
+  },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
     "empty_log": "活動履歴はありません",
@@ -287,6 +305,11 @@
     "content": "この日付の記録は見つかりませんでした。追加しますか？",
     "action_cancel": "戻る",
     "action_add": "記録を追加"
+  },
+  "D08_TaskClosed_Confirm": {
+    "title": "タスク終了確認",
+    "content": "この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？",
+    "action_confirm": "確認"
   },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "決済通貨を変更しますか？",

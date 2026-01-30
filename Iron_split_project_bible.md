@@ -266,19 +266,60 @@
 
 ### Collection: `tasks`
 
-| Field           | Type      | Description                                 |
-| :-------------- | :-------- | :------------------------------------------ |
-| title           | string    | 任務名稱                                    |
-| coverEmoji      | string    | 封面 Emoji                                  |
-| date            | timestamp | 任務日期                                    |
-| status          | string    | `active`, `settled`, `archived`             |
-| baseCurrency    | string    | 結算基準幣別 (S14 設定)                     |
-| prepayBalance   | number    | **公費池餘額** (取代 totalPool，即時計算用) |
-| balanceRule     | string    | `random` / `order` / `member`               |
-| remainderBuffer | number    | **暫存零頭** (累積除不盡的小數位)           |
-| members         | list/map  | 成員資料 `{id, name, avatar, isLinked...}`  |
-| createdBy       | string    | 建立者 UID                                  |
-| createdAt       | timestamp | 建立時間                                    |
+| Field           | Type      | Description                                                           |
+| :-------------- | :-------- | :-------------------------------------------------------------------- |
+| title           | string    | 任務名稱                                                              |
+| coverEmoji      | string    | 封面 Emoji                                                            |
+| date            | timestamp | 任務日期                                                              |
+| status          | string    | `active`, `settled`, `archived`                                       |
+| baseCurrency    | string    | 結算基準幣別 (S14 設定)                                               |
+| prepayBalance   | number    | **公費池餘額** (取代 totalPool，即時計算用)                           |
+| balanceRule     | string    | `random` / `order` / `member`                                         |
+| remainderBuffer | number    | **暫存零頭** (累積除不盡的小數位)                                     |
+| members         | list/map  | 成員資料 `{id, displayName, avatar, isLinked...}`                     |
+| createdBy       | string    | 建立者 UID                                                            |
+| createdAt       | timestamp | 建立時間                                                              |
+| settlement      | map       | 結算快照僅當 `status` 為 `settled` 時存在。由 S30 (結算確認頁) 寫入。 |
+
+### `settlement` Map Structure (詳細結構)
+
+此欄位儲存結算當下的靜態數據，確保 S17 顯示金額恆定且高效。
+
+````json
+"settlement": {
+  // 1. 結算流程子狀態 (Sub-status)
+  // 用於 S10 判斷任務應顯示於「進行中」還是「已結束」
+  "status": "pending", // "pending" (等待付款) | "cleared" (結清完成)
+
+  // 2. 結算當下資訊
+  "finalizedAt": Timestamp, // S30 按下確認的時間
+  "baseCurrency": "TWD",    // 結算鎖定的幣別 (Snapshot)
+
+  // 3. 統計數據快照 (供 S17 BalanceCard 直接顯示)
+  "stats": {
+    "totalExpense": 15000.0,
+    "totalIncome": 15000.0,
+    "poolBalance": -200.0,  // 公款餘額
+    "remainder": 3.0        // 餘額罐金額 (吸收值)
+  },
+
+  // 4. 成員分帳表 (Allocations) - 核心快照
+  // 記錄每位成員最終的應收付金額 (Net Amount)
+  // Key: uid, Value: double (正數=應收, 負數=應付)
+  "allocations": {
+    "user_a_uid": -500.0,
+    "user_b_uid": 200.0,
+    "user_c_uid": 300.0
+  },
+
+  // 5. 成員支付狀態追蹤 (Mutable)
+  // S17 唯一可寫入的欄位，由隊長操作
+  // Key: uid, Value: boolean (true=已處理/已結清)
+  "memberStatus": {
+    "user_a_uid": false,
+    "user_b_uid": true
+  }
+}
 
 ### Sub-collection: `tasks/{taskId}/records` (MVP Core)
 
@@ -404,7 +445,7 @@ lib/
 │   └── settlement/ # S30-S32
 ├── l10n/           # slang translations
 └── gen/            # generated files
-```
+````
 
 ### 14.2 狀態管理放置規則
 
@@ -484,6 +525,45 @@ lib/
     - 所有 Bottom Sheet (B02, B03, B07) 的底部 Action/Summary 區塊，必須加上 `MediaQuery.padding.bottom`。
     - 背景色需延伸至螢幕最底端，內容則避開 Home Indicator，確保原生手勢操作流暢。
 
+### 15.6 S10 任務列表分類規範 (Task List Logic)
+
+任務在首頁顯示的位置由 `status` (主狀態) 與 `settlement.status` (子狀態) 共同決定。
+
+#### Tab 1: 進行中 (Active)
+
+顯示「還在玩」或「玩完了但錢還沒算清楚」的任務。
+
+- **條件 A**: `status == 'ongoing'`
+- **條件 B**: `status == 'settled'` **AND** `settlement.status == 'pending'`
+
+#### Tab 2: 已結束 (Past)
+
+顯示「手動關閉」或「帳款已全部結清」的任務。
+
+- **條件 A**: `status == 'closed'`
+- **條件 B**: `status == 'settled'` **AND** `settlement.status == 'cleared'`
+
+### 15.7 任務生命週期流程 (Task Lifecycle)
+
+1.  **Ongoing (S13)**
+    - 任務創建後的預設狀態。
+    - 可新增記帳、編輯成員。
+2.  **Transition to Settled (S30 -> S17)**
+    - 使用者在 S30 確認結算。
+    - 系統計算最終金額，寫入 `settlement` 快照 (stats + allocations)。
+    - 更新 `status` = `settled`, `settlement.status` = `pending`。
+    - 跳轉至 **S17 (Mode: Settled, State: Pending)** (儀表板畫面)。
+3.  **Transition to Cleared (S17)**
+    - 隊長在 S17 將所有成員標記為「已處理」。
+    - 更新 `settlement.status` = `cleared`。
+    - S17 UI 自動切換為 **Mode: Settled, State: Cleared** (打勾畫面)。
+    - S10 列表將任務移至「已結束」。
+4.  **Manual Close (S12 -> S17)**
+    - 隊長在 S12 選擇手動結束任務 (略過結算)。
+    - 更新 `status` = `closed`。
+    - 跳轉至 **S17 (Mode: Closed)** (鎖頭畫面)。
+    - S10 列表將任務移至「已結束」。
+
 ---
 
 ## 16. M3 UI Blocks
@@ -513,7 +593,16 @@ lib/
 
 ## 變更紀錄（append-only）
 
-- **2026-01-28: 多幣別公款水位與混合支付邏輯修正 (v2.3)**
+- 2026-01-30: 結算流程架構確立 (S17/S30)
+  - **Schema Update**:
+    - `tasks` Collection: 擴充 `status` (`ongoing`/`settled`/`closed`)；新增 `settlement` 欄位 (Map) 作為結算快照 (Snapshot)，包含 `allocations`, `stats`, `memberStatus`。
+  - **App Logic Update**:
+    - S10: 確立列表分類邏輯，依據 `status` + `settlement.status` 區分 Active/Past。
+    - S17: 確立三態視圖 (Closed / Settled-Pending / Settled-Cleared)，移除即時計算邏輯，改讀取 Snapshot。
+  - **Refactor**:
+    - `BalanceCard`: 實施 State Hoisting (移除業務邏輯)，新增 `overrideStats` 支援唯讀模式。
+    - `S17SettledPendingView`: 優化效能，直接讀取結算快照渲染，支援隊長標記成員支付狀態。
+- 2026-01-28: 多幣別公款水位與混合支付邏輯修正
   - **Logic Update (Calculator)**:
     - 確立「公款水位 (Cash on Hand)」與「會計淨值 (Net Balance)」分離原則。
     - 修正 `calculatePersonalCredit`: 納入 Expense 中的成員代墊 (Member Advance) 貢獻。

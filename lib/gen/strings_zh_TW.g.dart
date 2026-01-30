@@ -47,10 +47,12 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
 	late final TranslationsS11InviteConfirmZhTw S11_Invite_Confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
+	late final TranslationsS12TaskCloseNoticeZhTw S12_TaskClose_Notice = TranslationsS12TaskCloseNoticeZhTw.internal(_root);
 	late final TranslationsS13TaskDashboardZhTw S13_Task_Dashboard = TranslationsS13TaskDashboardZhTw.internal(_root);
 	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
+	late final TranslationsS17TaskLockedZhTw S17_Task_Locked = TranslationsS17TaskLockedZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
@@ -60,6 +62,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
 	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
 	late final TranslationsD05DateJumpNoResultZhTw D05_DateJump_NoResult = TranslationsD05DateJumpNoResultZhTw.internal(_root);
+	late final TranslationsD08TaskClosedConfirmZhTw D08_TaskClosed_Confirm = TranslationsD08TaskClosedConfirmZhTw.internal(_root);
 	late final TranslationsD09TaskSettingsCurrencyConfirmZhTw D09_TaskSettings_CurrencyConfirm = TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(_root);
 	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
@@ -395,6 +398,24 @@ class TranslationsS11InviteConfirmZhTw {
 	String get label_expense => '應分攤';
 }
 
+// Path: S12_TaskClose_Notice
+class TranslationsS12TaskCloseNoticeZhTw {
+	TranslationsS12TaskCloseNoticeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '結束任務確認'
+	String get title => '結束任務確認';
+
+	/// zh-TW: '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。'
+	String get content => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。';
+
+	/// zh-TW: '結束任務'
+	String get action_close => '結束任務';
+}
+
 // Path: S13_Task_Dashboard
 class TranslationsS13TaskDashboardZhTw {
 	TranslationsS13TaskDashboardZhTw.internal(this._root);
@@ -404,7 +425,7 @@ class TranslationsS13TaskDashboardZhTw {
 	// Translations
 
 	/// zh-TW: '任務主頁'
-	String get title => '任務主頁';
+	String get title_active => '任務主頁';
 
 	/// zh-TW: '大家'
 	String get tab_group => '大家';
@@ -483,6 +504,12 @@ class TranslationsS13TaskDashboardZhTw {
 
 	/// zh-TW: '總金額'
 	String get total_amount_label => '總金額';
+
+	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
+	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
+
+	/// zh-TW: '下載記錄'
+	String get action_download => '下載記錄';
 }
 
 // Path: S14_Task_Settings
@@ -696,6 +723,48 @@ class TranslationsS16TaskCreateEditZhTw {
 
 	/// zh-TW: '貨幣'
 	String get label_currency => '貨幣';
+}
+
+// Path: S17_Task_Locked
+class TranslationsS17TaskLockedZhTw {
+	TranslationsS17TaskLockedZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
+	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
+
+	/// zh-TW: '下載紀錄'
+	String get action_download => '下載紀錄';
+
+	/// zh-TW: '通知成員'
+	String get action_notify_members => '通知成員';
+
+	/// zh-TW: '零錢罐 {amount} 由 {name} 吸收'
+	String label_remainder_absorbed_by({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收';
+
+	/// zh-TW: '查看收退款帳戶'
+	String get action_view_payment_details => '查看收退款帳戶';
+
+	/// zh-TW: '待處理'
+	String get section_pending => '待處理';
+
+	/// zh-TW: '已處理'
+	String get section_cleared => '已處理';
+
+	/// zh-TW: '應付'
+	String get member_payment_status_pay => '應付';
+
+	/// zh-TW: '應收'
+	String get member_payment_status_receive => '應收';
+
+	/// zh-TW: '確認收款/付款'
+	String get dialog_mark_cleared_title => '確認收款/付款';
+
+	/// zh-TW: '確定將 {name} 標記為已處理？'
+	String dialog_mark_cleared_content({required Object name}) => '確定將 ${name} 標記為已處理？';
 }
 
 // Path: S50_Onboarding_Consent
@@ -977,6 +1046,24 @@ class TranslationsD05DateJumpNoResultZhTw {
 
 	/// zh-TW: '新增紀錄'
 	String get action_add => '新增紀錄';
+}
+
+// Path: D08_TaskClosed_Confirm
+class TranslationsD08TaskClosedConfirmZhTw {
+	TranslationsD08TaskClosedConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認結束任務'
+	String get title => '確認結束任務';
+
+	/// zh-TW: '此操作無法復原。所有資料將被永久鎖定。 確定要繼續嗎？'
+	String get content => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？';
+
+	/// zh-TW: '確認'
+	String get action_confirm => '確認';
 }
 
 // Path: D09_TaskSettings_CurrencyConfirm
@@ -1375,7 +1462,10 @@ extension on Translations {
 			'S11_Invite_Confirm.label_select_ghost' => '選擇要繼承的成員',
 			'S11_Invite_Confirm.label_prepaid' => '已墊付',
 			'S11_Invite_Confirm.label_expense' => '應分攤',
-			'S13_Task_Dashboard.title' => '任務主頁',
+			'S12_TaskClose_Notice.title' => '結束任務確認',
+			'S12_TaskClose_Notice.content' => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。',
+			'S12_TaskClose_Notice.action_close' => '結束任務',
+			'S13_Task_Dashboard.title_active' => '任務主頁',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',
 			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額',
@@ -1402,6 +1492,8 @@ extension on Translations {
 			'S13_Task_Dashboard.personal_to_pay' => '應付',
 			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
 			'S13_Task_Dashboard.total_amount_label' => '總金額',
+			'S13_Task_Dashboard.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
+			'S13_Task_Dashboard.action_download' => '下載記錄',
 			'S14_Task_Settings.title' => '任務設定',
 			'S14_Task_Settings.menu_member_settings' => '成員設定',
 			'S14_Task_Settings.menu_history' => '歷史紀錄',
@@ -1464,6 +1556,17 @@ extension on Translations {
 			'S16_TaskCreate_Edit.label_name' => '任務名稱',
 			'S16_TaskCreate_Edit.label_date' => '日期',
 			'S16_TaskCreate_Edit.label_currency' => '貨幣',
+			'S17_Task_Locked.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
+			'S17_Task_Locked.action_download' => '下載紀錄',
+			'S17_Task_Locked.action_notify_members' => '通知成員',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收',
+			'S17_Task_Locked.action_view_payment_details' => '查看收退款帳戶',
+			'S17_Task_Locked.section_pending' => '待處理',
+			'S17_Task_Locked.section_cleared' => '已處理',
+			'S17_Task_Locked.member_payment_status_pay' => '應付',
+			'S17_Task_Locked.member_payment_status_receive' => '應收',
+			'S17_Task_Locked.dialog_mark_cleared_title' => '確認收款/付款',
+			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '確定將 ${name} 標記為已處理？',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.terms_link' => '服務條款',
@@ -1534,6 +1637,9 @@ extension on Translations {
 			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄，要新增一筆嗎？',
 			'D05_DateJump_NoResult.action_cancel' => '返回',
 			'D05_DateJump_NoResult.action_add' => '新增紀錄',
+			'D08_TaskClosed_Confirm.title' => '確認結束任務',
+			'D08_TaskClosed_Confirm.content' => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？',
+			'D08_TaskClosed_Confirm.action_confirm' => '確認',
 			'D09_TaskSettings_CurrencyConfirm.title' => '變更結算幣別？',
 			'D09_TaskSettings_CurrencyConfirm.content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',

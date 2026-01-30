@@ -44,14 +44,16 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
-	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
-	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
 	@override late final _TranslationsS11InviteConfirmEnUs S11_Invite_Confirm = _TranslationsS11InviteConfirmEnUs._(_root);
+	@override late final _TranslationsS12TaskCloseNoticeEnUs S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeEnUs._(_root);
 	@override late final _TranslationsS13TaskDashboardEnUs S13_Task_Dashboard = _TranslationsS13TaskDashboardEnUs._(_root);
 	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
+	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
+	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
+	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
 	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
@@ -59,6 +61,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
 	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
+	@override late final _TranslationsD08TaskClosedConfirmEnUs D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmEnUs._(_root);
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
@@ -175,40 +178,6 @@ class _TranslationsDialogEnUs extends TranslationsDialogZhTw {
 	@override String get unsaved_changes_content => 'Changes you made will not be saved.';
 }
 
-// Path: S50_Onboarding_Consent
-class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingConsentZhTw {
-	_TranslationsS50OnboardingConsentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Welcome to Iron Split';
-	@override String get content_prefix => 'By clicking Start, you agree to our ';
-	@override String get terms_link => 'Terms of Service';
-	@override String get and => ' and ';
-	@override String get privacy_link => 'Privacy Policy';
-	@override String get content_suffix => '. We use anonymous login to protect your privacy.';
-	@override String get agree_btn => 'Start';
-	@override String login_failed({required Object message}) => 'Login Failed: ${message}';
-}
-
-// Path: S51_Onboarding_Name
-class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZhTw {
-	_TranslationsS51OnboardingNameEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Set Display Name';
-	@override String get description => 'Please enter your display name (1-10 chars).';
-	@override String get field_hint => 'Enter nickname';
-	@override String field_counter({required Object current}) => '${current}/10';
-	@override String get error_empty => 'Name cannot be empty';
-	@override String get error_too_long => 'Max 10 characters';
-	@override String get error_invalid_char => 'Invalid characters';
-	@override String get action_next => 'Set';
-}
-
 // Path: S10_Home_TaskList
 class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 	_TranslationsS10HomeTaskListEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -252,6 +221,18 @@ class _TranslationsS11InviteConfirmEnUs extends TranslationsS11InviteConfirmZhTw
 	@override String get label_expense => 'Expense';
 }
 
+// Path: S12_TaskClose_Notice
+class _TranslationsS12TaskCloseNoticeEnUs extends TranslationsS12TaskCloseNoticeZhTw {
+	_TranslationsS12TaskCloseNoticeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Close Task';
+	@override String get content => 'Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.';
+	@override String get action_close => 'Close Task';
+}
+
 // Path: S13_Task_Dashboard
 class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw {
 	_TranslationsS13TaskDashboardEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -259,7 +240,7 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Dashboard';
+	@override String get title_active => 'Dashboard';
 	@override String get tab_group => 'Group';
 	@override String get tab_personal => 'Personal';
 	@override String get label_prepay_balance => 'Pool Balance';
@@ -377,6 +358,60 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override String get label_currency => 'Currency';
 }
 
+// Path: S17_Task_Locked
+class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
+	_TranslationsS17TaskLockedEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get retention_notice => 'Data will be retained for 30 days. Please download your records.';
+	@override String get action_download => 'Download Records';
+	@override String get action_notify_members => 'Notify Members';
+	@override String label_remainder_absorbed_by({required Object amount, required Object name}) => 'Remainder ${amount} absorbed by ${name}';
+	@override String get action_view_payment_details => 'View Payment Details';
+	@override String get section_pending => 'Pending';
+	@override String get section_cleared => 'Cleared';
+	@override String get member_payment_status_pay => 'To Pay';
+	@override String get member_payment_status_receive => 'To Receive';
+	@override String get dialog_mark_cleared_title => 'Mark as Cleared';
+	@override String dialog_mark_cleared_content({required Object name}) => 'Mark ${name} as cleared?';
+}
+
+// Path: S50_Onboarding_Consent
+class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingConsentZhTw {
+	_TranslationsS50OnboardingConsentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Welcome to Iron Split';
+	@override String get content_prefix => 'By clicking Start, you agree to our ';
+	@override String get terms_link => 'Terms of Service';
+	@override String get and => ' and ';
+	@override String get privacy_link => 'Privacy Policy';
+	@override String get content_suffix => '. We use anonymous login to protect your privacy.';
+	@override String get agree_btn => 'Start';
+	@override String login_failed({required Object message}) => 'Login Failed: ${message}';
+}
+
+// Path: S51_Onboarding_Name
+class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZhTw {
+	_TranslationsS51OnboardingNameEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Set Display Name';
+	@override String get description => 'Please enter your display name (1-10 chars).';
+	@override String get field_hint => 'Enter nickname';
+	@override String field_counter({required Object current}) => '${current}/10';
+	@override String get error_empty => 'Name cannot be empty';
+	@override String get error_too_long => 'Max 10 characters';
+	@override String get error_invalid_char => 'Invalid characters';
+	@override String get action_next => 'Set';
+}
+
 // Path: S52_TaskSettings_Log
 class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -491,6 +526,18 @@ class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResu
 	@override String get action_add => 'Add Record';
 }
 
+// Path: D08_TaskClosed_Confirm
+class _TranslationsD08TaskClosedConfirmEnUs extends TranslationsD08TaskClosedConfirmZhTw {
+	_TranslationsD08TaskClosedConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Close';
+	@override String get content => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?';
+	@override String get action_confirm => 'Confirm';
+}
+
 // Path: D09_TaskSettings_CurrencyConfirm
 class _TranslationsD09TaskSettingsCurrencyConfirmEnUs extends TranslationsD09TaskSettingsCurrencyConfirmZhTw {
 	_TranslationsD09TaskSettingsCurrencyConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -534,10 +581,6 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	@override String get action_save => 'Confirm Split';
 	@override String get hint_amount => 'Amount';
 	@override String get hint_percent => '%';
-	@override String get title_add => 'Add Item';
-	@override String get title_edit => 'Edit Item';
-	@override String get err_input_amount_first => 'Please enter amount first';
-	@override String split_status({required Object count}) => '${count} people';
 }
 
 // Path: B03_SplitMethod_Edit
@@ -748,22 +791,6 @@ extension on TranslationsEnUs {
 			'log_action.unknown' => 'Unknown Action',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
-			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
-			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
-			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',
-			'S50_Onboarding_Consent.and' => ' and ',
-			'S50_Onboarding_Consent.privacy_link' => 'Privacy Policy',
-			'S50_Onboarding_Consent.content_suffix' => '. We use anonymous login to protect your privacy.',
-			'S50_Onboarding_Consent.agree_btn' => 'Start',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: ${message}',
-			'S51_Onboarding_Name.title' => 'Set Display Name',
-			'S51_Onboarding_Name.description' => 'Please enter your display name (1-10 chars).',
-			'S51_Onboarding_Name.field_hint' => 'Enter nickname',
-			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
-			'S51_Onboarding_Name.error_empty' => 'Name cannot be empty',
-			'S51_Onboarding_Name.error_too_long' => 'Max 10 characters',
-			'S51_Onboarding_Name.error_invalid_char' => 'Invalid characters',
-			'S51_Onboarding_Name.action_next' => 'Set',
 			'S10_Home_TaskList.title' => 'My Tasks',
 			'S10_Home_TaskList.tab_in_progress' => 'Active',
 			'S10_Home_TaskList.tab_completed' => 'Finished',
@@ -789,7 +816,10 @@ extension on TranslationsEnUs {
 			'S11_Invite_Confirm.label_select_ghost' => 'Select Member to Inherit',
 			'S11_Invite_Confirm.label_prepaid' => 'Prepaid',
 			'S11_Invite_Confirm.label_expense' => 'Expense',
-			'S13_Task_Dashboard.title' => 'Dashboard',
+			'S12_TaskClose_Notice.title' => 'Close Task',
+			'S12_TaskClose_Notice.content' => 'Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.',
+			'S12_TaskClose_Notice.action_close' => 'Close Task',
+			'S13_Task_Dashboard.title_active' => 'Dashboard',
 			'S13_Task_Dashboard.tab_group' => 'Group',
 			'S13_Task_Dashboard.tab_personal' => 'Personal',
 			'S13_Task_Dashboard.label_prepay_balance' => 'Pool Balance',
@@ -878,6 +908,33 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.label_name' => 'Task Name',
 			'S16_TaskCreate_Edit.label_date' => 'Date',
 			'S16_TaskCreate_Edit.label_currency' => 'Currency',
+			'S17_Task_Locked.retention_notice' => 'Data will be retained for 30 days. Please download your records.',
+			'S17_Task_Locked.action_download' => 'Download Records',
+			'S17_Task_Locked.action_notify_members' => 'Notify Members',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => 'Remainder ${amount} absorbed by ${name}',
+			'S17_Task_Locked.action_view_payment_details' => 'View Payment Details',
+			'S17_Task_Locked.section_pending' => 'Pending',
+			'S17_Task_Locked.section_cleared' => 'Cleared',
+			'S17_Task_Locked.member_payment_status_pay' => 'To Pay',
+			'S17_Task_Locked.member_payment_status_receive' => 'To Receive',
+			'S17_Task_Locked.dialog_mark_cleared_title' => 'Mark as Cleared',
+			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => 'Mark ${name} as cleared?',
+			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
+			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
+			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',
+			'S50_Onboarding_Consent.and' => ' and ',
+			'S50_Onboarding_Consent.privacy_link' => 'Privacy Policy',
+			'S50_Onboarding_Consent.content_suffix' => '. We use anonymous login to protect your privacy.',
+			'S50_Onboarding_Consent.agree_btn' => 'Start',
+			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: ${message}',
+			'S51_Onboarding_Name.title' => 'Set Display Name',
+			'S51_Onboarding_Name.description' => 'Please enter your display name (1-10 chars).',
+			'S51_Onboarding_Name.field_hint' => 'Enter nickname',
+			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
+			'S51_Onboarding_Name.error_empty' => 'Name cannot be empty',
+			'S51_Onboarding_Name.error_too_long' => 'Max 10 characters',
+			'S51_Onboarding_Name.error_invalid_char' => 'Invalid characters',
+			'S51_Onboarding_Name.action_next' => 'Set',
 			'S52_TaskSettings_Log.title' => 'Activity Log',
 			'S52_TaskSettings_Log.empty_log' => 'No activity logs found',
 			'S52_TaskSettings_Log.action_export_csv' => 'Export CSV',
@@ -932,6 +989,9 @@ extension on TranslationsEnUs {
 			'D05_DateJump_NoResult.content' => 'No record found for this date. Would you like to add one?',
 			'D05_DateJump_NoResult.action_cancel' => 'Back',
 			'D05_DateJump_NoResult.action_add' => 'Add Record',
+			'D08_TaskClosed_Confirm.title' => 'Confirm Close',
+			'D08_TaskClosed_Confirm.content' => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?',
+			'D08_TaskClosed_Confirm.action_confirm' => 'Confirm',
 			'D09_TaskSettings_CurrencyConfirm.title' => 'Change Base Currency?',
 			'D09_TaskSettings_CurrencyConfirm.content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
@@ -950,10 +1010,6 @@ extension on TranslationsEnUs {
 			'B02_SplitExpense_Edit.action_save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.hint_amount' => 'Amount',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
-			'B02_SplitExpense_Edit.title_add' => 'Add Item',
-			'B02_SplitExpense_Edit.title_edit' => 'Edit Item',
-			'B02_SplitExpense_Edit.err_input_amount_first' => 'Please enter amount first',
-			'B02_SplitExpense_Edit.split_status' => ({required Object count}) => '${count} people',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.method_even' => 'Even',
 			'B03_SplitMethod_Edit.method_percent' => 'By Percentage',

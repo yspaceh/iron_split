@@ -101,8 +101,13 @@
     "label_prepaid": "已墊付",
     "label_expense": "應分攤"
   },
-    "S13_Task_Dashboard": {
-    "title": "任務主頁",
+  "S12_TaskClose_Notice": {
+    "title": "結束任務確認",
+    "content": "關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。",
+    "action_close": "結束任務"
+  },
+  "S13_Task_Dashboard": {
+    "title_active": "任務主頁",
     "tab_group": "大家",
     "tab_personal": "個人",
     "label_prepay_balance": "公款餘額",
@@ -128,7 +133,10 @@
     "personal_to_receive": "應收",
     "personal_to_pay": "應付",
     "personal_empty_desc": "這天沒有與你有關的紀錄",
-    "total_amount_label": "總金額"
+    "total_amount_label": "總金額",
+    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
+    "action_download": "下載記錄"
+    
   },
   "S14_Task_Settings": {
     "title": "任務設定",
@@ -197,6 +205,19 @@
     "label_name": "任務名稱",
     "label_date": "日期",
     "label_currency": "貨幣"
+  },
+  "S17_Task_Locked": {
+    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
+    "action_download": "下載紀錄",
+    "action_notify_members": "通知成員",
+    "label_remainder_absorbed_by": "零錢罐 {amount} 由 {name} 吸收",
+    "action_view_payment_details": "查看收退款帳戶",
+    "section_pending": "待處理",
+    "section_cleared": "已處理",
+    "member_payment_status_pay": "應付",
+    "member_payment_status_receive": "應收",
+    "dialog_mark_cleared_title": "確認收款/付款",
+    "dialog_mark_cleared_content": "確定將 {name} 標記為已處理？"
   },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
@@ -287,6 +308,11 @@
     "content": "找不到此日期的紀錄，要新增一筆嗎？",
     "action_cancel": "返回",
     "action_add": "新增紀錄"
+  },
+   "D08_TaskClosed_Confirm": {
+    "title": "確認結束任務",
+    "content": "此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？",
+    "action_confirm": "確認"
   },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "變更結算幣別？",

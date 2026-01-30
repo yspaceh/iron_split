@@ -93,7 +93,7 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
         return Scaffold(
           backgroundColor: colorScheme.surface,
           appBar: AppBar(
-            title: Text(taskData['name'] ?? t.S13_Task_Dashboard.title),
+            title: Text(taskData['name'] ?? t.S13_Task_Dashboard.title_active),
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings_outlined),

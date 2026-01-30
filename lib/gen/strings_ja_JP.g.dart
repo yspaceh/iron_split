@@ -48,10 +48,12 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS10HomeTaskListJaJp S10_Home_TaskList = _TranslationsS10HomeTaskListJaJp._(_root);
 	@override late final _TranslationsS11InviteConfirmJaJp S11_Invite_Confirm = _TranslationsS11InviteConfirmJaJp._(_root);
+	@override late final _TranslationsS12TaskCloseNoticeJaJp S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeJaJp._(_root);
 	@override late final _TranslationsS13TaskDashboardJaJp S13_Task_Dashboard = _TranslationsS13TaskDashboardJaJp._(_root);
 	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
+	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
@@ -59,6 +61,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
 	@override late final _TranslationsD05DateJumpNoResultJaJp D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJaJp._(_root);
+	@override late final _TranslationsD08TaskClosedConfirmJaJp D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmJaJp._(_root);
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
@@ -252,6 +255,18 @@ class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw
 	@override String get label_expense => '支出';
 }
 
+// Path: S12_TaskClose_Notice
+class _TranslationsS12TaskCloseNoticeJaJp extends TranslationsS12TaskCloseNoticeZhTw {
+	_TranslationsS12TaskCloseNoticeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク終了';
+	@override String get content => 'このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。';
+	@override String get action_close => 'タスク終了';
+}
+
 // Path: S13_Task_Dashboard
 class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw {
 	_TranslationsS13TaskDashboardJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -259,7 +274,7 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'ダッシュボード';
+	@override String get title_active => 'ダッシュボード';
 	@override String get tab_group => 'グループ';
 	@override String get tab_personal => '個人';
 	@override String get label_prepay_balance => 'プール残高';
@@ -377,6 +392,26 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override String get label_currency => '通貨';
 }
 
+// Path: S17_Task_Locked
+class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
+	_TranslationsS17TaskLockedJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get retention_notice => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。';
+	@override String get action_download => '記録をダウンロード';
+	@override String get action_notify_members => 'メンバーに通知';
+	@override String label_remainder_absorbed_by({required Object amount, required Object name}) => '端数 ${amount} は ${name} が負担';
+	@override String get action_view_payment_details => '支払/受取口座を確認';
+	@override String get section_pending => '未完了';
+	@override String get section_cleared => '完了';
+	@override String get member_payment_status_pay => '支払';
+	@override String get member_payment_status_receive => '受取';
+	@override String get dialog_mark_cleared_title => '完了確認';
+	@override String dialog_mark_cleared_content({required Object name}) => '${name} を完了としてマークしますか？';
+}
+
 // Path: S52_TaskSettings_Log
 class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -489,6 +524,18 @@ class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResu
 	@override String get content => 'この日付の記録は見つかりませんでした。追加しますか？';
 	@override String get action_cancel => '戻る';
 	@override String get action_add => '記録を追加';
+}
+
+// Path: D08_TaskClosed_Confirm
+class _TranslationsD08TaskClosedConfirmJaJp extends TranslationsD08TaskClosedConfirmZhTw {
+	_TranslationsD08TaskClosedConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク終了確認';
+	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？';
+	@override String get action_confirm => '確認';
 }
 
 // Path: D09_TaskSettings_CurrencyConfirm
@@ -785,7 +832,10 @@ extension on TranslationsJaJp {
 			'S11_Invite_Confirm.label_select_ghost' => '引き継ぐメンバーを選択',
 			'S11_Invite_Confirm.label_prepaid' => '立替',
 			'S11_Invite_Confirm.label_expense' => '支出',
-			'S13_Task_Dashboard.title' => 'ダッシュボード',
+			'S12_TaskClose_Notice.title' => 'タスク終了',
+			'S12_TaskClose_Notice.content' => 'このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
+			'S12_TaskClose_Notice.action_close' => 'タスク終了',
+			'S13_Task_Dashboard.title_active' => 'ダッシュボード',
 			'S13_Task_Dashboard.tab_group' => 'グループ',
 			'S13_Task_Dashboard.tab_personal' => '個人',
 			'S13_Task_Dashboard.label_prepay_balance' => 'プール残高',
@@ -874,6 +924,17 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.label_name' => 'タスク名',
 			'S16_TaskCreate_Edit.label_date' => '日付',
 			'S16_TaskCreate_Edit.label_currency' => '通貨',
+			'S17_Task_Locked.retention_notice' => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。',
+			'S17_Task_Locked.action_download' => '記録をダウンロード',
+			'S17_Task_Locked.action_notify_members' => 'メンバーに通知',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => '端数 ${amount} は ${name} が負担',
+			'S17_Task_Locked.action_view_payment_details' => '支払/受取口座を確認',
+			'S17_Task_Locked.section_pending' => '未完了',
+			'S17_Task_Locked.section_cleared' => '完了',
+			'S17_Task_Locked.member_payment_status_pay' => '支払',
+			'S17_Task_Locked.member_payment_status_receive' => '受取',
+			'S17_Task_Locked.dialog_mark_cleared_title' => '完了確認',
+			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '${name} を完了としてマークしますか？',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
 			'S52_TaskSettings_Log.action_export_csv' => 'CSVエクスポート',
@@ -928,6 +989,9 @@ extension on TranslationsJaJp {
 			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
 			'D05_DateJump_NoResult.action_cancel' => '戻る',
 			'D05_DateJump_NoResult.action_add' => '記録を追加',
+			'D08_TaskClosed_Confirm.title' => 'タスク終了確認',
+			'D08_TaskClosed_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？',
+			'D08_TaskClosed_Confirm.action_confirm' => '確認',
 			'D09_TaskSettings_CurrencyConfirm.title' => '決済通貨を変更しますか？',
 			'D09_TaskSettings_CurrencyConfirm.content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
