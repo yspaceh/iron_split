@@ -21,7 +21,7 @@ import 'package:iron_split/features/task/presentation/pages/s10_home_task_list_p
 import 'package:iron_split/features/task/presentation/pages/s16_task_create_edit_page.dart';
 
 // Invite
-import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_confirm_page_old.dart';
+import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_confirm_page.dart';
 
 // Task Dashboard & Sub-pages
 import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_page.dart';
