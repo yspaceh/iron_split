@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/invite/presentation/dialogs/d02_invite_result_dialog.dart';
+import 'package:iron_split/features/onboarding/presentation/dialogs/d02_invite_result_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S11_Invite.Confirm

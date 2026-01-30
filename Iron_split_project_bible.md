@@ -432,39 +432,133 @@
 
 ---
 
-## 14. 檔案/資料夾管理規則（AI 協作前提）
+## 14. 系統架構與檔案管理規則 (System Architecture & File Management)
 
-### 14.1 專案目錄總則（Feature-first）
+> **版本**：v3.0 (Service-Oriented Refactoring)
+> **生效日期**：2026-01-30
+> **核心原則**：採用 **Service-Oriented MVVM + Provider** 架構。UI 與邏輯徹底分離，UI 只負責顯示狀態 (State) 與轉發事件 (Event)，嚴禁直接操作資料庫或執行複雜運算。
+
+### 14.1 專案目錄結構 (Feature-First + Clean Architecture)
+
+所有功能模組（Features）必須嚴格遵守 `Data` / `Application` / `Presentation` 三層結構。
 
 ```text
 lib/
-├── core/           # router, theme, error, services
-├── features/
-│   ├── invite/     # S11
-│   ├── task/       # S10, S16, S13, S15
-│   └── settlement/ # S30-S32
-├── l10n/           # slang translations
-└── gen/            # generated files
-````
+├── core/                  # 全域共用的核心邏輯 (Pure Dart, No UI dependency)
+│   ├── constants/         # currency_constants.dart
+│   ├── models/            # record_model.dart, task_model.dart (Data Structures)
+│   └── utils/             # balance_calculator.dart (Pure Math Logic)
+│
+├── config/                # 全域配置
+│   ├── router.dart        # GoRouter (Sxx PageKey mapping)
+│   ├── theme.dart         # AppTheme
+│   └── i18n.dart          # Slang Translations
+│
+├── features/              # 業務功能模組
+│   │
+│   ├── common/            # [Global] 跨模組共用元件
+│   │   └── presentation/
+│   │       └── widgets/   # custom_date_picker.dart, common_avatar.dart
+│   │
+│   ├── onboarding/        # [Feature] 啟動/邀請/登入 (S00, S11, S50)
+│   │   ├── data/          # auth_repository.dart
+│   │   ├── application/   # onboarding_service.dart
+│   │   └── presentation/  # pages/s11_invite..., dialogs/d01...
+│   │
+│   ├── task/              # [Feature] 任務核心 (S10, S13, S17, S14)
+│   │   ├── data/          # task_repository.dart, record_repository.dart
+│   │   ├── application/   # balance_service.dart, task_settings_service.dart
+│   │   └── presentation/
+│   │       ├── viewmodels/# balance_summary_state.dart, dashboard_vm.dart
+│   │       ├── pages/     # s13_task_dashboard.dart
+│   │       ├── dialogs/   # d03_task_create..., d01_member_role_intro...
+│   │       └── widgets/   # balance_card.dart
+│   │
+│   ├── record/            # [Feature] 記帳/拆帳 (S15, B02, B03)
+│   │   ├── application/   # record_form_service.dart (Split Logic)
+│   │   └── presentation/  # sheets/b02_split..., widgets/expense_form.dart
+│   │
+│   ├── settlement/        # [Feature] 結算流程 (S30, S31, S32)
+│   │   ├── application/   # settlement_service.dart
+│   │   └── presentation/  # sheets/b04_merge..., pages/s30_confirm...
+│   │
+│   └── settings/          # [Feature] 系統設定 (S70)
+│       └── presentation/  # pages/s70_system_settings.dart
+│
+└── main.dart              # App Entry Point (S00 Bootstrap Logic)
 
-### 14.2 狀態管理放置規則
 
-- 狀態物件 (Bloc/Provider) 一律放 `features/<feature>/application/`。
-- 禁止在 `core/` 放業務狀態。
+### 14.2 分層職責定義 (Layer Responsibilities)
 
-### 14.3 外部系統整合放置規則
+#### **1. Data Layer (資料層)**
+* **路徑**：features/_/data/`
+* **職責**：搬運工。負責與 Firestore / Firebase Auth 溝通 (CRUD, Stream)。
+* **命名**：`*_repository.dart`
+* **鐵則**：不處理業務規則，只回傳 Model 或 List。**嚴禁 import `flutter/material`**。
 
-- `app_links` 只能被 `core/services/deep_link_service.dart` import。
-- Firebase 初始化放 `core/services/firebase/`。
+#### **2. Application Layer (應用服務層)**
+* **路徑**：`features/_/application/`
+* **職責**：大腦。負責協調 Repository、執行計算 (Calculator)、驗證表單邏輯。
+* **命名**：`*_service.dart`
+* **關鍵**：S13 (Stream) 與 S17 (Snapshot) 共用的計算邏輯（如餘額計算、拆帳分配）由此層統一處理。
 
-### 14.4 i18n 文案放置規則
+#### **3. Presentation Layer (表現層)**
+* **路徑**：`features/_/presentation/`
+* **組成**：
+    * **ViewModel (State)**：管家。持有 UI 狀態，呼叫 Service，通知 UI 重繪。使用 `ChangeNotifier` (Provider)。命名：`*_vm.dart` 或 `*_state.dart` (DTO)。
+    * **Page/Widget (UI)**：笨蛋顯示器。只負責 `Consumer<VM>` 顯示與轉發點擊事件。
+* **鐵則**：**絕對禁止**在 `build()` 中寫 `calculate...` 或 `FirebaseFirestore.instance`。
 
-- 後端只回 Error Code。
-- 前端 `l10n/` 定義翻譯。
+### 14.3 依賴與引用規則 (Dependency Rules)
 
-### 14.5 檔名與層級命名
+程式碼必須遵守 **單向依賴**，違者視為架構破壞：
 
-- `*_page.dart`, `*_widget.dart`, `*_repository.dart`。
+1.  ✅ **UI (Pages/Widgets)** 只能依賴 **ViewModel** 或 **State**。
+2.  ✅ **ViewModel** 只能依賴 **Service**。
+3.  ✅ **Service** 只能依賴 **Repository** 與 **Core Utils**。
+4.  ❌ **UI** 嚴禁直接 import **Repository**。
+5.  ❌ **Service** 嚴禁 import **UI Code** (Widgets)。
+
+### 14.4 元件歸位三原則 (Widget Placement)
+
+1.  **功能獨有元件 (Feature Widget)**：
+    * **定義**：只在該功能模組內使用的業務元件。
+    * **位置**：`features/<feature>/presentation/widgets/`
+    * **例**：`BalanceCard` (屬 Task), `SmartCurrencyPicker` (屬 Record)。
+2.  **全域共用元件 (Global Common)**：
+    * **定義**：跨模組使用、邏輯單純的通用元件。
+    * **位置**：`features/common/presentation/widgets/`
+    * **例**：`CommonAvatar`, `CustomDatePicker`。
+3.  **頁面局部視圖 (Page Partial)**：
+    * **定義**：單一頁面過於複雜而拆分出的區塊，通常包含特定頁面邏輯。
+    * **位置**：`features/<feature>/presentation/views/`
+    * **例**：S13Dashboard 裡面的 `MemberList` (若邏輯太複雜需拆分)。
+
+### 14.5 命名一致性規範 (Naming Conventions)
+
+為確保全案 40+ 頁面的一致性，請遵守以下後綴規則：
+
+| 類型 | 後綴 (Suffix) | 範例 |
+| :--- | :--- | :--- |
+| **Repository** | `_repository.dart` | `task_repository.dart` |
+| **Service** | `_service.dart` | `balance_service.dart` |
+| **ViewModel** | `_vm.dart` | `dashboard_vm.dart` |
+| **State (DTO)** | `_state.dart` | `balance_summary_state.dart` |
+| **Page (Screen)** | `_page.dart` | `s13_task_dashboard_page.dart` |
+| **Dialog** | `_dialog.dart` | `d03_task_create_confirm_dialog.dart` |
+| **BottomSheet** | `_sheet.dart` | `b02_split_expense_edit_sheet.dart` |
+
+### 14.6 核心邏輯歸位地圖 (Logic Migration Map)
+
+針對既有功能的重構，請依照此表進行邏輯抽離：
+
+| 功能模組 | 涉及頁面 (UI) | 核心邏輯 (Logic) | 歸屬 Service | 歸屬 Repository |
+| :--- | :--- | :--- | :--- | :--- |
+| **Dashboard** | S13, S17, BalanceCard | 餘額計算、圖表比例、鎖定快照讀取 | `DashboardService` | `RecordRepository` |
+| **Task Ops** | S16, S14, D03, D09 | 建立任務、修改設定、更換幣別 | `TaskFormService` | `TaskRepository` |
+| **Record Ops** | S15, B02, B03, B07 | 記帳 CRUD、拆帳演算法 (Split) | `RecordFormService` | `RecordRepository` |
+| **Settlement** | S30, S31, S32, B04 | 結算快照生成、付款合併計算 | `SettlementService` | `TaskRepository` |
+| **Auth/Invite**| S11, S00, S50, S51 | 匿名登入、邀請碼解析、權限檢查 | `OnboardingService`| `AuthRepository` |
 
 ---
 
@@ -637,3 +731,4 @@ lib/
 - 2026-01-14: 新增「正式環境切換清單」、命名補充、整理主畫面日期導覽列錨點規則、結算流程 p33→p39。
 - 2026-01-14: 定案使用 snake_case (iron_split) 作為開發基準。
 - 2026-01-13: 建立 vNext（整合 2026/02/14 封測規格）。
+````

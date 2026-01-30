@@ -13,7 +13,7 @@ import 'package:iron_split/core/theme/app_theme.dart'; // 導入定義好的主�
 import 'package:iron_split/firebase_options.dart';
 
 // 狀態管理
-import 'package:iron_split/features/invite/application/pending_invite_provider.dart';
+import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

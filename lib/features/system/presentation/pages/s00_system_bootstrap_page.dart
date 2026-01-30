@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:iron_split/features/invite/application/pending_invite_provider.dart';
+import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 
 /// Page Key: S00_System.Bootstrap
 class S00SystemBootstrapPage extends StatefulWidget {

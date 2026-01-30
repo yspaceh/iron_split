@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
-import 'package:iron_split/features/task/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
+import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B02SplitExpenseEditBottomSheet extends StatefulWidget {

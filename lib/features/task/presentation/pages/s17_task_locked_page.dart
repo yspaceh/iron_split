@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/features/task/presentation/widgets/s17/s17_settled_pending_view.dart';
-import 'package:iron_split/features/task/presentation/widgets/s17/s17_status_view.dart';
+import 'package:iron_split/features/task/presentation/views/s17_settled_pending_view.dart';
+import 'package:iron_split/features/task/presentation/views/s17_status_view.dart';
 
 /// Page Key: S17_Task.Locked
 /// 負責：AppBar, Loading, 路由分發

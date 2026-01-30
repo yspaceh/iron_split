@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/currency_picker_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/gen/strings.g.dart';
 

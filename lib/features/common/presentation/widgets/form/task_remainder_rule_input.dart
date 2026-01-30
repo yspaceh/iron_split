@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/bottom_sheets/remainder_rule_picker_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskRemainderRuleInput extends StatelessWidget {

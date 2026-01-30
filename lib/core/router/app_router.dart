@@ -11,8 +11,8 @@ import 'package:iron_split/features/system/presentation/pages/s70_system_setting
 import 'package:iron_split/features/system/presentation/pages/s71_system_settings_tos_page.dart';
 
 // Auth
-import 'package:iron_split/features/auth/presentation/screens/s50_onboarding_consent_page.dart';
-import 'package:iron_split/features/auth/presentation/screens/s51_onboarding_name_page.dart';
+import 'package:iron_split/features/onboarding/presentation/pages/s50_onboarding_consent_page.dart';
+import 'package:iron_split/features/onboarding/presentation/pages/s51_onboarding_name_page.dart';
 
 // Home / Task List
 import 'package:iron_split/features/task/presentation/pages/s10_home_task_list_page.dart';
@@ -21,14 +21,14 @@ import 'package:iron_split/features/task/presentation/pages/s10_home_task_list_p
 import 'package:iron_split/features/task/presentation/pages/s16_task_create_edit_page.dart';
 
 // Invite
-import 'package:iron_split/features/invite/presentation/pages/s11_invite_confirm_page.dart';
+import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_confirm_page.dart';
 
 // Task Dashboard & Sub-pages
 import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s53_task_settings_members_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s52_task_settings_log_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s12_task_close_notice_page.dart';
-import 'package:iron_split/features/task/presentation/pages/s15_record_edit_page.dart';
+import 'package:iron_split/features/record/presentation/pages/s15_record_edit_page.dart';
 
 // Settlement
 import 'package:iron_split/features/settlement/presentation/pages/s30_settlement_confirm_page.dart';

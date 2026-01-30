@@ -4,9 +4,9 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/calculation_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
-import 'package:iron_split/features/task/presentation/widgets/form/task_amount_input.dart';
-import 'package:iron_split/features/task/presentation/widgets/form/task_item_input.dart';
-import 'package:iron_split/features/task/presentation/widgets/form/task_memo_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
