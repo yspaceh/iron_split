@@ -8,8 +8,8 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/features/record/presentation/views/s13_group_view.dart';
-import 'package:iron_split/features/record/presentation/views/s13_personal_view.dart';
+import 'package:iron_split/features/task/presentation/views/s13_group_view.dart';
+import 'package:iron_split/features/task/presentation/views/s13_personal_view.dart';
 
 /// Page Key: S13_Task_Dashboard (Wireframe 16)
 class S13TaskDashboardPage extends StatefulWidget {

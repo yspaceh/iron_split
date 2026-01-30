@@ -15,7 +15,7 @@ class S51OnboardingNamePage extends StatelessWidget {
     // 注入 VM
     return ChangeNotifierProvider(
       create: (_) => S51OnboardingNameViewModel(
-        service: OnboardingService(authRepository: AuthRepository()),
+        service: OnboardingService(authRepo: AuthRepository()),
       ),
       child: const _S51View(),
     );

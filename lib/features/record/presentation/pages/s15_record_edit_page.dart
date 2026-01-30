@@ -19,8 +19,8 @@ import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_
 import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
 import 'package:iron_split/core/services/record_service.dart';
-import 'package:iron_split/features/task/presentation/views/s15_expense_form.dart';
-import 'package:iron_split/features/task/presentation/views/s15_income_form.dart';
+import 'package:iron_split/features/record/presentation/views/s15_expense_form.dart';
+import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
