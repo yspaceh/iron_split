@@ -1,35 +1,42 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
+import 'package:provider/provider.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/s10_task_list_vm.dart';
+import 'package:iron_split/features/task/presentation/widgets/task_list_item.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: S10_Home.TaskList
-class S10HomeTaskListPage extends StatefulWidget {
+class S10HomeTaskListPage extends StatelessWidget {
   const S10HomeTaskListPage({super.key});
 
   @override
-  State<S10HomeTaskListPage> createState() => _S10HomeTaskListPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => S10TaskListViewModel(
+        repo: TaskRepository(),
+      )..init(),
+      child: const _S10View(),
+    );
+  }
 }
 
-class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
-  int _selectedIndex = 0; // 0: 進行中 (ongoing), 1: 已完成 (settled/closed)
+class _S10View extends StatelessWidget {
+  const _S10View();
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final vm = context.watch<S10TaskListViewModel>();
 
-    if (user == null) {
+    if (vm.currentUserId.isEmpty) {
       return Scaffold(body: Center(child: Text(t.common.please_login)));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S10_Home_TaskList.title), // '我的任務'
+        title: Text(t.S10_Home_TaskList.title),
         centerTitle: false,
         actions: [
           IconButton(
@@ -38,22 +45,25 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
           ),
         ],
       ),
+      // 還原 FAB
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/tasks/create'),
         icon: const Icon(Icons.add),
-        label: Text(t.S16_TaskCreate_Edit.title),
+        label: Text(t.S16_TaskCreate_Edit.title), // 使用 S16 的標題 '建立任務'
         shape: const StadiumBorder(),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),
       body: Column(
         children: [
+          // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             color: colorScheme.surface,
             child: Column(
               children: [
+                // Mascot 區塊 (還原)
                 Container(
                   height: 120,
                   alignment: Alignment.center,
@@ -79,252 +89,79 @@ class _S10HomeTaskListPageState extends State<S10HomeTaskListPage> {
                     ],
                   ),
                 ),
+
+                // Segmented Button (還原 Icon)
                 SizedBox(
                   width: double.infinity,
                   child: SegmentedButton<int>(
                     segments: [
                       ButtonSegment(
                         value: 0,
-                        label:
-                            Text(t.S10_Home_TaskList.tab_in_progress), // '進行中'
-                        icon: const Icon(Icons.directions_run),
+                        label: Text(t.S10_Home_TaskList.tab_in_progress),
+                        icon: const Icon(Icons.directions_run), // 還原 Icon
                       ),
                       ButtonSegment(
                         value: 1,
-                        label: Text(t.S10_Home_TaskList.tab_completed), // '已完成'
-                        icon: const Icon(Icons.done_all),
+                        label: Text(t.S10_Home_TaskList.tab_completed),
+                        icon: const Icon(Icons.done_all), // 還原 Icon
                       ),
                     ],
-                    selected: {_selectedIndex},
-                    onSelectionChanged: (Set<int> newSelection) {
-                      setState(() {
-                        _selectedIndex = newSelection.first;
-                      });
+                    selected: {vm.filterIndex},
+                    onSelectionChanged: (newSelection) {
+                      vm.setFilter(newSelection.first);
                     },
                   ),
                 ),
               ],
             ),
           ),
+
           const Divider(height: 1),
+
+          // 2. 任務列表
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('tasks')
-                  // Fix 1: Sort by updatedAt so newest activity shows first
-                  .orderBy('updatedAt', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                      child: Text(t.common
-                          .error_prefix(message: snapshot.error.toString())));
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final docs = snapshot.data?.docs ?? [];
-
-                final myDocs = docs.where((doc) {
-                  final data = doc.data() as Map<String, dynamic>;
-                  final members = data['members'] as Map<String, dynamic>?;
-
-                  // 1. Membership Check
-                  final isMember =
-                      members != null && members.containsKey(user.uid);
-                  if (!isMember) return false;
-
-                  // 2. Status Check (Fix 2)
-                  // Default to 'ongoing' for legacy data that misses this field
-                  final String status = data['status'] ?? 'ongoing';
-
-                  if (_selectedIndex == 0) {
-                    // Tab 0: Show 'ongoing'
-                    return status == 'ongoing';
-                  } else {
-                    // Tab 1: Show anything else ('settled', 'closed', etc.)
-                    return status != 'ongoing';
-                  }
-                }).toList();
-
-                if (myDocs.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.assignment_outlined,
-                            size: 48, color: colorScheme.outlineVariant),
-                        const SizedBox(height: 16),
-                        Text(
-                          _selectedIndex == 0
-                              ? t.S10_Home_TaskList
-                                  .empty_in_progress // '目前沒有進行中的任務'
-                              : t.S10_Home_TaskList
-                                  .empty_completed, // '沒有已完成的任務'
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+            child: vm.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : vm.displayTasks.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.assignment_outlined,
+                                size: 48, color: colorScheme.outlineVariant),
+                            const SizedBox(height: 16),
+                            Text(
+                              vm.filterIndex == 0
+                                  ? t.S10_Home_TaskList.empty_in_progress
+                                  : t.S10_Home_TaskList.empty_completed,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                }
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(
+                            16, 16, 16, 80), // 底部留白給 FAB
+                        itemCount: vm.displayTasks.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final task = vm.displayTasks[index];
 
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-                  itemCount: myDocs.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final doc = myDocs[index];
-                    final data = doc.data() as Map<String, dynamic>;
-
-                    final members = data['members'] as Map<String, dynamic>;
-                    final myData = members[user.uid] as Map<String, dynamic>;
-
-                    return _TaskCard(
-                      taskId: doc.id,
-                      data: data,
-                      myAvatar: myData['avatar'] ?? 'cow',
-                      myDisplayName: myData['displayName'] as String?,
-                      isCaptain: data['createdBy'] == user.uid,
-                    );
-                  },
-                );
-              },
-            ),
+                          // 使用 TaskListItem (已修正邏輯)
+                          return TaskListItem(
+                            task: task,
+                            currentUserId: vm.currentUserId, // 傳入 uid 找頭像
+                            isCaptain: vm.isCaptain(task),
+                            onTap: () => context.push('/tasks/${task.id}'),
+                            onDelete: () => vm.deleteTask(task.id),
+                          );
+                        },
+                      ),
           ),
         ],
       ),
     );
-  }
-}
-
-class _TaskCard extends StatelessWidget {
-  final String taskId;
-  final Map<String, dynamic> data;
-  final String myAvatar;
-  final String? myDisplayName;
-  final bool isCaptain;
-
-  const _TaskCard({
-    required this.taskId,
-    required this.data,
-    required this.myAvatar,
-    required this.isCaptain,
-    required this.myDisplayName,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final dateFormat = DateFormat('yyyy/MM/dd');
-
-    final String name = data['name'] ?? 'Task';
-
-    final Timestamp? startTs = data['startDate'];
-    final Timestamp? endTs = data['endDate'];
-    String periodText = t.S10_Home_TaskList.date_tbd; // '日期未定'
-    if (startTs != null && endTs != null) {
-      periodText =
-          '${dateFormat.format(startTs.toDate())} - ${dateFormat.format(endTs.toDate())}';
-    }
-
-    Widget cardContent = Card(
-      elevation: 0,
-      color: colorScheme.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/tasks/$taskId'),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              CommonAvatar(
-                avatarId: myAvatar,
-                name: myDisplayName,
-                radius: 28, // 56x56 -> radius 28
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(Icons.date_range,
-                            size: 16, color: colorScheme.primary),
-                        const SizedBox(width: 4),
-                        Text(
-                          periodText,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    if (isCaptain) {
-      return Dismissible(
-        key: Key(taskId),
-        direction: DismissDirection.endToStart,
-        background: Container(
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-            color: colorScheme.error,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Icon(Icons.delete_outline, color: colorScheme.onError),
-        ),
-        confirmDismiss: (direction) async {
-          return await showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text(t.S10_Home_TaskList.delete_confirm_title), // '確認刪除'
-              content: Text(
-                  t.S10_Home_TaskList.delete_confirm_content), // '確定要刪除這個任務嗎？'
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(ctx, false),
-                    child: Text(t.common.cancel)), // '取消'
-                TextButton(
-                    onPressed: () => Navigator.pop(ctx, true),
-                    child: Text(t.common.delete)), // '刪除'
-              ],
-            ),
-          );
-        },
-        onDismissed: (direction) {
-          // TODO: Implement Logic Delete (Soft delete) in future
-          FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
-        },
-        child: cardContent,
-      );
-    }
-
-    return cardContent;
   }
 }
