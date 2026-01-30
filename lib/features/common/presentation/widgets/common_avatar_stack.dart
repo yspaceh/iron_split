@@ -31,7 +31,7 @@ class CommonAvatarStack extends StatelessWidget {
         children: activeMembers.map((member) {
           return CommonAvatar(
             avatarId: member['avatar'],
-            name: member['name'],
+            name: member['displayName'],
             radius: radius,
             fontSize: fontSize,
             isLinked: member['isLinked'] ?? false,

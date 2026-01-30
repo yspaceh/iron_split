@@ -264,7 +264,7 @@ class _S11InviteConfirmPageState extends State<S11InviteConfirmPage> {
                     itemBuilder: (context, index) {
                       final ghost = _ghosts[index];
                       final id = ghost['id'] as String;
-                      final name = ghost['name'] as String;
+                      final name = ghost['displayName'] as String;
                       final prepaid =
                           (ghost['prepaid'] as num?)?.toDouble() ?? 0.0;
                       final expense =

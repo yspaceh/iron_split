@@ -181,8 +181,9 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
                 memberData['id'] = e.key;
               }
               // Fallback name if missing
-              if (memberData['name'] == null) {
-                memberData['name'] = memberData['displayName'] ?? 'Member';
+              if (memberData['displayName'] == null) {
+                memberData['displayName'] = memberData['displayName'] ??
+                    t.S53_TaskSettings_Members.member_default_name;
               }
               return memberData;
             }).toList();
@@ -624,12 +625,19 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
         } else if (_payerType == 'member' && _payerId.isNotEmpty) {
           // 單人代墊
           final payer = _taskMembers.firstWhere((m) => m['id'] == _payerId,
-              orElse: () => {'displayName': 'Unknown', 'name': 'Unknown'});
-          final name = payer['displayName'] ?? payer['name'];
+              orElse: () => {
+                    'displayName':
+                        t.S53_TaskSettings_Members.member_default_name
+                  });
+          final name = payer['displayName'] ??
+              t.S53_TaskSettings_Members.member_default_name;
           paymentLogData = {
             'type': 'single',
             'contributors': [
-              {'name': name, 'amount': double.parse(_amountController.text)}
+              {
+                'displayName': name,
+                'amount': double.parse(_amountController.text)
+              }
             ]
           };
         } else if (_payerType == 'multiple' && _complexPaymentData != null) {
@@ -641,9 +649,13 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
           advances.forEach((uid, amount) {
             if ((amount as num) > 0) {
               final member = _taskMembers.firstWhere((m) => m['id'] == uid,
-                  orElse: () => {'displayName': 'Unknown', 'name': 'Unknown'});
+                  orElse: () => {
+                        'displayName':
+                            t.S53_TaskSettings_Members.member_default_name
+                      });
               contributors.add({
-                'name': member['displayName'] ?? member['name'],
+                'displayName': member['displayName'] ??
+                    t.S53_TaskSettings_Members.member_default_name,
                 'amount': amount
               });
             }

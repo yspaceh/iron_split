@@ -296,7 +296,7 @@ class ActivityLogModel {
         if (contributors.isNotEmpty) {
           // "Alice代墊"
           bufferMain.write(
-              "${contributors.first['name']}${t.S52_TaskSettings_Log.payment_single_suffix}");
+              "${contributors.first['displayName']}${t.S52_TaskSettings_Log.payment_single_suffix}");
         }
       } else if (payType == 'multiple') {
         final list = payment['contributors'] as List;

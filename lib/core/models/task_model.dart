@@ -51,8 +51,9 @@ class TaskModel {
     // Helper to parse dates safely
     DateTime parseDate(dynamic val, {DateTime? fallback}) {
       if (val is Timestamp) return val.toDate();
-      if (val is String)
+      if (val is String) {
         return DateTime.tryParse(val) ?? fallback ?? DateTime.now();
+      }
       return fallback ?? DateTime.now();
     }
 

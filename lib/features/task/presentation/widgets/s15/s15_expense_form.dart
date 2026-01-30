@@ -103,9 +103,9 @@ class S15ExpenseForm extends StatelessWidget {
 
     final member = members.firstWhere(
       (m) => m['id'] == id,
-      orElse: () => {'name': '?'},
+      orElse: () => {'displayName': '?'},
     );
-    return t.S15_Record_Edit.val_member_paid(name: member['name']);
+    return t.S15_Record_Edit.val_member_paid(name: member['displayName']);
   }
 
   @override

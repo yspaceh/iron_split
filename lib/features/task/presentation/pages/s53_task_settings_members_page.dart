@@ -36,7 +36,7 @@ class _S53TaskSettingsMembersPageState
 
       final newMember = {
         'id': newId,
-        'name':
+        'displayName':
             '${t.S53_TaskSettings_Members.member_default_name} ${currentMembersMap.length + 1}',
         'role': 'member',
         'status': 'unlinked',
@@ -57,7 +57,7 @@ class _S53TaskSettingsMembersPageState
       await ActivityLogService.log(
         taskId: widget.taskId,
         action: LogAction.addMember,
-        details: {'memberName': newMember['name']},
+        details: {'memberName': newMember['displayName']},
       );
     } catch (e) {
       debugPrint("Add member failed: $e");
@@ -82,7 +82,7 @@ class _S53TaskSettingsMembersPageState
     if (oldData == null) return;
 
     // 如果名字沒變，不執行寫入
-    if (oldData['name'] == trimmedName) return;
+    if (oldData['displayName'] == trimmedName) return;
 
     setState(() => _isProcessing = true);
 
@@ -92,7 +92,7 @@ class _S53TaskSettingsMembersPageState
 
       // 複製單個成員資料
       final updatedMemberData = Map<String, dynamic>.from(oldData);
-      updatedMemberData['name'] = trimmedName;
+      updatedMemberData['displayName'] = trimmedName;
 
       // 放回大 Map
       updatedMap[memberId] = updatedMemberData;
@@ -194,7 +194,7 @@ class _S53TaskSettingsMembersPageState
       await ActivityLogService.log(
         taskId: widget.taskId,
         action: LogAction.removeMember,
-        details: {'memberName': memberToDelete['name']},
+        details: {'memberName': memberToDelete['displayName']},
       );
     } catch (e) {
       debugPrint("Delete member failed: $e");
@@ -338,8 +338,8 @@ class _S53TaskSettingsMembersPageState
                           _handleRatioChange(membersMap, memberId, val),
                       onDelete: () => _handleDeleteMember(membersMap, memberId),
                       // [UI優化] 傳入 onEdit callback 觸發 Dialog
-                      onEdit: () => _showRenameDialog(
-                          membersMap, memberId, memberData['name'] ?? ''),
+                      onEdit: () => _showRenameDialog(membersMap, memberId,
+                          memberData['displayName'] ?? ''),
                       isProcessing: _isProcessing,
                     );
                   },
@@ -427,9 +427,11 @@ class _MemberTile extends StatelessWidget {
 
     String displayLabel;
     if (isLinked) {
-      displayLabel = member['displayName'] ?? member['name'] ?? 'Unknown';
+      displayLabel = member['displayName'] ??
+          t.S53_TaskSettings_Members.member_default_name;
     } else {
-      displayLabel = member['name'] ?? 'Unknown';
+      displayLabel = member['displayName'] ??
+          t.S53_TaskSettings_Members.member_default_name;
     }
 
     return Container(

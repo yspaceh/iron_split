@@ -358,10 +358,8 @@ class _PersonalBalanceCard extends StatelessWidget {
     final statusColor = isPositive ? Colors.green : theme.colorScheme.error;
 
     final currentUser = FirebaseAuth.instance.currentUser;
-    final displayName = memberData?['name'] ??
-        memberData?['displayName'] ??
-        currentUser?.displayName ??
-        '';
+    final displayName =
+        memberData?['displayName'] ?? currentUser?.displayName ?? '';
 
     return Card(
       color: theme.colorScheme.secondaryContainer,

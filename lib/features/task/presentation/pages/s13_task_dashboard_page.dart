@@ -107,28 +107,40 @@ class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
           bottomNavigationBar: BottomAppBar(
             child: Row(
               children: [
-                if (isCaptain)
-                  OutlinedButton.icon(
-                    onPressed: () => context.pushNamed(
-                      'S30',
-                      pathParameters: {'taskId': widget.taskId},
+                Visibility(
+                  visible: isCaptain,
+                  child: Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => context.pushNamed(
+                        'S30',
+                        pathParameters: {'taskId': widget.taskId},
+                      ),
+                      label: Text(t.S13_Task_Dashboard.settlement_button),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                     ),
-                    icon: const Icon(Icons.check),
-                    label: Text(t.S13_Task_Dashboard.settlement_button),
                   ),
-                const Spacer(),
-                FloatingActionButton.extended(
-                  onPressed: () => context.pushNamed(
-                    'S15',
-                    pathParameters: {'taskId': widget.taskId},
-                    extra: {
-                      'poolBalancesByCurrency': poolBalancesByCurrency,
-                      'baseCurrencyOption': baseCurrencyOption,
-                    },
+                ),
+                Visibility(
+                  visible: isCaptain,
+                  child: const SizedBox(width: 12),
+                ),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => context.pushNamed(
+                      'S15',
+                      pathParameters: {'taskId': widget.taskId},
+                      extra: {
+                        'poolBalancesByCurrency': poolBalancesByCurrency,
+                        'baseCurrencyOption': baseCurrencyOption,
+                      },
+                    ),
+                    label: Text(t.S13_Task_Dashboard.fab_record),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
                   ),
-                  icon: const Icon(Icons.add),
-                  label: Text(t.S13_Task_Dashboard.fab_record),
-                  elevation: 0,
                 ),
               ],
             ),

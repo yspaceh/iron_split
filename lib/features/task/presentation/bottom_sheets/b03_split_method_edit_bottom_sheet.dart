@@ -411,11 +411,12 @@ class _B03SplitMethodEditBottomSheetState
                   ),
                   CommonAvatar(
                       avatarId: m['avatar'],
-                      name: m['name'],
+                      name: m['displayName'],
                       isLinked: m['isLinked'] ?? false),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: Text(m['name'], overflow: TextOverflow.ellipsis)),
+                      child: Text(m['displayName'],
+                          overflow: TextOverflow.ellipsis)),
                   if (isSelected)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -528,11 +529,12 @@ class _B03SplitMethodEditBottomSheetState
                 ),
                 CommonAvatar(
                     avatarId: m['avatar'],
-                    name: m['name'],
+                    name: m['displayName'],
                     isLinked: m['isLinked'] ?? false),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: Text(m['name'], overflow: TextOverflow.ellipsis)),
+                    child: Text(m['displayName'],
+                        overflow: TextOverflow.ellipsis)),
 
                 // Amounts Column
                 if (isSelected)
@@ -742,10 +744,10 @@ class _B03SplitMethodEditBottomSheetState
                 ),
                 CommonAvatar(
                     avatarId: m['avatar'],
-                    name: m['name'],
+                    name: m['displayName'],
                     isLinked: m['isLinked'] ?? false),
                 const SizedBox(width: 12),
-                Expanded(child: Text(m['name'])),
+                Expanded(child: Text(m['displayName'])),
                 SizedBox(
                   width: 100,
                   child: Column(

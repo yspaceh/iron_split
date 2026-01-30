@@ -358,14 +358,17 @@ class _B07PaymentMethodEditBottomSheetState
                             children: [
                               CommonAvatar(
                                 avatarId: m['avatar'],
-                                name: m['name'],
+                                name: m['displayName'],
                                 radius: 16,
                                 fontSize: 14,
                                 isLinked: m['isLinked'] ?? false,
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: Text(m['name'] ?? '成員', // TODO: 之後要改掉，
+                                child: Text(
+                                    m['displayName'] ??
+                                        t.S53_TaskSettings_Members
+                                            .member_default_name,
                                     style: theme.textTheme.bodyLarge),
                               ),
                               SizedBox(
