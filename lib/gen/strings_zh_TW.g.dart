@@ -44,7 +44,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
 	late final TranslationsRemainderRuleZhTw remainder_rule = TranslationsRemainderRuleZhTw.internal(_root);
-	late final TranslationsSplitMethodZhTw split_method = TranslationsSplitMethodZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
@@ -275,30 +274,6 @@ class TranslationsRemainderRuleZhTw {
 
 	/// zh-TW: '指定成員'
 	String get rule_member => '指定成員';
-}
-
-// Path: split_method
-class TranslationsSplitMethodZhTw {
-	TranslationsSplitMethodZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '平均分攤'
-	String get method_even => '平均分攤';
-
-	/// zh-TW: '金額分攤'
-	String get method_exact => '金額分攤';
-
-	/// zh-TW: '比例分攤'
-	String get method_percent => '比例分攤';
-
-	/// zh-TW: '份數'
-	String get weight => '份數';
-
-	/// zh-TW: '調整'
-	String get adjustment => '調整';
 }
 
 // Path: log_action
@@ -1453,11 +1428,6 @@ extension on Translations {
 			'remainder_rule.rule_random' => '餘額輪盤',
 			'remainder_rule.rule_order' => '順序輪替',
 			'remainder_rule.rule_member' => '指定成員',
-			'split_method.method_even' => '平均分攤',
-			'split_method.method_exact' => '金額分攤',
-			'split_method.method_percent' => '比例分攤',
-			'split_method.weight' => '份數',
-			'split_method.adjustment' => '調整',
 			'log_action.create_task' => '建立任務',
 			'log_action.update_settings' => '更新設定',
 			'log_action.add_member' => '新增成員',

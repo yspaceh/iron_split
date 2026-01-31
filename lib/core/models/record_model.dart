@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 
 class RecordDetail {
   String id;
@@ -17,7 +18,7 @@ class RecordDetail {
     required this.name,
     required this.amount,
     this.memo,
-    this.splitMethod = 'even',
+    this.splitMethod = SplitMethodConstants.defaultMethod,
     required this.splitMemberIds,
     this.splitDetails,
   });
@@ -40,7 +41,7 @@ class RecordDetail {
       name: map['name'] ?? '',
       amount: (map['amount'] ?? 0).toDouble(),
       memo: map['memo'],
-      splitMethod: map['splitMethod'] ?? 'even',
+      splitMethod: map['splitMethod'] ?? SplitMethodConstants.defaultMethod,
       splitMemberIds: List<String>.from(map['splitMemberIds'] ?? []),
       splitDetails: map['splitDetails'] != null
           ? Map<String, double>.from(map['splitDetails'])
@@ -87,7 +88,7 @@ class RecordModel {
     required this.amount,
     required this.currencyCode,
     this.exchangeRate = 1.0,
-    this.splitMethod = 'even',
+    this.splitMethod = SplitMethodConstants.defaultMethod,
     this.splitMemberIds = const [],
     this.splitDetails,
     this.memo,
@@ -203,7 +204,7 @@ class RecordModel {
       currencyCode: data['currency'] ?? CurrencyConstants.defaultCode,
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
 
-      splitMethod: data['splitMethod'] ?? 'even',
+      splitMethod: data['splitMethod'] ?? SplitMethodConstants.defaultMethod,
       splitMemberIds: List<String>.from(data['splitMemberIds'] ?? []),
       splitDetails: data['splitDetails'] != null
           ? Map<String, double>.from(data['splitDetails'])

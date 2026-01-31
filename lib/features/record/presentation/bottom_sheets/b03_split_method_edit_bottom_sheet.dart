@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -64,7 +65,8 @@ class _B03SplitMethodEditBottomSheetState
     }
 
     // 防呆：如果進來時沒選人，且是 Even 模式，預設全選
-    if (_selectedMemberIds.isEmpty && _splitMethod == 'even') {
+    if (_selectedMemberIds.isEmpty &&
+        _splitMethod == SplitMethodConstants.even) {
       _selectedMemberIds =
           widget.allMembers.map((m) => m['id'] as String).toList();
     }
@@ -100,14 +102,14 @@ class _B03SplitMethodEditBottomSheetState
     // 2. 計算 Total Weight
     double totalWeight = 0.0;
 
-    if (_splitMethod == 'even') {
+    if (_splitMethod == SplitMethodConstants.even) {
       totalWeight = _selectedMemberIds.length.toDouble();
-    } else if (_splitMethod == 'percent') {
+    } else if (_splitMethod == SplitMethodConstants.percent) {
       // Fix Math: 只計算選中成員的權重
       for (var id in _selectedMemberIds) {
         totalWeight += _details[id] ?? 0.0;
       }
-    } else if (_splitMethod == 'exact') {
+    } else if (_splitMethod == SplitMethodConstants.exact) {
       // Exact 模式不使用權重
       totalWeight = 1.0;
     }
@@ -115,7 +117,7 @@ class _B03SplitMethodEditBottomSheetState
     // 3. 計算每個人的 Base Share 和 Source Share
     double allocatedBase = 0.0;
 
-    if (_splitMethod == 'exact') {
+    if (_splitMethod == SplitMethodConstants.exact) {
       // Exact 模式：直接使用使用者輸入的 Source Amount
       for (var id in _selectedMemberIds) {
         final sourceAmount = _details[id] ?? 0.0;
@@ -131,7 +133,7 @@ class _B03SplitMethodEditBottomSheetState
       if (totalWeight > 0) {
         for (var id in _selectedMemberIds) {
           double weight = 0.0;
-          if (_splitMethod == 'even') {
+          if (_splitMethod == SplitMethodConstants.even) {
             weight = 1.0;
           } else {
             weight = _details[id] ?? 0.0;
@@ -168,13 +170,13 @@ class _B03SplitMethodEditBottomSheetState
     setState(() {
       _splitMethod = newMethod;
       // 切換模式時的數據轉換邏輯
-      if (newMethod == 'percent') {
+      if (newMethod == SplitMethodConstants.percent) {
         // 切換到比例：載入預設權重
         _details.clear();
         for (var id in _selectedMemberIds) {
           _details[id] = widget.defaultMemberWeights[id] ?? 1.0;
         }
-      } else if (newMethod == 'exact') {
+      } else if (newMethod == SplitMethodConstants.exact) {
         // 切換到金額：清空，讓使用者自己打
         _details.clear();
         for (var c in _amountControllers.values) {
@@ -188,7 +190,7 @@ class _B03SplitMethodEditBottomSheetState
   bool get _isValid {
     if (_selectedMemberIds.isEmpty) return false;
 
-    if (_splitMethod == 'exact') {
+    if (_splitMethod == SplitMethodConstants.exact) {
       final sum = _details.values.fold(0.0, (prev, curr) => prev + curr);
       // 允許 0.1 的浮點誤差
       return (sum - widget.totalAmount).abs() < 0.1;
@@ -200,21 +202,7 @@ class _B03SplitMethodEditBottomSheetState
 
   void _showMethodPicker(Translations t) {
     // Pass t
-    final options = ['even', 'percent', 'exact'];
     String tempMethod = _splitMethod;
-
-    String getLabel(String method) {
-      switch (method) {
-        case 'even':
-          return t.B03_SplitMethod_Edit.method_even;
-        case 'percent':
-          return t.B03_SplitMethod_Edit.method_percent;
-        case 'exact':
-          return t.B03_SplitMethod_Edit.method_exact;
-        default:
-          return method;
-      }
-    }
 
     showCommonWheelPicker(
       context: context,
@@ -222,9 +210,13 @@ class _B03SplitMethodEditBottomSheetState
       child: CupertinoPicker(
         itemExtent: 40,
         scrollController: FixedExtentScrollController(
-            initialItem: options.indexOf(_splitMethod)),
-        onSelectedItemChanged: (index) => tempMethod = options[index],
-        children: options.map((e) => Center(child: Text(getLabel(e)))).toList(),
+            initialItem: SplitMethodConstants.allRules.indexOf(_splitMethod)),
+        onSelectedItemChanged: (index) =>
+            tempMethod = SplitMethodConstants.allRules[index],
+        children: SplitMethodConstants.allRules
+            .map((e) =>
+                Center(child: Text(SplitMethodConstants.getLabel(context, e))))
+            .toList(),
       ),
     );
   }
@@ -235,14 +227,7 @@ class _B03SplitMethodEditBottomSheetState
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    String methodLabel = _splitMethod;
-    if (_splitMethod == 'even') {
-      methodLabel = t.B03_SplitMethod_Edit.method_even;
-    } else if (_splitMethod == 'percent') {
-      methodLabel = t.B03_SplitMethod_Edit.method_percent;
-    } else if (_splitMethod == 'exact') {
-      methodLabel = t.B03_SplitMethod_Edit.method_exact;
-    }
+    String methodLabel = SplitMethodConstants.getLabel(context, _splitMethod);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -344,9 +329,12 @@ class _B03SplitMethodEditBottomSheetState
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                if (_splitMethod == 'even') _buildEvenSection(t),
-                if (_splitMethod == 'percent') _buildPercentSection(t),
-                if (_splitMethod == 'exact') _buildExactSection(t),
+                if (_splitMethod == SplitMethodConstants.even)
+                  _buildEvenSection(t),
+                if (_splitMethod == SplitMethodConstants.percent)
+                  _buildPercentSection(t),
+                if (_splitMethod == SplitMethodConstants.exact)
+                  _buildExactSection(t),
                 const SizedBox(height: 40),
               ],
             ),

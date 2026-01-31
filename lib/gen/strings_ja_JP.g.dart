@@ -43,7 +43,6 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsCurrencyJaJp currency = _TranslationsCurrencyJaJp._(_root);
 	@override late final _TranslationsRemainderRuleJaJp remainder_rule = _TranslationsRemainderRuleJaJp._(_root);
-	@override late final _TranslationsSplitMethodJaJp split_method = _TranslationsSplitMethodJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
 	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
@@ -162,20 +161,6 @@ class _TranslationsRemainderRuleJaJp extends TranslationsRemainderRuleZhTw {
 	@override String get rule_random => 'ランダム';
 	@override String get rule_order => '順番';
 	@override String get rule_member => '指定';
-}
-
-// Path: split_method
-class _TranslationsSplitMethodJaJp extends TranslationsSplitMethodZhTw {
-	_TranslationsSplitMethodJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get method_even => '均等';
-	@override String get method_exact => '金額指定';
-	@override String get method_percent => '割合';
-	@override String get weight => '人分';
-	@override String get adjustment => '調整';
 }
 
 // Path: log_action
@@ -805,11 +790,6 @@ extension on TranslationsJaJp {
 			'remainder_rule.rule_random' => 'ランダム',
 			'remainder_rule.rule_order' => '順番',
 			'remainder_rule.rule_member' => '指定',
-			'split_method.method_even' => '均等',
-			'split_method.method_exact' => '金額指定',
-			'split_method.method_percent' => '割合',
-			'split_method.weight' => '人分',
-			'split_method.adjustment' => '調整',
 			'log_action.create_task' => 'タスク作成',
 			'log_action.update_settings' => '設定更新',
 			'log_action.add_member' => 'メンバー追加',

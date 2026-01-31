@@ -63,13 +63,6 @@
     "rule_order": "Order",
     "rule_member": "Member"
   },
-  "split_method": {
-    "method_even": "Even",
-    "method_exact": "Exact Amount",
-    "method_percent": "By Percentage",
-    "weight": "Share",
-    "adjustment": "Adjustment"
-  },
   "log_action": {
     "create_task": "Create Task",
     "update_settings": "Update Settings",

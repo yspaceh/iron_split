@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/calculation_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
@@ -251,7 +252,8 @@ class S15ExpenseForm extends StatelessWidget {
             showSplitAction: baseRemainingAmount > 0,
             onSplitTap: onAddItemTap,
           ),
-          if (baseSplitMethod == 'even' && baseMemberIds.isNotEmpty)
+          if (baseSplitMethod == SplitMethodConstants.even &&
+              baseMemberIds.isNotEmpty)
             Builder(
               builder: (context) {
                 final rate =

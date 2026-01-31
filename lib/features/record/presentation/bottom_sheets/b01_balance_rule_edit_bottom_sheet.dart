@@ -156,7 +156,7 @@ class _B01BalanceRuleEditBottomSheetState
                       ),
 
                       // 展開區域：只有選 member 時顯示成員清單
-                      if (rule == 'member' && isSelected)
+                      if (rule == RemainderRuleConstants.member && isSelected)
                         _buildMemberSelectionArea(theme),
 
                       // 分隔線 (美觀用)

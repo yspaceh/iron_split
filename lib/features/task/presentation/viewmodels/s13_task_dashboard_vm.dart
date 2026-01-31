@@ -286,7 +286,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     // 2. 準備資料
     final Map<String, dynamic> updateData = {
       'remainderRule': newRule,
-      'remainderAbsorberId': newRule == 'member' ? newAbsorberId : null,
+      'remainderAbsorberId':
+          newRule == RemainderRuleConstants.member ? newAbsorberId : null,
     };
 
     // 3. 使用 Repository
@@ -298,7 +299,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       'newValue': newRule,
     };
 
-    if (newRule == 'member' && newAbsorberId != null) {
+    if (newRule == RemainderRuleConstants.member && newAbsorberId != null) {
       final memberName =
           membersData[newAbsorberId]?['displayName'] ?? 'Unknown';
       logDetails['absorberName'] = memberName;

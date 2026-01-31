@@ -63,13 +63,6 @@
     "rule_order": "順番",
     "rule_member": "指定"
   },
-  "split_method": {
-    "method_even": "均等",
-    "method_exact": "金額指定",
-    "method_percent": "割合",
-    "weight": "人分",
-    "adjustment": "調整"
-  },
   "log_action": {
     "create_task": "タスク作成",
     "update_settings": "設定更新",

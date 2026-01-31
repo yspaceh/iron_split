@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
@@ -51,7 +52,8 @@ class _B02SplitExpenseEditBottomSheetState
         TextEditingController(text: widget.detail?.amount.toString() ?? '');
     _memoController = TextEditingController(text: widget.detail?.memo ?? '');
 
-    _splitMethod = widget.detail?.splitMethod ?? 'even';
+    _splitMethod =
+        widget.detail?.splitMethod ?? SplitMethodConstants.defaultMethod;
     _splitMemberIds = widget.detail?.splitMemberIds ??
         widget.allMembers.map((m) => m['id'] as String).toList();
     _splitDetails = widget.detail?.splitDetails;

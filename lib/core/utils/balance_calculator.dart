@@ -1,3 +1,4 @@
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
 class BalanceCalculator {
@@ -132,7 +133,8 @@ class BalanceCalculator {
 
       if (r.type == 'expense') {
         // 支出：算出實際分攤總額 (通常因 Floor 而小於 baseTotal)
-        if (r.splitMethod == 'even' && r.splitMemberIds.isNotEmpty) {
+        if (r.splitMethod == SplitMethodConstants.even &&
+            r.splitMemberIds.isNotEmpty) {
           double perPerson =
               (baseTotal / r.splitMemberIds.length).floorToDouble();
           allocatedBase = perPerson * r.splitMemberIds.length;
@@ -142,7 +144,8 @@ class BalanceCalculator {
         totalBuffer += (baseTotal - allocatedBase); // 剩餘的錢進罐子 (+)
       } else {
         // 預收：算出實際收到的總額
-        if (r.splitMethod == 'even' && r.splitMemberIds.isNotEmpty) {
+        if (r.splitMethod == SplitMethodConstants.even &&
+            r.splitMemberIds.isNotEmpty) {
           double perPerson =
               (baseTotal / r.splitMemberIds.length).floorToDouble();
           allocatedBase = perPerson * r.splitMemberIds.length;
@@ -162,11 +165,11 @@ class BalanceCalculator {
     if (!detail.splitMemberIds.contains(uid)) return 0.0;
 
     switch (detail.splitMethod) {
-      case 'even':
+      case SplitMethodConstants.even:
         return detail.amount * effectiveRate / detail.splitMemberIds.length;
-      case 'exact':
+      case SplitMethodConstants.exact:
         return detail.splitDetails?[uid] ?? 0.0;
-      case 'percent':
+      case SplitMethodConstants.percent:
         return _calculateWeightBasedAmount(
             detail.amount, detail.splitDetails, uid, effectiveRate);
       default:
@@ -179,11 +182,11 @@ class BalanceCalculator {
     if (!record.splitMemberIds.contains(uid)) return 0.0;
 
     switch (record.splitMethod) {
-      case 'even':
+      case SplitMethodConstants.even:
         return amount * effectiveRate / record.splitMemberIds.length;
-      case 'exact':
+      case SplitMethodConstants.exact:
         return record.splitDetails?[uid] ?? 0.0;
-      case 'percent':
+      case SplitMethodConstants.percent:
         return _calculateWeightBasedAmount(
             amount, record.splitDetails, uid, effectiveRate);
       default:

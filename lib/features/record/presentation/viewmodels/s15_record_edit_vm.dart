@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
@@ -41,7 +42,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // Split State
   final List<RecordDetail> _details = [];
-  String _baseSplitMethod = 'even';
+  String _baseSplitMethod = SplitMethodConstants.defaultMethod;
   List<String> _baseMemberIds = [];
   Map<String, double> _baseRawDetails = {}; // For advanced split
 
@@ -236,9 +237,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
       _lastKnownAmount = currentAmount;
       // Reset Logic
-      if (_details.isNotEmpty || _baseSplitMethod != 'even') {
+      if (_details.isNotEmpty ||
+          _baseSplitMethod != SplitMethodConstants.even) {
         _details.clear();
-        _baseSplitMethod = 'even';
+        _baseSplitMethod = SplitMethodConstants.defaultMethod;
         if (_taskMembers.isNotEmpty) {
           _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
         }

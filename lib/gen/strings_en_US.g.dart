@@ -43,7 +43,6 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
 	@override late final _TranslationsRemainderRuleEnUs remainder_rule = _TranslationsRemainderRuleEnUs._(_root);
-	@override late final _TranslationsSplitMethodEnUs split_method = _TranslationsSplitMethodEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
@@ -162,20 +161,6 @@ class _TranslationsRemainderRuleEnUs extends TranslationsRemainderRuleZhTw {
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
-}
-
-// Path: split_method
-class _TranslationsSplitMethodEnUs extends TranslationsSplitMethodZhTw {
-	_TranslationsSplitMethodEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get method_even => 'Even';
-	@override String get method_exact => 'Exact Amount';
-	@override String get method_percent => 'By Percentage';
-	@override String get weight => 'Share';
-	@override String get adjustment => 'Adjustment';
 }
 
 // Path: log_action
@@ -805,11 +790,6 @@ extension on TranslationsEnUs {
 			'remainder_rule.rule_random' => 'Random',
 			'remainder_rule.rule_order' => 'Order',
 			'remainder_rule.rule_member' => 'Member',
-			'split_method.method_even' => 'Even',
-			'split_method.method_exact' => 'Exact Amount',
-			'split_method.method_percent' => 'By Percentage',
-			'split_method.weight' => 'Share',
-			'split_method.adjustment' => 'Adjustment',
 			'log_action.create_task' => 'Create Task',
 			'log_action.update_settings' => 'Update Settings',
 			'log_action.add_member' => 'Add Member',

@@ -133,7 +133,8 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
     // 2. 準備資料
     final Map<String, dynamic> updateData = {
       'remainderRule': newRule,
-      'remainderAbsorberId': newRule == 'member' ? newAbsorberId : null,
+      'remainderAbsorberId':
+          newRule == RemainderRuleConstants.member ? newAbsorberId : null,
     };
 
     // 3. ✅ 改用 Repo
@@ -145,7 +146,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
       'newValue': newRule,
     };
 
-    if (newRule == 'member' && newAbsorberId != null) {
+    if (newRule == RemainderRuleConstants.member && newAbsorberId != null) {
       final memberName =
           _membersData[newAbsorberId]?['displayName'] ?? 'Unknown';
       logDetails['absorberName'] = memberName;
