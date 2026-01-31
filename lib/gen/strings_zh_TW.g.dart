@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
 	late final TranslationsRemainderRuleZhTw remainder_rule = TranslationsRemainderRuleZhTw.internal(_root);
+	late final TranslationsSplitMethodZhTw split_method = TranslationsSplitMethodZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
@@ -274,6 +275,30 @@ class TranslationsRemainderRuleZhTw {
 
 	/// zh-TW: '指定成員'
 	String get rule_member => '指定成員';
+}
+
+// Path: split_method
+class TranslationsSplitMethodZhTw {
+	TranslationsSplitMethodZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '平均分攤'
+	String get method_even => '平均分攤';
+
+	/// zh-TW: '金額分攤'
+	String get method_exact => '金額分攤';
+
+	/// zh-TW: '比例分攤'
+	String get method_percent => '比例分攤';
+
+	/// zh-TW: '份數'
+	String get weight => '份數';
+
+	/// zh-TW: '調整'
+	String get adjustment => '調整';
 }
 
 // Path: log_action
@@ -608,15 +633,6 @@ class TranslationsS15RecordEditZhTw {
 	/// zh-TW: '總計 {amount} 由 {method} 分攤'
 	String val_split_summary({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤';
 
-	/// zh-TW: '平均分攤'
-	String get method_even => '平均分攤';
-
-	/// zh-TW: '金額分攤'
-	String get method_exact => '金額分攤';
-
-	/// zh-TW: '比例分攤'
-	String get method_percent => '比例分攤';
-
 	/// zh-TW: '匯率來源'
 	String get info_rate_source => '匯率來源';
 
@@ -670,12 +686,6 @@ class TranslationsS15RecordEditZhTw {
 
 	/// zh-TW: '資金來源 (入金者)'
 	String get base_card_title_income => '資金來源 (入金者)';
-
-	/// zh-TW: '份數'
-	String get method_share => '份數';
-
-	/// zh-TW: '調整'
-	String get method_adjustment => '調整';
 
 	/// zh-TW: '多人'
 	String get payer_multiple => '多人';
@@ -1443,6 +1453,11 @@ extension on Translations {
 			'remainder_rule.rule_random' => '餘額輪盤',
 			'remainder_rule.rule_order' => '順序輪替',
 			'remainder_rule.rule_member' => '指定成員',
+			'split_method.method_even' => '平均分攤',
+			'split_method.method_exact' => '金額分攤',
+			'split_method.method_percent' => '比例分攤',
+			'split_method.weight' => '份數',
+			'split_method.adjustment' => '調整',
 			'log_action.create_task' => '建立任務',
 			'log_action.update_settings' => '更新設定',
 			'log_action.add_member' => '新增成員',
@@ -1530,9 +1545,6 @@ extension on Translations {
 			'S15_Record_Edit.action_save' => '儲存紀錄',
 			'S15_Record_Edit.val_split_details' => '細項分拆',
 			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
-			'S15_Record_Edit.method_even' => '平均分攤',
-			'S15_Record_Edit.method_exact' => '金額分攤',
-			'S15_Record_Edit.method_percent' => '比例分攤',
 			'S15_Record_Edit.info_rate_source' => '匯率來源',
 			'S15_Record_Edit.msg_rate_source' => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。',
 			'S15_Record_Edit.btn_close' => '關閉',
@@ -1551,8 +1563,6 @@ extension on Translations {
 			'S15_Record_Edit.type_income_title' => '預收款',
 			'S15_Record_Edit.base_card_title_expense' => '剩餘金額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
-			'S15_Record_Edit.method_share' => '份數',
-			'S15_Record_Edit.method_adjustment' => '調整',
 			'S15_Record_Edit.payer_multiple' => '多人',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',

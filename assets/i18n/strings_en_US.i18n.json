@@ -63,6 +63,13 @@
     "rule_order": "Order",
     "rule_member": "Member"
   },
+  "split_method": {
+    "method_even": "Even",
+    "method_exact": "Exact Amount",
+    "method_percent": "By Percentage",
+    "weight": "Share",
+    "adjustment": "Adjustment"
+  },
   "log_action": {
     "create_task": "Create Task",
     "update_settings": "Update Settings",
@@ -163,9 +170,6 @@
     "action_save": "Save",
     "val_split_details": "Split Details",
     "val_split_summary": "Total {amount} split by {method}",
-    "method_even": "Even",
-    "method_exact": "Exact Amount",
-    "method_percent": "By Percentage",
     "info_rate_source": "Rate Source",
     "msg_rate_source": "Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.",
     "btn_close": "Close",
@@ -184,8 +188,6 @@
     "type_income_title": "Income",
     "base_card_title_expense": "Remaining (Base)",
     "base_card_title_income": "Contributors (Source)",
-    "method_share": "Share",
-    "method_adjustment": "Adjustment",
     "payer_multiple" : "Multiple Payers"
   },
   "S16_TaskCreate_Edit": {

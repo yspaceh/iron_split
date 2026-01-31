@@ -63,6 +63,13 @@
     "rule_order": "順番",
     "rule_member": "指定"
   },
+  "split_method": {
+    "method_even": "均等",
+    "method_exact": "金額指定",
+    "method_percent": "割合",
+    "weight": "人分",
+    "adjustment": "調整"
+  },
   "log_action": {
     "create_task": "タスク作成",
     "update_settings": "設定更新",
@@ -183,9 +190,6 @@
     "action_save": "保存",
     "val_split_details": "詳細を編集",
     "val_split_summary": "計 {amount} を{method}で割り勘",
-    "method_even": "均等",
-    "method_exact": "金額指定",
-    "method_percent": "割合 (%)",
     "info_rate_source": "レートの提供元",
     "msg_rate_source": "為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。",
     "btn_close": "閉じる",
@@ -204,8 +208,6 @@
     "type_income_title": "預り金",
     "base_card_title_expense": "残額 (Base)",
     "base_card_title_income": "資金提供者",
-    "method_share": "人数",
-    "method_adjustment": "調整",
     "payer_multiple" : "複数人"
   },
   "S16_TaskCreate_Edit": {

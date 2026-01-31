@@ -63,6 +63,13 @@
     "rule_order": "順序輪替",
     "rule_member": "指定成員"
   },
+  "split_method": {
+    "method_even": "平均分攤",
+    "method_exact": "金額分攤",
+    "method_percent": "比例分攤",
+    "weight": "份數",
+    "adjustment": "調整"
+  },
   "log_action": {
     "create_task": "建立任務",
     "update_settings": "更新設定",
@@ -166,9 +173,6 @@
     "action_save": "儲存紀錄",
     "val_split_details": "細項分拆",
     "val_split_summary": "總計 {amount} 由 {method} 分攤",
-    "method_even": "平均分攤",
-    "method_exact": "金額分攤",
-    "method_percent": "比例分攤",
     "info_rate_source": "匯率來源",
     "msg_rate_source": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。",
     "btn_close": "關閉",
@@ -187,8 +191,6 @@
     "type_income_title": "預收款",
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
-    "method_share": "份數",
-    "method_adjustment": "調整",
     "payer_multiple" : "多人"
   },
   "S16_TaskCreate_Edit": {

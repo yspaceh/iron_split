@@ -43,6 +43,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
 	@override late final _TranslationsRemainderRuleEnUs remainder_rule = _TranslationsRemainderRuleEnUs._(_root);
+	@override late final _TranslationsSplitMethodEnUs split_method = _TranslationsSplitMethodEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
@@ -161,6 +162,20 @@ class _TranslationsRemainderRuleEnUs extends TranslationsRemainderRuleZhTw {
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
+}
+
+// Path: split_method
+class _TranslationsSplitMethodEnUs extends TranslationsSplitMethodZhTw {
+	_TranslationsSplitMethodEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get method_even => 'Even';
+	@override String get method_exact => 'Exact Amount';
+	@override String get method_percent => 'By Percentage';
+	@override String get weight => 'Share';
+	@override String get adjustment => 'Adjustment';
 }
 
 // Path: log_action
@@ -318,9 +333,6 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get action_save => 'Save';
 	@override String get val_split_details => 'Split Details';
 	@override String val_split_summary({required Object amount, required Object method}) => 'Total ${amount} split by ${method}';
-	@override String get method_even => 'Even';
-	@override String get method_exact => 'Exact Amount';
-	@override String get method_percent => 'By Percentage';
 	@override String get info_rate_source => 'Rate Source';
 	@override String get msg_rate_source => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.';
 	@override String get btn_close => 'Close';
@@ -339,8 +351,6 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get type_income_title => 'Income';
 	@override String get base_card_title_expense => 'Remaining (Base)';
 	@override String get base_card_title_income => 'Contributors (Source)';
-	@override String get method_share => 'Share';
-	@override String get method_adjustment => 'Adjustment';
 	@override String get payer_multiple => 'Multiple Payers';
 }
 
@@ -795,6 +805,11 @@ extension on TranslationsEnUs {
 			'remainder_rule.rule_random' => 'Random',
 			'remainder_rule.rule_order' => 'Order',
 			'remainder_rule.rule_member' => 'Member',
+			'split_method.method_even' => 'Even',
+			'split_method.method_exact' => 'Exact Amount',
+			'split_method.method_percent' => 'By Percentage',
+			'split_method.weight' => 'Share',
+			'split_method.adjustment' => 'Adjustment',
 			'log_action.create_task' => 'Create Task',
 			'log_action.update_settings' => 'Update Settings',
 			'log_action.add_member' => 'Add Member',
@@ -880,9 +895,6 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.action_save' => 'Save',
 			'S15_Record_Edit.val_split_details' => 'Split Details',
 			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => 'Total ${amount} split by ${method}',
-			'S15_Record_Edit.method_even' => 'Even',
-			'S15_Record_Edit.method_exact' => 'Exact Amount',
-			'S15_Record_Edit.method_percent' => 'By Percentage',
 			'S15_Record_Edit.info_rate_source' => 'Rate Source',
 			'S15_Record_Edit.msg_rate_source' => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.',
 			'S15_Record_Edit.btn_close' => 'Close',
@@ -901,8 +913,6 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.type_income_title' => 'Income',
 			'S15_Record_Edit.base_card_title_expense' => 'Remaining (Base)',
 			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
-			'S15_Record_Edit.method_share' => 'Share',
-			'S15_Record_Edit.method_adjustment' => 'Adjustment',
 			'S15_Record_Edit.payer_multiple' => 'Multiple Payers',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.section_name' => 'Task Name',

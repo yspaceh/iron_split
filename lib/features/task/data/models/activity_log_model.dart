@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 enum LogAction {
@@ -104,24 +105,6 @@ class ActivityLogModel {
     final t = Translations.of(context);
     final buffer = StringBuffer();
 
-    // --- Helper Functions (與 getDisplayInfo 共用邏輯，但在這裡局部定義也可) ---
-    String getSplitMethodName(String code) {
-      switch (code) {
-        case 'even':
-          return t.S15_Record_Edit.method_even;
-        case 'exact':
-          return t.S15_Record_Edit.method_exact;
-        case 'percent':
-          return t.S15_Record_Edit.method_percent;
-        case 'share':
-          return t.S15_Record_Edit.method_share;
-        case 'adjustment':
-          return t.S15_Record_Edit.method_adjustment;
-        default:
-          return code;
-      }
-    }
-
     String getPayerName(String nameOrCode) {
       if (nameOrCode == 'multiple') return t.S15_Record_Edit.payer_multiple;
       if (nameOrCode == 'none') return '';
@@ -205,7 +188,9 @@ class ActivityLogModel {
       buffer.write(" • ${details['splitCount']} $unit");
 
       if (details.containsKey('splitMethod')) {
-        final method = getSplitMethodName(details['splitMethod']);
+        final method =
+            SplitMethodConstants.getLabel(context, details['splitMethod']);
+        buffer.write(details['splitMethod']);
         buffer.write(" ($method)");
       }
     }
@@ -227,24 +212,6 @@ class ActivityLogModel {
 
   LogDisplayInfo getDisplayInfo(BuildContext context) {
     final t = Translations.of(context);
-
-    // Helper: 翻譯分帳方式
-    String getSplitMethodName(String code) {
-      switch (code) {
-        case 'even':
-          return t.S15_Record_Edit.method_even;
-        case 'exact':
-          return t.S15_Record_Edit.method_exact;
-        case 'percent':
-          return t.S15_Record_Edit.method_percent;
-        case 'share':
-          return t.S15_Record_Edit.method_share;
-        case 'adjustment':
-          return t.S15_Record_Edit.method_adjustment;
-        default:
-          return code;
-      }
-    }
 
     // 1. 標題 (Title)
     // 格式: "新增記帳：[支出]"
@@ -279,7 +246,7 @@ class ActivityLogModel {
       // 基本模式顯示簡略分帳
       if (mode == 'basic' && groups.isNotEmpty) {
         final g = groups.first;
-        final method = getSplitMethodName(g['method']);
+        final method = SplitMethodConstants.getLabel(context, g['method']);
         final unit = t.S52_TaskSettings_Log.unit_members;
         bufferMain.write(" / ${g['count']}$unit $method");
       }
@@ -316,7 +283,7 @@ class ActivityLogModel {
           final label = g['label'];
           final amt = CurrencyConstants.formatAmount(g['amount'], currency);
           final count = g['count'];
-          final method = getSplitMethodName(g['method']);
+          final method = SplitMethodConstants.getLabel(context, g['method']);
           final unit = t.S52_TaskSettings_Log.unit_members;
           // 格式: "- drink (JPY 1,000 / 2人 平分)"
           return "- $label ($currency $amt / $count$unit $method)";

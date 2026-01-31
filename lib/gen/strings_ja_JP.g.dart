@@ -43,6 +43,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsCurrencyJaJp currency = _TranslationsCurrencyJaJp._(_root);
 	@override late final _TranslationsRemainderRuleJaJp remainder_rule = _TranslationsRemainderRuleJaJp._(_root);
+	@override late final _TranslationsSplitMethodJaJp split_method = _TranslationsSplitMethodJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
 	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
@@ -161,6 +162,20 @@ class _TranslationsRemainderRuleJaJp extends TranslationsRemainderRuleZhTw {
 	@override String get rule_random => 'ランダム';
 	@override String get rule_order => '順番';
 	@override String get rule_member => '指定';
+}
+
+// Path: split_method
+class _TranslationsSplitMethodJaJp extends TranslationsSplitMethodZhTw {
+	_TranslationsSplitMethodJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get method_even => '均等';
+	@override String get method_exact => '金額指定';
+	@override String get method_percent => '割合';
+	@override String get weight => '人分';
+	@override String get adjustment => '調整';
 }
 
 // Path: log_action
@@ -352,9 +367,6 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get action_save => '保存';
 	@override String get val_split_details => '詳細を編集';
 	@override String val_split_summary({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘';
-	@override String get method_even => '均等';
-	@override String get method_exact => '金額指定';
-	@override String get method_percent => '割合 (%)';
 	@override String get info_rate_source => 'レートの提供元';
 	@override String get msg_rate_source => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。';
 	@override String get btn_close => '閉じる';
@@ -373,8 +385,6 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get type_income_title => '預り金';
 	@override String get base_card_title_expense => '残額 (Base)';
 	@override String get base_card_title_income => '資金提供者';
-	@override String get method_share => '人数';
-	@override String get method_adjustment => '調整';
 	@override String get payer_multiple => '複数人';
 }
 
@@ -795,6 +805,11 @@ extension on TranslationsJaJp {
 			'remainder_rule.rule_random' => 'ランダム',
 			'remainder_rule.rule_order' => '順番',
 			'remainder_rule.rule_member' => '指定',
+			'split_method.method_even' => '均等',
+			'split_method.method_exact' => '金額指定',
+			'split_method.method_percent' => '割合',
+			'split_method.weight' => '人分',
+			'split_method.adjustment' => '調整',
 			'log_action.create_task' => 'タスク作成',
 			'log_action.update_settings' => '設定更新',
 			'log_action.add_member' => 'メンバー追加',
@@ -896,9 +911,6 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.action_save' => '保存',
 			'S15_Record_Edit.val_split_details' => '詳細を編集',
 			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘',
-			'S15_Record_Edit.method_even' => '均等',
-			'S15_Record_Edit.method_exact' => '金額指定',
-			'S15_Record_Edit.method_percent' => '割合 (%)',
 			'S15_Record_Edit.info_rate_source' => 'レートの提供元',
 			'S15_Record_Edit.msg_rate_source' => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。',
 			'S15_Record_Edit.btn_close' => '閉じる',
@@ -917,8 +929,6 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.type_income_title' => '預り金',
 			'S15_Record_Edit.base_card_title_expense' => '残額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金提供者',
-			'S15_Record_Edit.method_share' => '人数',
-			'S15_Record_Edit.method_adjustment' => '調整',
 			'S15_Record_Edit.payer_multiple' => '複数人',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.section_name' => 'タスク名',

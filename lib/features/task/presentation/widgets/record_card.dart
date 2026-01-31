@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -30,19 +31,6 @@ class RecordCard extends StatelessWidget {
     this.isBaseCard = false,
     this.showSplitAction = false,
   });
-
-  String _getSplitMethodLabel(Translations t, String method) {
-    switch (method) {
-      case 'even':
-        return t.S15_Record_Edit.method_even;
-      case 'exact':
-        return t.S15_Record_Edit.method_exact;
-      case 'percent':
-        return t.S15_Record_Edit.method_percent;
-      default:
-        return method;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +75,7 @@ class RecordCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _getSplitMethodLabel(t, methodLabel),
+                          SplitMethodConstants.getLabel(context, methodLabel),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: colorScheme.onPrimary, // 白字
                             fontWeight: FontWeight.bold,
