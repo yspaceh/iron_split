@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart'; // 新增
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
@@ -45,6 +48,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   Map<DateTime, List<RecordModel>> _personalGroupedRecords = {};
   double _personalNetBalance = 0.0;
 
+  String _remainderRule = RemainderRuleConstants.defaultRule;
+  String? _remainderAbsorberId;
+
   // Getters
   bool get isLoading => _isLoading;
   TaskModel? get task => _task;
@@ -59,6 +65,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   double get personalNetBalance => _personalNetBalance;
   ScrollController get activeScrollController =>
       _currentTabIndex == 0 ? groupScrollController : personalScrollController;
+  String get remainderRule => _remainderRule;
+  String? get remainderAbsorberId => _remainderAbsorberId;
+  Map<String, dynamic> get membersData => _task?.members ?? {};
 
   // 新增：為了支援 UI 顯示 Currency Symbol
   CurrencyOption get currencyOption {
@@ -72,13 +81,13 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   StreamSubscription? _taskSub;
   StreamSubscription? _recordSub;
 
-  // ✅ 2. 新增：Page 需要知道是否為隊長
+  // 2. 新增：Page 需要知道是否為隊長
   bool get isCaptain {
     if (_task == null) return false;
     return _task!.createdBy == currentUserId;
   }
 
-  // ✅ 3. 新增：Page 需要知道是否顯示 Intro
+  // 3. 新增：Page 需要知道是否顯示 Intro
   bool get shouldShowIntro {
     if (_task == null) return false;
     final memberData = _task!.members[currentUserId];
@@ -104,6 +113,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     _taskSub = _taskRepo.streamTask(taskId).listen((taskData) {
       if (taskData != null) {
         _task = taskData;
+        _remainderRule = taskData.remainderRule;
+        _remainderAbsorberId = taskData.remainderAbsorberId;
         _recalculate();
       }
     });
@@ -201,7 +212,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     handleDateJump(targetDate);
   }
 
-  // ✅ 新增：檢查並執行自動捲動
+  // 新增：檢查並執行自動捲動
   void checkInitialScroll() {
     if (_task == null || _displayDates.isEmpty) return;
 
@@ -264,9 +275,39 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     attemptScroll();
   }
 
-  Future<void> updateRemainderRule(String newRule) async {
-    if (_task == null) return;
-    await _taskRepo.updateTask(taskId, {'remainderRule': newRule});
+  Future<void> updateRemainderRule(
+      String newRule, String? newAbsorberId) async {
+    // 1. 樂觀更新
+    _remainderRule = newRule;
+    _remainderAbsorberId = newAbsorberId;
+    notifyListeners();
+
+    // 2. 準備資料
+    final Map<String, dynamic> updateData = {
+      'remainderRule': newRule,
+      'remainderAbsorberId': newRule == 'member' ? newAbsorberId : null,
+    };
+
+    // 3. 使用 Repository
+    await _taskRepo.updateTask(taskId, updateData);
+
+    // 4. Log
+    Map<String, dynamic> logDetails = {
+      'settingType': 'remainder_rule',
+      'newValue': newRule,
+    };
+
+    if (newRule == 'member' && newAbsorberId != null) {
+      final memberName =
+          membersData[newAbsorberId]?['displayName'] ?? 'Unknown';
+      logDetails['absorberName'] = memberName;
+    }
+
+    await ActivityLogService.log(
+      taskId: taskId,
+      action: LogAction.updateSettings,
+      details: logDetails,
+    );
   }
 
   // Helper for Daily Header Calculation (給 View 用)

@@ -57,6 +57,12 @@
     "try_": "Turkish Lira",
     "inr": "Indian Rupee"
   },
+  "remainder_rule": {
+    "title":"Remainder Rule",
+    "rule_random": "Random",
+    "rule_order": "Order",
+    "rule_member": "Member"
+  },
   "log_action": {
     "create_task": "Create Task",
     "update_settings": "Update Settings",
@@ -131,17 +137,13 @@
     "personal_to_receive": "To Receive",
     "personal_to_pay": "To Pay",
     "personal_empty_desc": "No records related to you on this day",
-    "total_amount_label": "Total Bill",
-    "rule_random": "Random",
-    "rule_order": "Order",
-    "rule_member": "Member"
+    "total_amount_label": "Total Bill"
   },
   "S14_Task_Settings": {
     "title": "Task Settings",
     "menu_member_settings": "Member Settings",
     "menu_history": "History",
     "menu_end_task": "End Task",
-    "field_remainder_rule": "Remainder Rule",
     "section_remainder": "Remainder"
   },
   "S15_Record_Edit": {

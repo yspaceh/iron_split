@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/member_item.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -17,7 +19,11 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S53TaskSettingsMembersViewModel(taskId: taskId),
+      create: (_) => S53TaskSettingsMembersViewModel(
+        taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
+      ),
       child: const _S53Content(),
     );
   }
@@ -107,27 +113,23 @@ class _S53Content extends StatelessWidget {
         title: Text(t.S53_TaskSettings_Members.title),
         centerTitle: true,
       ),
-      body: StreamBuilder<DocumentSnapshot>(
+      body: StreamBuilder<TaskModel?>(
         stream: vm.taskStream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            // TODO: 這邊的錯誤處理語言要處理
             return Center(child: Text("Error: ${snapshot.error}"));
           }
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final taskData = snapshot.data!.data() as Map<String, dynamic>?;
-          if (taskData == null) return const SizedBox();
+          final task = snapshot.data;
+          if (task == null) return const SizedBox();
 
-          final rawMembers = taskData['members'];
-          final Map<String, dynamic> membersMap = (rawMembers is Map)
-              ? Map<String, dynamic>.from(rawMembers)
-              : <String, dynamic>{};
-
-          final createdBy = taskData['createdBy'] as String?;
-          final taskName = taskData['name'] as String? ?? 'Task';
-
+          final taskName = task.name;
+          final createdBy = task.createdBy;
+          final membersMap = task.members;
           // Sort Logic (UI Layer)
           final List<MapEntry<String, dynamic>> membersList =
               membersMap.entries.toList();
@@ -158,8 +160,7 @@ class _S53Content extends StatelessWidget {
                     final memberId = entry.key;
                     final memberData = entry.value as Map<String, dynamic>;
 
-                    final bool isOwner =
-                        (createdBy != null && memberId == createdBy);
+                    final bool isOwner = (memberId == createdBy);
 
                     return MemberItem(
                       key: ValueKey(memberId),

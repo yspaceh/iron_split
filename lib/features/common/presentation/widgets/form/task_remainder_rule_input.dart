@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskRemainderRuleInput extends StatelessWidget {
   const TaskRemainderRuleInput({
     super.key,
     required this.rule,
-    required this.onRuleChanged,
+    required this.onTap,
     this.enabled = true,
   });
 
   final String rule;
-  final ValueChanged<String> onRuleChanged;
+  final VoidCallback? onTap;
   final bool enabled;
-
-  void _showRemainerRulePicker(BuildContext context) {
-    RemainderRulePickerSheet.show(
-      context: context,
-      initialRule: rule,
-      onSelected: (rule) {
-        onRuleChanged(rule);
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return _buildRowItem(
       context: context,
       icon: Icons.calculate_outlined,
-      label: t.S14_Task_Settings.field_remainder_rule,
+      label: t.remainder_rule.title,
       value: rule,
-      onTap: enabled ? () => _showRemainerRulePicker(context) : null,
+      onTap: enabled ? onTap : null,
       enabled: enabled,
     );
   }

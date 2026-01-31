@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s12_task_close_notice_vm.dart';
@@ -13,7 +14,10 @@ class S12TaskCloseNoticePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S12TaskCloseNoticeViewModel(taskId: taskId),
+      create: (_) => S12TaskCloseNoticeViewModel(
+        taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+      ),
       child: const _S12Content(),
     );
   }

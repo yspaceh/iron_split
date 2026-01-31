@@ -57,6 +57,12 @@
     "try_": "トルコリラ",
     "inr": "インドルピー"
   },
+  "remainder_rule": {
+    "title":"端数処理",
+    "rule_random": "ランダム",
+    "rule_order": "順番",
+    "rule_member": "指定"
+  },
   "log_action": {
     "create_task": "タスク作成",
     "update_settings": "設定更新",
@@ -140,9 +146,6 @@
     "label_remainder_pot": "端数ポット",
     "fab_record": "記録",
     "empty_records": "記録がありません",
-    "rule_random": "ランダム",
-    "rule_order": "順番",
-    "rule_member": "指定",
     "settlement_button": "精算",
     "nav_to_record": "記録ページへ移動します...",
     "daily_expense_label": "支出",
@@ -161,7 +164,6 @@
     "menu_member_settings": "メンバー設定",
     "menu_history": "履歴",
     "menu_end_task": "タスク終了",
-    "field_remainder_rule": "端数処理",
     "section_remainder": "残高"
   },
   "S15_Record_Edit": {

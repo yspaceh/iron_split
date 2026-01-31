@@ -57,6 +57,12 @@
     "try_": "土耳其里拉",
     "inr": "印度盧比"
   },
+  "remainder_rule": {
+    "title":"零頭處理",
+    "rule_random": "餘額輪盤",
+    "rule_order": "順序輪替",
+    "rule_member": "指定成員"
+  },
   "log_action": {
     "create_task": "建立任務",
     "update_settings": "更新設定",
@@ -120,9 +126,6 @@
     "label_remainder_pot": "零頭罐",
     "fab_record": "記一筆",
     "empty_records": "尚無收支紀錄",
-    "rule_random": "餘額輪盤",
-    "rule_order": "順序輪替",
-    "rule_member": "指定成員",
     "settlement_button": "結算",
     "nav_to_record": "準備前往記帳頁面...",
     "daily_expense_label": "支出",
@@ -144,7 +147,6 @@
     "menu_member_settings": "成員設定",
     "menu_history": "歷史紀錄",
     "menu_end_task": "結束任務",
-    "field_remainder_rule": "零頭處理",
     "section_remainder": "剩餘款"
   },
   "S15_Record_Edit": {

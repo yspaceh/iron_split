@@ -1,21 +1,29 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart'; // For default name
 
 class S53TaskSettingsMembersViewModel extends ChangeNotifier {
+  final TaskRepository _taskRepo;
+  final RecordRepository _recordRepo;
   final String taskId;
   bool _isProcessing = false;
 
   bool get isProcessing => _isProcessing;
 
-  S53TaskSettingsMembersViewModel({required this.taskId});
+  S53TaskSettingsMembersViewModel(
+      {required TaskRepository taskRepo,
+      required RecordRepository recordRepo,
+      required this.taskId})
+      : _taskRepo = taskRepo,
+        _recordRepo = recordRepo;
 
   // 直接暴露 Firestore Stream 給 UI 使用 (也可以在 VM 內 listen)
-  Stream<DocumentSnapshot> get taskStream =>
-      FirebaseFirestore.instance.collection('tasks').doc(taskId).snapshots();
+  Stream<TaskModel?> get taskStream => _taskRepo.streamTask(taskId);
 
   Future<void> addMember(
       Map<String, dynamic> currentMembersMap, Translations t) async {
@@ -41,10 +49,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       final updatedMap = Map<String, dynamic>.from(currentMembersMap);
       updatedMap[newId] = newMember;
 
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .update({'members': updatedMap});
+      await _taskRepo.replaceMembersMap(taskId, updatedMap);
 
       await ActivityLogService.log(
         taskId: taskId,
@@ -77,10 +82,8 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       updatedMemberData['displayName'] = trimmedName;
       updatedMap[memberId] = updatedMemberData;
 
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .update({'members': updatedMap});
+      await _taskRepo
+          .updateMemberFields(taskId, memberId, {'displayName': trimmedName});
     } catch (e) {
       debugPrint("Rename failed: $e");
     } finally {
@@ -91,19 +94,9 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
   Future<void> updateRatio(Map<String, dynamic> currentMembersMap,
       String memberId, double newRatio) async {
-    // 這裡通常反應很快，不做全局 loading，避免 UI 跳動
-    final updatedMap = Map<String, dynamic>.from(currentMembersMap);
-
-    if (updatedMap.containsKey(memberId)) {
-      final memberData = Map<String, dynamic>.from(updatedMap[memberId] as Map);
-      memberData['defaultSplitRatio'] = newRatio;
-      updatedMap[memberId] = memberData;
-
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .update({'members': updatedMap});
-    }
+    // 這裡還是要更新
+    await _taskRepo
+        .updateMemberFields(taskId, memberId, {'defaultSplitRatio': newRatio});
   }
 
   /// 嘗試刪除成員
@@ -118,37 +111,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
     try {
       // 1. 髒檢查
-      final recordsSnapshot = await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .collection('records')
-          .get();
-
-      bool hasData = false;
-
-      for (var doc in recordsSnapshot.docs) {
-        final data = doc.data();
-        // 檢查 Payer
-        if (data['payerId'] == memberId) {
-          hasData = true;
-          break;
-        }
-        // 檢查 Contributors (複雜結構)
-        if (data['payment'] != null &&
-            data['payment']['contributors'] is List) {
-          final contributors = data['payment']['contributors'] as List;
-          if (contributors.any((c) => (c as Map)['uid'] == memberId)) {
-            hasData = true;
-            break;
-          }
-        }
-        // Fallback: 簡單字串匹配 (防止遺漏)
-        final jsonString = data.toString();
-        if (jsonString.contains(memberId)) {
-          hasData = true;
-          break;
-        }
-      }
+      final hasData = await _recordRepo.hasMemberRecords(taskId, memberId);
 
       if (hasData) {
         return false; // Blocked
@@ -158,10 +121,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       final updatedMap = Map<String, dynamic>.from(currentMembersMap);
       updatedMap.remove(memberId);
 
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .update({'members': updatedMap});
+      await _taskRepo.replaceMembersMap(taskId, updatedMap);
 
       await ActivityLogService.log(
         taskId: taskId,

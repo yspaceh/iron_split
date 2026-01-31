@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s14_task_settings_vm.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/form_section.dart';
@@ -20,7 +22,10 @@ class S14TaskSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S14TaskSettingsViewModel(taskId: taskId)..init(),
+      create: (_) => S14TaskSettingsViewModel(
+        taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+      )..init(),
       child: const _S14Content(),
     );
   }
@@ -75,6 +80,32 @@ class _S14ContentState extends State<_S14Content> {
     // 成功後更新 VM 狀態
     if (success == true && mounted) {
       vm.updateCurrency(selectedOption);
+    }
+  }
+
+  Future<void> _onRemainderRuleChange(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    // 1. 準備成員資料 (Map 轉 List)
+    final List<Map<String, dynamic>> membersList =
+        vm.membersData.entries.map((e) {
+      final m = e.value as Map<String, dynamic>;
+      return <String, dynamic>{...m, 'id': e.key};
+    }).toList();
+
+    // 2. 呼叫 B01
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => B01BalanceRuleEditBottomSheet(
+        initialRule: vm.remainderRule,
+        initialMemberId: vm.remainderAbsorberId,
+        members: membersList,
+      ),
+    );
+
+    // 3. 處理回傳
+    if (result != null && mounted) {
+      await vm.updateRemainderRule(result['rule'], result['memberId']);
     }
   }
 
@@ -146,9 +177,9 @@ class _S14ContentState extends State<_S14Content> {
                     color: theme.dividerColor),
               ),
               TaskRemainderRuleInput(
-                rule: RemainderRulePickerSheet.getRuleName(
-                    context, vm.remainderRule),
-                onRuleChanged: vm.updateRemainderRule,
+                rule:
+                    RemainderRuleConstants.getLabel(context, vm.remainderRule),
+                onTap: () => _onRemainderRuleChange(context, vm),
                 enabled: true,
               ),
             ],

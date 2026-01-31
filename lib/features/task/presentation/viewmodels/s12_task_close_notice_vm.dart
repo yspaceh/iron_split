@@ -1,15 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S12TaskCloseNoticeViewModel extends ChangeNotifier {
+  final TaskRepository _taskRepo;
   final String taskId;
   bool _isProcessing = false;
 
   bool get isProcessing => _isProcessing;
 
-  S12TaskCloseNoticeViewModel({required this.taskId});
+  S12TaskCloseNoticeViewModel({
+    required this.taskId,
+    required TaskRepository taskRepo,
+  }) : _taskRepo = taskRepo;
 
   /// 執行結束任務邏輯
   /// Returns: true if success
@@ -18,11 +22,7 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // 1. 更新 Firestore 狀態
-      await FirebaseFirestore.instance.collection('tasks').doc(taskId).update({
-        'status': 'closed',
-        'closedAt': FieldValue.serverTimestamp(),
-      });
+      await _taskRepo.closeTask(taskId);
 
       // 2. 寫入 Log
       await ActivityLogService.log(

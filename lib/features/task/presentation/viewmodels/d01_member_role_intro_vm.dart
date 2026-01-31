@@ -1,10 +1,11 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 
 class D01MemberRoleIntroViewModel extends ChangeNotifier {
+  final TaskRepository _taskRepo;
   final String taskId;
 
   late String _currentAvatar;
@@ -18,9 +19,10 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
 
   D01MemberRoleIntroViewModel({
     required this.taskId,
+    required TaskRepository taskRepo,
     required String initialAvatar,
     required bool canReroll,
-  }) {
+  }) : _taskRepo = taskRepo {
     _currentAvatar = initialAvatar;
     _canReroll = canReroll;
   }
@@ -40,9 +42,9 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
           AvatarConstants.allAvatars.where((a) => a != _currentAvatar).toList();
       final newAvatar = available[Random().nextInt(available.length)];
 
-      await FirebaseFirestore.instance.collection('tasks').doc(taskId).update({
-        'members.$uid.avatar': newAvatar,
-        'members.$uid.hasRerolled': true,
+      await _taskRepo.updateMemberFields(taskId, uid, {
+        'avatar': newAvatar,
+        'hasRerolled': true,
       });
 
       _currentAvatar = newAvatar;
@@ -60,10 +62,9 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
 
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .update({'members.$uid.hasSeenRoleIntro': true});
+      await _taskRepo.updateMemberFields(taskId, uid, {
+        'hasSeenRoleIntro': true,
+      });
     } catch (e) {
       debugPrint('Update seen status failed: $e');
       // 這裡不 throw，因為即使失敗也要讓使用者進入 Dashboard

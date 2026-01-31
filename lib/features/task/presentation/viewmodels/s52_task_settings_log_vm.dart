@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart'; // 需要 context 翻譯
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class S52TaskSettingsLogViewModel extends ChangeNotifier {
+  final TaskRepository _taskRepo;
   final String taskId;
   final Map<String, dynamic> membersData;
 
@@ -16,14 +17,13 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
 
   S52TaskSettingsLogViewModel({
     required this.taskId,
+    required TaskRepository taskRepo,
     required this.membersData,
-  });
+  }) : _taskRepo = taskRepo;
 
   // Logs Stream Getter
-  Stream<QuerySnapshot> get logsStream => FirebaseFirestore.instance
-      .collection('tasks/$taskId/activity_logs')
-      .orderBy('createdAt', descending: true)
-      .snapshots();
+  Stream<List<ActivityLogModel>> get logsStream =>
+      _taskRepo.streamActivityLogs(taskId);
 
   Future<void> exportCsv(BuildContext context) async {
     _isExporting = true;
@@ -32,15 +32,8 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
     try {
       final t = Translations.of(context);
 
-      // 1. Fetch all logs (One-time fetch for export)
-      final collection = FirebaseFirestore.instance
-          .collection('tasks/$taskId/activity_logs')
-          .orderBy('createdAt', descending: true);
-
-      final snapshot = await collection.get();
-      final logs = snapshot.docs
-          .map((doc) => ActivityLogModel.fromFirestore(doc))
-          .toList();
+      // 1. Fetch all logs (改用 Repo)
+      final logs = await _taskRepo.getActivityLogs(taskId);
 
       // 2. Prepare CSV Header
       final header =

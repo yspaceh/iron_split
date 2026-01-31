@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,9 @@ class S16TaskCreateEditPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 注入 VM
     return ChangeNotifierProvider(
-      create: (_) => S16TaskCreateEditViewModel(),
+      create: (_) => S16TaskCreateEditViewModel(
+        taskRepo: context.read<TaskRepository>(),
+      ),
       child: const _S16Content(),
     );
   }

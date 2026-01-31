@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 
 class TaskModel {
   final String id;
@@ -9,6 +10,7 @@ class TaskModel {
   final String status; // Was 'mode'/'state', now 'ongoing' etc.
   final String createdBy; // Was 'ownerId'
   final String remainderRule; // Added to match S14
+  final String? remainderAbsorberId;
   final DateTime createdAt;
   final DateTime updatedAt; // Added
   final DateTime? startDate;
@@ -28,6 +30,7 @@ class TaskModel {
     this.startDate,
     this.endDate,
     this.memberCount = 1,
+    this.remainderAbsorberId,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
@@ -42,7 +45,8 @@ class TaskModel {
         members: {},
         status: 'unknown',
         createdBy: '',
-        remainderRule: 'random',
+        remainderRule: RemainderRuleConstants.defaultRule,
+        remainderAbsorberId: null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -73,7 +77,9 @@ class TaskModel {
       createdBy: data['createdBy'] as String? ?? '',
 
       // Rule handling (S14: remainderRule)
-      remainderRule: data['remainderRule'] as String? ?? 'random',
+      remainderRule: data['remainderRule'] as String? ??
+          RemainderRuleConstants.defaultRule,
+      remainderAbsorberId: data['remainderAbsorberId'] as String?,
 
       createdAt: parseDate(data['createdAt']),
       updatedAt: parseDate(data['updatedAt']),
@@ -93,6 +99,7 @@ class TaskModel {
       'status': status,
       'createdBy': createdBy,
       'remainderRule': remainderRule,
+      'remainderAbsorberId': remainderAbsorberId,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,

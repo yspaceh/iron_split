@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/activity_log_item.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -21,6 +21,7 @@ class S52TaskSettingsLogPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => S52TaskSettingsLogViewModel(
         taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
         membersData: membersData,
       ),
       child: const _S52Content(),
@@ -44,7 +45,7 @@ class _S52Content extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
+            child: StreamBuilder<List<ActivityLogModel>>(
               stream: vm.logsStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -57,9 +58,9 @@ class _S52Content extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final docs = snapshot.data?.docs ?? [];
+                final logs = snapshot.data ?? [];
 
-                if (docs.isEmpty) {
+                if (logs.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,11 +80,11 @@ class _S52Content extends StatelessWidget {
                 }
 
                 return ListView.separated(
-                  itemCount: docs.length,
+                  itemCount: logs.length,
                   separatorBuilder: (context, index) =>
                       const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    final log = ActivityLogModel.fromFirestore(docs[index]);
+                    final log = logs[index];
 
                     return ActivityLogItem(
                       log: log,

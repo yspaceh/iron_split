@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -31,19 +32,6 @@ class BalanceCard extends StatelessWidget {
 
     // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
     final bool isLocked = state.isLocked;
-
-    // Helper: 翻譯規則名稱
-    String mapRuleName(String rule) {
-      switch (rule) {
-        case 'order':
-          return t.S13_Task_Dashboard.rule_order;
-        case 'member':
-          return t.S13_Task_Dashboard.rule_member;
-        case 'random':
-        default:
-          return t.S13_Task_Dashboard.rule_random;
-      }
-    }
 
     // Dialog 1: 收支明細
     void showBalanceDetails() {
@@ -388,7 +376,8 @@ class BalanceCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            mapRuleName(state.ruleKey),
+                            RemainderRuleConstants.getLabel(
+                                context, state.ruleKey),
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.bold,

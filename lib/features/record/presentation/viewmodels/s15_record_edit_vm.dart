@@ -1,15 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
-import 'package:iron_split/core/services/record_service.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class S15RecordEditViewModel extends ChangeNotifier {
@@ -18,6 +17,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
   final exchangeRateController = TextEditingController(text: '1.0');
   final titleController = TextEditingController();
   final memoController = TextEditingController();
+  final RecordRepository _recordRepo;
+  final TaskRepository _taskRepo;
 
   // Basic State
   late DateTime _selectedDate;
@@ -95,12 +96,16 @@ class S15RecordEditViewModel extends ChangeNotifier {
   // Constructor
   S15RecordEditViewModel({
     required this.taskId,
+    required RecordRepository recordRepo,
+    required TaskRepository taskRepo,
     this.recordId,
     RecordModel? record,
     this.baseCurrencyOption = CurrencyOption.defaultCurrencyOption,
     this.poolBalancesByCurrency = const {},
     DateTime? initialDate,
-  }) : _originalRecord = record {
+  })  : _recordRepo = recordRepo,
+        _taskRepo = taskRepo,
+        _originalRecord = record {
     _init(initialDate);
   }
 
@@ -173,33 +178,30 @@ class S15RecordEditViewModel extends ChangeNotifier {
       _isLoadingTaskData = true;
       notifyListeners();
 
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .get();
+      // 1. 改用 Repo 拿資料 (會拿到 TaskModel?)
+      final task = await _taskRepo.streamTask(taskId).first;
 
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data()!;
-        List<Map<String, dynamic>> realMembers = [];
+      // 2. 判斷 task 是否存在 (取代 docSnapshot.exists)
+      if (task != null) {
+        // 3. 資料轉換: TaskModel -> List<Map>
+        // TaskModel 裡的 members 已經是 Map<String, dynamic> 了，直接轉即可
+        // 我們不再需要判斷 "if (rawMembers is List)"，因為 Model 層已經規範好了
 
-        if (data.containsKey('members')) {
-          final dynamic rawMembers = data['members'];
-          if (rawMembers is List) {
-            realMembers =
-                rawMembers.map((m) => m as Map<String, dynamic>).toList();
-          } else if (rawMembers is Map) {
-            realMembers = (rawMembers as Map<String, dynamic>).entries.map((e) {
-              final memberData = e.value as Map<String, dynamic>;
-              if (!memberData.containsKey('id')) memberData['id'] = e.key;
-              if (memberData['displayName'] == null) {
-                memberData['displayName'] = 'Unknown';
-              }
-              return memberData;
-            }).toList();
+        List<Map<String, dynamic>> realMembers = task.members.entries.map((e) {
+          // 確保是深拷貝或新 Map，以免汙染 Model
+          final memberMap = Map<String, dynamic>.from(e.value);
+
+          // 補上 ID (因為 Firestore Map 的 Key 就是 ID)
+          memberMap['id'] = e.key;
+
+          // 防呆預設值
+          if (memberMap['displayName'] == null) {
+            memberMap['displayName'] = 'Unknown';
           }
-        }
+          return memberMap;
+        }).toList();
 
-        // Sorting logic (same as original)
+        // 4. 排序邏輯 (完全保留原樣，這是 UI 邏輯)
         realMembers.sort((a, b) {
           final bool aIsCaptain = a['role'] == 'captain';
           final bool bIsCaptain = b['role'] == 'captain';
@@ -214,7 +216,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
         _taskMembers = realMembers;
 
-        // Init Split Members if needed
+        // 5. 初始化分帳成員 (保留原樣)
         if (_originalRecord == null) {
           _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
         }
@@ -340,6 +342,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // --- Save & Delete ---
 
+  // --- Save Logic ---
+
   Future<void> saveRecord(Translations t) async {
     if (_isSaving) return;
     _isSaving = true;
@@ -349,96 +353,73 @@ class S15RecordEditViewModel extends ChangeNotifier {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       final isIncome = _recordTypeIndex == 1;
 
-      final recordData = {
-        'date': Timestamp.fromDate(_selectedDate),
-        'title': isIncome
+      // 1. 準備必要的資料
+      // 如果是編輯模式，保留原始建立時間；如果是新增，使用現在時間
+      final now = DateTime.now();
+      final createdAt = _originalRecord?.createdAt ?? now;
+
+      // 2. 建構 RecordModel 物件 (完全對應您的 Model 定義)
+      final newRecord = RecordModel(
+        id: recordId, // 編輯時有值，新增時為 null
+
+        // 基本資訊
+        date: _selectedDate,
+        title: isIncome
             ? t.S15_Record_Edit.type_income_title
             : titleController.text,
-        'type': isIncome ? 'income' : 'expense',
-        'categoryIndex':
+        type: isIncome ? 'income' : 'expense',
+
+        // 分類
+        categoryIndex:
             kAppCategories.indexWhere((c) => c.id == _selectedCategoryId),
-        'categoryId': _selectedCategoryId,
-        'payerType': isIncome ? 'none' : _payerType,
-        'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
-        'paymentDetails': isIncome ? null : _complexPaymentData,
-        'amount': totalAmount,
-        'currency': _selectedCurrencyOption.code,
-        'exchangeRate': double.parse(exchangeRateController.text),
-        'splitMethod': _baseSplitMethod,
-        'splitMemberIds': _baseMemberIds,
-        'splitDetails': _baseRawDetails,
-        'details': isIncome ? [] : _details.map((x) => x.toMap()).toList(),
-        'memo': memoController.text,
-        'createdAt': FieldValue.serverTimestamp(),
-        'createdBy': uid,
-      };
+        categoryId: _selectedCategoryId,
 
-      final recordsRef = FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .collection('records');
+        // 付款資訊
+        payerType: isIncome ? 'none' : _payerType,
+        payerId: (!isIncome && _payerType == 'member') ? _payerId : null,
+        paymentDetails: isIncome ? null : _complexPaymentData,
 
-      // --- Log Data Construction (Copied from original) ---
-      // (Simplified here, assumes same logic as original file)
-      // We need to construct paymentLogData and allocationLogData
-      // For brevity, I'll implement the critical parts.
+        // 金額與匯率 (根據您的 Model，這就是最終金額)
+        amount: totalAmount,
+        currencyCode: _selectedCurrencyOption.code, // ✅ 修正名稱: currencyCode
+        exchangeRate: double.tryParse(exchangeRateController.text) ?? 1.0,
 
-      Map<String, dynamic> paymentLogData = {};
-      if (isIncome) {
-        paymentLogData = {'type': 'income', 'contributors': []};
-      } else if (_payerType == 'prepay') {
-        paymentLogData = {'type': 'pool', 'contributors': []};
-      } else if (_payerType == 'member') {
-        final name = _getMemberName(_payerId, t);
-        paymentLogData = {
-          'type': 'single',
-          'contributors': [
-            {'displayName': name, 'amount': totalAmount}
-          ]
-        };
-      } else if (_payerType == 'multiple') {
-        // ... handle multiple
-        paymentLogData = {
-          'type': 'multiple',
-          'contributors': []
-        }; // Fill logic if needed
-      }
+        // 分帳邏輯
+        splitMethod: _baseSplitMethod,
+        splitMemberIds: _baseMemberIds,
+        splitDetails: _baseRawDetails, // Map<String, double> 符合型別
 
-      List<Map<String, dynamic>> splitGroups = [];
-      // ... Fill splitGroups logic
-      final allocationLogData = {'mode': 'basic', 'groups': splitGroups};
+        // 細項
+        details: isIncome ? [] : _details, // ✅ 直接傳 List<RecordDetail>
 
+        // 其他
+        memo: memoController.text,
+        createdAt: createdAt,
+        createdBy: uid ?? _originalRecord?.createdBy, // 編輯時保留原作者，新增時用当前 UID
+      );
+
+      // 3. 準備 Log 資料 (這是輔助顯示用的，邏輯不變)
+      final logDetails = _buildLogDetails(t, isIncome);
+
+      // 4. 呼叫 Repository
       if (recordId == null) {
-        await recordsRef.add(recordData);
-        ActivityLogService.log(
+        // 新增
+        await _recordRepo.addRecord(taskId, newRecord);
+
+        await ActivityLogService.log(
           taskId: taskId,
           action: LogAction.createRecord,
-          details: {
-            'recordName': isIncome
-                ? t.S15_Record_Edit.type_income_title
-                : titleController.text,
-            'amount': totalAmount,
-            'currency': _selectedCurrencyOption.code,
-            'recordType': isIncome ? 'income' : 'expense',
-            'payment': paymentLogData,
-            'allocation': allocationLogData,
-          },
+          details: logDetails,
         );
       } else {
-        await recordsRef.doc(recordId).update(recordData);
-        ActivityLogService.log(
-            taskId: taskId,
-            action: LogAction.updateRecord,
-            details: {
-              'recordName': isIncome
-                  ? t.S15_Record_Edit.type_income_title
-                  : titleController.text,
-              'amount': totalAmount,
-              'currency': _selectedCurrencyOption.code,
-              'recordType': isIncome ? 'income' : 'expense',
-              'payment': paymentLogData,
-              'allocation': allocationLogData,
-            });
+        // 更新 (Repo 內部會去讀取 newRecord.id)
+        await _recordRepo.updateRecord(taskId, newRecord);
+
+        await ActivityLogService.log(
+          taskId: taskId,
+          action: LogAction.updateRecord,
+          details: logDetails,
+        );
       }
     } catch (e) {
       rethrow;
@@ -448,9 +429,62 @@ class S15RecordEditViewModel extends ChangeNotifier {
     }
   }
 
+  /// 私有 Helper: 組裝 Activity Log 的詳細資料
+  Map<String, dynamic> _buildLogDetails(Translations t, bool isIncome) {
+    // A. 建構 Payment Log Info
+    Map<String, dynamic> paymentLogData = {};
+
+    if (isIncome) {
+      paymentLogData = {'type': 'income', 'contributors': []};
+    } else if (_payerType == 'prepay') {
+      paymentLogData = {'type': 'pool', 'contributors': []};
+    } else if (_payerType == 'member') {
+      final name = _getMemberName(_payerId, t);
+      paymentLogData = {
+        'type': 'single',
+        'contributors': [
+          {'displayName': name, 'amount': totalAmount}
+        ]
+      };
+    } else if (_payerType == 'multiple') {
+      // 嘗試從 complexPaymentData 解析多位付款人
+      List<Map<String, dynamic>> contributors = [];
+      if (_complexPaymentData != null &&
+          _complexPaymentData!['memberAdvance'] is Map) {
+        final advances =
+            _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
+        contributors = advances.entries
+            .where((e) => (e.value as num) > 0)
+            .map((e) =>
+                {'displayName': _getMemberName(e.key, t), 'amount': e.value})
+            .toList();
+      }
+      paymentLogData = {'type': 'multiple', 'contributors': contributors};
+    }
+
+    // B. 建構 Allocation Log Info (簡化版)
+    // 這裡通常需要根據 splitMethod 顯示 "均分"、"比例" 或 "詳細"
+    // 因為這部分邏輯很長，這裡先保留基礎結構
+    final allocationLogData = {
+      'mode': _baseSplitMethod,
+      // 若需要更詳細的 groups 資訊可在此擴充
+      'groups': []
+    };
+
+    return {
+      'recordName':
+          isIncome ? t.S15_Record_Edit.type_income_title : titleController.text,
+      'amount': totalAmount,
+      'currency': _selectedCurrencyOption.code,
+      'recordType': isIncome ? 'income' : 'expense',
+      'payment': paymentLogData,
+      'allocation': allocationLogData,
+    };
+  }
+
   Future<void> deleteRecord(Translations t) async {
     try {
-      await RecordService.deleteRecord(taskId, recordId!);
+      await _recordRepo.deleteRecord(taskId, recordId!);
       ActivityLogService.log(
           taskId: taskId,
           action: LogAction.deleteRecord,

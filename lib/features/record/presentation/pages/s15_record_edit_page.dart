@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart'; // For DatePicker
 import 'package:iron_split/core/constants/currency_constants.dart';
@@ -47,6 +49,8 @@ class S15RecordEditPage extends StatelessWidget {
         baseCurrencyOption: baseCurrencyOption,
         poolBalancesByCurrency: poolBalancesByCurrency,
         initialDate: initialDate,
+        taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
       ),
       child: const _S15Content(),
     );

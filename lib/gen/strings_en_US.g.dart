@@ -42,6 +42,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCategoryEnUs category = _TranslationsCategoryEnUs._(_root);
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsCurrencyEnUs currency = _TranslationsCurrencyEnUs._(_root);
+	@override late final _TranslationsRemainderRuleEnUs remainder_rule = _TranslationsRemainderRuleEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
 	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
@@ -147,6 +148,19 @@ class _TranslationsCurrencyEnUs extends TranslationsCurrencyZhTw {
 	@override String get sar => 'Saudi Riyal';
 	@override String get try_ => 'Turkish Lira';
 	@override String get inr => 'Indian Rupee';
+}
+
+// Path: remainder_rule
+class _TranslationsRemainderRuleEnUs extends TranslationsRemainderRuleZhTw {
+	_TranslationsRemainderRuleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Remainder Rule';
+	@override String get rule_random => 'Random';
+	@override String get rule_order => 'Order';
+	@override String get rule_member => 'Member';
 }
 
 // Path: log_action
@@ -265,9 +279,6 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override String get personal_to_pay => 'To Pay';
 	@override String get personal_empty_desc => 'No records related to you on this day';
 	@override String get total_amount_label => 'Total Bill';
-	@override String get rule_random => 'Random';
-	@override String get rule_order => 'Order';
-	@override String get rule_member => 'Member';
 }
 
 // Path: S14_Task_Settings
@@ -281,7 +292,6 @@ class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
 	@override String get menu_member_settings => 'Member Settings';
 	@override String get menu_history => 'History';
 	@override String get menu_end_task => 'End Task';
-	@override String get field_remainder_rule => 'Remainder Rule';
 	@override String get section_remainder => 'Remainder';
 }
 
@@ -781,6 +791,10 @@ extension on TranslationsEnUs {
 			'currency.sar' => 'Saudi Riyal',
 			'currency.try_' => 'Turkish Lira',
 			'currency.inr' => 'Indian Rupee',
+			'remainder_rule.title' => 'Remainder Rule',
+			'remainder_rule.rule_random' => 'Random',
+			'remainder_rule.rule_order' => 'Order',
+			'remainder_rule.rule_member' => 'Member',
 			'log_action.create_task' => 'Create Task',
 			'log_action.update_settings' => 'Update Settings',
 			'log_action.add_member' => 'Add Member',
@@ -845,14 +859,10 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.personal_to_pay' => 'To Pay',
 			'S13_Task_Dashboard.personal_empty_desc' => 'No records related to you on this day',
 			'S13_Task_Dashboard.total_amount_label' => 'Total Bill',
-			'S13_Task_Dashboard.rule_random' => 'Random',
-			'S13_Task_Dashboard.rule_order' => 'Order',
-			'S13_Task_Dashboard.rule_member' => 'Member',
 			'S14_Task_Settings.title' => 'Task Settings',
 			'S14_Task_Settings.menu_member_settings' => 'Member Settings',
 			'S14_Task_Settings.menu_history' => 'History',
 			'S14_Task_Settings.menu_end_task' => 'End Task',
-			'S14_Task_Settings.field_remainder_rule' => 'Remainder Rule',
 			'S14_Task_Settings.section_remainder' => 'Remainder',
 			'S15_Record_Edit.title_create' => 'Add Expense',
 			'S15_Record_Edit.title_edit' => 'Edit Record',

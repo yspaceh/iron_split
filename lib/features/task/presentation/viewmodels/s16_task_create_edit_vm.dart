@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class S16TaskCreateEditViewModel extends ChangeNotifier {
+  final TaskRepository _taskRepo;
   // State
   late DateTime _startDate;
   late DateTime _endDate;
@@ -29,7 +30,9 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   bool get isProcessing => _isProcessing;
   String? get statusText => _statusText;
 
-  S16TaskCreateEditViewModel() {
+  S16TaskCreateEditViewModel({
+    required TaskRepository taskRepo,
+  }) : _taskRepo = taskRepo {
     // 1. 初始化日期 (今天)
     final now = DateTime.now();
     _startDate = DateTime(now.year, now.month, now.day);
@@ -96,7 +99,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       membersMap[user.uid] = {
         'role': 'captain',
         'displayName': user.displayName ?? 'Captain',
-        'joinedAt': FieldValue.serverTimestamp(),
+        'joinedAt': DateTime.now(), // 改傳 DateTime，Repo/Firestore 支援
         'avatar': _getRandomAvatar(),
         'isLinked': true,
         'hasSeenRoleIntro': false,
@@ -110,7 +113,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         membersMap[ghostId] = {
           'role': 'member',
           'displayName': '$prefix ${i + 1}',
-          'joinedAt': FieldValue.serverTimestamp(),
+          'joinedAt': DateTime.now(),
           'avatar': _getRandomAvatar(),
           'isLinked': false,
           'hasSeenRoleIntro': false,
@@ -118,28 +121,27 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       }
 
       // 2. 寫入 DB
-      final docRef = await FirebaseFirestore.instance.collection('tasks').add({
+      final taskData = {
         'name': taskName,
         'createdBy': user.uid,
         'memberCount': _memberCount,
         'maxMembers': _memberCount,
         'baseCurrency': _baseCurrencyOption.code,
-        'startDate': Timestamp.fromDate(_startDate),
-        'endDate': Timestamp.fromDate(_endDate),
-        'status': 'ongoing',
-        'updatedAt': FieldValue.serverTimestamp(),
-        'createdAt': FieldValue.serverTimestamp(),
+        'startDate': _startDate, // 直接傳 DateTime
+        'endDate': _endDate, // 直接傳 DateTime
         'members': membersMap,
-        'activeInviteCode': null,
-        // 'remainderRule': 'random', // Optional based on Model
-      });
+        'remainderRule': 'random', // 預設值
+      };
+
+      // ✅ 呼叫 Repo 建立任務，取得 ID
+      final taskId = await _taskRepo.createTask(taskData);
 
       // 3. Activity Log
       final dateStr =
           "${DateFormat('yyyy/MM/dd').format(_startDate)} - ${DateFormat('yyyy/MM/dd').format(_endDate)}";
 
       await ActivityLogService.log(
-        taskId: docRef.id,
+        taskId: taskId,
         action: LogAction.createTask,
         details: {
           'recordName': taskName,
@@ -155,17 +157,16 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         _statusText = t.D03_TaskCreate_Confirm.preparing_share;
         notifyListeners();
 
-        // 呼叫 API 取得邀請碼
         final callable =
             FirebaseFunctions.instance.httpsCallable('createInviteCode');
-        final res = await callable.call({'taskId': docRef.id});
+        final res = await callable.call({'taskId': taskId});
         final data = Map<String, dynamic>.from(res.data);
         inviteCode = data['code'];
       }
 
       _isProcessing = false;
       notifyListeners();
-      return (taskId: docRef.id, inviteCode: inviteCode);
+      return (taskId: taskId, inviteCode: inviteCode);
     } catch (e) {
       _isProcessing = false;
       notifyListeners();

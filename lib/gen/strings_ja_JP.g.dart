@@ -42,6 +42,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsCategoryJaJp category = _TranslationsCategoryJaJp._(_root);
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsCurrencyJaJp currency = _TranslationsCurrencyJaJp._(_root);
+	@override late final _TranslationsRemainderRuleJaJp remainder_rule = _TranslationsRemainderRuleJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
 	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
@@ -147,6 +148,19 @@ class _TranslationsCurrencyJaJp extends TranslationsCurrencyZhTw {
 	@override String get sar => 'サウジアラビアリヤル';
 	@override String get try_ => 'トルコリラ';
 	@override String get inr => 'インドルピー';
+}
+
+// Path: remainder_rule
+class _TranslationsRemainderRuleJaJp extends TranslationsRemainderRuleZhTw {
+	_TranslationsRemainderRuleJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '端数処理';
+	@override String get rule_random => 'ランダム';
+	@override String get rule_order => '順番';
+	@override String get rule_member => '指定';
 }
 
 // Path: log_action
@@ -287,9 +301,6 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override String get label_remainder_pot => '端数ポット';
 	@override String get fab_record => '記録';
 	@override String get empty_records => '記録がありません';
-	@override String get rule_random => 'ランダム';
-	@override String get rule_order => '順番';
-	@override String get rule_member => '指定';
 	@override String get settlement_button => '精算';
 	@override String get nav_to_record => '記録ページへ移動します...';
 	@override String get daily_expense_label => '支出';
@@ -315,7 +326,6 @@ class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
 	@override String get menu_member_settings => 'メンバー設定';
 	@override String get menu_history => '履歴';
 	@override String get menu_end_task => 'タスク終了';
-	@override String get field_remainder_rule => '端数処理';
 	@override String get section_remainder => '残高';
 }
 
@@ -781,6 +791,10 @@ extension on TranslationsJaJp {
 			'currency.sar' => 'サウジアラビアリヤル',
 			'currency.try_' => 'トルコリラ',
 			'currency.inr' => 'インドルピー',
+			'remainder_rule.title' => '端数処理',
+			'remainder_rule.rule_random' => 'ランダム',
+			'remainder_rule.rule_order' => '順番',
+			'remainder_rule.rule_member' => '指定',
 			'log_action.create_task' => 'タスク作成',
 			'log_action.update_settings' => '設定更新',
 			'log_action.add_member' => 'メンバー追加',
@@ -849,9 +863,6 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.label_remainder_pot' => '端数ポット',
 			'S13_Task_Dashboard.fab_record' => '記録',
 			'S13_Task_Dashboard.empty_records' => '記録がありません',
-			'S13_Task_Dashboard.rule_random' => 'ランダム',
-			'S13_Task_Dashboard.rule_order' => '順番',
-			'S13_Task_Dashboard.rule_member' => '指定',
 			'S13_Task_Dashboard.settlement_button' => '精算',
 			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
@@ -868,7 +879,6 @@ extension on TranslationsJaJp {
 			'S14_Task_Settings.menu_member_settings' => 'メンバー設定',
 			'S14_Task_Settings.menu_history' => '履歴',
 			'S14_Task_Settings.menu_end_task' => 'タスク終了',
-			'S14_Task_Settings.field_remainder_rule' => '端数処理',
 			'S14_Task_Settings.section_remainder' => '残高',
 			'S15_Record_Edit.title_create' => '記録を追加',
 			'S15_Record_Edit.title_edit' => '記録を編集',

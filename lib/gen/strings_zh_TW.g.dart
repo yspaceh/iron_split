@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCategoryZhTw category = TranslationsCategoryZhTw.internal(_root);
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
+	late final TranslationsRemainderRuleZhTw remainder_rule = TranslationsRemainderRuleZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
@@ -254,6 +255,27 @@ class TranslationsCurrencyZhTw {
 	String get inr => '印度盧比';
 }
 
+// Path: remainder_rule
+class TranslationsRemainderRuleZhTw {
+	TranslationsRemainderRuleZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '零頭處理'
+	String get title => '零頭處理';
+
+	/// zh-TW: '餘額輪盤'
+	String get rule_random => '餘額輪盤';
+
+	/// zh-TW: '順序輪替'
+	String get rule_order => '順序輪替';
+
+	/// zh-TW: '指定成員'
+	String get rule_member => '指定成員';
+}
+
 // Path: log_action
 class TranslationsLogActionZhTw {
 	TranslationsLogActionZhTw.internal(this._root);
@@ -463,15 +485,6 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '尚無收支紀錄'
 	String get empty_records => '尚無收支紀錄';
 
-	/// zh-TW: '餘額輪盤'
-	String get rule_random => '餘額輪盤';
-
-	/// zh-TW: '順序輪替'
-	String get rule_order => '順序輪替';
-
-	/// zh-TW: '指定成員'
-	String get rule_member => '指定成員';
-
 	/// zh-TW: '結算'
 	String get settlement_button => '結算';
 
@@ -534,9 +547,6 @@ class TranslationsS14TaskSettingsZhTw {
 
 	/// zh-TW: '結束任務'
 	String get menu_end_task => '結束任務';
-
-	/// zh-TW: '零頭處理'
-	String get field_remainder_rule => '零頭處理';
 
 	/// zh-TW: '剩餘款'
 	String get section_remainder => '剩餘款';
@@ -1429,6 +1439,10 @@ extension on Translations {
 			'currency.sar' => '沙烏地里亞爾',
 			'currency.try_' => '土耳其里拉',
 			'currency.inr' => '印度盧比',
+			'remainder_rule.title' => '零頭處理',
+			'remainder_rule.rule_random' => '餘額輪盤',
+			'remainder_rule.rule_order' => '順序輪替',
+			'remainder_rule.rule_member' => '指定成員',
 			'log_action.create_task' => '建立任務',
 			'log_action.update_settings' => '更新設定',
 			'log_action.add_member' => '新增成員',
@@ -1481,9 +1495,6 @@ extension on Translations {
 			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
 			'S13_Task_Dashboard.fab_record' => '記一筆',
 			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
-			'S13_Task_Dashboard.rule_random' => '餘額輪盤',
-			'S13_Task_Dashboard.rule_order' => '順序輪替',
-			'S13_Task_Dashboard.rule_member' => '指定成員',
 			'S13_Task_Dashboard.settlement_button' => '結算',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
@@ -1502,7 +1513,6 @@ extension on Translations {
 			'S14_Task_Settings.menu_member_settings' => '成員設定',
 			'S14_Task_Settings.menu_history' => '歷史紀錄',
 			'S14_Task_Settings.menu_end_task' => '結束任務',
-			'S14_Task_Settings.field_remainder_rule' => '零頭處理',
 			'S14_Task_Settings.section_remainder' => '剩餘款',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',

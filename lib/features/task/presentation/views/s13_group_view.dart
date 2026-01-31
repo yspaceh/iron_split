@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/remainder_rule_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
@@ -27,14 +27,31 @@ class S13GroupView extends StatelessWidget {
 
     if (task == null) return const Center(child: CircularProgressIndicator());
 
-    void showRulePicker() {
-      RemainderRulePickerSheet.show(
+    Future<void> onRemainderRuleChange() async {
+      final vm = context.read<S13TaskDashboardViewModel>();
+      final task = vm.task;
+      if (task == null) return;
+
+      // 修正這裡
+      final List<Map<String, dynamic>> membersList =
+          task.members.entries.map((e) {
+        final m = e.value as Map<String, dynamic>;
+        return <String, dynamic>{...m, 'id': e.key};
+      }).toList();
+
+      final result = await showModalBottomSheet<Map<String, dynamic>>(
         context: context,
-        initialRule: task.remainderRule,
-        onSelected: (selectedRule) {
-          vm.updateRemainderRule(selectedRule);
-        },
+        isScrollControlled: true,
+        builder: (context) => B01BalanceRuleEditBottomSheet(
+          initialRule: task.remainderRule,
+          initialMemberId: task.remainderAbsorberId,
+          members: membersList,
+        ),
       );
+
+      if (result != null && context.mounted) {
+        await vm.updateRemainderRule(result['rule'], result['memberId']);
+      }
     }
 
     void showCurrencyPicker() {
@@ -78,7 +95,7 @@ class S13GroupView extends StatelessWidget {
                     child: BalanceCard(
                       state: vm.balanceState, // 使用 VM 的 State
                       onCurrencyTap: showCurrencyPicker,
-                      onRuleTap: showRulePicker,
+                      onRuleTap: onRemainderRuleChange,
                     ),
                   ),
                 ),

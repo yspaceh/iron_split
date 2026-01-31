@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/d09_task_settings_currency_confirm_vm.dart';
@@ -21,6 +23,8 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => D09TaskSettingsCurrencyConfirmViewModel(
         taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
         newCurrency: newCurrency,
       ),
       child: const _D09DialogContent(),

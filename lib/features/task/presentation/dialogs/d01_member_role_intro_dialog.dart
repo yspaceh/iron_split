@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/d01_member_role_intro_vm.dart';
@@ -24,6 +25,7 @@ class D01MemberRoleIntroDialog extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => D01MemberRoleIntroViewModel(
         taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
         initialAvatar: initialAvatar,
         canReroll: canReroll,
       ),

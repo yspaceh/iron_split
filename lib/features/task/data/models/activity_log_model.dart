@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 enum LogAction {
@@ -151,10 +152,7 @@ class ActivityLogModel {
         case 'currency':
           return "${t.S16_TaskCreate_Edit.label_currency}: $val";
         case 'remainder_rule':
-          String ruleName = val.toString();
-          if (val == 'random') ruleName = t.S13_Task_Dashboard.rule_random;
-          if (val == 'order') ruleName = t.S13_Task_Dashboard.rule_order;
-          if (val == 'member') ruleName = t.S13_Task_Dashboard.rule_member;
+          String ruleName = RemainderRuleConstants.getLabel(context, val);
           return "${t.S14_Task_Settings.section_remainder}: $ruleName";
         default:
           return "$val";

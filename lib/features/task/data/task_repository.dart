@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:iron_split/core/models/task_model.dart'; // 引用現有 Model
+import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart'; // 引用現有 Model
 
 class TaskRepository {
   final FirebaseFirestore _firestore;
@@ -45,5 +46,80 @@ class TaskRepository {
   /// 取代原 S13GroupView 裡的 FirebaseFirestore.instance.update(...)
   Future<void> updateTask(String taskId, Map<String, dynamic> data) async {
     await _firestore.collection('tasks').doc(taskId).update(data);
+  }
+
+  /// 更新特定成員的特定欄位 (Partial Update)
+  /// [taskId] 任務ID
+  /// [memberId] 成員ID (通常是 user uid)
+  /// [data] 要更新的欄位與值，例如 {'avatar': 'cat', 'hasSeenRoleIntro': true}
+  Future<void> updateMemberFields(
+      String taskId, String memberId, Map<String, dynamic> data) async {
+    final Map<String, dynamic> updateData = {};
+    data.forEach((key, value) {
+      updateData['members.$memberId.$key'] = value;
+    });
+    await _firestore.collection('tasks').doc(taskId).update(updateData);
+  }
+
+  /// 更新整個成員列表 (Full Replacement)
+  Future<void> replaceMembersMap(
+      String taskId, Map<String, dynamic> membersMap) async {
+    await _firestore.collection('tasks').doc(taskId).update({
+      'members': membersMap,
+    });
+  }
+
+  /// 結束任務 (將狀態改為 closed 並記錄時間)
+  Future<void> closeTask(String taskId) async {
+    await _firestore.collection('tasks').doc(taskId).update({
+      'status': 'closed',
+      'closedAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(), // 建議同時更新 updatedAt
+    });
+  }
+
+  /// 建立新任務
+  /// [taskData] 已經組裝好的任務資料 Map (包含 members)
+  /// 回傳新建立的 Task ID
+  Future<String> createTask(Map<String, dynamic> taskData) async {
+    // 確保時間戳記是 Server Time
+    taskData['createdAt'] = FieldValue.serverTimestamp();
+    taskData['updatedAt'] = FieldValue.serverTimestamp();
+
+    // 預設狀態
+    taskData['status'] = 'ongoing';
+    taskData['activeInviteCode'] = null;
+
+    final docRef = await _firestore.collection('tasks').add(taskData);
+    return docRef.id;
+  }
+
+  /// 監聽活動日誌 (回傳 Model List，而非 Snapshot)
+  Stream<List<ActivityLogModel>> streamActivityLogs(String taskId) {
+    return _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .collection('activity_logs')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => ActivityLogModel.fromFirestore(doc))
+          .toList();
+    });
+  }
+
+  /// 取得所有活動日誌 (一次性讀取，供匯出用)
+  Future<List<ActivityLogModel>> getActivityLogs(String taskId) async {
+    final snapshot = await _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .collection('activity_logs')
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => ActivityLogModel.fromFirestore(doc))
+        .toList();
   }
 }
