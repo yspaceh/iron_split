@@ -1,30 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart'; // For DatePicker
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/core/constants/category_constants.dart';
-import 'package:iron_split/core/services/currency_service.dart';
-import 'package:iron_split/core/services/preferences_service.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
+import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/features/record/presentation/views/s15_expense_form.dart';
+import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
+// Import Dialogs & Sheets
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
-import 'package:iron_split/core/services/record_service.dart';
-import 'package:iron_split/features/record/presentation/views/s15_expense_form.dart';
-import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:iron_split/core/models/record_model.dart';
 
-class S15RecordEditPage extends StatefulWidget {
+class S15RecordEditPage extends StatelessWidget {
   final String taskId;
   final String? recordId;
   final RecordModel? record;
@@ -43,876 +37,279 @@ class S15RecordEditPage extends StatefulWidget {
   });
 
   @override
-  State<S15RecordEditPage> createState() => _S15RecordEditPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => S15RecordEditViewModel(
+        taskId: taskId,
+        recordId: recordId,
+        record: record,
+        baseCurrencyOption: baseCurrencyOption,
+        poolBalancesByCurrency: poolBalancesByCurrency,
+        initialDate: initialDate,
+      ),
+      child: const _S15Content(),
+    );
+  }
 }
 
-class _S15RecordEditPageState extends State<S15RecordEditPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  // Controllers
-  final _amountController = TextEditingController();
-  final _exchangeRateController = TextEditingController(text: '1.0');
-  final _titleController = TextEditingController();
-  final _memoController = TextEditingController();
-
-  // State
-  late DateTime _selectedDate;
-  late CurrencyOption _selectedCurrencyOption;
-  String _selectedCategoryId = 'fastfood';
-  bool _isRateLoading = false;
-  bool _isSaving = false;
-  bool _isLoadingTaskData = true;
-  double _lastKnownAmount = 0.0;
-
-  // 記錄類型切換 (0: 支出, 1: 預收
-  int _recordTypeIndex = 0;
-
-  // Payment Method
-  String _payerType = 'prepay';
-  String _payerId = '';
-
-  // REMOVED: double _taskPrepayBalance = 0.0;
-  Map<String, dynamic>? _complexPaymentData; // 儲存 B07 回傳的混合支付資料
-
-  // Data from Firestore
-  List<Map<String, dynamic>> _taskMembers = [];
-
-  // Split Logic State
-  final List<RecordItem> _items = [];
-  String _baseSplitMethod = 'even';
-  List<String> _baseMemberIds = [];
-
-  // 儲存「剩餘金額卡片」的詳細分攤設定 (權重或金額)
-  Map<String, double> _baseRawDetails = {};
-
-  final List<String> _currencies =
-      kSupportedCurrencies.map((c) => c.code).toList();
-
-  bool _isCurrencyInitialized = false;
+class _S15Content extends StatefulWidget {
+  const _S15Content();
 
   @override
-  void initState() {
-    super.initState();
+  State<_S15Content> createState() => _S15ContentState();
+}
 
-    // 1. 基本數據初始化
-    if (widget.record != null) {
-      // === 編輯模式 (以既有紀錄內容為主) ===
-      final r = widget.record!;
-      _recordTypeIndex = r.type == 'income' ? 1 : 0;
-      _amountController.text =
-          r.originalAmount.truncateToDouble() == r.originalAmount
-              ? r.originalAmount.toInt().toString()
-              : r.originalAmount.toString();
-      _selectedDate = r.date;
-      _selectedCurrencyOption = CurrencyOption.getCurrencyOption(
-          r.originalCurrencyCode); // 編輯模式直接鎖定紀錄幣別
-      _exchangeRateController.text = r.exchangeRate.toString();
-
-      if (r.type == 'expense') {
-        _titleController.text = r.title;
-        _selectedCategoryId = r.categoryId;
-      }
-      _memoController.text = r.memo ?? '';
-      _payerType = r.payerType;
-      _payerId = r.payerId ?? '';
-      _complexPaymentData = r.paymentDetails;
-      _baseSplitMethod = r.splitMethod;
-      _baseMemberIds = List.from(r.splitMemberIds);
-      _baseRawDetails = Map.from(r.splitDetails ?? {});
-      _items.addAll(r.items);
-    } else {
-      // === 新建模式 ===
-      _selectedDate = widget.initialDate ?? DateTime.now();
-      // 這裡先給一個安全值，真正的偵測放在 didChangeDependencies
-      _selectedCurrencyOption = widget.baseCurrencyOption;
-      _loadCurrencyPreference();
-    }
-
-    _lastKnownAmount = double.tryParse(_amountController.text) ?? 0.0;
-    _fetchTaskData();
-    _amountController.addListener(_onAmountChanged);
-  }
+class _S15ContentState extends State<_S15Content> {
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // 只有在「新建模式」且「尚未初始化過幣別」時才執行
-    if (widget.record == null && !_isCurrencyInitialized) {
-      _isCurrencyInitialized = true;
-
-      // 現在呼叫 localeOf(context) 是安全的
-      final CurrencyOption suggestedCurrency =
-          CurrencyOption.detectSystemCurrency();
-
-      setState(() {
-        // 邏輯：有偵測到就用偵測的，否則用任務預設的 (widget.baseCurrency)
-        _selectedCurrencyOption =
-            suggestedCurrency != CurrencyOption.defaultCurrencyOption
-                ? suggestedCurrency
-                : widget.baseCurrencyOption;
-      });
-    }
+    context.read<S15RecordEditViewModel>().initCurrency();
   }
 
-  Future<void> _fetchTaskData() async {
-    try {
-      if (mounted) setState(() => _isLoadingTaskData = true);
+  // --- Handlers (Bridge between VM and UI) ---
 
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .get();
-
-      if (docSnapshot.exists && mounted) {
-        final data = docSnapshot.data()!;
-
-        // 1. Parse Members from Firestore (Handle Map or List)
-        List<Map<String, dynamic>> realMembers = [];
-        if (data.containsKey('members')) {
-          final dynamic rawMembers = data['members'];
-          if (rawMembers is List) {
-            realMembers =
-                rawMembers.map((m) => m as Map<String, dynamic>).toList();
-          } else if (rawMembers is Map) {
-            realMembers = (rawMembers as Map<String, dynamic>).entries.map((e) {
-              final memberData = e.value as Map<String, dynamic>;
-              if (!memberData.containsKey('id')) {
-                memberData['id'] = e.key;
-              }
-              // Fallback name if missing
-              if (memberData['displayName'] == null) {
-                memberData['displayName'] = memberData['displayName'] ??
-                    t.S53_TaskSettings_Members.member_default_name;
-              }
-              return memberData;
-            }).toList();
-          }
-        }
-
-        // 2. Sort Members: Captain -> Linked -> Ghosts (by ID)
-        realMembers.sort((a, b) {
-          // Rule 1: Captain first
-          final bool aIsCaptain = a['role'] == 'captain';
-          final bool bIsCaptain = b['role'] == 'captain';
-          if (aIsCaptain && !bIsCaptain) return -1;
-          if (!aIsCaptain && bIsCaptain) return 1;
-
-          // Rule 2: Linked Users before Ghosts
-          final bool aLinked = a['isLinked'] ?? false;
-          final bool bLinked = b['isLinked'] ?? false;
-          if (aLinked && !bLinked) return -1;
-          if (!aLinked && bLinked) return 1;
-
-          // Rule 3: Stable Sort by ID for Ghosts (virtual_member_1 vs 2)
-          final String idA = a['id'] as String? ?? '';
-          final String idB = b['id'] as String? ?? '';
-          return idA.compareTo(idB);
-        });
-
-        // 3. Assign to State (No more fake generation!)
-        _taskMembers = realMembers;
-      } else {
-        debugPrint("⚠️ Document does not exist: tasks/${widget.taskId}");
-      }
-
-      // 4. Init Split Members (Only Reset in Create Mode)
-      if (mounted) {
-        setState(() {
-          if (widget.record == null) {
-            _baseMemberIds =
-                _taskMembers.map((m) => m['id'] as String).toList();
-          }
-        });
-      }
-    } catch (e) {
-      debugPrint("❌ Error fetching task data: $e");
-    } finally {
-      if (mounted) {
-        setState(() => _isLoadingTaskData = false);
-      }
-    }
-  }
-
-  Future<void> _loadCurrencyPreference() async {
-    final lastCurrency = await PreferencesService.getLastCurrency();
-    if (lastCurrency != null && _currencies.contains(lastCurrency)) {
-      setState(() {
-        _selectedCurrencyOption =
-            CurrencyOption.getCurrencyOption(lastCurrency);
-      });
-      if (_selectedCurrencyOption != widget.baseCurrencyOption) {
-        _onCurrencyChanged(_selectedCurrencyOption.code);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    _exchangeRateController.dispose();
-    _titleController.dispose();
-    _memoController.dispose();
-    super.dispose();
-  }
-
-  void _onAmountChanged() {
-    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
-    if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
-      setState(() {
-        _lastKnownAmount = currentAmount;
-        // RESET LOGIC
-        if (_items.isNotEmpty || _baseSplitMethod != 'even') {
-          _items.clear();
-          _baseSplitMethod = 'even';
-          if (_taskMembers.isNotEmpty) {
-            _baseMemberIds =
-                _taskMembers.map((m) => m['id'] as String).toList();
-          }
-          _baseRawDetails.clear();
-        }
-      });
-    } else {
-      setState(() {});
-    }
-  }
-
-  double get _totalAmount => double.tryParse(_amountController.text) ?? 0.0;
-
-  bool get _hasPaymentError {
-    // 只有在選擇「公款支付」時才檢查
-    if (_payerType != 'prepay') return false;
-
-    // 1. 取得當前輸入金額
-    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
-    if (currentAmount <= 0) return false;
-
-    // 2. 取得當前幣別的庫存餘額
-    final currentCurrency = _selectedCurrencyOption.code;
-    final balance = widget.poolBalancesByCurrency[currentCurrency] ?? 0.0;
-
-    // 3. 檢查餘額是否不足 (允許極小誤差)
-    return balance < (currentAmount - 0.01);
-  }
-
-  double get _baseRemainingAmount {
-    final subTotal = _items.fold(0.0, (prev, curr) => prev + curr.amount);
-    final remaining = _totalAmount - subTotal;
-    return remaining > 0 ? remaining : 0.0;
-  }
-
-  // --- Actions ---
-
-  // 1. Base Card Action: Configure Split Method (B03)
-  Future<void> _handleBaseSplitConfig() async {
-    final amountToSplit =
-        _recordTypeIndex == 1 ? _totalAmount : _baseRemainingAmount;
-
-    final Map<String, double> defaultWeights = {
-      for (var m in _taskMembers) m['id']: 1.0
-    };
-
-    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-
-    final result = await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B03SplitMethodEditBottomSheet(
-        totalAmount: amountToSplit,
-        selectedCurrency: _selectedCurrencyOption,
-        allMembers: _taskMembers,
-        defaultMemberWeights: defaultWeights,
-        initialSplitMethod: _baseSplitMethod,
-        initialMemberIds: _baseMemberIds,
-        initialDetails: _baseRawDetails,
-        exchangeRate: rate,
-        baseCurrency: widget.baseCurrencyOption,
-      ),
-    );
-
-    if (result != null && mounted) {
-      setState(() {
-        _baseSplitMethod = result['splitMethod'];
-        _baseMemberIds = List<String>.from(result['memberIds']);
-        _baseRawDetails = Map<String, double>.from(result['details']);
-      });
-    }
-  }
-
-  // 2. Add Item Action: Open B02
-  Future<void> _handleCreateSubItem() async {
-    if (_baseRemainingAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.S15_Record_Edit.err_amount_not_enough)));
-      return;
-    }
-
-    final Map<String, double> defaultWeights = {
-      for (var m in _taskMembers) m['id']: 1.0
-    };
-
-    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-
-    final result = await showModalBottomSheet<RecordItem>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        item: null,
-        allMembers: _taskMembers,
-        defaultWeights: defaultWeights,
-        selectedCurrency: _selectedCurrencyOption,
-        parentTitle: _titleController.text,
-        availableAmount: _baseRemainingAmount,
-        exchangeRate: rate,
-        baseCurrency: widget.baseCurrencyOption,
-      ),
-    );
-
-    if (result != null && mounted) {
-      setState(() {
-        _items.add(result);
-      });
-    }
-  }
-
-  // 3. Edit Item Action: Open B02
-  Future<void> _handleItemEdit(RecordItem item) async {
-    final Map<String, double> defaultWeights = {
-      for (var m in _taskMembers) m['id']: 1.0
-    };
-
-    final rate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-
-    final result = await showModalBottomSheet<dynamic>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        item: item,
-        allMembers: _taskMembers,
-        defaultWeights: defaultWeights,
-        selectedCurrency: _selectedCurrencyOption,
-        parentTitle: _titleController.text,
-        availableAmount: _baseRemainingAmount + item.amount,
-        exchangeRate: rate,
-        baseCurrency: widget.baseCurrencyOption,
-      ),
-    );
-
-    if (result == 'DELETE' && mounted) {
-      setState(() {
-        _items.removeWhere((element) => element.id == item.id);
-      });
-    } else if (result is RecordItem && mounted) {
-      setState(() {
-        final index = _items.indexWhere((element) => element.id == item.id);
-        if (index != -1) {
-          _items[index] = result;
-        }
-      });
-    }
-  }
-
-  void _showCategoryPicker() {
-    CategoryPickerSheet.show(
-      context: context,
-      initialCategoryId: _selectedCategoryId,
-      onSelected: (CategoryConstant selected) {
-        setState(() {
-          _selectedCategoryId = selected.id;
-        });
-      },
-    );
-  }
-
-  void _showCurrencyPicker() {
-    CurrencyPickerSheet.show(
-      context: context,
-      initialCode: _selectedCurrencyOption.code,
-      onSelected: (currency) async {
-        if (currency.code != _selectedCurrencyOption.code) {
-          await _onCurrencyChanged(currency.code);
-        }
-      },
-    );
-  }
-
-  void _showDatePicker() {
-    DateTime tempDate = _selectedDate;
+  void _onDateTap(S15RecordEditViewModel vm) {
+    DateTime tempDate = vm.selectedDate;
     showCommonWheelPicker(
       context: context,
-      onConfirm: () => setState(() => _selectedDate = tempDate),
+      onConfirm: () => vm.updateDate(tempDate),
       child: CupertinoDatePicker(
-        initialDateTime: _selectedDate,
+        initialDateTime: vm.selectedDate,
         mode: CupertinoDatePickerMode.date,
         onDateTimeChanged: (val) => tempDate = val,
       ),
     );
   }
 
-  Future<void> _onCurrencyChanged(String newCurrency) async {
-    setState(() => _selectedCurrencyOption =
-        CurrencyOption.getCurrencyOption(newCurrency));
-    await PreferencesService.saveLastCurrency(newCurrency);
-    await _fetchExchangeRate();
-  }
-
-  Future<void> _fetchExchangeRate() async {
-    if (_selectedCurrencyOption == widget.baseCurrencyOption) {
-      _exchangeRateController.text = '1.0';
-      return;
-    }
-
-    setState(() => _isRateLoading = true);
-    final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrencyOption.code, to: widget.baseCurrencyOption.code);
-
-    if (mounted) {
-      setState(() {
-        _isRateLoading = false;
-        if (rate != null) {
-          _exchangeRateController.text = rate.toString();
-        }
-      });
-    }
-  }
-
-  void _showRateInfoDialog() {
-    showDialog(
+  void _onCategoryTap(S15RecordEditViewModel vm) {
+    CategoryPickerSheet.show(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(t.S15_Record_Edit.info_rate_source),
-        content: Text(t.S15_Record_Edit.msg_rate_source),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(t.S15_Record_Edit.btn_close),
-          ),
-        ],
-      ),
+      initialCategoryId: vm.selectedCategoryId,
+      onSelected: (cat) => vm.updateCategory(cat.id),
     );
   }
 
-  // 呼叫 B07 並處理回傳
-  Future<void> _handlePaymentMethod() async {
-    if (_taskMembers.isEmpty) return;
+  void _onCurrencyTap(S15RecordEditViewModel vm) {
+    CurrencyPickerSheet.show(
+      context: context,
+      initialCode: vm.selectedCurrencyOption.code,
+      onSelected: (curr) => vm.updateCurrency(curr.code),
+    );
+  }
 
-    // 防呆：必須先有金額才能開 B07
-    final totalAmount = double.tryParse(_amountController.text) ?? 0.0;
-    if (totalAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(t.S15_Record_Edit.err_input_amount)), // 建議補上 i18n
-      );
+  // Show B03
+  Future<void> _onBaseSplitConfigTap(S15RecordEditViewModel vm) async {
+    final amountToSplit =
+        vm.recordTypeIndex == 1 ? vm.totalAmount : vm.baseRemainingAmount;
+
+    // 🛠️ 修正點 1：明確轉型為 Map<String, double>
+    final Map<String, double> defaultWeights = {
+      for (var m in vm.taskMembers) (m['id'] as String): 1.0
+    };
+
+    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
+
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B03SplitMethodEditBottomSheet(
+        totalAmount: amountToSplit,
+        selectedCurrency: vm.selectedCurrencyOption,
+        allMembers: vm.taskMembers,
+        defaultMemberWeights: defaultWeights,
+        initialSplitMethod: vm.baseSplitMethod,
+        initialMemberIds: vm.baseMemberIds,
+        initialDetails: vm.baseRawDetails,
+        exchangeRate: rate,
+        baseCurrency: vm.baseCurrencyOption,
+      ),
+    );
+
+    if (result != null) vm.updateBaseSplit(result);
+  }
+
+  // Show B02 (Create)
+  Future<void> _onAddItemTap(S15RecordEditViewModel vm) async {
+    if (vm.baseRemainingAmount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              Translations.of(context).S15_Record_Edit.err_amount_not_enough)));
       return;
     }
+
+    // 🛠️ 修正點 2：明確轉型為 Map<String, double>
+    final Map<String, double> defaultWeights = {
+      for (var m in vm.taskMembers) (m['id'] as String): 1.0
+    };
+
+    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
+
+    final result = await showModalBottomSheet<RecordItem>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B02SplitExpenseEditBottomSheet(
+        item: null,
+        allMembers: vm.taskMembers,
+        defaultWeights: defaultWeights,
+        selectedCurrency: vm.selectedCurrencyOption,
+        parentTitle: vm.titleController.text,
+        availableAmount: vm.baseRemainingAmount,
+        exchangeRate: rate,
+        baseCurrency: vm.baseCurrencyOption,
+      ),
+    );
+
+    if (result != null) vm.addItem(result);
+  }
+
+  // Show B02 (Edit)
+  Future<void> _onItemEditTap(
+      S15RecordEditViewModel vm, RecordItem item) async {
+    // 🛠️ 修正點 3：明確轉型為 Map<String, double>
+    final Map<String, double> defaultWeights = {
+      for (var m in vm.taskMembers) (m['id'] as String): 1.0
+    };
+
+    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
+
+    final result = await showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => B02SplitExpenseEditBottomSheet(
+        item: item,
+        allMembers: vm.taskMembers,
+        defaultWeights: defaultWeights,
+        selectedCurrency: vm.selectedCurrencyOption,
+        parentTitle: vm.titleController.text,
+        availableAmount: vm.baseRemainingAmount + item.amount,
+        exchangeRate: rate,
+        baseCurrency: vm.baseCurrencyOption,
+      ),
+    );
+
+    if (result == 'DELETE') {
+      vm.deleteItem(item.id);
+    } else if (result is RecordItem) {
+      vm.updateItem(result);
+    }
+  }
+
+  // Show B07
+  Future<void> _onPaymentMethodTap(S15RecordEditViewModel vm) async {
+    if (vm.totalAmount <= 0) {
+      // 建議補上 SnackBar 提示
+      return;
+    }
+
+    // 🛠️ 修正點 4：恢復完整的初始化邏輯，不簡化功能
+    final Map<String, double> initialMemberAdvance =
+        vm.complexPaymentData?['memberAdvance'] != null
+            ? Map<String, double>.from(vm.complexPaymentData!['memberAdvance'])
+            : (vm.payerType == 'member' ? {vm.payerId: vm.totalAmount} : {});
 
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
-        totalAmount: totalAmount,
-        poolBalancesByCurrency: widget.poolBalancesByCurrency,
-        selectedCurrency: _selectedCurrencyOption,
-        baseCurrency: widget.baseCurrencyOption,
-        members: _taskMembers,
-        // 傳入當前狀態 (若有複雜資料優先用，否則用簡易狀態推導)
+        totalAmount: vm.totalAmount,
+        poolBalancesByCurrency: vm.poolBalancesByCurrency,
+        selectedCurrency: vm.selectedCurrencyOption,
+        baseCurrency: vm.baseCurrencyOption,
+        members: vm.taskMembers,
         initialUsePrepay:
-            _complexPaymentData?['usePrepay'] ?? (_payerType == 'prepay'),
-        initialPrepayAmount: _complexPaymentData?['prepayAmount'] ??
-            (_payerType == 'prepay' ? totalAmount : 0.0),
-        initialMemberAdvance: _complexPaymentData?['memberAdvance'] != null
-            ? Map<String, double>.from(_complexPaymentData!['memberAdvance'])
-            : (_payerType == 'member' ? {_payerId: totalAmount} : {}),
+            vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
+        initialPrepayAmount: vm.complexPaymentData?['prepayAmount'] ??
+            (vm.payerType == 'prepay' ? vm.totalAmount : 0.0),
+        initialMemberAdvance: initialMemberAdvance,
       ),
     );
 
-    if (result != null && mounted) {
-      setState(() {
-        // 1. 儲存複雜資料
-        _complexPaymentData = result;
-
-        // 2. 更新 S15 顯示邏輯
-        final bool usePrepay = result['usePrepay'];
-        final bool useAdvance = result['useAdvance'];
-        final Map<String, double> advances = result['memberAdvance'];
-
-        if (usePrepay && !useAdvance) {
-          _payerType = 'prepay';
-        } else if (!usePrepay && useAdvance) {
-          _payerType = 'member';
-          final payers = advances.entries.where((e) => e.value > 0).toList();
-          if (payers.length == 1) {
-            _payerId = payers.first.key;
-          } else {
-            _payerId = 'multiple'; // 標記為多人代墊
-          }
-        } else {
-          _payerType = 'mixed'; // 標記為混合支付
-        }
-      });
-    }
+    if (result != null) vm.updatePaymentMethod(result);
   }
 
-  Future<void> _onSave() async {
+  Future<void> _onSave(S15RecordEditViewModel vm) async {
     if (!_formKey.currentState!.validate()) return;
-    if (_isSaving) return;
+    final t = Translations.of(context);
 
-    // 額外檢查：如果顯示紅框 (預收餘額不足)，禁止儲存 (僅限支出模式)
-    if (_recordTypeIndex == 0 && _hasPaymentError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(t.B07_PaymentMethod_Edit.err_balance_not_enough)),
-      );
+    if (vm.recordTypeIndex == 0 && vm.hasPaymentError) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(t.B07_PaymentMethod_Edit.err_balance_not_enough)));
       return;
     }
-
-    setState(() => _isSaving = true);
 
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      final isIncome = _recordTypeIndex == 1;
-
-      final recordData = {
-        'date': Timestamp.fromDate(_selectedDate),
-        'title': isIncome
-            ? t.S15_Record_Edit.type_income_title
-            : _titleController.text,
-        'type': isIncome ? 'income' : 'expense',
-        'categoryIndex': kAppCategories
-            .indexWhere((c) => c.id == _selectedCategoryId), // Legacy support
-        'categoryId': _selectedCategoryId,
-        'payerType': isIncome ? 'none' : _payerType,
-        'payerId': (!isIncome && _payerType == 'member') ? _payerId : null,
-        'paymentDetails': isIncome ? null : _complexPaymentData,
-        'amount': double.parse(_amountController.text),
-        'currency': _selectedCurrencyOption.code,
-        'exchangeRate': double.parse(_exchangeRateController.text),
-        'splitMethod': _baseSplitMethod,
-        'splitMemberIds': _baseMemberIds,
-        'splitDetails': _baseRawDetails,
-        'items': isIncome ? [] : _items.map((x) => x.toMap()).toList(),
-        'memo': _memoController.text,
-        'createdAt': FieldValue.serverTimestamp(),
-        'createdBy': uid,
-      };
-
-      final recordsRef = FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .collection('records');
-
-      // ... (前面是 recordsRef 定義) ...
-
-      // --- [修正開始] 準備結構化的 Log 資料 ---
-
-      // 1. 建構 Payment (支付資訊)
-      Map<String, dynamic> paymentLogData = {};
-
-      if (isIncome) {
-        // 預收模式
-        paymentLogData = {
-          'type': 'income', // 對應顯示「預收款」
-          'contributors': []
-        };
-      } else {
-        // 支出模式：根據 _payerType 判斷
-        if (_payerType == 'prepay') {
-          // 公款支付
-          paymentLogData = {
-            'type': 'pool', // 對應顯示「公款支付」
-            'contributors': []
-          };
-        } else if (_payerType == 'member' && _payerId.isNotEmpty) {
-          // 單人代墊
-          final payer = _taskMembers.firstWhere((m) => m['id'] == _payerId,
-              orElse: () => {
-                    'displayName':
-                        t.S53_TaskSettings_Members.member_default_name
-                  });
-          final name = payer['displayName'] ??
-              t.S53_TaskSettings_Members.member_default_name;
-          paymentLogData = {
-            'type': 'single',
-            'contributors': [
-              {
-                'displayName': name,
-                'amount': double.parse(_amountController.text)
-              }
-            ]
-          };
-        } else if (_payerType == 'multiple' && _complexPaymentData != null) {
-          // 多人代墊 (從 B07 回傳的 _complexPaymentData 取得資料)
-          final advances =
-              _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
-          List<Map<String, dynamic>> contributors = [];
-
-          advances.forEach((uid, amount) {
-            if ((amount as num) > 0) {
-              final member = _taskMembers.firstWhere((m) => m['id'] == uid,
-                  orElse: () => {
-                        'displayName':
-                            t.S53_TaskSettings_Members.member_default_name
-                      });
-              contributors.add({
-                'displayName': member['displayName'] ??
-                    t.S53_TaskSettings_Members.member_default_name,
-                'amount': amount
-              });
-            }
-          });
-
-          paymentLogData = {'type': 'multiple', 'contributors': contributors};
-        } else {
-          // 混合或其他 (Fallback)
-          paymentLogData = {'type': 'unknown', 'contributors': []};
-        }
-      }
-
-      // 2. 建構 Allocation (分帳資訊：包含細項與主分帳)
-      List<Map<String, dynamic>> splitGroups = [];
-
-      // A. 加入細項 (Items)
-      for (var item in _items) {
-        splitGroups.add({
-          'type': 'item',
-          'label': item.name,
-          'amount': item.amount,
-          'method': item.splitMethod, // 'even', 'exact', etc.
-          'count': item.splitMemberIds.length,
-        });
-      }
-
-      // B. 加入主分帳 (Base Split)
-      // 如果是預收(Income)，整筆都是 Base；如果是支出，剩餘金額才是 Base
-      double baseAmountForLog = isIncome
-          ? double.parse(_amountController.text)
-          : _baseRemainingAmount;
-
-      if (baseAmountForLog > 0) {
-        splitGroups.add({
-          'type': 'base',
-          'label': isIncome
-              ? t.S15_Record_Edit.type_income_title // "預收款"
-              : t.S15_Record_Edit.base_card_title_expense, // "剩餘金額"
-          'amount': baseAmountForLog,
-          'method': _baseSplitMethod,
-          'count': _baseMemberIds.length,
-        });
-      }
-
-      final allocationLogData = {
-        'mode': _items.isNotEmpty ? 'hybrid' : 'basic', // 混合模式才顯示細項折疊
-        'groups': splitGroups,
-      };
-
-      // 3. 寫入 Log
-      if (widget.recordId == null) {
-        await recordsRef.add(recordData);
-        // [Log] Create
-        ActivityLogService.log(
-          taskId: widget.taskId,
-          action: LogAction.createRecord,
-          details: {
-            'recordName': isIncome
-                ? t.S15_Record_Edit.type_income_title
-                : _titleController.text,
-            'amount': double.parse(_amountController.text),
-            'currency': _selectedCurrencyOption.code,
-            'recordType': isIncome ? 'income' : 'expense',
-            // [關鍵] 存入結構化資料
-            'payment': paymentLogData,
-            'allocation': allocationLogData,
-          },
-        );
-      } else {
-        final oldAmount = widget.record?.amount;
-        await recordsRef.doc(widget.recordId).update(recordData);
-        // [Log] Update
-        ActivityLogService.log(
-          taskId: widget.taskId,
-          action: LogAction.updateRecord,
-          details: {
-            'recordName': isIncome
-                ? t.S15_Record_Edit.type_income_title
-                : _titleController.text,
-            'oldAmount': oldAmount,
-            'newAmount': double.parse(_amountController.text),
-            'currency': _selectedCurrencyOption.code,
-            'recordType': isIncome ? 'income' : 'expense',
-            // [關鍵] 存入結構化資料
-            'payment': paymentLogData,
-            'allocation': allocationLogData,
-          },
-        );
-      }
-      // --- [修正結束] ---
-
+      await vm.saveRecord(t);
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted) {
-        setState(() => _isSaving = false);
+      if (mounted)
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
+            .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
-  bool _hasUnsavedChanges() {
-    // 1. Create Mode
-    if (widget.record == null) {
-      final amount = double.tryParse(_amountController.text) ?? 0.0;
-      // For Income, title is not input, so only check amount
-      if (_recordTypeIndex == 1) return amount > 0;
-      return amount > 0 || _titleController.text.trim().isNotEmpty;
-    }
-
-    // 2. Edit Mode
-    final r = widget.record!;
-
-    // Check Type Change
-    final currentType = _recordTypeIndex == 0 ? 'expense' : 'income';
-    if (currentType != r.type) return true;
-
-    // --- Common Fields (Checked for BOTH) ---
-    final currentAmount = double.tryParse(_amountController.text) ?? 0.0;
-    if ((currentAmount - r.originalAmount).abs() > 0.001) return true;
-
-    if (!_isSameDay(_selectedDate, r.date)) return true;
-    if (_selectedCurrencyOption.code != r.originalCurrencyCode) return true;
-
-    final currentRate = double.tryParse(_exchangeRateController.text) ?? 1.0;
-    if ((currentRate - (r.exchangeRate)).abs() > 0.000001) return true;
-
-    if (_memoController.text != (r.memo ?? '')) return true;
-
-    // Split Logic (Income ALSO has split members)
-    if (_baseSplitMethod != r.splitMethod) return true;
-    if (!listEquals(_baseMemberIds, r.splitMemberIds)) return true;
-    // Optional: Deep compare splitDetails if needed
-    // if (!mapEquals(_baseRawDetails, r.splitDetails)) return true;
-
-    // --- Mode Specific Checks ---
-    if (_recordTypeIndex == 0) {
-      // [Expense Only]
-      if (_titleController.text != r.title) return true;
-      if (_selectedCategoryId != r.categoryId) return true;
-
-      // Payer
-      if (_payerType != r.payerType) return true;
-      if (_payerId != (r.payerId ?? '')) return true;
-
-      // Items (Sub-items)
-      if (_items.length != r.items.length) return true;
-      for (int i = 0; i < _items.length; i++) {
-        if (!_isItemEqual(_items[i], r.items[i])) return true;
-      }
-    } else {
-      // [Income Only]
-      // Skip Title (auto-generated)
-      // Skip Category (hidden)
-      // Skip Payer (always none)
-      // Skip Items (always empty)
-    }
-
-    return false;
-  }
-
-  bool _isSameDay(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
-  }
-
-  bool _isItemEqual(RecordItem a, RecordItem b) {
-    if (a.id != b.id)
-      return false; // Usually ID matches if editing same item, but here comparing by index
-    if (a.name != b.name) return false;
-    if (a.amount != b.amount) return false;
-    if (a.splitMethod != b.splitMethod) return false;
-    if (!listEquals(a.splitMemberIds, b.splitMemberIds)) return false;
-    // Note: splitDetails comparison if needed, but usually derived from method/ids or manual
-    return true;
-  }
-
-  Future<void> _handleClose() async {
-    if (!_hasUnsavedChanges()) {
-      if (mounted) context.pop();
+  Future<void> _onClose(S15RecordEditViewModel vm) async {
+    if (!vm.hasUnsavedChanges()) {
+      context.pop();
       return;
     }
-
-    final shouldDiscard = await showDialog<bool>(
+    final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => const D04CommonUnsavedConfirmDialog(),
     );
-
-    if (shouldDiscard == true && mounted) {
-      context.pop();
-    }
+    if (confirm == true && mounted) context.pop();
   }
 
-  Future<void> _handleDelete() async {
-    final amount = double.tryParse(_amountController.text) ?? 0.0;
-    final amountText =
-        "${_selectedCurrencyOption.symbol} ${CurrencyOption.formatAmount(amount, _selectedCurrencyOption.code)}";
-
-    await showDialog(
+  Future<void> _onDelete(S15RecordEditViewModel vm) async {
+    final t = Translations.of(context);
+    final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => D10RecordDeleteConfirmDialog(
-        title: _titleController.text,
-        amount: amountText,
+      builder: (ctx) => D10RecordDeleteConfirmDialog(
+        title: vm.titleController.text,
+        amount: "${vm.selectedCurrencyOption.symbol} ${vm.totalAmount}",
         onConfirm: () async {
-          try {
-            await RecordService.deleteRecord(widget.taskId, widget.recordId!);
-            if (mounted) {
-              context.pop(); // Close S15
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(t.D10_RecordDelete_Confirm.deleted_success)),
-              );
-            }
-          } catch (e) {
-            debugPrint("Delete failed: $e");
+          await vm.deleteRecord(t);
+          if (mounted) {
+            Navigator.pop(ctx, true);
           }
-          // [Log] Delete Record
-          // Retrieve info from controllers or widget.recordData for the log
-          final amount = double.tryParse(_amountController.text) ?? 0;
-
-          ActivityLogService.log(
-            taskId: widget.taskId,
-            action: LogAction.deleteRecord,
-            details: {
-              'recordName':
-                  _titleController.text, // or widget.recordData?['title']
-              'amount': amount,
-              'currency': _selectedCurrencyOption.code,
-            },
-          );
         },
       ),
     );
+
+    if (confirm == true && mounted) {
+      context.pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoadingTaskData) {
+    final t = Translations.of(context);
+    final vm = context.watch<S15RecordEditViewModel>();
+
+    if (vm.isLoadingTaskData) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recordId == null
+        title: Text(vm.recordId == null
             ? t.S15_Record_Edit.title_create
             : t.S15_Record_Edit.title_edit),
-        leading:
-            IconButton(icon: const Icon(Icons.close), onPressed: _handleClose),
+        leading: IconButton(
+            icon: const Icon(Icons.close), onPressed: () => _onClose(vm)),
         actions: [
-          if (widget.recordId != null)
+          if (vm.recordId != null)
             IconButton(
               icon: const Icon(Icons.delete_outline),
               color: Theme.of(context).colorScheme.error,
-              onPressed: _handleDelete,
+              onPressed: () => _onDelete(vm),
             ),
           TextButton(
-            onPressed: _isSaving ? null : _onSave,
-            child: _isSaving
+            onPressed: vm.isSaving ? null : () => _onSave(vm),
+            child: vm.isSaving
                 ? const SizedBox(
                     width: 20,
                     height: 20,
@@ -924,97 +321,77 @@ class _S15RecordEditPageState extends State<S15RecordEditPage> {
       ),
       body: Column(
         children: [
-          // 1. 頂部切換開關
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SizedBox(
               width: double.infinity,
               child: SegmentedButton<int>(
-                // 1. 定義選項 (使用 i18n 變數)
-                segments: <ButtonSegment<int>>[
-                  ButtonSegment<int>(
-                    value: 0,
-                    label: Text(t.S15_Record_Edit.tab_expense), // "支出"
-                    icon: const Icon(Icons.receipt_long),
-                  ),
-                  ButtonSegment<int>(
-                    value: 1,
-                    label: Text(t.S15_Record_Edit.tab_income), // "預收"
-                    icon: const Icon(Icons.savings_outlined),
-                  ),
+                segments: [
+                  ButtonSegment(
+                      value: 0,
+                      label: Text(t.S15_Record_Edit.tab_expense),
+                      icon: const Icon(Icons.receipt_long)),
+                  ButtonSegment(
+                      value: 1,
+                      label: Text(t.S15_Record_Edit.tab_income),
+                      icon: const Icon(Icons.savings_outlined)),
                 ],
-                // 2. 當前選中的項目
-                selected: {_recordTypeIndex},
-
-                // 3. 切換事件
-                onSelectionChanged: (Set<int> newSelection) {
-                  setState(() {
-                    _recordTypeIndex = newSelection.first;
-                  });
-                },
-
-                showSelectedIcon: false, // 不顯示打勾圖示，保持簡潔
+                selected: {vm.recordTypeIndex},
+                onSelectionChanged: (val) => vm.setRecordType(val.first),
+                showSelectedIcon: false,
               ),
             ),
           ),
-
-          // 2. 內容區：根據切換顯示不同表單
           Expanded(
             child: Form(
-              key: _formKey, // Form Key 依然包在最外面，保護你的驗證邏輯
-              child: _recordTypeIndex == 0
+              key: _formKey,
+              child: vm.recordTypeIndex == 0
                   ? S15ExpenseForm(
-                      // Controllers
-                      amountController: _amountController,
-                      titleController: _titleController,
-                      memoController: _memoController,
-                      exchangeRateController: _exchangeRateController,
-                      // State
-                      selectedDate: _selectedDate,
-                      selectedCurrencyOption: _selectedCurrencyOption,
-                      baseCurrencyOption: widget.baseCurrencyOption,
-                      selectedCategoryId: _selectedCategoryId,
-                      isRateLoading: _isRateLoading,
-                      poolBalancesByCurrency: widget.poolBalancesByCurrency,
-                      members: _taskMembers,
-                      items: _items,
-                      baseRemainingAmount: _baseRemainingAmount,
-                      baseSplitMethod: _baseSplitMethod,
-                      baseMemberIds: _baseMemberIds,
-                      payerType: _payerType,
-                      payerId: _payerId,
-                      hasPaymentError: _hasPaymentError,
-                      // Callbacks
-                      onDateTap: _showDatePicker,
-                      onPaymentMethodTap: _handlePaymentMethod,
-                      onCategoryTap: _showCategoryPicker,
-                      onCurrencyTap: _showCurrencyPicker,
-                      onFetchExchangeRate: _fetchExchangeRate,
-                      onShowRateInfo: _showRateInfoDialog,
-                      onBaseSplitConfigTap: _handleBaseSplitConfig,
-                      onAddItemTap: _handleCreateSubItem,
-                      onItemEditTap: _handleItemEdit,
+                      amountController: vm.amountController,
+                      titleController: vm.titleController,
+                      memoController: vm.memoController,
+                      exchangeRateController: vm.exchangeRateController,
+                      selectedDate: vm.selectedDate,
+                      selectedCurrencyOption: vm.selectedCurrencyOption,
+                      baseCurrencyOption: vm.baseCurrencyOption,
+                      selectedCategoryId: vm.selectedCategoryId,
+                      isRateLoading: vm.isRateLoading,
+                      poolBalancesByCurrency: vm.poolBalancesByCurrency,
+                      members: vm.taskMembers,
+                      items: vm.items,
+                      baseRemainingAmount: vm.baseRemainingAmount,
+                      baseSplitMethod: vm.baseSplitMethod,
+                      baseMemberIds: vm.baseMemberIds,
+                      payerType: vm.payerType,
+                      payerId: vm.payerId,
+                      hasPaymentError: vm.hasPaymentError,
+                      onDateTap: () => _onDateTap(vm),
+                      onPaymentMethodTap: () => _onPaymentMethodTap(vm),
+                      onCategoryTap: () => _onCategoryTap(vm),
+                      onCurrencyTap: () => _onCurrencyTap(vm),
+                      onFetchExchangeRate: vm.fetchExchangeRate,
+                      onShowRateInfo: () {},
+                      onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
+                      onAddItemTap: () => _onAddItemTap(vm),
+                      onItemEditTap: (item) => _onItemEditTap(vm, item),
                     )
                   : S15IncomeForm(
-                      // Controllers
-                      amountController: _amountController,
-                      memoController: _memoController,
-                      exchangeRateController: _exchangeRateController,
-                      // State
-                      selectedDate: _selectedDate,
-                      selectedCurrencyOption: _selectedCurrencyOption,
-                      baseCurrencyOption: widget.baseCurrencyOption,
-                      isRateLoading: _isRateLoading,
-                      members: _taskMembers,
-                      baseRemainingAmount: _totalAmount, // 收入時，總金額即為要分配的金額
-                      baseSplitMethod: _baseSplitMethod,
-                      baseMemberIds: _baseMemberIds,
-                      // Callbacks
-                      onDateTap: _showDatePicker,
-                      onCurrencyTap: _showCurrencyPicker,
-                      onFetchExchangeRate: _fetchExchangeRate,
-                      onShowRateInfo: _showRateInfoDialog,
-                      onBaseSplitConfigTap: _handleBaseSplitConfig,
+                      amountController: vm.amountController,
+                      memoController: vm.memoController,
+                      exchangeRateController: vm.exchangeRateController,
+                      selectedDate: vm.selectedDate,
+                      selectedCurrencyOption: vm.selectedCurrencyOption,
+                      baseCurrencyOption: vm.baseCurrencyOption,
+                      isRateLoading: vm.isRateLoading,
+                      members: vm.taskMembers,
+                      baseRemainingAmount: vm.totalAmount,
+                      baseSplitMethod: vm.baseSplitMethod,
+                      baseMemberIds: vm.baseMemberIds,
+                      onDateTap: () => _onDateTap(vm),
+                      onCurrencyTap: () => _onCurrencyTap(vm),
+                      onFetchExchangeRate: () {},
+                      onShowRateInfo: () {},
+                      onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
                     ),
             ),
           ),

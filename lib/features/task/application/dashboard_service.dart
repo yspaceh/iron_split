@@ -1,36 +1,64 @@
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart'; // 核心引用
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class DashboardService {
-  /// 1. [核心計算]：依賴 BalanceCalculator 算出 State
+  /// 1. [核心計算]：完全依賴 BalanceCalculator
   BalanceSummaryState calculateBalanceState({
     required TaskModel task,
     required List<RecordModel> records,
     required String currentUserId,
   }) {
-    // 1. [修正] 直接使用 BalanceCalculator 計算各幣別公款餘額 (Pool Detail)
-    // 這取代了原本的手動迴圈加總，確保與舊 Page 邏輯完全一致
-    final Map<String, double> poolDetail =
-        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
+    // 1. [Pool Balance] 右上角大數字 (公款總值)
+    final double poolBalance =
+        BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
 
-    // 2. 計算核心金額 (維持不變)
-    final double remainder =
-        BalanceCalculator.calculateRemainderBuffer(records);
+    // 2. [Chart Stats] 圖表用的總收入與總支出 (歷史總量)
+    final double totalIncome =
+        BalanceCalculator.calculateIncomeTotal(records, isBaseCurrency: true);
+
     final double totalExpense =
         BalanceCalculator.calculateExpenseTotal(records, isBaseCurrency: true);
 
-    // Pool Balance (主幣別總額)
-    // 從算好的 map 裡直接取，取不到就 0
-    final double poolBalance = poolDetail[task.baseCurrency] ?? 0.0;
+    // 3. [Remainder] 零錢罐
+    final double remainder =
+        BalanceCalculator.calculateRemainderBuffer(records);
 
-    // 3. 計算圖表比例 (維持不變)
+    // 4. [Pool Detail] 點擊後的各幣別庫存明細
+    final Map<String, double> poolDetail =
+        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
+
+    // 5. [Chart Detail] 收入與支出的幣別分布 (給圓餅圖或詳情用)
+    // 雖然 BalanceCalculator 沒直接給這個 map，但這只是單純分類加總，可以在這裡簡單做
+    // 或者如果您希望連這個都封裝進 Calculator，我可以再加，
+    // 但目前為了不改動 Calculator，我們在這裡做簡單的分類。
+    final Map<String, double> expenseDetail = {};
+    final Map<String, double> incomeDetail = {};
+
+    for (var r in records) {
+      if (r.type == 'income') {
+        incomeDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
+      } else {
+        expenseDetail.update(
+            r.originalCurrencyCode, (v) => v + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
+      }
+    }
+
+    // 6. [Flex] 計算圖表比例
     int expenseFlex = 0;
     int incomeFlex = 0;
-    if (totalExpense.abs() > 0) {
-      expenseFlex = 1000;
-      incomeFlex = 0;
+
+    // 分母為兩者絕對值之和
+    final totalVolume = totalExpense.abs() + totalIncome.abs();
+
+    if (totalVolume > 0) {
+      // 計算支出佔的比例 (乘 1000 轉整數)
+      expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
+      // 收入佔剩餘比例 (確保加起來是 1000)
+      incomeFlex = 1000 - expenseFlex;
     }
 
     return BalanceSummaryState(
@@ -38,33 +66,28 @@ class DashboardService {
       currencySymbol: '\$',
       poolBalance: poolBalance,
       totalExpense: totalExpense,
-      totalIncome: 0,
+      totalIncome: totalIncome,
       remainder: remainder,
       expenseFlex: expenseFlex,
       incomeFlex: incomeFlex,
       ruleKey: task.remainderRule,
       isLocked: task.status != 'ongoing',
-      expenseDetail: {}, // RecordModel 沒 currency，暫空
-      incomeDetail: {},
-      poolDetail: poolDetail, // ✅ 這裡現在裝的是 BalanceCalculator 算出來的正確結果
+      expenseDetail: expenseDetail,
+      incomeDetail: incomeDetail,
+      poolDetail: poolDetail,
       absorbedBy: null,
       absorbedAmount: null,
     );
   }
 
-  /// 新增：完全對齊 S13 Page 的計算邏輯
-  Map<String, double> calculatePoolBalances(List<RecordModel> records) {
-    return BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
-  }
-
-  /// 2. [列表分組]：完全移植 S13GroupView._groupRecords
+  // ... (其他方法保持不變)
   Map<DateTime, List<RecordModel>> groupRecordsByDate(
       List<RecordModel> records) {
+    // ...
     final Map<DateTime, List<RecordModel>> grouped = {};
     for (var record in records) {
       final date =
           DateTime(record.date.year, record.date.month, record.date.day);
-
       if (!grouped.containsKey(date)) {
         grouped[date] = [];
       }
@@ -73,13 +96,12 @@ class DashboardService {
     return grouped;
   }
 
-  /// 3. [日期生成]：完全移植 S13GroupView._generateFullDateRangeDescending
   List<DateTime> generateDisplayDates({
     required DateTime startDate,
     required DateTime endDate,
     required Map<DateTime, List<RecordModel>> groupedRecords,
   }) {
-    // 1. 產生範圍內的所有日期 (移植邏輯)
+    // ...
     List<DateTime> rangeDates = [];
     if (startDate.isAfter(endDate)) {
       rangeDates = [startDate];
@@ -88,23 +110,18 @@ class DashboardService {
       rangeDates = List.generate(
           days + 1, (index) => endDate.subtract(Duration(days: index)));
     }
-
-    // 2. 合併有紀錄的日期
     final Set<DateTime> uniqueDates = {};
     uniqueDates.addAll(rangeDates);
     uniqueDates.addAll(groupedRecords.keys);
-
-    // 3. 排序 (Desc)
     return uniqueDates.toList()..sort((a, b) => b.compareTo(a));
   }
 
-  /// 4. [捲動目標計算]：移植 Auto-Scroll 判定
   DateTime calculateInitialTargetDate(DateTime start, DateTime end) {
+    // ...
     final now = DateTime.now();
     final dStart = DateTime(start.year, start.month, start.day);
     final dEnd = DateTime(end.year, end.month, end.day);
     final dNow = DateTime(now.year, now.month, now.day);
-
     if (dNow.isBefore(dStart) || dNow.isAfter(dEnd)) {
       return start;
     } else {
@@ -112,7 +129,6 @@ class DashboardService {
     }
   }
 
-  /// 新增：過濾出與特定使用者有關的紀錄 (S13PersonalView 邏輯)
   List<RecordModel> filterPersonalRecords(
       List<RecordModel> allRecords, String uid) {
     return allRecords.where((record) {
@@ -120,7 +136,6 @@ class DashboardService {
     }).toList();
   }
 
-  /// 新增：計算個人淨額 (S13PersonalView Card 邏輯)
   double calculatePersonalNetBalance({
     required List<RecordModel> allRecords,
     required String uid,
@@ -132,15 +147,13 @@ class DashboardService {
     );
   }
 
-  /// 新增：計算當日個人消費總額 (S13PersonalView DailyHeader 邏輯)
   double calculateDailyPersonalDebit(List<RecordModel> dayRecords, String uid) {
     double dayMyDebit = 0;
     for (var r in dayRecords) {
-      // 1. Get personal share in original currency
-      double myShareOriginal = BalanceCalculator.calculatePersonalDebit(r, uid,
-          isBaseCurrency: false);
-      // 2. Convert to Base Currency
-      dayMyDebit += myShareOriginal * r.exchangeRate;
+      // 直接使用 Calculator 算出該筆紀錄我的消費額 (Debit)
+      double myDebitBase = BalanceCalculator.calculatePersonalDebit(r, uid,
+          isBaseCurrency: true); // 這裡直接取 Base Currency
+      dayMyDebit += myDebitBase;
     }
     return dayMyDebit;
   }
