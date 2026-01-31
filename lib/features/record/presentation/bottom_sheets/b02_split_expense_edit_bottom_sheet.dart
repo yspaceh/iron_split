@@ -112,6 +112,8 @@ class _B02SplitExpenseEditBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    // 這裡我們需要使用 Translations.of(context) 來取得 t
+    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 

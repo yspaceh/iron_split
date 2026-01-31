@@ -198,12 +198,11 @@ class _B03SplitMethodEditBottomSheetState
 
   // --- UI Builders ---
 
-  void _showMethodPicker() {
-    // 使用 CommonWheelPicker 重複利用
+  void _showMethodPicker(Translations t) {
+    // Pass t
     final options = ['even', 'percent', 'exact'];
     String tempMethod = _splitMethod;
 
-    // 建立 i18n 對照
     String getLabel(String method) {
       switch (method) {
         case 'even':
@@ -232,10 +231,10 @@ class _B03SplitMethodEditBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // 根據模式取得顯示名稱
     String methodLabel = _splitMethod;
     if (_splitMethod == 'even') {
       methodLabel = t.B03_SplitMethod_Edit.method_even;
@@ -314,7 +313,7 @@ class _B03SplitMethodEditBottomSheetState
                   ],
                 ),
                 InkWell(
-                  onTap: _showMethodPicker,
+                  onTap: () => _showMethodPicker(t),
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     padding:
@@ -345,9 +344,9 @@ class _B03SplitMethodEditBottomSheetState
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                if (_splitMethod == 'even') _buildEvenSection(),
-                if (_splitMethod == 'percent') _buildPercentSection(),
-                if (_splitMethod == 'exact') _buildExactSection(),
+                if (_splitMethod == 'even') _buildEvenSection(t),
+                if (_splitMethod == 'percent') _buildPercentSection(t),
+                if (_splitMethod == 'exact') _buildExactSection(t),
                 const SizedBox(height: 40),
               ],
             ),
@@ -358,7 +357,8 @@ class _B03SplitMethodEditBottomSheetState
   }
 
   // --- Method 1: Even (平分) ---
-  Widget _buildEvenSection() {
+  Widget _buildEvenSection(Translations t) {
+    // Pass t
     final theme = Theme.of(context);
 
     // 使用新的計算邏輯
@@ -480,10 +480,10 @@ class _B03SplitMethodEditBottomSheetState
   }
 
   // --- Method 2: Percent (比例) ---
-  Widget _buildPercentSection() {
+  Widget _buildPercentSection(Translations t) {
+    // Pass t
     final theme = Theme.of(context);
 
-    // 使用新的計算邏輯
     final result = _calculateSplit();
     final sourceAmounts = result.sourceAmounts;
     final baseAmounts = result.baseAmounts;
@@ -497,7 +497,6 @@ class _B03SplitMethodEditBottomSheetState
           child: Text(t.B03_SplitMethod_Edit.desc_percent,
               style: const TextStyle(color: Colors.grey)),
         ),
-
         ...widget.allMembers.map((m) {
           final id = m['id'];
           final weight = _details[id] ?? 0.0;
@@ -514,13 +513,11 @@ class _B03SplitMethodEditBottomSheetState
                   onChanged: (val) {
                     setState(() {
                       if (val == true) {
-                        // 勾選時，恢復預設權重 (預設值 1.0)
                         _details[id] = widget.defaultMemberWeights[id] ?? 1.0;
                         if (!_selectedMemberIds.contains(id)) {
                           _selectedMemberIds.add(id);
                         }
                       } else {
-                        // 取消勾選，權重歸 0
                         _details[id] = 0.0;
                         _selectedMemberIds.remove(id);
                       }
@@ -535,8 +532,6 @@ class _B03SplitMethodEditBottomSheetState
                 Expanded(
                     child: Text(m['displayName'],
                         overflow: TextOverflow.ellipsis)),
-
-                // Amounts Column
                 if (isSelected)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -559,10 +554,7 @@ class _B03SplitMethodEditBottomSheetState
                         }),
                     ],
                   ),
-
                 const SizedBox(width: 12),
-
-                // 調整權重區
                 if (isSelected) ...[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -628,7 +620,6 @@ class _B03SplitMethodEditBottomSheetState
                     ],
                   ),
                 ] else ...[
-                  // 未勾選時顯示 0x
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     child: Text("0x", style: TextStyle(color: Colors.grey)),
@@ -638,8 +629,6 @@ class _B03SplitMethodEditBottomSheetState
             ),
           );
         }),
-
-        // 餘額提示 (Base Currency Remainder)
         if (baseRemainder > 0)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -673,14 +662,14 @@ class _B03SplitMethodEditBottomSheetState
   }
 
   // --- Method 3: Exact (金額) ---
-  Widget _buildExactSection() {
+  Widget _buildExactSection(Translations t) {
+    // Pass t
     final currentSum = _details.values.fold(0.0, (sum, v) => sum + v);
     final remaining = widget.totalAmount - currentSum;
     final isMatched = remaining.abs() < 0.1;
 
     return Column(
       children: [
-        // 總額檢查 Bar (紅綠燈號)
         Container(
           padding: const EdgeInsets.all(12),
           margin: const EdgeInsets.only(bottom: 16),
@@ -712,7 +701,6 @@ class _B03SplitMethodEditBottomSheetState
             ],
           ),
         ),
-
         ...widget.allMembers.map((m) {
           final id = m['id'];
           final isSelected = _selectedMemberIds.contains(id);
@@ -727,7 +715,6 @@ class _B03SplitMethodEditBottomSheetState
                     setState(() {
                       if (val == true) {
                         _selectedMemberIds.add(id);
-                        // UX 優化：勾選時自動填入剩餘金額
                         if (remaining > 0) {
                           _details[id] = remaining;
                           _amountControllers[id]?.text =
@@ -765,7 +752,7 @@ class _B03SplitMethodEditBottomSheetState
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 8),
                           border: const OutlineInputBorder(),
-                          enabled: isSelected, // 沒勾選不能打字
+                          enabled: isSelected,
                         ),
                         onChanged: (val) {
                           setState(() {

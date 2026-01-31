@@ -44,7 +44,7 @@ class _B07PaymentMethodEditBottomSheetState
 
   // Controllers
   final Map<String, TextEditingController> _memberControllers = {};
-  late TextEditingController _prepayController; // ✅ 新增：預收也需要 Controller
+  late TextEditingController _prepayController;
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _B07PaymentMethodEditBottomSheetState
       _prepayAmount = widget.initialPrepayAmount;
     }
 
-    // ✅ 初始化預收 Controller
+    // 初始化預收 Controller
     _prepayController = TextEditingController(
         text: _prepayAmount == 0
             ? ''
@@ -111,17 +111,15 @@ class _B07PaymentMethodEditBottomSheetState
 
   bool get _isValid => (_remaining.abs() < 0.01);
 
-  // 在 State 中新增一個 helper getter
   double get _currentCurrencyPoolBalance {
     return widget.poolBalancesByCurrency[widget.selectedCurrency.code] ?? 0.0;
   }
 
-  // _calculateAutoPrepay
   double _calculateAutoPrepay(double advanceTotal) {
     double needed = widget.totalAmount - advanceTotal;
     if (needed < 0) needed = 0;
 
-    // 上限是當前幣別的餘額，而不是 widget.prepayBalance (總資產)
+    // 上限是當前幣別的餘額
     return needed > _currentCurrencyPoolBalance
         ? _currentCurrencyPoolBalance
         : needed;
@@ -131,7 +129,6 @@ class _B07PaymentMethodEditBottomSheetState
     setState(() {
       _usePrepay = val ?? false;
       if (_usePrepay) {
-        // 自動計算並更新 Controller
         _prepayAmount = _calculateAutoPrepay(_currentAdvanceTotal);
         _prepayController.text = _prepayAmount == 0
             ? ''
@@ -152,7 +149,6 @@ class _B07PaymentMethodEditBottomSheetState
     setState(() {
       _useAdvance = val ?? false;
       if (!_useAdvance) {
-        // 清空所有代墊
         for (var key in _memberAdvance.keys) {
           _memberAdvance[key] = 0.0;
           _memberControllers[key]?.text = '';
@@ -172,7 +168,6 @@ class _B07PaymentMethodEditBottomSheetState
     final v = double.tryParse(val) ?? 0.0;
     setState(() {
       _prepayAmount = v;
-      // 注意：這裡是使用者手動輸入，絕對不要去 set text，否則游標會跳
     });
   }
 
@@ -182,19 +177,14 @@ class _B07PaymentMethodEditBottomSheetState
     setState(() {
       _memberAdvance[memberId] = v;
 
-      // 當代墊改變，若開啟預收，系統要自動調整預收金額
       if (_usePrepay) {
         _prepayAmount = _calculateAutoPrepay(_currentAdvanceTotal);
 
-        // ✅ 關鍵：因為是「系統自動調整」，所以要同步更新預收的 Controller 文字
-        // 這樣使用者才會看到預收金額變了
         String newText = _prepayAmount == 0
             ? ''
             : CurrencyOption.formatAmount(
                 _prepayAmount, widget.selectedCurrency.code);
 
-        // 只有當數值真的變了，且使用者目前沒有正在編輯預收欄位(簡單判斷)才更新
-        // 這裡直接更新通常沒問題，因為使用者的焦點現在是在「成員代墊」欄位上
         _prepayController.text = newText;
       }
     });
@@ -203,15 +193,11 @@ class _B07PaymentMethodEditBottomSheetState
   void _onSave() {
     if (!_isValid) return;
 
-    // 就算 UI 上有勾選，但如果金額是 0，就視為「沒勾選」
-    // 這樣可以避免「預收 0 + 代墊 1000」被判定為「混合支付」
     bool finalUsePrepay = _usePrepay;
     if (_prepayAmount <= 0) {
       finalUsePrepay = false;
     }
 
-    // 同理，如果代墊總額為 0，也視為沒用代墊
-    // 避免「預收 1000 + 代墊 0」被判定為「混合支付」
     bool finalUseAdvance = _useAdvance;
     if (_currentAdvanceTotal <= 0) {
       finalUseAdvance = false;
@@ -230,6 +216,7 @@ class _B07PaymentMethodEditBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final bool allowDecimal = widget.selectedCurrency.decimalDigits > 0;
@@ -297,7 +284,6 @@ class _B07PaymentMethodEditBottomSheetState
                               amount:
                                   "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
                           style: TextStyle(
-                            // 如果餘額小於總金額，顯示警告色
                             color: _currentCurrencyPoolBalance <
                                         widget.totalAmount &&
                                     _usePrepay
