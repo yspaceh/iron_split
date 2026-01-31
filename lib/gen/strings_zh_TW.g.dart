@@ -288,6 +288,9 @@ class TranslationsLogActionZhTw {
 
 	/// zh-TW: '未知操作'
 	String get unknown => '未知操作';
+
+	/// zh-TW: '結束任務'
+	String get close_task => '結束任務';
 }
 
 // Path: dialog
@@ -1435,6 +1438,7 @@ extension on Translations {
 			'log_action.delete_record' => '刪除記帳',
 			'log_action.settle_up' => '執行結算',
 			'log_action.unknown' => '未知操作',
+			'log_action.close_task' => '結束任務',
 			'dialog.unsaved_changes_title' => '尚未儲存',
 			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S10_Home_TaskList.title' => '我的任務',

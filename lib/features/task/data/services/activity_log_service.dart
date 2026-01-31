@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 
 class ActivityLogService {
   /// 寫入一筆活動紀錄
@@ -51,6 +51,8 @@ class ActivityLogService {
         return 'delete_record';
       case LogAction.settleUp:
         return 'settle_up';
+      case LogAction.closeTask:
+        return 'close_task';
       default:
         return 'unknown';
     }

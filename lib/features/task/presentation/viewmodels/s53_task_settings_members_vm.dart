@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/task/domain/helpers/task_share_helper.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart'; // For default name
 
 class S53TaskSettingsMembersViewModel extends ChangeNotifier {

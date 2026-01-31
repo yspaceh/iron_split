@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // 確保路徑正確
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:intl/intl.dart';
 
 class ActivityLogBlock extends StatelessWidget {

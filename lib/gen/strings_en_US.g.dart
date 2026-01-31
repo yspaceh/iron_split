@@ -165,6 +165,7 @@ class _TranslationsLogActionEnUs extends TranslationsLogActionZhTw {
 	@override String get delete_record => 'Delete Record';
 	@override String get settle_up => 'Settle Up';
 	@override String get unknown => 'Unknown Action';
+	@override String get close_task => 'Close Task';
 }
 
 // Path: dialog
@@ -789,6 +790,7 @@ extension on TranslationsEnUs {
 			'log_action.delete_record' => 'Delete Record',
 			'log_action.settle_up' => 'Settle Up',
 			'log_action.unknown' => 'Unknown Action',
+			'log_action.close_task' => 'Close Task',
 			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
 			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S10_Home_TaskList.title' => 'My Tasks',

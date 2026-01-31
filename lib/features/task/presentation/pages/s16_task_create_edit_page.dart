@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
@@ -80,12 +81,26 @@ class _S16ContentState extends State<_S16Content> {
     if (confirmed == true && mounted) {
       try {
         // 呼叫 VM 執行建立流程
-        final t = Translations.of(context);
-        final taskId = await vm.createTask(_nameController.text.trim(), t);
+        final result = await vm.createTask(_nameController.text.trim(), t);
 
-        if (mounted && taskId != null) {
-          // 成功 -> 跳轉 Dashboard
-          context.go('/tasks/$taskId');
+        if (result != null && mounted) {
+          // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
+          if (result.inviteCode != null) {
+            await TaskShareHelper.inviteMember(
+              context: context,
+              taskId: result.taskId,
+              taskName: _nameController.text.trim(),
+              existingCode: result.inviteCode, //  傳入 VM 拿到的 Code
+            );
+          }
+
+          // 3. 導航到任務 Dashboard
+          if (mounted) {
+            context.goNamed(
+              'S13', // 請確認您的 Router name (例如 S13)
+              pathParameters: {'taskId': result.taskId},
+            );
+          }
         }
       } catch (e) {
         if (mounted) {

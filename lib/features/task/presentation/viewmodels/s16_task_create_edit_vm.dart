@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:share_plus/share_plus.dart';
 
 class S16TaskCreateEditViewModel extends ChangeNotifier {
   // State
@@ -76,7 +75,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   }
 
   /// 核心邏輯：建立任務
-  Future<String?> createTask(String taskName, Translations t) async {
+  Future<({String taskId, String? inviteCode})?> createTask(
+      String taskName, Translations t) async {
     _isProcessing = true;
     _statusText = t.D03_TaskCreate_Confirm.creating_task;
     notifyListeners();
@@ -150,36 +150,22 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       );
 
       // 4. Invite Code & Share
+      String? inviteCode;
       if (_memberCount > 1) {
         _statusText = t.D03_TaskCreate_Confirm.preparing_share;
         notifyListeners();
 
+        // 呼叫 API 取得邀請碼
         final callable =
             FirebaseFunctions.instance.httpsCallable('createInviteCode');
         final res = await callable.call({'taskId': docRef.id});
         final data = Map<String, dynamic>.from(res.data);
-        final code = data['code'];
-        final inviteLink = 'iron-split://join?code=$code';
-
-        // 注意：ViewModel 不應該直接操作 UI (Share Sheet 屬於 UI)，
-        // 但 SharePlus 是一個 Plugin，通常在 VM 呼叫是可以接受的，
-        // 或者我們可以回傳一個 Result 物件讓 Page 去呼叫 Share。
-        // 為了簡單起見，這裡先在 VM 呼叫，因為它不依賴 context。
-        await SharePlus.instance.share(
-          ShareParams(
-            text: t.D03_TaskCreate_Confirm.share_message(
-              taskName: taskName,
-              code: code,
-              link: inviteLink,
-            ),
-            subject: t.D03_TaskCreate_Confirm.share_subject,
-          ),
-        );
+        inviteCode = data['code'];
       }
 
       _isProcessing = false;
       notifyListeners();
-      return docRef.id; // 回傳 Task ID 供頁面跳轉
+      return (taskId: docRef.id, inviteCode: inviteCode);
     } catch (e) {
       _isProcessing = false;
       notifyListeners();

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/gen/strings.g.dart'; // 需要 context 翻譯
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';

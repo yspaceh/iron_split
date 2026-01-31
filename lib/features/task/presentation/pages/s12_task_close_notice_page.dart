@@ -1,65 +1,48 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/s12_task_close_notice_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class S12TaskCloseNoticePage extends StatefulWidget {
+class S12TaskCloseNoticePage extends StatelessWidget {
   final String taskId;
 
   const S12TaskCloseNoticePage({super.key, required this.taskId});
 
   @override
-  State<S12TaskCloseNoticePage> createState() => _S12TaskCloseNoticePageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => S12TaskCloseNoticeViewModel(taskId: taskId),
+      child: const _S12Content(),
+    );
+  }
 }
 
-class _S12TaskCloseNoticePageState extends State<S12TaskCloseNoticePage> {
-  bool _isProcessing = false;
+class _S12Content extends StatelessWidget {
+  const _S12Content();
 
-  /// 執行結束任務邏輯 (D08 確認後觸發)
-  Future<void> _executeCloseTask() async {
-    setState(() => _isProcessing = true);
-    try {
-      // 1. 更新 Firestore 狀態
-      await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .update({
-        'status': 'closed',
-        'closedAt': FieldValue.serverTimestamp(),
-      });
+  Future<void> _handleClose(
+      BuildContext context, S12TaskCloseNoticeViewModel vm) async {
+    final success = await vm.closeTask();
 
-      // 2. 寫入 Log
-      await ActivityLogService.log(
-        taskId: widget.taskId,
-        action: LogAction.updateSettings, // 或新增一個 closeTask 類型
-        details: {'info': 'Task Closed'},
-      );
-
-      if (!mounted) return;
-
-      // 3. 導航回 S13 (因為 S13 會自動偵測 status=closed 切換畫面)
-      // 使用 go 而不是 push，清除堆疊避免回到 S12
+    if (success && context.mounted) {
+      // 導航回 S13
+      // 使用 goNamed 清除堆疊，避免按上一頁回到 S12
+      // 假設 Router 定義 S13 的 name 為 'S13' (請確認您的 router.dart 設定)
       context.goNamed(
-        'task_dashboard', // 請確認您的 Router name
-        pathParameters: {'taskId': widget.taskId},
+        'S13',
+        pathParameters: {'taskId': vm.taskId},
       );
-    } catch (e) {
-      debugPrint("Close task failed: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $e")),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isProcessing = false);
+    } else if (!success && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to close task")),
+      );
     }
   }
 
-  /// 顯示 D08 確認對話框
-  void _showConfirmDialog() {
+  void _showConfirmDialog(
+      BuildContext context, S12TaskCloseNoticeViewModel vm) {
     final t = Translations.of(context);
     CommonAlertDialog.show(
       context,
@@ -68,7 +51,7 @@ class _S12TaskCloseNoticePageState extends State<S12TaskCloseNoticePage> {
       confirmText: t.D08_TaskClosed_Confirm.action_confirm,
       isDestructive: true, // 啟用紅色警示
       showCancel: true, // 強制顯示取消按鈕
-      onConfirm: _executeCloseTask,
+      onConfirm: () => _handleClose(context, vm),
     );
   }
 
@@ -76,6 +59,7 @@ class _S12TaskCloseNoticePageState extends State<S12TaskCloseNoticePage> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final vm = context.watch<S12TaskCloseNoticeViewModel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -120,16 +104,18 @@ class _S12TaskCloseNoticePageState extends State<S12TaskCloseNoticePage> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: _isProcessing ? null : _showConfirmDialog,
+                  onPressed: vm.isProcessing
+                      ? null
+                      : () => _showConfirmDialog(context, vm),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: theme.colorScheme.error), // 紅色邊框
                     foregroundColor: theme.colorScheme.error, // 紅色文字/Icon
                   ),
-                  icon: _isProcessing
+                  icon: vm.isProcessing
                       ? const SizedBox.shrink()
                       : const Icon(Icons.lock_outline),
-                  label: _isProcessing
+                  label: vm.isProcessing
                       ? SizedBox(
                           width: 24,
                           height: 24,

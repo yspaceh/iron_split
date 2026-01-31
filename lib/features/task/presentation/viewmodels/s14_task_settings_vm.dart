@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/task/data/models/activity_log_model.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 
 class S14TaskSettingsViewModel extends ChangeNotifier {
   final String taskId;

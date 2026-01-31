@@ -165,6 +165,7 @@ class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
 	@override String get delete_record => '記録削除';
 	@override String get settle_up => '精算実行';
 	@override String get unknown => '不明な操作';
+	@override String get close_task => 'タスク終了';
 }
 
 // Path: dialog
@@ -789,6 +790,7 @@ extension on TranslationsJaJp {
 			'log_action.delete_record' => '記録削除',
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
+			'log_action.close_task' => 'タスク終了',
 			'dialog.unsaved_changes_title' => '未保存の変更',
 			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
