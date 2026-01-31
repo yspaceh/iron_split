@@ -11,13 +11,13 @@ class S50OnboardingConsentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => S50OnboardingConsentViewModel(),
-      child: const _S50View(),
+      child: const _S50Content(),
     );
   }
 }
 
-class _S50View extends StatelessWidget {
-  const _S50View();
+class _S50Content extends StatelessWidget {
+  const _S50Content();
 
   @override
   Widget build(BuildContext context) {

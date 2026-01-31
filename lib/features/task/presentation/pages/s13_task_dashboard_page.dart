@@ -34,19 +34,19 @@ class S13TaskDashboardPage extends StatelessWidget {
         recordRepo: RecordRepository(),
         service: DashboardService(),
       )..init(),
-      child: const _S13DashboardContent(),
+      child: const _S13Content(),
     );
   }
 }
 
-class _S13DashboardContent extends StatefulWidget {
-  const _S13DashboardContent();
+class _S13Content extends StatefulWidget {
+  const _S13Content();
 
   @override
-  State<_S13DashboardContent> createState() => _S13DashboardContentState();
+  State<_S13Content> createState() => _S13ContentState();
 }
 
-class _S13DashboardContentState extends State<_S13DashboardContent> {
+class _S13ContentState extends State<_S13Content> {
   bool _isShowingIntro = false;
 
   @override

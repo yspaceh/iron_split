@@ -27,7 +27,7 @@ class S11InviteConfirmPage extends StatelessWidget {
           onError: (code, msg, details) =>
               _handleError(context, code, msg, details),
         ),
-      child: const _S11View(),
+      child: const _S11Content(),
     );
   }
 
@@ -64,8 +64,8 @@ class S11InviteConfirmPage extends StatelessWidget {
   }
 }
 
-class _S11View extends StatelessWidget {
-  const _S11View();
+class _S11Content extends StatelessWidget {
+  const _S11Content();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class _S11View extends StatelessWidget {
     // (修正 VM: 建議在 VM 加一個 `String? _code`，loadPreview 時存起來)
     // 這裡暫時假設可以從 context 拿到 parent (做不到)，
     // **修正方案**：我們直接在 build 方法裡從 `S11InviteConfirmPage` 傳進來太麻煩，
-    // 建議將 _S11View 改為接收 inviteCode 參數。
+    // 建議將 _S11Content 改為接收 inviteCode 參數。
     // 但因為這是重構，我先在 VM 裡加一個 `_currentInviteCode` 欄位最乾淨。
     // (假設 VM 已經修正在 loadPreview 記住 code)
 
@@ -105,7 +105,7 @@ class _S11View extends StatelessWidget {
     final currency = taskData['baseCurrency'] ?? CurrencyOption.defaultCode;
 
     // 這裡必須拿 S11InviteConfirmPage 的 inviteCode，
-    // 實務上我會建議把 _S11View 寫在 Page 檔案裡並傳參數進去。
+    // 實務上我會建議把 _S11Content 寫在 Page 檔案裡並傳參數進去。
     // 這裡為了編譯通過，我們假設 VM 有個 `currentInviteCode`
     // 或是從 context 獲取 (這在 GoRouter 傳參時常用)。
     // 為了確保正確，這裡請自行確認 VM 實作有存 code。

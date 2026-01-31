@@ -17,19 +17,19 @@ class S51OnboardingNamePage extends StatelessWidget {
       create: (_) => S51OnboardingNameViewModel(
         service: OnboardingService(authRepo: AuthRepository()),
       ),
-      child: const _S51View(),
+      child: const _S51Content(),
     );
   }
 }
 
-class _S51View extends StatefulWidget {
-  const _S51View();
+class _S51Content extends StatefulWidget {
+  const _S51Content();
 
   @override
-  State<_S51View> createState() => _S51ViewState();
+  State<_S51Content> createState() => _S51ContentState();
 }
 
-class _S51ViewState extends State<_S51View> {
+class _S51ContentState extends State<_S51Content> {
   final _controller = TextEditingController();
 
   @override

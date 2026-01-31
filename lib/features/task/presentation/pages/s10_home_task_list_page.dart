@@ -15,13 +15,13 @@ class S10HomeTaskListPage extends StatelessWidget {
       create: (_) => S10TaskListViewModel(
         repo: TaskRepository(),
       )..init(),
-      child: const _S10View(),
+      child: const _S10Content(),
     );
   }
 }
 
-class _S10View extends StatelessWidget {
-  const _S10View();
+class _S10Content extends StatelessWidget {
+  const _S10Content();
 
   @override
   Widget build(BuildContext context) {

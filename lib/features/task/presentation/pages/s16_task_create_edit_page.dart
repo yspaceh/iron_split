@@ -20,19 +20,19 @@ class S16TaskCreateEditPage extends StatelessWidget {
     // 注入 VM
     return ChangeNotifierProvider(
       create: (_) => S16TaskCreateEditViewModel(),
-      child: const _S16FormContent(),
+      child: const _S16Content(),
     );
   }
 }
 
-class _S16FormContent extends StatefulWidget {
-  const _S16FormContent();
+class _S16Content extends StatefulWidget {
+  const _S16Content();
 
   @override
-  State<_S16FormContent> createState() => _S16FormContentState();
+  State<_S16Content> createState() => _S16ContentState();
 }
 
-class _S16FormContentState extends State<_S16FormContent> {
+class _S16ContentState extends State<_S16Content> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
 

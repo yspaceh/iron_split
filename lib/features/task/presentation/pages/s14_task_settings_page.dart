@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/remainder_rule_picker_sheet.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/s14_task_settings_vm.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/form_section.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_currency_input.dart';
@@ -16,184 +13,82 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_remain
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: S14_Task.Settings
-class S14TaskSettingsPage extends StatefulWidget {
+class S14TaskSettingsPage extends StatelessWidget {
   final String taskId;
   const S14TaskSettingsPage({super.key, required this.taskId});
 
   @override
-  State<S14TaskSettingsPage> createState() => _S14TaskSettingsPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => S14TaskSettingsViewModel(taskId: taskId)..init(),
+      child: const _S14Content(),
+    );
+  }
 }
 
-class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
-  late TextEditingController _nameController;
-  final FocusNode _nameFocusNode = FocusNode();
+class _S14Content extends StatefulWidget {
+  const _S14Content();
 
-  DateTime? _startDate;
-  DateTime? _endDate;
-  CurrencyOption? _currency;
-  String _remainderRule = 'random';
-  String? _createdBy;
-  bool _isLoading = true;
-  Map<String, dynamic> _membersData = {};
-  String? _initialName;
+  @override
+  State<_S14Content> createState() => _S14ContentState();
+}
+
+class _S14ContentState extends State<_S14Content> {
+  final FocusNode _nameFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-
+    final vm = context.read<S14TaskSettingsViewModel>();
     // Auto-save Name when focus is lost
     _nameFocusNode.addListener(() {
       if (!_nameFocusNode.hasFocus) {
-        _updateName();
+        vm.updateName();
       }
     });
-
-    _fetchTaskData();
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
     _nameFocusNode.dispose();
     super.dispose();
   }
 
-  Future<void> _fetchTaskData() async {
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(widget.taskId)
-          .get();
-      if (doc.exists && mounted) {
-        final data = doc.data()!;
-        _nameController.text = data['name'] ?? '';
-        _initialName = data['name'] ?? '';
+  Future<void> _onCurrencyChange(BuildContext context,
+      S14TaskSettingsViewModel vm, CurrencyOption selectedOption) async {
+    // 髒檢查
+    if (selectedOption.code == vm.currency?.code) return;
 
-        setState(() {
-          _startDate = (data['startDate'] as Timestamp?)?.toDate();
-          _endDate = (data['endDate'] as Timestamp?)?.toDate();
-          _currency = CurrencyOption.getCurrencyOption(
-              data['baseCurrency'] ?? CurrencyOption.defaultCode);
-          _remainderRule = data['remainderRule'] ?? 'random';
-          _createdBy = data['createdBy'] as String?;
-          _membersData = data['members'] as Map<String, dynamic>? ?? {};
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  // --- Auto-Save Actions ---
-
-  Future<void> _updateName() async {
-    final newName = _nameController.text.trim();
-    if (newName.isEmpty) return;
-    if (newName == _initialName) return;
-    _initialName = newName;
-    await FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(widget.taskId)
-        .update({
-      'name': newName,
-    });
-    ActivityLogService.log(
-      taskId: widget.taskId,
-      action: LogAction.updateSettings,
-      details: {
-        'settingType': 'task_name', // 代碼
-        'newValue': newName, // 原文 (e.g., "大阪之旅")
-      },
-    );
-  }
-
-  Future<void> _updateDateRange(DateTime start, DateTime end) async {
-    setState(() {
-      _startDate = start;
-      _endDate = end;
-    });
-    await FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(widget.taskId)
-        .update({
-      'startDate': Timestamp.fromDate(start),
-      'endDate': Timestamp.fromDate(end),
-    });
-    final dateStr =
-        "${DateFormat('yyyy/MM/dd').format(start)} - ${DateFormat('yyyy/MM/dd').format(end)}";
-    // [Log] Update Date
-    ActivityLogService.log(
-      taskId: widget.taskId,
-      action: LogAction.updateSettings,
-      details: {
-        'settingType': 'date_range',
-        'newValue': dateStr,
-      },
-    );
-  }
-
-  Future<void> _handleCurrencyChange(
-      CurrencyOption selectedCurrencyOption) async {
-    // 髒檢查：如果選了一樣的幣別，直接結束，不做任何事
-    if (selectedCurrencyOption.code == _currency?.code) return;
-
-    // 等待 BottomSheet 關閉動畫完成
-    // 如果不加這行，Dialog 會因為 Sheet 還在關閉而被「吃掉」
+    // 等待 BottomSheet 關閉動畫
     await Future.delayed(const Duration(milliseconds: 300));
-
-    // 3. 檢查頁面是否還活著 (防呆)
     if (!mounted) return;
 
-    // 2. 呼叫 D09 Dialog (傳入 TaskId 與 新幣別)
-    // D09 會負責執行 update 和 log
+    // 呼叫 D09 Dialog
     final bool? success = await showDialog<bool>(
       context: context,
       builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
-        taskId: widget.taskId,
-        newCurrency: selectedCurrencyOption,
+        taskId: vm.taskId,
+        newCurrency: selectedOption,
       ),
     );
 
-    // 3. 根據結果更新 UI
+    // 成功後更新 VM 狀態
     if (success == true && mounted) {
-      setState(() {
-        _currency = selectedCurrencyOption;
-      });
+      vm.updateCurrency(selectedOption);
     }
   }
-
-  Future<void> _handleRuleChange(String newRule) async {
-    setState(() => _remainderRule = newRule);
-    await FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(widget.taskId)
-        .update({
-      'remainderRule': newRule,
-    });
-    // [Log] Update Remainder Rule
-    ActivityLogService.log(
-      taskId: widget.taskId,
-      action: LogAction.updateSettings,
-      details: {
-        'settingType': 'remainder_rule',
-        'newValue': newRule, // e.g., "random" (Model will translate this)
-      },
-    );
-  }
-
-  // --- Build UI ---
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final currentUid = FirebaseAuth.instance.currentUser?.uid;
-    final isOwner = currentUid != null && currentUid == _createdBy;
+    final vm = context.watch<S14TaskSettingsViewModel>();
 
-    if (_isLoading) {
+    if (vm.isLoading ||
+        vm.startDate == null ||
+        vm.endDate == null ||
+        vm.currency == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
@@ -211,40 +106,40 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
           const SizedBox(height: 8),
 
           Focus(
-            onFocusChange: (hasFocus) {
-              if (!hasFocus) _updateName();
-            },
-            child: TaskNameInput(controller: _nameController),
+            focusNode: _nameFocusNode,
+            child: TaskNameInput(controller: vm.nameController),
           ),
 
           const SizedBox(height: 24),
 
-          // --- 2. 期間設定 (卡片分組) ---
+          // --- 2. 期間設定 ---
           TaskFormSectionCard(
             title: t.S16_TaskCreate_Edit.section_period,
             children: [
               TaskDateRangeInput(
-                startDate: _startDate!,
-                endDate: _endDate!,
-                onStartDateChanged: (val) => _updateDateRange(val, _endDate!),
-                onEndDateChanged: (val) => _updateDateRange(_startDate!, val),
+                startDate: vm.startDate!,
+                endDate: vm.endDate!,
+                onStartDateChanged: (val) =>
+                    vm.updateDateRange(val, vm.endDate!),
+                onEndDateChanged: (val) =>
+                    vm.updateDateRange(vm.startDate!, val),
               ),
             ],
           ),
 
           const SizedBox(height: 24),
 
-          // --- 3. 詳細設定 (卡片分組) ---
+          // --- 3. 詳細設定 ---
           TaskFormSectionCard(
             title: t.S16_TaskCreate_Edit.section_settings,
             children: [
               TaskCurrencyInput(
-                currency: _currency!,
-                onCurrencyChanged: _handleCurrencyChange,
+                currency: vm.currency!,
+                onCurrencyChanged: (val) => _onCurrencyChange(context, vm, val),
                 enabled: true,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                     height: 1,
                     width: double.infinity,
@@ -252,8 +147,8 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
               ),
               TaskRemainderRuleInput(
                 rule: RemainderRulePickerSheet.getRuleName(
-                    context, _remainderRule),
-                onRuleChanged: _handleRuleChange,
+                    context, vm.remainderRule),
+                onRuleChanged: vm.updateRemainderRule,
                 enabled: true,
               ),
             ],
@@ -261,8 +156,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
 
           const SizedBox(height: 24),
 
-          // 3. Settings Navigation (Use S14 Keys)
-          // S53: Member Settings
+          // Settings Navigation
           _buildNavTile(
             context: context,
             icon: Icons.people_outline,
@@ -270,13 +164,12 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
             onTap: () {
               context.pushNamed(
                 'S53',
-                pathParameters: {'taskId': widget.taskId},
+                pathParameters: {'taskId': vm.taskId},
               );
             },
           ),
           const SizedBox(height: 12),
 
-          // S52: History
           _buildNavTile(
             context: context,
             icon: Icons.history,
@@ -284,14 +177,13 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
             onTap: () {
               context.pushNamed(
                 'S52',
-                pathParameters: {'taskId': widget.taskId},
-                extra: _membersData, // 透過 extra 傳遞 Map 資料
+                pathParameters: {'taskId': vm.taskId},
+                extra: vm.membersData,
               );
             },
           ),
 
-          // 4. End Task (S12) - Owner Only
-          if (isOwner) ...[
+          if (vm.isOwner) ...[
             const SizedBox(height: 40),
             _buildNavTile(
               context: context,
@@ -299,7 +191,7 @@ class _S14TaskSettingsPageState extends State<S14TaskSettingsPage> {
               title: t.S14_Task_Settings.menu_end_task,
               isDestructive: true,
               onTap: () {
-                context.push('/task/${widget.taskId}/close');
+                context.push('/task/${vm.taskId}/close');
               },
             ),
           ],
