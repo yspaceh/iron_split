@@ -1,259 +1,201 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart';
-import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
-import 'package:iron_split/gen/strings.g.dart';
-import 'package:iron_split/core/models/record_model.dart';
+import 'package:provider/provider.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/application/dashboard_service.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
 import 'package:iron_split/features/task/presentation/views/s13_group_view.dart';
 import 'package:iron_split/features/task/presentation/views/s13_personal_view.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d01_member_role_intro_dialog.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
-/// Page Key: S13_Task_Dashboard (Wireframe 16)
-class S13TaskDashboardPage extends StatefulWidget {
+class S13TaskDashboardPage extends StatelessWidget {
   final String taskId;
 
   const S13TaskDashboardPage({super.key, required this.taskId});
 
   @override
-  State<S13TaskDashboardPage> createState() => _S13TaskDashboardPageState();
-}
-
-class _S13TaskDashboardPageState extends State<S13TaskDashboardPage> {
-  int _segmentIndex = 0; // 0: Group, 1: Personal
-  bool _isShowingIntro = false;
-
-  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final t = Translations.of(context);
 
     if (user == null) {
       return Scaffold(body: Center(child: Text(t.common.please_login)));
     }
 
-    return MultiStreamBuilder(
-      taskId: widget.taskId,
-      uid: user.uid,
-      builder: (context, taskData, memberData, records, isLoading) {
-        if (isLoading) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
-        }
-
-        // 1. D01 Intro Logic
-        final bool hasSeen = memberData?['hasSeenRoleIntro'] ?? true;
-        if (memberData != null && !hasSeen && !_isShowingIntro) {
-          _isShowingIntro = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!mounted) return;
-            await showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => D01MemberRoleIntroDialog(
-                taskId: widget.taskId,
-                initialAvatar: memberData['avatar'] ?? 'cow',
-                canReroll: true,
-              ),
-            );
-            if (mounted) {
-              setState(() => _isShowingIntro = false);
-            }
-          });
-        }
-
-        if (taskData == null) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
-        }
-
-        // Calculate Balance
-        final recordModels =
-            records.map((doc) => RecordModel.fromFirestore(doc)).toList();
-        final Map<String, double> poolBalancesByCurrency =
-            BalanceCalculator.calculatePoolBalancesByOriginalCurrency(
-                recordModels);
-
-        // 2. Data Preparation
-        final String systemCurrency = NumberFormat.simpleCurrency(
-                    locale: Localizations.localeOf(context).toString())
-                .currencyName ??
-            '';
-        final String baseCurrencyCode = taskData['baseCurrency'] ??
-            (systemCurrency.isNotEmpty
-                ? systemCurrency
-                : CurrencyOption.defaultCode);
-        final baseCurrencyOption =
-            CurrencyOption.getCurrencyOption(baseCurrencyCode);
-        final bool isCaptain = taskData['createdBy'] == user.uid;
-
-        return Scaffold(
-          backgroundColor: colorScheme.surface,
-          appBar: AppBar(
-            title: Text(taskData['name'] ?? t.S13_Task_Dashboard.title_active),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings_outlined),
-                onPressed: () {
-                  context.pushNamed('S14',
-                      pathParameters: {'taskId': widget.taskId});
-                },
-              ),
-            ],
-          ),
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              children: [
-                Visibility(
-                  visible: isCaptain,
-                  child: Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => context.pushNamed(
-                        'S30',
-                        pathParameters: {'taskId': widget.taskId},
-                      ),
-                      label: Text(t.S13_Task_Dashboard.settlement_button),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: isCaptain,
-                  child: const SizedBox(width: 12),
-                ),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () => context.pushNamed(
-                      'S15',
-                      pathParameters: {'taskId': widget.taskId},
-                      extra: {
-                        'poolBalancesByCurrency': poolBalancesByCurrency,
-                        'baseCurrencyOption': baseCurrencyOption,
-                      },
-                    ),
-                    label: Text(t.S13_Task_Dashboard.fab_record),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          body: Column(
-            children: [
-              // Segmented Button
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: SegmentedButton<int>(
-                    segments: [
-                      ButtonSegment(
-                          value: 0,
-                          label: Text(t.S13_Task_Dashboard.tab_group),
-                          icon: const Icon(Icons.groups)),
-                      ButtonSegment(
-                          value: 1,
-                          label: Text(t.S13_Task_Dashboard.tab_personal),
-                          icon: const Icon(Icons.person)),
-                    ],
-                    selected: {_segmentIndex},
-                    onSelectionChanged: (Set<int> newSelection) {
-                      setState(() => _segmentIndex = newSelection.first);
-                    },
-                    showSelectedIcon: false,
-                  ),
-                ),
-              ),
-
-              // Content Switcher
-              Expanded(
-                child: _segmentIndex == 0
-                    ? S13GroupView(
-                        taskId: widget.taskId,
-                        taskData: taskData,
-                        memberData: memberData,
-                        records: records,
-                        poolBalancesByCurrency: poolBalancesByCurrency,
-                        baseCurrencyOption: baseCurrencyOption,
-                      )
-                    : S13PersonalView(
-                        taskId: widget.taskId,
-                        taskData: taskData, // [新增] 傳入資料
-                        memberData: memberData, // [新增] 傳入資料
-                        records: records, // [新增] 傳入資料
-                        baseCurrencyOption: baseCurrencyOption, // [新增] 傳入資料
-                        uid: user.uid, // [新增] 傳入 UID 做過濾
-                        poolBalancesByCurrency:
-                            poolBalancesByCurrency, // [新增] 傳入預付款
-                      ),
-              ),
-            ],
-          ),
-        );
-      },
+    // 1. 注入 ViewModel
+    return ChangeNotifierProvider(
+      create: (_) => S13TaskDashboardViewModel(
+        taskId: taskId,
+        currentUserId: user.uid,
+        taskRepo: TaskRepository(),
+        recordRepo: RecordRepository(),
+        service: DashboardService(),
+      )..init(),
+      child: const _S13DashboardContent(),
     );
   }
 }
 
-class MultiStreamBuilder extends StatelessWidget {
-  final String taskId;
-  final String uid;
-  final Widget Function(
-      BuildContext context,
-      Map<String, dynamic>? task,
-      Map<String, dynamic>? member,
-      List<QueryDocumentSnapshot> records,
-      bool isLoading) builder;
+class _S13DashboardContent extends StatefulWidget {
+  const _S13DashboardContent();
 
-  const MultiStreamBuilder(
-      {super.key,
-      required this.taskId,
-      required this.uid,
-      required this.builder});
+  @override
+  State<_S13DashboardContent> createState() => _S13DashboardContentState();
+}
+
+class _S13DashboardContentState extends State<_S13DashboardContent> {
+  bool _isShowingIntro = false;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .snapshots(),
-      builder: (context, taskSnapshot) {
-        final taskData = taskSnapshot.data?.data() as Map<String, dynamic>?;
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-        // Derive memberData from the Map
-        Map<String, dynamic>? memberData;
-        if (taskData != null && taskData.containsKey('members')) {
-          final membersMap = taskData['members'] as Map<String, dynamic>;
-          if (membersMap.containsKey(uid)) {
-            memberData = membersMap[uid] as Map<String, dynamic>;
-          }
-        }
+    // 監聽 ViewModel
+    final vm = context.watch<S13TaskDashboardViewModel>();
 
-        return StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('tasks')
-              .doc(taskId)
-              .collection('records')
-              .orderBy('date', descending: true)
-              .snapshots(),
-          builder: (context, recordSnapshot) {
-            final records = recordSnapshot.data?.docs ?? [];
-            final bool isLoading =
-                recordSnapshot.connectionState == ConnectionState.waiting ||
-                    taskSnapshot.connectionState == ConnectionState.waiting;
-            return builder(context, taskData, memberData, records, isLoading);
-          },
+    // 取得當前 Tab Index
+    final int currentTabIndex = vm.currentTabIndex;
+
+    if (vm.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (vm.task == null) {
+      return const Scaffold(body: Center(child: Text("Task not found")));
+    }
+
+    // 2. Intro Logic (移植)
+    // 檢查 VM 狀態，決定是否顯示彈窗
+    if (vm.shouldShowIntro && !_isShowingIntro) {
+      _isShowingIntro = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        // 取得當前成員資料傳給 Dialog
+        final memberData = vm.task!.members[vm.currentUserId];
+        if (memberData == null) return;
+
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => D01MemberRoleIntroDialog(
+            taskId: vm.taskId,
+            initialAvatar: memberData['avatar'] ?? 'cow',
+            canReroll: true,
+          ),
         );
-      },
+        if (mounted) {
+          setState(() => _isShowingIntro = false);
+        }
+      });
+    }
+
+    // 3. Data Preparation (從 VM 獲取)
+    final taskName = vm.task!.name;
+    final isCaptain = vm.isCaptain;
+    final poolBalances = vm.poolBalances;
+    final currencyOption = vm.currencyOption;
+
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        title: Text(
+            taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title_active),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () {
+              context.pushNamed('S14', pathParameters: {'taskId': vm.taskId});
+            },
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            // S30 結算按鈕 (Captain Only)
+            Visibility(
+              visible: isCaptain,
+              child: Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => context.pushNamed(
+                    'S30',
+                    pathParameters: {'taskId': vm.taskId},
+                  ),
+                  label: Text(t.S13_Task_Dashboard.settlement_button),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: isCaptain,
+              child: const SizedBox(width: 12),
+            ),
+            // S15 記帳按鈕
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: () => context.pushNamed(
+                  'S15',
+                  pathParameters: {'taskId': vm.taskId},
+                  extra: {
+                    'poolBalancesByCurrency': poolBalances,
+                    'baseCurrencyOption': currencyOption,
+                  },
+                ),
+                label: Text(t.S13_Task_Dashboard.fab_record),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          // Segmented Button
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<int>(
+                segments: [
+                  ButtonSegment(
+                      value: 0,
+                      label: Text(t.S13_Task_Dashboard.tab_group),
+                      icon: const Icon(Icons.groups)),
+                  ButtonSegment(
+                      value: 1,
+                      label: Text(t.S13_Task_Dashboard.tab_personal),
+                      icon: const Icon(Icons.person)),
+                ],
+                selected: {currentTabIndex},
+                onSelectionChanged: (Set<int> newSelection) {
+                  // 通知 VM 切換，VM 會負責更新 currentTabIndex 並觸發自動捲動檢查
+                  vm.setTabIndex(newSelection.first);
+                },
+                showSelectedIcon: false,
+              ),
+            ),
+          ),
+
+          // Content Switcher
+          Expanded(
+            child: currentTabIndex == 0
+                // S13GroupView (重構後不需傳參數，直接吃 Provider)
+                ? const S13GroupView()
+                // S13PersonalView (重構後不需傳參數，直接吃 Provider)
+                : const S13PersonalView(),
+          ),
+        ],
+      ),
     );
   }
 }

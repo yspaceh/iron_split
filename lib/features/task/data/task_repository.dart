@@ -32,4 +32,18 @@ class TaskRepository {
   Future<void> deleteTask(String taskId) async {
     await _firestore.collection('tasks').doc(taskId).delete();
   }
+
+  /// S13: 監聽單一任務詳情 (即時更新標題、成員、幣別、規則)
+  Stream<TaskModel?> streamTask(String taskId) {
+    return _firestore.collection('tasks').doc(taskId).snapshots().map((doc) {
+      if (!doc.exists) return null;
+      return TaskModel.fromFirestore(doc);
+    });
+  }
+
+  /// S13/S14: 更新任務設定 (改餘額規則、改幣別等)
+  /// 取代原 S13GroupView 裡的 FirebaseFirestore.instance.update(...)
+  Future<void> updateTask(String taskId, Map<String, dynamic> data) async {
+    await _firestore.collection('tasks').doc(taskId).update(data);
+  }
 }

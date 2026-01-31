@@ -1,109 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Ensure this is imported for the update
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'dart:ui' as ui;
 
 class BalanceCard extends StatelessWidget {
-  final String taskId;
-  final Map<String, dynamic>? taskData;
-  final List<QueryDocumentSnapshot> records;
-  final double remainderBuffer;
+  // 唯一的資料來源
+  final BalanceSummaryState state;
+
+  // 事件回調
   final VoidCallback? onCurrencyTap;
   final VoidCallback? onRuleTap;
 
   const BalanceCard({
     super.key,
-    required this.taskId,
-    required this.taskData,
-    required this.records,
-    required this.remainderBuffer,
+    required this.state,
     this.onCurrencyTap,
     this.onRuleTap,
   });
 
   /// ! CRITICAL LAYOUT CONFIGURATION !
   /// Used by S13Page to calculate Sticky Header size.
-  /// IF YOU UPDATE UI (Rows, Padding), YOU MUST UPDATE THIS VALUE MANUALLY.
-  /// Breakdown:
-  /// Pad Top: 16
-  /// Header: 44
-  /// Gap: 8
-  /// Legend: 20
-  /// Gap: 8
-  /// Chart: 12 (Slim Visual Bar)
-  /// Gap: 12
-  /// Footer: 40
-  /// Pad Bottom: 16
-  /// TOTAL = 176.0
   static const double fixedHeight = 176.0;
 
   @override
   Widget build(BuildContext context) {
-    if (taskData == null) return const SizedBox.shrink();
-
     final t = Translations.of(context);
     final theme = Theme.of(context);
-    final bool isLocked = onCurrencyTap == null;
-    // 1. Data Parsing
-    final String systemCurrency = NumberFormat.simpleCurrency(
-                locale: Localizations.localeOf(context).toString())
-            .currencyName ??
-        '';
 
-    final basrCurrency = taskData!['baseCurrency'] ??
-        (systemCurrency.isNotEmpty
-            ? systemCurrency
-            : CurrencyOption.defaultCode);
+    // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
+    final bool isLocked = state.isLocked;
 
-    final baseCurrencyOption = CurrencyOption.getCurrencyOption(basrCurrency);
-
-    // 2. 轉換為 Model
-    final recordModels =
-        records.map((doc) => RecordModel.fromFirestore(doc)).toList();
-
-    final baseTotal = BalanceCalculator.calculateBaseTotals(recordModels,
-        isBaseCurrency: true);
-    final poolBalanceByBaseCurrency =
-        BalanceCalculator.calculatePoolBalanceByBaseCurrency(recordModels);
-    final poolBalancesByOriginalCurrency =
-        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(recordModels);
-
-    final double totalIncomeBase = baseTotal.totalIncome;
-    final double totalExpensesBase = baseTotal.totalExpense;
-
-    // 3. 使用 Calculator 計算
-    final double potRemainder =
-        BalanceCalculator.calculateRemainderBuffer(recordModels);
-
-    // 統計支出與收入 (用於圖表)
-    double potIncome = 0.0;
-    double totalExpenses = 0.0;
-
-    final Map<String, double> expenseByCurrency = {};
-    final Map<String, double> incomeByCurrency = {};
-
-    for (var r in recordModels) {
-      final recCurrency = r.originalCurrencyCode;
-      if (r.type == 'income') {
-        potIncome += r.originalAmount;
-        incomeByCurrency.update(recCurrency, (val) => val + r.originalAmount,
-            ifAbsent: () => r.originalAmount);
-      } else {
-        totalExpenses += r.originalAmount;
-        expenseByCurrency.update(recCurrency, (val) => val + r.originalAmount,
-            ifAbsent: () => r.originalAmount);
-      }
-    }
-
-    // Chart Scaling
-    final maxVal = (totalExpenses > potIncome) ? totalExpenses : potIncome;
-    final scaleBase = maxVal == 0 ? 1.0 : maxVal;
-    int getFlex(double val) => (val / scaleBase * 1000).toInt();
-
+    // Helper: 翻譯規則名稱
     String mapRuleName(String rule) {
       switch (rule) {
         case 'order':
@@ -116,78 +45,72 @@ class BalanceCard extends StatelessWidget {
       }
     }
 
-    // Get current rule from taskData
-    final balanceRule = taskData?['remainderRule'] ?? 'random';
-
+    // Dialog 1: 收支明細
     void showBalanceDetails() {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(t.S13_Task_Dashboard.dialog_balance_detail),
-          content: Column(
+      CommonAlertDialog.show(context,
+          title: t.S13_Task_Dashboard.dialog_balance_detail,
+          showCancel: false, // 純資訊顯示，不用取消按鈕
+          confirmText: t.common.close, // 按鈕改叫「關閉」
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 支出區塊
               Text(t.S13_Task_Dashboard.section_expense,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: theme.colorScheme.error)),
-              ...expenseByCurrency.entries.map((e) => Text(
-                  "${e.key} ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(e.value, baseCurrencyOption.code)}")),
+              if (state.expenseDetail.isEmpty)
+                Text(t.S13_Task_Dashboard.empty_records,
+                    style: const TextStyle(color: Colors.grey)),
+              ...state.expenseDetail.entries.map((e) => Text(
+                  "${e.key} ${state.currencySymbol} ${CurrencyOption.formatAmount(e.value, state.currencyCode)}")),
+
               const Divider(),
+
+              // 收入區塊
               Text(t.S13_Task_Dashboard.section_income,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: Colors.green)),
-              ...incomeByCurrency.entries.map((e) => Text(
-                  "${e.key} ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(e.value, baseCurrencyOption.code)}")),
+              if (state.incomeDetail.isEmpty)
+                Text(t.S13_Task_Dashboard.empty_records,
+                    style: const TextStyle(color: Colors.grey)),
+              ...state.incomeDetail.entries.map((e) => Text(
+                  "${e.key} ${state.currencySymbol} ${CurrencyOption.formatAmount(e.value, state.currencyCode)}")),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(t.common.close),
-            ),
-          ],
-        ),
-      );
+          ));
     }
 
+    // Dialog 2: 餘額組成
     void showPoolBreakdown() {
-      // 過濾掉餘額為 0 的幣別
-      final activeBalances = poolBalancesByOriginalCurrency.entries
-          .where((e) => e.value.abs() > 0.01)
-          .toList();
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(t.S13_Task_Dashboard.dialog_balance_detail), // 或 "公款餘額明細"
-          content: Column(
+      final activeBalances =
+          state.poolDetail.entries.where((e) => e.value.abs() > 0.01).toList();
+      CommonAlertDialog.show(context,
+          title: t.S13_Task_Dashboard.dialog_balance_detail,
+          showCancel: false,
+          confirmText: t.common.close,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (activeBalances.isEmpty)
                 Text(t.S13_Task_Dashboard.empty_records,
-                    style: TextStyle(color: Colors.grey)),
+                    style: const TextStyle(color: Colors.grey)),
               ...activeBalances.map((e) {
-                final currency = CurrencyOption.getCurrencyOption(e.key);
                 final amount = e.value;
                 final isNegative = amount < 0;
+                // 注意：這裡假設 State 裡的 Key 就是 CurrencyCode
+                final currencySymbol =
+                    CurrencyOption.getCurrencyOption(e.key).symbol;
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          // 可以加國旗或 Icon
-                          Text(currency.code,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
+                      Text(e.key,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                        "${currency.symbol} ${CurrencyOption.formatAmount(amount, currency.code)}",
+                        "$currencySymbol ${CurrencyOption.formatAmount(amount, e.key)}",
                         style: TextStyle(
                           color: isNegative
                               ? theme.colorScheme.error
@@ -201,15 +124,7 @@ class BalanceCard extends StatelessWidget {
                 );
               }),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(t.common.close),
-            ),
-          ],
-        ),
-      );
+          ));
     }
 
     return Card(
@@ -218,7 +133,7 @@ class BalanceCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        height: fixedHeight, // STRICT HEIGHT ENFORCEMENT
+        height: fixedHeight,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: [
@@ -242,17 +157,17 @@ class BalanceCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(baseCurrencyOption.code,
+                          Text(state.currencyCode,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               )),
                           Visibility(
-                            visible: isLocked == false,
+                            visible: !isLocked,
                             child: const SizedBox(width: 4),
                           ),
                           Visibility(
-                            visible: isLocked == false,
+                            visible: !isLocked,
                             child: Icon(Icons.keyboard_arrow_down,
                                 size: 20, color: theme.colorScheme.primary),
                           ),
@@ -263,7 +178,7 @@ class BalanceCard extends StatelessWidget {
 
                   // Right: Balance
                   InkWell(
-                    onTap: showPoolBreakdown, // <--- 綁定事件
+                    onTap: showPoolBreakdown,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -280,11 +195,11 @@ class BalanceCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(poolBalanceByBaseCurrency.abs(), baseCurrencyOption.code)}",
+                                    "${state.currencySymbol} ${CurrencyOption.formatAmount(state.poolBalance.abs(), state.currencyCode)}",
                                 style: TextStyle(
-                                  color: poolBalanceByBaseCurrency > 0
+                                  color: state.poolBalance > 0
                                       ? theme.colorScheme.tertiary
-                                      : poolBalanceByBaseCurrency < 0
+                                      : state.poolBalance < 0
                                           ? theme.colorScheme.error
                                           : theme.colorScheme.outline,
                                 ),
@@ -322,7 +237,7 @@ class BalanceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_expense} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalExpensesBase.abs(), baseCurrencyOption.code)}",
+                          "${t.S13_Task_Dashboard.label_total_expense} : ${state.currencySymbol} ${CurrencyOption.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
                           style: theme.textTheme.labelSmall,
                         ),
                       ],
@@ -339,7 +254,7 @@ class BalanceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_prepay} : ${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(totalIncomeBase.abs(), baseCurrencyOption.code)}",
+                          "${t.S13_Task_Dashboard.label_total_prepay} : ${state.currencySymbol} ${CurrencyOption.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
                           style: theme.textTheme.labelSmall,
                         ),
                       ],
@@ -357,7 +272,7 @@ class BalanceCard extends StatelessWidget {
               onTap: showBalanceDetails,
               child: SizedBox(
                 height: 12.0,
-                child: (totalExpenses == 0 && potIncome == 0)
+                child: (state.expenseFlex == 0 && state.incomeFlex == 0)
                     ? Container(
                         width: double.infinity,
                         alignment: Alignment.center,
@@ -372,26 +287,24 @@ class BalanceCard extends StatelessWidget {
                           Expanded(
                             child: Directionality(
                               textDirection: ui.TextDirection.rtl,
-                              child: totalExpenses > 0
+                              child: state.expenseFlex > 0
                                   ? Row(
                                       children: [
-                                        if (getFlex(totalExpenses) > 0)
-                                          Flexible(
-                                            flex: getFlex(totalExpenses),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: theme
-                                                    .colorScheme.errorContainer,
-                                                borderRadius: const BorderRadius
-                                                    .horizontal(
-                                                    left: Radius.circular(6)),
-                                              ),
+                                        Flexible(
+                                          flex: state.expenseFlex,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: theme
+                                                  .colorScheme.errorContainer,
+                                              borderRadius:
+                                                  const BorderRadius.horizontal(
+                                                      left: Radius.circular(6)),
                                             ),
                                           ),
-                                        if ((1000 - getFlex(totalExpenses)) > 0)
+                                        ),
+                                        if ((1000 - state.expenseFlex) > 0)
                                           Spacer(
-                                              flex: 1000 -
-                                                  getFlex(totalExpenses)),
+                                              flex: 1000 - state.expenseFlex),
                                       ],
                                     )
                                   : const SizedBox(),
@@ -402,24 +315,22 @@ class BalanceCard extends StatelessWidget {
 
                           // Right Bar (Pot Income Only - Green)
                           Expanded(
-                            child: potIncome > 0
+                            child: state.incomeFlex > 0
                                 ? Row(
                                     children: [
-                                      if (getFlex(potIncome) > 0)
-                                        Flexible(
-                                          flex: getFlex(potIncome),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.green.shade400,
-                                              borderRadius:
-                                                  const BorderRadius.horizontal(
-                                                      right:
-                                                          Radius.circular(6)),
-                                            ),
+                                      Flexible(
+                                        flex: state.incomeFlex,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.shade400,
+                                            borderRadius:
+                                                const BorderRadius.horizontal(
+                                                    right: Radius.circular(6)),
                                           ),
                                         ),
-                                      if ((1000 - getFlex(potIncome)) > 0)
-                                        Spacer(flex: 1000 - getFlex(potIncome)),
+                                      ),
+                                      if ((1000 - state.incomeFlex) > 0)
+                                        Spacer(flex: 1000 - state.incomeFlex),
                                     ],
                                   )
                                 : const SizedBox(),
@@ -450,13 +361,13 @@ class BalanceCard extends StatelessWidget {
                       ),
                       Text(" : ", style: theme.textTheme.bodyMedium),
                       Text(
-                        "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(potRemainder.abs(), baseCurrencyOption.code)}",
+                        "${state.currencySymbol} ${CurrencyOption.formatAmount(state.remainder.abs(), state.currencyCode)}",
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: potRemainder > 0
-                              ? Colors.green // 剩餘資金 (正數)
-                              : (potRemainder < 0
-                                  ? Theme.of(context).colorScheme.error
-                                  : Colors.grey), // 💡 套用顏色
+                          color: state.remainder > 0
+                              ? Colors.green
+                              : (state.remainder < 0
+                                  ? theme.colorScheme.error
+                                  : Colors.grey),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -477,18 +388,18 @@ class BalanceCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            mapRuleName(balanceRule),
+                            mapRuleName(state.ruleKey),
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Visibility(
-                            visible: isLocked == false,
+                            visible: !isLocked,
                             child: const SizedBox(width: 4),
                           ),
                           Visibility(
-                            visible: isLocked == false,
+                            visible: !isLocked,
                             child: Icon(Icons.keyboard_arrow_down,
                                 size: 16,
                                 color: theme.colorScheme.onSurfaceVariant),
@@ -500,25 +411,28 @@ class BalanceCard extends StatelessWidget {
                 ],
               ),
             ),
+
+            // S17 Locked View Specific (Absorbed By)
             Visibility(
-              visible: onRuleTap != null,
-              child: const SizedBox(height: 12.0),
-            ),
-            Visibility(
-              visible: onRuleTap != null,
-              child: Text(
-                // 這裡使用 i18n key，需替換具體金額與人名
-                // 暫時範例：
-                t.S17_Task_Locked.label_remainder_absorbed_by(
-                  amount: "${baseCurrencyOption.symbol} 0", // TODO: 接真實餘額
-                  name: "Owner", // TODO: 接真實吸收者
-                ),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.outline,
+              visible: state.isLocked && state.absorbedBy != null,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 8.0), // slightly adjusted for flow
+                child: Text(
+                  // 使用 S17 的 i18n
+                  t.S17_Task_Locked.label_remainder_absorbed_by(
+                    amount:
+                        "${state.currencySymbol} ${CurrencyOption.formatAmount(state.absorbedAmount ?? 0, state.currencyCode)}",
+                    name: state.absorbedBy ?? "",
+                  ),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
                 ),
               ),
             ),
-            // Pad Bottom: 16
+
+            // Pad Bottom: 16 (preserved)
             const SizedBox(height: 16.0),
           ],
         ),
