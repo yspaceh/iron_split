@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/features/task/presentation/widgets/activity_log_item.dart';
 import 'package:provider/provider.dart';
-import 'package:iron_split/features/task/presentation/widgets/activity_log_block.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s52_task_settings_log_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -85,7 +85,7 @@ class _S52Content extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final log = ActivityLogModel.fromFirestore(docs[index]);
 
-                    return ActivityLogBlock(
+                    return ActivityLogItem(
                       log: log,
                       memberData: vm.membersData, // Use data from VM
                     );

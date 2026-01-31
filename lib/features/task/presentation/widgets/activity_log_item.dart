@@ -3,11 +3,11 @@ import 'package:iron_split/features/common/presentation/widgets/common_avatar.da
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:intl/intl.dart';
 
-class ActivityLogBlock extends StatelessWidget {
+class ActivityLogItem extends StatelessWidget {
   final ActivityLogModel log;
   final Map<String, dynamic>? memberData; // 用於顯示頭像 (Optional)
 
-  const ActivityLogBlock({
+  const ActivityLogItem({
     super.key,
     required this.log,
     this.memberData,

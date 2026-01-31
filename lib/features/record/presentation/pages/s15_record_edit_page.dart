@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart'; // For DatePicker
@@ -146,11 +147,11 @@ class _S15ContentState extends State<_S15Content> {
 
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
-    final result = await showModalBottomSheet<RecordItem>(
+    final result = await showModalBottomSheet<RecordDetail>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        item: null,
+        detail: null,
         allMembers: vm.taskMembers,
         defaultWeights: defaultWeights,
         selectedCurrency: vm.selectedCurrencyOption,
@@ -165,8 +166,8 @@ class _S15ContentState extends State<_S15Content> {
   }
 
   // Show B02 (Edit)
-  Future<void> _onItemEditTap(
-      S15RecordEditViewModel vm, RecordItem item) async {
+  Future<void> _onDetailEditTap(
+      S15RecordEditViewModel vm, RecordDetail detail) async {
     // 🛠️ 修正點 3：明確轉型為 Map<String, double>
     final Map<String, double> defaultWeights = {
       for (var m in vm.taskMembers) (m['id'] as String): 1.0
@@ -178,28 +179,39 @@ class _S15ContentState extends State<_S15Content> {
       context: context,
       isScrollControlled: true,
       builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        item: item,
+        detail: detail,
         allMembers: vm.taskMembers,
         defaultWeights: defaultWeights,
         selectedCurrency: vm.selectedCurrencyOption,
         parentTitle: vm.titleController.text,
-        availableAmount: vm.baseRemainingAmount + item.amount,
+        availableAmount: vm.baseRemainingAmount + detail.amount,
         exchangeRate: rate,
         baseCurrency: vm.baseCurrencyOption,
       ),
     );
 
     if (result == 'DELETE') {
-      vm.deleteItem(item.id);
-    } else if (result is RecordItem) {
+      vm.deleteItem(detail.id);
+    } else if (result is RecordDetail) {
       vm.updateItem(result);
     }
+  }
+
+  void _showRateInfoDialog() {
+    final t = Translations.of(context);
+    CommonAlertDialog.show(
+      context,
+      title: t.S15_Record_Edit.info_rate_source,
+      content: t.S15_Record_Edit.msg_rate_source,
+      confirmText: t.S15_Record_Edit.btn_close,
+      onConfirm: () => Navigator.pop(context),
+    );
   }
 
   // Show B07
   Future<void> _onPaymentMethodTap(S15RecordEditViewModel vm) async {
     if (vm.totalAmount <= 0) {
-      // 建議補上 SnackBar 提示
+      // TODO: 建議補上 SnackBar 提示
       return;
     }
 
@@ -243,9 +255,10 @@ class _S15ContentState extends State<_S15Content> {
       await vm.saveRecord(t);
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     }
   }
 
@@ -358,7 +371,7 @@ class _S15ContentState extends State<_S15Content> {
                       isRateLoading: vm.isRateLoading,
                       poolBalancesByCurrency: vm.poolBalancesByCurrency,
                       members: vm.taskMembers,
-                      items: vm.items,
+                      details: vm.details,
                       baseRemainingAmount: vm.baseRemainingAmount,
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
@@ -370,10 +383,10 @@ class _S15ContentState extends State<_S15Content> {
                       onCategoryTap: () => _onCategoryTap(vm),
                       onCurrencyTap: () => _onCurrencyTap(vm),
                       onFetchExchangeRate: vm.fetchExchangeRate,
-                      onShowRateInfo: () {},
+                      onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
                       onAddItemTap: () => _onAddItemTap(vm),
-                      onItemEditTap: (item) => _onItemEditTap(vm, item),
+                      onDetailEditTap: (detail) => _onDetailEditTap(vm, detail),
                     )
                   : S15IncomeForm(
                       amountController: vm.amountController,
@@ -389,8 +402,8 @@ class _S15ContentState extends State<_S15Content> {
                       baseMemberIds: vm.baseMemberIds,
                       onDateTap: () => _onDateTap(vm),
                       onCurrencyTap: () => _onCurrencyTap(vm),
-                      onFetchExchangeRate: () {},
-                      onShowRateInfo: () {},
+                      onFetchExchangeRate: vm.fetchExchangeRate,
+                      onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
                     ),
             ),

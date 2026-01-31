@@ -11,7 +11,6 @@ import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class S15ExpenseForm extends StatelessWidget {
-  // 建議改成 StatelessWidget，因為狀態都在外面
   // 1. 接收控制器 (讓 Parent 可以讀取輸入值)
   final TextEditingController amountController;
   final TextEditingController titleController;
@@ -29,7 +28,7 @@ class S15ExpenseForm extends StatelessWidget {
 
   // 3. 接收複雜邏輯資料
   final List<Map<String, dynamic>> members; // 從 parent 傳入 members
-  final List<RecordItem> items; // 從 parent 傳入 _items
+  final List<RecordDetail> details; // 從 parent 傳入 _details
   final double baseRemainingAmount;
   final String baseSplitMethod;
   final List<String> baseMemberIds;
@@ -48,7 +47,7 @@ class S15ExpenseForm extends StatelessWidget {
   final VoidCallback onShowRateInfo;
   final VoidCallback onBaseSplitConfigTap; // 點擊剩餘金額卡片時
   final VoidCallback onAddItemTap; // 點擊新增細項時
-  final Function(RecordItem) onItemEditTap; // 點擊既有細項時
+  final Function(RecordDetail) onDetailEditTap; // 點擊既有細項時
 
   const S15ExpenseForm({
     super.key,
@@ -62,7 +61,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.selectedCategoryId,
     required this.isRateLoading,
     required this.members,
-    required this.items,
+    required this.details,
     required this.baseRemainingAmount,
     required this.baseSplitMethod,
     required this.baseMemberIds,
@@ -77,7 +76,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.onShowRateInfo,
     required this.onBaseSplitConfigTap,
     required this.onAddItemTap,
-    required this.onItemEditTap,
+    required this.onDetailEditTap,
     required this.poolBalancesByCurrency,
   });
 
@@ -211,7 +210,7 @@ class S15ExpenseForm extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 12),
-        if (items.isNotEmpty) ...[
+        if (details.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: Text(
@@ -222,22 +221,22 @@ class S15ExpenseForm extends StatelessWidget {
               ),
             ),
           ),
-          ...items.map((item) => Padding(
+          ...details.map((detail) => Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: RecordCard(
                   t: t,
                   selectedCurrencyOption: selectedCurrencyOption,
                   members: members,
-                  amount: item.amount,
-                  methodLabel: item.splitMethod,
-                  memberIds: item.splitMemberIds,
-                  note: item.name,
+                  amount: detail.amount,
+                  methodLabel: detail.splitMethod,
+                  memberIds: detail.splitMemberIds,
+                  note: detail.name,
                   isBaseCard: false,
-                  onTap: () => onItemEditTap(item),
+                  onTap: () => onDetailEditTap(detail),
                 ),
               )),
         ],
-        if (baseRemainingAmount > 0 || items.isEmpty) ...[
+        if (baseRemainingAmount > 0 || details.isEmpty) ...[
           RecordCard(
             t: t,
             selectedCurrencyOption: selectedCurrencyOption,

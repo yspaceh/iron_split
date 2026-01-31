@@ -85,7 +85,7 @@ class _S11Content extends StatelessWidget {
     // (修正 VM: 建議在 VM 加一個 `String? _code`，loadPreview 時存起來)
     // 這裡暫時假設可以從 context 拿到 parent (做不到)，
     // **修正方案**：我們直接在 build 方法裡從 `S11InviteConfirmPage` 傳進來太麻煩，
-    // 建議將 _S11Content 改為接收 inviteCode 參數。
+    // TODO: 建議將 _S11Content 改為接收 inviteCode 參數。
     // 但因為這是重構，我先在 VM 裡加一個 `_currentInviteCode` 欄位最乾淨。
     // (假設 VM 已經修正在 loadPreview 記住 code)
 
@@ -236,7 +236,7 @@ class _S11Content extends StatelessWidget {
                                 // 或是直接在這裡 showDialog
                                 // 為了乾淨，我們通常會在 UI 裡面直接處理 dialog
                                 // 但因為 _handleError 在 S11InviteConfirmPage 裡...
-                                // 建議：直接在這裡複製 _handleError 的邏輯呼叫 D02
+                                // TODO: 建議：直接在這裡複製 _handleError 的邏輯呼叫 D02
                               });
                         },
                   child: vm.isJoining

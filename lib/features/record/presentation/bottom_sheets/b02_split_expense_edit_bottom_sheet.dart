@@ -7,7 +7,7 @@ import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_
 import 'package:iron_split/gen/strings.g.dart';
 
 class B02SplitExpenseEditBottomSheet extends StatefulWidget {
-  final RecordItem? item;
+  final RecordDetail? detail;
   final List<Map<String, dynamic>> allMembers;
   final Map<String, double> defaultWeights;
   final CurrencyOption selectedCurrency;
@@ -17,7 +17,7 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
   final CurrencyOption baseCurrency;
   const B02SplitExpenseEditBottomSheet({
     super.key,
-    this.item,
+    this.detail,
     required this.allMembers,
     required this.defaultWeights,
     required this.selectedCurrency,
@@ -46,15 +46,15 @@ class _B02SplitExpenseEditBottomSheetState
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.item?.name ?? '');
+    _nameController = TextEditingController(text: widget.detail?.name ?? '');
     _amountController =
-        TextEditingController(text: widget.item?.amount.toString() ?? '');
-    _memoController = TextEditingController(text: widget.item?.memo ?? '');
+        TextEditingController(text: widget.detail?.amount.toString() ?? '');
+    _memoController = TextEditingController(text: widget.detail?.memo ?? '');
 
-    _splitMethod = widget.item?.splitMethod ?? 'even';
-    _splitMemberIds = widget.item?.splitMemberIds ??
+    _splitMethod = widget.detail?.splitMethod ?? 'even';
+    _splitMemberIds = widget.detail?.splitMemberIds ??
         widget.allMembers.map((m) => m['id'] as String).toList();
-    _splitDetails = widget.item?.splitDetails;
+    _splitDetails = widget.detail?.splitDetails;
   }
 
   @override
@@ -97,8 +97,9 @@ class _B02SplitExpenseEditBottomSheetState
   void _onSave() {
     if (_formKey.currentState!.validate()) {
       final amount = double.parse(_amountController.text);
-      final newItem = RecordItem(
-        id: widget.item?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      final newItem = RecordDetail(
+        id: widget.detail?.id ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
         amount: amount,
         memo: _memoController.text,
@@ -141,7 +142,7 @@ class _B02SplitExpenseEditBottomSheetState
                         ?.copyWith(fontWeight: FontWeight.bold)),
                 Row(
                   children: [
-                    if (widget.item != null)
+                    if (widget.detail != null)
                       IconButton(
                         icon: const Icon(Icons.delete_outline),
                         color: colorScheme.error,

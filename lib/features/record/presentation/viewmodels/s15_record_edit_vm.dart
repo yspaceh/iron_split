@@ -39,7 +39,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> _taskMembers = [];
 
   // Split State
-  final List<RecordItem> _items = [];
+  final List<RecordDetail> _details = [];
   String _baseSplitMethod = 'even';
   List<String> _baseMemberIds = [];
   Map<String, double> _baseRawDetails = {}; // For advanced split
@@ -70,7 +70,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   Map<String, dynamic>? get complexPaymentData => _complexPaymentData;
 
   List<Map<String, dynamic>> get taskMembers => _taskMembers;
-  List<RecordItem> get items => _items;
+  List<RecordDetail> get details => _details;
   String get baseSplitMethod => _baseSplitMethod;
   List<String> get baseMemberIds => _baseMemberIds;
   Map<String, double> get baseRawDetails => _baseRawDetails;
@@ -79,7 +79,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   double get totalAmount => double.tryParse(amountController.text) ?? 0.0;
 
   double get baseRemainingAmount {
-    final subTotal = _items.fold(0.0, (prev, curr) => prev + curr.amount);
+    final subTotal = _details.fold(0.0, (prev, curr) => prev + curr.amount);
     final remaining = totalAmount - subTotal;
     return remaining > 0 ? remaining : 0.0;
   }
@@ -131,7 +131,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       _baseSplitMethod = r.splitMethod;
       _baseMemberIds = List.from(r.splitMemberIds);
       _baseRawDetails = Map.from(r.splitDetails ?? {});
-      _items.addAll(r.items);
+      _details.addAll(r.details);
     } else {
       // Create Mode
       _selectedDate = initialDate ?? DateTime.now();
@@ -191,8 +191,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
             realMembers = (rawMembers as Map<String, dynamic>).entries.map((e) {
               final memberData = e.value as Map<String, dynamic>;
               if (!memberData.containsKey('id')) memberData['id'] = e.key;
-              if (memberData['displayName'] == null)
+              if (memberData['displayName'] == null) {
                 memberData['displayName'] = 'Unknown';
+              }
               return memberData;
             }).toList();
           }
@@ -231,8 +232,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
       _lastKnownAmount = currentAmount;
       // Reset Logic
-      if (_items.isNotEmpty || _baseSplitMethod != 'even') {
-        _items.clear();
+      if (_details.isNotEmpty || _baseSplitMethod != 'even') {
+        _details.clear();
         _baseSplitMethod = 'even';
         if (_taskMembers.isNotEmpty) {
           _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
@@ -297,21 +298,21 @@ class S15RecordEditViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addItem(RecordItem item) {
-    _items.add(item);
+  void addItem(RecordDetail item) {
+    _details.add(item);
     notifyListeners();
   }
 
-  void updateItem(RecordItem item) {
-    final index = _items.indexWhere((e) => e.id == item.id);
+  void updateItem(RecordDetail item) {
+    final index = _details.indexWhere((e) => e.id == item.id);
     if (index != -1) {
-      _items[index] = item;
+      _details[index] = item;
       notifyListeners();
     }
   }
 
   void deleteItem(String itemId) {
-    _items.removeWhere((e) => e.id == itemId);
+    _details.removeWhere((e) => e.id == itemId);
     notifyListeners();
   }
 
@@ -366,7 +367,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         'splitMethod': _baseSplitMethod,
         'splitMemberIds': _baseMemberIds,
         'splitDetails': _baseRawDetails,
-        'items': isIncome ? [] : _items.map((x) => x.toMap()).toList(),
+        'details': isIncome ? [] : _details.map((x) => x.toMap()).toList(),
         'memo': memoController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'createdBy': uid,

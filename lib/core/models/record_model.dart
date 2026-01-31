@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 
-class RecordItem {
+class RecordDetail {
   String id;
   String name;
   double amount;
@@ -12,7 +12,7 @@ class RecordItem {
   List<String> splitMemberIds;
   Map<String, double>? splitDetails;
 
-  RecordItem({
+  RecordDetail({
     required this.id,
     required this.name,
     required this.amount,
@@ -34,8 +34,8 @@ class RecordItem {
     };
   }
 
-  factory RecordItem.fromMap(Map<String, dynamic> map) {
-    return RecordItem(
+  factory RecordDetail.fromMap(Map<String, dynamic> map) {
+    return RecordDetail(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       amount: (map['amount'] ?? 0).toDouble(),
@@ -70,7 +70,7 @@ class RecordModel {
   final List<String> splitMemberIds;
   final Map<String, double>? splitDetails;
   final String? memo;
-  final List<RecordItem> items;
+  final List<RecordDetail> details;
   final DateTime? createdAt;
   final String? createdBy;
 
@@ -91,7 +91,7 @@ class RecordModel {
     this.splitMemberIds = const [],
     this.splitDetails,
     this.memo,
-    this.items = const [],
+    this.details = const [],
     this.createdAt,
     this.createdBy,
   });
@@ -131,7 +131,7 @@ class RecordModel {
     List<String>? splitMemberIds,
     Map<String, double>? splitDetails,
     String? memo,
-    List<RecordItem>? items,
+    List<RecordDetail>? details,
     DateTime? createdAt,
     String? createdBy,
   }) {
@@ -152,7 +152,7 @@ class RecordModel {
       splitMemberIds: splitMemberIds ?? this.splitMemberIds,
       splitDetails: splitDetails ?? this.splitDetails,
       memo: memo ?? this.memo,
-      items: items ?? this.items,
+      details: details ?? this.details,
       createdAt: createdAt ?? this.createdAt,
       createdBy: createdBy ?? this.createdBy,
     );
@@ -176,7 +176,7 @@ class RecordModel {
       'splitMemberIds': splitMemberIds,
       'splitDetails': splitDetails,
       'memo': memo,
-      'items': items.map((x) => x.toMap()).toList(),
+      'details': details.map((x) => x.toMap()).toList(),
       'createdAt': createdAt != null
           ? Timestamp.fromDate(createdAt!)
           : FieldValue.serverTimestamp(),
@@ -209,8 +209,8 @@ class RecordModel {
           ? Map<String, double>.from(data['splitDetails'])
           : null,
       memo: data['memo'],
-      items: (data['items'] as List<dynamic>?)
-              ?.map((x) => RecordItem.fromMap(x as Map<String, dynamic>))
+      details: (data['details'] as List<dynamic>?)
+              ?.map((x) => RecordDetail.fromMap(x as Map<String, dynamic>))
               .toList() ??
           [],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),

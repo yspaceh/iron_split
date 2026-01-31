@@ -29,9 +29,9 @@ class BalanceCalculator {
       return true;
     }
 
-    if (record.items.isNotEmpty) {
-      for (var item in record.items) {
-        if (item.splitMemberIds.contains(uid)) return true;
+    if (record.details.isNotEmpty) {
+      for (var detail in record.details) {
+        if (detail.splitMemberIds.contains(uid)) return true;
       }
     }
     if (record.splitDetails != null && record.splitDetails!.containsKey(uid)) {
@@ -53,15 +53,15 @@ class BalanceCalculator {
     double exchangeRate = isBaseCurrency ? record.exchangeRate : 1.0;
 
     // 1. 處理細項分攤
-    if (record.items.isNotEmpty) {
-      for (var item in record.items) {
+    if (record.details.isNotEmpty) {
+      for (var item in record.details) {
         totalDebit += _calculateItemDebit(item, uid, exchangeRate);
       }
     }
 
     // 2. 處理剩餘金額分攤 (Base Remaining)
     double amountCoveredByItems =
-        record.items.fold(0.0, (sum, item) => sum + item.amount);
+        record.details.fold(0.0, (sum, item) => sum + item.amount);
     double remainingAmount = record.originalAmount - amountCoveredByItems;
 
     if (remainingAmount > 0.001) {
@@ -158,17 +158,17 @@ class BalanceCalculator {
   // --- 私有計算邏輯 ---
 
   static double _calculateItemDebit(
-      RecordItem item, String uid, double effectiveRate) {
-    if (!item.splitMemberIds.contains(uid)) return 0.0;
+      RecordDetail detail, String uid, double effectiveRate) {
+    if (!detail.splitMemberIds.contains(uid)) return 0.0;
 
-    switch (item.splitMethod) {
+    switch (detail.splitMethod) {
       case 'even':
-        return item.amount * effectiveRate / item.splitMemberIds.length;
+        return detail.amount * effectiveRate / detail.splitMemberIds.length;
       case 'exact':
-        return item.splitDetails?[uid] ?? 0.0;
+        return detail.splitDetails?[uid] ?? 0.0;
       case 'percent':
         return _calculateWeightBasedAmount(
-            item.amount, item.splitDetails, uid, effectiveRate);
+            detail.amount, detail.splitDetails, uid, effectiveRate);
       default:
         return 0.0;
     }
