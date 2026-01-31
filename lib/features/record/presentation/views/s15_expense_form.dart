@@ -19,8 +19,8 @@ class S15ExpenseForm extends StatelessWidget {
 
   // 2. 接收狀態資料 (顯示用)
   final DateTime selectedDate;
-  final CurrencyOption selectedCurrencyOption;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants selectedCurrencyConstants;
+  final CurrencyConstants baseCurrencyConstants;
   final String selectedCategoryId;
   final bool isRateLoading;
 
@@ -56,8 +56,8 @@ class S15ExpenseForm extends StatelessWidget {
     required this.memoController,
     required this.exchangeRateController,
     required this.selectedDate,
-    required this.selectedCurrencyOption,
-    required this.baseCurrencyOption,
+    required this.selectedCurrencyConstants,
+    required this.baseCurrencyConstants,
     required this.selectedCategoryId,
     required this.isRateLoading,
     required this.members,
@@ -84,12 +84,12 @@ class S15ExpenseForm extends StatelessWidget {
   String _getPayerDisplayName(Translations t, String type, String id) {
     if (type == 'prepay') {
       // 1. 取得當前選擇幣別的公款餘額
-      final currentCode = selectedCurrencyOption.code;
+      final currentCode = selectedCurrencyConstants.code;
       final balance = poolBalancesByCurrency[currentCode] ?? 0.0;
 
       // 2. 智慧顯示：直接顯示該幣別的餘額 (例如: JPY 30,000)
       // 不再強制換算回 Base Currency，這樣更符合物理錢包直覺
-      return "${selectedCurrencyOption.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyOption.symbol} ${CurrencyOption.formatAmount(balance, currentCode)})";
+      return "${selectedCurrencyConstants.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(balance, currentCode)})";
     }
 
     // ... (混合支付與成員代墊的邏輯保持不變)
@@ -115,7 +115,7 @@ class S15ExpenseForm extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
-    final isForeign = selectedCurrencyOption != baseCurrencyOption;
+    final isForeign = selectedCurrencyConstants != baseCurrencyConstants;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -156,7 +156,7 @@ class S15ExpenseForm extends StatelessWidget {
         TaskAmountInput(
             onCurrencyTap: onCurrencyTap,
             amountController: amountController,
-            selectedCurrencyOption: selectedCurrencyOption),
+            selectedCurrencyConstants: selectedCurrencyConstants),
         if (isForeign) ...[
           const SizedBox(height: 16),
           TextFormField(
@@ -164,8 +164,8 @@ class S15ExpenseForm extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: t.S15_Record_Edit.label_rate(
-                  base: baseCurrencyOption.code,
-                  target: selectedCurrencyOption.code),
+                  base: baseCurrencyConstants.code,
+                  target: selectedCurrencyConstants.code),
               prefixIcon: IconButton(
                 icon: const Icon(Icons.currency_exchange),
                 onPressed: isRateLoading ? null : onFetchExchangeRate,
@@ -192,15 +192,15 @@ class S15ExpenseForm extends StatelessWidget {
               final amount = double.tryParse(amountController.text) ?? 0.0;
               final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
               final converted = amount * rate;
-              final formattedAmount = CurrencyOption.formatAmount(
-                  converted, baseCurrencyOption.code);
+              final formattedAmount = CurrencyConstants.formatAmount(
+                  converted, baseCurrencyConstants.code);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
                   t.S15_Record_Edit.val_converted_amount(
-                      base: baseCurrencyOption.code,
-                      symbol: baseCurrencyOption.symbol,
+                      base: baseCurrencyConstants.code,
+                      symbol: baseCurrencyConstants.symbol,
                       amount: formattedAmount),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
@@ -225,7 +225,7 @@ class S15ExpenseForm extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: RecordCard(
                   t: t,
-                  selectedCurrencyOption: selectedCurrencyOption,
+                  selectedCurrencyConstants: selectedCurrencyConstants,
                   members: members,
                   amount: detail.amount,
                   methodLabel: detail.splitMethod,
@@ -239,7 +239,7 @@ class S15ExpenseForm extends StatelessWidget {
         if (baseRemainingAmount > 0 || details.isEmpty) ...[
           RecordCard(
             t: t,
-            selectedCurrencyOption: selectedCurrencyOption,
+            selectedCurrencyConstants: selectedCurrencyConstants,
             members: members,
             amount: baseRemainingAmount,
             methodLabel: baseSplitMethod,
@@ -267,7 +267,7 @@ class S15ExpenseForm extends StatelessWidget {
                     child: Text(
                       t.S13_Task_Dashboard.label_remainder(
                           amount:
-                              "${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(split.remainder, baseCurrencyOption.code)}"),
+                              "${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(split.remainder, baseCurrencyConstants.code)}"),
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: theme.colorScheme.outline),
                       textAlign: TextAlign.end,

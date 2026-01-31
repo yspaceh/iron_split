@@ -41,7 +41,7 @@ class TaskModel {
       return TaskModel(
         id: doc.id,
         name: 'Error Task',
-        baseCurrency: CurrencyOption.defaultCode,
+        baseCurrency: CurrencyConstants.defaultCode,
         members: {},
         status: 'unknown',
         createdBy: '',
@@ -65,7 +65,7 @@ class TaskModel {
       id: doc.id,
       name: data['name'] as String? ?? '', // Matches D03 write
       baseCurrency:
-          data['baseCurrency'] as String? ?? CurrencyOption.defaultCode,
+          data['baseCurrency'] as String? ?? CurrencyConstants.defaultCode,
       members: data['members'] is Map
           ? Map<String, dynamic>.from(data['members'])
           : {},

@@ -7,12 +7,12 @@ class TaskAmountInput extends StatelessWidget {
     super.key,
     required this.onCurrencyTap,
     required this.amountController,
-    required this.selectedCurrencyOption,
+    required this.selectedCurrencyConstants,
   });
 
   final VoidCallback onCurrencyTap;
   final TextEditingController amountController;
-  final CurrencyOption selectedCurrencyOption;
+  final CurrencyConstants selectedCurrencyConstants;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +36,12 @@ class TaskAmountInput extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  selectedCurrencyOption.symbol,
+                  selectedCurrencyConstants.symbol,
                   style: theme.textTheme.titleLarge?.copyWith(
                       color: colorScheme.primary, fontWeight: FontWeight.w900),
                 ),
                 Text(
-                  selectedCurrencyOption.code,
+                  selectedCurrencyConstants.code,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),

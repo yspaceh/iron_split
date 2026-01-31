@@ -8,7 +8,7 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 
 class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
   final String taskId;
-  final CurrencyOption newCurrency;
+  final CurrencyConstants newCurrency;
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
 

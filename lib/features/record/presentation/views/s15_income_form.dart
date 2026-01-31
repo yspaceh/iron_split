@@ -15,8 +15,8 @@ class S15IncomeForm extends StatelessWidget {
 
   // 2. State (顯示用資料)
   final DateTime selectedDate;
-  final CurrencyOption selectedCurrencyOption;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants selectedCurrencyConstants;
+  final CurrencyConstants baseCurrencyConstants;
   final bool isRateLoading;
 
   // 3. Income Specific State (收入相關)
@@ -38,8 +38,8 @@ class S15IncomeForm extends StatelessWidget {
     required this.memoController,
     required this.exchangeRateController,
     required this.selectedDate,
-    required this.selectedCurrencyOption,
-    required this.baseCurrencyOption,
+    required this.selectedCurrencyConstants,
+    required this.baseCurrencyConstants,
     required this.isRateLoading,
     required this.members,
     required this.baseRemainingAmount,
@@ -60,7 +60,7 @@ class S15IncomeForm extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
-    final isForeign = selectedCurrencyOption != baseCurrencyOption;
+    final isForeign = selectedCurrencyConstants != baseCurrencyConstants;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -76,7 +76,7 @@ class S15IncomeForm extends StatelessWidget {
         TaskAmountInput(
             onCurrencyTap: onCurrencyTap,
             amountController: amountController,
-            selectedCurrencyOption: selectedCurrencyOption),
+            selectedCurrencyConstants: selectedCurrencyConstants),
         if (isForeign) ...[
           const SizedBox(height: 16),
           TextFormField(
@@ -84,8 +84,8 @@ class S15IncomeForm extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: t.S15_Record_Edit.label_rate(
-                  base: baseCurrencyOption.code,
-                  target: selectedCurrencyOption.code),
+                  base: baseCurrencyConstants.code,
+                  target: selectedCurrencyConstants.code),
               prefixIcon: IconButton(
                 icon: const Icon(Icons.currency_exchange),
                 onPressed: isRateLoading ? null : onFetchExchangeRate,
@@ -113,15 +113,15 @@ class S15IncomeForm extends StatelessWidget {
               final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
               final converted = amount * rate;
 
-              final formattedAmount = CurrencyOption.formatAmount(
-                  converted, baseCurrencyOption.code);
+              final formattedAmount = CurrencyConstants.formatAmount(
+                  converted, baseCurrencyConstants.code);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
                   t.S15_Record_Edit.val_converted_amount(
-                      base: baseCurrencyOption.code,
-                      symbol: baseCurrencyOption.symbol,
+                      base: baseCurrencyConstants.code,
+                      symbol: baseCurrencyConstants.symbol,
                       amount: formattedAmount),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
@@ -133,7 +133,7 @@ class S15IncomeForm extends StatelessWidget {
         const SizedBox(height: 12),
         RecordCard(
           t: t,
-          selectedCurrencyOption: selectedCurrencyOption,
+          selectedCurrencyConstants: selectedCurrencyConstants,
           members: members,
           amount: baseRemainingAmount,
           methodLabel: baseSplitMethod,

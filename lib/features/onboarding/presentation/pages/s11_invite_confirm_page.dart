@@ -102,7 +102,7 @@ class _S11Content extends StatelessWidget {
     if (taskData == null) return const Scaffold();
 
     final taskName = taskData['taskName'] ?? 'Unknown Task';
-    final currency = taskData['baseCurrency'] ?? CurrencyOption.defaultCode;
+    final currency = taskData['baseCurrency'] ?? CurrencyConstants.defaultCode;
 
     // 這裡必須拿 S11InviteConfirmPage 的 inviteCode，
     // 實務上我會建議把 _S11Content 寫在 Page 檔案裡並傳參數進去。
@@ -203,7 +203,7 @@ class _S11Content extends StatelessWidget {
                             ],
                           ),
                           subtitle: Text(
-                              "${t.S11_Invite_Confirm.label_prepaid}: ${CurrencyOption.formatAmount(prepaid, currency)} • ${t.S11_Invite_Confirm.label_expense}: ${CurrencyOption.formatAmount(expense, currency)}"),
+                              "${t.S11_Invite_Confirm.label_prepaid}: ${CurrencyConstants.formatAmount(prepaid, currency)} • ${t.S11_Invite_Confirm.label_expense}: ${CurrencyConstants.formatAmount(expense, currency)}"),
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 0),
                         ),

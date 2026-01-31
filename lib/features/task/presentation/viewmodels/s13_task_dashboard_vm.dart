@@ -70,9 +70,10 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   Map<String, dynamic> get membersData => _task?.members ?? {};
 
   // 新增：為了支援 UI 顯示 Currency Symbol
-  CurrencyOption get currencyOption {
-    if (_task == null) return CurrencyOption.defaultCurrencyOption; // Default
-    return CurrencyOption.getCurrencyOption(_task!.baseCurrency);
+  CurrencyConstants get currencyOption {
+    if (_task == null)
+      return CurrencyConstants.defaultCurrencyConstants; // Default
+    return CurrencyConstants.getCurrencyConstants(_task!.baseCurrency);
   }
 
   // 新增：為了支援 RecordBlock (暫時給空值或從 State 拿)

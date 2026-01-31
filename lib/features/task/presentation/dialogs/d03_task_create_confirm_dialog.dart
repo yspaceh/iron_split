@@ -9,7 +9,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
   final String taskName;
   final DateTime startDate;
   final DateTime endDate;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants baseCurrencyConstants;
   final int memberCount;
 
   const D03TaskCreateConfirmDialog({
@@ -17,7 +17,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
     required this.taskName,
     required this.startDate,
     required this.endDate,
-    required this.baseCurrencyOption,
+    required this.baseCurrencyConstants,
     required this.memberCount,
   });
 
@@ -55,7 +55,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
                 '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
             const SizedBox(height: 8),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_currency,
-                baseCurrencyOption.code),
+                baseCurrencyConstants.code),
             const SizedBox(height: 8),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_members,
                 '$memberCount'),

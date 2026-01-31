@@ -146,13 +146,13 @@ class S13GroupView extends StatelessWidget {
                       DailyHeader(
                         date: date,
                         total: dayTotal,
-                        baseCurrencyOption: vm.currencyOption, // 從 VM 獲取
+                        baseCurrencyConstants: vm.currencyOption, // 從 VM 獲取
                         isPersonal: false,
                       ),
                       ...dayRecords.map((record) {
                         return RecordItem(
                           record: record,
-                          baseCurrencyOption: vm.currencyOption,
+                          baseCurrencyConstants: vm.currencyOption,
                           displayAmount: record.amount,
                           onTap: () {
                             context.pushNamed(
@@ -162,7 +162,7 @@ class S13GroupView extends StatelessWidget {
                               extra: {
                                 // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
                                 'poolBalancesByCurrency': vm.poolBalances,
-                                'baseCurrencyOption': vm.currencyOption,
+                                'baseCurrencyConstants': vm.currencyOption,
                                 'record': record,
                               },
                             );
@@ -199,7 +199,7 @@ class S13GroupView extends StatelessWidget {
                               pathParameters: {'taskId': task.id},
                               extra: {
                                 'poolBalancesByCurrency': vm.poolBalances,
-                                'baseCurrencyOption': vm.currencyOption,
+                                'baseCurrencyConstants': vm.currencyOption,
                                 'date': date,
                               },
                             ),

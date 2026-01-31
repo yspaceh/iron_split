@@ -8,8 +8,8 @@ class B07PaymentMethodEditBottomSheet extends StatefulWidget {
   final double totalAmount; // 該筆費用的總金額
   final Map<String, double> poolBalancesByCurrency;
   final List<Map<String, dynamic>> members; // 成員清單
-  final CurrencyOption selectedCurrency;
-  final CurrencyOption baseCurrency;
+  final CurrencyConstants selectedCurrency;
+  final CurrencyConstants baseCurrency;
 
   // 初始狀態
   final bool initialUsePrepay;
@@ -75,7 +75,7 @@ class _B07PaymentMethodEditBottomSheetState
     _prepayController = TextEditingController(
         text: _prepayAmount == 0
             ? ''
-            : CurrencyOption.formatAmount(
+            : CurrencyConstants.formatAmount(
                 _prepayAmount, widget.selectedCurrency.code));
 
     // 初始化成員 Controller
@@ -85,7 +85,8 @@ class _B07PaymentMethodEditBottomSheetState
       _memberControllers[id] = TextEditingController(
           text: val == 0
               ? ''
-              : CurrencyOption.formatAmount(val, widget.selectedCurrency.code));
+              : CurrencyConstants.formatAmount(
+                  val, widget.selectedCurrency.code));
     }
   }
 
@@ -132,7 +133,7 @@ class _B07PaymentMethodEditBottomSheetState
         _prepayAmount = _calculateAutoPrepay(_currentAdvanceTotal);
         _prepayController.text = _prepayAmount == 0
             ? ''
-            : CurrencyOption.formatAmount(
+            : CurrencyConstants.formatAmount(
                 _prepayAmount, widget.selectedCurrency.code);
       } else {
         _prepayAmount = 0.0;
@@ -157,7 +158,7 @@ class _B07PaymentMethodEditBottomSheetState
         if (!_usePrepay) {
           _usePrepay = true;
           _prepayAmount = _calculateAutoPrepay(0);
-          _prepayController.text = CurrencyOption.formatAmount(
+          _prepayController.text = CurrencyConstants.formatAmount(
               _prepayAmount, widget.selectedCurrency.code);
         }
       }
@@ -182,7 +183,7 @@ class _B07PaymentMethodEditBottomSheetState
 
         String newText = _prepayAmount == 0
             ? ''
-            : CurrencyOption.formatAmount(
+            : CurrencyConstants.formatAmount(
                 _prepayAmount, widget.selectedCurrency.code);
 
         _prepayController.text = newText;
@@ -282,7 +283,7 @@ class _B07PaymentMethodEditBottomSheetState
                         Text(
                           t.B07_PaymentMethod_Edit.prepay_balance(
                               amount:
-                                  "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
+                                  "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
                           style: TextStyle(
                             color: _currentCurrencyPoolBalance <
                                         widget.totalAmount &&
@@ -431,7 +432,7 @@ class _B07PaymentMethodEditBottomSheetState
                   _isValid
                       ? t.B07_PaymentMethod_Edit.status_balanced
                       : t.B07_PaymentMethod_Edit.status_remaining(
-                          amount: CurrencyOption.formatAmount(
+                          amount: CurrencyConstants.formatAmount(
                               _remaining.abs(), widget.selectedCurrency.code)),
                   _remaining,
                   widget.selectedCurrency,
@@ -470,7 +471,7 @@ class _B07PaymentMethodEditBottomSheetState
   }
 
   Widget _buildSummaryRow(
-      String label, double amount, CurrencyOption currencyOption,
+      String label, double amount, CurrencyConstants currencyOption,
       {Color? color,
       bool isBold = false,
       bool hideAmount = false,
@@ -483,7 +484,7 @@ class _B07PaymentMethodEditBottomSheetState
                 color: color, fontWeight: isBold ? FontWeight.bold : null)),
         Text(
           customValueText ??
-              CurrencyOption.formatAmount(amount, currencyOption.code),
+              CurrencyConstants.formatAmount(amount, currencyOption.code),
           style: TextStyle(
               color: color, fontWeight: isBold ? FontWeight.bold : null),
         ),

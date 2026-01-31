@@ -22,7 +22,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // Basic State
   late DateTime _selectedDate;
-  late CurrencyOption _selectedCurrencyOption;
+  late CurrencyConstants _selectedCurrencyConstants;
   String _selectedCategoryId = 'fastfood';
   int _recordTypeIndex = 0; // 0: expense, 1: income
 
@@ -53,12 +53,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
   final String taskId;
   final String? recordId;
   final RecordModel? _originalRecord;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants baseCurrencyConstants;
   final Map<String, double> poolBalancesByCurrency;
 
   // Getters
   DateTime get selectedDate => _selectedDate;
-  CurrencyOption get selectedCurrencyOption => _selectedCurrencyOption;
+  CurrencyConstants get selectedCurrencyConstants => _selectedCurrencyConstants;
   String get selectedCategoryId => _selectedCategoryId;
   int get recordTypeIndex => _recordTypeIndex;
 
@@ -89,7 +89,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if (_payerType != 'prepay') return false;
     final currentAmount = totalAmount;
     if (currentAmount <= 0) return false;
-    final balance = poolBalancesByCurrency[_selectedCurrencyOption.code] ?? 0.0;
+    final balance =
+        poolBalancesByCurrency[_selectedCurrencyConstants.code] ?? 0.0;
     return balance < (currentAmount - 0.01);
   }
 
@@ -100,7 +101,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     this.recordId,
     RecordModel? record,
-    this.baseCurrencyOption = CurrencyOption.defaultCurrencyOption,
+    this.baseCurrencyConstants = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     DateTime? initialDate,
   })  : _recordRepo = recordRepo,
@@ -121,8 +122,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
               ? r.originalAmount.toInt().toString()
               : r.originalAmount.toString();
       _selectedDate = r.date;
-      _selectedCurrencyOption =
-          CurrencyOption.getCurrencyOption(r.originalCurrencyCode);
+      _selectedCurrencyConstants =
+          CurrencyConstants.getCurrencyConstants(r.originalCurrencyCode);
       exchangeRateController.text = r.exchangeRate.toString();
 
       if (r.type == 'expense') {
@@ -140,7 +141,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     } else {
       // Create Mode
       _selectedDate = initialDate ?? DateTime.now();
-      _selectedCurrencyOption = baseCurrencyOption;
+      _selectedCurrencyConstants = baseCurrencyConstants;
       _loadCurrencyPreference();
     }
 
@@ -153,9 +154,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
   Future<void> initCurrency() async {
     if (_originalRecord == null && !_isCurrencyInitialized) {
       _isCurrencyInitialized = true;
-      final suggested = CurrencyOption.detectSystemCurrency();
-      if (suggested != CurrencyOption.defaultCurrencyOption) {
-        _selectedCurrencyOption = suggested;
+      final suggested = CurrencyConstants.detectSystemCurrency();
+      if (suggested != CurrencyConstants.defaultCurrencyConstants) {
+        _selectedCurrencyConstants = suggested;
         notifyListeners();
       }
     }
@@ -164,9 +165,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
   Future<void> _loadCurrencyPreference() async {
     final lastCurrency = await PreferencesService.getLastCurrency();
     if (lastCurrency != null) {
-      _selectedCurrencyOption = CurrencyOption.getCurrencyOption(lastCurrency);
-      if (_selectedCurrencyOption != baseCurrencyOption) {
-        updateCurrency(_selectedCurrencyOption.code); // Trigger rate fetch
+      _selectedCurrencyConstants =
+          CurrencyConstants.getCurrencyConstants(lastCurrency);
+      if (_selectedCurrencyConstants != baseCurrencyConstants) {
+        updateCurrency(_selectedCurrencyConstants.code); // Trigger rate fetch
       } else {
         notifyListeners();
       }
@@ -266,7 +268,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   }
 
   Future<void> updateCurrency(String code) async {
-    _selectedCurrencyOption = CurrencyOption.getCurrencyOption(code);
+    _selectedCurrencyConstants = CurrencyConstants.getCurrencyConstants(code);
     await PreferencesService.saveLastCurrency(code);
     await fetchExchangeRate(); // 呼叫下方的公開方法
     notifyListeners();
@@ -274,7 +276,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // 🔄 [修正] 將 _fetchExchangeRate 改為 fetchExchangeRate (拿掉底線，變為公開)
   Future<void> fetchExchangeRate() async {
-    if (_selectedCurrencyOption == baseCurrencyOption) {
+    if (_selectedCurrencyConstants == baseCurrencyConstants) {
       exchangeRateController.text = '1.0';
       return;
     }
@@ -282,7 +284,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     notifyListeners();
 
     final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrencyOption.code, to: baseCurrencyOption.code);
+        from: _selectedCurrencyConstants.code, to: baseCurrencyConstants.code);
 
     _isRateLoading = false;
     if (rate != null) {
@@ -381,7 +383,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
         // 金額與匯率 (根據您的 Model，這就是最終金額)
         amount: totalAmount,
-        currencyCode: _selectedCurrencyOption.code, // ✅ 修正名稱: currencyCode
+        currencyCode: _selectedCurrencyConstants.code, // ✅ 修正名稱: currencyCode
         exchangeRate: double.tryParse(exchangeRateController.text) ?? 1.0,
 
         // 分帳邏輯
@@ -475,7 +477,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       'recordName':
           isIncome ? t.S15_Record_Edit.type_income_title : titleController.text,
       'amount': totalAmount,
-      'currency': _selectedCurrencyOption.code,
+      'currency': _selectedCurrencyConstants.code,
       'recordType': isIncome ? 'income' : 'expense',
       'payment': paymentLogData,
       'allocation': allocationLogData,
@@ -491,7 +493,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
           details: {
             'recordName': titleController.text,
             'amount': totalAmount,
-            'currency': _selectedCurrencyOption.code
+            'currency': _selectedCurrencyConstants.code
           });
     } catch (e) {
       rethrow;

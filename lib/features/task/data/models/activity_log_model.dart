@@ -175,11 +175,12 @@ class ActivityLogModel {
     if (details.containsKey('currency') && details.containsKey('amount')) {
       if (buffer.isNotEmpty) buffer.write(" ");
       final currency = details['currency'];
-      final amount = CurrencyOption.formatAmount(details['amount'], currency);
+      final amount =
+          CurrencyConstants.formatAmount(details['amount'], currency);
 
       if (details.containsKey('oldAmount')) {
         final oldAmt =
-            CurrencyOption.formatAmount(details['oldAmount'], currency);
+            CurrencyConstants.formatAmount(details['oldAmount'], currency);
         buffer.write("($currency $oldAmt -> $amount)");
       } else {
         buffer.write("($currency $amount)");
@@ -267,7 +268,8 @@ class ActivityLogModel {
       final mode = allocation['mode'];
 
       final currency = details['currency'];
-      final totalAmt = CurrencyOption.formatAmount(details['amount'], currency);
+      final totalAmt =
+          CurrencyConstants.formatAmount(details['amount'], currency);
       final recordName = details['recordName'];
 
       // --- A. 主行 (名稱 + 金額 + 分帳簡述) ---
@@ -312,7 +314,7 @@ class ActivityLogModel {
       if (mode == 'hybrid') {
         final subItems = groups.map((g) {
           final label = g['label'];
-          final amt = CurrencyOption.formatAmount(g['amount'], currency);
+          final amt = CurrencyConstants.formatAmount(g['amount'], currency);
           final count = g['count'];
           final method = getSplitMethodName(g['method']);
           final unit = t.S52_TaskSettings_Log.unit_members;

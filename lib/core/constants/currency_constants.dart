@@ -5,22 +5,22 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class CurrencyOption {
+class CurrencyConstants {
   final String code;
   final String symbol;
   final int decimalDigits;
 
-  const CurrencyOption({
+  const CurrencyConstants({
     required this.code,
     required this.symbol,
     this.decimalDigits = 2, // Default to 2 decimal places
   });
 
   static const String defaultCode = 'USD';
-  static const CurrencyOption defaultCurrencyOption =
-      CurrencyOption(code: 'USD', symbol: '\$', decimalDigits: 2);
+  static const CurrencyConstants defaultCurrencyConstants =
+      CurrencyConstants(code: 'USD', symbol: '\$', decimalDigits: 2);
 
-  static CurrencyOption getCurrencyOption(String currencyCode) {
+  static CurrencyConstants getCurrencyConstants(String currencyCode) {
     final currency = kSupportedCurrencies.firstWhere(
       (e) => e.code == currencyCode,
       orElse: () => kSupportedCurrencies.first,
@@ -30,7 +30,7 @@ class CurrencyOption {
   }
 
   static String formatAmount(double amount, String currencyCode) {
-    final currency = getCurrencyOption(currencyCode);
+    final currency = getCurrencyConstants(currencyCode);
 
     final decimalDigits = currency.decimalDigits;
 
@@ -41,7 +41,7 @@ class CurrencyOption {
     ).format(amount);
   }
 
-  static CurrencyOption detectSystemCurrency() {
+  static CurrencyConstants detectSystemCurrency() {
     String systemLocale = Platform.localeName;
     if (kDebugMode) {
       print('System Locale: $systemLocale');
@@ -58,39 +58,39 @@ class CurrencyOption {
   }
 }
 
-const List<CurrencyOption> kSupportedCurrencies = [
-  CurrencyOption(code: 'USD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'JPY', symbol: '¥', decimalDigits: 0),
-  CurrencyOption(code: 'TWD', symbol: '\$', decimalDigits: 0),
-  CurrencyOption(code: 'EUR', symbol: '€', decimalDigits: 2),
-  CurrencyOption(code: 'KRW', symbol: '₩', decimalDigits: 0),
-  CurrencyOption(code: 'CNY', symbol: '¥', decimalDigits: 2),
-  CurrencyOption(code: 'GBP', symbol: '£', decimalDigits: 2),
-  CurrencyOption(code: 'CAD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'AUD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'CHF', symbol: 'CHF', decimalDigits: 2),
-  CurrencyOption(code: 'DKK', symbol: 'kr.', decimalDigits: 2),
-  CurrencyOption(code: 'HKD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'NOK', symbol: 'kr', decimalDigits: 2),
-  CurrencyOption(code: 'NZD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'SGD', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'THB', symbol: '฿', decimalDigits: 2),
-  CurrencyOption(code: 'ZAR', symbol: 'R', decimalDigits: 2),
-  CurrencyOption(code: 'RUB', symbol: '₽', decimalDigits: 2),
-  CurrencyOption(code: 'VND', symbol: '₫', decimalDigits: 0),
-  CurrencyOption(code: 'IDR', symbol: 'Rp', decimalDigits: 0),
-  CurrencyOption(code: 'MYR', symbol: 'RM', decimalDigits: 2),
-  CurrencyOption(code: 'PHP', symbol: '₱', decimalDigits: 2),
-  CurrencyOption(code: 'MOP', symbol: '\$', decimalDigits: 2),
-  CurrencyOption(code: 'SEK', symbol: 'kr', decimalDigits: 2),
-  CurrencyOption(code: 'AED', symbol: 'د.إ', decimalDigits: 2),
-  CurrencyOption(code: 'SAR', symbol: '﷼', decimalDigits: 2),
-  CurrencyOption(code: 'TRY', symbol: '₺', decimalDigits: 2),
-  CurrencyOption(code: 'INR', symbol: '₹', decimalDigits: 2),
+const List<CurrencyConstants> kSupportedCurrencies = [
+  CurrencyConstants(code: 'USD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'JPY', symbol: '¥', decimalDigits: 0),
+  CurrencyConstants(code: 'TWD', symbol: '\$', decimalDigits: 0),
+  CurrencyConstants(code: 'EUR', symbol: '€', decimalDigits: 2),
+  CurrencyConstants(code: 'KRW', symbol: '₩', decimalDigits: 0),
+  CurrencyConstants(code: 'CNY', symbol: '¥', decimalDigits: 2),
+  CurrencyConstants(code: 'GBP', symbol: '£', decimalDigits: 2),
+  CurrencyConstants(code: 'CAD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'AUD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'CHF', symbol: 'CHF', decimalDigits: 2),
+  CurrencyConstants(code: 'DKK', symbol: 'kr.', decimalDigits: 2),
+  CurrencyConstants(code: 'HKD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'NOK', symbol: 'kr', decimalDigits: 2),
+  CurrencyConstants(code: 'NZD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'SGD', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'THB', symbol: '฿', decimalDigits: 2),
+  CurrencyConstants(code: 'ZAR', symbol: 'R', decimalDigits: 2),
+  CurrencyConstants(code: 'RUB', symbol: '₽', decimalDigits: 2),
+  CurrencyConstants(code: 'VND', symbol: '₫', decimalDigits: 0),
+  CurrencyConstants(code: 'IDR', symbol: 'Rp', decimalDigits: 0),
+  CurrencyConstants(code: 'MYR', symbol: 'RM', decimalDigits: 2),
+  CurrencyConstants(code: 'PHP', symbol: '₱', decimalDigits: 2),
+  CurrencyConstants(code: 'MOP', symbol: '\$', decimalDigits: 2),
+  CurrencyConstants(code: 'SEK', symbol: 'kr', decimalDigits: 2),
+  CurrencyConstants(code: 'AED', symbol: 'د.إ', decimalDigits: 2),
+  CurrencyConstants(code: 'SAR', symbol: '﷼', decimalDigits: 2),
+  CurrencyConstants(code: 'TRY', symbol: '₺', decimalDigits: 2),
+  CurrencyConstants(code: 'INR', symbol: '₹', decimalDigits: 2),
 ];
 
 /// 這是新增的擴充方法，用來取得多國語言名稱
-extension CurrencyOptionExt on CurrencyOption {
+extension CurrencyConstantsExt on CurrencyConstants {
   String getLocalizedName(BuildContext context) {
     final t = Translations.of(context);
 

@@ -154,7 +154,7 @@ class _S13ContentState extends State<_S13Content> {
                   pathParameters: {'taskId': vm.taskId},
                   extra: {
                     'poolBalancesByCurrency': poolBalances,
-                    'baseCurrencyOption': currencyOption,
+                    'baseCurrencyConstants': currencyOption,
                   },
                 ),
                 label: Text(t.S13_Task_Dashboard.fab_record),

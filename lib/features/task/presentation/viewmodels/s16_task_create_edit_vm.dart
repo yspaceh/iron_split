@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -15,7 +16,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   // State
   late DateTime _startDate;
   late DateTime _endDate;
-  CurrencyOption _baseCurrencyOption = CurrencyOption.defaultCurrencyOption;
+  CurrencyConstants _baseCurrencyConstants =
+      CurrencyConstants.defaultCurrencyConstants;
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
   bool _isProcessing = false;
@@ -24,7 +26,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   // Getters
   DateTime get startDate => _startDate;
   DateTime get endDate => _endDate;
-  CurrencyOption get baseCurrencyOption => _baseCurrencyOption;
+  CurrencyConstants get baseCurrencyConstants => _baseCurrencyConstants;
   int get memberCount => _memberCount;
   bool get isCurrencyEnabled => true; // 保留原始邏輯
   bool get isProcessing => _isProcessing;
@@ -43,9 +45,9 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   void initCurrency() {
     if (!_isCurrencyInitialized) {
       _isCurrencyInitialized = true;
-      final CurrencyOption suggestedCurrency =
-          CurrencyOption.detectSystemCurrency();
-      _baseCurrencyOption = suggestedCurrency;
+      final CurrencyConstants suggestedCurrency =
+          CurrencyConstants.detectSystemCurrency();
+      _baseCurrencyConstants = suggestedCurrency;
       // 這裡不需 notifyListeners，因為通常是在 build 前或第一幀執行，
       // 若有需要可加，但需注意 notify 時機
     }
@@ -67,8 +69,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateCurrency(CurrencyOption currency) {
-    _baseCurrencyOption = currency;
+  void updateCurrency(CurrencyConstants currency) {
+    _baseCurrencyConstants = currency;
     notifyListeners();
   }
 
@@ -126,11 +128,11 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'createdBy': user.uid,
         'memberCount': _memberCount,
         'maxMembers': _memberCount,
-        'baseCurrency': _baseCurrencyOption.code,
+        'baseCurrency': _baseCurrencyConstants.code,
         'startDate': _startDate, // 直接傳 DateTime
         'endDate': _endDate, // 直接傳 DateTime
         'members': membersMap,
-        'remainderRule': 'random', // 預設值
+        'remainderRule': RemainderRuleConstants.defaultRule, // 預設值
       };
 
       // ✅ 呼叫 Repo 建立任務，取得 ID
@@ -145,7 +147,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         action: LogAction.createTask,
         details: {
           'recordName': taskName,
-          'currency': _baseCurrencyOption.code,
+          'currency': _baseCurrencyConstants.code,
           'memberCount': _memberCount,
           'dateRange': dateStr,
         },

@@ -109,7 +109,7 @@ class RecordRepository {
     for (final doc in snapshot.docs) {
       final data = doc.data();
       final recordCurrency =
-          data['currency'] as String? ?? CurrencyOption.defaultCode;
+          data['currency'] as String? ?? CurrencyConstants.defaultCode;
 
       // 查表取得新匯率 (如果沒在表裡，維持 1.0 或原樣，視需求而定)
       final newRate = rateMap[recordCurrency] ?? 1.0;

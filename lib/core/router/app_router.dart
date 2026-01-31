@@ -160,16 +160,16 @@ class AppRouter {
                   extra['poolBalancesByCurrency'] as Map<String, double>? ?? {};
               final record = extra['record'] as RecordModel?;
               final date = extra['date'] as DateTime?;
-              final baseCurrencyOption =
-                  extra['baseCurrencyOption'] as CurrencyOption? ??
-                      CurrencyOption.defaultCurrencyOption;
+              final baseCurrencyConstants =
+                  extra['baseCurrencyConstants'] as CurrencyConstants? ??
+                      CurrencyConstants.defaultCurrencyConstants;
 
               return S15RecordEditPage(
                 taskId: taskId,
                 recordId: recordId,
                 record: record,
                 poolBalancesByCurrency: poolBalancesByCurrency,
-                baseCurrencyOption: baseCurrencyOption,
+                baseCurrencyConstants: baseCurrencyConstants,
                 initialDate: date,
               );
             },

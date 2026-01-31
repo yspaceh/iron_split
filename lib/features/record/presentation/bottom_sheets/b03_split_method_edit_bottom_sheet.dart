@@ -7,11 +7,11 @@ import 'package:iron_split/gen/strings.g.dart';
 
 class B03SplitMethodEditBottomSheet extends StatefulWidget {
   final double totalAmount;
-  final CurrencyOption selectedCurrency;
+  final CurrencyConstants selectedCurrency;
   final List<Map<String, dynamic>> allMembers; // 任務所有成員
   final Map<String, double> defaultMemberWeights; // 任務預設權重
   final double exchangeRate;
-  final CurrencyOption baseCurrency;
+  final CurrencyConstants baseCurrency;
 
   // 初始狀態
   final String initialSplitMethod;
@@ -58,7 +58,7 @@ class _B03SplitMethodEditBottomSheetState
       final val = _details[id] ?? 0.0;
       _amountControllers[id] = TextEditingController(
         text: val > 0
-            ? CurrencyOption.formatAmount(val, widget.selectedCurrency.code)
+            ? CurrencyConstants.formatAmount(val, widget.selectedCurrency.code)
             : '',
       );
     }
@@ -298,13 +298,13 @@ class _B03SplitMethodEditBottomSheetState
                     Text(t.S15_Record_Edit.label_amount,
                         style: theme.textTheme.bodySmall),
                     Text(
-                      "${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(widget.totalAmount, widget.selectedCurrency.code)}",
+                      "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.totalAmount, widget.selectedCurrency.code)}",
                       style: theme.textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     if (widget.exchangeRate != 1.0)
                       Text(
-                        "≈ ${widget.baseCurrency.symbol} ${CurrencyOption.formatAmount(widget.totalAmount * widget.exchangeRate, widget.baseCurrency.code)}",
+                        "≈ ${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(widget.totalAmount * widget.exchangeRate, widget.baseCurrency.code)}",
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
@@ -422,17 +422,17 @@ class _B03SplitMethodEditBottomSheetState
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          "${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, widget.selectedCurrency.code)}",
+                          "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, widget.selectedCurrency.code)}",
                           style: theme.textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         if (widget.exchangeRate != 1.0)
                           Builder(builder: (context) {
-                            final baseCurrencyOption =
-                                CurrencyOption.getCurrencyOption(
+                            final baseCurrencyConstants =
+                                CurrencyConstants.getCurrencyConstants(
                                     widget.baseCurrency.code);
                             return Text(
-                              "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(baseAmount, baseCurrencyOption.code)}",
+                              "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrencyConstants.code)}",
                               style: theme.textTheme.bodySmall
                                   ?.copyWith(color: Colors.grey, fontSize: 10),
                             );
@@ -537,17 +537,17 @@ class _B03SplitMethodEditBottomSheetState
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(amount, widget.selectedCurrency.code)}",
+                        "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, widget.selectedCurrency.code)}",
                         style: theme.textTheme.bodyMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       if (widget.exchangeRate != 1.0)
                         Builder(builder: (context) {
-                          final baseCurrencyOption =
-                              CurrencyOption.getCurrencyOption(
+                          final baseCurrencyConstants =
+                              CurrencyConstants.getCurrencyConstants(
                                   widget.baseCurrency.code);
                           return Text(
-                            "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(baseAmount, baseCurrencyOption.code)}",
+                            "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrencyConstants.code)}",
                             style: theme.textTheme.bodySmall
                                 ?.copyWith(color: Colors.grey, fontSize: 10),
                           );
@@ -683,15 +683,15 @@ class _B03SplitMethodEditBottomSheetState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(t.B02_SplitExpense_Edit.label_total(
-                  current: CurrencyOption.formatAmount(
+                  current: CurrencyConstants.formatAmount(
                       currentSum, widget.selectedCurrency.code),
-                  target: CurrencyOption.formatAmount(
+                  target: CurrencyConstants.formatAmount(
                       widget.totalAmount, widget.selectedCurrency.code))),
               Text(
                 isMatched
                     ? "OK"
                     : t.B03_SplitMethod_Edit.error_total_mismatch(
-                        diff: CurrencyOption.formatAmount(
+                        diff: CurrencyConstants.formatAmount(
                             remaining, widget.selectedCurrency.code)),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -718,7 +718,7 @@ class _B03SplitMethodEditBottomSheetState
                         if (remaining > 0) {
                           _details[id] = remaining;
                           _amountControllers[id]?.text =
-                              CurrencyOption.formatAmount(
+                              CurrencyConstants.formatAmount(
                                   remaining, widget.selectedCurrency.code);
                         }
                       } else {
@@ -778,7 +778,7 @@ class _B03SplitMethodEditBottomSheetState
                             return Padding(
                               padding: const EdgeInsets.only(top: 2),
                               child: Text(
-                                "≈ ${widget.baseCurrency.symbol} ${CurrencyOption.formatAmount(converted, widget.baseCurrency.code)}",
+                                "≈ ${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(converted, widget.baseCurrency.code)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall

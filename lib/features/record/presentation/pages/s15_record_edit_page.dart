@@ -25,7 +25,7 @@ class S15RecordEditPage extends StatelessWidget {
   final String taskId;
   final String? recordId;
   final RecordModel? record;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants baseCurrencyConstants;
   final Map<String, double> poolBalancesByCurrency;
   final DateTime? initialDate;
 
@@ -34,7 +34,7 @@ class S15RecordEditPage extends StatelessWidget {
     required this.taskId,
     this.recordId,
     this.record,
-    this.baseCurrencyOption = CurrencyOption.defaultCurrencyOption,
+    this.baseCurrencyConstants = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     this.initialDate,
   });
@@ -46,7 +46,7 @@ class S15RecordEditPage extends StatelessWidget {
         taskId: taskId,
         recordId: recordId,
         record: record,
-        baseCurrencyOption: baseCurrencyOption,
+        baseCurrencyConstants: baseCurrencyConstants,
         poolBalancesByCurrency: poolBalancesByCurrency,
         initialDate: initialDate,
         taskRepo: context.read<TaskRepository>(),
@@ -99,7 +99,7 @@ class _S15ContentState extends State<_S15Content> {
   void _onCurrencyTap(S15RecordEditViewModel vm) {
     CurrencyPickerSheet.show(
       context: context,
-      initialCode: vm.selectedCurrencyOption.code,
+      initialCode: vm.selectedCurrencyConstants.code,
       onSelected: (curr) => vm.updateCurrency(curr.code),
     );
   }
@@ -121,14 +121,14 @@ class _S15ContentState extends State<_S15Content> {
       isScrollControlled: true,
       builder: (ctx) => B03SplitMethodEditBottomSheet(
         totalAmount: amountToSplit,
-        selectedCurrency: vm.selectedCurrencyOption,
+        selectedCurrency: vm.selectedCurrencyConstants,
         allMembers: vm.taskMembers,
         defaultMemberWeights: defaultWeights,
         initialSplitMethod: vm.baseSplitMethod,
         initialMemberIds: vm.baseMemberIds,
         initialDetails: vm.baseRawDetails,
         exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyOption,
+        baseCurrency: vm.baseCurrencyConstants,
       ),
     );
 
@@ -158,11 +158,11 @@ class _S15ContentState extends State<_S15Content> {
         detail: null,
         allMembers: vm.taskMembers,
         defaultWeights: defaultWeights,
-        selectedCurrency: vm.selectedCurrencyOption,
+        selectedCurrency: vm.selectedCurrencyConstants,
         parentTitle: vm.titleController.text,
         availableAmount: vm.baseRemainingAmount,
         exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyOption,
+        baseCurrency: vm.baseCurrencyConstants,
       ),
     );
 
@@ -186,11 +186,11 @@ class _S15ContentState extends State<_S15Content> {
         detail: detail,
         allMembers: vm.taskMembers,
         defaultWeights: defaultWeights,
-        selectedCurrency: vm.selectedCurrencyOption,
+        selectedCurrency: vm.selectedCurrencyConstants,
         parentTitle: vm.titleController.text,
         availableAmount: vm.baseRemainingAmount + detail.amount,
         exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyOption,
+        baseCurrency: vm.baseCurrencyConstants,
       ),
     );
 
@@ -231,8 +231,8 @@ class _S15ContentState extends State<_S15Content> {
       builder: (ctx) => B07PaymentMethodEditBottomSheet(
         totalAmount: vm.totalAmount,
         poolBalancesByCurrency: vm.poolBalancesByCurrency,
-        selectedCurrency: vm.selectedCurrencyOption,
-        baseCurrency: vm.baseCurrencyOption,
+        selectedCurrency: vm.selectedCurrencyConstants,
+        baseCurrency: vm.baseCurrencyConstants,
         members: vm.taskMembers,
         initialUsePrepay:
             vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
@@ -284,7 +284,7 @@ class _S15ContentState extends State<_S15Content> {
       context: context,
       builder: (ctx) => D10RecordDeleteConfirmDialog(
         title: vm.titleController.text,
-        amount: "${vm.selectedCurrencyOption.symbol} ${vm.totalAmount}",
+        amount: "${vm.selectedCurrencyConstants.symbol} ${vm.totalAmount}",
         onConfirm: () async {
           await vm.deleteRecord(t);
           if (mounted) {
@@ -369,8 +369,8 @@ class _S15ContentState extends State<_S15Content> {
                       memoController: vm.memoController,
                       exchangeRateController: vm.exchangeRateController,
                       selectedDate: vm.selectedDate,
-                      selectedCurrencyOption: vm.selectedCurrencyOption,
-                      baseCurrencyOption: vm.baseCurrencyOption,
+                      selectedCurrencyConstants: vm.selectedCurrencyConstants,
+                      baseCurrencyConstants: vm.baseCurrencyConstants,
                       selectedCategoryId: vm.selectedCategoryId,
                       isRateLoading: vm.isRateLoading,
                       poolBalancesByCurrency: vm.poolBalancesByCurrency,
@@ -397,8 +397,8 @@ class _S15ContentState extends State<_S15Content> {
                       memoController: vm.memoController,
                       exchangeRateController: vm.exchangeRateController,
                       selectedDate: vm.selectedDate,
-                      selectedCurrencyOption: vm.selectedCurrencyOption,
-                      baseCurrencyOption: vm.baseCurrencyOption,
+                      selectedCurrencyConstants: vm.selectedCurrencyConstants,
+                      baseCurrencyConstants: vm.baseCurrencyConstants,
                       isRateLoading: vm.isRateLoading,
                       members: vm.taskMembers,
                       baseRemainingAmount: vm.totalAmount,

@@ -51,7 +51,7 @@ class BalanceCard extends StatelessWidget {
                 Text(t.S13_Task_Dashboard.empty_records,
                     style: const TextStyle(color: Colors.grey)),
               ...state.expenseDetail.entries.map((e) => Text(
-                  "${e.key} ${state.currencySymbol} ${CurrencyOption.formatAmount(e.value, state.currencyCode)}")),
+                  "${e.key} ${state.currencySymbol} ${CurrencyConstants.formatAmount(e.value, state.currencyCode)}")),
 
               const Divider(),
 
@@ -63,7 +63,7 @@ class BalanceCard extends StatelessWidget {
                 Text(t.S13_Task_Dashboard.empty_records,
                     style: const TextStyle(color: Colors.grey)),
               ...state.incomeDetail.entries.map((e) => Text(
-                  "${e.key} ${state.currencySymbol} ${CurrencyOption.formatAmount(e.value, state.currencyCode)}")),
+                  "${e.key} ${state.currencySymbol} ${CurrencyConstants.formatAmount(e.value, state.currencyCode)}")),
             ],
           ));
     }
@@ -88,7 +88,7 @@ class BalanceCard extends StatelessWidget {
                 final isNegative = amount < 0;
                 // 注意：這裡假設 State 裡的 Key 就是 CurrencyCode
                 final currencySymbol =
-                    CurrencyOption.getCurrencyOption(e.key).symbol;
+                    CurrencyConstants.getCurrencyConstants(e.key).symbol;
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -98,7 +98,7 @@ class BalanceCard extends StatelessWidget {
                       Text(e.key,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                        "$currencySymbol ${CurrencyOption.formatAmount(amount, e.key)}",
+                        "$currencySymbol ${CurrencyConstants.formatAmount(amount, e.key)}",
                         style: TextStyle(
                           color: isNegative
                               ? theme.colorScheme.error
@@ -183,7 +183,7 @@ class BalanceCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    "${state.currencySymbol} ${CurrencyOption.formatAmount(state.poolBalance.abs(), state.currencyCode)}",
+                                    "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.poolBalance.abs(), state.currencyCode)}",
                                 style: TextStyle(
                                   color: state.poolBalance > 0
                                       ? theme.colorScheme.tertiary
@@ -225,7 +225,7 @@ class BalanceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_expense} : ${state.currencySymbol} ${CurrencyOption.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
+                          "${t.S13_Task_Dashboard.label_total_expense} : ${state.currencySymbol} ${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
                           style: theme.textTheme.labelSmall,
                         ),
                       ],
@@ -242,7 +242,7 @@ class BalanceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_prepay} : ${state.currencySymbol} ${CurrencyOption.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
+                          "${t.S13_Task_Dashboard.label_total_prepay} : ${state.currencySymbol} ${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
                           style: theme.textTheme.labelSmall,
                         ),
                       ],
@@ -349,7 +349,7 @@ class BalanceCard extends StatelessWidget {
                       ),
                       Text(" : ", style: theme.textTheme.bodyMedium),
                       Text(
-                        "${state.currencySymbol} ${CurrencyOption.formatAmount(state.remainder.abs(), state.currencyCode)}",
+                        "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder.abs(), state.currencyCode)}",
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: state.remainder > 0
                               ? Colors.green
@@ -411,7 +411,7 @@ class BalanceCard extends StatelessWidget {
                   // 使用 S17 的 i18n
                   t.S17_Task_Locked.label_remainder_absorbed_by(
                     amount:
-                        "${state.currencySymbol} ${CurrencyOption.formatAmount(state.absorbedAmount ?? 0, state.currencyCode)}",
+                        "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.absorbedAmount ?? 0, state.currencyCode)}",
                     name: state.absorbedBy ?? "",
                   ),
                   style: theme.textTheme.bodySmall?.copyWith(

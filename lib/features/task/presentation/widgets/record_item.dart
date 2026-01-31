@@ -8,7 +8,7 @@ import 'package:iron_split/gen/strings.g.dart';
 class RecordItem extends StatelessWidget {
   final RecordModel record;
   final double displayAmount;
-  final CurrencyOption baseCurrencyOption;
+  final CurrencyConstants baseCurrencyConstants;
   final VoidCallback? onTap;
   final Future<void> Function(BuildContext context)? onDelete;
 
@@ -16,7 +16,7 @@ class RecordItem extends StatelessWidget {
     super.key,
     required this.record,
     required this.displayAmount,
-    required this.baseCurrencyOption,
+    required this.baseCurrencyConstants,
     this.onTap,
     this.onDelete,
   });
@@ -26,7 +26,7 @@ class RecordItem extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final isIncome = record.type == 'income';
-    final originalCurrencyOption = CurrencyOption.getCurrencyOption(
+    final originalCurrencyConstants = CurrencyConstants.getCurrencyConstants(
         record.currencyCode); // 注意這裡用 currencyCode
     final exchangeRate = record.exchangeRate;
 
@@ -46,7 +46,7 @@ class RecordItem extends StatelessWidget {
         : theme.colorScheme.onError;
 
     final amountText =
-        "${originalCurrencyOption.symbol} ${CurrencyOption.formatAmount(displayAmount, originalCurrencyOption.code)}";
+        "${originalCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(displayAmount, originalCurrencyConstants.code)}";
     return Dismissible(
       key: Key(record.id ?? ''),
       direction: DismissDirection.endToStart,
@@ -99,9 +99,9 @@ class RecordItem extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (originalCurrencyOption != baseCurrencyOption)
+            if (originalCurrencyConstants != baseCurrencyConstants)
               Text(
-                "≈ ${baseCurrencyOption.code}${baseCurrencyOption.symbol} ${CurrencyOption.formatAmount(displayAmount * exchangeRate, baseCurrencyOption.code)}",
+                "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(displayAmount * exchangeRate, baseCurrencyConstants.code)}",
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.grey,
                 ),

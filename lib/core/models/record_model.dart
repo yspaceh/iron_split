@@ -200,7 +200,7 @@ class RecordModel {
 
       // 從 DB 讀取原始欄位
       amount: (data['amount'] ?? 0).toDouble(),
-      currencyCode: data['currency'] ?? CurrencyOption.defaultCode,
+      currencyCode: data['currency'] ?? CurrencyConstants.defaultCode,
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
 
       splitMethod: data['splitMethod'] ?? 'even',

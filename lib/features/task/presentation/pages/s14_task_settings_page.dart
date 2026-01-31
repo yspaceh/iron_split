@@ -60,7 +60,7 @@ class _S14ContentState extends State<_S14Content> {
   }
 
   Future<void> _onCurrencyChange(BuildContext context,
-      S14TaskSettingsViewModel vm, CurrencyOption selectedOption) async {
+      S14TaskSettingsViewModel vm, CurrencyConstants selectedOption) async {
     // 髒檢查
     if (selectedOption.code == vm.currency?.code) return;
 

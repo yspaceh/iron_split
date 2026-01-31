@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 
 /// [ViewModel State]
 /// 這是 BalanceCard 唯一認識的資料結構。
@@ -52,7 +54,7 @@ class BalanceSummaryState extends Equatable {
   // 初始空狀態 (避免 UI null check)
   factory BalanceSummaryState.initial() {
     return const BalanceSummaryState(
-      currencyCode: 'TWD',
+      currencyCode: CurrencyConstants.defaultCode,
       currencySymbol: '\$',
       poolBalance: 0,
       totalExpense: 0,
@@ -60,7 +62,7 @@ class BalanceSummaryState extends Equatable {
       remainder: 0,
       expenseFlex: 0,
       incomeFlex: 0,
-      ruleKey: 'random',
+      ruleKey: RemainderRuleConstants.defaultRule,
       isLocked: false,
       expenseDetail: {},
       incomeDetail: {},

@@ -7,7 +7,7 @@ class CurrencyPickerSheet {
   static void show({
     required BuildContext context,
     required String initialCode,
-    required Function(CurrencyOption selected) onSelected,
+    required Function(CurrencyConstants selected) onSelected,
   }) {
     // 1. 取得初始索引
     int selectedIndex =

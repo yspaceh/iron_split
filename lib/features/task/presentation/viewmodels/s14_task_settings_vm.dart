@@ -15,7 +15,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
-  CurrencyOption? _currency;
+  CurrencyConstants? _currency;
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId; // ✅ 新增：B01 需要知道目前是誰請客
   bool _isLoading = true;
@@ -28,7 +28,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   // Getters
   DateTime? get startDate => _startDate;
   DateTime? get endDate => _endDate;
-  CurrencyOption? get currency => _currency;
+  CurrencyConstants? get currency => _currency;
   String get remainderRule => _remainderRule;
   String? get remainderAbsorberId => _remainderAbsorberId; // ✅ 新增 Getter
   bool get isLoading => _isLoading;
@@ -56,7 +56,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
         _startDate = task.startDate;
         _endDate = task.endDate;
-        _currency = CurrencyOption.getCurrencyOption(task.baseCurrency);
+        _currency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
 
         _remainderRule = task.remainderRule;
         _remainderAbsorberId = task.remainderAbsorberId; // ✅ 讀取 ID
@@ -158,7 +158,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
     );
   }
 
-  void updateCurrency(CurrencyOption newCurrency) {
+  void updateCurrency(CurrencyConstants newCurrency) {
     _currency = newCurrency;
     notifyListeners();
   }

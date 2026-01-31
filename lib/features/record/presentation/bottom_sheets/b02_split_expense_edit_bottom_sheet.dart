@@ -10,11 +10,11 @@ class B02SplitExpenseEditBottomSheet extends StatefulWidget {
   final RecordDetail? detail;
   final List<Map<String, dynamic>> allMembers;
   final Map<String, double> defaultWeights;
-  final CurrencyOption selectedCurrency;
+  final CurrencyConstants selectedCurrency;
   final String parentTitle;
   final double availableAmount;
   final double exchangeRate;
-  final CurrencyOption baseCurrency;
+  final CurrencyConstants baseCurrency;
   const B02SplitExpenseEditBottomSheet({
     super.key,
     this.detail,
@@ -185,7 +185,7 @@ class _B02SplitExpenseEditBottomSheetState
                   ),
                 ),
                 Text(
-                  "${widget.selectedCurrency.symbol} ${CurrencyOption.formatAmount(widget.availableAmount, widget.selectedCurrency.code)}",
+                  "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.availableAmount, widget.selectedCurrency.code)}",
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.primary,

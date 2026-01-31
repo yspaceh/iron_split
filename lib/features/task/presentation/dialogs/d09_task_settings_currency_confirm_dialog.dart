@@ -10,7 +10,7 @@ import 'package:iron_split/gen/strings.g.dart';
 /// Page Key: D09_TaskSettings.CurrencyConfirm
 class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
   final String taskId;
-  final CurrencyOption newCurrency;
+  final CurrencyConstants newCurrency;
 
   const D09TaskSettingsCurrencyConfirmDialog({
     super.key,

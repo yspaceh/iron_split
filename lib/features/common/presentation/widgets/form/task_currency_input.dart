@@ -11,8 +11,8 @@ class TaskCurrencyInput extends StatelessWidget {
     this.enabled = true,
   });
 
-  final CurrencyOption currency;
-  final ValueChanged<CurrencyOption> onCurrencyChanged;
+  final CurrencyConstants currency;
+  final ValueChanged<CurrencyConstants> onCurrencyChanged;
   final bool enabled;
 
   void _showCurrencyPicker(BuildContext context) {
