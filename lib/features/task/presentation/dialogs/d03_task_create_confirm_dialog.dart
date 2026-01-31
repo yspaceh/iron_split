@@ -1,20 +1,11 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/task/domain/models/activity_log_model.dart';
-import 'package:iron_split/features/task/domain/services/activity_log_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:share_plus/share_plus.dart';
 
 /// Page Key: D03_TaskCreate.Confirm
-/// CSV Page 14
-class D03TaskCreateConfirmDialog extends StatefulWidget {
+/// 職責：單純顯示確認資訊，不處理業務邏輯
+class D03TaskCreateConfirmDialog extends StatelessWidget {
   final String taskName;
   final DateTime startDate;
   final DateTime endDate;
@@ -31,155 +22,9 @@ class D03TaskCreateConfirmDialog extends StatefulWidget {
   });
 
   @override
-  State<D03TaskCreateConfirmDialog> createState() =>
-      _D03TaskCreateConfirmDialogState();
-}
-
-class _D03TaskCreateConfirmDialogState
-    extends State<D03TaskCreateConfirmDialog> {
-  bool _isProcessing = false;
-  String? _statusText;
-
-  String _getRandomAvatar() {
-    const avatars = [
-      "cow",
-      "pig",
-      "deer",
-      "horse",
-      "sheep",
-      "goat",
-      "duck",
-      "stoat",
-      "rabbit",
-      "mouse",
-      "cat",
-      "dog",
-      "otter",
-      "owl",
-      "fox",
-      "hedgehog",
-      "donkey",
-      "squirrel",
-      "badger",
-      "robin",
-    ];
-    return avatars[Random().nextInt(avatars.length)];
-  }
-
-  Future<void> _handleConfirm() async {
-    setState(() {
-      _isProcessing = true;
-      _statusText = t.D03_TaskCreate_Confirm.creating_task;
-    });
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    try {
-      // 1. Prepare Members Map
-      final Map<String, dynamic> membersMap = {};
-
-      // A. Add Captain (Real User)
-      membersMap[user.uid] = {
-        'role': 'captain',
-        'displayName': user.displayName ?? 'Captain',
-        'joinedAt': FieldValue.serverTimestamp(),
-        'avatar': _getRandomAvatar(),
-        'isLinked': true,
-        'hasSeenRoleIntro': false, // 關鍵：讓 Dashboard 跳出 D01
-      };
-
-      // B. Add Ghost Members (Placeholders)
-      // Start from 1 because Captain is 0 (conceptually)
-      for (int i = 1; i < widget.memberCount; i++) {
-        final ghostId = 'virtual_member_$i'; // Stable ID
-        final prefix = t.common.member_prefix;
-
-        membersMap[ghostId] = {
-          'role': 'member',
-          'displayName': '$prefix ${i + 1}', // e.g. "Member 2"
-          'joinedAt': FieldValue.serverTimestamp(),
-          'avatar': _getRandomAvatar(),
-          'isLinked': false,
-          'hasSeenRoleIntro': false,
-        };
-      }
-
-      // 2. 寫入 DB
-      final docRef = await FirebaseFirestore.instance.collection('tasks').add({
-        'name': widget.taskName,
-        'createdBy': user.uid,
-        'memberCount': widget.memberCount,
-        'maxMembers': widget.memberCount,
-        'baseCurrency': widget.baseCurrencyOption.code,
-        'startDate': Timestamp.fromDate(widget.startDate),
-        'endDate': Timestamp.fromDate(widget.endDate),
-        'status': 'ongoing',
-        'updatedAt': FieldValue.serverTimestamp(),
-        'createdAt': FieldValue.serverTimestamp(),
-        'members': membersMap,
-        'activeInviteCode': null,
-      });
-
-      final dateStr =
-          "${DateFormat('yyyy/MM/dd').format(widget.startDate)} - ${DateFormat('yyyy/MM/dd').format(widget.endDate)}";
-
-      await ActivityLogService.log(
-        taskId: docRef.id,
-        action: LogAction.createTask,
-        details: {
-          'recordName': widget.taskName,
-          'currency': widget.baseCurrencyOption.code,
-          'memberCount': widget.memberCount,
-          'dateRange': dateStr,
-        },
-      );
-
-      // 2. 若有邀請需求 (人數 > 1) -> 產生 Invite Code 並分享
-      if (widget.memberCount > 1) {
-        setState(() => _statusText = t.D03_TaskCreate_Confirm.preparing_share);
-
-        final callable =
-            FirebaseFunctions.instance.httpsCallable('createInviteCode');
-        final res = await callable.call({'taskId': docRef.id});
-        final data = Map<String, dynamic>.from(res.data);
-        final code = data['code'];
-        final inviteLink = 'iron-split://join?code=$code';
-
-        // 3. 觸發原生 Share Sheet
-        if (mounted) {
-          await SharePlus.instance.share(
-            ShareParams(
-              text: t.D03_TaskCreate_Confirm.share_message(
-                taskName: widget.taskName,
-                code: code,
-                link: inviteLink,
-              ),
-              subject: t.D03_TaskCreate_Confirm.share_subject,
-            ),
-          );
-        }
-      }
-
-      // 4. 完成 -> S06 Dashboard
-      if (mounted) {
-        Navigator.pop(context); // 關閉 D03
-        context.go('/tasks/${docRef.id}');
-      }
-    } catch (e) {
-      print('${e.toString()}');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.common.error_prefix(message: e.toString()))),
-        );
-        setState(() => _isProcessing = false);
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = Translations.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd');
 
     return AlertDialog(
@@ -189,7 +34,7 @@ class _D03TaskCreateConfirmDialogState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 鐵公雞 Placeholder (靜態)
+            // Icon
             Center(
               child: Container(
                 margin: const EdgeInsets.only(bottom: 16),
@@ -204,44 +49,35 @@ class _D03TaskCreateConfirmDialogState
               ),
             ),
 
-            _buildRow(t.D03_TaskCreate_Confirm.label_name, widget.taskName),
+            _buildRow(context, t.D03_TaskCreate_Confirm.label_name, taskName),
             const SizedBox(height: 8),
-            _buildRow(t.D03_TaskCreate_Confirm.label_period,
-                '${dateFormat.format(widget.startDate)} - ${dateFormat.format(widget.endDate)}'),
+            _buildRow(context, t.D03_TaskCreate_Confirm.label_period,
+                '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
             const SizedBox(height: 8),
-            _buildRow(t.D03_TaskCreate_Confirm.label_currency,
-                widget.baseCurrencyOption.code),
+            _buildRow(context, t.D03_TaskCreate_Confirm.label_currency,
+                baseCurrencyOption.code),
             const SizedBox(height: 8),
-            _buildRow(t.D03_TaskCreate_Confirm.label_members,
-                '${widget.memberCount}'),
-
-            if (_isProcessing) ...[
-              const SizedBox(height: 24),
-              const Center(child: CircularProgressIndicator()),
-              const SizedBox(height: 8),
-              Center(
-                  child: Text(_statusText ?? '',
-                      style: theme.textTheme.bodySmall)),
-            ],
+            _buildRow(context, t.D03_TaskCreate_Confirm.label_members,
+                '$memberCount'),
           ],
         ),
       ),
       actions: [
-        // Secondary: 返回編輯
+        // Secondary: 返回
         TextButton(
-          onPressed: _isProcessing ? null : () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false), // 回傳 false
           child: Text(t.D03_TaskCreate_Confirm.action_back),
         ),
         // Primary: 確認
         FilledButton(
-          onPressed: _isProcessing ? null : _handleConfirm,
+          onPressed: () => Navigator.pop(context, true), // 回傳 true
           child: Text(t.D03_TaskCreate_Confirm.action_confirm),
         ),
       ],
     );
   }
 
-  Widget _buildRow(String label, String value) {
+  Widget _buildRow(BuildContext context, String label, String value) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

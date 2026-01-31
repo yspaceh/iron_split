@@ -105,6 +105,15 @@ class _S13DashboardContentState extends State<_S13DashboardContent> {
       appBar: AppBar(
         title: Text(
             taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title_active),
+        // 新增：智慧導航按鈕
+        leading: Navigator.of(context).canPop()
+            ? null // null 代表使用預設的「返回箭頭」 (因為有上一頁)
+            : IconButton(
+                icon: Icon(Icons.adaptive.arrow_back), // 沒有上一頁時，顯示「回首頁」
+                onPressed: () {
+                  context.goNamed('S10');
+                },
+              ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
