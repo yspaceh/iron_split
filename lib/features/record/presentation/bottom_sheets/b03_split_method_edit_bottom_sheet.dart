@@ -635,7 +635,7 @@ class _B03SplitMethodEditBottomSheetState
                     child: Text(
                       t.B03_SplitMethod_Edit.msg_leftover_pot(
                           amount:
-                              "$baseRemainder ${widget.baseCurrency.symbol}"),
+                              "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseRemainder, widget.baseCurrency.code)}"),
                       style: TextStyle(
                           fontSize: 12,
                           color: theme.colorScheme.onTertiaryContainer),

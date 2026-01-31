@@ -109,11 +109,6 @@ class _S15ContentState extends State<_S15Content> {
     final amountToSplit =
         vm.recordTypeIndex == 1 ? vm.totalAmount : vm.baseRemainingAmount;
 
-    // 🛠️ 修正點 1：明確轉型為 Map<String, double>
-    final Map<String, double> defaultWeights = {
-      for (var m in vm.taskMembers) (m['id'] as String): 1.0
-    };
-
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
     final result = await showModalBottomSheet<Map<String, dynamic>>(
@@ -123,7 +118,7 @@ class _S15ContentState extends State<_S15Content> {
         totalAmount: amountToSplit,
         selectedCurrency: vm.selectedCurrencyConstants,
         allMembers: vm.taskMembers,
-        defaultMemberWeights: defaultWeights,
+        defaultMemberWeights: vm.memberDefaultWeights,
         initialSplitMethod: vm.baseSplitMethod,
         initialMemberIds: vm.baseMemberIds,
         initialDetails: vm.baseRawDetails,

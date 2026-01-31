@@ -503,20 +503,47 @@ class S15RecordEditViewModel extends ChangeNotifier {
   }
 
   bool hasUnsavedChanges() {
+    // 1. 新增模式 (Create Mode)
     if (_originalRecord == null) {
-      if (_recordTypeIndex == 1) return totalAmount > 0;
-      return totalAmount > 0 || titleController.text.trim().isNotEmpty;
+      if (totalAmount > 0) return true;
+      // 只有在支出模式下，才檢查標題是否有字
+      if (_recordTypeIndex == 0) {
+        return titleController.text.trim().isNotEmpty;
+      }
+      return false;
     }
 
+    // 2. 編輯模式 (Edit Mode)
     final r = _originalRecord!;
     final currentType = _recordTypeIndex == 0 ? 'expense' : 'income';
+
+    // 檢查類型變更
     if (currentType != r.type) return true;
 
+    // 檢查金額變更
     if ((totalAmount - r.originalAmount).abs() > 0.001) return true;
-    if (titleController.text != r.title) return true;
+
+    // 檢查標題變更 (✅ 修正重點)
+    // 只有當「現在是支出」且「資料庫原本也是支出」時，才比對標題
+    // 因為 Income 的 Controller 通常是空的，比對會出錯
+    if (_recordTypeIndex == 0 && r.type == 'expense') {
+      if (titleController.text != r.title) return true;
+    }
+
+    // 檢查日期變更
     if (!_isSameDay(_selectedDate, r.date)) return true;
 
-    return false; // Simplified check
+    // (建議) 檢查分類是否變更 (防止改了分類卻沒警告)
+    if (_recordTypeIndex == 0 && _selectedCategoryId != r.categoryId) {
+      return true;
+    }
+
+    // (建議) 檢查付款人/成員是否變更 (防止改了付款人卻沒警告)
+    // 簡單檢查 payerType 或 payerId
+    if (_payerType != r.payerType) return true;
+    if (_payerType == 'member' && _payerId != r.payerId) return true;
+
+    return false;
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
@@ -525,6 +552,19 @@ class S15RecordEditViewModel extends ChangeNotifier {
   String _getMemberName(String id, Translations t) {
     final m = _taskMembers.firstWhere((e) => e['id'] == id, orElse: () => {});
     return m['displayName'] ?? t.S53_TaskSettings_Members.member_default_name;
+  }
+
+  /// 取得所有成員的預設分帳比例
+  /// 用於傳遞給 B03
+  Map<String, double> get memberDefaultWeights {
+    final Map<String, double> weights = {};
+    for (var m in _taskMembers) {
+      final id = m['id'] as String;
+      // 從 S53 更新的 'defaultSplitRatio' 欄位讀取
+      final ratio = (m['defaultSplitRatio'] as num? ?? 1.0).toDouble();
+      weights[id] = ratio;
+    }
+    return weights;
   }
 
   @override

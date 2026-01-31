@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 
 // 核心配置與服務
@@ -26,6 +28,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        // 1. 注入 TaskRepository
+        Provider<TaskRepository>(
+          create: (_) => TaskRepository(),
+        ),
+        // 2. 注入 RecordRepository
+        Provider<RecordRepository>(
+          create: (_) => RecordRepository(),
+        ),
         // 註冊 PendingInviteProvider 並執行 init
         ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
       ],
