@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/presentation/widgets/personal_balance_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -113,12 +115,47 @@ class S13PersonalView extends StatelessWidget {
                         )
                       else
                         ...dayRecords.map((record) {
+                          double displayAmount = record.type == 'income'
+                              ? BalanceCalculator.calculatePersonalCredit(
+                                  record, vm.currentUserId,
+                                  isBaseCurrency: false)
+                              : BalanceCalculator.calculatePersonalDebit(
+                                  record, vm.currentUserId,
+                                  isBaseCurrency: false);
                           return RecordItem(
-                            taskId: task.id,
                             record: record,
-                            poolBalancesByCurrency: vm.poolBalances,
                             baseCurrencyOption: vm.currencyOption,
-                            uid: vm.currentUserId, // 傳入 UID 判斷顯示方式 (藍/綠/紅)
+                            displayAmount: displayAmount,
+                            onTap: () {
+                              context.pushNamed(
+                                'S15',
+                                pathParameters: {'taskId': task.id},
+                                queryParameters: {'id': record.id},
+                                extra: {
+                                  // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
+                                  'poolBalancesByCurrency': vm.poolBalances,
+                                  'baseCurrencyOption': vm.currencyOption,
+                                  'record': record,
+                                },
+                              );
+                            },
+                            onDelete: (ctx) async {
+                              // 呼叫 Repo 進行刪除
+                              try {
+                                await vm.deleteRecord(record.id!);
+                                // 顯示 SnackBar
+                                if (ctx.mounted) {
+                                  ScaffoldMessenger.of(ctx).showSnackBar(
+                                    SnackBar(
+                                        content: Text(Translations.of(ctx)
+                                            .D10_RecordDelete_Confirm
+                                            .deleted_success)),
+                                  );
+                                }
+                              } catch (e) {
+                                // TODO: 需追加錯誤處理
+                              }
+                            },
                           );
                         }),
                     ],

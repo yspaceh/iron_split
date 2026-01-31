@@ -316,6 +316,39 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     return _service.calculateDailyPersonalDebit(dayRecords, currentUserId);
   }
 
+  /// 刪除消費紀錄
+  Future<void> deleteRecord(String recordId) async {
+    try {
+      // 1. 為了寫 Log，先從目前的列表找出該筆紀錄的資訊
+      // 如果找不到 (極端情況)，這裡會拋出異常，或者你可以給預設值
+      final record = _records.firstWhere(
+        (r) => r.id == recordId,
+        orElse: () => throw Exception("Record not found in current list"),
+      );
+
+      // 2. 呼叫 Repository 執行刪除
+      await _recordRepo.deleteRecord(taskId, recordId);
+
+      // 3. 寫入 Activity Log
+      await ActivityLogService.log(
+        taskId: taskId,
+        action: LogAction.deleteRecord,
+        details: {
+          'recordName': record.title,
+          'amount': record.amount,
+          'currency': record.currencyCode, // 注意：Model 的欄位是 currencyCode
+        },
+      );
+
+      // 注意：不需要手動從 _records 移除或 notifyListeners
+      // 因為 _recordRepo.streamRecords 會監聽到 Firestore 變更，
+      // 自動觸發 _recordSub -> _recalculate -> notifyListeners
+    } catch (e) {
+      debugPrint("Delete record failed: $e");
+      rethrow; // 拋出異常，讓 UI 層 (RecordItem) 可以顯示 SnackBar 錯誤訊息
+    }
+  }
+
   @override
   void dispose() {
     _taskSub?.cancel();

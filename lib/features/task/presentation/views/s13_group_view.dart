@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -150,10 +151,39 @@ class S13GroupView extends StatelessWidget {
                       ),
                       ...dayRecords.map((record) {
                         return RecordItem(
-                          taskId: task.id,
                           record: record,
-                          poolBalancesByCurrency: vm.poolBalances, // 從 VM 獲取
                           baseCurrencyOption: vm.currencyOption,
+                          displayAmount: record.amount,
+                          onTap: () {
+                            context.pushNamed(
+                              'S15',
+                              pathParameters: {'taskId': task.id},
+                              queryParameters: {'id': record.id},
+                              extra: {
+                                // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
+                                'poolBalancesByCurrency': vm.poolBalances,
+                                'baseCurrencyOption': vm.currencyOption,
+                                'record': record,
+                              },
+                            );
+                          },
+                          onDelete: (ctx) async {
+                            // 呼叫 Repo 進行刪除
+                            try {
+                              await vm.deleteRecord(record.id!);
+                              // 顯示 SnackBar
+                              if (ctx.mounted) {
+                                ScaffoldMessenger.of(ctx).showSnackBar(
+                                  SnackBar(
+                                      content: Text(Translations.of(ctx)
+                                          .D10_RecordDelete_Confirm
+                                          .deleted_success)),
+                                );
+                              }
+                            } catch (e) {
+                              // TODO: 需追加錯誤處理
+                            }
+                          },
                         );
                       }),
                       // 保留新增按鈕樣式
