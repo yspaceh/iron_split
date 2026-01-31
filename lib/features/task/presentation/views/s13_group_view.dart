@@ -9,7 +9,7 @@ import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
-import 'package:iron_split/features/task/presentation/widgets/record_block.dart';
+import 'package:iron_split/features/task/presentation/widgets/record_item.dart';
 import 'package:iron_split/features/task/presentation/widgets/balance_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
@@ -132,7 +132,7 @@ class S13GroupView extends StatelessWidget {
                         isPersonal: false,
                       ),
                       ...dayRecords.map((record) {
-                        return RecordBlock(
+                        return RecordItem(
                           taskId: task.id,
                           record: record,
                           poolBalancesByCurrency: vm.poolBalances, // 從 VM 獲取

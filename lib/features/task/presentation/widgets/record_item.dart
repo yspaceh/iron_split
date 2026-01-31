@@ -8,14 +8,14 @@ import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class RecordBlock extends StatelessWidget {
+class RecordItem extends StatelessWidget {
   final String taskId;
   final RecordModel record;
   final Map<String, double> poolBalancesByCurrency;
   final CurrencyOption baseCurrencyOption;
   final String? uid; // 個人用
 
-  const RecordBlock({
+  const RecordItem({
     super.key,
     required this.taskId,
     required this.record,
