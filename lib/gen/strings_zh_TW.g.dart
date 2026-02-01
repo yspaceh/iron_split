@@ -40,10 +40,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
-	late final TranslationsCategoryZhTw category = TranslationsCategoryZhTw.internal(_root);
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
-	late final TranslationsCurrencyZhTw currency = TranslationsCurrencyZhTw.internal(_root);
-	late final TranslationsRemainderRuleZhTw remainder_rule = TranslationsRemainderRuleZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
 	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
@@ -69,35 +66,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
+	late final TranslationsB04PaymentMergeZhTw b04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
-}
-
-// Path: category
-class TranslationsCategoryZhTw {
-	TranslationsCategoryZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '飲食'
-	String get food => '飲食';
-
-	/// zh-TW: '交通'
-	String get transport => '交通';
-
-	/// zh-TW: '購物'
-	String get shopping => '購物';
-
-	/// zh-TW: '娛樂'
-	String get entertainment => '娛樂';
-
-	/// zh-TW: '住宿'
-	String get accommodation => '住宿';
-
-	/// zh-TW: '其他'
-	String get others => '其他';
 }
 
 // Path: common
@@ -107,21 +78,10 @@ class TranslationsCommonZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// zh-TW: '取消'
-	String get cancel => '取消';
-
-	/// zh-TW: '刪除'
-	String get delete => '刪除';
-
-	/// zh-TW: '確認'
-	String get confirm => '確認';
-
-	/// zh-TW: '返回'
-	String get back => '返回';
-
-	/// zh-TW: '保存'
-	String get save => '保存';
+	late final TranslationsCommonButtonsZhTw buttons = TranslationsCommonButtonsZhTw.internal(_root);
+	late final TranslationsCommonCategoryZhTw category = TranslationsCommonCategoryZhTw.internal(_root);
+	late final TranslationsCommonCurrencyZhTw currency = TranslationsCommonCurrencyZhTw.internal(_root);
+	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 
 	/// zh-TW: '錯誤: {message}'
 	String error_prefix({required Object message}) => '錯誤: ${message}';
@@ -132,23 +92,11 @@ class TranslationsCommonZhTw {
 	/// zh-TW: '讀取中...'
 	String get loading => '讀取中...';
 
-	/// zh-TW: '編輯'
-	String get edit => '編輯';
-
-	/// zh-TW: '關閉'
-	String get close => '關閉';
-
 	/// zh-TW: '我'
 	String get me => '我';
 
 	/// zh-TW: '必填'
 	String get required => '必填';
-
-	/// zh-TW: '放棄變更'
-	String get discard => '放棄變更';
-
-	/// zh-TW: '繼續編輯'
-	String get keep_editing => '繼續編輯';
 
 	/// zh-TW: '成員'
 	String get member_prefix => '成員';
@@ -161,120 +109,6 @@ class TranslationsCommonZhTw {
 
 	/// zh-TW: '未命名'
 	String get untitled => '未命名';
-}
-
-// Path: currency
-class TranslationsCurrencyZhTw {
-	TranslationsCurrencyZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '新台幣'
-	String get twd => '新台幣';
-
-	/// zh-TW: '日圓'
-	String get jpy => '日圓';
-
-	/// zh-TW: '美金'
-	String get usd => '美金';
-
-	/// zh-TW: '歐元'
-	String get eur => '歐元';
-
-	/// zh-TW: '韓元'
-	String get krw => '韓元';
-
-	/// zh-TW: '人民幣'
-	String get cny => '人民幣';
-
-	/// zh-TW: '英鎊'
-	String get gbp => '英鎊';
-
-	/// zh-TW: '加拿大幣'
-	String get cad => '加拿大幣';
-
-	/// zh-TW: '澳幣'
-	String get aud => '澳幣';
-
-	/// zh-TW: '瑞士法郎'
-	String get chf => '瑞士法郎';
-
-	/// zh-TW: '丹麥幣'
-	String get dkk => '丹麥幣';
-
-	/// zh-TW: '港幣'
-	String get hkd => '港幣';
-
-	/// zh-TW: '挪威幣'
-	String get nok => '挪威幣';
-
-	/// zh-TW: '紐西蘭幣'
-	String get nzd => '紐西蘭幣';
-
-	/// zh-TW: '新加坡幣'
-	String get sgd => '新加坡幣';
-
-	/// zh-TW: '泰幣'
-	String get thb => '泰幣';
-
-	/// zh-TW: '南非幣'
-	String get zar => '南非幣';
-
-	/// zh-TW: '俄羅斯幣'
-	String get rub => '俄羅斯幣';
-
-	/// zh-TW: '越南盾'
-	String get vnd => '越南盾';
-
-	/// zh-TW: '印尼盾'
-	String get idr => '印尼盾';
-
-	/// zh-TW: '馬來幣'
-	String get myr => '馬來幣';
-
-	/// zh-TW: '菲律賓幣'
-	String get php => '菲律賓幣';
-
-	/// zh-TW: '澳門幣'
-	String get mop => '澳門幣';
-
-	/// zh-TW: '瑞典克朗'
-	String get sek => '瑞典克朗';
-
-	/// zh-TW: '阿聯酋迪拉姆'
-	String get aed => '阿聯酋迪拉姆';
-
-	/// zh-TW: '沙烏地里亞爾'
-	String get sar => '沙烏地里亞爾';
-
-	/// zh-TW: '土耳其里拉'
-	String get try_ => '土耳其里拉';
-
-	/// zh-TW: '印度盧比'
-	String get inr => '印度盧比';
-}
-
-// Path: remainder_rule
-class TranslationsRemainderRuleZhTw {
-	TranslationsRemainderRuleZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '零頭處理'
-	String get title => '零頭處理';
-
-	/// zh-TW: '餘額輪盤'
-	String get rule_random => '餘額輪盤';
-
-	/// zh-TW: '順序輪替'
-	String get rule_order => '順序輪替';
-
-	/// zh-TW: '指定成員'
-	String get rule_member => '指定成員';
 }
 
 // Path: log_action
@@ -381,6 +215,8 @@ class TranslationsS11InviteConfirmZhTw {
 	/// zh-TW: '您受邀加入以下任務：'
 	String get subtitle => '您受邀加入以下任務：';
 
+	late final TranslationsS11InviteConfirmButtonsZhTw buttons = TranslationsS11InviteConfirmButtonsZhTw.internal(_root);
+
 	/// zh-TW: '正在讀取邀請函...'
 	String get loading_invite => '正在讀取邀請函...';
 
@@ -398,15 +234,6 @@ class TranslationsS11InviteConfirmZhTw {
 
 	/// zh-TW: '將以「新成員」身分加入'
 	String get status_new_member => '將以「新成員」身分加入';
-
-	/// zh-TW: '加入'
-	String get action_confirm => '加入';
-
-	/// zh-TW: '取消'
-	String get action_cancel => '取消';
-
-	/// zh-TW: '回首頁'
-	String get action_home => '回首頁';
 
 	/// zh-TW: '加入失敗：{message}'
 	String error_join_failed({required Object message}) => '加入失敗：${message}';
@@ -438,8 +265,7 @@ class TranslationsS12TaskCloseNoticeZhTw {
 	/// zh-TW: '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。'
 	String get content => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。';
 
-	/// zh-TW: '結束任務'
-	String get action_close => '結束任務';
+	late final TranslationsS12TaskCloseNoticeButtonsZhTw buttons = TranslationsS12TaskCloseNoticeButtonsZhTw.internal(_root);
 }
 
 // Path: S13_Task_Dashboard
@@ -452,6 +278,8 @@ class TranslationsS13TaskDashboardZhTw {
 
 	/// zh-TW: '任務主頁'
 	String get title_active => '任務主頁';
+
+	late final TranslationsS13TaskDashboardButtonsZhTw buttons = TranslationsS13TaskDashboardButtonsZhTw.internal(_root);
 
 	/// zh-TW: '大家'
 	String get tab_group => '大家';
@@ -480,14 +308,8 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '零頭罐'
 	String get label_remainder_pot => '零頭罐';
 
-	/// zh-TW: '記一筆'
-	String get fab_record => '記一筆';
-
 	/// zh-TW: '尚無收支紀錄'
 	String get empty_records => '尚無收支紀錄';
-
-	/// zh-TW: '結算'
-	String get settlement_button => '結算';
 
 	/// zh-TW: '準備前往記帳頁面...'
 	String get nav_to_record => '準備前往記帳頁面...';
@@ -524,9 +346,6 @@ class TranslationsS13TaskDashboardZhTw {
 
 	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
 	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
-
-	/// zh-TW: '下載記錄'
-	String get action_download => '下載記錄';
 }
 
 // Path: S14_Task_Settings
@@ -567,6 +386,8 @@ class TranslationsS15RecordEditZhTw {
 	/// zh-TW: '編輯紀錄'
 	String get title_edit => '編輯紀錄';
 
+	late final TranslationsS15RecordEditButtonsZhTw buttons = TranslationsS15RecordEditButtonsZhTw.internal(_root);
+
 	/// zh-TW: '分攤資訊'
 	String get section_split => '分攤資訊';
 
@@ -600,9 +421,6 @@ class TranslationsS15RecordEditZhTw {
 	/// zh-TW: '輸入備註...'
 	String get hint_memo => '輸入備註...';
 
-	/// zh-TW: '儲存紀錄'
-	String get action_save => '儲存紀錄';
-
 	/// zh-TW: '細項分拆'
 	String get val_split_details => '細項分拆';
 
@@ -614,9 +432,6 @@ class TranslationsS15RecordEditZhTw {
 
 	/// zh-TW: '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。'
 	String get msg_rate_source => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。';
-
-	/// zh-TW: '關閉'
-	String get btn_close => '關閉';
 
 	/// zh-TW: '≈ {base}{symbol} {amount}'
 	String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
@@ -678,6 +493,8 @@ class TranslationsS16TaskCreateEditZhTw {
 	/// zh-TW: '新增任務'
 	String get title => '新增任務';
 
+	late final TranslationsS16TaskCreateEditButtonsZhTw buttons = TranslationsS16TaskCreateEditButtonsZhTw.internal(_root);
+
 	/// zh-TW: '任務名稱'
 	String get section_name => '任務名稱';
 
@@ -705,12 +522,6 @@ class TranslationsS16TaskCreateEditZhTw {
 	/// zh-TW: '參加人數'
 	String get field_member_count => '參加人數';
 
-	/// zh-TW: '保存'
-	String get action_save => '保存';
-
-	/// zh-TW: '確定'
-	String get picker_done => '確定';
-
 	/// zh-TW: '請輸入任務名稱'
 	String get error_name_empty => '請輸入任務名稱';
 
@@ -731,21 +542,13 @@ class TranslationsS17TaskLockedZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final TranslationsS17TaskLockedButtonsZhTw buttons = TranslationsS17TaskLockedButtonsZhTw.internal(_root);
 
 	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
 	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
 
-	/// zh-TW: '下載紀錄'
-	String get action_download => '下載紀錄';
-
-	/// zh-TW: '通知成員'
-	String get action_notify_members => '通知成員';
-
 	/// zh-TW: '零錢罐 {amount} 由 {name} 吸收'
 	String label_remainder_absorbed_by({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收';
-
-	/// zh-TW: '查看收退款帳戶'
-	String get action_view_payment_details => '查看收退款帳戶';
 
 	/// zh-TW: '待處理'
 	String get section_pending => '待處理';
@@ -777,6 +580,7 @@ class TranslationsS30SettlementConfirmZhTw {
 	/// zh-TW: '結算確認'
 	String get title => '結算確認';
 
+	late final TranslationsS30SettlementConfirmButtonsZhTw buttons = TranslationsS30SettlementConfirmButtonsZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmStepsZhTw steps = TranslationsS30SettlementConfirmStepsZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmWarningZhTw warning = TranslationsS30SettlementConfirmWarningZhTw.internal(_root);
 
@@ -787,9 +591,6 @@ class TranslationsS30SettlementConfirmZhTw {
 	String get label_refund => '可退';
 
 	late final TranslationsS30SettlementConfirmListItemZhTw list_item = TranslationsS30SettlementConfirmListItemZhTw.internal(_root);
-
-	/// zh-TW: '收款設定'
-	String get action_next => '收款設定';
 }
 
 // Path: S50_Onboarding_Consent
@@ -802,6 +603,8 @@ class TranslationsS50OnboardingConsentZhTw {
 
 	/// zh-TW: '歡迎使用 Iron Split'
 	String get title => '歡迎使用 Iron Split';
+
+	late final TranslationsS50OnboardingConsentButtonsZhTw buttons = TranslationsS50OnboardingConsentButtonsZhTw.internal(_root);
 
 	/// zh-TW: '歡迎使用 Iron Split。點擊開始即代表您同意我們的 '
 	String get content_prefix => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
@@ -818,9 +621,6 @@ class TranslationsS50OnboardingConsentZhTw {
 	/// zh-TW: '。我們採用匿名登入，保障您的隱私。'
 	String get content_suffix => '。我們採用匿名登入，保障您的隱私。';
 
-	/// zh-TW: '開始使用'
-	String get agree_btn => '開始使用';
-
 	/// zh-TW: '登入失敗: {message}'
 	String login_failed({required Object message}) => '登入失敗: ${message}';
 }
@@ -835,6 +635,8 @@ class TranslationsS51OnboardingNameZhTw {
 
 	/// zh-TW: '名稱設定'
 	String get title => '名稱設定';
+
+	late final TranslationsS51OnboardingNameButtonsZhTw buttons = TranslationsS51OnboardingNameButtonsZhTw.internal(_root);
 
 	/// zh-TW: '請輸入您在 App 內的顯示名稱（1-10 個字）。'
 	String get description => '請輸入您在 App 內的顯示名稱（1-10 個字）。';
@@ -853,9 +655,6 @@ class TranslationsS51OnboardingNameZhTw {
 
 	/// zh-TW: '包含無效字元'
 	String get error_invalid_char => '包含無效字元';
-
-	/// zh-TW: '設定完成'
-	String get action_next => '設定完成';
 }
 
 // Path: S52_TaskSettings_Log
@@ -869,11 +668,10 @@ class TranslationsS52TaskSettingsLogZhTw {
 	/// zh-TW: '活動紀錄'
 	String get title => '活動紀錄';
 
+	late final TranslationsS52TaskSettingsLogButtonsZhTw buttons = TranslationsS52TaskSettingsLogButtonsZhTw.internal(_root);
+
 	/// zh-TW: '目前沒有任何活動紀錄'
 	String get empty_log => '目前沒有任何活動紀錄';
-
-	/// zh-TW: '匯出 CSV'
-	String get action_export_csv => '匯出 CSV';
 
 	/// zh-TW: '活動紀錄'
 	String get export_file_prefix => '活動紀錄';
@@ -919,11 +717,7 @@ class TranslationsS53TaskSettingsMembersZhTw {
 	/// zh-TW: '成員管理'
 	String get title => '成員管理';
 
-	/// zh-TW: '新增成員'
-	String get action_add => '新增成員';
-
-	/// zh-TW: '發送邀請'
-	String get action_invite => '發送邀請';
+	late final TranslationsS53TaskSettingsMembersButtonsZhTw buttons = TranslationsS53TaskSettingsMembersButtonsZhTw.internal(_root);
 
 	/// zh-TW: '預設比例'
 	String get label_default_ratio => '預設比例';
@@ -964,11 +758,7 @@ class TranslationsD01MemberRoleIntroZhTw {
 	/// zh-TW: '你的角色是...'
 	String get title => '你的角色是...';
 
-	/// zh-TW: '換個動物'
-	String get action_reroll => '換個動物';
-
-	/// zh-TW: '進入任務'
-	String get action_enter => '進入任務';
+	late final TranslationsD01MemberRoleIntroButtonsZhTw buttons = TranslationsD01MemberRoleIntroButtonsZhTw.internal(_root);
 
 	/// zh-TW: '還有 1 次機會'
 	String get desc_reroll_left => '還有 1 次機會';
@@ -991,8 +781,7 @@ class TranslationsD02InviteResultZhTw {
 	/// zh-TW: '加入失敗'
 	String get title => '加入失敗';
 
-	/// zh-TW: '回首頁'
-	String get action_back => '回首頁';
+	late final TranslationsD02InviteResultButtonsZhTw buttons = TranslationsD02InviteResultButtonsZhTw.internal(_root);
 
 	/// zh-TW: '邀請碼無效，請確認連結是否正確。'
 	String get error_INVALID_CODE => '邀請碼無效，請確認連結是否正確。';
@@ -1021,6 +810,8 @@ class TranslationsD03TaskCreateConfirmZhTw {
 	/// zh-TW: '確認任務設定'
 	String get title => '確認任務設定';
 
+	late final TranslationsD03TaskCreateConfirmButtonsZhTw buttons = TranslationsD03TaskCreateConfirmButtonsZhTw.internal(_root);
+
 	/// zh-TW: '任務名稱'
 	String get label_name => '任務名稱';
 
@@ -1032,12 +823,6 @@ class TranslationsD03TaskCreateConfirmZhTw {
 
 	/// zh-TW: '人數'
 	String get label_members => '人數';
-
-	/// zh-TW: '確認'
-	String get action_confirm => '確認';
-
-	/// zh-TW: '返回編輯'
-	String get action_back => '返回編輯';
 
 	/// zh-TW: '正在建立任務...'
 	String get creating_task => '正在建立任務...';
@@ -1063,14 +848,10 @@ class TranslationsD05DateJumpNoResultZhTw {
 	/// zh-TW: '無紀錄'
 	String get title => '無紀錄';
 
+	late final TranslationsD05DateJumpNoResultButtonsZhTw buttons = TranslationsD05DateJumpNoResultButtonsZhTw.internal(_root);
+
 	/// zh-TW: '找不到此日期的紀錄，要新增一筆嗎？'
 	String get content => '找不到此日期的紀錄，要新增一筆嗎？';
-
-	/// zh-TW: '返回'
-	String get action_cancel => '返回';
-
-	/// zh-TW: '新增紀錄'
-	String get action_add => '新增紀錄';
 }
 
 // Path: D08_TaskClosed_Confirm
@@ -1084,11 +865,10 @@ class TranslationsD08TaskClosedConfirmZhTw {
 	/// zh-TW: '確認結束任務'
 	String get title => '確認結束任務';
 
+	late final TranslationsD08TaskClosedConfirmButtonsZhTw buttons = TranslationsD08TaskClosedConfirmButtonsZhTw.internal(_root);
+
 	/// zh-TW: '此操作無法復原。所有資料將被永久鎖定。 確定要繼續嗎？'
 	String get content => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？';
-
-	/// zh-TW: '確認'
-	String get action_confirm => '確認';
 }
 
 // Path: D09_TaskSettings_CurrencyConfirm
@@ -1135,6 +915,8 @@ class TranslationsB02SplitExpenseEditZhTw {
 	/// zh-TW: '編輯細項'
 	String get title => '編輯細項';
 
+	late final TranslationsB02SplitExpenseEditButtonsZhTw buttons = TranslationsB02SplitExpenseEditButtonsZhTw.internal(_root);
+
 	/// zh-TW: '項目名稱'
 	String get name_label => '項目名稱';
 
@@ -1162,9 +944,6 @@ class TranslationsB02SplitExpenseEditZhTw {
 	/// zh-TW: '總比例必須為 100%'
 	String get error_percent_mismatch => '總比例必須為 100%';
 
-	/// zh-TW: '確認分拆'
-	String get action_save => '確認分拆';
-
 	/// zh-TW: '金額'
 	String get hint_amount => '金額';
 
@@ -1182,6 +961,8 @@ class TranslationsB03SplitMethodEditZhTw {
 
 	/// zh-TW: '選擇分攤方式'
 	String get title => '選擇分攤方式';
+
+	late final TranslationsB03SplitMethodEditButtonsZhTw buttons = TranslationsB03SplitMethodEditButtonsZhTw.internal(_root);
 
 	/// zh-TW: '平均分攤'
 	String get method_even => '平均分攤';
@@ -1209,9 +990,35 @@ class TranslationsB03SplitMethodEditZhTw {
 
 	/// zh-TW: '總金額不符 (差額 {diff})'
 	String error_total_mismatch({required Object diff}) => '總金額不符 (差額 ${diff})';
+}
 
-	/// zh-TW: '調整權重'
-	String get btn_adjust_weight => '調整權重';
+// Path: b04_payment_merge
+class TranslationsB04PaymentMergeZhTw {
+	TranslationsB04PaymentMergeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '合併成員款項'
+	String get title => '合併成員款項';
+
+	/// zh-TW: '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。'
+	String get description => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。';
+
+	/// zh-TW: '代表成員'
+	String get section_head => '代表成員';
+
+	/// zh-TW: '選擇合併成員'
+	String get section_candidates => '選擇合併成員';
+
+	/// zh-TW: '應付'
+	String get status_payable => '應付';
+
+	/// zh-TW: '可退'
+	String get status_receivable => '可退';
+
+	late final TranslationsB04PaymentMergeButtonsZhTw buttons = TranslationsB04PaymentMergeButtonsZhTw.internal(_root);
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -1280,6 +1087,291 @@ class TranslationsErrorZhTw {
 	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
 }
 
+// Path: common.buttons
+class TranslationsCommonButtonsZhTw {
+	TranslationsCommonButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '取消'
+	String get cancel => '取消';
+
+	/// zh-TW: '刪除'
+	String get delete => '刪除';
+
+	/// zh-TW: '確認'
+	String get confirm => '確認';
+
+	/// zh-TW: '返回'
+	String get back => '返回';
+
+	/// zh-TW: '保存'
+	String get save => '保存';
+
+	/// zh-TW: '編輯'
+	String get edit => '編輯';
+
+	/// zh-TW: '關閉'
+	String get close => '關閉';
+
+	/// zh-TW: '放棄變更'
+	String get discard => '放棄變更';
+
+	/// zh-TW: '繼續編輯'
+	String get keep_editing => '繼續編輯';
+}
+
+// Path: common.category
+class TranslationsCommonCategoryZhTw {
+	TranslationsCommonCategoryZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '飲食'
+	String get food => '飲食';
+
+	/// zh-TW: '交通'
+	String get transport => '交通';
+
+	/// zh-TW: '購物'
+	String get shopping => '購物';
+
+	/// zh-TW: '娛樂'
+	String get entertainment => '娛樂';
+
+	/// zh-TW: '住宿'
+	String get accommodation => '住宿';
+
+	/// zh-TW: '其他'
+	String get others => '其他';
+}
+
+// Path: common.currency
+class TranslationsCommonCurrencyZhTw {
+	TranslationsCommonCurrencyZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '新台幣'
+	String get twd => '新台幣';
+
+	/// zh-TW: '日圓'
+	String get jpy => '日圓';
+
+	/// zh-TW: '美金'
+	String get usd => '美金';
+
+	/// zh-TW: '歐元'
+	String get eur => '歐元';
+
+	/// zh-TW: '韓元'
+	String get krw => '韓元';
+
+	/// zh-TW: '人民幣'
+	String get cny => '人民幣';
+
+	/// zh-TW: '英鎊'
+	String get gbp => '英鎊';
+
+	/// zh-TW: '加拿大幣'
+	String get cad => '加拿大幣';
+
+	/// zh-TW: '澳幣'
+	String get aud => '澳幣';
+
+	/// zh-TW: '瑞士法郎'
+	String get chf => '瑞士法郎';
+
+	/// zh-TW: '丹麥幣'
+	String get dkk => '丹麥幣';
+
+	/// zh-TW: '港幣'
+	String get hkd => '港幣';
+
+	/// zh-TW: '挪威幣'
+	String get nok => '挪威幣';
+
+	/// zh-TW: '紐西蘭幣'
+	String get nzd => '紐西蘭幣';
+
+	/// zh-TW: '新加坡幣'
+	String get sgd => '新加坡幣';
+
+	/// zh-TW: '泰幣'
+	String get thb => '泰幣';
+
+	/// zh-TW: '南非幣'
+	String get zar => '南非幣';
+
+	/// zh-TW: '俄羅斯幣'
+	String get rub => '俄羅斯幣';
+
+	/// zh-TW: '越南盾'
+	String get vnd => '越南盾';
+
+	/// zh-TW: '印尼盾'
+	String get idr => '印尼盾';
+
+	/// zh-TW: '馬來幣'
+	String get myr => '馬來幣';
+
+	/// zh-TW: '菲律賓幣'
+	String get php => '菲律賓幣';
+
+	/// zh-TW: '澳門幣'
+	String get mop => '澳門幣';
+
+	/// zh-TW: '瑞典克朗'
+	String get sek => '瑞典克朗';
+
+	/// zh-TW: '阿聯酋迪拉姆'
+	String get aed => '阿聯酋迪拉姆';
+
+	/// zh-TW: '沙烏地里亞爾'
+	String get sar => '沙烏地里亞爾';
+
+	/// zh-TW: '土耳其里拉'
+	String get try_ => '土耳其里拉';
+
+	/// zh-TW: '印度盧比'
+	String get inr => '印度盧比';
+}
+
+// Path: common.remainder_rule
+class TranslationsCommonRemainderRuleZhTw {
+	TranslationsCommonRemainderRuleZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '零頭處理'
+	String get title => '零頭處理';
+
+	/// zh-TW: '餘額輪盤'
+	String get rule_random => '餘額輪盤';
+
+	/// zh-TW: '順序輪替'
+	String get rule_order => '順序輪替';
+
+	/// zh-TW: '指定成員'
+	String get rule_member => '指定成員';
+}
+
+// Path: S11_Invite_Confirm.buttons
+class TranslationsS11InviteConfirmButtonsZhTw {
+	TranslationsS11InviteConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '加入'
+	String get confirm => '加入';
+
+	/// zh-TW: '取消'
+	String get cancel => '取消';
+
+	/// zh-TW: '回首頁'
+	String get home => '回首頁';
+}
+
+// Path: S12_TaskClose_Notice.buttons
+class TranslationsS12TaskCloseNoticeButtonsZhTw {
+	TranslationsS12TaskCloseNoticeButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '結束任務'
+	String get close => '結束任務';
+}
+
+// Path: S13_Task_Dashboard.buttons
+class TranslationsS13TaskDashboardButtonsZhTw {
+	TranslationsS13TaskDashboardButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '記一筆'
+	String get record => '記一筆';
+
+	/// zh-TW: '結算'
+	String get settlement => '結算';
+
+	/// zh-TW: '下載記錄'
+	String get download => '下載記錄';
+}
+
+// Path: S15_Record_Edit.buttons
+class TranslationsS15RecordEditButtonsZhTw {
+	TranslationsS15RecordEditButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '儲存紀錄'
+	String get save => '儲存紀錄';
+
+	/// zh-TW: '關閉'
+	String get close => '關閉';
+}
+
+// Path: S16_TaskCreate_Edit.buttons
+class TranslationsS16TaskCreateEditButtonsZhTw {
+	TranslationsS16TaskCreateEditButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '保存'
+	String get save => '保存';
+
+	/// zh-TW: '確定'
+	String get done => '確定';
+}
+
+// Path: S17_Task_Locked.buttons
+class TranslationsS17TaskLockedButtonsZhTw {
+	TranslationsS17TaskLockedButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '下載紀錄'
+	String get download => '下載紀錄';
+
+	/// zh-TW: '通知成員'
+	String get notify_members => '通知成員';
+
+	/// zh-TW: '查看收退款帳戶'
+	String get view_payment_details => '查看收退款帳戶';
+}
+
+// Path: s30_settlement_confirm.buttons
+class TranslationsS30SettlementConfirmButtonsZhTw {
+	TranslationsS30SettlementConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '收款設定'
+	String get next => '收款設定';
+}
+
 // Path: s30_settlement_confirm.steps
 class TranslationsS30SettlementConfirmStepsZhTw {
 	TranslationsS30SettlementConfirmStepsZhTw.internal(this._root);
@@ -1331,6 +1423,42 @@ class TranslationsS30SettlementConfirmListItemZhTw {
 	String get remainder => '餘額';
 }
 
+// Path: S50_Onboarding_Consent.buttons
+class TranslationsS50OnboardingConsentButtonsZhTw {
+	TranslationsS50OnboardingConsentButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '開始使用'
+	String get agree => '開始使用';
+}
+
+// Path: S51_Onboarding_Name.buttons
+class TranslationsS51OnboardingNameButtonsZhTw {
+	TranslationsS51OnboardingNameButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '設定完成'
+	String get next => '設定完成';
+}
+
+// Path: S52_TaskSettings_Log.buttons
+class TranslationsS52TaskSettingsLogButtonsZhTw {
+	TranslationsS52TaskSettingsLogButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '匯出 CSV'
+	String get export_csv => '匯出 CSV';
+}
+
 // Path: S52_TaskSettings_Log.csv_header
 class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(this._root);
@@ -1350,6 +1478,129 @@ class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 
 	/// zh-TW: '內容'
 	String get details => '內容';
+}
+
+// Path: S53_TaskSettings_Members.buttons
+class TranslationsS53TaskSettingsMembersButtonsZhTw {
+	TranslationsS53TaskSettingsMembersButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '新增成員'
+	String get add => '新增成員';
+
+	/// zh-TW: '發送邀請'
+	String get invite => '發送邀請';
+}
+
+// Path: D01_MemberRole_Intro.buttons
+class TranslationsD01MemberRoleIntroButtonsZhTw {
+	TranslationsD01MemberRoleIntroButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '換個動物'
+	String get reroll => '換個動物';
+
+	/// zh-TW: '進入任務'
+	String get enter => '進入任務';
+}
+
+// Path: D02_Invite_Result.buttons
+class TranslationsD02InviteResultButtonsZhTw {
+	TranslationsD02InviteResultButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '回首頁'
+	String get back => '回首頁';
+}
+
+// Path: D03_TaskCreate_Confirm.buttons
+class TranslationsD03TaskCreateConfirmButtonsZhTw {
+	TranslationsD03TaskCreateConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認'
+	String get confirm => '確認';
+
+	/// zh-TW: '返回編輯'
+	String get back => '返回編輯';
+}
+
+// Path: D05_DateJump_NoResult.buttons
+class TranslationsD05DateJumpNoResultButtonsZhTw {
+	TranslationsD05DateJumpNoResultButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '返回'
+	String get cancel => '返回';
+
+	/// zh-TW: '新增紀錄'
+	String get add => '新增紀錄';
+}
+
+// Path: D08_TaskClosed_Confirm.buttons
+class TranslationsD08TaskClosedConfirmButtonsZhTw {
+	TranslationsD08TaskClosedConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認'
+	String get confirm => '確認';
+}
+
+// Path: B02_SplitExpense_Edit.buttons
+class TranslationsB02SplitExpenseEditButtonsZhTw {
+	TranslationsB02SplitExpenseEditButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認分拆'
+	String get save => '確認分拆';
+}
+
+// Path: B03_SplitMethod_Edit.buttons
+class TranslationsB03SplitMethodEditButtonsZhTw {
+	TranslationsB03SplitMethodEditButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '調整權重'
+	String get adjust_weight => '調整權重';
+}
+
+// Path: b04_payment_merge.buttons
+class TranslationsB04PaymentMergeButtonsZhTw {
+	TranslationsB04PaymentMergeButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '取消'
+	String get cancel => '取消';
+
+	/// zh-TW: '合併'
+	String get confirm => '合併';
 }
 
 // Path: error.taskFull
@@ -1450,62 +1701,62 @@ class TranslationsErrorUnknownZhTw {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
-			'category.food' => '飲食',
-			'category.transport' => '交通',
-			'category.shopping' => '購物',
-			'category.entertainment' => '娛樂',
-			'category.accommodation' => '住宿',
-			'category.others' => '其他',
-			'common.cancel' => '取消',
-			'common.delete' => '刪除',
-			'common.confirm' => '確認',
-			'common.back' => '返回',
-			'common.save' => '保存',
+			'common.buttons.cancel' => '取消',
+			'common.buttons.delete' => '刪除',
+			'common.buttons.confirm' => '確認',
+			'common.buttons.back' => '返回',
+			'common.buttons.save' => '保存',
+			'common.buttons.edit' => '編輯',
+			'common.buttons.close' => '關閉',
+			'common.buttons.discard' => '放棄變更',
+			'common.buttons.keep_editing' => '繼續編輯',
+			'common.category.food' => '飲食',
+			'common.category.transport' => '交通',
+			'common.category.shopping' => '購物',
+			'common.category.entertainment' => '娛樂',
+			'common.category.accommodation' => '住宿',
+			'common.category.others' => '其他',
+			'common.currency.twd' => '新台幣',
+			'common.currency.jpy' => '日圓',
+			'common.currency.usd' => '美金',
+			'common.currency.eur' => '歐元',
+			'common.currency.krw' => '韓元',
+			'common.currency.cny' => '人民幣',
+			'common.currency.gbp' => '英鎊',
+			'common.currency.cad' => '加拿大幣',
+			'common.currency.aud' => '澳幣',
+			'common.currency.chf' => '瑞士法郎',
+			'common.currency.dkk' => '丹麥幣',
+			'common.currency.hkd' => '港幣',
+			'common.currency.nok' => '挪威幣',
+			'common.currency.nzd' => '紐西蘭幣',
+			'common.currency.sgd' => '新加坡幣',
+			'common.currency.thb' => '泰幣',
+			'common.currency.zar' => '南非幣',
+			'common.currency.rub' => '俄羅斯幣',
+			'common.currency.vnd' => '越南盾',
+			'common.currency.idr' => '印尼盾',
+			'common.currency.myr' => '馬來幣',
+			'common.currency.php' => '菲律賓幣',
+			'common.currency.mop' => '澳門幣',
+			'common.currency.sek' => '瑞典克朗',
+			'common.currency.aed' => '阿聯酋迪拉姆',
+			'common.currency.sar' => '沙烏地里亞爾',
+			'common.currency.try_' => '土耳其里拉',
+			'common.currency.inr' => '印度盧比',
+			'common.remainder_rule.title' => '零頭處理',
+			'common.remainder_rule.rule_random' => '餘額輪盤',
+			'common.remainder_rule.rule_order' => '順序輪替',
+			'common.remainder_rule.rule_member' => '指定成員',
 			'common.error_prefix' => ({required Object message}) => '錯誤: ${message}',
 			'common.please_login' => '請先登入',
 			'common.loading' => '讀取中...',
-			'common.edit' => '編輯',
-			'common.close' => '關閉',
 			'common.me' => '我',
 			'common.required' => '必填',
-			'common.discard' => '放棄變更',
-			'common.keep_editing' => '繼續編輯',
 			'common.member_prefix' => '成員',
 			'common.no_record' => '無紀錄',
 			'common.today' => '今天',
 			'common.untitled' => '未命名',
-			'currency.twd' => '新台幣',
-			'currency.jpy' => '日圓',
-			'currency.usd' => '美金',
-			'currency.eur' => '歐元',
-			'currency.krw' => '韓元',
-			'currency.cny' => '人民幣',
-			'currency.gbp' => '英鎊',
-			'currency.cad' => '加拿大幣',
-			'currency.aud' => '澳幣',
-			'currency.chf' => '瑞士法郎',
-			'currency.dkk' => '丹麥幣',
-			'currency.hkd' => '港幣',
-			'currency.nok' => '挪威幣',
-			'currency.nzd' => '紐西蘭幣',
-			'currency.sgd' => '新加坡幣',
-			'currency.thb' => '泰幣',
-			'currency.zar' => '南非幣',
-			'currency.rub' => '俄羅斯幣',
-			'currency.vnd' => '越南盾',
-			'currency.idr' => '印尼盾',
-			'currency.myr' => '馬來幣',
-			'currency.php' => '菲律賓幣',
-			'currency.mop' => '澳門幣',
-			'currency.sek' => '瑞典克朗',
-			'currency.aed' => '阿聯酋迪拉姆',
-			'currency.sar' => '沙烏地里亞爾',
-			'currency.try_' => '土耳其里拉',
-			'currency.inr' => '印度盧比',
-			'remainder_rule.title' => '零頭處理',
-			'remainder_rule.rule_random' => '餘額輪盤',
-			'remainder_rule.rule_order' => '順序輪替',
-			'remainder_rule.rule_member' => '指定成員',
 			'log_action.create_task' => '建立任務',
 			'log_action.update_settings' => '更新設定',
 			'log_action.add_member' => '新增成員',
@@ -1529,15 +1780,15 @@ extension on Translations {
 			'S10_Home_TaskList.delete_confirm_content' => '確定要刪除這個任務嗎？',
 			'S11_Invite_Confirm.title' => '加入任務',
 			'S11_Invite_Confirm.subtitle' => '您受邀加入以下任務：',
+			'S11_Invite_Confirm.buttons.confirm' => '加入',
+			'S11_Invite_Confirm.buttons.cancel' => '取消',
+			'S11_Invite_Confirm.buttons.home' => '回首頁',
 			'S11_Invite_Confirm.loading_invite' => '正在讀取邀請函...',
 			'S11_Invite_Confirm.join_failed_title' => '哎呀！無法加入任務',
 			'S11_Invite_Confirm.identity_match_title' => '請問您是以下成員嗎？',
 			'S11_Invite_Confirm.identity_match_desc' => '此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。',
 			'S11_Invite_Confirm.status_linking' => '將以「連結帳號」方式加入',
 			'S11_Invite_Confirm.status_new_member' => '將以「新成員」身分加入',
-			'S11_Invite_Confirm.action_confirm' => '加入',
-			'S11_Invite_Confirm.action_cancel' => '取消',
-			'S11_Invite_Confirm.action_home' => '回首頁',
 			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '加入失敗：${message}',
 			'S11_Invite_Confirm.error_generic' => ({required Object message}) => '發生錯誤：${message}',
 			'S11_Invite_Confirm.label_select_ghost' => '選擇要繼承的成員',
@@ -1545,8 +1796,11 @@ extension on Translations {
 			'S11_Invite_Confirm.label_expense' => '應分攤',
 			'S12_TaskClose_Notice.title' => '結束任務確認',
 			'S12_TaskClose_Notice.content' => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。',
-			'S12_TaskClose_Notice.action_close' => '結束任務',
+			'S12_TaskClose_Notice.buttons.close' => '結束任務',
 			'S13_Task_Dashboard.title_active' => '任務主頁',
+			'S13_Task_Dashboard.buttons.record' => '記一筆',
+			'S13_Task_Dashboard.buttons.settlement' => '結算',
+			'S13_Task_Dashboard.buttons.download' => '下載記錄',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',
 			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額',
@@ -1556,9 +1810,7 @@ extension on Translations {
 			'S13_Task_Dashboard.label_total_expense' => '總費用',
 			'S13_Task_Dashboard.label_total_prepay' => '總預收',
 			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
-			'S13_Task_Dashboard.fab_record' => '記一筆',
 			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
-			'S13_Task_Dashboard.settlement_button' => '結算',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
@@ -1571,7 +1823,6 @@ extension on Translations {
 			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
 			'S13_Task_Dashboard.total_amount_label' => '總金額',
 			'S13_Task_Dashboard.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
-			'S13_Task_Dashboard.action_download' => '下載記錄',
 			'S14_Task_Settings.title' => '任務設定',
 			'S14_Task_Settings.menu_member_settings' => '成員設定',
 			'S14_Task_Settings.menu_history' => '歷史紀錄',
@@ -1579,6 +1830,8 @@ extension on Translations {
 			'S14_Task_Settings.section_remainder' => '剩餘款',
 			'S15_Record_Edit.title_create' => '記一筆',
 			'S15_Record_Edit.title_edit' => '編輯紀錄',
+			'S15_Record_Edit.buttons.save' => '儲存紀錄',
+			'S15_Record_Edit.buttons.close' => '關閉',
 			'S15_Record_Edit.section_split' => '分攤資訊',
 			'S15_Record_Edit.label_date' => '日期',
 			'S15_Record_Edit.label_title' => '項目名稱',
@@ -1590,12 +1843,10 @@ extension on Translations {
 			'S15_Record_Edit.label_rate' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
 			'S15_Record_Edit.label_memo' => '備註',
 			'S15_Record_Edit.hint_memo' => '輸入備註...',
-			'S15_Record_Edit.action_save' => '儲存紀錄',
 			'S15_Record_Edit.val_split_details' => '細項分拆',
 			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
 			'S15_Record_Edit.info_rate_source' => '匯率來源',
 			'S15_Record_Edit.msg_rate_source' => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。',
-			'S15_Record_Edit.btn_close' => '關閉',
 			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
 			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
 			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
@@ -1613,6 +1864,8 @@ extension on Translations {
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
 			'S15_Record_Edit.payer_multiple' => '多人',
 			'S16_TaskCreate_Edit.title' => '新增任務',
+			'S16_TaskCreate_Edit.buttons.save' => '保存',
+			'S16_TaskCreate_Edit.buttons.done' => '確定',
 			'S16_TaskCreate_Edit.section_name' => '任務名稱',
 			'S16_TaskCreate_Edit.section_period' => '任務期間',
 			'S16_TaskCreate_Edit.section_settings' => '結算設定',
@@ -1622,17 +1875,15 @@ extension on Translations {
 			'S16_TaskCreate_Edit.field_end_date' => '結束日期',
 			'S16_TaskCreate_Edit.field_currency' => '結算幣別',
 			'S16_TaskCreate_Edit.field_member_count' => '參加人數',
-			'S16_TaskCreate_Edit.action_save' => '保存',
-			'S16_TaskCreate_Edit.picker_done' => '確定',
 			'S16_TaskCreate_Edit.error_name_empty' => '請輸入任務名稱',
 			'S16_TaskCreate_Edit.label_name' => '任務名稱',
 			'S16_TaskCreate_Edit.label_date' => '日期',
 			'S16_TaskCreate_Edit.label_currency' => '貨幣',
+			'S17_Task_Locked.buttons.download' => '下載紀錄',
+			'S17_Task_Locked.buttons.notify_members' => '通知成員',
+			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
 			'S17_Task_Locked.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
-			'S17_Task_Locked.action_download' => '下載紀錄',
-			'S17_Task_Locked.action_notify_members' => '通知成員',
 			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收',
-			'S17_Task_Locked.action_view_payment_details' => '查看收退款帳戶',
 			'S17_Task_Locked.section_pending' => '待處理',
 			'S17_Task_Locked.section_cleared' => '已處理',
 			'S17_Task_Locked.member_payment_status_pay' => '應付',
@@ -1640,6 +1891,7 @@ extension on Translations {
 			'S17_Task_Locked.dialog_mark_cleared_title' => '確認收款/付款',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '確定將 ${name} 標記為已處理？',
 			's30_settlement_confirm.title' => '結算確認',
+			's30_settlement_confirm.buttons.next' => '收款設定',
 			's30_settlement_confirm.steps.confirm_amount' => '確認金額',
 			's30_settlement_confirm.steps.payment_info' => '收款設定',
 			's30_settlement_confirm.warning.random_reveal' => '餘額將於下一步結算完成後揭曉！',
@@ -1650,26 +1902,25 @@ extension on Translations {
 			's30_settlement_confirm.list_item.principal' => '本金',
 			's30_settlement_confirm.list_item.random_remainder' => '隨機餘額',
 			's30_settlement_confirm.list_item.remainder' => '餘額',
-			's30_settlement_confirm.action_next' => '收款設定',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
+			'S50_Onboarding_Consent.buttons.agree' => '開始使用',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.terms_link' => '服務條款',
 			'S50_Onboarding_Consent.and' => ' 與 ',
 			'S50_Onboarding_Consent.privacy_link' => '隱私政策',
 			'S50_Onboarding_Consent.content_suffix' => '。我們採用匿名登入，保障您的隱私。',
-			'S50_Onboarding_Consent.agree_btn' => '開始使用',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名稱設定',
+			'S51_Onboarding_Name.buttons.next' => '設定完成',
 			'S51_Onboarding_Name.description' => '請輸入您在 App 內的顯示名稱（1-10 個字）。',
 			'S51_Onboarding_Name.field_hint' => '輸入暱稱',
 			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
 			'S51_Onboarding_Name.error_empty' => '名稱不能為空',
 			'S51_Onboarding_Name.error_too_long' => '最多 10 個字',
 			'S51_Onboarding_Name.error_invalid_char' => '包含無效字元',
-			'S51_Onboarding_Name.action_next' => '設定完成',
 			'S52_TaskSettings_Log.title' => '活動紀錄',
+			'S52_TaskSettings_Log.buttons.export_csv' => '匯出 CSV',
 			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
-			'S52_TaskSettings_Log.action_export_csv' => '匯出 CSV',
 			'S52_TaskSettings_Log.export_file_prefix' => '活動紀錄',
 			'S52_TaskSettings_Log.csv_header.time' => '時間',
 			'S52_TaskSettings_Log.csv_header.user' => '操作者',
@@ -1685,8 +1936,8 @@ extension on Translations {
 			'S52_TaskSettings_Log.unit_members' => '人',
 			'S52_TaskSettings_Log.unit_items' => '細項',
 			'S53_TaskSettings_Members.title' => '成員管理',
-			'S53_TaskSettings_Members.action_add' => '新增成員',
-			'S53_TaskSettings_Members.action_invite' => '發送邀請',
+			'S53_TaskSettings_Members.buttons.add' => '新增成員',
+			'S53_TaskSettings_Members.buttons.invite' => '發送邀請',
 			'S53_TaskSettings_Members.label_default_ratio' => '預設比例',
 			'S53_TaskSettings_Members.dialog_delete_error_title' => '無法刪除成員',
 			'S53_TaskSettings_Members.dialog_delete_error_content' => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。',
@@ -1694,42 +1945,43 @@ extension on Translations {
 			'S53_TaskSettings_Members.member_name' => '成員名稱',
 			'S71_SystemSettings_Tos.title' => '服務條款',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
-			'D01_MemberRole_Intro.action_reroll' => '換個動物',
-			'D01_MemberRole_Intro.action_enter' => '進入任務',
+			'D01_MemberRole_Intro.buttons.reroll' => '換個動物',
+			'D01_MemberRole_Intro.buttons.enter' => '進入任務',
 			'D01_MemberRole_Intro.desc_reroll_left' => '還有 1 次機會',
 			'D01_MemberRole_Intro.desc_reroll_empty' => '機會已用完',
 			'D01_MemberRole_Intro.dialog_content' => '這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！',
 			'D02_Invite_Result.title' => '加入失敗',
-			'D02_Invite_Result.action_back' => '回首頁',
+			'D02_Invite_Result.buttons.back' => '回首頁',
 			'D02_Invite_Result.error_INVALID_CODE' => '邀請碼無效，請確認連結是否正確。',
 			'D02_Invite_Result.error_EXPIRED_CODE' => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。',
 			'D02_Invite_Result.error_TASK_FULL' => '任務人數已滿 (上限 15 人)，無法加入。',
 			'D02_Invite_Result.error_AUTH_REQUIRED' => '身分驗證失敗，請重新啟動 App。',
 			'D02_Invite_Result.error_UNKNOWN' => '發生未知錯誤，請稍後再試。',
 			'D03_TaskCreate_Confirm.title' => '確認任務設定',
+			'D03_TaskCreate_Confirm.buttons.confirm' => '確認',
+			'D03_TaskCreate_Confirm.buttons.back' => '返回編輯',
 			'D03_TaskCreate_Confirm.label_name' => '任務名稱',
 			'D03_TaskCreate_Confirm.label_period' => '期間',
 			'D03_TaskCreate_Confirm.label_currency' => '幣別',
 			'D03_TaskCreate_Confirm.label_members' => '人數',
-			'D03_TaskCreate_Confirm.action_confirm' => '確認',
-			'D03_TaskCreate_Confirm.action_back' => '返回編輯',
 			'D03_TaskCreate_Confirm.creating_task' => '正在建立任務...',
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
 			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
 			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'D05_DateJump_NoResult.title' => '無紀錄',
+			'D05_DateJump_NoResult.buttons.cancel' => '返回',
+			'D05_DateJump_NoResult.buttons.add' => '新增紀錄',
 			'D05_DateJump_NoResult.content' => '找不到此日期的紀錄，要新增一筆嗎？',
-			'D05_DateJump_NoResult.action_cancel' => '返回',
-			'D05_DateJump_NoResult.action_add' => '新增紀錄',
 			'D08_TaskClosed_Confirm.title' => '確認結束任務',
+			'D08_TaskClosed_Confirm.buttons.confirm' => '確認',
 			'D08_TaskClosed_Confirm.content' => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？',
-			'D08_TaskClosed_Confirm.action_confirm' => '確認',
 			'D09_TaskSettings_CurrencyConfirm.title' => '變更結算幣別？',
 			'D09_TaskSettings_CurrencyConfirm.content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
+			'B02_SplitExpense_Edit.buttons.save' => '確認分拆',
 			'B02_SplitExpense_Edit.name_label' => '項目名稱',
 			'B02_SplitExpense_Edit.amount_label' => '金額',
 			'B02_SplitExpense_Edit.split_button_prefix' => '分攤設定',
@@ -1739,10 +1991,10 @@ extension on Translations {
 			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '總計: ${current}/${target}',
 			'B02_SplitExpense_Edit.error_total_mismatch' => '總金額不符',
 			'B02_SplitExpense_Edit.error_percent_mismatch' => '總比例必須為 100%',
-			'B02_SplitExpense_Edit.action_save' => '確認分拆',
 			'B02_SplitExpense_Edit.hint_amount' => '金額',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
+			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
 			'B03_SplitMethod_Edit.method_even' => '平均分攤',
 			'B03_SplitMethod_Edit.method_percent' => '比例分攤',
 			'B03_SplitMethod_Edit.method_exact' => '指定金額',
@@ -1752,7 +2004,14 @@ extension on Translations {
 			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
 			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '總金額不符 (差額 ${diff})',
-			'B03_SplitMethod_Edit.btn_adjust_weight' => '調整權重',
+			'b04_payment_merge.title' => '合併成員款項',
+			'b04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
+			'b04_payment_merge.section_head' => '代表成員',
+			'b04_payment_merge.section_candidates' => '選擇合併成員',
+			'b04_payment_merge.status_payable' => '應付',
+			'b04_payment_merge.status_receivable' => '可退',
+			'b04_payment_merge.buttons.cancel' => '取消',
+			'b04_payment_merge.buttons.confirm' => '合併',
 			'B07_PaymentMethod_Edit.title' => '選擇資金來源',
 			'B07_PaymentMethod_Edit.type_member' => '成員墊付',
 			'B07_PaymentMethod_Edit.type_prepay' => '公款支付',

@@ -20,7 +20,7 @@ class D05DateJumpNoResultDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => context.pop(),
-          child: Text(t.D05_DateJump_NoResult.action_cancel),
+          child: Text(t.D05_DateJump_NoResult.buttons.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -33,7 +33,7 @@ class D05DateJumpNoResultDialog extends StatelessWidget {
               extra: {'date': targetDate},
             );
           },
-          child: Text(t.D05_DateJump_NoResult.action_add),
+          child: Text(t.D05_DateJump_NoResult.buttons.add),
         ),
       ],
     );

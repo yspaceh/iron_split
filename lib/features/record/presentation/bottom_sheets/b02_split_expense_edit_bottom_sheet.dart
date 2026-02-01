@@ -136,7 +136,7 @@ class _B02SplitExpenseEditBottomSheetState
               children: [
                 TextButton(
                   onPressed: () => context.pop(),
-                  child: Text(t.common.cancel,
+                  child: Text(t.common.buttons.cancel,
                       style: const TextStyle(color: Colors.grey)),
                 ),
                 Text(t.B02_SplitExpense_Edit.title,
@@ -152,7 +152,7 @@ class _B02SplitExpenseEditBottomSheetState
                       ),
                     TextButton(
                       onPressed: _onSave,
-                      child: Text(t.B02_SplitExpense_Edit.action_save,
+                      child: Text(t.B02_SplitExpense_Edit.buttons.save,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: colorScheme.primary)),

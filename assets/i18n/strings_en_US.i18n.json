@@ -1,67 +1,69 @@
 {
-  "category": {
-    "food": "Food",
-    "transport": "Transport",
-    "shopping": "Shopping",
-    "entertainment": "Entertainment",
-    "accommodation": "Accommodation",
-    "others": "Others"
-  },
   "common": {
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "confirm": "Confirm",
-    "back": "Back",
-    "save": "Save",
+    "buttons": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirm": "Confirm",
+      "back": "Back",
+      "save": "Save",
+      "edit": "Edit",
+      "close": "Close",
+      "discard": "Discard",
+      "keep_editing": "Keep Editing"
+    },
+    "category": {
+      "food": "Food",
+      "transport": "Transport",
+      "shopping": "Shopping",
+      "entertainment": "Entertainment",
+      "accommodation": "Accommodation",
+      "others": "Others"
+    },
+    "currency": {
+      "twd": "New Taiwan Dollar",
+      "jpy": "Japanese Yen",
+      "usd": "US Dollar",
+      "eur": "Euro",
+      "krw": "South Korean Won",
+      "cny": "Chinese Yuan",
+      "gbp": "British Pound",
+      "cad": "Canadian Dollar",
+      "aud": "Australian Dollar",
+      "chf": "Swiss Franc",
+      "dkk": "Danish Krone",
+      "hkd": "Hong Kong Dollar",
+      "nok": "Norwegian Krone",
+      "nzd": "New Zealand Dollar",
+      "sgd": "Singapore Dollar",
+      "thb": "Thai Baht",
+      "zar": "South African Rand",
+      "rub": "Russian Ruble",
+      "vnd": "Vietnamese Dong",
+      "idr": "Indonesian Rupiah",
+      "myr": "Malaysian Ringgit",
+      "php": "Philippine Peso",
+      "mop": "Macanese Pataca",
+      "sek": "Swedish Krone",
+      "aed": "UAE Dirham",
+      "sar": "Saudi Riyal",
+      "try_": "Turkish Lira",
+      "inr": "Indian Rupee"
+    },
+    "remainder_rule": {
+      "title": "Remainder Rule",
+      "rule_random": "Random",
+      "rule_order": "Order",
+      "rule_member": "Member"
+    },
     "error_prefix": "Error: {message}",
     "please_login": "Please Login",
     "loading": "Loading...",
-    "edit": "Edit",
-    "close": "Close",
     "me": "Me",
     "required": "Required",
-    "discard": "Discard",
-    "keep_editing": "Keep Editing",
     "member_prefix": "Member",
     "no_record": "No Record",
     "today": "Today",
     "untitled": "Untitled"
-  },
-  "currency": {
-    "twd": "New Taiwan Dollar",
-    "jpy": "Japanese Yen",
-    "usd": "US Dollar",
-    "eur": "Euro",
-    "krw": "South Korean Won",
-    "cny": "Chinese Yuan",
-    "gbp": "British Pound",
-    "cad": "Canadian Dollar",
-    "aud": "Australian Dollar",
-    "chf": "Swiss Franc",
-    "dkk": "Danish Krone",
-    "hkd": "Hong Kong Dollar",
-    "nok": "Norwegian Krone",
-    "nzd": "New Zealand Dollar",
-    "sgd": "Singapore Dollar",
-    "thb": "Thai Baht",
-    "zar": "South African Rand",
-    "rub": "Russian Ruble",
-    "vnd": "Vietnamese Dong",
-    "idr": "Indonesian Rupiah",
-    "myr": "Malaysian Ringgit",
-    "php": "Philippine Peso",
-    "mop": "Macanese Pataca",
-    "sek": "Swedish Krone",
-    "aed": "UAE Dirham",
-    "sar": "Saudi Riyal",
-    "try_": "Turkish Lira",
-    "inr": "Indian Rupee"
-  },
-  "remainder_rule": {
-    "title":"Remainder Rule",
-    "rule_random": "Random",
-    "rule_order": "Order",
-    "rule_member": "Member"
   },
   "log_action": {
     "create_task": "Create Task",
@@ -93,15 +95,17 @@
   "S11_Invite_Confirm": {
     "title": "Join Task",
     "subtitle": "You are invited to join:",
+    "buttons": {
+      "confirm": "Join",
+      "cancel": "Cancel",
+      "home": "Home"
+    },
     "loading_invite": "Loading invite...",
     "join_failed_title": "Oops! Cannot join task",
     "identity_match_title": "Are you one of these members?",
     "identity_match_desc": "This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.",
     "status_linking": "Joining by linking account",
     "status_new_member": "Joining as new member",
-    "action_confirm": "Join",
-    "action_cancel": "Cancel",
-    "action_home": "Home",
     "error_join_failed": "Join failed: {message}",
     "error_generic": "Error: {message}",
     "label_select_ghost": "Select Member to Inherit",
@@ -110,11 +114,18 @@
   },
   "S12_TaskClose_Notice": {
     "title": "Close Task",
-    "content": "Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.",
-    "action_close": "Close Task"
+    "buttons": {
+      "close": "Close Task"
+    },
+    "content": "Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data."
   },
   "S13_Task_Dashboard": {
     "title_active": "Dashboard",
+    "buttons": {
+      "record": "Record",
+      "settlement": "Settlement",
+      "download": "Download Records"
+    },
     "tab_group": "Group",
     "tab_personal": "Personal",
     "label_prepay_balance": "Pool Balance",
@@ -124,9 +135,7 @@
     "label_total_expense": "Total Expense",
     "label_total_prepay": "Total Pre-collected",
     "label_remainder_pot": "Remainder Pot",
-    "fab_record": "Record",
     "empty_records": "No records",
-    "settlement_button": "Settlement",
     "nav_to_record": "Navigating to record page...",
     "daily_expense_label": "Exp",
     "dialog_balance_detail": "Balance Details",
@@ -137,7 +146,8 @@
     "personal_to_receive": "To Receive",
     "personal_to_pay": "To Pay",
     "personal_empty_desc": "No records related to you on this day",
-    "total_amount_label": "Total Bill"
+    "total_amount_label": "Total Bill",
+    "retention_notice": "This task is closed. Data retained for 30 days."
   },
   "S14_Task_Settings": {
     "title": "Task Settings",
@@ -149,6 +159,10 @@
   "S15_Record_Edit": {
     "title_create": "Add Expense",
     "title_edit": "Edit Record",
+    "buttons": {
+      "save": "Save",
+      "close": "Close"
+    },
     "section_split": "Split Info",
     "label_date": "Date",
     "label_title": "Item Name",
@@ -160,12 +174,10 @@
     "label_rate": "Rate (1 {base} = ? {target})",
     "label_memo": "Memo",
     "hint_memo": "Add a note...",
-    "action_save": "Save",
     "val_split_details": "Split Details",
     "val_split_summary": "Total {amount} split by {method}",
     "info_rate_source": "Rate Source",
     "msg_rate_source": "Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.",
-    "btn_close": "Close",
     "val_converted_amount": "≈ {base}{symbol} {amount}",
     "val_split_remaining": "Remaining Amount",
     "err_amount_not_enough": "Insufficient remaining amount",
@@ -181,10 +193,14 @@
     "type_income_title": "Income",
     "base_card_title_expense": "Remaining (Base)",
     "base_card_title_income": "Contributors (Source)",
-    "payer_multiple" : "Multiple Payers"
+    "payer_multiple": "Multiple Payers"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
+    "buttons": {
+      "save": "Save",
+      "done": "Done"
+    },
     "section_name": "Task Name",
     "section_period": "Period",
     "section_settings": "Settings",
@@ -194,19 +210,19 @@
     "field_end_date": "End Date",
     "field_currency": "Currency",
     "field_member_count": "Members",
-    "action_save": "Save",
-    "picker_done": "Done",
     "error_name_empty": "Please enter task name",
     "label_name": "Task Name",
     "label_date": "Date",
     "label_currency": "Currency"
   },
   "S17_Task_Locked": {
+    "buttons": {
+      "download": "Download Records",
+      "notify_members": "Notify Members",
+      "view_payment_details": "View Payment Details"
+    },
     "retention_notice": "Data will be retained for 30 days. Please download your records.",
-    "action_download": "Download Records",
-    "action_notify_members": "Notify Members",
     "label_remainder_absorbed_by": "Remainder {amount} absorbed by {name}",
-    "action_view_payment_details": "View Payment Details",
     "section_pending": "Pending",
     "section_cleared": "Cleared",
     "member_payment_status_pay": "To Pay",
@@ -216,6 +232,9 @@
   },
   "s30_settlement_confirm": {
     "title": "Confirm Settlement",
+    "buttons": {
+      "next": "Payment Info"
+    },
     "steps": {
       "confirm_amount": "Confirm Amount",
       "payment_info": "Payment Info"
@@ -231,33 +250,38 @@
       "principal": "Principal",
       "random_remainder": "Random Remainder",
       "remainder": "Remainder"
-    },
-    "action_next": "Next: Payment Info"
+    }
   },
   "S50_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
+    "buttons": {
+      "agree": "Start"
+    },
     "content_prefix": "By clicking Start, you agree to our ",
     "terms_link": "Terms of Service",
     "and": " and ",
     "privacy_link": "Privacy Policy",
     "content_suffix": ". We use anonymous login to protect your privacy.",
-    "agree_btn": "Start",
     "login_failed": "Login Failed: {message}"
   },
   "S51_Onboarding_Name": {
     "title": "Set Display Name",
+    "buttons": {
+      "next": "Set"
+    },
     "description": "Please enter your display name (1-10 chars).",
     "field_hint": "Enter nickname",
     "field_counter": "{current}/10",
     "error_empty": "Name cannot be empty",
     "error_too_long": "Max 10 characters",
-    "error_invalid_char": "Invalid characters",
-    "action_next": "Set"
+    "error_invalid_char": "Invalid characters"
   },
   "S52_TaskSettings_Log": {
     "title": "Activity Log",
+    "buttons": {
+      "export_csv": "Export CSV"
+    },
     "empty_log": "No activity logs found",
-    "action_export_csv": "Export CSV",
     "export_file_prefix": "Activity_Log",
     "csv_header": {
       "time": "Time",
@@ -277,8 +301,10 @@
   },
   "S53_TaskSettings_Members": {
     "title": "Member Management",
-    "action_add": "Add Member",
-    "action_invite": "Invite",
+    "buttons": {
+      "add": "Add Member",
+      "invite": "Invite"
+    },
     "label_default_ratio": "Default Ratio",
     "dialog_delete_error_title": "Member Deletion Error",
     "dialog_delete_error_content": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.",
@@ -290,15 +316,19 @@
   },
   "D01_MemberRole_Intro": {
     "title": "Your Character",
-    "action_reroll": "Change Animal",
-    "action_enter": "Enter Task",
+    "buttons": {
+      "reroll": "Change Animal",
+      "enter": "Enter Task"
+    },
     "desc_reroll_left": "1 chance left",
     "desc_reroll_empty": "No chances left",
     "dialog_content": "This is your exclusive avatar for this task. It will represent you in all split records!"
   },
   "D02_Invite_Result": {
     "title": "Join Failed",
-    "action_back": "Back to Home",
+    "buttons": {
+      "back": "Back to Home"
+    },
     "error_INVALID_CODE": "Invalid invite code. Please check if the link is correct.",
     "error_EXPIRED_CODE": "Invite link expired (over 15 mins). Please ask the captain to share again.",
     "error_TASK_FULL": "Task is full (max 15 members). Cannot join.",
@@ -307,12 +337,14 @@
   },
   "D03_TaskCreate_Confirm": {
     "title": "Confirm Settings",
+    "buttons": {
+      "confirm": "Confirm",
+      "back": "Edit"
+    },
     "label_name": "Name",
     "label_period": "Period",
     "label_currency": "Currency",
     "label_members": "Members",
-    "action_confirm": "Confirm",
-    "action_back": "Edit",
     "creating_task": "Creating task...",
     "preparing_share": "Preparing invite...",
     "share_subject": "Join Iron Split Task",
@@ -320,14 +352,18 @@
   },
   "D05_DateJump_NoResult": {
     "title": "No Record",
-    "content": "No record found for this date. Would you like to add one?",
-    "action_cancel": "Back",
-    "action_add": "Add Record"
+    "buttons": {
+      "cancel": "Back",
+      "add": "Add Record"
+    },
+    "content": "No record found for this date. Would you like to add one?"
   },
   "D08_TaskClosed_Confirm": {
     "title": "Confirm Close",
-    "content": "This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?",
-    "action_confirm": "Confirm"
+    "buttons": {
+      "confirm": "Confirm"
+    },
+    "content": "This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?"
   },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "Change Base Currency?",
@@ -340,6 +376,9 @@
   },
   "B02_SplitExpense_Edit": {
     "title": "Edit Item",
+    "buttons": {
+      "save": "Confirm Split"
+    },
     "name_label": "Item Name",
     "amount_label": "Amount",
     "split_button_prefix": "Split by",
@@ -349,12 +388,14 @@
     "label_total": "Total: {current}/{target}",
     "error_total_mismatch": "Total mismatch",
     "error_percent_mismatch": "Total must be 100%",
-    "action_save": "Confirm Split",
     "hint_amount": "Amount",
     "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
     "title": "Choose Split Method",
+    "buttons": {
+      "adjust_weight": "Adjust Weight"
+    },
     "method_even": "Even",
     "method_percent": "By Percentage",
     "method_exact": "Exact Amount",
@@ -363,8 +404,19 @@
     "desc_exact": "Enter specific amounts, total must match",
     "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)",
     "label_weight": "Weight",
-    "error_total_mismatch": "Total mismatch (difference {diff})",
-    "btn_adjust_weight": "Adjust Weight"
+    "error_total_mismatch": "Total mismatch (difference {diff})"
+  },
+  "b04_payment_merge": {
+    "title": "Merge Member Payments",
+    "description": "Merge members under a representative. Payments and refunds will be consolidated for easier collection.",
+    "section_head": "Representative",
+    "section_candidates": "Select Members",
+    "status_payable": "Payable",
+    "status_receivable": "Receivable",
+    "buttons": {
+      "cancel": "Cancel",
+      "confirm": "Merge"
+    }
   },
   "B07_PaymentMethod_Edit": {
     "title": "Select Funding Source",

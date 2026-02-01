@@ -123,7 +123,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
                         child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.refresh),
                 label: Text(vm.canReroll
-                    ? t.D01_MemberRole_Intro.action_reroll
+                    ? t.D01_MemberRole_Intro.buttons.reroll
                     : t.D01_MemberRole_Intro.desc_reroll_empty),
               ),
 
@@ -134,7 +134,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () => _onEnter(context, vm),
-                  child: Text(t.D01_MemberRole_Intro.action_enter),
+                  child: Text(t.D01_MemberRole_Intro.buttons.enter),
                 ),
               ),
             ],

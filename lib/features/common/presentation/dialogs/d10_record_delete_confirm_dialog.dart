@@ -28,7 +28,7 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
         // Left: Secondary Action (Tonal/Outlined) - Cancel
         OutlinedButton(
           onPressed: () => context.pop(),
-          child: Text(t.common.cancel),
+          child: Text(t.common.buttons.cancel),
         ),
         // Right: Primary Action (Filled) - Delete
         FilledButton(
@@ -40,7 +40,7 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
             onConfirm();
             context.pop();
           },
-          child: Text(t.common.delete),
+          child: Text(t.common.buttons.delete),
         ),
       ],
     );

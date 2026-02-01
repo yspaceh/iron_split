@@ -238,7 +238,7 @@ class _B07PaymentMethodEditBottomSheetState
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(t.common.cancel,
+                  child: Text(t.common.buttons.cancel,
                       style: const TextStyle(color: Colors.grey)),
                 ),
                 Text(
@@ -249,7 +249,7 @@ class _B07PaymentMethodEditBottomSheetState
                 TextButton(
                   onPressed: _isValid ? _onSave : null,
                   child: Text(
-                    t.common.save,
+                    t.common.buttons.save,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: _isValid ? colorScheme.primary : Colors.grey,

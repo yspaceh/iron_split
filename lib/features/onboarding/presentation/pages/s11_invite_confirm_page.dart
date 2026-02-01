@@ -245,7 +245,7 @@ class _S11Content extends StatelessWidget {
                           height: 24,
                           child: CircularProgressIndicator(
                               color: Colors.white, strokeWidth: 2))
-                      : Text(t.S11_Invite_Confirm.action_confirm,
+                      : Text(t.S11_Invite_Confirm.buttons.confirm,
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
@@ -258,7 +258,7 @@ class _S11Content extends StatelessWidget {
                 child: TextButton(
                   // TODO: 要更新連結
                   onPressed: () => context.go('/landing'),
-                  child: Text(t.S11_Invite_Confirm.action_cancel),
+                  child: Text(t.S11_Invite_Confirm.buttons.cancel),
                 ),
               ),
             ],

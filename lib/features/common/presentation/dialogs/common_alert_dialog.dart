@@ -79,7 +79,7 @@ class CommonAlertDialog extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: theme.colorScheme.onSurfaceVariant,
             ),
-            child: Text(cancelText ?? t.common.cancel),
+            child: Text(cancelText ?? t.common.buttons.cancel),
           ),
         TextButton(
           onPressed: () {
@@ -91,7 +91,7 @@ class CommonAlertDialog extends StatelessWidget {
                 ? theme.colorScheme.error
                 : theme.colorScheme.primary,
           ),
-          child: Text(confirmText ?? t.common.confirm),
+          child: Text(confirmText ?? t.common.buttons.confirm),
         ),
       ],
     );

@@ -125,7 +125,7 @@ class MemberItem extends StatelessWidget {
                 color: theme.colorScheme.error,
                 size: 20,
               ),
-              tooltip: t.common.delete,
+              tooltip: t.common.buttons.delete,
             ),
         ],
       ),

@@ -33,7 +33,7 @@ void showCommonWheelPicker({
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
                     child: Text(
-                      t.common.cancel,
+                      t.common.buttons.cancel,
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -46,7 +46,7 @@ void showCommonWheelPicker({
                       Navigator.pop(ctx);
                     },
                     child: Text(
-                      t.S16_TaskCreate_Edit.picker_done,
+                      t.S16_TaskCreate_Edit.buttons.done,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

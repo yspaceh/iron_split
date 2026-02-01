@@ -18,7 +18,7 @@ class TaskRemainderRuleInput extends StatelessWidget {
     return _buildRowItem(
       context: context,
       icon: Icons.calculate_outlined,
-      label: t.remainder_rule.title,
+      label: t.common.remainder_rule.title,
       value: rule,
       onTap: enabled ? onTap : null,
       enabled: enabled,

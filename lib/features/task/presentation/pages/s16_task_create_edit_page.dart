@@ -222,7 +222,7 @@ class _S16ContentState extends State<_S16Content> {
             bottomNavigationBar: StickyBottomActionBar(
               children: [
                 AppButton(
-                  text: t.S16_TaskCreate_Edit.action_save,
+                  text: t.S16_TaskCreate_Edit.buttons.save,
                   type: AppButtonType.primary,
                   onPressed: () => _onSave(context, vm),
                 ),

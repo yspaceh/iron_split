@@ -66,12 +66,12 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
         // Secondary: 返回
         TextButton(
           onPressed: () => Navigator.pop(context, false), // 回傳 false
-          child: Text(t.D03_TaskCreate_Confirm.action_back),
+          child: Text(t.D03_TaskCreate_Confirm.buttons.back),
         ),
         // Primary: 確認
         FilledButton(
           onPressed: () => Navigator.pop(context, true), // 回傳 true
-          child: Text(t.D03_TaskCreate_Confirm.action_confirm),
+          child: Text(t.D03_TaskCreate_Confirm.buttons.confirm),
         ),
       ],
     );

@@ -112,7 +112,7 @@ class D02InviteResultDialog extends StatelessWidget {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: Text(t.D02_Invite_Result.action_back),
+                  child: Text(t.D02_Invite_Result.buttons.back),
                 ),
               ),
             ],

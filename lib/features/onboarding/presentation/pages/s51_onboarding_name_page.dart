@@ -84,7 +84,7 @@ class _S51ContentState extends State<_S51Content> {
                       : null,
                   child: vm.isSaving
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(t.S51_Onboarding_Name.action_next), // "設定完成"
+                      : Text(t.S51_Onboarding_Name.buttons.next), // "設定完成"
                 ),
               ),
             ],

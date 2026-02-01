@@ -23,11 +23,11 @@ class RemainderRuleConstants {
     final t = Translations.of(context);
     switch (rule) {
       case random:
-        return t.remainder_rule.rule_random;
+        return t.common.remainder_rule.rule_random;
       case order:
-        return t.remainder_rule.rule_order;
+        return t.common.remainder_rule.rule_order;
       case member:
-        return t.remainder_rule.rule_member;
+        return t.common.remainder_rule.rule_member;
       default:
         return rule;
     }

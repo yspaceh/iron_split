@@ -122,11 +122,11 @@ class TaskListItem extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: Text(t.common.cancel),
+                child: Text(t.common.buttons.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: Text(t.common.delete),
+                child: Text(t.common.buttons.delete),
               ),
             ],
           ),

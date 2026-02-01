@@ -67,7 +67,7 @@ class S17StatusView extends StatelessWidget {
             child: FilledButton.icon(
               onPressed: () => _handleDownload(context),
               icon: const Icon(Icons.download),
-              label: Text(t.S17_Task_Locked.action_download),
+              label: Text(t.S17_Task_Locked.buttons.download),
             ),
           ),
 

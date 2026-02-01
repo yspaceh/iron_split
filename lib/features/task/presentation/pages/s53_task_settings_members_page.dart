@@ -65,14 +65,14 @@ class _S53Content extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(t.common.cancel),
+              child: Text(t.common.buttons.cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 vm.renameMember(membersMap, memberId, controller.text);
               },
-              child: Text(t.common.confirm),
+              child: Text(t.common.buttons.confirm),
             ),
           ],
         );
@@ -184,7 +184,7 @@ class _S53Content extends StatelessWidget {
           bottomNavigationBar: StickyBottomActionBar(
             children: [
               AppButton(
-                text: t.S53_TaskSettings_Members.action_invite,
+                text: t.S53_TaskSettings_Members.buttons.invite,
                 type: AppButtonType.secondary,
                 icon: Icons.share,
                 onPressed: vm.isProcessing
@@ -192,7 +192,7 @@ class _S53Content extends StatelessWidget {
                     : () => vm.inviteMember(context, taskName),
               ),
               AppButton(
-                text: t.S53_TaskSettings_Members.action_add,
+                text: t.S53_TaskSettings_Members.buttons.add,
                 type: AppButtonType.primary,
                 icon: Icons.person_add_alt_1,
                 onPressed:

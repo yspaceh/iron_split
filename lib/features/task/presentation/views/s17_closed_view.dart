@@ -77,7 +77,7 @@ class S13ClosedView extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: () => _handleDownload(context),
                 icon: const Icon(Icons.download),
-                label: Text(t.S13_Task_Dashboard.action_download),
+                label: Text(t.S13_Task_Dashboard.buttons.download),
               ),
             ),
             const SizedBox(height: 12),

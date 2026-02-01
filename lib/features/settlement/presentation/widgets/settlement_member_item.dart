@@ -36,7 +36,7 @@ class SettlementMemberItem extends StatelessWidget {
 
     // 按鈕文字與圖示狀態 (如果是代表，顯示編輯；否則顯示合併)
     final actionLabel = member.isMergedHead
-        ? t.common.edit // "編輯"
+        ? t.common.buttons.edit // "編輯"
         : t.s30_settlement_confirm.list_item.merged_label; // "合併"
 
     final actionIcon = member.isMergedHead ? Icons.edit_outlined : Icons.link;

@@ -22,37 +22,43 @@ class CategoryConstant {
   String getName(Translations t) {
     switch (id) {
       case 'fastfood':
-        return t.category.food;
+        return t.common.category.food;
       case 'directions_bus':
-        return t.category.transport;
+        return t.common.category.transport;
       case 'shopping_bag':
-        return t.category.shopping;
+        return t.common.category.shopping;
       case 'movie':
-        return t.category.entertainment;
+        return t.common.category.entertainment;
       case 'hotel':
-        return t.category.accommodation;
+        return t.common.category.accommodation;
       case 'more_horiz':
       default:
-        return t.category.others;
+        return t.common.category.others;
     }
   }
 }
 
 const List<CategoryConstant> kAppCategories = [
   CategoryConstant(
-      id: 'fastfood', labelKey: 't.category.food', icon: Icons.fastfood),
+      id: 'fastfood', labelKey: 't.common.category.food', icon: Icons.fastfood),
   CategoryConstant(
       id: 'directions_bus',
-      labelKey: 't.category.transport',
+      labelKey: 't.common.category.transport',
       icon: Icons.directions_bus),
   CategoryConstant(
       id: 'shopping_bag',
-      labelKey: 't.category.shopping',
+      labelKey: 't.common.category.shopping',
       icon: Icons.shopping_bag),
   CategoryConstant(
-      id: 'movie', labelKey: 't.category.entertainment', icon: Icons.movie),
+      id: 'movie',
+      labelKey: 't.common.category.entertainment',
+      icon: Icons.movie),
   CategoryConstant(
-      id: 'hotel', labelKey: 't.category.accommodation', icon: Icons.hotel),
+      id: 'hotel',
+      labelKey: 't.common.category.accommodation',
+      icon: Icons.hotel),
   CategoryConstant(
-      id: 'more_horiz', labelKey: 't.category.others', icon: Icons.more_horiz),
+      id: 'more_horiz',
+      labelKey: 't.common.category.others',
+      icon: Icons.more_horiz),
 ];

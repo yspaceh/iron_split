@@ -245,7 +245,7 @@ class _B03SplitMethodEditBottomSheetState
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(t.common.cancel,
+                  child: Text(t.common.buttons.cancel,
                       style: const TextStyle(color: Colors.grey)),
                 ),
                 Text(t.B03_SplitMethod_Edit.title,
@@ -261,7 +261,7 @@ class _B03SplitMethodEditBottomSheetState
                           });
                         }
                       : null,
-                  child: Text(t.common.save,
+                  child: Text(t.common.buttons.save,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: _isValid ? colorScheme.primary : Colors.grey)),

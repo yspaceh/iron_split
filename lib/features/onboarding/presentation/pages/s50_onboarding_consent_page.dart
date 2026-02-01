@@ -43,7 +43,7 @@ class _S50Content extends StatelessWidget {
                 // 導航到下一頁 (S51)
                 context.pushNamed('S51');
               },
-              child: Text(t.S50_Onboarding_Consent.agree_btn),
+              child: Text(t.S50_Onboarding_Consent.buttons.agree),
             ),
           ],
         ),

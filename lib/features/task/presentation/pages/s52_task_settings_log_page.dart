@@ -102,7 +102,7 @@ class _S52Content extends StatelessWidget {
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(
-              text: t.S52_TaskSettings_Log.action_export_csv,
+              text: t.S52_TaskSettings_Log.buttons.export_csv,
               type: AppButtonType.secondary,
               isLoading: vm.isExporting,
               icon: Icons.download,

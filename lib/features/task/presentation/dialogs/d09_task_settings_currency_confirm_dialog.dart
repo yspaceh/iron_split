@@ -57,7 +57,7 @@ class _D09DialogContent extends StatelessWidget {
         // 取消按鈕
         TextButton(
           onPressed: vm.isProcessing ? null : () => context.pop(false),
-          child: Text(t.common.cancel),
+          child: Text(t.common.buttons.cancel),
         ),
         // 確認按鈕
         TextButton(
@@ -71,7 +71,7 @@ class _D09DialogContent extends StatelessWidget {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : Text(t.common.confirm),
+              : Text(t.common.buttons.confirm),
         ),
       ],
     );

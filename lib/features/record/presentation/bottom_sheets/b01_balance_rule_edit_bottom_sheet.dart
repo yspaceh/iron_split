@@ -85,12 +85,12 @@ class _B01BalanceRuleEditBottomSheetState
                 // 左側：取消
                 TextButton(
                   onPressed: () => context.pop(),
-                  child: Text(t.common.cancel,
+                  child: Text(t.common.buttons.cancel,
                       style: const TextStyle(color: Colors.grey)),
                 ),
                 // 中間：標題
                 Text(
-                  t.remainder_rule.title, // "餘額處理方式"
+                  t.common.remainder_rule.title, // "餘額處理方式"
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -98,7 +98,7 @@ class _B01BalanceRuleEditBottomSheetState
                 TextButton(
                   onPressed: _isValid ? _onSave : null,
                   child: Text(
-                    t.common.confirm,
+                    t.common.buttons.confirm,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: _isValid ? colorScheme.primary : Colors.grey,

@@ -183,14 +183,14 @@ class _S30Content extends StatelessWidget {
         children: [
           // 左邊：取消 (次要按鈕)
           AppButton(
-            text: t.common.cancel,
+            text: t.common.buttons.cancel,
             type: AppButtonType.secondary,
             onPressed: () => Navigator.pop(context),
           ),
 
           // 右邊：下一步 (主要按鈕)
           AppButton(
-            text: t.s30_settlement_confirm.action_next,
+            text: t.s30_settlement_confirm.buttons.next,
             type: AppButtonType.primary,
             onPressed: () => context.pushNamed('S31'),
           ),

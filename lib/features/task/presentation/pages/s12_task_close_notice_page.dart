@@ -52,7 +52,7 @@ class _S12Content extends StatelessWidget {
       context,
       title: t.D08_TaskClosed_Confirm.title,
       content: t.D08_TaskClosed_Confirm.content,
-      confirmText: t.D08_TaskClosed_Confirm.action_confirm,
+      confirmText: t.D08_TaskClosed_Confirm.buttons.confirm,
       isDestructive: true, // 啟用紅色警示
       showCancel: true, // 強制顯示取消按鈕
       onConfirm: () => _handleClose(context, vm),
@@ -126,7 +126,7 @@ class _S12Content extends StatelessWidget {
                           child: CircularProgressIndicator(
                               color: theme.colorScheme.error, strokeWidth: 2),
                         )
-                      : Text(t.S12_TaskClose_Notice.action_close),
+                      : Text(t.S12_TaskClose_Notice.buttons.close),
                 ),
               ),
             ],

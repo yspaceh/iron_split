@@ -38,7 +38,7 @@ class GroupBalanceCard extends StatelessWidget {
       CommonAlertDialog.show(context,
           title: t.S13_Task_Dashboard.dialog_balance_detail,
           showCancel: false, // 純資訊顯示，不用取消按鈕
-          confirmText: t.common.close, // 按鈕改叫「關閉」
+          confirmText: t.common.buttons.close, // 按鈕改叫「關閉」
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class GroupBalanceCard extends StatelessWidget {
       CommonAlertDialog.show(context,
           title: t.S13_Task_Dashboard.dialog_balance_detail,
           showCancel: false,
-          confirmText: t.common.close,
+          confirmText: t.common.buttons.close,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

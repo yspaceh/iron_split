@@ -1,67 +1,69 @@
 {
-  "category": {
-    "food": "飲食",
-    "transport": "交通",
-    "shopping": "購物",
-    "entertainment": "娛樂",
-    "accommodation": "住宿",
-    "others": "其他"
-  },
   "common": {
-    "cancel": "取消",
-    "delete": "刪除",
-    "confirm": "確認",
-    "back": "返回",
-    "save": "保存",
+    "buttons": {
+      "cancel": "取消",
+      "delete": "刪除",
+      "confirm": "確認",
+      "back": "返回",
+      "save": "保存",
+      "edit": "編輯",
+      "close": "關閉",
+      "discard": "放棄變更",
+      "keep_editing": "繼續編輯"
+    },
+    "category": {
+      "food": "飲食",
+      "transport": "交通",
+      "shopping": "購物",
+      "entertainment": "娛樂",
+      "accommodation": "住宿",
+      "others": "其他"
+    },
+    "currency": {
+      "twd": "新台幣",
+      "jpy": "日圓",
+      "usd": "美金",
+      "eur": "歐元",
+      "krw": "韓元",
+      "cny": "人民幣",
+      "gbp": "英鎊",
+      "cad": "加拿大幣",
+      "aud": "澳幣",
+      "chf": "瑞士法郎",
+      "dkk": "丹麥幣",
+      "hkd": "港幣",
+      "nok": "挪威幣",
+      "nzd": "紐西蘭幣",
+      "sgd": "新加坡幣",
+      "thb": "泰幣",
+      "zar": "南非幣",
+      "rub": "俄羅斯幣",
+      "vnd": "越南盾",
+      "idr": "印尼盾",
+      "myr": "馬來幣",
+      "php": "菲律賓幣",
+      "mop": "澳門幣",
+      "sek": "瑞典克朗",
+      "aed": "阿聯酋迪拉姆",
+      "sar": "沙烏地里亞爾",
+      "try_": "土耳其里拉",
+      "inr": "印度盧比"
+    },
+    "remainder_rule": {
+      "title": "零頭處理",
+      "rule_random": "餘額輪盤",
+      "rule_order": "順序輪替",
+      "rule_member": "指定成員"
+    },
     "error_prefix": "錯誤: {message}",
     "please_login": "請先登入",
     "loading": "讀取中...",
-    "edit": "編輯",
-    "close": "關閉",
     "me": "我",
     "required": "必填",
-    "discard": "放棄變更",
-    "keep_editing": "繼續編輯",
     "member_prefix": "成員",
     "no_record": "無紀錄",
     "today": "今天",
     "untitled": "未命名"
-  },
-  "currency": {
-    "twd": "新台幣",
-    "jpy": "日圓",
-    "usd": "美金",
-    "eur": "歐元",
-    "krw": "韓元",
-    "cny": "人民幣",
-    "gbp": "英鎊",
-    "cad": "加拿大幣",
-    "aud": "澳幣",
-    "chf": "瑞士法郎",
-    "dkk": "丹麥幣",
-    "hkd": "港幣",
-    "nok": "挪威幣",
-    "nzd": "紐西蘭幣",
-    "sgd": "新加坡幣",
-    "thb": "泰幣",
-    "zar": "南非幣",
-    "rub": "俄羅斯幣",
-    "vnd": "越南盾",
-    "idr": "印尼盾",
-    "myr": "馬來幣",
-    "php": "菲律賓幣",
-    "mop": "澳門幣",
-    "sek": "瑞典克朗",
-    "aed": "阿聯酋迪拉姆",
-    "sar": "沙烏地里亞爾",
-    "try_": "土耳其里拉",
-    "inr": "印度盧比"
-  },
-  "remainder_rule": {
-    "title":"零頭處理",
-    "rule_random": "餘額輪盤",
-    "rule_order": "順序輪替",
-    "rule_member": "指定成員"
   },
   "log_action": {
     "create_task": "建立任務",
@@ -93,15 +95,17 @@
   "S11_Invite_Confirm": {
     "title": "加入任務",
     "subtitle": "您受邀加入以下任務：",
+    "buttons": {
+      "confirm": "加入",
+      "cancel": "取消",
+      "home": "回首頁"
+    },
     "loading_invite": "正在讀取邀請函...",
     "join_failed_title": "哎呀！無法加入任務",
     "identity_match_title": "請問您是以下成員嗎？",
     "identity_match_desc": "此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。",
     "status_linking": "將以「連結帳號」方式加入",
     "status_new_member": "將以「新成員」身分加入",
-    "action_confirm": "加入",
-    "action_cancel": "取消",
-    "action_home": "回首頁",
     "error_join_failed": "加入失敗：{message}",
     "error_generic": "發生錯誤：{message}",
     "label_select_ghost": "選擇要繼承的成員",
@@ -111,10 +115,17 @@
   "S12_TaskClose_Notice": {
     "title": "結束任務確認",
     "content": "關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。",
-    "action_close": "結束任務"
+    "buttons": {
+      "close": "結束任務"
+    }
   },
   "S13_Task_Dashboard": {
     "title_active": "任務主頁",
+    "buttons": {
+      "record": "記一筆",
+      "settlement": "結算",
+      "download": "下載記錄"
+    },
     "tab_group": "大家",
     "tab_personal": "個人",
     "label_prepay_balance": "公款餘額",
@@ -124,9 +135,7 @@
     "label_total_expense": "總費用",
     "label_total_prepay": "總預收",
     "label_remainder_pot": "零頭罐",
-    "fab_record": "記一筆",
     "empty_records": "尚無收支紀錄",
-    "settlement_button": "結算",
     "nav_to_record": "準備前往記帳頁面...",
     "daily_expense_label": "支出",
     "dialog_balance_detail": "收支幣別明細",
@@ -138,9 +147,7 @@
     "personal_to_pay": "應付",
     "personal_empty_desc": "這天沒有與你有關的紀錄",
     "total_amount_label": "總金額",
-    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
-    "action_download": "下載記錄"
-    
+    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。"
   },
   "S14_Task_Settings": {
     "title": "任務設定",
@@ -152,6 +159,10 @@
   "S15_Record_Edit": {
     "title_create": "記一筆",
     "title_edit": "編輯紀錄",
+    "buttons": {
+      "save": "儲存紀錄",
+      "close": "關閉"
+    },
     "section_split": "分攤資訊",
     "label_date": "日期",
     "label_title": "項目名稱",
@@ -163,12 +174,10 @@
     "label_rate": "匯率 (1 {base} = ? {target})",
     "label_memo": "備註",
     "hint_memo": "輸入備註...",
-    "action_save": "儲存紀錄",
     "val_split_details": "細項分拆",
     "val_split_summary": "總計 {amount} 由 {method} 分攤",
     "info_rate_source": "匯率來源",
     "msg_rate_source": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。",
-    "btn_close": "關閉",
     "val_converted_amount": "≈ {base}{symbol} {amount}",
     "val_split_remaining": "剩餘金額",
     "err_amount_not_enough": "剩餘金額不足",
@@ -184,10 +193,14 @@
     "type_income_title": "預收款",
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
-    "payer_multiple" : "多人"
+    "payer_multiple": "多人"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
+    "buttons": {
+      "save": "保存",
+      "done": "確定"
+    },
     "section_name": "任務名稱",
     "section_period": "任務期間",
     "section_settings": "結算設定",
@@ -197,19 +210,19 @@
     "field_end_date": "結束日期",
     "field_currency": "結算幣別",
     "field_member_count": "參加人數",
-    "action_save": "保存",
-    "picker_done": "確定",
     "error_name_empty": "請輸入任務名稱",
     "label_name": "任務名稱",
     "label_date": "日期",
     "label_currency": "貨幣"
   },
   "S17_Task_Locked": {
+    "buttons": {
+      "download": "下載紀錄",
+      "notify_members": "通知成員",
+      "view_payment_details": "查看收退款帳戶"
+    },
     "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
-    "action_download": "下載紀錄",
-    "action_notify_members": "通知成員",
     "label_remainder_absorbed_by": "零錢罐 {amount} 由 {name} 吸收",
-    "action_view_payment_details": "查看收退款帳戶",
     "section_pending": "待處理",
     "section_cleared": "已處理",
     "member_payment_status_pay": "應付",
@@ -219,6 +232,9 @@
   },
   "s30_settlement_confirm": {
     "title": "結算確認",
+    "buttons": {
+      "next": "收款設定"
+    },
     "steps": {
       "confirm_amount": "確認金額",
       "payment_info": "收款設定"
@@ -234,33 +250,38 @@
       "principal": "本金",
       "random_remainder": "隨機餘額",
       "remainder": "餘額"
-    },
-    "action_next": "收款設定"
+    }
   },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
+    "buttons": {
+      "agree": "開始使用"
+    },
     "content_prefix": "歡迎使用 Iron Split。點擊開始即代表您同意我們的 ",
     "terms_link": "服務條款",
     "and": " 與 ",
     "privacy_link": "隱私政策",
     "content_suffix": "。我們採用匿名登入，保障您的隱私。",
-    "agree_btn": "開始使用",
     "login_failed": "登入失敗: {message}"
   },
   "S51_Onboarding_Name": {
     "title": "名稱設定",
+    "buttons": {
+      "next": "設定完成"
+    },
     "description": "請輸入您在 App 內的顯示名稱（1-10 個字）。",
     "field_hint": "輸入暱稱",
     "field_counter": "{current}/10",
     "error_empty": "名稱不能為空",
     "error_too_long": "最多 10 個字",
-    "error_invalid_char": "包含無效字元",
-    "action_next": "設定完成"
+    "error_invalid_char": "包含無效字元"
   },
   "S52_TaskSettings_Log": {
     "title": "活動紀錄",
+    "buttons": {
+      "export_csv": "匯出 CSV"
+    },
     "empty_log": "目前沒有任何活動紀錄",
-    "action_export_csv": "匯出 CSV",
     "export_file_prefix": "活動紀錄",
     "csv_header": {
       "time": "時間",
@@ -280,8 +301,10 @@
   },
   "S53_TaskSettings_Members": {
     "title": "成員管理",
-    "action_add": "新增成員",
-    "action_invite": "發送邀請",
+    "buttons": {
+      "add": "新增成員",
+      "invite": "發送邀請"
+    },
     "label_default_ratio": "預設比例",
     "dialog_delete_error_title": "無法刪除成員",
     "dialog_delete_error_content": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
@@ -293,15 +316,19 @@
   },
   "D01_MemberRole_Intro": {
     "title": "你的角色是...",
-    "action_reroll": "換個動物",
-    "action_enter": "進入任務",
+    "buttons": {
+      "reroll": "換個動物",
+      "enter": "進入任務"
+    },
     "desc_reroll_left": "還有 1 次機會",
     "desc_reroll_empty": "機會已用完",
     "dialog_content": "這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！"
   },
   "D02_Invite_Result": {
     "title": "加入失敗",
-    "action_back": "回首頁",
+    "buttons": {
+      "back": "回首頁"
+    },
     "error_INVALID_CODE": "邀請碼無效，請確認連結是否正確。",
     "error_EXPIRED_CODE": "邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。",
     "error_TASK_FULL": "任務人數已滿 (上限 15 人)，無法加入。",
@@ -310,12 +337,14 @@
   },
   "D03_TaskCreate_Confirm": {
     "title": "確認任務設定",
+    "buttons": {
+      "confirm": "確認",
+      "back": "返回編輯"
+    },
     "label_name": "任務名稱",
     "label_period": "期間",
     "label_currency": "幣別",
     "label_members": "人數",
-    "action_confirm": "確認",
-    "action_back": "返回編輯",
     "creating_task": "正在建立任務...",
     "preparing_share": "準備邀請函...",
     "share_subject": "邀請加入 Iron Split 任務",
@@ -323,14 +352,18 @@
   },
   "D05_DateJump_NoResult": {
     "title": "無紀錄",
-    "content": "找不到此日期的紀錄，要新增一筆嗎？",
-    "action_cancel": "返回",
-    "action_add": "新增紀錄"
+    "buttons": {
+      "cancel": "返回",
+      "add": "新增紀錄"
+    },
+    "content": "找不到此日期的紀錄，要新增一筆嗎？"
   },
-   "D08_TaskClosed_Confirm": {
+  "D08_TaskClosed_Confirm": {
     "title": "確認結束任務",
-    "content": "此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？",
-    "action_confirm": "確認"
+    "buttons": {
+      "confirm": "確認"
+    },
+    "content": "此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？"
   },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "變更結算幣別？",
@@ -343,6 +376,9 @@
   },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",
+    "buttons": {
+      "save": "確認分拆"
+    },
     "name_label": "項目名稱",
     "amount_label": "金額",
     "split_button_prefix": "分攤設定",
@@ -352,12 +388,14 @@
     "label_total": "總計: {current}/{target}",
     "error_total_mismatch": "總金額不符",
     "error_percent_mismatch": "總比例必須為 100%",
-    "action_save": "確認分拆",
     "hint_amount": "金額",
     "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
     "title": "選擇分攤方式",
+    "buttons": {
+      "adjust_weight": "調整權重"
+    },
     "method_even": "平均分攤",
     "method_percent": "比例分攤",
     "method_exact": "指定金額",
@@ -366,8 +404,19 @@
     "desc_exact": "手動輸入金額，總額需吻合",
     "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
     "label_weight": "比例",
-    "error_total_mismatch": "總金額不符 (差額 {diff})",
-    "btn_adjust_weight": "調整權重"
+    "error_total_mismatch": "總金額不符 (差額 {diff})"
+  },
+  "b04_payment_merge": {
+    "title": "合併成員款項",
+    "description": "將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。",
+    "section_head": "代表成員",
+    "section_candidates": "選擇合併成員",
+    "status_payable": "應付",
+    "status_receivable": "可退",
+    "buttons": {
+      "cancel": "取消",
+      "confirm": "合併"
+    }
   },
   "B07_PaymentMethod_Edit": {
     "title": "選擇資金來源",

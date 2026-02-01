@@ -33,13 +33,13 @@ class D04CommonUnsavedConfirmDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: colorScheme.error,
           ),
-          child: Text(confirmText ?? t.common.discard),
+          child: Text(confirmText ?? t.common.buttons.discard),
         ),
 
         // 右側按鈕：繼續編輯 (留下來)
         FilledButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelText ?? t.common.keep_editing),
+          child: Text(cancelText ?? t.common.buttons.keep_editing),
         ),
       ],
     );

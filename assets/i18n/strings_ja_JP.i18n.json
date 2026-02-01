@@ -1,67 +1,69 @@
 {
-  "category": {
-    "food": "食事",
-    "transport": "交通",
-    "shopping": "買い物",
-    "entertainment": "エンタメ",
-    "accommodation": "宿泊",
-    "others": "その他"
-  },
   "common": {
-    "cancel": "キャンセル",
-    "delete": "削除",
-    "confirm": "確認",
-    "back": "戻る",
-    "save": "保存",
+    "buttons": {
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "confirm": "確認",
+      "back": "戻る",
+      "save": "保存",
+      "edit": "編集",
+      "close": "閉じる",
+      "discard": "破棄",
+      "keep_editing": "編集を続ける"
+    },
+    "category": {
+      "food": "食事",
+      "transport": "交通",
+      "shopping": "買い物",
+      "entertainment": "エンタメ",
+      "accommodation": "宿泊",
+      "others": "その他"
+    },
+    "currency": {
+      "twd": "新台湾ドル",
+      "jpy": "日本円",
+      "usd": "USドル",
+      "eur": "ユーロ",
+      "krw": "韓国ウォン",
+      "cny": "人民元",
+      "gbp": "英ポンド",
+      "cad": "カナダドル",
+      "aud": "オーストラリアドル",
+      "chf": "スイスフラン",
+      "dkk": "デンマーククローネ",
+      "hkd": "香港ドル",
+      "nok": "ノルウェークローネ",
+      "nzd": "ニュージーランドドル",
+      "sgd": "シンガポールドル",
+      "thb": "タイバーツ",
+      "zar": "南アフリカランド",
+      "rub": "ロシアルーブル",
+      "vnd": "ベトナムドン",
+      "idr": "インドネシアルピア",
+      "myr": "マレーシアリンギット",
+      "php": "フィリピンペソ",
+      "mop": "マカオパタカ",
+      "sek": "スウェーデンクローナ",
+      "aed": "UAEディルハム",
+      "sar": "サウジアラビアリヤル",
+      "try_": "トルコリラ",
+      "inr": "インドルピー"
+    },
+    "remainder_rule": {
+      "title": "端数処理",
+      "rule_random": "ランダム",
+      "rule_order": "順番",
+      "rule_member": "指定"
+    },
     "error_prefix": "エラー: {message}",
     "please_login": "ログインしてください",
     "loading": "読み込み中...",
-    "edit": "編集",
-    "close": "閉じる",
     "me": "自分",
     "required": "必須",
-    "discard": "破棄",
-    "keep_editing": "編集を続ける",
     "member_prefix": "メンバー",
     "no_record": "記録なし",
     "today": "今日",
     "untitled": "無題"
-  },
-  "currency": {
-    "twd": "新台湾ドル",
-    "jpy": "日本円",
-    "usd": "USドル",
-    "eur": "ユーロ",
-    "krw": "韓国ウォン",
-    "cny": "人民元",
-    "gbp": "英ポンド",
-    "cad": "カナダドル",
-    "aud": "オーストラリアドル",
-    "chf": "スイスフラン",
-    "dkk": "デンマーククローネ",
-    "hkd": "香港ドル",
-    "nok": "ノルウェークローネ",
-    "nzd": "ニュージーランドドル",
-    "sgd": "シンガポールドル",
-    "thb": "タイバーツ",
-    "zar": "南アフリカランド",
-    "rub": "ロシアルーブル",
-    "vnd": "ベトナムドン",
-    "idr": "インドネシアルピア",
-    "myr": "マレーシアリンギット",
-    "php": "フィリピンペソ",
-    "mop": "マカオパタカ",
-    "sek": "スウェーデンクローナ",
-    "aed": "UAEディルハム",
-    "sar": "サウジアラビアリヤル",
-    "try_": "トルコリラ",
-    "inr": "インドルピー"
-  },
-  "remainder_rule": {
-    "title":"端数処理",
-    "rule_random": "ランダム",
-    "rule_order": "順番",
-    "rule_member": "指定"
   },
   "log_action": {
     "create_task": "タスク作成",
@@ -81,23 +83,27 @@
   },
   "S50_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
+    "buttons": {
+      "agree": "はじめる"
+    },
     "content_prefix": "開始することで、",
     "terms_link": "利用規約",
     "and": " と ",
     "privacy_link": "プライバシーポリシー",
     "content_suffix": " に同意したものとみなされます。",
-    "agree_btn": "はじめる",
     "login_failed": "ログイン失敗: {message}"
   },
   "S51_Onboarding_Name": {
     "title": "名前設定",
+    "buttons": {
+      "next": "設定"
+    },
     "description": "アプリ内で表示する名前を入力してください（1-10文字）。",
     "field_hint": "ニックネームを入力",
     "field_counter": "{current}/10",
     "error_empty": "名前を入力してください",
     "error_too_long": "10文字以内で入力してください",
-    "error_invalid_char": "無効な文字が含まれています",
-    "action_next": "設定"
+    "error_invalid_char": "無効な文字が含まれています"
   },
   "S10_Home_TaskList": {
     "title": "マイタスク",
@@ -113,15 +119,17 @@
   "S11_Invite_Confirm": {
     "title": "タスクに参加",
     "subtitle": "以下のタスクに招待されました：",
+    "buttons": {
+      "confirm": "参加",
+      "cancel": "キャンセル",
+      "home": "ホームへ"
+    },
     "loading_invite": "招待状を読み込み中...",
     "join_failed_title": "タスクに参加できません",
     "identity_match_title": "あなたは以下のメンバーですか？",
     "identity_match_desc": "このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。",
     "status_linking": "「アカウント連携」で参加します",
     "status_new_member": "「新規メンバー」として参加します",
-    "action_confirm": "参加",
-    "action_cancel": "キャンセル",
-    "action_home": "ホームへ",
     "error_join_failed": "参加失敗: {message}",
     "error_generic": "エラー: {message}",
     "label_select_ghost": "引き継ぐメンバーを選択",
@@ -130,11 +138,17 @@
   },
   "S12_TaskClose_Notice": {
     "title": "タスク終了",
-    "content": "このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。",
-    "action_close": "タスク終了"
+    "buttons": {
+      "close": "タスク終了"
+    },
+    "content": "このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。"
   },
   "S13_Task_Dashboard": {
     "title_active": "ダッシュボード",
+    "buttons": {
+      "record": "記録",
+      "settlement": "精算"
+    },
     "tab_group": "グループ",
     "tab_personal": "個人",
     "label_prepay_balance": "プール残高",
@@ -144,9 +158,7 @@
     "label_total_expense": "総費用",
     "label_total_prepay": "総預り金",
     "label_remainder_pot": "端数ポット",
-    "fab_record": "記録",
     "empty_records": "記録がありません",
-    "settlement_button": "精算",
     "nav_to_record": "記録ページへ移動します...",
     "daily_expense_label": "支出",
     "dialog_balance_detail": "通貨別内訳",
@@ -169,6 +181,10 @@
   "S15_Record_Edit": {
     "title_create": "記録を追加",
     "title_edit": "記録を編集",
+    "buttons": {
+      "save": "保存",
+      "close": "閉じる"
+    },
     "section_split": "割り勘情報",
     "label_date": "日付",
     "label_title": "項目名",
@@ -180,12 +196,10 @@
     "label_rate": "レート (1 {base} = ? {target})",
     "label_memo": "メモ",
     "hint_memo": "備考を入力...",
-    "action_save": "保存",
     "val_split_details": "詳細を編集",
     "val_split_summary": "計 {amount} を{method}で割り勘",
     "info_rate_source": "レートの提供元",
     "msg_rate_source": "為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。",
-    "btn_close": "閉じる",
     "val_converted_amount": "≈ {base}{symbol} {amount}",
     "val_split_remaining": "残り金額",
     "err_amount_not_enough": "残り金額不足",
@@ -201,10 +215,14 @@
     "type_income_title": "預り金",
     "base_card_title_expense": "残額 (Base)",
     "base_card_title_income": "資金提供者",
-    "payer_multiple" : "複数人"
+    "payer_multiple": "複数人"
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
+    "buttons": {
+      "save": "保存",
+      "done": "完了"
+    },
     "section_name": "タスク名",
     "section_period": "期間",
     "section_settings": "設定",
@@ -214,19 +232,19 @@
     "field_end_date": "終了日",
     "field_currency": "通貨",
     "field_member_count": "参加人数",
-    "action_save": "保存",
-    "picker_done": "完了",
     "error_name_empty": "タスク名を入力してください",
     "label_name": "タスク名",
     "label_date": "日付",
     "label_currency": "通貨"
   },
   "S17_Task_Locked": {
+    "buttons": {
+      "download": "記録をダウンロード",
+      "notify_members": "メンバーに通知",
+      "view_payment_details": "支払/受取口座を確認"
+    },
     "retention_notice": "このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。",
-    "action_download": "記録をダウンロード",
-    "action_notify_members": "メンバーに通知",
     "label_remainder_absorbed_by": "端数 {amount} は {name} が負担",
-    "action_view_payment_details": "支払/受取口座を確認",
     "section_pending": "未完了",
     "section_cleared": "完了",
     "member_payment_status_pay": "支払",
@@ -236,6 +254,9 @@
   },
   "s30_settlement_confirm": {
     "title": "精算確認",
+    "buttons": {
+      "next": "受取設定"
+    },
     "steps": {
       "confirm_amount": "金額確認",
       "payment_info": "受取設定"
@@ -251,13 +272,14 @@
       "principal": "元金",
       "random_remainder": "ランダム端数",
       "remainder": "端数"
-    },
-    "action_next": "受取設定"
+    }
   },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
+    "buttons": {
+      "export_csv": "CSVエクスポート"
+    },
     "empty_log": "活動履歴はありません",
-    "action_export_csv": "CSVエクスポート",
     "export_file_prefix": "活動履歴",
     "csv_header": {
       "time": "日時",
@@ -277,8 +299,10 @@
   },
   "S53_TaskSettings_Members": {
     "title": "メンバー管理",
-    "action_add": "メンバー追加",
-    "action_invite": "招待送信",
+    "buttons": {
+      "add": "メンバー追加",
+      "invite": "招待送信"
+    },
     "label_default_ratio": "デフォルト比率",
     "dialog_delete_error_title": "メンバー削除エラー",
     "dialog_delete_error_content": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。",
@@ -290,15 +314,19 @@
   },
   "D01_MemberRole_Intro": {
     "title": "あなたのキャラクター",
-    "action_reroll": "動物を変える",
-    "action_enter": "タスクへ進む",
+    "buttons": {
+      "reroll": "動物を変える",
+      "enter": "タスクへ進む"
+    },
     "desc_reroll_left": "あと1回変更可",
     "desc_reroll_empty": "変更不可",
     "dialog_content": "これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！"
   },
   "D02_Invite_Result": {
     "title": "参加失敗",
-    "action_back": "ホームへ戻る",
+    "buttons": {
+      "back": "ホームへ戻る"
+    },
     "error_INVALID_CODE": "招待コードが無効です。リンクが正しいか確認してください。",
     "error_EXPIRED_CODE": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
     "error_TASK_FULL": "定員オーバーです（上限15名）。参加できません。",
@@ -307,12 +335,14 @@
   },
   "D03_TaskCreate_Confirm": {
     "title": "設定の確認",
+    "buttons": {
+      "confirm": "確認",
+      "back": "編集に戻る"
+    },
     "label_name": "タスク名",
     "label_period": "期間",
     "label_currency": "通貨",
     "label_members": "人数",
-    "action_confirm": "確認",
-    "action_back": "編集に戻る",
     "creating_task": "作成中...",
     "preparing_share": "招待を準備中...",
     "share_subject": "Iron Split タスク招待",
@@ -320,14 +350,18 @@
   },
   "D05_DateJump_NoResult": {
     "title": "記録なし",
-    "content": "この日付の記録は見つかりませんでした。追加しますか？",
-    "action_cancel": "戻る",
-    "action_add": "記録を追加"
+    "buttons": {
+      "cancel": "戻る",
+      "add": "記録を追加"
+    },
+    "content": "この日付の記録は見つかりませんでした。追加しますか？"
   },
   "D08_TaskClosed_Confirm": {
     "title": "タスク終了確認",
-    "content": "この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？",
-    "action_confirm": "確認"
+    "buttons": {
+      "confirm": "確認"
+    },
+    "content": "この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？"
   },
   "D09_TaskSettings_CurrencyConfirm": {
     "title": "決済通貨を変更しますか？",
@@ -340,6 +374,9 @@
   },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",
+    "buttons": {
+      "save": "決定"
+    },
     "name_label": "項目名",
     "amount_label": "金額",
     "split_button_prefix": "負担設定",
@@ -349,12 +386,14 @@
     "label_total": "合計: {current}/{target}",
     "error_total_mismatch": "合計金額が一致しません",
     "error_percent_mismatch": "合計は100%である必要があります",
-    "action_save": "決定",
     "hint_amount": "金額",
     "hint_percent": "%"
   },
   "B03_SplitMethod_Edit": {
     "title": "割り勘方法を選択",
+    "buttons": {
+      "adjust_weight": "比率を調整"
+    },
     "method_even": "均等分攤",
     "method_percent": "割合分攤",
     "method_exact": "金額指定",
@@ -363,8 +402,19 @@
     "desc_exact": "金額を手動で入力",
     "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）",
     "label_weight": "比例",
-    "error_total_mismatch": "合計金額が一致しません (差額 {diff})",
-    "btn_adjust_weight": "比率を調整"
+    "error_total_mismatch": "合計金額が一致しません (差額 {diff})"
+  },
+  "b04_payment_merge": {
+    "title": "メンバー支払いの統合",
+    "description": "メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。",
+    "section_head": "代表メンバー",
+    "section_candidates": "統合するメンバーを選択",
+    "status_payable": "支払",
+    "status_receivable": "受取",
+    "buttons": {
+      "cancel": "キャンセル",
+      "confirm": "統合"
+    }
   },
   "B07_PaymentMethod_Edit": {
     "title": "資金源を選択",

@@ -202,7 +202,7 @@ class _S15ContentState extends State<_S15Content> {
       context,
       title: t.S15_Record_Edit.info_rate_source,
       content: t.S15_Record_Edit.msg_rate_source,
-      confirmText: t.S15_Record_Edit.btn_close,
+      confirmText: t.S15_Record_Edit.buttons.close,
       onConfirm: () => Navigator.pop(context),
     );
   }
@@ -326,7 +326,7 @@ class _S15ContentState extends State<_S15Content> {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2))
-                : Text(t.common.save,
+                : Text(t.common.buttons.save,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
           )
         ],
