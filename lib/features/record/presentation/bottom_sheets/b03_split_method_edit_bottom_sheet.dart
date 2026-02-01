@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B03SplitMethodEditBottomSheet extends StatefulWidget {
@@ -31,6 +34,37 @@ class B03SplitMethodEditBottomSheet extends StatefulWidget {
     required this.initialMemberIds,
     required this.initialDetails,
   });
+
+  static Future<Map<String, dynamic>?> show(
+    BuildContext context, {
+    required double totalAmount,
+    required CurrencyConstants selectedCurrency,
+    required List<Map<String, dynamic>> allMembers,
+    required Map<String, double> defaultMemberWeights,
+    double exchangeRate = 1.0,
+    required CurrencyConstants baseCurrency,
+    required String initialSplitMethod,
+    required List<String> initialMemberIds,
+    required Map<String, double> initialDetails,
+  }) {
+    return showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context) => B03SplitMethodEditBottomSheet(
+        totalAmount: totalAmount,
+        selectedCurrency: selectedCurrency,
+        allMembers: allMembers,
+        defaultMemberWeights: defaultMemberWeights,
+        exchangeRate: exchangeRate,
+        baseCurrency: baseCurrency,
+        initialSplitMethod: initialSplitMethod,
+        initialMemberIds: initialMemberIds,
+        initialDetails: initialDetails,
+      ),
+    );
+  }
 
   @override
   State<B03SplitMethodEditBottomSheet> createState() =>
@@ -229,49 +263,35 @@ class _B03SplitMethodEditBottomSheetState
 
     String methodLabel = SplitMethodConstants.getLabel(context, _splitMethod);
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Column(
-        children: [
-          // 1. Header
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(t.common.buttons.cancel,
-                      style: const TextStyle(color: Colors.grey)),
-                ),
-                Text(t.B03_SplitMethod_Edit.title,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold)),
-                TextButton(
-                  onPressed: _isValid
-                      ? () {
-                          Navigator.pop(context, {
-                            'splitMethod': _splitMethod,
-                            'memberIds': _selectedMemberIds,
-                            'details': _details,
-                          });
-                        }
-                      : null,
-                  child: Text(t.common.buttons.save,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isValid ? colorScheme.primary : Colors.grey)),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
+    // ✅ 使用 CommonBottomSheet
+    return CommonBottomSheet(
+      title: t.B03_SplitMethod_Edit.title,
 
-          // 2. Info Bar (金額 & 方式)
+      // ✅ 底部按鈕區：使用 .sheet 建構子
+      bottomActionBar: StickyBottomActionBar.sheet(
+        children: [
+          AppButton(
+            text: t.common.buttons.save,
+            type: AppButtonType.primary,
+            // 邏輯直接取自原本 TextButton 的 onPressed
+            onPressed: _isValid
+                ? () {
+                    Navigator.pop(context, {
+                      'splitMethod': _splitMethod,
+                      'memberIds': _selectedMemberIds,
+                      'details': _details,
+                    });
+                  }
+                : null,
+          ),
+        ],
+      ),
+
+      // ✅ 內容區：改為 Column 結構，實現「上方固定，下方捲動」
+      children: Column(
+        children: [
+          // 1. Info Bar (金額 & 方式) - 固定在上方
+          // 直接沿用您原始代碼的 Padding -> Row 結構
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -324,11 +344,14 @@ class _B03SplitMethodEditBottomSheetState
             ),
           ),
 
-          // 3. Content Area
+          // 2. Content Area - 捲動區
+          // 使用 Expanded 佔滿剩餘高度，內部使用 ListView 實現捲動
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
+                // 注意：這裡假設您的原始檔案中有定義 _buildEvenSection 等方法
+                // 否則這裡會報錯。如果您需要我補上這些方法的空殼或實作，請告知。
                 if (_splitMethod == SplitMethodConstants.even)
                   _buildEvenSection(t),
                 if (_splitMethod == SplitMethodConstants.percent)

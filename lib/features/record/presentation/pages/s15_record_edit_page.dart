@@ -111,20 +111,17 @@ class _S15ContentState extends State<_S15Content> {
 
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
-    final result = await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B03SplitMethodEditBottomSheet(
-        totalAmount: amountToSplit,
-        selectedCurrency: vm.selectedCurrencyConstants,
-        allMembers: vm.taskMembers,
-        defaultMemberWeights: vm.memberDefaultWeights,
-        initialSplitMethod: vm.baseSplitMethod,
-        initialMemberIds: vm.baseMemberIds,
-        initialDetails: vm.baseRawDetails,
-        exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyConstants,
-      ),
+    final result = await B03SplitMethodEditBottomSheet.show(
+      context,
+      totalAmount: amountToSplit,
+      selectedCurrency: vm.selectedCurrencyConstants,
+      allMembers: vm.taskMembers,
+      defaultMemberWeights: vm.memberDefaultWeights,
+      initialSplitMethod: vm.baseSplitMethod,
+      initialMemberIds: vm.baseMemberIds,
+      initialDetails: vm.baseRawDetails,
+      exchangeRate: rate,
+      baseCurrency: vm.baseCurrencyConstants,
     );
 
     if (result != null) vm.updateBaseSplit(result);
@@ -146,19 +143,16 @@ class _S15ContentState extends State<_S15Content> {
 
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
-    final result = await showModalBottomSheet<RecordDetail>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        detail: null,
-        allMembers: vm.taskMembers,
-        defaultWeights: defaultWeights,
-        selectedCurrency: vm.selectedCurrencyConstants,
-        parentTitle: vm.titleController.text,
-        availableAmount: vm.baseRemainingAmount,
-        exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyConstants,
-      ),
+    final result = await B02SplitExpenseEditBottomSheet.show(
+      context,
+      detail: null,
+      allMembers: vm.taskMembers,
+      defaultWeights: defaultWeights,
+      selectedCurrency: vm.selectedCurrencyConstants,
+      parentTitle: vm.titleController.text,
+      availableAmount: vm.baseRemainingAmount,
+      exchangeRate: rate,
+      baseCurrency: vm.baseCurrencyConstants,
     );
 
     if (result != null) vm.addItem(result);
@@ -174,19 +168,16 @@ class _S15ContentState extends State<_S15Content> {
 
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
-    final result = await showModalBottomSheet<dynamic>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B02SplitExpenseEditBottomSheet(
-        detail: detail,
-        allMembers: vm.taskMembers,
-        defaultWeights: defaultWeights,
-        selectedCurrency: vm.selectedCurrencyConstants,
-        parentTitle: vm.titleController.text,
-        availableAmount: vm.baseRemainingAmount + detail.amount,
-        exchangeRate: rate,
-        baseCurrency: vm.baseCurrencyConstants,
-      ),
+    final result = await B02SplitExpenseEditBottomSheet.show(
+      context,
+      detail: detail,
+      allMembers: vm.taskMembers,
+      defaultWeights: defaultWeights,
+      selectedCurrency: vm.selectedCurrencyConstants,
+      parentTitle: vm.titleController.text,
+      availableAmount: vm.baseRemainingAmount + detail.amount,
+      exchangeRate: rate,
+      baseCurrency: vm.baseCurrencyConstants,
     );
 
     if (result == 'DELETE') {
@@ -220,21 +211,18 @@ class _S15ContentState extends State<_S15Content> {
             ? Map<String, double>.from(vm.complexPaymentData!['memberAdvance'])
             : (vm.payerType == 'member' ? {vm.payerId: vm.totalAmount} : {});
 
-    final result = await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => B07PaymentMethodEditBottomSheet(
-        totalAmount: vm.totalAmount,
-        poolBalancesByCurrency: vm.poolBalancesByCurrency,
-        selectedCurrency: vm.selectedCurrencyConstants,
-        baseCurrency: vm.baseCurrencyConstants,
-        members: vm.taskMembers,
-        initialUsePrepay:
-            vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
-        initialPrepayAmount: vm.complexPaymentData?['prepayAmount'] ??
-            (vm.payerType == 'prepay' ? vm.totalAmount : 0.0),
-        initialMemberAdvance: initialMemberAdvance,
-      ),
+    final result = await B07PaymentMethodEditBottomSheet.show(
+      context,
+      totalAmount: vm.totalAmount,
+      poolBalancesByCurrency: vm.poolBalancesByCurrency,
+      selectedCurrency: vm.selectedCurrencyConstants,
+      baseCurrency: vm.baseCurrencyConstants,
+      members: vm.taskMembers,
+      initialUsePrepay:
+          vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
+      initialPrepayAmount: vm.complexPaymentData?['prepayAmount'] ??
+          (vm.payerType == 'prepay' ? vm.totalAmount : 0.0),
+      initialMemberAdvance: initialMemberAdvance,
     );
 
     if (result != null) vm.updatePaymentMethod(result);

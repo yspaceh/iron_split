@@ -38,15 +38,10 @@ class S13GroupView extends StatelessWidget {
         return <String, dynamic>{...m, 'id': e.key};
       }).toList();
 
-      final result = await showModalBottomSheet<Map<String, dynamic>>(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => B01BalanceRuleEditBottomSheet(
+      final result = await B01BalanceRuleEditBottomSheet.show(context,
           initialRule: task.remainderRule,
           initialMemberId: task.remainderAbsorberId,
-          members: membersList,
-        ),
-      );
+          members: membersList);
 
       if (result != null && context.mounted) {
         await vm.updateRemainderRule(result['rule'], result['memberId']);

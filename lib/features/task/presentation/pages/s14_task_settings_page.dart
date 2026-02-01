@@ -93,14 +93,11 @@ class _S14ContentState extends State<_S14Content> {
     }).toList();
 
     // 2. 呼叫 B01
-    final result = await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => B01BalanceRuleEditBottomSheet(
-        initialRule: vm.remainderRule,
-        initialMemberId: vm.remainderAbsorberId,
-        members: membersList,
-      ),
+    final result = await B01BalanceRuleEditBottomSheet.show(
+      context,
+      initialRule: vm.remainderRule,
+      initialMemberId: vm.remainderAbsorberId,
+      members: membersList,
     );
 
     // 3. 處理回傳

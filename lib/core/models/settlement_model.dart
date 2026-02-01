@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 /// 結算成員模型
 /// 用於 S30 結算確認頁面及後續寫入 Settlement Record
 class SettlementMember extends Equatable {
-  final String memberId;
+  final String id;
   final String displayName;
   final String? avatar;
   final bool isLinked;
@@ -22,7 +22,7 @@ class SettlementMember extends Equatable {
   final List<SettlementMember> subMembers; // 被合併的成員 (如果是 Head)
 
   const SettlementMember({
-    required this.memberId,
+    required this.id,
     required this.displayName,
     this.avatar,
     required this.finalAmount,
@@ -37,7 +37,7 @@ class SettlementMember extends Equatable {
 
   @override
   List<Object?> get props => [
-        memberId,
+        id,
         displayName,
         avatar,
         isLinked,

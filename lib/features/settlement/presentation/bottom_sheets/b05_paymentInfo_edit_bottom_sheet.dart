@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 /// Page Key: [在此填入 CSV 中的 Page Key，例如 B06_PaymentInfo.Detail]
 /// 類型: BottomSheet
 /// 描述: 根據專案聖經規範預留的空白 Bottom Sheet 檔案
-class B01BalanceRuleEditBottomSheet extends StatelessWidget {
-  const B01BalanceRuleEditBottomSheet({super.key});
+class B05PaymentinfoEditBottomSheet extends StatelessWidget {
+  const B05PaymentinfoEditBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {

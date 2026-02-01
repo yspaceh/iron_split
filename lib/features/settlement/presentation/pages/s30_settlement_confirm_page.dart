@@ -1,22 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
-import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
-import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
-import 'package:iron_split/features/settlement/presentation/viewmodels/s30_settlement_confirm_vm.dart';
-import 'package:iron_split/features/settlement/presentation/widgets/settlement_member_item.dart';
-import 'package:iron_split/features/settlement/presentation/widgets/step_indicator.dart';
-import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
-import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/features/settlement/presentation/bottom_sheets/b04_payment_merge_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+
+// Core & Models
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/gen/strings.g.dart';
+
+// Repos & Services
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+
+// ViewModels
+import 'package:iron_split/features/settlement/presentation/viewmodels/s30_settlement_confirm_vm.dart';
+
+// Widgets - Common
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
+
+// Widgets - Feature Specific
+import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/settlement_member_item.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/step_indicator.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 
 class S30SettlementConfirmPage extends StatelessWidget {
   final String taskId;
@@ -51,6 +63,11 @@ class _S30Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    // M3 Theme Access
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     // 使用 watch 監聽變化
     final vm = context.watch<S30SettlementConfirmViewModel>();
 
@@ -84,21 +101,17 @@ class _S30Content extends StatelessWidget {
       final task = vm.task;
       if (task == null) return;
 
-      // 修正這裡
       final List<Map<String, dynamic>> membersList =
           vm.task!.members.entries.map((e) {
         final m = e.value as Map<String, dynamic>;
         return <String, dynamic>{...m, 'id': e.key};
       }).toList();
 
-      final result = await showModalBottomSheet<Map<String, dynamic>>(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => B01BalanceRuleEditBottomSheet(
-          initialRule: task.remainderRule,
-          initialMemberId: task.remainderAbsorberId,
-          members: membersList,
-        ),
+      final result = await B01BalanceRuleEditBottomSheet.show(
+        context,
+        initialRule: task.remainderRule,
+        initialMemberId: task.remainderAbsorberId,
+        members: membersList,
       );
 
       if (result != null && context.mounted) {
@@ -106,17 +119,49 @@ class _S30Content extends StatelessWidget {
       }
     }
 
-    void _showMergeSettings(
-        BuildContext context, S30SettlementConfirmViewModel vm) {
-      // TODO: 呼叫 B04 (省略實作)
+    // B04 合併設定邏輯實作
+    Future<void> _showMergeSettings(
+      BuildContext context,
+      S30SettlementConfirmViewModel vm,
+      SettlementMember head,
+    ) async {
+      // 1. 過濾候選名單
+      final candidates = vm.settlementMembers.where((m) {
+        if (m.id == head.id) return false;
+        if (m.isMergedHead) return false;
+        return true;
+      }).toList();
+
+      // 2. 取得目前已經合併在該 Head 底下的 ID
+      final initialMergedIds = vm.currentMergeMap[head.id] ?? [];
+
+      // 3. 開啟 B04
+      final result = await B04PaymentMergeBottomSheet.show(
+        context,
+        headMember: head,
+        candidateMembers: candidates,
+        initialMergedIds: initialMergedIds,
+        baseCurrency: vm.baseCurrency,
+      );
+
+      // 4. 處理回傳結果
+      if (result != null && context.mounted) {
+        if (result.isEmpty) {
+          vm.unmergeMembers(head.id);
+        } else {
+          vm.mergeMembers(head.id, result);
+        }
+      }
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      // [M3]: 使用 surface (或 surfaceContainerLow) 取代 hardcoded grey
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(t.s30_settlement_confirm.title),
         centerTitle: true,
-        elevation: 0,
+        // [M3]: AppBar 預設背景透明，捲動時自動染色 (Surface Tint)
+        // 若要全白可設 scrolledUnderElevation: 0
       ),
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -126,18 +171,13 @@ class _S30Content extends StatelessWidget {
                 const StepIndicator(currentStep: 1),
 
                 // 2. 總覽卡片
+                // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: GroupBalanceCard(
-                        state: vm.balanceState, // 使用 VM 的 State
-                        onCurrencyTap: () => showCurrencyPicker(context, vm),
-                        onRuleTap: () => onRemainderRuleChange(vm),
-                      ),
-                    ),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: GroupBalanceCard(
+                    state: vm.balanceState,
+                    onCurrencyTap: () => showCurrencyPicker(context, vm),
+                    onRuleTap: () => onRemainderRuleChange(vm),
                   ),
                 ),
 
@@ -145,17 +185,22 @@ class _S30Content extends StatelessWidget {
                 if (vm.remainderRule == RemainderRuleConstants.random)
                   Container(
                     width: double.infinity,
-                    color: Colors.amber[50],
+                    // [M3]: 使用 Tertiary (第三色) 作為強調/提示背景
+                    color: colorScheme.tertiaryContainer,
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Row(
                       children: [
-                        Icon(Icons.casino, size: 16, color: Colors.amber[900]),
+                        Icon(Icons.casino,
+                            size: 16, color: colorScheme.onTertiaryContainer),
                         const SizedBox(width: 8),
-                        Text(
-                          t.s30_settlement_confirm.warning.random_reveal,
-                          style:
-                              TextStyle(color: Colors.amber[900], fontSize: 12),
+                        Expanded(
+                          child: Text(
+                            t.s30_settlement_confirm.warning.random_reveal,
+                            style: textTheme.labelMedium?.copyWith(
+                              color: colorScheme.onTertiaryContainer,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -164,7 +209,8 @@ class _S30Content extends StatelessWidget {
                 // 4. 成員列表
                 Expanded(
                   child: ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 100),
+                    // 底部留白讓最後一個項目不會被 BottomBar 擋住
+                    padding: const EdgeInsets.only(bottom: 24, top: 8),
                     itemCount: vm.settlementMembers.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
@@ -172,7 +218,8 @@ class _S30Content extends StatelessWidget {
                       return SettlementMemberItem(
                         member: member,
                         baseCurrency: vm.baseCurrency,
-                        onMergeTap: () => _showMergeSettings(context, vm),
+                        onMergeTap: () =>
+                            _showMergeSettings(context, vm, member),
                       );
                     },
                   ),
@@ -192,7 +239,8 @@ class _S30Content extends StatelessWidget {
           AppButton(
             text: t.s30_settlement_confirm.buttons.next,
             type: AppButtonType.primary,
-            onPressed: () => context.pushNamed('S31'),
+            onPressed: () =>
+                context.pushNamed('S31', pathParameters: {'taskId': vm.taskId}),
           ),
         ],
       ),

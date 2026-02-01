@@ -109,7 +109,7 @@ class SettlementService {
       double rem = remainderMap[uid] ?? 0.0;
       final memberData = task.members[uid] ?? {};
       results[uid] = SettlementMember(
-        memberId: uid,
+        id: uid,
         displayName: memberData['displayName'] ?? 'Unknown',
         avatar: memberData['avatar'],
         isLinked: memberData['isLinked'] ?? false,
@@ -160,7 +160,7 @@ class SettlementService {
       }
 
       list.add(SettlementMember(
-          memberId: headId,
+          id: headId,
           displayName: headModel.displayName,
           avatar: headModel.avatar,
           finalAmount: mergedFinal,

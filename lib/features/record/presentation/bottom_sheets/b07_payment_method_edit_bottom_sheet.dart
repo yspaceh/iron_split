@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B07PaymentMethodEditBottomSheet extends StatefulWidget {
@@ -27,6 +31,33 @@ class B07PaymentMethodEditBottomSheet extends StatefulWidget {
     required this.selectedCurrency,
     required this.baseCurrency,
   });
+
+  static Future<Map<String, dynamic>?> show(BuildContext context,
+      {required double totalAmount, // 該筆費用的總金額
+      required Map<String, double> poolBalancesByCurrency,
+      required List<Map<String, dynamic>> members, // 成員清單
+      required CurrencyConstants selectedCurrency,
+      required CurrencyConstants baseCurrency,
+      bool initialUsePrepay = true,
+      double initialPrepayAmount = 0.0,
+      Map<String, double> initialMemberAdvance = const {}}) {
+    return showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context) => B07PaymentMethodEditBottomSheet(
+        totalAmount: totalAmount,
+        poolBalancesByCurrency: poolBalancesByCurrency,
+        selectedCurrency: selectedCurrency,
+        baseCurrency: baseCurrency,
+        members: members,
+        initialUsePrepay: initialUsePrepay,
+        initialPrepayAmount: initialPrepayAmount,
+        initialMemberAdvance: initialMemberAdvance,
+      ),
+    );
+  }
 
   @override
   State<B07PaymentMethodEditBottomSheet> createState() =>
@@ -99,7 +130,7 @@ class _B07PaymentMethodEditBottomSheetState
     super.dispose();
   }
 
-  // --- 邏輯運算 ---
+  // --- 邏輯運算 (保持不變) ---
 
   double get _currentAdvanceTotal =>
       _memberAdvance.values.fold(0.0, (sum, val) => sum + val);
@@ -222,51 +253,84 @@ class _B07PaymentMethodEditBottomSheetState
     final colorScheme = theme.colorScheme;
     final bool allowDecimal = widget.selectedCurrency.decimalDigits > 0;
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Column(
+    return CommonBottomSheet(
+      title: t.B07_PaymentMethod_Edit.title,
+
+      // 按鈕區域 (確認/取消)
+      bottomActionBar: StickyBottomActionBar.sheet(
         children: [
-          // 1. Header
+          AppButton(
+            text: t.common.buttons.cancel,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(),
+          ),
+          AppButton(
+            text: t.common.buttons.confirm,
+            type: AppButtonType.primary,
+            onPressed: _isValid ? _onSave : null,
+          ),
+        ],
+      ),
+
+      // 內容區域：分為「固定上方卡片」與「可捲動列表」
+      children: Column(
+        children: [
+          // --- 1. 固定上方的 Summary 卡片 ---
+          // 這裡的邏輯原本在最下方，現在搬到最上面
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(t.common.buttons.cancel,
-                      style: const TextStyle(color: Colors.grey)),
-                ),
-                Text(
-                  t.B07_PaymentMethod_Edit.title,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: _isValid ? _onSave : null,
-                  child: Text(
-                    t.common.buttons.save,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: _isValid ? colorScheme.primary : Colors.grey,
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color:
+                    colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colorScheme.outlineVariant),
+              ),
+              child: Column(
+                children: [
+                  _buildSummaryRow(t.B07_PaymentMethod_Edit.total_label,
+                      widget.totalAmount, widget.selectedCurrency,
+                      isBold: true),
+                  const SizedBox(height: 8),
+                  if (_usePrepay)
+                    _buildSummaryRow(
+                      t.B07_PaymentMethod_Edit.total_prepay,
+                      _prepayAmount,
+                      widget.selectedCurrency,
                     ),
+                  if (_useAdvance)
+                    _buildSummaryRow(
+                      t.B07_PaymentMethod_Edit.total_advance,
+                      _currentAdvanceTotal,
+                      widget.selectedCurrency,
+                    ),
+                  const Divider(),
+                  _buildSummaryRow(
+                    _isValid
+                        ? t.B07_PaymentMethod_Edit.status_balanced
+                        : t.B07_PaymentMethod_Edit.status_remaining(
+                            amount: CurrencyConstants.formatAmount(
+                                _remaining.abs(),
+                                widget.selectedCurrency.code)),
+                    _remaining,
+                    widget.selectedCurrency,
+                    hideAmount: true, // 邏輯不變：isValid 時顯示 "OK"
+                    color: _isValid ? Colors.green : colorScheme.error,
+                    isBold: true,
+                    customValueText: _isValid ? "OK" : null,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          const Divider(height: 1),
 
-          // 2. 內容捲動區
+          // --- 2. 可捲動的輸入區 ---
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                // --- 區塊 A: 預收公款 ---
+                // 區塊 A: 預收公款
                 _buildSectionHeader(
                   title: t.B07_PaymentMethod_Edit.type_prepay,
                   value: _usePrepay,
@@ -302,9 +366,8 @@ class _B07PaymentMethodEditBottomSheetState
                           inputFormatters: [
                             allowDecimal
                                 ? FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d*')) // 允許小數
-                                : FilteringTextInputFormatter
-                                    .digitsOnly, // 只允許整數
+                                    RegExp(r'^\d+\.?\d*'))
+                                : FilteringTextInputFormatter.digitsOnly,
                           ],
                           decoration: InputDecoration(
                             labelText: t.B07_PaymentMethod_Edit.label_amount,
@@ -327,7 +390,7 @@ class _B07PaymentMethodEditBottomSheetState
 
                 const Divider(),
 
-                // --- 區塊 B: 成員代墊 ---
+                // 區塊 B: 成員代墊
                 _buildSectionHeader(
                   title: t.B07_PaymentMethod_Edit.type_member,
                   value: _useAdvance,
@@ -368,9 +431,9 @@ class _B07PaymentMethodEditBottomSheetState
                                   inputFormatters: [
                                     allowDecimal
                                         ? FilteringTextInputFormatter.allow(
-                                            RegExp(r'^\d+\.?\d*')) // 允許小數
+                                            RegExp(r'^\d+\.?\d*'))
                                         : FilteringTextInputFormatter
-                                            .digitsOnly, // 只允許整數
+                                            .digitsOnly,
                                   ],
                                   decoration: InputDecoration(
                                     hintText: '0',
@@ -392,55 +455,8 @@ class _B07PaymentMethodEditBottomSheetState
                     ),
                   ),
                 ],
-              ],
-            ),
-          ),
-
-          // 3. 底部總結區
-          Container(
-            padding: EdgeInsets.only(
-              top: 16,
-              left: 16,
-              right: 16,
-              bottom: 16 + MediaQuery.of(context).padding.bottom,
-            ),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              border:
-                  Border(top: BorderSide(color: colorScheme.outlineVariant)),
-            ),
-            child: Column(
-              children: [
-                _buildSummaryRow(t.B07_PaymentMethod_Edit.total_label,
-                    widget.totalAmount, widget.selectedCurrency,
-                    isBold: true),
-                const SizedBox(height: 8),
-                if (_usePrepay)
-                  _buildSummaryRow(
-                    t.B07_PaymentMethod_Edit.total_prepay,
-                    _prepayAmount,
-                    widget.selectedCurrency,
-                  ),
-                if (_useAdvance)
-                  _buildSummaryRow(
-                    t.B07_PaymentMethod_Edit.total_advance,
-                    _currentAdvanceTotal,
-                    widget.selectedCurrency,
-                  ),
-                const Divider(),
-                _buildSummaryRow(
-                  _isValid
-                      ? t.B07_PaymentMethod_Edit.status_balanced
-                      : t.B07_PaymentMethod_Edit.status_remaining(
-                          amount: CurrencyConstants.formatAmount(
-                              _remaining.abs(), widget.selectedCurrency.code)),
-                  _remaining,
-                  widget.selectedCurrency,
-                  hideAmount: true,
-                  color: _isValid ? Colors.green : colorScheme.error,
-                  isBold: true,
-                  customValueText: _isValid ? "OK" : null,
-                ),
+                // 底部留白
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -448,6 +464,8 @@ class _B07PaymentMethodEditBottomSheetState
       ),
     );
   }
+
+  // --- Helpers (保持不變) ---
 
   Widget _buildSectionHeader({
     required String title,
