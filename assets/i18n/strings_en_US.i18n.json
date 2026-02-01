@@ -214,6 +214,26 @@
     "dialog_mark_cleared_title": "Mark as Cleared",
     "dialog_mark_cleared_content": "Mark {name} as cleared?"
   },
+  "s30_settlement_confirm": {
+    "title": "Confirm Settlement",
+    "steps": {
+      "confirm_amount": "Confirm Amount",
+      "payment_info": "Payment Info"
+    },
+    "warning": {
+      "random_reveal": "Remainder will be revealed after settlement!"
+    },
+    "label_payable": "To Pay",
+    "label_refund": "Refund",
+    "list_item": {
+      "merged_label": "Representative",
+      "includes": "Includes:",
+      "principal": "Principal",
+      "random_remainder": "Random Remainder",
+      "remainder": "Remainder"
+    },
+    "action_next": "Next: Payment Info"
+  },
   "S50_Onboarding_Consent": {
     "title": "Welcome to Iron Split",
     "content_prefix": "By clicking Start, you agree to our ",

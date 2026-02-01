@@ -199,7 +199,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
           // 防呆預設值
           if (memberMap['displayName'] == null) {
-            memberMap['displayName'] = 'Unknown';
+            memberMap['displayName'] =
+                t.S53_TaskSettings_Members.member_default_name;
           }
           return memberMap;
         }).toList();

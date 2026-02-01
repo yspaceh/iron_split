@@ -217,6 +217,26 @@
     "dialog_mark_cleared_title": "確認收款/付款",
     "dialog_mark_cleared_content": "確定將 {name} 標記為已處理？"
   },
+  "s30_settlement_confirm": {
+    "title": "結算確認",
+    "steps": {
+      "confirm_amount": "確認金額",
+      "payment_info": "收款設定"
+    },
+    "warning": {
+      "random_reveal": "餘額將於下一步結算完成後揭曉！"
+    },
+    "label_payable": "應付",
+    "label_refund": "可退",
+    "list_item": {
+      "merged_label": "合併",
+      "includes": "包含：",
+      "principal": "本金",
+      "random_remainder": "隨機餘額",
+      "remainder": "餘額"
+    },
+    "action_next": "收款設定"
+  },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
     "content_prefix": "歡迎使用 Iron Split。點擊開始即代表您同意我們的 ",

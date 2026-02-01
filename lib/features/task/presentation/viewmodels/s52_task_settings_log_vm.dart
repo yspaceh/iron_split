@@ -49,7 +49,8 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
       // 3. Generate Rows
       for (final log in logs) {
         final member = membersData[log.operatorUid] as Map<String, dynamic>?;
-        final displayName = member?['displayName'] as String? ?? 'Unknown';
+        final displayName = member?['displayName'] as String? ??
+            t.S53_TaskSettings_Members.member_default_name;
 
         final timeStr = dateFormat.format(log.createdAt);
         final actionStr = log.getLocalizedAction(context);

@@ -55,6 +55,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
+	@override late final _TranslationsS30SettlementConfirmJaJp s30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
@@ -418,6 +419,22 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	@override String dialog_mark_cleared_content({required Object name}) => '${name} を完了としてマークしますか？';
 }
 
+// Path: s30_settlement_confirm
+class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementConfirmZhTw {
+	_TranslationsS30SettlementConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '精算確認';
+	@override late final _TranslationsS30SettlementConfirmStepsJaJp steps = _TranslationsS30SettlementConfirmStepsJaJp._(_root);
+	@override late final _TranslationsS30SettlementConfirmWarningJaJp warning = _TranslationsS30SettlementConfirmWarningJaJp._(_root);
+	@override String get label_payable => '支払';
+	@override String get label_refund => '返金';
+	@override late final _TranslationsS30SettlementConfirmListItemJaJp list_item = _TranslationsS30SettlementConfirmListItemJaJp._(_root);
+	@override String get action_next => '受取設定';
+}
+
 // Path: S52_TaskSettings_Log
 class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -645,6 +662,41 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredJaJp authRequired = _TranslationsErrorAuthRequiredJaJp._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskJaJp alreadyInTask = _TranslationsErrorAlreadyInTaskJaJp._(_root);
 	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
+}
+
+// Path: s30_settlement_confirm.steps
+class _TranslationsS30SettlementConfirmStepsJaJp extends TranslationsS30SettlementConfirmStepsZhTw {
+	_TranslationsS30SettlementConfirmStepsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm_amount => '金額確認';
+	@override String get payment_info => '受取設定';
+}
+
+// Path: s30_settlement_confirm.warning
+class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30SettlementConfirmWarningZhTw {
+	_TranslationsS30SettlementConfirmWarningJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get random_reveal => '端数は決済確定後に公開されます！';
+}
+
+// Path: s30_settlement_confirm.list_item
+class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30SettlementConfirmListItemZhTw {
+	_TranslationsS30SettlementConfirmListItemJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get merged_label => '代表メンバー';
+	@override String get includes => '内訳：';
+	@override String get principal => '元金';
+	@override String get random_remainder => 'ランダム端数';
+	@override String get remainder => '端数';
 }
 
 // Path: S52_TaskSettings_Log.csv_header
@@ -937,6 +989,18 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.member_payment_status_receive' => '受取',
 			'S17_Task_Locked.dialog_mark_cleared_title' => '完了確認',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '${name} を完了としてマークしますか？',
+			's30_settlement_confirm.title' => '精算確認',
+			's30_settlement_confirm.steps.confirm_amount' => '金額確認',
+			's30_settlement_confirm.steps.payment_info' => '受取設定',
+			's30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます！',
+			's30_settlement_confirm.label_payable' => '支払',
+			's30_settlement_confirm.label_refund' => '返金',
+			's30_settlement_confirm.list_item.merged_label' => '代表メンバー',
+			's30_settlement_confirm.list_item.includes' => '内訳：',
+			's30_settlement_confirm.list_item.principal' => '元金',
+			's30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
+			's30_settlement_confirm.list_item.remainder' => '端数',
+			's30_settlement_confirm.action_next' => '受取設定',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
 			'S52_TaskSettings_Log.action_export_csv' => 'CSVエクスポート',

@@ -11,7 +11,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_date_stri
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_item.dart';
-import 'package:iron_split/features/task/presentation/widgets/balance_card.dart';
+import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
 
@@ -28,12 +28,10 @@ class S13GroupView extends StatelessWidget {
 
     if (task == null) return const Center(child: CircularProgressIndicator());
 
-    Future<void> onRemainderRuleChange() async {
-      final vm = context.read<S13TaskDashboardViewModel>();
+    Future<void> onRemainderRuleChange(S13TaskDashboardViewModel vm) async {
       final task = vm.task;
       if (task == null) return;
 
-      // 修正這裡
       final List<Map<String, dynamic>> membersList =
           task.members.entries.map((e) {
         final m = e.value as Map<String, dynamic>;
@@ -93,10 +91,10 @@ class S13GroupView extends StatelessWidget {
                   height: _kCardHeight,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: BalanceCard(
+                    child: GroupBalanceCard(
                       state: vm.balanceState, // 使用 VM 的 State
                       onCurrencyTap: showCurrencyPicker,
-                      onRuleTap: onRemainderRuleChange,
+                      onRuleTap: () => onRemainderRuleChange(vm),
                     ),
                   ),
                 ),

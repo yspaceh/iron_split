@@ -53,6 +53,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
+	@override late final _TranslationsS30SettlementConfirmEnUs s30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
@@ -384,6 +385,22 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	@override String dialog_mark_cleared_content({required Object name}) => 'Mark ${name} as cleared?';
 }
 
+// Path: s30_settlement_confirm
+class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementConfirmZhTw {
+	_TranslationsS30SettlementConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Settlement';
+	@override late final _TranslationsS30SettlementConfirmStepsEnUs steps = _TranslationsS30SettlementConfirmStepsEnUs._(_root);
+	@override late final _TranslationsS30SettlementConfirmWarningEnUs warning = _TranslationsS30SettlementConfirmWarningEnUs._(_root);
+	@override String get label_payable => 'To Pay';
+	@override String get label_refund => 'Refund';
+	@override late final _TranslationsS30SettlementConfirmListItemEnUs list_item = _TranslationsS30SettlementConfirmListItemEnUs._(_root);
+	@override String get action_next => 'Next: Payment Info';
+}
+
 // Path: S50_Onboarding_Consent
 class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingConsentZhTw {
 	_TranslationsS50OnboardingConsentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -645,6 +662,41 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredEnUs authRequired = _TranslationsErrorAuthRequiredEnUs._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskEnUs alreadyInTask = _TranslationsErrorAlreadyInTaskEnUs._(_root);
 	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
+}
+
+// Path: s30_settlement_confirm.steps
+class _TranslationsS30SettlementConfirmStepsEnUs extends TranslationsS30SettlementConfirmStepsZhTw {
+	_TranslationsS30SettlementConfirmStepsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm_amount => 'Confirm Amount';
+	@override String get payment_info => 'Payment Info';
+}
+
+// Path: s30_settlement_confirm.warning
+class _TranslationsS30SettlementConfirmWarningEnUs extends TranslationsS30SettlementConfirmWarningZhTw {
+	_TranslationsS30SettlementConfirmWarningEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get random_reveal => 'Remainder will be revealed after settlement!';
+}
+
+// Path: s30_settlement_confirm.list_item
+class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30SettlementConfirmListItemZhTw {
+	_TranslationsS30SettlementConfirmListItemEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get merged_label => 'Representative';
+	@override String get includes => 'Includes:';
+	@override String get principal => 'Principal';
+	@override String get random_remainder => 'Random Remainder';
+	@override String get remainder => 'Remainder';
 }
 
 // Path: S52_TaskSettings_Log.csv_header
@@ -921,6 +973,18 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.member_payment_status_receive' => 'To Receive',
 			'S17_Task_Locked.dialog_mark_cleared_title' => 'Mark as Cleared',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => 'Mark ${name} as cleared?',
+			's30_settlement_confirm.title' => 'Confirm Settlement',
+			's30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
+			's30_settlement_confirm.steps.payment_info' => 'Payment Info',
+			's30_settlement_confirm.warning.random_reveal' => 'Remainder will be revealed after settlement!',
+			's30_settlement_confirm.label_payable' => 'To Pay',
+			's30_settlement_confirm.label_refund' => 'Refund',
+			's30_settlement_confirm.list_item.merged_label' => 'Representative',
+			's30_settlement_confirm.list_item.includes' => 'Includes:',
+			's30_settlement_confirm.list_item.principal' => 'Principal',
+			's30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
+			's30_settlement_confirm.list_item.remainder' => 'Remainder',
+			's30_settlement_confirm.action_next' => 'Next: Payment Info',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
 			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
@@ -217,18 +219,14 @@ class _S16ContentState extends State<_S16Content> {
                 ),
               ),
             ),
-            bottomNavigationBar: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FilledButton(
+            bottomNavigationBar: StickyBottomActionBar(
+              children: [
+                AppButton(
+                  text: t.S16_TaskCreate_Edit.action_save,
+                  type: AppButtonType.primary,
                   onPressed: () => _onSave(context, vm),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: colorScheme.primary,
-                  ),
-                  child: Text(t.S16_TaskCreate_Edit.action_save),
                 ),
-              ),
+              ],
             ),
           ),
         ),

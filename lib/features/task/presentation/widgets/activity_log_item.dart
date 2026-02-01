@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // 確保路徑正確
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/gen/strings.g.dart';
 
 class ActivityLogItem extends StatelessWidget {
   final ActivityLogModel log;
@@ -15,6 +16,7 @@ class ActivityLogItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -27,7 +29,8 @@ class ActivityLogItem extends StatelessWidget {
     final member = memberData?[log.operatorUid] as Map<String, dynamic>?;
 
     final String avatarId = member?['avatar'];
-    final String operatorName = member?['displayName'] as String? ?? 'Unknown';
+    final String operatorName = member?['displayName'] as String? ??
+        t.S53_TaskSettings_Members.member_default_name;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),

@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +37,12 @@ void main() async {
         // 2. 注入 RecordRepository
         Provider<RecordRepository>(
           create: (_) => RecordRepository(),
+        ),
+        Provider<DashboardService>(
+          create: (_) => DashboardService(),
+        ),
+        Provider<SettlementService>(
+          create: (_) => SettlementService(),
         ),
         // 註冊 PendingInviteProvider 並執行 init
         ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),

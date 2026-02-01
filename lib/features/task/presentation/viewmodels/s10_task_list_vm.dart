@@ -6,7 +6,7 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S10TaskListViewModel extends ChangeNotifier {
   final TaskRepository _repo;
-  final FirebaseAuth _auth;
+  final String currentUserId;
 
   // UI State
   List<TaskModel> _allTasks = [];
@@ -17,7 +17,6 @@ class S10TaskListViewModel extends ChangeNotifier {
   // Getters
   bool get isLoading => _isLoading;
   int get filterIndex => _filterIndex;
-  String get currentUserId => _auth.currentUser?.uid ?? '';
 
   // Computed Property: 篩選並排序
   List<TaskModel> get displayTasks {
@@ -40,26 +39,22 @@ class S10TaskListViewModel extends ChangeNotifier {
 
   S10TaskListViewModel({
     required TaskRepository repo,
-    FirebaseAuth? auth,
-  })  : _repo = repo,
-        _auth = auth ?? FirebaseAuth.instance;
+    required this.currentUserId,
+  }) : _repo = repo;
 
   void init() {
-    final user = _auth.currentUser;
-    if (user != null) {
-      _isLoading = true;
-      notifyListeners();
+    _isLoading = true;
+    notifyListeners();
 
-      _subscription = _repo.streamUserTasks(user.uid).listen((tasks) {
-        _allTasks = tasks;
-        _isLoading = false;
-        notifyListeners();
-      }, onError: (e) {
-        debugPrint("Error fetching tasks: $e");
-        _isLoading = false;
-        notifyListeners();
-      });
-    }
+    _subscription = _repo.streamUserTasks(currentUserId).listen((tasks) {
+      _allTasks = tasks;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (e) {
+      debugPrint("Error fetching tasks: $e");
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void setFilter(int index) {

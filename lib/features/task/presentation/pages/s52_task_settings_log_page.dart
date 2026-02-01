@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/activity_log_item.dart';
 import 'package:provider/provider.dart';
@@ -95,38 +97,16 @@ class _S52Content extends StatelessWidget {
               },
             ),
           ),
-
-          // Sticky Bottom Button
-          SafeArea(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: FilledButton.icon(
-                onPressed: vm.isExporting ? null : () => vm.exportCsv(context),
-                icon: vm.isExporting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Icon(Icons.download),
-                label: Text(t.S52_TaskSettings_Log.action_export_csv),
-              ),
-            ),
-          ),
+        ],
+      ),
+      bottomNavigationBar: StickyBottomActionBar(
+        children: [
+          AppButton(
+              text: t.S52_TaskSettings_Log.action_export_csv,
+              type: AppButtonType.secondary,
+              isLoading: vm.isExporting,
+              icon: Icons.download,
+              onPressed: vm.isExporting ? null : () => vm.exportCsv(context)),
         ],
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/member_item.dart';
@@ -105,50 +107,50 @@ class _S53Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
     final vm = context.watch<S53TaskSettingsMembersViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S53_TaskSettings_Members.title),
-        centerTitle: true,
-      ),
-      body: StreamBuilder<TaskModel?>(
-        stream: vm.taskStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            // TODO: 這邊的錯誤處理語言要處理
-            return Center(child: Text("Error: ${snapshot.error}"));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return StreamBuilder<TaskModel?>(
+      stream: vm.taskStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          // TODO: 這邊的錯誤處理語言要處理
+          return Center(child: Text("Error: ${snapshot.error}"));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          final task = snapshot.data;
-          if (task == null) return const SizedBox();
+        final task = snapshot.data;
+        if (task == null) return const SizedBox();
 
-          final taskName = task.name;
-          final createdBy = task.createdBy;
-          final membersMap = task.members;
-          // Sort Logic (UI Layer)
-          final List<MapEntry<String, dynamic>> membersList =
-              membersMap.entries.toList();
+        final taskName = task.name;
+        final createdBy = task.createdBy;
+        final membersMap = task.members;
+        // Sort Logic (UI Layer)
+        final List<MapEntry<String, dynamic>> membersList =
+            membersMap.entries.toList();
 
-          membersList.sort((a, b) {
-            final dataA = a.value as Map<String, dynamic>;
-            final dataB = b.value as Map<String, dynamic>;
-            final bool isALinked =
-                dataA['status'] == 'linked' || (dataA['isLinked'] == true);
-            final bool isBLinked =
-                dataB['status'] == 'linked' || (dataB['isLinked'] == true);
-            if (isALinked && !isBLinked) return -1;
-            if (!isALinked && isBLinked) return 1;
-            final int tA = dataA['createdAt'] as int? ?? 0;
-            final int tB = dataB['createdAt'] as int? ?? 0;
-            return tA.compareTo(tB);
-          });
+        membersList.sort((a, b) {
+          final dataA = a.value as Map<String, dynamic>;
+          final dataB = b.value as Map<String, dynamic>;
+          final bool isALinked =
+              dataA['status'] == 'linked' || (dataA['isLinked'] == true);
+          final bool isBLinked =
+              dataB['status'] == 'linked' || (dataB['isLinked'] == true);
+          if (isALinked && !isBLinked) return -1;
+          if (!isALinked && isBLinked) return 1;
+          final int tA = dataA['createdAt'] as int? ?? 0;
+          final int tB = dataB['createdAt'] as int? ?? 0;
+          return tA.compareTo(tB);
+        });
 
-          return Column(
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text(t.S53_TaskSettings_Members.title),
+            centerTitle: true,
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: ListView.separated(
@@ -177,54 +179,29 @@ class _S53Content extends StatelessWidget {
                   },
                 ),
               ),
-              SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, -2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: vm.isProcessing
-                              ? null
-                              : () => vm.inviteMember(context, taskName),
-                          icon: const Icon(Icons.share, size: 18),
-                          label: Text(t.S53_TaskSettings_Members.action_invite),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.icon(
-                          onPressed: vm.isProcessing
-                              ? null
-                              : () => vm.addMember(membersMap, t),
-                          icon: const Icon(Icons.person_add_alt_1, size: 18),
-                          label: Text(t.S53_TaskSettings_Members.action_add),
-                          style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            ],
+          ),
+          bottomNavigationBar: StickyBottomActionBar(
+            children: [
+              AppButton(
+                text: t.S53_TaskSettings_Members.action_invite,
+                type: AppButtonType.secondary,
+                icon: Icons.share,
+                onPressed: vm.isProcessing
+                    ? null
+                    : () => vm.inviteMember(context, taskName),
+              ),
+              AppButton(
+                text: t.S53_TaskSettings_Members.action_add,
+                type: AppButtonType.primary,
+                icon: Icons.person_add_alt_1,
+                onPressed:
+                    vm.isProcessing ? null : () => vm.addMember(membersMap, t),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

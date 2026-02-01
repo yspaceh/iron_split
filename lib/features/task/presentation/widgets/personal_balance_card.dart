@@ -26,7 +26,8 @@ class PersonalBalanceCard extends StatelessWidget {
 
     final isPositive = netBalance >= 0;
     final statusColor = isPositive ? Colors.green : theme.colorScheme.error;
-    final displayName = memberData?['displayName'] ?? '';
+    final displayName = memberData?['displayName'] ??
+        t.S53_TaskSettings_Members.member_default_name;
 
     return Card(
       color: theme.colorScheme.secondaryContainer,

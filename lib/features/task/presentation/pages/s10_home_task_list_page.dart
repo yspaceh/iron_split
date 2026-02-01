@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +12,14 @@ class S10HomeTaskListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Scaffold(body: Center(child: Text(t.common.please_login)));
+    }
     return ChangeNotifierProvider(
       create: (_) => S10TaskListViewModel(
         repo: TaskRepository(),
+        currentUserId: user.uid,
       )..init(),
       child: const _S10Content(),
     );

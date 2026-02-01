@@ -234,6 +234,26 @@
     "dialog_mark_cleared_title": "完了確認",
     "dialog_mark_cleared_content": "{name} を完了としてマークしますか？"
   },
+  "s30_settlement_confirm": {
+    "title": "精算確認",
+    "steps": {
+      "confirm_amount": "金額確認",
+      "payment_info": "受取設定"
+    },
+    "warning": {
+      "random_reveal": "端数は決済確定後に公開されます！"
+    },
+    "label_payable": "支払",
+    "label_refund": "返金",
+    "list_item": {
+      "merged_label": "代表メンバー",
+      "includes": "内訳：",
+      "principal": "元金",
+      "random_remainder": "ランダム端数",
+      "remainder": "端数"
+    },
+    "action_next": "受取設定"
+  },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
     "empty_log": "活動履歴はありません",

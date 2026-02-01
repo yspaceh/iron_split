@@ -25,6 +25,7 @@ import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_con
 
 // Task Dashboard & Sub-pages
 import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s17_task_locked_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s53_task_settings_members_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s52_task_settings_log_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s12_task_close_notice_page.dart';
@@ -146,7 +147,6 @@ class AppRouter {
               ),
             ],
           ),
-
           // S15_Record.Edit
           GoRoute(
             path: 'record', // Full: /task/:taskId/record
@@ -174,28 +174,39 @@ class AppRouter {
               );
             },
           ),
-
           // S30_Settlement.Confirm
           GoRoute(
-            path:
-                'settlement/preview', // Full: /task/:taskId/settlement/preview
-            name: 'S30',
-            builder: (context, state) => const S30SettlementConfirmPage(),
-          ),
-
-          // S31_Settlement.PaymentInfo
-          GoRoute(
-            path:
-                'settlement/payment', // Full: /task/:taskId/settlement/payment
-            name: 'S31',
-            builder: (context, state) => const S31SettlementPaymentInfoPage(),
-          ),
-
+              path:
+                  'settlement/preview', // Full: /task/:taskId/settlement/preview
+              name: 'S30',
+              builder: (context, state) {
+                final taskId = state.pathParameters['taskId']!;
+                return S30SettlementConfirmPage(taskId: taskId);
+              },
+              routes: [
+                // S31_Settlement.PaymentInfo
+                GoRoute(
+                  path:
+                      'settlement/payment', // Full: /task/:taskId/settlement/payment
+                  name: 'S31',
+                  builder: (context, state) =>
+                      const S31SettlementPaymentInfoPage(),
+                ),
+              ]),
           // S32_Settlement.Result
           GoRoute(
             path: 'settlement/result', // Full: /task/:taskId/settlement/result
             name: 'S32',
             builder: (context, state) => const S32SettlementResultPage(),
+          ),
+          // S17_Task.Locked
+          GoRoute(
+            path: 'locked',
+            name: 'S17',
+            builder: (context, state) {
+              final taskId = state.pathParameters['taskId']!;
+              return S17TaskLockedPage(taskId: taskId);
+            },
           ),
         ],
       ),

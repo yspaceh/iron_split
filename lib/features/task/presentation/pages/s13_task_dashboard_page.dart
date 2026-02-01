@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
@@ -19,8 +21,6 @@ class S13TaskDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    final t = Translations.of(context);
-
     if (user == null) {
       return Scaffold(body: Center(child: Text(t.common.please_login)));
     }
@@ -123,48 +123,33 @@ class _S13ContentState extends State<_S13Content> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            // S30 結算按鈕 (Captain Only)
-            Visibility(
-              visible: isCaptain,
-              child: Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => context.pushNamed(
-                    'S30',
-                    pathParameters: {'taskId': vm.taskId},
-                  ),
-                  label: Text(t.S13_Task_Dashboard.settlement_button),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                ),
+      bottomNavigationBar: StickyBottomActionBar(
+        children: [
+          Visibility(
+            visible: isCaptain,
+            child: AppButton(
+              text: t.S13_Task_Dashboard.settlement_button,
+              type: AppButtonType.secondary,
+              onPressed: () => context.pushNamed(
+                'S30',
+                pathParameters: {'taskId': vm.taskId},
               ),
             ),
-            Visibility(
-              visible: isCaptain,
-              child: const SizedBox(width: 12),
+          ),
+          AppButton(
+            text: t.S13_Task_Dashboard.fab_record,
+            type: AppButtonType.primary,
+            icon: Icons.add,
+            onPressed: () => context.pushNamed(
+              'S15',
+              pathParameters: {'taskId': vm.taskId},
+              extra: {
+                'poolBalancesByCurrency': poolBalances,
+                'baseCurrencyConstants': currencyOption,
+              },
             ),
-            // S15 記帳按鈕
-            Expanded(
-              child: FilledButton.icon(
-                onPressed: () => context.pushNamed(
-                  'S15',
-                  pathParameters: {'taskId': vm.taskId},
-                  extra: {
-                    'poolBalancesByCurrency': poolBalances,
-                    'baseCurrencyConstants': currencyOption,
-                  },
-                ),
-                label: Text(t.S13_Task_Dashboard.fab_record),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       body: Column(
         children: [

@@ -54,6 +54,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS17TaskLockedZhTw S17_Task_Locked = TranslationsS17TaskLockedZhTw.internal(_root);
+	late final TranslationsS30SettlementConfirmZhTw s30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
@@ -765,6 +766,32 @@ class TranslationsS17TaskLockedZhTw {
 	String dialog_mark_cleared_content({required Object name}) => '確定將 ${name} 標記為已處理？';
 }
 
+// Path: s30_settlement_confirm
+class TranslationsS30SettlementConfirmZhTw {
+	TranslationsS30SettlementConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '結算確認'
+	String get title => '結算確認';
+
+	late final TranslationsS30SettlementConfirmStepsZhTw steps = TranslationsS30SettlementConfirmStepsZhTw.internal(_root);
+	late final TranslationsS30SettlementConfirmWarningZhTw warning = TranslationsS30SettlementConfirmWarningZhTw.internal(_root);
+
+	/// zh-TW: '應付'
+	String get label_payable => '應付';
+
+	/// zh-TW: '可退'
+	String get label_refund => '可退';
+
+	late final TranslationsS30SettlementConfirmListItemZhTw list_item = TranslationsS30SettlementConfirmListItemZhTw.internal(_root);
+
+	/// zh-TW: '收款設定'
+	String get action_next => '收款設定';
+}
+
 // Path: S50_Onboarding_Consent
 class TranslationsS50OnboardingConsentZhTw {
 	TranslationsS50OnboardingConsentZhTw.internal(this._root);
@@ -1253,6 +1280,57 @@ class TranslationsErrorZhTw {
 	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
 }
 
+// Path: s30_settlement_confirm.steps
+class TranslationsS30SettlementConfirmStepsZhTw {
+	TranslationsS30SettlementConfirmStepsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認金額'
+	String get confirm_amount => '確認金額';
+
+	/// zh-TW: '收款設定'
+	String get payment_info => '收款設定';
+}
+
+// Path: s30_settlement_confirm.warning
+class TranslationsS30SettlementConfirmWarningZhTw {
+	TranslationsS30SettlementConfirmWarningZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '餘額將於下一步結算完成後揭曉！'
+	String get random_reveal => '餘額將於下一步結算完成後揭曉！';
+}
+
+// Path: s30_settlement_confirm.list_item
+class TranslationsS30SettlementConfirmListItemZhTw {
+	TranslationsS30SettlementConfirmListItemZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '合併'
+	String get merged_label => '合併';
+
+	/// zh-TW: '包含：'
+	String get includes => '包含：';
+
+	/// zh-TW: '本金'
+	String get principal => '本金';
+
+	/// zh-TW: '隨機餘額'
+	String get random_remainder => '隨機餘額';
+
+	/// zh-TW: '餘額'
+	String get remainder => '餘額';
+}
+
 // Path: S52_TaskSettings_Log.csv_header
 class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(this._root);
@@ -1561,6 +1639,18 @@ extension on Translations {
 			'S17_Task_Locked.member_payment_status_receive' => '應收',
 			'S17_Task_Locked.dialog_mark_cleared_title' => '確認收款/付款',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '確定將 ${name} 標記為已處理？',
+			's30_settlement_confirm.title' => '結算確認',
+			's30_settlement_confirm.steps.confirm_amount' => '確認金額',
+			's30_settlement_confirm.steps.payment_info' => '收款設定',
+			's30_settlement_confirm.warning.random_reveal' => '餘額將於下一步結算完成後揭曉！',
+			's30_settlement_confirm.label_payable' => '應付',
+			's30_settlement_confirm.label_refund' => '可退',
+			's30_settlement_confirm.list_item.merged_label' => '合併',
+			's30_settlement_confirm.list_item.includes' => '包含：',
+			's30_settlement_confirm.list_item.principal' => '本金',
+			's30_settlement_confirm.list_item.random_remainder' => '隨機餘額',
+			's30_settlement_confirm.list_item.remainder' => '餘額',
+			's30_settlement_confirm.action_next' => '收款設定',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.terms_link' => '服務條款',

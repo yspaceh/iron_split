@@ -51,7 +51,11 @@ class AppTheme {
         tertiaryContainer: _incomeGreenContainer,
         onTertiaryContainer: _onIncomeGreenContainer,
       ),
-
+      appBarTheme: const AppBarTheme(
+        scrolledUnderElevation: 0, // ✅ 關鍵：設為 0 就不會變色了
+        backgroundColor: _softWhite, // 您希望的固定背景色
+        surfaceTintColor: Colors.transparent, // 雙重保險：把染色的顏料設為透明
+      ),
       // 按鈕主題：對齊聖經 7.2 規範
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

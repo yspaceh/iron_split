@@ -6,7 +6,7 @@ import 'package:iron_split/features/task/presentation/viewmodels/balance_summary
 import 'package:iron_split/gen/strings.g.dart';
 import 'dart:ui' as ui;
 
-class BalanceCard extends StatelessWidget {
+class GroupBalanceCard extends StatelessWidget {
   // 唯一的資料來源
   final BalanceSummaryState state;
 
@@ -14,7 +14,7 @@ class BalanceCard extends StatelessWidget {
   final VoidCallback? onCurrencyTap;
   final VoidCallback? onRuleTap;
 
-  const BalanceCard({
+  const GroupBalanceCard({
     super.key,
     required this.state,
     this.onCurrencyTap,
