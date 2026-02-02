@@ -55,6 +55,20 @@
       "rule_order": "順序輪替",
       "rule_member": "指定成員"
     },
+    "payment_info": {
+      "method_label": "收款方式",
+      "mode_private": "請直接私訊聯絡",
+      "mode_private_desc": "不顯示詳細資訊，請成員直接找你",
+      "mode_public": "提供收款資訊",
+      "mode_public_desc": "顯示銀行帳號或支付連結",
+      "type_cash": "現金",
+      "type_bank": "銀行轉帳",
+      "type_apps": "其他支付 App",
+      "bank_name_hint": "銀行代碼 / 名稱",
+      "bank_account_hint": "帳號",
+      "app_name": "App 名稱 (如: LinePay)",
+      "app_link": "連結 / ID"
+    },
     "error_prefix": "錯誤: {message}",
     "please_login": "請先登入",
     "loading": "讀取中...",
@@ -250,6 +264,16 @@
       "principal": "本金",
       "random_remainder": "隨機餘額",
       "remainder": "餘額"
+    }
+  },
+  "s31_settlement_payment_info": {
+    "title": "收款資訊",
+    "setup_instruction": "收款資訊僅供本次結算使用。預設資料加密儲存於本機。",
+    "sync_save": "儲存為預設收款資訊 (存在手機)",
+    "sync_update": "同步更新我的預設收款資訊",
+    "buttons": {
+      "settle": "結算",
+      "prev_step": "上一步"
     }
   },
   "S50_Onboarding_Consent": {

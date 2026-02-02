@@ -189,8 +189,10 @@ class AppRouter {
                   path:
                       'settlement/payment', // Full: /task/:taskId/settlement/payment
                   name: 'S31',
-                  builder: (context, state) =>
-                      const S31SettlementPaymentInfoPage(),
+                  builder: (context, state) {
+                    final taskId = state.pathParameters['taskId']!;
+                    return S31SettlementPaymentInfoPage(taskId: taskId);
+                  },
                 ),
               ]),
           // S32_Settlement.Result

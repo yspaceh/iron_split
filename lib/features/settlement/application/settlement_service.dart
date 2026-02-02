@@ -127,58 +127,63 @@ class SettlementService {
     required Map<String, SettlementMember> rawMembers,
     required Map<String, List<String>> mergeMap,
   }) {
-    // ... (合併邏輯完全相同，略去重複代碼以節省篇幅) ...
-    // 這裡代碼邏輯與前幾次產出的 _processMerging 完全一致
-    // 遍歷 mergeMap, 建立 Head Model (包含 subMembers), 加總 finalAmount 等
-
-    // [Implementation omitted for brevity, logic is identical to previous version]
-    // 實際開發時請貼上之前的 _processMerging 實作
-
     List<SettlementMember> list = [];
-    Set<String> processedIds = {};
 
-    mergeMap.forEach((headId, childrenIds) {
-      if (!rawMembers.containsKey(headId)) return;
-      var headModel = rawMembers[headId]!;
-      processedIds.add(headId);
+    // 1. 先找出所有「被合併的子成員」ID (這些人不該出現在列表最外層)
+    final Set<String> allChildIds =
+        mergeMap.values.expand((ids) => ids).toSet();
 
-      List<SettlementMember> subs = [];
-      double mergedFinal = headModel.finalAmount;
-      double mergedBase = headModel.baseAmount;
-      double mergedRem = headModel.remainderAmount;
+    // 2. [關鍵修正] 依照 rawMembers 的順序 (即 TaskModel 的全域順序) 進行遍歷
+    // 不要先跑 mergeMap，否則會破壞順序
+    for (var entry in rawMembers.entries) {
+      final currentId = entry.key;
+      final currentModel = entry.value;
 
-      for (var childId in childrenIds) {
-        if (rawMembers.containsKey(childId)) {
-          var child = rawMembers[childId]!;
-          processedIds.add(childId);
-          subs.add(child);
+      // Case A: 如果他是別人的子成員 -> 跳過 (因為他會被包在 Head 裡面)
+      if (allChildIds.contains(currentId)) {
+        continue;
+      }
 
-          mergedFinal += child.finalAmount;
-          mergedBase += child.baseAmount;
-          mergedRem += child.remainderAmount;
+      // Case B: 如果他是合併群組的代表 (Head) -> 執行合併計算
+      if (mergeMap.containsKey(currentId)) {
+        final childrenIds = mergeMap[currentId]!;
+
+        List<SettlementMember> subs = [];
+        double mergedFinal = currentModel.finalAmount;
+        double mergedBase = currentModel.baseAmount;
+        double mergedRem = currentModel.remainderAmount;
+
+        for (var childId in childrenIds) {
+          if (rawMembers.containsKey(childId)) {
+            var child = rawMembers[childId]!;
+            subs.add(child); // 把子成員加入 subMembers
+
+            mergedFinal += child.finalAmount;
+            mergedBase += child.baseAmount;
+            mergedRem += child.remainderAmount;
+          }
         }
+
+        // 建立合併後的 Head 物件
+        list.add(SettlementMember(
+            id: currentId,
+            displayName: currentModel.displayName,
+            avatar: currentModel.avatar,
+            isLinked: currentModel.isLinked,
+            finalAmount: mergedFinal,
+            baseAmount: mergedBase,
+            remainderAmount: mergedRem,
+            isRemainderAbsorber: mergedRem.abs() > 0.0000001,
+            isRemainderHidden: currentModel.isRemainderHidden,
+            isMergedHead: true,
+            subMembers: subs)); // 這裡 subs 只有子成員，不含 Head 自己 (依你的需求可調整)
       }
-
-      list.add(SettlementMember(
-          id: headId,
-          displayName: headModel.displayName,
-          avatar: headModel.avatar,
-          finalAmount: mergedFinal,
-          baseAmount: mergedBase,
-          remainderAmount: mergedRem,
-          isRemainderAbsorber: mergedRem.abs() > 0.0000001,
-          isRemainderHidden: headModel.isRemainderHidden,
-          isMergedHead: true,
-          subMembers: subs));
-    });
-
-    rawMembers.forEach((uid, model) {
-      if (!processedIds.contains(uid)) {
-        list.add(model);
+      // Case C: 普通獨立成員 -> 直接加入
+      else {
+        list.add(currentModel);
       }
-    });
+    }
 
-    list.sort((a, b) => b.finalAmount.compareTo(a.finalAmount));
     return list;
   }
 }

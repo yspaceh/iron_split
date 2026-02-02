@@ -61,6 +61,44 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   double get totalBufferAmount =>
       _settlementMembers.fold(0.0, (sum, item) => sum + item.remainderAmount);
 
+// [修改] 取得所有成員的攤平列表 (將 Head 還原為個人單位)
+  List<SettlementMember> get allMembers {
+    final List<SettlementMember> flattened = [];
+
+    for (var m in _settlementMembers) {
+      if (m.subMembers.isEmpty) {
+        // 沒有合併，直接加入
+        flattened.add(m);
+      } else {
+        // 有合併：需要拆解
+        // 1. 加入子成員 (本來就在 subMembers 裡)
+        flattened.addAll(m.subMembers);
+
+        // 2. 加入 Head 的「個人部分」
+        // 計算邏輯：總額 - 所有子成員的總額
+        final double childrenSum =
+            m.subMembers.fold(0.0, (sum, child) => sum + child.finalAmount);
+        final double headIndividualAmount = m.finalAmount - childrenSum;
+
+        // 創建一個暫時的 Head 個人物件 (僅用於列表顯示與 B04 候選)
+        // 這裡我們手動複製 m 的屬性，但金額改為個人金額
+        flattened.add(SettlementMember(
+          id: m.id,
+          displayName: m.displayName,
+          avatar: m.avatar,
+          isLinked: m.isLinked,
+          finalAmount: headIndividualAmount, // <--- 關鍵修改
+          baseAmount: m.baseAmount, // 這裡視需求可能也要扣除，但顯示上主要看 finalAmount
+          remainderAmount: 0, // 簡化處理
+          isRemainderAbsorber: m.isRemainderAbsorber,
+          isMergedHead: false, // 還原為個人，所以不是 Head
+          subMembers: const [],
+        ));
+      }
+    }
+    return flattened;
+  }
+
   S30SettlementConfirmViewModel({
     required this.taskId,
     required this.currentUserId,

@@ -29,7 +29,7 @@ class SettlementMember extends Equatable {
     required this.baseAmount,
     required this.remainderAmount,
     required this.isRemainderAbsorber,
-    this.isLinked = false,
+    required this.isLinked,
     this.isRemainderHidden = false,
     this.isMergedHead = false,
     this.subMembers = const [],

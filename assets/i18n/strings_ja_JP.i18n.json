@@ -55,6 +55,20 @@
       "rule_order": "順番",
       "rule_member": "指定"
     },
+    "payment_info": {
+      "method_label": "受取方法",
+      "mode_private": "直接連絡してもらう",
+      "mode_private_desc": "詳細情報は表示せず、メンバーが直接あなたに連絡します",
+      "mode_public": "受取情報を提供する",
+      "mode_public_desc": "銀行口座情報または支払いリンクを表示します",
+      "type_cash": "現金",
+      "type_bank": "銀行振込",
+      "type_apps": "その他の支払いアプリ",
+      "bank_name_hint": "銀行コード / 銀行名",
+      "bank_account_hint": "口座番号",
+      "app_name": "アプリ名（例：LinePay）",
+      "app_link": "リンク / ID"
+    },
     "error_prefix": "エラー: {message}",
     "please_login": "ログインしてください",
     "loading": "読み込み中...",
@@ -272,6 +286,16 @@
       "principal": "元金",
       "random_remainder": "ランダム端数",
       "remainder": "端数"
+    }
+  },
+  "s31_settlement_payment_info": {
+    "title": "受取情報",
+    "setup_instruction": "今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。",
+    "sync_save": "デフォルトの受取情報として保存（端末内）",
+    "sync_update": "自分のデフォルト受取情報を同期更新",
+    "buttons": {
+      "settle": "精算する",
+      "prev_step": "前のステップに戻る"
     }
   },
   "S52_TaskSettings_Log": {

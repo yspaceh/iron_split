@@ -53,6 +53,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
 	@override late final _TranslationsS30SettlementConfirmJaJp s30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoJaJp s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
@@ -81,6 +82,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCategoryJaJp category = _TranslationsCommonCategoryJaJp._(_root);
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override String error_prefix({required Object message}) => 'エラー: ${message}';
 	@override String get please_login => 'ログインしてください';
 	@override String get loading => '読み込み中...';
@@ -354,6 +356,20 @@ class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementCon
 	@override String get label_payable => '支払';
 	@override String get label_refund => '返金';
 	@override late final _TranslationsS30SettlementConfirmListItemJaJp list_item = _TranslationsS30SettlementConfirmListItemJaJp._(_root);
+}
+
+// Path: s31_settlement_payment_info
+class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31SettlementPaymentInfoZhTw {
+	_TranslationsS31SettlementPaymentInfoJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '受取情報';
+	@override String get setup_instruction => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。';
+	@override String get sync_save => 'デフォルトの受取情報として保存（端末内）';
+	@override String get sync_update => '自分のデフォルト受取情報を同期更新';
+	@override late final _TranslationsS31SettlementPaymentInfoButtonsJaJp buttons = _TranslationsS31SettlementPaymentInfoButtonsJaJp._(_root);
 }
 
 // Path: S52_TaskSettings_Log
@@ -680,6 +696,27 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 	@override String get rule_member => '指定';
 }
 
+// Path: common.payment_info
+class _TranslationsCommonPaymentInfoJaJp extends TranslationsCommonPaymentInfoZhTw {
+	_TranslationsCommonPaymentInfoJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get method_label => '受取方法';
+	@override String get mode_private => '直接連絡してもらう';
+	@override String get mode_private_desc => '詳細情報は表示せず、メンバーが直接あなたに連絡します';
+	@override String get mode_public => '受取情報を提供する';
+	@override String get mode_public_desc => '銀行口座情報または支払いリンクを表示します';
+	@override String get type_cash => '現金';
+	@override String get type_bank => '銀行振込';
+	@override String get type_apps => 'その他の支払いアプリ';
+	@override String get bank_name_hint => '銀行コード / 銀行名';
+	@override String get bank_account_hint => '口座番号';
+	@override String get app_name => 'アプリ名（例：LinePay）';
+	@override String get app_link => 'リンク / ID';
+}
+
 // Path: S50_Onboarding_Consent.buttons
 class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50OnboardingConsentButtonsZhTw {
 	_TranslationsS50OnboardingConsentButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -810,6 +847,17 @@ class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30Settl
 	@override String get principal => '元金';
 	@override String get random_remainder => 'ランダム端数';
 	@override String get remainder => '端数';
+}
+
+// Path: s31_settlement_payment_info.buttons
+class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
+	_TranslationsS31SettlementPaymentInfoButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get settle => '精算する';
+	@override String get prev_step => '前のステップに戻る';
 }
 
 // Path: S52_TaskSettings_Log.buttons
@@ -1051,6 +1099,18 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.rule_random' => 'ランダム',
 			'common.remainder_rule.rule_order' => '順番',
 			'common.remainder_rule.rule_member' => '指定',
+			'common.payment_info.method_label' => '受取方法',
+			'common.payment_info.mode_private' => '直接連絡してもらう',
+			'common.payment_info.mode_private_desc' => '詳細情報は表示せず、メンバーが直接あなたに連絡します',
+			'common.payment_info.mode_public' => '受取情報を提供する',
+			'common.payment_info.mode_public_desc' => '銀行口座情報または支払いリンクを表示します',
+			'common.payment_info.type_cash' => '現金',
+			'common.payment_info.type_bank' => '銀行振込',
+			'common.payment_info.type_apps' => 'その他の支払いアプリ',
+			'common.payment_info.bank_name_hint' => '銀行コード / 銀行名',
+			'common.payment_info.bank_account_hint' => '口座番号',
+			'common.payment_info.app_name' => 'アプリ名（例：LinePay）',
+			'common.payment_info.app_link' => 'リンク / ID',
 			'common.error_prefix' => ({required Object message}) => 'エラー: ${message}',
 			'common.please_login' => 'ログインしてください',
 			'common.loading' => '読み込み中...',
@@ -1219,6 +1279,12 @@ extension on TranslationsJaJp {
 			's30_settlement_confirm.list_item.principal' => '元金',
 			's30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
 			's30_settlement_confirm.list_item.remainder' => '端数',
+			's31_settlement_payment_info.title' => '受取情報',
+			's31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
+			's31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
+			's31_settlement_payment_info.sync_update' => '自分のデフォルト受取情報を同期更新',
+			's31_settlement_payment_info.buttons.settle' => '精算する',
+			's31_settlement_payment_info.buttons.prev_step' => '前のステップに戻る',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.buttons.export_csv' => 'CSVエクスポート',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',

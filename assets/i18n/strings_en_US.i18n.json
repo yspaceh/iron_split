@@ -49,6 +49,20 @@
       "try_": "Turkish Lira",
       "inr": "Indian Rupee"
     },
+    "payment_info": {
+      "method_label": "Payment Method",
+      "mode_private": "Contact me directly",
+      "mode_private_desc": "No detailed information will be shown. Members should contact you directly.",
+      "mode_public": "Provide payment information",
+      "mode_public_desc": "Display bank account details or a payment link",
+      "type_cash": "Cash",
+      "type_bank": "Bank Transfer",
+      "type_apps": "Other Payment Apps",
+      "bank_name_hint": "Bank code / name",
+      "bank_account_hint": "Account number",
+      "app_name": "App name (e.g. LinePay)",
+      "app_link": "Link / ID"
+    },
     "remainder_rule": {
       "title": "Remainder Rule",
       "rule_random": "Random",
@@ -250,6 +264,16 @@
       "principal": "Principal",
       "random_remainder": "Random Remainder",
       "remainder": "Remainder"
+    }
+  },
+  "s31_settlement_payment_info": {
+    "title": "Payment Information",
+    "setup_instruction": "Used for this settlement only. Default data is encrypted and stored locally.",
+    "sync_save": "Save as default payment information (stored on this device)",
+    "sync_update": "Sync and update my default payment information",
+    "buttons": {
+      "settle": "Settle",
+      "prev_step": "Previous Step"
     }
   },
   "S50_Onboarding_Consent": {

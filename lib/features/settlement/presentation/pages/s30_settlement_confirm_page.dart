@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/settlement/presentation/bottom_sheets/b04_payment_merge_bottom_sheet.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/step_dots.dart';
 import 'package:provider/provider.dart';
 
 // Core & Models
@@ -27,7 +28,6 @@ import 'package:iron_split/features/common/presentation/widgets/pickers/currency
 // Widgets - Feature Specific
 import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/settlement_member_item.dart';
-import 'package:iron_split/features/settlement/presentation/widgets/step_indicator.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 
 class S30SettlementConfirmPage extends StatelessWidget {
@@ -162,18 +162,18 @@ class _S30Content extends StatelessWidget {
         centerTitle: true,
         // [M3]: AppBar 預設背景透明，捲動時自動染色 (Surface Tint)
         // 若要全白可設 scrolledUnderElevation: 0
+        actions: [
+          StepDots(currentStep: 1),
+          const SizedBox(width: 24),
+        ],
       ),
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // 1. 步驟指示器
-                const StepIndicator(currentStep: 1),
-
-                // 2. 總覽卡片
                 // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  padding: const EdgeInsets.all(16),
                   child: GroupBalanceCard(
                     state: vm.balanceState,
                     onCurrencyTap: () => showCurrencyPicker(context, vm),
@@ -218,7 +218,7 @@ class _S30Content extends StatelessWidget {
                       return SettlementMemberItem(
                         member: member,
                         baseCurrency: vm.baseCurrency,
-                        onMergeTap: () =>
+                        onActionTap: () =>
                             _showMergeSettings(context, vm, member),
                       );
                     },

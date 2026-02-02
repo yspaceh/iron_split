@@ -51,6 +51,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
 	@override late final _TranslationsS30SettlementConfirmEnUs s30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoEnUs s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
@@ -80,6 +81,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonButtonsEnUs buttons = _TranslationsCommonButtonsEnUs._(_root);
 	@override late final _TranslationsCommonCategoryEnUs category = _TranslationsCommonCategoryEnUs._(_root);
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
+	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
 	@override String get please_login => 'Please Login';
@@ -321,6 +323,20 @@ class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementCon
 	@override String get label_payable => 'To Pay';
 	@override String get label_refund => 'Refund';
 	@override late final _TranslationsS30SettlementConfirmListItemEnUs list_item = _TranslationsS30SettlementConfirmListItemEnUs._(_root);
+}
+
+// Path: s31_settlement_payment_info
+class _TranslationsS31SettlementPaymentInfoEnUs extends TranslationsS31SettlementPaymentInfoZhTw {
+	_TranslationsS31SettlementPaymentInfoEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Payment Information';
+	@override String get setup_instruction => 'Used for this settlement only. Default data is encrypted and stored locally.';
+	@override String get sync_save => 'Save as default payment information (stored on this device)';
+	@override String get sync_update => 'Sync and update my default payment information';
+	@override late final _TranslationsS31SettlementPaymentInfoButtonsEnUs buttons = _TranslationsS31SettlementPaymentInfoButtonsEnUs._(_root);
 }
 
 // Path: S50_Onboarding_Consent
@@ -668,6 +684,27 @@ class _TranslationsCommonCurrencyEnUs extends TranslationsCommonCurrencyZhTw {
 	@override String get inr => 'Indian Rupee';
 }
 
+// Path: common.payment_info
+class _TranslationsCommonPaymentInfoEnUs extends TranslationsCommonPaymentInfoZhTw {
+	_TranslationsCommonPaymentInfoEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get method_label => 'Payment Method';
+	@override String get mode_private => 'Contact me directly';
+	@override String get mode_private_desc => 'No detailed information will be shown. Members should contact you directly.';
+	@override String get mode_public => 'Provide payment information';
+	@override String get mode_public_desc => 'Display bank account details or a payment link';
+	@override String get type_cash => 'Cash';
+	@override String get type_bank => 'Bank Transfer';
+	@override String get type_apps => 'Other Payment Apps';
+	@override String get bank_name_hint => 'Bank code / name';
+	@override String get bank_account_hint => 'Account number';
+	@override String get app_name => 'App name (e.g. LinePay)';
+	@override String get app_link => 'Link / ID';
+}
+
 // Path: common.remainder_rule
 class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRuleZhTw {
 	_TranslationsCommonRemainderRuleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -792,6 +829,17 @@ class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30Settl
 	@override String get principal => 'Principal';
 	@override String get random_remainder => 'Random Remainder';
 	@override String get remainder => 'Remainder';
+}
+
+// Path: s31_settlement_payment_info.buttons
+class _TranslationsS31SettlementPaymentInfoButtonsEnUs extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
+	_TranslationsS31SettlementPaymentInfoButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get settle => 'Settle';
+	@override String get prev_step => 'Previous Step';
 }
 
 // Path: S50_Onboarding_Consent.buttons
@@ -1049,6 +1097,18 @@ extension on TranslationsEnUs {
 			'common.currency.sar' => 'Saudi Riyal',
 			'common.currency.try_' => 'Turkish Lira',
 			'common.currency.inr' => 'Indian Rupee',
+			'common.payment_info.method_label' => 'Payment Method',
+			'common.payment_info.mode_private' => 'Contact me directly',
+			'common.payment_info.mode_private_desc' => 'No detailed information will be shown. Members should contact you directly.',
+			'common.payment_info.mode_public' => 'Provide payment information',
+			'common.payment_info.mode_public_desc' => 'Display bank account details or a payment link',
+			'common.payment_info.type_cash' => 'Cash',
+			'common.payment_info.type_bank' => 'Bank Transfer',
+			'common.payment_info.type_apps' => 'Other Payment Apps',
+			'common.payment_info.bank_name_hint' => 'Bank code / name',
+			'common.payment_info.bank_account_hint' => 'Account number',
+			'common.payment_info.app_name' => 'App name (e.g. LinePay)',
+			'common.payment_info.app_link' => 'Link / ID',
 			'common.remainder_rule.title' => 'Remainder Rule',
 			'common.remainder_rule.rule_random' => 'Random',
 			'common.remainder_rule.rule_order' => 'Order',
@@ -1207,6 +1267,12 @@ extension on TranslationsEnUs {
 			's30_settlement_confirm.list_item.principal' => 'Principal',
 			's30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
 			's30_settlement_confirm.list_item.remainder' => 'Remainder',
+			's31_settlement_payment_info.title' => 'Payment Information',
+			's31_settlement_payment_info.setup_instruction' => 'Used for this settlement only. Default data is encrypted and stored locally.',
+			's31_settlement_payment_info.sync_save' => 'Save as default payment information (stored on this device)',
+			's31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
+			's31_settlement_payment_info.buttons.settle' => 'Settle',
+			's31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => 'Start',
 			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',

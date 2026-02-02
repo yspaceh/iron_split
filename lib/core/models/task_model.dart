@@ -52,6 +52,32 @@ class TaskModel {
       );
     }
 
+    // 邏輯：先抓 Linked (保持原順序)，再抓 Unlinked (保持原順序)，最後組合成新的 Map
+    Map<String, dynamic> sortMembers(Map<String, dynamic> rawMembers) {
+      final entries = rawMembers.entries.toList();
+
+      // 1. 連結成員 (Linked)
+      final linked = entries.where((e) {
+        final mData = e.value as Map<String, dynamic>;
+        return mData['isLinked'] == true;
+      });
+
+      // 2. 未連結成員 (Unlinked)
+      final unlinked = entries.where((e) {
+        final mData = e.value as Map<String, dynamic>;
+        return mData['isLinked'] != true;
+      });
+
+      // 3. 重新組裝成有序的 Map
+      // Map.fromEntries 會依照 List 的順序建立 Key，確保遍歷順序正確
+      return Map.fromEntries([...linked, ...unlinked]);
+    }
+
+    // 取得原始 Map
+    final rawMembers = data['members'] is Map
+        ? Map<String, dynamic>.from(data['members'])
+        : <String, dynamic>{};
+
     // Helper to parse dates safely
     DateTime parseDate(dynamic val, {DateTime? fallback}) {
       if (val is Timestamp) return val.toDate();
@@ -66,21 +92,12 @@ class TaskModel {
       name: data['name'] as String? ?? '', // Matches D03 write
       baseCurrency:
           data['baseCurrency'] as String? ?? CurrencyConstants.defaultCode,
-      members: data['members'] is Map
-          ? Map<String, dynamic>.from(data['members'])
-          : {},
-
-      // Status handling (Bible: ongoing, closed, archived)
+      members: sortMembers(rawMembers),
       status: data['status'] as String? ?? 'ongoing',
-
-      // Captain/Owner handling (Bible: createdBy)
       createdBy: data['createdBy'] as String? ?? '',
-
-      // Rule handling (S14: remainderRule)
       remainderRule: data['remainderRule'] as String? ??
           RemainderRuleConstants.defaultRule,
       remainderAbsorberId: data['remainderAbsorberId'] as String?,
-
       createdAt: parseDate(data['createdAt']),
       updatedAt: parseDate(data['updatedAt']),
       startDate:

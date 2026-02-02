@@ -1,4 +1,5 @@
 class AvatarConstants {
+  static const String defaultAvatar = 'cow';
   // 原始完整 ID 列表 (供選擇器使用)
   static const List<String> allAvatars = [
     '01_cow',

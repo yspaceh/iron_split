@@ -52,6 +52,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS17TaskLockedZhTw S17_Task_Locked = TranslationsS17TaskLockedZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmZhTw s30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
+	late final TranslationsS31SettlementPaymentInfoZhTw s31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
@@ -82,6 +83,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonCategoryZhTw category = TranslationsCommonCategoryZhTw.internal(_root);
 	late final TranslationsCommonCurrencyZhTw currency = TranslationsCommonCurrencyZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
+	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
 
 	/// zh-TW: '錯誤: {message}'
 	String error_prefix({required Object message}) => '錯誤: ${message}';
@@ -591,6 +593,29 @@ class TranslationsS30SettlementConfirmZhTw {
 	String get label_refund => '可退';
 
 	late final TranslationsS30SettlementConfirmListItemZhTw list_item = TranslationsS30SettlementConfirmListItemZhTw.internal(_root);
+}
+
+// Path: s31_settlement_payment_info
+class TranslationsS31SettlementPaymentInfoZhTw {
+	TranslationsS31SettlementPaymentInfoZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '收款資訊'
+	String get title => '收款資訊';
+
+	/// zh-TW: '收款資訊僅供本次結算使用。預設資料加密儲存於本機。'
+	String get setup_instruction => '收款資訊僅供本次結算使用。預設資料加密儲存於本機。';
+
+	/// zh-TW: '儲存為預設收款資訊 (存在手機)'
+	String get sync_save => '儲存為預設收款資訊 (存在手機)';
+
+	/// zh-TW: '同步更新我的預設收款資訊'
+	String get sync_update => '同步更新我的預設收款資訊';
+
+	late final TranslationsS31SettlementPaymentInfoButtonsZhTw buttons = TranslationsS31SettlementPaymentInfoButtonsZhTw.internal(_root);
 }
 
 // Path: S50_Onboarding_Consent
@@ -1264,6 +1289,51 @@ class TranslationsCommonRemainderRuleZhTw {
 	String get rule_member => '指定成員';
 }
 
+// Path: common.payment_info
+class TranslationsCommonPaymentInfoZhTw {
+	TranslationsCommonPaymentInfoZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '收款方式'
+	String get method_label => '收款方式';
+
+	/// zh-TW: '請直接私訊聯絡'
+	String get mode_private => '請直接私訊聯絡';
+
+	/// zh-TW: '不顯示詳細資訊，請成員直接找你'
+	String get mode_private_desc => '不顯示詳細資訊，請成員直接找你';
+
+	/// zh-TW: '提供收款資訊'
+	String get mode_public => '提供收款資訊';
+
+	/// zh-TW: '顯示銀行帳號或支付連結'
+	String get mode_public_desc => '顯示銀行帳號或支付連結';
+
+	/// zh-TW: '現金'
+	String get type_cash => '現金';
+
+	/// zh-TW: '銀行轉帳'
+	String get type_bank => '銀行轉帳';
+
+	/// zh-TW: '其他支付 App'
+	String get type_apps => '其他支付 App';
+
+	/// zh-TW: '銀行代碼 / 名稱'
+	String get bank_name_hint => '銀行代碼 / 名稱';
+
+	/// zh-TW: '帳號'
+	String get bank_account_hint => '帳號';
+
+	/// zh-TW: 'App 名稱 (如: LinePay)'
+	String get app_name => 'App 名稱 (如: LinePay)';
+
+	/// zh-TW: '連結 / ID'
+	String get app_link => '連結 / ID';
+}
+
 // Path: S11_Invite_Confirm.buttons
 class TranslationsS11InviteConfirmButtonsZhTw {
 	TranslationsS11InviteConfirmButtonsZhTw.internal(this._root);
@@ -1421,6 +1491,21 @@ class TranslationsS30SettlementConfirmListItemZhTw {
 
 	/// zh-TW: '餘額'
 	String get remainder => '餘額';
+}
+
+// Path: s31_settlement_payment_info.buttons
+class TranslationsS31SettlementPaymentInfoButtonsZhTw {
+	TranslationsS31SettlementPaymentInfoButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '結算'
+	String get settle => '結算';
+
+	/// zh-TW: '上一步'
+	String get prev_step => '上一步';
 }
 
 // Path: S50_Onboarding_Consent.buttons
@@ -1748,6 +1833,18 @@ extension on Translations {
 			'common.remainder_rule.rule_random' => '餘額輪盤',
 			'common.remainder_rule.rule_order' => '順序輪替',
 			'common.remainder_rule.rule_member' => '指定成員',
+			'common.payment_info.method_label' => '收款方式',
+			'common.payment_info.mode_private' => '請直接私訊聯絡',
+			'common.payment_info.mode_private_desc' => '不顯示詳細資訊，請成員直接找你',
+			'common.payment_info.mode_public' => '提供收款資訊',
+			'common.payment_info.mode_public_desc' => '顯示銀行帳號或支付連結',
+			'common.payment_info.type_cash' => '現金',
+			'common.payment_info.type_bank' => '銀行轉帳',
+			'common.payment_info.type_apps' => '其他支付 App',
+			'common.payment_info.bank_name_hint' => '銀行代碼 / 名稱',
+			'common.payment_info.bank_account_hint' => '帳號',
+			'common.payment_info.app_name' => 'App 名稱 (如: LinePay)',
+			'common.payment_info.app_link' => '連結 / ID',
 			'common.error_prefix' => ({required Object message}) => '錯誤: ${message}',
 			'common.please_login' => '請先登入',
 			'common.loading' => '讀取中...',
@@ -1902,6 +1999,12 @@ extension on Translations {
 			's30_settlement_confirm.list_item.principal' => '本金',
 			's30_settlement_confirm.list_item.random_remainder' => '隨機餘額',
 			's30_settlement_confirm.list_item.remainder' => '餘額',
+			's31_settlement_payment_info.title' => '收款資訊',
+			's31_settlement_payment_info.setup_instruction' => '收款資訊僅供本次結算使用。預設資料加密儲存於本機。',
+			's31_settlement_payment_info.sync_save' => '儲存為預設收款資訊 (存在手機)',
+			's31_settlement_payment_info.sync_update' => '同步更新我的預設收款資訊',
+			's31_settlement_payment_info.buttons.settle' => '結算',
+			's31_settlement_payment_info.buttons.prev_step' => '上一步',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => '開始使用',
 			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',

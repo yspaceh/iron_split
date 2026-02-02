@@ -97,11 +97,14 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       // 1. Prepare Members Map
       final Map<String, dynamic> membersMap = {};
 
+      // 定義基準時間，確保所有人的時間都是相對於這個時間點
+      final baseTime = DateTime.now();
+
       // A. Add Captain
       membersMap[user.uid] = {
         'role': 'captain',
         'displayName': user.displayName ?? 'Captain',
-        'joinedAt': DateTime.now(), // 改傳 DateTime，Repo/Firestore 支援
+        'joinedAt': baseTime,
         'avatar': _getRandomAvatar(),
         'isLinked': true,
         'hasSeenRoleIntro': false,
@@ -115,7 +118,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         membersMap[ghostId] = {
           'role': 'member',
           'displayName': '$prefix ${i + 1}',
-          'joinedAt': DateTime.now(),
+          'joinedAt': baseTime.add(Duration(milliseconds: i)),
           'avatar': _getRandomAvatar(),
           'isLinked': false,
           'hasSeenRoleIntro': false,
@@ -135,7 +138,6 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'remainderRule': RemainderRuleConstants.defaultRule, // 預設值
       };
 
-      // ✅ 呼叫 Repo 建立任務，取得 ID
       final taskId = await _taskRepo.createTask(taskData);
 
       // 3. Activity Log
