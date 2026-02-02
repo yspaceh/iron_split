@@ -1,13 +1,28 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/error/exceptions.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 
 class SettlementService {
-  /// 計算結算成員列表
+  final TaskRepository _taskRepo;
+
+  SettlementService(this._taskRepo);
+
+  /// 隨機選出一位餘額得主 (用於 S32 初始化時)
+  String pickRandomRemainderWinner(List<String> memberIds) {
+    if (memberIds.isEmpty) return '';
+    final random = Random();
+    return memberIds[random.nextInt(memberIds.length)];
+  }
+
+  /// S30 預覽用：計算當前金額 (若為 Random 且未結算，remainderAbsorberId 傳 null)
+  /// 此時 Random 模式下，餘額不會分配給任何人，大家只看到 Base Amount
   List<SettlementMember> calculateSettlementMembers({
     required TaskModel task,
     required List<RecordModel> records,
@@ -19,13 +34,16 @@ class SettlementService {
     // 因為 D09 已經更新了 DB 裡的匯率，所以這裡算出來的就是最新幣別的淨額
     final baseBalances = _calculateBaseNetBalances(task, records);
 
+    final double totalRemainder =
+        BalanceCalculator.calculateRemainderBuffer(records);
+
     // 2. 餘額發牌 (Card Dealing)
     final memberResults = _applyRemainderAllocation(
-      task: task,
-      baseBalances: baseBalances,
-      remainderRule: remainderRule,
-      remainderAbsorberId: remainderAbsorberId,
-    );
+        task: task,
+        baseBalances: baseBalances,
+        remainderRule: remainderRule,
+        remainderAbsorberId: remainderAbsorberId,
+        totalRemainder: totalRemainder);
 
     // 3. 處理合併
     return _processMerging(rawMembers: memberResults, mergeMap: mergeMap);
@@ -44,82 +62,101 @@ class SettlementService {
     return balances;
   }
 
+  /// 核心分配邏輯
+  /// 職責：將傳入的 [totalRemainder] 依照規則分配給成員
+  /// 不再自行推算餘額，而是完全信任外部傳入的 source of truth
   Map<String, SettlementMember> _applyRemainderAllocation({
     required TaskModel task,
     required Map<String, double> baseBalances,
     required String remainderRule,
     String? remainderAbsorberId,
+    required double totalRemainder, // <--- 這是重點：拿這包確定的錢來分
   }) {
     final Map<String, SettlementMember> results = {};
 
-    // 取得當前 Task 幣別的精度
+    // 1. 準備工具：取得最小貨幣單位 (Step)
     final currency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
     final int exponent = currency.decimalDigits;
-    final double stepValue = 1 / pow(10, exponent);
+    final double stepValue = 1 / pow(10, exponent); // e.g., 0.01
 
-    double totalVal = 0.0;
-    double totalAllocated = 0.0;
-    Map<String, double> tempAllocatedMap = {};
-
+    // 2. 準備 Base Amount (每個人的基本盤)
+    // 這裡只做 Floor (無條件捨去)，不做任何餘額計算
+    Map<String, double> baseAmountMap = {};
     baseBalances.forEach((uid, val) {
-      totalVal += val;
-      // Floor logic
       double multiplier = pow(10, exponent).toDouble();
-      double allocated = (val * multiplier).floorToDouble() / multiplier;
-      tempAllocatedMap[uid] = allocated;
-      totalAllocated += allocated;
+      baseAmountMap[uid] = (val * multiplier).floorToDouble() / multiplier;
     });
 
-    // 計算誤差
-    double totalRemainder = totalVal - totalAllocated;
-    int remainderSteps = (totalRemainder / stepValue).round();
-
-    // 發牌邏輯
-    Map<String, double> remainderMap = {};
+    // 3. 準備分配表 (誰拿到多少零頭)
+    Map<String, double> allocatedRemMap = {};
+    // 初始化為 0
     for (var uid in task.members.keys) {
-      remainderMap[uid] = 0.0;
+      allocatedRemMap[uid] = 0.0;
     }
 
-    if (remainderSteps != 0) {
-      List<String> candidateIds = [];
-      if (remainderRule == RemainderRuleConstants.member &&
-          remainderAbsorberId != null) {
-        candidateIds = [remainderAbsorberId];
-      } else {
-        candidateIds = task.members.keys.toList()..sort();
-      }
+    // 4. 開始分配 (根據你的三條規則)
 
-      if (remainderRule == RemainderRuleConstants.member &&
-          remainderAbsorberId != null) {
-        remainderMap[remainderAbsorberId] = remainderSteps * stepValue;
-      } else {
-        int count = remainderSteps.abs();
-        double unit = stepValue * (remainderSteps > 0 ? 1 : -1);
+    // --- 規則 A: Random (輪盤) ---
+    if (remainderRule == RemainderRuleConstants.random) {
+      // S30 邏輯：完全不計算分配。
+      // 餘額懸浮在空中，沒人拿到。 allocatedRemMap 全是 0。
+    }
+
+    // --- 規則 B: Member (指定) ---
+    else if (remainderRule == RemainderRuleConstants.member &&
+        remainderAbsorberId != null) {
+      // S30 邏輯：零頭總額直接歸屬到指定成員身上
+      if (allocatedRemMap.containsKey(remainderAbsorberId)) {
+        allocatedRemMap[remainderAbsorberId] = totalRemainder;
+      }
+    }
+
+    // --- 規則 C: Order (輪流) ---
+    else if (remainderRule == RemainderRuleConstants.order) {
+      // S30 邏輯：零頭總額用發牌邏輯把零頭發完
+
+      // 計算有幾張牌 (幾分錢)
+      int steps = (totalRemainder / stepValue).round();
+
+      if (steps != 0) {
+        // 決定發牌順序 (依照加入時間或 ID 排序)
+        List<String> sortedIds = task.members.keys.toList()..sort();
+
+        int count = steps.abs();
+        double unit = stepValue * (steps > 0 ? 1 : -1); // 處理負餘額的情況
         int idx = 0;
+
+        // 一張一張發
         for (int i = 0; i < count; i++) {
-          String uid = candidateIds[idx];
-          remainderMap[uid] = (remainderMap[uid] ?? 0) + unit;
-          idx = (idx + 1) % candidateIds.length;
+          String uid = sortedIds[idx];
+          allocatedRemMap[uid] = (allocatedRemMap[uid] ?? 0) + unit;
+          idx = (idx + 1) % sortedIds.length; // 繞圈圈
         }
       }
     }
 
-    bool isRandom = remainderRule == RemainderRuleConstants.random;
-    tempAllocatedMap.forEach((uid, base) {
-      double rem = remainderMap[uid] ?? 0.0;
+    // 5. 組裝最終結果
+    baseAmountMap.forEach((uid, base) {
+      double rem = allocatedRemMap[uid] ?? 0.0;
       final memberData = task.members[uid] ?? {};
+
+      // 檢查是否為 Random 模式 (決定是否要在 UI 上標示為隱藏/抽獎中)
+      bool isRandom = (remainderRule == RemainderRuleConstants.random);
+
       results[uid] = SettlementMember(
         id: uid,
         displayName: memberData['displayName'] ?? 'Unknown',
         avatar: memberData['avatar'],
         isLinked: memberData['isLinked'] ?? false,
-        finalAmount: base + rem,
+        // 最終金額 = 基本盤 + 分配到的零頭
+        finalAmount: double.parse((base + rem).toStringAsFixed(exponent)),
         baseAmount: base,
         remainderAmount: rem,
-        isRemainderAbsorber: rem.abs() > 0.0000001,
-        isRemainderHidden: isRandom,
+        isRemainderAbsorber: rem.abs() > 0.0000001, // 拿到錢的人就是吸收者
+        isRemainderHidden: isRandom, // Random 模式 UI 會顯示特殊狀態
       );
     });
+
     return results;
   }
 
@@ -185,5 +222,96 @@ class SettlementService {
     }
 
     return list;
+  }
+
+  Future<String?> executeSettlement({
+    required TaskModel task, // 需要它，是因為要讀取 baseCurrency 和 remainderRule
+    required List<RecordModel> records,
+    required Map<String, List<String>> mergeMap,
+    String? captainPaymentInfoJson, // [修正] 直接接收 JSON
+    required double checkPointPoolBalance,
+  }) async {
+    // 0. 狀態檢查
+    if (task.status == 'settled' || task.status == 'finished') {
+      throw SettlementStatusInvalidException(task.status);
+    }
+
+    // 1. 檢查點驗證 (公款水位)
+    final double currentPoolBalance =
+        BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
+
+    if ((currentPoolBalance - checkPointPoolBalance).abs() > 0.01) {
+      throw SettlementDataConflictException();
+    }
+
+    try {
+      // 2. 準備計算資料 (需用到 task.baseCurrency)
+      final baseBalances = _calculateBaseNetBalances(task, records);
+      final double currentTotalRemainder =
+          BalanceCalculator.calculateRemainderBuffer(records);
+
+      // 3. 決定得主 (Random 模式邏輯)
+      String? finalWinnerId = task.remainderAbsorberId;
+
+      if (task.remainderRule == RemainderRuleConstants.random) {
+        final Set<String> childIds = mergeMap.values.expand((e) => e).toSet();
+        final candidateIds =
+            baseBalances.keys.where((id) => !childIds.contains(id)).toList();
+
+        if (candidateIds.isNotEmpty) {
+          finalWinnerId = pickRandomRemainderWinner(candidateIds);
+        }
+      }
+
+      // 4. 執行歸戶 (使用共用的分配邏輯)
+      // 這裡需用到 task.remainderRule
+      String ruleToApply = task.remainderRule;
+      String? absorberToApply = task.remainderAbsorberId;
+
+      if (task.remainderRule == RemainderRuleConstants.random) {
+        ruleToApply = RemainderRuleConstants.member;
+        absorberToApply = finalWinnerId;
+      }
+
+      final Map<String, SettlementMember> finalRawMap =
+          _applyRemainderAllocation(
+        task: task,
+        baseBalances: baseBalances,
+        remainderRule: ruleToApply,
+        remainderAbsorberId: absorberToApply,
+        totalRemainder: currentTotalRemainder,
+      );
+
+      // 5. 處理合併
+      final finalMergedList =
+          _processMerging(rawMembers: finalRawMap, mergeMap: mergeMap);
+
+      // 6. 準備存檔資料
+      final Map<String, double> allocations = {};
+      final Map<String, bool> memberStatus = {};
+
+      for (var m in finalMergedList) {
+        allocations[m.id] = m.finalAmount;
+        memberStatus[m.id] = false;
+      }
+
+      // 7. 寫入 Firestore
+      await _taskRepo.settleTask(
+        taskId: task.id,
+        settlementData: {
+          "finalizedAt": Timestamp.now(),
+          "baseCurrency": task.baseCurrency, // 這裡用到了 task
+          "remainderWinnerId": finalWinnerId,
+          "allocations": allocations,
+          "memberStatus": memberStatus,
+          "receiverInfos": captainPaymentInfoJson,
+        },
+      );
+
+      return finalWinnerId;
+    } catch (e) {
+      if (e is SettlementException) rethrow;
+      throw SettlementTransactionFailedException(e.toString());
+    }
   }
 }

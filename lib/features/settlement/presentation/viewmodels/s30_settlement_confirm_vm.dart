@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
@@ -25,6 +26,8 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   List<RecordModel> _records = [];
   bool _isLoading = true;
 
+  double _checkPointPoolBalance = 0.0;
+
   // 暫態設定 (合併狀態)
   final Map<String, List<String>> _mergeMap = {};
 
@@ -41,6 +44,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   // Getters
   bool get isLoading => _isLoading;
   TaskModel? get task => _task;
+  double get checkPointPoolBalance => _checkPointPoolBalance;
 
   // 這些設定直接從 Task 讀取 (因為 UI 會呼叫 D09/Repo 更新 Task)
   String get remainderRule =>
@@ -57,9 +61,6 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   }
 
   Map<String, List<String>> get currentMergeMap => _mergeMap;
-
-  double get totalBufferAmount =>
-      _settlementMembers.fold(0.0, (sum, item) => sum + item.remainderAmount);
 
 // [修改] 取得所有成員的攤平列表 (將 Head 還原為個人單位)
   List<SettlementMember> get allMembers {
@@ -135,6 +136,9 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
       return;
     }
 
+    _checkPointPoolBalance =
+        BalanceCalculator.calculatePoolBalanceByBaseCurrency(_records);
+
     // Step 1: Top Card - 使用 DashboardService (完全不變)
     // 因為 D09 已經把 DB 更新為使用者選擇的幣別，所以這裡直接算就好
     _balanceState = _dashboardService.calculateBalanceState(
@@ -185,5 +189,14 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   void unmergeMembers(String headId) {
     _mergeMap.remove(headId);
     _recalculate();
+  }
+
+  Future<void> unlockTask() async {
+    try {
+      // pending -> ongoing
+      await _taskRepo.updateTaskStatus(taskId, 'ongoing');
+    } catch (e) {
+      debugPrint("Unlock failed: $e");
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -99,7 +100,14 @@ class _S53Content extends StatelessWidget {
       await CommonAlertDialog.show(
         context,
         title: t.S53_TaskSettings_Members.dialog_delete_error_title,
-        content: t.S53_TaskSettings_Members.dialog_delete_error_content,
+        content: Text(t.S53_TaskSettings_Members.dialog_delete_error_content),
+        actions: [
+          AppButton(
+            text: t.common.buttons.close,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(),
+          ),
+        ],
       );
     }
   }

@@ -9,7 +9,13 @@
       "edit": "Edit",
       "close": "Close",
       "discard": "Discard",
-      "keep_editing": "Keep Editing"
+      "keep_editing": "Keep Editing",
+      "refresh": "Refresh",
+      "ok": "OK"
+    },
+    "error": {
+      "title": "Error",
+      "unknown": "Unknown error: {error}"
     },
     "category": {
       "food": "Food",
@@ -207,7 +213,8 @@
     "type_income_title": "Income",
     "base_card_title_expense": "Remaining (Base)",
     "base_card_title_income": "Contributors (Source)",
-    "payer_multiple": "Multiple Payers"
+    "payer_multiple": "Multiple Payers",
+    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)"
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
@@ -244,7 +251,7 @@
     "dialog_mark_cleared_title": "Mark as Cleared",
     "dialog_mark_cleared_content": "Mark {name} as cleared?"
   },
-  "s30_settlement_confirm": {
+  "S30_settlement_confirm": {
     "title": "Confirm Settlement",
     "buttons": {
       "next": "Payment Info"
@@ -266,7 +273,7 @@
       "remainder": "Remainder"
     }
   },
-  "s31_settlement_payment_info": {
+  "S31_settlement_payment_info": {
     "title": "Payment Information",
     "setup_instruction": "Used for this settlement only. Default data is encrypted and stored locally.",
     "sync_save": "Save as default payment information (stored on this device)",
@@ -274,6 +281,19 @@
     "buttons": {
       "settle": "Settle",
       "prev_step": "Previous Step"
+    }
+  },
+  "S32_settlement_result": {
+    "title": "Settlement Successful",
+    "content": "Settlement is complete and the task is locked. Please notify members to check the final details.",
+    "waiting_reveal": "Revealing result...",
+    "remainder_winner_prefix": "Remainder goes to:",
+    "remainder_winner_total": "${winnerName}'s result change to ${prefix} ${total}",
+    "total_label": "Total Settlement Amount",
+    "share_message": "Settlement completed!\nPlease open the Iron Split app to check your \"{taskName}\" payment amount.\nLink：{link}",
+    "buttons": {
+      "share": "Send Settlement Notification",
+      "back": "Back to Task"
     }
   },
   "S50_Onboarding_Consent": {
@@ -382,6 +402,13 @@
     },
     "content": "No record found for this date. Would you like to add one?"
   },
+  "D06_settlement_confirm": {
+    "title": "Confirm Settlement",
+    "warning_text": "The task will be locked upon settlement. You will not be able to add, delete, or edit any records.\nPlease ensure all details are correct.",
+    "buttons": {
+      "confirm": "Settle"
+    }
+  },
   "D08_TaskClosed_Confirm": {
     "title": "Confirm Close",
     "buttons": {
@@ -397,6 +424,14 @@
     "delete_record_title": "Delete Record?",
     "delete_record_content": "Are you sure you want to delete {title} ({amount})?",
     "deleted_success": "Record deleted"
+  },
+  "D11_random_result": {
+    "title": "Remainder Roulette Winner",
+    "skip": "Skip",
+    "winner_reveal": "It's you!",
+    "buttons": {
+      "close": "OK"
+    }
   },
   "B02_SplitExpense_Edit": {
     "title": "Edit Item",
@@ -426,7 +461,6 @@
     "desc_even": "Selected members split equally, leftover goes to pot",
     "desc_percent": "Distribute by percentage",
     "desc_exact": "Enter specific amounts, total must match",
-    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)",
     "label_weight": "Weight",
     "error_total_mismatch": "Total mismatch (difference {diff})"
   },
@@ -482,6 +516,15 @@
     "unknown": {
       "title": "Error",
       "message": "An unexpected error occurred."
+    },
+    "settlement": {
+      "data_conflict": {
+        "title": "Data Changed",
+        "message": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy."
+      },
+      "status_invalid": "The task status is invalid (may be already settled). Please refresh.",
+      "permission_denied": "Only the creator can execute settlement.",
+      "transaction_failed": "System error. Settlement failed. Please try again later."
     }
   }
 }

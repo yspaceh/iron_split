@@ -154,95 +154,118 @@ class _S30Content extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      // [M3]: 使用 surface (或 surfaceContainerLow) 取代 hardcoded grey
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: Text(t.s30_settlement_confirm.title),
-        centerTitle: true,
-        // [M3]: AppBar 預設背景透明，捲動時自動染色 (Surface Tint)
-        // 若要全白可設 scrolledUnderElevation: 0
-        actions: [
-          StepDots(currentStep: 1),
-          const SizedBox(width: 24),
-        ],
-      ),
-      body: vm.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: GroupBalanceCard(
-                    state: vm.balanceState,
-                    onCurrencyTap: () => showCurrencyPicker(context, vm),
-                    onRuleTap: () => onRemainderRuleChange(vm),
-                  ),
-                ),
+    return PopScope(
+      canPop: false, // 禁止直接返回，我們要自己處理
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        if (didPop) return; // 如果系統已經處理了返回 (例如 canPop 為 true)，這裡就不重複執行
 
-                // 3. 隨機模式提示
-                if (vm.remainderRule == RemainderRuleConstants.random)
-                  Container(
-                    width: double.infinity,
-                    // [M3]: 使用 Tertiary (第三色) 作為強調/提示背景
-                    color: colorScheme.tertiaryContainer,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Row(
-                      children: [
-                        Icon(Icons.casino,
-                            size: 16, color: colorScheme.onTertiaryContainer),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            t.s30_settlement_confirm.warning.random_reveal,
-                            style: textTheme.labelMedium?.copyWith(
-                              color: colorScheme.onTertiaryContainer,
-                            ),
-                          ),
-                        ),
-                      ],
+        // 1. 使用者按了實體返回鍵 -> 執行解鎖 (pending -> ongoing)
+        await vm.unlockTask();
+
+        // 2. 解鎖完成後，手動執行返回 S13
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        // [M3]: 使用 surface (或 surfaceContainerLow) 取代 hardcoded grey
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          title: Text(t.S30_settlement_confirm.title),
+          centerTitle: true,
+          // [M3]: AppBar 預設背景透明，捲動時自動染色 (Surface Tint)
+          // 若要全白可設 scrolledUnderElevation: 0
+          actions: [
+            StepDots(currentStep: 1),
+            const SizedBox(width: 24),
+          ],
+        ),
+        body: vm.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: GroupBalanceCard(
+                      state: vm.balanceState,
+                      onCurrencyTap: () => showCurrencyPicker(context, vm),
+                      onRuleTap: () => onRemainderRuleChange(vm),
                     ),
                   ),
 
-                // 4. 成員列表
-                Expanded(
-                  child: ListView.separated(
-                    // 底部留白讓最後一個項目不會被 BottomBar 擋住
-                    padding: const EdgeInsets.only(bottom: 24, top: 8),
-                    itemCount: vm.settlementMembers.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final member = vm.settlementMembers[index];
-                      return SettlementMemberItem(
-                        member: member,
-                        baseCurrency: vm.baseCurrency,
-                        onActionTap: () =>
-                            _showMergeSettings(context, vm, member),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-      bottomNavigationBar: StickyBottomActionBar(
-        children: [
-          // 左邊：取消 (次要按鈕)
-          AppButton(
-            text: t.common.buttons.cancel,
-            type: AppButtonType.secondary,
-            onPressed: () => Navigator.pop(context),
-          ),
+                  // 3. 隨機模式提示
+                  if (vm.remainderRule == RemainderRuleConstants.random)
+                    Container(
+                      width: double.infinity,
+                      // [M3]: 使用 Tertiary (第三色) 作為強調/提示背景
+                      color: colorScheme.tertiaryContainer,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      child: Row(
+                        children: [
+                          Icon(Icons.casino,
+                              size: 16, color: colorScheme.onTertiaryContainer),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              t.S30_settlement_confirm.warning.random_reveal,
+                              style: textTheme.labelMedium?.copyWith(
+                                color: colorScheme.onTertiaryContainer,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
-          // 右邊：下一步 (主要按鈕)
-          AppButton(
-            text: t.s30_settlement_confirm.buttons.next,
-            type: AppButtonType.primary,
-            onPressed: () =>
-                context.pushNamed('S31', pathParameters: {'taskId': vm.taskId}),
-          ),
-        ],
+                  // 4. 成員列表
+                  Expanded(
+                    child: ListView.separated(
+                      // 底部留白讓最後一個項目不會被 BottomBar 擋住
+                      padding: const EdgeInsets.only(bottom: 24, top: 8),
+                      itemCount: vm.settlementMembers.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final member = vm.settlementMembers[index];
+                        return SettlementMemberItem(
+                          member: member,
+                          baseCurrency: vm.baseCurrency,
+                          onActionTap: () =>
+                              _showMergeSettings(context, vm, member),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            // 左邊：取消 (次要按鈕)
+            AppButton(
+              text: t.common.buttons.cancel,
+              type: AppButtonType.secondary,
+              onPressed: () async {
+                await vm.unlockTask();
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+
+            // 右邊：下一步 (主要按鈕)
+            AppButton(
+              text: t.S30_settlement_confirm.buttons.next,
+              type: AppButtonType.primary,
+              onPressed: () => context.pushNamed(
+                'S31',
+                pathParameters: {'taskId': vm.taskId},
+                extra: {
+                  "checkPointPoolBalance": vm.checkPointPoolBalance,
+                  "mergeMap": vm.currentMergeMap,
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

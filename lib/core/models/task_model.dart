@@ -16,6 +16,7 @@ class TaskModel {
   final DateTime? startDate;
   final DateTime? endDate;
   final int memberCount; // Added for convenience
+  final Map<String, dynamic>? settlement; // [Bible 7.4] 結算快照
 
   TaskModel({
     required this.id,
@@ -31,6 +32,7 @@ class TaskModel {
     this.endDate,
     this.memberCount = 1,
     this.remainderAbsorberId,
+    this.settlement,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
@@ -49,6 +51,7 @@ class TaskModel {
         remainderAbsorberId: null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+        settlement: data!['settlement'] as Map<String, dynamic>?,
       );
     }
 
@@ -122,6 +125,7 @@ class TaskModel {
       'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
       'memberCount': memberCount,
+      'settlement': settlement,
     };
   }
 }

@@ -9,7 +9,13 @@
       "edit": "編集",
       "close": "閉じる",
       "discard": "破棄",
-      "keep_editing": "編集を続ける"
+      "keep_editing": "編集を続ける",
+      "refresh": "更新",
+      "ok": "OK"
+    },
+    "error": {
+      "title": "エラー",
+      "unknown": "不明なエラー: {error}"
     },
     "category": {
       "food": "食事",
@@ -229,7 +235,8 @@
     "type_income_title": "預り金",
     "base_card_title_expense": "残額 (Base)",
     "base_card_title_income": "資金提供者",
-    "payer_multiple": "複数人"
+    "payer_multiple": "複数人",
+    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）"
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
@@ -266,7 +273,7 @@
     "dialog_mark_cleared_title": "完了確認",
     "dialog_mark_cleared_content": "{name} を完了としてマークしますか？"
   },
-  "s30_settlement_confirm": {
+  "S30_settlement_confirm": {
     "title": "精算確認",
     "buttons": {
       "next": "受取設定"
@@ -288,7 +295,7 @@
       "remainder": "端数"
     }
   },
-  "s31_settlement_payment_info": {
+  "S31_settlement_payment_info": {
     "title": "受取情報",
     "setup_instruction": "今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。",
     "sync_save": "デフォルトの受取情報として保存（端末内）",
@@ -296,6 +303,19 @@
     "buttons": {
       "settle": "精算する",
       "prev_step": "前のステップに戻る"
+    }
+  },
+  "S32_settlement_result": {
+    "title": "精算完了",
+    "content": "すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。",
+    "waiting_reveal": "結果を確認中...",
+    "remainder_winner_prefix": "残額の受取先：",
+    "remainder_winner_total": "${winnerName}さんは${prefix} ${total}になります。",
+    "total_label": "今回の精算合計額",
+    "share_message": "精算が完了しました！\nIton Splitアプリを開いて「{taskName}」支払い金額をご確認ください。\nリンク：{link}",
+    "buttons": {
+      "share": "精算通知を送信",
+      "back": "タスクに戻る"
     }
   },
   "S52_TaskSettings_Log": {
@@ -380,6 +400,13 @@
     },
     "content": "この日付の記録は見つかりませんでした。追加しますか？"
   },
+  "D06_settlement_confirm": {
+    "title": "清算の確認",
+    "warning_text": "清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。",
+    "buttons": {
+      "confirm": "清算する"
+    }
+  },
   "D08_TaskClosed_Confirm": {
     "title": "タスク終了確認",
     "buttons": {
@@ -395,6 +422,14 @@
     "delete_record_title": "記録を削除？",
     "delete_record_content": "{title} ({amount}) を削除してもよろしいですか？",
     "deleted_success": "記録を削除しました"
+  },
+  "D11_random_result": {
+    "title": "残額ルーレット当選者",
+    "skip": "スキップ",
+    "winner_reveal": "あなたです！",
+    "buttons": {
+      "close": "OK"
+    }
   },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",
@@ -424,7 +459,6 @@
     "desc_even": "選択したメンバーで均等割",
     "desc_percent": "パーセンテージで配分",
     "desc_exact": "金額を手動で入力",
-    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）",
     "label_weight": "比例",
     "error_total_mismatch": "合計金額が一致しません (差額 {diff})"
   },
@@ -480,6 +514,15 @@
     "unknown": {
       "title": "エラー",
       "message": "予期せぬエラーが発生しました。"
+    },
+    "settlement": {
+      "data_conflict": {
+        "title": "データ更新あり",
+        "message": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。"
+      },
+      "status_invalid": "タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。",
+      "permission_denied": "精算を実行できるのは作成者のみです。",
+      "transaction_failed": "システムエラーが発生しました。後でもう一度お試しください。"
     }
   }
 }

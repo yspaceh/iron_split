@@ -2,7 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/error/exceptions.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/add_outlined_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/info_card.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
@@ -19,17 +25,28 @@ import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_ac
 
 class S31SettlementPaymentInfoPage extends StatelessWidget {
   final String taskId;
+  final double checkPointPoolBalance;
+  final Map<String, List<String>> mergeMap;
 
   // 實務上 S30 轉場時會把摘要資料傳過來 (extra)，這裡簡化處理
   const S31SettlementPaymentInfoPage({
     super.key,
     required this.taskId,
+    required this.checkPointPoolBalance,
+    required this.mergeMap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S31SettlementPaymentInfoViewModel(taskId: taskId)..init(),
+      create: (_) => S31SettlementPaymentInfoViewModel(
+        taskId: taskId,
+        checkPointPoolBalance: checkPointPoolBalance,
+        mergeMap: mergeMap,
+        settlementService: context.read<SettlementService>(),
+        taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
+      )..init(),
       child: const _S31Content(),
     );
   }
@@ -47,21 +64,96 @@ class _S31Content extends StatelessWidget {
 
     final vm = context.watch<S31SettlementPaymentInfoViewModel>();
 
-    void onSubmit() async {
-      final info = await vm.submit();
-      if (context.mounted) {
-        // 前往 D06 確認，並帶上 PaymentInfo
-        // context.pushNamed('D06', extra: info);
-        // [Demo]: 僅印出資料
+    Future<void> executeSettlement() async {
+      try {
+        // 執行結算
+        await vm.handleExecuteSettlement();
+
+        if (context.mounted) {
+          context.goNamed('S32', pathParameters: {'taskId': vm.taskId});
+        }
+      } on SettlementDataConflictException catch (_) {
+        // [異常處理] 資料變動
+        if (!context.mounted) return;
+
+        // 跳出警告 Dialog，並等待使用者按下按鈕
+        await CommonAlertDialog.show(
+          context,
+          title: t.error.settlement.data_conflict.title,
+          content: Text(
+            t.error.settlement.data_conflict.message,
+            style: theme.textTheme.bodyMedium,
+          ),
+          actions: [
+            AppButton(
+              text: t.common.buttons.back,
+              type: AppButtonType.primary,
+              // 按下後，只負責關閉 Dialog
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+
+        // Dialog 關閉後，執行退回 S30 (這會觸發 PopScope 的解鎖邏輯)
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      } on SettlementStatusInvalidException catch (_) {
+        if (!context.mounted) return;
+        CommonAlertDialog.show(
+          context,
+          title: t.common.error.title,
+          content: Text(t.error.settlement.status_invalid),
+          actions: [
+            AppButton(
+              text: t.common.buttons.ok,
+              type: AppButtonType.primary,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      } catch (e) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Data ready: ${info.mode.name}')));
+          SnackBar(
+            content: Text(t.common.error.unknown(error: e.toString())),
+            backgroundColor: theme.colorScheme.error,
+          ),
+        );
       }
+    }
+
+    Future<bool> showRateInfoDialog() async {
+      await CommonAlertDialog.show<bool>(
+        context,
+        title: t.D06_settlement_confirm.title, // "結算確認"
+        // 直接顯示純文字警告，不用再包 Column 或顯示金額
+        content: Text(
+          t.D06_settlement_confirm.warning_text,
+          style: textTheme.bodyMedium,
+        ),
+        actions: [
+          // 取消按鈕
+          AppButton(
+            text: t.common.buttons.cancel,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(false),
+          ),
+          // 確定結算按鈕
+          AppButton(
+            text: t.D06_settlement_confirm.buttons.confirm, // "確定結算"
+            type: AppButtonType.primary,
+            onPressed: () => context.pop(true),
+          ),
+        ],
+      );
+      return false;
     }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text(t.s31_settlement_payment_info.title), // 需新增 i18n
+        title: Text(t.S31_settlement_payment_info.title), // 需新增 i18n
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -80,42 +172,16 @@ class _S31Content extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 1. 頂部摘要 (Placeholder)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      // [M3]: 使用 surfaceContainer (或 surfaceContainerLow) 作為容器背景
-                      // 這比 secondaryContainer 更中性，適合這種「提示資訊」
-                      color: colorScheme.surfaceContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // 讓 Icon 對齊文字頂部
-                      children: [
-                        // 1. 左側 Icon (隱私/安全相關)
-                        Icon(
-                          Icons
-                              .privacy_tip_outlined, // 或 verified_user_outlined
-                          size: 24,
-                          color: colorScheme.primary, // 使用主色調來傳遞「系統保證」的信任感
-                        ),
-                        const SizedBox(width: 16), // M3 標準間距
-
-                        // 2. 右側說明文字
-                        Expanded(
-                          child: Text(
-                            t.s31_settlement_payment_info
-                                .setup_instruction, // 剛修訂過的精簡文案
-                            style: textTheme.bodyMedium?.copyWith(
-                              color:
-                                  colorScheme.onSurfaceVariant, // M3 建議的次要內容文字色
-                              height: 1.5, // 增加行高，提升閱讀舒適度
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ],
+                  InfoCard(
+                    icon: Icons.privacy_tip_outlined,
+                    child: Text(
+                      t.S31_settlement_payment_info
+                          .setup_instruction, // 剛修訂過的精簡文案
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant, // M3 建議的次要內容文字色
+                        height: 1.5, // 增加行高，提升閱讀舒適度
+                      ),
+                      textAlign: TextAlign.start,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -303,9 +369,9 @@ class _S31Content extends StatelessWidget {
                 onChanged: vm.toggleSync,
                 title: Text(
                   vm.isUpdate
-                      ? t.s31_settlement_payment_info
+                      ? t.S31_settlement_payment_info
                           .sync_update // "更新我的預設收款資訊"
-                      : t.s31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
+                      : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
                   style: textTheme.bodySmall
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -319,14 +385,19 @@ class _S31Content extends StatelessWidget {
           StickyBottomActionBar(
             children: [
               AppButton(
-                text: t.s31_settlement_payment_info.buttons.prev_step,
+                text: t.S31_settlement_payment_info.buttons.prev_step,
                 type: AppButtonType.secondary,
                 onPressed: () => context.pop(),
               ),
               AppButton(
-                text: t.s31_settlement_payment_info.buttons.settle, // "結算"
+                text: t.S31_settlement_payment_info.buttons.settle, // "結算"
                 type: AppButtonType.primary,
-                onPressed: onSubmit,
+                onPressed: () async {
+                  final bool shouldSettle = await showRateInfoDialog();
+                  if (shouldSettle == true && context.mounted) {
+                    await executeSettlement();
+                  }
+                },
               ),
             ],
           ),

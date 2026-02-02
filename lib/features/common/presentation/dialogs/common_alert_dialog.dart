@@ -1,99 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:iron_split/gen/strings.g.dart';
 
 class CommonAlertDialog extends StatelessWidget {
   final String title;
-  final String? content; // 改為可空，用於顯示純文字
-  final Widget? child; // 新增：用於顯示複雜內容 (如列表)
-  final String? confirmText;
-  final String? cancelText;
-  final bool isDestructive;
-  final bool? showCancel;
-  final VoidCallback? onConfirm;
-  final VoidCallback? onCancel;
+  final Widget? content;
+  final List<Widget>? actions;
 
   const CommonAlertDialog({
     super.key,
     required this.title,
     this.content,
-    this.child,
-    this.confirmText,
-    this.cancelText,
-    this.isDestructive = false,
-    this.showCancel,
-    this.onConfirm,
-    this.onCancel,
-  }) : assert(content != null || child != null,
-            'Content or child must be provided');
+    this.actions,
+  });
 
   /// Helper static method
-  static Future<void> show(
+  /// 1. 加入泛型 <T>，讓呼叫者決定回傳型別 (例如 bool, String, int)。
+  /// 2. 回傳 Future<T?>，這樣 showDialog 的結果才能傳出去。
+  /// 3. 如果呼叫時不指定 <T>，它預設就是 dynamic，不接值也沒問題（相容舊代碼）。
+  static Future<T?> show<T>(
     BuildContext context, {
     required String title,
-    String? content,
-    Widget? child, // 新增參數
-    String? confirmText,
-    String? cancelText,
-    bool isDestructive = false,
-    bool? showCancel,
-    VoidCallback? onConfirm,
-    VoidCallback? onCancel,
+    Widget? content,
+    List<Widget>? actions,
   }) {
     return showDialog(
       context: context,
       builder: (context) => CommonAlertDialog(
         title: title,
         content: content,
-        child: child,
-        confirmText: confirmText,
-        cancelText: cancelText,
-        isDestructive: isDestructive,
-        showCancel: showCancel,
-        onConfirm: onConfirm,
-        onCancel: onCancel,
+        actions: actions,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context);
     final theme = Theme.of(context);
-
-    final bool shouldShowCancel = showCancel ?? (onConfirm != null);
 
     return AlertDialog(
       title: Text(title, style: theme.textTheme.titleLarge),
-      // 核心修改：優先使用 child，沒有才用 Text
-      content: child ?? Text(content ?? '', style: theme.textTheme.bodyMedium),
-      // 統一使用 Scrollable，避免內容過長爆版
+      content: content, // 如果 content 為 null，AlertDialog 會自動處理佈局
       scrollable: true,
-      actions: [
-        if (shouldShowCancel)
-          TextButton(
-            onPressed: () {
-              context.pop();
-              if (onCancel != null) onCancel!();
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurfaceVariant,
-            ),
-            child: Text(cancelText ?? t.common.buttons.cancel),
-          ),
-        TextButton(
-          onPressed: () {
-            context.pop();
-            if (onConfirm != null) onConfirm!();
-          },
-          style: TextButton.styleFrom(
-            foregroundColor: isDestructive
-                ? theme.colorScheme.error
-                : theme.colorScheme.primary,
-          ),
-          child: Text(confirmText ?? t.common.buttons.confirm),
-        ),
-      ],
+      actions: actions,
+      actionsPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
     );
   }
 }

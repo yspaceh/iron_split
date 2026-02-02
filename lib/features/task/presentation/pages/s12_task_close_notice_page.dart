@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -51,11 +52,19 @@ class _S12Content extends StatelessWidget {
     CommonAlertDialog.show(
       context,
       title: t.D08_TaskClosed_Confirm.title,
-      content: t.D08_TaskClosed_Confirm.content,
-      confirmText: t.D08_TaskClosed_Confirm.buttons.confirm,
-      isDestructive: true, // 啟用紅色警示
-      showCancel: true, // 強制顯示取消按鈕
-      onConfirm: () => _handleClose(context, vm),
+      content: Text(t.D08_TaskClosed_Confirm.content),
+      actions: [
+        AppButton(
+          text: t.common.buttons.cancel,
+          type: AppButtonType.secondary,
+          onPressed: () => context.pop(),
+        ),
+        AppButton(
+          text: t.D08_TaskClosed_Confirm.buttons.confirm,
+          type: AppButtonType.primary,
+          onPressed: () => _handleClose(context, vm),
+        ),
+      ],
     );
   }
 

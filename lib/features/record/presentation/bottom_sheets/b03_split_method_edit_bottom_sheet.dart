@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
+import 'package:iron_split/features/common/presentation/widgets/remainder_bar.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -116,87 +118,13 @@ class _B03SplitMethodEditBottomSheetState
 
   // --- Logic Helpers ---
 
-  /// 計算分攤結果
-  /// Returns:
-  /// - sourceAmounts: 每個成員應付的 Source Currency 金額 (用於 UI 顯示)
-  /// - baseAmounts: 每個成員應付的 Base Currency 金額 (用於 UI 顯示近似值)
-  /// - baseRemainder: 轉換為 Base Currency 後的餘額 (用於存入 Buffer)
-  ({
-    Map<String, double> sourceAmounts,
-    Map<String, double> baseAmounts,
-    double baseRemainder
-  }) _calculateSplit() {
-    final Map<String, double> sourceAmounts = {};
-    final Map<String, double> baseAmounts = {};
-
-    // 1. 計算 Base Total (Anchor)
-    final baseTotal =
-        (widget.totalAmount * widget.exchangeRate).roundToDouble();
-
-    // 2. 計算 Total Weight
-    double totalWeight = 0.0;
-
-    if (_splitMethod == SplitMethodConstants.even) {
-      totalWeight = _selectedMemberIds.length.toDouble();
-    } else if (_splitMethod == SplitMethodConstants.percent) {
-      // Fix Math: 只計算選中成員的權重
-      for (var id in _selectedMemberIds) {
-        totalWeight += _details[id] ?? 0.0;
-      }
-    } else if (_splitMethod == SplitMethodConstants.exact) {
-      // Exact 模式不使用權重
-      totalWeight = 1.0;
-    }
-
-    // 3. 計算每個人的 Base Share 和 Source Share
-    double allocatedBase = 0.0;
-
-    if (_splitMethod == SplitMethodConstants.exact) {
-      // Exact 模式：直接使用使用者輸入的 Source Amount
-      for (var id in _selectedMemberIds) {
-        final sourceAmount = _details[id] ?? 0.0;
-        sourceAmounts[id] = sourceAmount;
-
-        // 轉換為 Base Share (近似)
-        final baseShare = (sourceAmount * widget.exchangeRate).floorToDouble();
-        baseAmounts[id] = baseShare;
-        allocatedBase += baseShare;
-      }
-    } else {
-      // Even & Percent 模式
-      if (totalWeight > 0) {
-        for (var id in _selectedMemberIds) {
-          double weight = 0.0;
-          if (_splitMethod == SplitMethodConstants.even) {
-            weight = 1.0;
-          } else {
-            weight = _details[id] ?? 0.0;
-          }
-
-          final ratio = weight / totalWeight;
-
-          // A. Source Currency Calculation (For Display)
-          // 保留兩位小數
-          final sourceShare =
-              (widget.totalAmount * ratio * 100).floorToDouble() / 100;
-          sourceAmounts[id] = sourceShare;
-
-          // B. Base Currency Calculation (For Buffer)
-          // Project Bible 5.8: Floor(BaseTotal * Weight / TotalWeight)
-          final baseShare = (baseTotal * ratio).floorToDouble();
-          baseAmounts[id] = baseShare;
-          allocatedBase += baseShare;
-        }
-      }
-    }
-
-    // 4. 計算 Base Remainder
-    final baseRemainder = baseTotal - allocatedBase;
-
-    return (
-      sourceAmounts: sourceAmounts,
-      baseAmounts: baseAmounts,
-      baseRemainder: baseRemainder
+  SplitResult _getSplitResult() {
+    return BalanceCalculator.calculateSplit(
+      totalAmount: widget.totalAmount,
+      exchangeRate: widget.exchangeRate,
+      splitMethod: _splitMethod,
+      memberIds: _selectedMemberIds,
+      details: _details,
     );
   }
 
@@ -373,10 +301,10 @@ class _B03SplitMethodEditBottomSheetState
     final theme = Theme.of(context);
 
     // 使用新的計算邏輯
-    final result = _calculateSplit();
+    final result = _getSplitResult();
     final sourceAmounts = result.sourceAmounts;
     final baseAmounts = result.baseAmounts;
-    final baseRemainder = result.baseRemainder;
+    final baseRemainder = result.remainder;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,30 +389,9 @@ class _B03SplitMethodEditBottomSheetState
         if (baseRemainder > 0)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.tertiaryContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.savings,
-                      color: theme.colorScheme.onTertiaryContainer, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      t.B03_SplitMethod_Edit.msg_leftover_pot(
-                          amount:
-                              "$baseRemainder ${widget.baseCurrency.symbol}"),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.onTertiaryContainer),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: RemainderBar(
+                baseCurrency: widget.baseCurrency,
+                baseRemainder: baseRemainder),
           ),
       ],
     );
@@ -495,10 +402,10 @@ class _B03SplitMethodEditBottomSheetState
     // Pass t
     final theme = Theme.of(context);
 
-    final result = _calculateSplit();
+    final result = _getSplitResult();
     final sourceAmounts = result.sourceAmounts;
     final baseAmounts = result.baseAmounts;
-    final baseRemainder = result.baseRemainder;
+    final baseRemainder = result.remainder;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -640,33 +547,13 @@ class _B03SplitMethodEditBottomSheetState
             ),
           );
         }),
+        // 餘額提示 (Base Currency Remainder)
         if (baseRemainder > 0)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.tertiaryContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.savings,
-                      color: theme.colorScheme.onTertiaryContainer, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      t.B03_SplitMethod_Edit.msg_leftover_pot(
-                          amount:
-                              "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseRemainder, widget.baseCurrency.code)}"),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.onTertiaryContainer),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: RemainderBar(
+                baseCurrency: widget.baseCurrency,
+                baseRemainder: baseRemainder),
           ),
       ],
     );
@@ -678,6 +565,8 @@ class _B03SplitMethodEditBottomSheetState
     final currentSum = _details.values.fold(0.0, (sum, v) => sum + v);
     final remaining = widget.totalAmount - currentSum;
     final isMatched = remaining.abs() < 0.1;
+    final splitResult = _getSplitResult();
+    final baseRemainder = splitResult.remainder;
 
     return Column(
       children: [
@@ -808,6 +697,14 @@ class _B03SplitMethodEditBottomSheetState
             ),
           );
         }),
+        // 餘額提示 (Base Currency Remainder)
+        if (baseRemainder > 0)
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: RemainderBar(
+                baseCurrency: widget.baseCurrency,
+                baseRemainder: baseRemainder),
+          ),
       ],
     );
   }

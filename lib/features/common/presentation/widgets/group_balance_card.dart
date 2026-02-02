@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'dart:ui' as ui;
@@ -37,9 +39,14 @@ class GroupBalanceCard extends StatelessWidget {
     void showBalanceDetails() {
       CommonAlertDialog.show(context,
           title: t.S13_Task_Dashboard.dialog_balance_detail,
-          showCancel: false, // 純資訊顯示，不用取消按鈕
-          confirmText: t.common.buttons.close, // 按鈕改叫「關閉」
-          child: Column(
+          actions: [
+            AppButton(
+              text: t.common.buttons.close,
+              type: AppButtonType.primary,
+              onPressed: () => context.pop(),
+            ),
+          ],
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -74,9 +81,14 @@ class GroupBalanceCard extends StatelessWidget {
           state.poolDetail.entries.where((e) => e.value.abs() > 0.01).toList();
       CommonAlertDialog.show(context,
           title: t.S13_Task_Dashboard.dialog_balance_detail,
-          showCancel: false,
-          confirmText: t.common.buttons.close,
-          child: Column(
+          actions: [
+            AppButton(
+              text: t.common.buttons.close,
+              type: AppButtonType.secondary,
+              onPressed: () => context.pop(),
+            ),
+          ],
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

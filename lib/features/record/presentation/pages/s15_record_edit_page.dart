@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -192,9 +193,14 @@ class _S15ContentState extends State<_S15Content> {
     CommonAlertDialog.show(
       context,
       title: t.S15_Record_Edit.info_rate_source,
-      content: t.S15_Record_Edit.msg_rate_source,
-      confirmText: t.S15_Record_Edit.buttons.close,
-      onConfirm: () => Navigator.pop(context),
+      content: Text(t.S15_Record_Edit.msg_rate_source),
+      actions: [
+        AppButton(
+          text: t.common.buttons.close,
+          type: AppButtonType.primary,
+          onPressed: () => context.pop(),
+        ),
+      ],
     );
   }
 
@@ -362,6 +368,7 @@ class _S15ContentState extends State<_S15Content> {
                       baseRemainingAmount: vm.baseRemainingAmount,
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
+                      baseRawDetails: vm.baseRawDetails,
                       payerType: vm.payerType,
                       payerId: vm.payerId,
                       hasPaymentError: vm.hasPaymentError,
@@ -387,6 +394,7 @@ class _S15ContentState extends State<_S15Content> {
                       baseRemainingAmount: vm.totalAmount,
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
+                      baseRawDetails: vm.baseRawDetails,
                       onDateTap: () => _onDateTap(vm),
                       onCurrencyTap: () => _onCurrencyTap(vm),
                       onFetchExchangeRate: vm.fetchExchangeRate,

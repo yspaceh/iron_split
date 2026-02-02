@@ -1,6 +1,18 @@
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
+class SplitResult {
+  final Map<String, double> sourceAmounts; // 顯示用 (原始幣別)
+  final Map<String, double> baseAmounts; // 內部用 (基準幣別)
+  final double remainder; // 零頭 (基準幣別)
+
+  SplitResult({
+    required this.sourceAmounts,
+    required this.baseAmounts,
+    required this.remainder,
+  });
+}
+
 class BalanceCalculator {
   /// 計算特定使用者的淨餘額 (Net Balance)
   /// 公式：(總支付 Credit) - (總消費 Debit)
@@ -128,34 +140,10 @@ class BalanceCalculator {
   static double calculateRemainderBuffer(List<RecordModel> records) {
     double totalBuffer = 0.0;
     for (var r in records) {
-      final double baseTotal = r.originalAmount * r.exchangeRate;
-      double allocatedBase = 0.0;
-
-      if (r.type == 'expense') {
-        // 支出：算出實際分攤總額 (通常因 Floor 而小於 baseTotal)
-        if (r.splitMethod == SplitMethodConstants.even &&
-            r.splitMemberIds.isNotEmpty) {
-          double perPerson =
-              (baseTotal / r.splitMemberIds.length).floorToDouble();
-          allocatedBase = perPerson * r.splitMemberIds.length;
-        } else {
-          allocatedBase = baseTotal;
-        }
-        totalBuffer += (baseTotal - allocatedBase); // 剩餘的錢進罐子 (+)
-      } else {
-        // 預收：算出實際收到的總額
-        if (r.splitMethod == SplitMethodConstants.even &&
-            r.splitMemberIds.isNotEmpty) {
-          double perPerson =
-              (baseTotal / r.splitMemberIds.length).floorToDouble();
-          allocatedBase = perPerson * r.splitMemberIds.length;
-        } else {
-          allocatedBase = baseTotal;
-        }
-        totalBuffer += (allocatedBase - baseTotal); // 多收為正，少收為負
-      }
+      // 直接累加，不再重跑分配演算法
+      totalBuffer += r.remainder;
     }
-    return totalBuffer;
+    return double.parse(totalBuffer.toStringAsFixed(2));
   }
 
   // --- 私有計算邏輯 ---
@@ -326,5 +314,79 @@ class BalanceCalculator {
       }
     }
     return balances;
+  }
+
+  /// [核心修正] 全站統一的分帳計算機
+  /// 輸入：總金額、匯率、分帳設定
+  /// 輸出：完整的分配結果 (包含 UI 要顯示的金額 + 存檔要用的零頭)
+  static SplitResult calculateSplit({
+    required double totalAmount,
+    required double exchangeRate,
+    required String splitMethod,
+    required List<String> memberIds,
+    required Map<String, double> details, // 權重或金額設定
+  }) {
+    final Map<String, double> sourceAmounts = {};
+    final Map<String, double> baseAmounts = {};
+
+    // 1. Base Total (四捨五入)
+    final double baseTotal = (totalAmount * exchangeRate).roundToDouble();
+
+    // 2. 計算總權重
+    double totalWeight = 0.0;
+    if (splitMethod == SplitMethodConstants.even) {
+      totalWeight = memberIds.length.toDouble();
+    } else if (splitMethod == SplitMethodConstants.percent) {
+      for (var id in memberIds) {
+        totalWeight += details[id] ?? 0.0;
+      }
+    }
+
+    // 3. 計算分配
+    double allocatedBaseSum = 0.0;
+
+    // A. Exact Mode
+    if (splitMethod == SplitMethodConstants.exact) {
+      for (var id in memberIds) {
+        final sourceAmount = details[id] ?? 0.0;
+        sourceAmounts[id] = sourceAmount;
+
+        // Exact 模式的零頭來自匯率換算的 floor
+        final baseShare = (sourceAmount * exchangeRate).floorToDouble();
+        baseAmounts[id] = baseShare;
+        allocatedBaseSum += baseShare;
+      }
+    }
+    // B. Even / Percent Mode
+    else {
+      if (totalWeight > 0) {
+        for (var id in memberIds) {
+          double weight = (splitMethod == SplitMethodConstants.even)
+              ? 1.0
+              : (details[id] ?? 0.0);
+
+          final ratio = weight / totalWeight;
+
+          // Source Share (Display): 顯示用，取小數點兩位 floor
+          final sourceShare = (totalAmount * ratio * 100).floorToDouble() / 100;
+          sourceAmounts[id] = sourceShare;
+
+          // Base Share (Logic): 邏輯用，轉 Base Currency 後 floor
+          final baseShare = (baseTotal * ratio).floorToDouble();
+          baseAmounts[id] = baseShare;
+          allocatedBaseSum += baseShare;
+        }
+      }
+    }
+
+    // 4. 算出零頭
+    double remainder = baseTotal - allocatedBaseSum;
+    remainder = double.parse(remainder.toStringAsFixed(3)); // 消除浮點誤差
+
+    return SplitResult(
+      sourceAmounts: sourceAmounts,
+      baseAmounts: baseAmounts,
+      remainder: remainder,
+    );
   }
 }

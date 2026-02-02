@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/core/services/calculation_service.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/remainder_bar.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -33,6 +33,7 @@ class S15ExpenseForm extends StatelessWidget {
   final double baseRemainingAmount;
   final String baseSplitMethod;
   final List<String> baseMemberIds;
+  final Map<String, double> baseRawDetails;
 
   // 4. 接收支付狀態
   final String payerType;
@@ -79,6 +80,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.onAddItemTap,
     required this.onDetailEditTap,
     required this.poolBalancesByCurrency,
+    required this.baseRawDetails,
   });
 
   // 支援多種支付型態顯示
@@ -117,6 +119,36 @@ class S15ExpenseForm extends StatelessWidget {
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrencyConstants;
+
+    final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
+    double totalRemainder = 0.0;
+
+    // A. 累加所有細項 (Details) 的零頭
+    for (var detail in details) {
+      final result = BalanceCalculator.calculateSplit(
+        totalAmount: detail.amount,
+        exchangeRate: rate,
+        splitMethod: detail.splitMethod,
+        memberIds: detail.splitMemberIds,
+        details: detail.splitDetails ?? {},
+      );
+      totalRemainder += result.remainder;
+    }
+
+    // B. 累加剩餘金額 (Base Remaining) 的零頭 (如果有剩)
+    if (baseRemainingAmount > 0 || details.isEmpty) {
+      final result = BalanceCalculator.calculateSplit(
+        totalAmount: baseRemainingAmount,
+        exchangeRate: rate,
+        splitMethod: baseSplitMethod,
+        memberIds: baseMemberIds,
+        details: baseRawDetails, // [注意] 必須傳入 baseRawDetails 才能算準
+      );
+      totalRemainder += result.remainder;
+    }
+
+    // C. 消除浮點數誤差
+    totalRemainder = double.parse(totalRemainder.toStringAsFixed(3));
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -222,20 +254,22 @@ class S15ExpenseForm extends StatelessWidget {
               ),
             ),
           ),
-          ...details.map((detail) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: RecordCard(
-                  t: t,
-                  selectedCurrencyConstants: selectedCurrencyConstants,
-                  members: members,
-                  amount: detail.amount,
-                  methodLabel: detail.splitMethod,
-                  memberIds: detail.splitMemberIds,
-                  note: detail.name,
-                  isBaseCard: false,
-                  onTap: () => onDetailEditTap(detail),
-                ),
-              )),
+          ...details.map(
+            (detail) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: RecordCard(
+                t: t,
+                selectedCurrencyConstants: selectedCurrencyConstants,
+                members: members,
+                amount: detail.amount,
+                methodLabel: detail.splitMethod,
+                memberIds: detail.splitMemberIds,
+                note: detail.name,
+                isBaseCard: false,
+                onTap: () => onDetailEditTap(detail),
+              ),
+            ),
+          ),
         ],
         if (baseRemainingAmount > 0 || details.isEmpty) ...[
           RecordCard(
@@ -252,34 +286,14 @@ class S15ExpenseForm extends StatelessWidget {
             showSplitAction: baseRemainingAmount > 0,
             onSplitTap: onAddItemTap,
           ),
-          if (baseSplitMethod == SplitMethodConstants.even &&
-              baseMemberIds.isNotEmpty)
-            Builder(
-              builder: (context) {
-                final rate =
-                    double.tryParse(exchangeRateController.text) ?? 1.0;
-                final baseTotal = CalculationService.calculateBaseTotal(
-                    baseRemainingAmount, rate);
-                final split = CalculationService.calculateEvenSplit(
-                    baseTotal, baseMemberIds.length);
-                if (split.remainder > 0) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: Text(
-                      t.S13_Task_Dashboard.label_remainder(
-                          amount:
-                              "${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(split.remainder, baseCurrencyConstants.code)}"),
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: theme.colorScheme.outline),
-                      textAlign: TextAlign.end,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
         ],
+        if (totalRemainder > 0)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: RemainderBar(
+                baseCurrency: baseCurrencyConstants,
+                baseRemainder: totalRemainder),
+          ),
         const SizedBox(height: 16),
         TaskMemoInput(
           memoController: memoController,

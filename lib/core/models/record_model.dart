@@ -60,13 +60,10 @@ class RecordModel {
   final String payerType; // 'member', 'prepay'
   final String? payerId;
   final Map<String, dynamic>? paymentDetails;
-
-  // --- 資料庫原始欄位 (保持不變以相容 Firestore) ---
   final double amount; // 存入 DB 的金額
   final String currencyCode; // 存入 DB 的幣別代碼 (String)
   final double exchangeRate; // 匯率
-  // ----------------------------------------------
-
+  final double remainder;
   final String splitMethod;
   final List<String> splitMemberIds;
   final Map<String, double>? splitDetails;
@@ -88,6 +85,7 @@ class RecordModel {
     required this.amount,
     required this.currencyCode,
     this.exchangeRate = 1.0,
+    this.remainder = 0.0,
     this.splitMethod = SplitMethodConstants.defaultMethod,
     this.splitMemberIds = const [],
     this.splitDetails,
@@ -128,6 +126,7 @@ class RecordModel {
     double? amount,
     String? currencyCode,
     double? exchangeRate,
+    double? remainder,
     String? splitMethod,
     List<String>? splitMemberIds,
     Map<String, double>? splitDetails,
@@ -149,6 +148,7 @@ class RecordModel {
       amount: amount ?? this.amount,
       currencyCode: currencyCode ?? this.currencyCode,
       exchangeRate: exchangeRate ?? this.exchangeRate,
+      remainder: remainder ?? this.remainder,
       splitMethod: splitMethod ?? this.splitMethod,
       splitMemberIds: splitMemberIds ?? this.splitMemberIds,
       splitDetails: splitDetails ?? this.splitDetails,
@@ -173,6 +173,7 @@ class RecordModel {
       'amount': amount,
       'currency': currencyCode,
       'exchangeRate': exchangeRate,
+      'remainder': remainder,
       'splitMethod': splitMethod,
       'splitMemberIds': splitMemberIds,
       'splitDetails': splitDetails,
@@ -203,7 +204,7 @@ class RecordModel {
       amount: (data['amount'] ?? 0).toDouble(),
       currencyCode: data['currency'] ?? CurrencyConstants.defaultCode,
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
-
+      remainder: (data['remainder'] ?? 0).toDouble(),
       splitMethod: data['splitMethod'] ?? SplitMethodConstants.defaultMethod,
       splitMemberIds: List<String>.from(data['splitMemberIds'] ?? []),
       splitDetails: data['splitDetails'] != null

@@ -52,8 +52,9 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
-	@override late final _TranslationsS30SettlementConfirmJaJp s30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
-	@override late final _TranslationsS31SettlementPaymentInfoJaJp s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
+	@override late final _TranslationsS30SettlementConfirmJaJp S30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoJaJp S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
+	@override late final _TranslationsS32SettlementResultJaJp S32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
@@ -61,9 +62,11 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
 	@override late final _TranslationsD05DateJumpNoResultJaJp D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJaJp._(_root);
+	@override late final _TranslationsD06SettlementConfirmJaJp D06_settlement_confirm = _TranslationsD06SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsD08TaskClosedConfirmJaJp D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmJaJp._(_root);
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
+	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB04PaymentMergeJaJp b04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
@@ -79,6 +82,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 
 	// Translations
 	@override late final _TranslationsCommonButtonsJaJp buttons = _TranslationsCommonButtonsJaJp._(_root);
+	@override late final _TranslationsCommonErrorJaJp error = _TranslationsCommonErrorJaJp._(_root);
 	@override late final _TranslationsCommonCategoryJaJp category = _TranslationsCommonCategoryJaJp._(_root);
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
@@ -298,6 +302,7 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_expense => '残額 (Base)';
 	@override String get base_card_title_income => '資金提供者';
 	@override String get payer_multiple => '複数人';
+	@override String msg_leftover_pot({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -342,7 +347,7 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	@override String dialog_mark_cleared_content({required Object name}) => '${name} を完了としてマークしますか？';
 }
 
-// Path: s30_settlement_confirm
+// Path: S30_settlement_confirm
 class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementConfirmZhTw {
 	_TranslationsS30SettlementConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -358,7 +363,7 @@ class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementCon
 	@override late final _TranslationsS30SettlementConfirmListItemJaJp list_item = _TranslationsS30SettlementConfirmListItemJaJp._(_root);
 }
 
-// Path: s31_settlement_payment_info
+// Path: S31_settlement_payment_info
 class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31SettlementPaymentInfoZhTw {
 	_TranslationsS31SettlementPaymentInfoJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -370,6 +375,23 @@ class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31Settlemen
 	@override String get sync_save => 'デフォルトの受取情報として保存（端末内）';
 	@override String get sync_update => '自分のデフォルト受取情報を同期更新';
 	@override late final _TranslationsS31SettlementPaymentInfoButtonsJaJp buttons = _TranslationsS31SettlementPaymentInfoButtonsJaJp._(_root);
+}
+
+// Path: S32_settlement_result
+class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResultZhTw {
+	_TranslationsS32SettlementResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '精算完了';
+	@override String get content => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。';
+	@override String get waiting_reveal => '結果を確認中...';
+	@override String get remainder_winner_prefix => '残額の受取先：';
+	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。';
+	@override String get total_label => '今回の精算合計額';
+	@override String share_message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
+	@override late final _TranslationsS32SettlementResultButtonsJaJp buttons = _TranslationsS32SettlementResultButtonsJaJp._(_root);
 }
 
 // Path: S52_TaskSettings_Log
@@ -482,6 +504,18 @@ class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResu
 	@override String get content => 'この日付の記録は見つかりませんでした。追加しますか？';
 }
 
+// Path: D06_settlement_confirm
+class _TranslationsD06SettlementConfirmJaJp extends TranslationsD06SettlementConfirmZhTw {
+	_TranslationsD06SettlementConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '清算の確認';
+	@override String get warning_text => '清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。';
+	@override late final _TranslationsD06SettlementConfirmButtonsJaJp buttons = _TranslationsD06SettlementConfirmButtonsJaJp._(_root);
+}
+
 // Path: D08_TaskClosed_Confirm
 class _TranslationsD08TaskClosedConfirmJaJp extends TranslationsD08TaskClosedConfirmZhTw {
 	_TranslationsD08TaskClosedConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -515,6 +549,19 @@ class _TranslationsD10RecordDeleteConfirmJaJp extends TranslationsD10RecordDelet
 	@override String get delete_record_title => '記録を削除？';
 	@override String delete_record_content({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？';
 	@override String get deleted_success => '記録を削除しました';
+}
+
+// Path: D11_random_result
+class _TranslationsD11RandomResultJaJp extends TranslationsD11RandomResultZhTw {
+	_TranslationsD11RandomResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '残額ルーレット当選者';
+	@override String get skip => 'スキップ';
+	@override String get winner_reveal => 'あなたです！';
+	@override late final _TranslationsD11RandomResultButtonsJaJp buttons = _TranslationsD11RandomResultButtonsJaJp._(_root);
 }
 
 // Path: B02_SplitExpense_Edit
@@ -554,7 +601,6 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	@override String get desc_even => '選択したメンバーで均等割';
 	@override String get desc_percent => 'パーセンテージで配分';
 	@override String get desc_exact => '金額を手動で入力';
-	@override String msg_leftover_pot({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）';
 	@override String get label_weight => '比例';
 	@override String error_total_mismatch({required Object diff}) => '合計金額が一致しません (差額 ${diff})';
 }
@@ -611,6 +657,7 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredJaJp authRequired = _TranslationsErrorAuthRequiredJaJp._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskJaJp alreadyInTask = _TranslationsErrorAlreadyInTaskJaJp._(_root);
 	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
+	@override late final _TranslationsErrorSettlementJaJp settlement = _TranslationsErrorSettlementJaJp._(_root);
 }
 
 // Path: common.buttons
@@ -629,6 +676,19 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get close => '閉じる';
 	@override String get discard => '破棄';
 	@override String get keep_editing => '編集を続ける';
+	@override String get refresh => '更新';
+	@override String get ok => 'OK';
+}
+
+// Path: common.error
+class _TranslationsCommonErrorJaJp extends TranslationsCommonErrorZhTw {
+	_TranslationsCommonErrorJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'エラー';
+	@override String unknown({required Object error}) => '不明なエラー: ${error}';
 }
 
 // Path: common.category
@@ -804,7 +864,7 @@ class _TranslationsS17TaskLockedButtonsJaJp extends TranslationsS17TaskLockedBut
 	@override String get view_payment_details => '支払/受取口座を確認';
 }
 
-// Path: s30_settlement_confirm.buttons
+// Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -814,7 +874,7 @@ class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30Settle
 	@override String get next => '受取設定';
 }
 
-// Path: s30_settlement_confirm.steps
+// Path: S30_settlement_confirm.steps
 class _TranslationsS30SettlementConfirmStepsJaJp extends TranslationsS30SettlementConfirmStepsZhTw {
 	_TranslationsS30SettlementConfirmStepsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -825,7 +885,7 @@ class _TranslationsS30SettlementConfirmStepsJaJp extends TranslationsS30Settleme
 	@override String get payment_info => '受取設定';
 }
 
-// Path: s30_settlement_confirm.warning
+// Path: S30_settlement_confirm.warning
 class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30SettlementConfirmWarningZhTw {
 	_TranslationsS30SettlementConfirmWarningJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -835,7 +895,7 @@ class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30Settle
 	@override String get random_reveal => '端数は決済確定後に公開されます！';
 }
 
-// Path: s30_settlement_confirm.list_item
+// Path: S30_settlement_confirm.list_item
 class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30SettlementConfirmListItemZhTw {
 	_TranslationsS30SettlementConfirmListItemJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -849,7 +909,7 @@ class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30Settl
 	@override String get remainder => '端数';
 }
 
-// Path: s31_settlement_payment_info.buttons
+// Path: S31_settlement_payment_info.buttons
 class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	_TranslationsS31SettlementPaymentInfoButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -858,6 +918,17 @@ class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31Se
 	// Translations
 	@override String get settle => '精算する';
 	@override String get prev_step => '前のステップに戻る';
+}
+
+// Path: S32_settlement_result.buttons
+class _TranslationsS32SettlementResultButtonsJaJp extends TranslationsS32SettlementResultButtonsZhTw {
+	_TranslationsS32SettlementResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get share => '精算通知を送信';
+	@override String get back => 'タスクに戻る';
 }
 
 // Path: S52_TaskSettings_Log.buttons
@@ -937,6 +1008,16 @@ class _TranslationsD05DateJumpNoResultButtonsJaJp extends TranslationsD05DateJum
 	@override String get add => '記録を追加';
 }
 
+// Path: D06_settlement_confirm.buttons
+class _TranslationsD06SettlementConfirmButtonsJaJp extends TranslationsD06SettlementConfirmButtonsZhTw {
+	_TranslationsD06SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm => '清算する';
+}
+
 // Path: D08_TaskClosed_Confirm.buttons
 class _TranslationsD08TaskClosedConfirmButtonsJaJp extends TranslationsD08TaskClosedConfirmButtonsZhTw {
 	_TranslationsD08TaskClosedConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -945,6 +1026,16 @@ class _TranslationsD08TaskClosedConfirmButtonsJaJp extends TranslationsD08TaskCl
 
 	// Translations
 	@override String get confirm => '確認';
+}
+
+// Path: D11_random_result.buttons
+class _TranslationsD11RandomResultButtonsJaJp extends TranslationsD11RandomResultButtonsZhTw {
+	_TranslationsD11RandomResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get close => 'OK';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1044,6 +1135,30 @@ class _TranslationsErrorUnknownJaJp extends TranslationsErrorUnknownZhTw {
 	@override String get message => '予期せぬエラーが発生しました。';
 }
 
+// Path: error.settlement
+class _TranslationsErrorSettlementJaJp extends TranslationsErrorSettlementZhTw {
+	_TranslationsErrorSettlementJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsErrorSettlementDataConflictJaJp data_conflict = _TranslationsErrorSettlementDataConflictJaJp._(_root);
+	@override String get status_invalid => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
+	@override String get permission_denied => '精算を実行できるのは作成者のみです。';
+	@override String get transaction_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
+}
+
+// Path: error.settlement.data_conflict
+class _TranslationsErrorSettlementDataConflictJaJp extends TranslationsErrorSettlementDataConflictZhTw {
+	_TranslationsErrorSettlementDataConflictJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'データ更新あり';
+	@override String get message => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
+}
+
 /// The flat map containing all translations for locale <ja-JP>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1061,6 +1176,10 @@ extension on TranslationsJaJp {
 			'common.buttons.close' => '閉じる',
 			'common.buttons.discard' => '破棄',
 			'common.buttons.keep_editing' => '編集を続ける',
+			'common.buttons.refresh' => '更新',
+			'common.buttons.ok' => 'OK',
+			'common.error.title' => 'エラー',
+			'common.error.unknown' => ({required Object error}) => '不明なエラー: ${error}',
 			'common.category.food' => '食事',
 			'common.category.transport' => '交通',
 			'common.category.shopping' => '買い物',
@@ -1240,6 +1359,7 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.base_card_title_expense' => '残額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金提供者',
 			'S15_Record_Edit.payer_multiple' => '複数人',
+			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '完了',
@@ -1267,24 +1387,33 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.member_payment_status_receive' => '受取',
 			'S17_Task_Locked.dialog_mark_cleared_title' => '完了確認',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '${name} を完了としてマークしますか？',
-			's30_settlement_confirm.title' => '精算確認',
-			's30_settlement_confirm.buttons.next' => '受取設定',
-			's30_settlement_confirm.steps.confirm_amount' => '金額確認',
-			's30_settlement_confirm.steps.payment_info' => '受取設定',
-			's30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます！',
-			's30_settlement_confirm.label_payable' => '支払',
-			's30_settlement_confirm.label_refund' => '返金',
-			's30_settlement_confirm.list_item.merged_label' => '代表メンバー',
-			's30_settlement_confirm.list_item.includes' => '内訳：',
-			's30_settlement_confirm.list_item.principal' => '元金',
-			's30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
-			's30_settlement_confirm.list_item.remainder' => '端数',
-			's31_settlement_payment_info.title' => '受取情報',
-			's31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
-			's31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
-			's31_settlement_payment_info.sync_update' => '自分のデフォルト受取情報を同期更新',
-			's31_settlement_payment_info.buttons.settle' => '精算する',
-			's31_settlement_payment_info.buttons.prev_step' => '前のステップに戻る',
+			'S30_settlement_confirm.title' => '精算確認',
+			'S30_settlement_confirm.buttons.next' => '受取設定',
+			'S30_settlement_confirm.steps.confirm_amount' => '金額確認',
+			'S30_settlement_confirm.steps.payment_info' => '受取設定',
+			'S30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます！',
+			'S30_settlement_confirm.label_payable' => '支払',
+			'S30_settlement_confirm.label_refund' => '返金',
+			'S30_settlement_confirm.list_item.merged_label' => '代表メンバー',
+			'S30_settlement_confirm.list_item.includes' => '内訳：',
+			'S30_settlement_confirm.list_item.principal' => '元金',
+			'S30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
+			'S30_settlement_confirm.list_item.remainder' => '端数',
+			'S31_settlement_payment_info.title' => '受取情報',
+			'S31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
+			'S31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
+			'S31_settlement_payment_info.sync_update' => '自分のデフォルト受取情報を同期更新',
+			'S31_settlement_payment_info.buttons.settle' => '精算する',
+			'S31_settlement_payment_info.buttons.prev_step' => '前のステップに戻る',
+			'S32_settlement_result.title' => '精算完了',
+			'S32_settlement_result.content' => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。',
+			'S32_settlement_result.waiting_reveal' => '結果を確認中...',
+			'S32_settlement_result.remainder_winner_prefix' => '残額の受取先：',
+			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。',
+			'S32_settlement_result.total_label' => '今回の精算合計額',
+			'S32_settlement_result.share_message' => ({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}',
+			'S32_settlement_result.buttons.share' => '精算通知を送信',
+			'S32_settlement_result.buttons.back' => 'タスクに戻る',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.buttons.export_csv' => 'CSVエクスポート',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
@@ -1339,6 +1468,9 @@ extension on TranslationsJaJp {
 			'D05_DateJump_NoResult.buttons.cancel' => '戻る',
 			'D05_DateJump_NoResult.buttons.add' => '記録を追加',
 			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
+			'D06_settlement_confirm.title' => '清算の確認',
+			'D06_settlement_confirm.warning_text' => '清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。',
+			'D06_settlement_confirm.buttons.confirm' => '清算する',
 			'D08_TaskClosed_Confirm.title' => 'タスク終了確認',
 			'D08_TaskClosed_Confirm.buttons.confirm' => '確認',
 			'D08_TaskClosed_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？',
@@ -1347,6 +1479,10 @@ extension on TranslationsJaJp {
 			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
 			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',
+			'D11_random_result.title' => '残額ルーレット当選者',
+			'D11_random_result.skip' => 'スキップ',
+			'D11_random_result.winner_reveal' => 'あなたです！',
+			'D11_random_result.buttons.close' => 'OK',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.save' => '決定',
 			'B02_SplitExpense_Edit.name_label' => '項目名',
@@ -1368,7 +1504,6 @@ extension on TranslationsJaJp {
 			'B03_SplitMethod_Edit.desc_even' => '選択したメンバーで均等割',
 			'B03_SplitMethod_Edit.desc_percent' => 'パーセンテージで配分',
 			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
-			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
 			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '合計金額が一致しません (差額 ${diff})',
 			'b04_payment_merge.title' => 'メンバー支払いの統合',
@@ -1405,6 +1540,11 @@ extension on TranslationsJaJp {
 			'error.alreadyInTask.message' => '既にこのタスクのメンバーです。',
 			'error.unknown.title' => 'エラー',
 			'error.unknown.message' => '予期せぬエラーが発生しました。',
+			'error.settlement.data_conflict.title' => 'データ更新あり',
+			'error.settlement.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
+			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
+			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
+			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
 			_ => null,
 		};
 	}

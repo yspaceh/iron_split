@@ -128,13 +128,20 @@ class _S13ContentState extends State<_S13Content> {
           Visibility(
             visible: isCaptain,
             child: AppButton(
-              text: t.S13_Task_Dashboard.buttons.settlement,
-              type: AppButtonType.secondary,
-              onPressed: () => context.pushNamed(
-                'S30',
-                pathParameters: {'taskId': vm.taskId},
-              ),
-            ),
+                text: t.S13_Task_Dashboard.buttons.settlement,
+                type: AppButtonType.secondary,
+                onPressed: () async {
+                  // 1. 先鎖定
+                  final success = await vm.lockTaskAndStartSettlement();
+
+                  if (success && context.mounted) {
+                    // 2. 成功後才跳轉 S30
+                    context.pushNamed(
+                      'S30',
+                      pathParameters: {'taskId': vm.taskId},
+                    );
+                  }
+                }),
           ),
           AppButton(
             text: t.S13_Task_Dashboard.buttons.record,

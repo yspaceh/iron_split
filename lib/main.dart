@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
@@ -41,8 +42,15 @@ void main() async {
         Provider<DashboardService>(
           create: (_) => DashboardService(),
         ),
+        Provider<RecordService>(
+          create: (context) => RecordService(context.read<RecordRepository>()),
+        ),
         Provider<SettlementService>(
-          create: (_) => SettlementService(),
+          create: (context) =>
+              SettlementService(context.read<TaskRepository>()),
+        ),
+        Provider<DeepLinkService>(
+          create: (context) => DeepLinkService(),
         ),
         // 註冊 PendingInviteProvider 並執行 init
         ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
@@ -100,9 +108,6 @@ class _IronSplitAppState extends State<IronSplitApp> {
           break;
       }
     });
-
-    // 處理 App 啟動時的初始連結
-    _deepLinkService.handleInitialLink();
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
+import 'package:flutter/cupertino.dart';
 
 // 保持 Sealed class 定義，確保對應 AppRouter 的 Intent 解析
 sealed class DeepLinkIntent {
@@ -21,21 +22,22 @@ class UnknownIntent extends DeepLinkIntent {}
 class DeepLinkService {
   final _appLinks = AppLinks();
   final _controller = StreamController<DeepLinkIntent>.broadcast();
-  
+
   String? _lastUri;
   DateTime? _lastTime;
 
   Stream<DeepLinkIntent> get intentStream => _controller.stream;
 
   void initialize() {
-    _appLinks.uriLinkStream.listen(_onNewUri);
-    handleInitialLink(); // 處理冷啟動
-  }
-
-  Future<void> handleInitialLink() async {
-    // 修正點：將 getInitialAppLink() 改為 getInitialLink()
-    final uri = await _appLinks.getInitialLink(); 
-    if (uri != null) _onNewUri(uri);
+    // [修正] app_links v6+ 不需要手動呼叫 getInitialLink
+    // uriLinkStream 現在會自動發送初始連結 (Cold Start)
+    _appLinks.uriLinkStream.listen(
+      _onNewUri,
+      onError: (err) {
+        // TODO: 處理錯誤
+        debugPrint('DeepLink Error: $err');
+      },
+    );
   }
 
   void _onNewUri(Uri uri) {
@@ -51,25 +53,51 @@ class DeepLinkService {
 
     _lastUri = uriString;
     _lastTime = now;
-    _controller.add(_parseUri(uri));
+    final intent = _parseUri(uri);
+    if (intent is! UnknownIntent) {
+      _controller.add(intent);
+    }
   }
 
   DeepLinkIntent _parseUri(Uri uri) {
-    // 根據專案聖經規範解析
-    // 優先支援 HTTPS 連結 (Firebase Dynamic Links / Universal Links)
-    if (uri.path == '/join' || uri.queryParameters.containsKey('code')) {
-      final code = uri.queryParameters['code'];
-      // 驗證 8 位碼邏輯保持不變
-      if (code != null && code.length == 8) return JoinTaskIntent(code);
+    // 取得 Query Parameters
+    final query = uri.queryParameters;
+
+    // --- Custom Scheme 處理 (iron-split://) ---
+    if (uri.scheme == 'iron-split') {
+      // Case 1: Join Task
+      // iron-split://join?code=12345678
+      if (uri.host == 'join') {
+        final code = query['code'];
+        if (code != null && code.length == 8) {
+          return JoinTaskIntent(code);
+        }
+      }
+
+      // Case 2: [新增] Settlement / Task Detail
+      // iron-split://task?id=TASK_ID_HERE
+      if (uri.host == 'task') {
+        final taskId = query['id'];
+        if (taskId != null && taskId.isNotEmpty) {
+          return SettlementIntent(taskId);
+        }
+      }
     }
-    
-    // 原本的 Custom Scheme 作為備援
-    if (uri.scheme == 'iron-split' && uri.host == 'join') {
-      final code = uri.queryParameters['code'];
-      if (code != null) return JoinTaskIntent(code);
-    }
-    
+
+    // 如果未來有 HTTPS 網域，可以加在這裡作為備援
+    // if (uri.scheme == 'https' ... )
+
     return UnknownIntent();
+  }
+
+  // [新增] 產生連結的方法 (供 ViewModel 呼叫)
+  // 因為目前沒有 Domain，我們產生 Custom Scheme 格式
+  String generateTaskLink(String taskId) {
+    return "iron-split://task?id=$taskId";
+  }
+
+  String generateJoinLink(String inviteCode) {
+    return "iron-split://join?code=$inviteCode";
   }
 
   void dispose() => _controller.close();

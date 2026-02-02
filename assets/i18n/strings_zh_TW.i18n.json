@@ -9,7 +9,13 @@
       "edit": "編輯",
       "close": "關閉",
       "discard": "放棄變更",
-      "keep_editing": "繼續編輯"
+      "keep_editing": "繼續編輯",
+      "ok": "確定",
+      "refresh": "重新整理"
+    },
+    "error": {
+      "title": "錯誤",
+      "unknown": "發生未知錯誤: {error}"
     },
     "category": {
       "food": "飲食",
@@ -207,7 +213,8 @@
     "type_income_title": "預收款",
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
-    "payer_multiple": "多人"
+    "payer_multiple": "多人",
+    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)"
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
@@ -244,7 +251,7 @@
     "dialog_mark_cleared_title": "確認收款/付款",
     "dialog_mark_cleared_content": "確定將 {name} 標記為已處理？"
   },
-  "s30_settlement_confirm": {
+  "S30_settlement_confirm": {
     "title": "結算確認",
     "buttons": {
       "next": "收款設定"
@@ -266,7 +273,7 @@
       "remainder": "餘額"
     }
   },
-  "s31_settlement_payment_info": {
+  "S31_settlement_payment_info": {
     "title": "收款資訊",
     "setup_instruction": "收款資訊僅供本次結算使用。預設資料加密儲存於本機。",
     "sync_save": "儲存為預設收款資訊 (存在手機)",
@@ -274,6 +281,19 @@
     "buttons": {
       "settle": "結算",
       "prev_step": "上一步"
+    }
+  },
+  "S32_settlement_result": {
+    "title": "結算成功",
+    "content": "所有帳目已核對無誤。請將結果分享給成員以進行付款。",
+    "waiting_reveal": "等待揭曉...",
+    "remainder_winner_prefix": "餘額歸屬：",
+    "remainder_winner_total": "{winnerName}總金額變更至{prefix} {total}",
+    "total_label": "本次結算總額",
+    "share_message": "結算已完成！\n請開啟 Iron Split App 確認「{taskName}」您的支付金額。\n連結：{link}",
+    "buttons": {
+      "share": "發送結算通知",
+      "back": "返回任務首頁"
     }
   },
   "S50_Onboarding_Consent": {
@@ -382,6 +402,13 @@
     },
     "content": "找不到此日期的紀錄，要新增一筆嗎？"
   },
+  "D06_settlement_confirm": {
+    "title": "結算確認",
+    "warning_text": "結算後任務將立即鎖定，無法再新增、刪除或編輯任何紀錄。\n請確認所有帳目皆已核對無誤。",
+    "buttons": {
+      "confirm": "確定結算"
+    }
+  },
   "D08_TaskClosed_Confirm": {
     "title": "確認結束任務",
     "buttons": {
@@ -397,6 +424,14 @@
     "delete_record_title": "刪除紀錄？",
     "delete_record_content": "確定要刪除 {title} ({amount}) 嗎？",
     "deleted_success": "紀錄已刪除"
+  },
+  "D11_random_result": {
+    "title": "餘額輪盤得主",
+    "skip": "略過",
+    "winner_reveal": "就是你了！",
+    "buttons": {
+      "close": "確定"
+    }
   },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",
@@ -426,7 +461,6 @@
     "desc_even": "選定成員平分，餘額存入餘額罐",
     "desc_percent": "依設定比例分配",
     "desc_exact": "手動輸入金額，總額需吻合",
-    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
     "label_weight": "比例",
     "error_total_mismatch": "總金額不符 (差額 {diff})"
   },
@@ -482,6 +516,15 @@
     "unknown": {
       "title": "發生錯誤",
       "message": "發生未預期的錯誤，請稍後再試。"
+    },
+    "settlement": {
+      "data_conflict": {
+        "title": "帳目已變動",
+        "message": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。"
+      },
+      "status_invalid": "此任務狀態異常（可能已被結算），請刷新頁面。",
+      "permission_denied": "只有建立者可以執行結算。",
+      "transaction_failed": "系統錯誤，結算失敗，請稍後再試。"
     }
   }
 }

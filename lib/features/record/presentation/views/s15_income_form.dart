@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/remainder_bar.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -24,6 +26,7 @@ class S15IncomeForm extends StatelessWidget {
   final String baseSplitMethod; // 分配方式
   final List<String> baseMemberIds; // 分配對象
   final List<Map<String, dynamic>> members; // 成員列表
+  final Map<String, double> baseRawDetails;
 
   // 4. Callbacks (動作)
   final VoidCallback onDateTap;
@@ -50,6 +53,7 @@ class S15IncomeForm extends StatelessWidget {
     required this.onFetchExchangeRate,
     required this.onShowRateInfo,
     required this.onBaseSplitConfigTap,
+    required this.baseRawDetails,
   });
 
   @override
@@ -143,6 +147,25 @@ class S15IncomeForm extends StatelessWidget {
           onTap: onBaseSplitConfigTap,
           showSplitAction: false,
           onSplitTap: null,
+        ),
+        Builder(
+          builder: (context) {
+            final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
+            final split = BalanceCalculator.calculateSplit(
+                totalAmount: baseRemainingAmount,
+                exchangeRate: rate,
+                splitMethod: baseSplitMethod,
+                memberIds: baseMemberIds,
+                details: {});
+            if (split.remainder > 0) {
+              return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: RemainderBar(
+                      baseCurrency: baseCurrencyConstants,
+                      baseRemainder: split.remainder));
+            }
+            return const SizedBox.shrink();
+          },
         ),
         const SizedBox(height: 16),
         TaskMemoInput(

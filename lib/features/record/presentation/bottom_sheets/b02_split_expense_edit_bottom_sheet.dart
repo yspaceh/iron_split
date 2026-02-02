@@ -104,6 +104,16 @@ class _B02SplitExpenseEditBottomSheetState
   Future<void> _handleSplitConfig() async {
     final amount = double.tryParse(_amountController.text) ?? 0.0;
 
+    // 防呆：金額為 0 不能分帳
+    if (amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                Translations.of(context).S15_Record_Edit.err_input_amount)),
+      );
+      return;
+    }
+
     final result = await B03SplitMethodEditBottomSheet.show(
       context,
       totalAmount: amount,
@@ -129,6 +139,17 @@ class _B02SplitExpenseEditBottomSheetState
   void _onSave() {
     if (_formKey.currentState!.validate()) {
       final amount = double.parse(_amountController.text);
+      // [最後防線] 如果 splitDetails 存在，檢查總和是否吻合
+      // 如果不吻合 (且不是比例模式)，理論上應該要重算，但這裡為了簡單，
+      // 如果發現金額變了但 splitDetails 沒清乾淨，這裡強制清空讓 S15 處理
+      Map<String, double>? finalSplitDetails = _splitDetails;
+      if (finalSplitDetails != null) {
+        final sum = finalSplitDetails.values.fold(0.0, (p, c) => p + c);
+        if ((sum - amount).abs() > 0.1) {
+          finalSplitDetails = null; // 強制失效，回退到自動均分
+          _splitMethod = SplitMethodConstants.defaultMethod;
+        }
+      }
       final newItem = RecordDetail(
         id: widget.detail?.id ??
             DateTime.now().millisecondsSinceEpoch.toString(),

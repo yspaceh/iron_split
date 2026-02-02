@@ -122,4 +122,35 @@ class TaskRepository {
         .map((doc) => ActivityLogModel.fromFirestore(doc))
         .toList();
   }
+
+  /// 執行結算存檔
+  /// 1. 將 Task 狀態改為 'pending' (鎖定房間，禁止編輯)
+  /// 2. 寫入 settlement 結算快照
+  Future<void> settleTask({
+    required String taskId,
+    required Map<String, dynamic> settlementData,
+  }) async {
+    // 雖然 settlementData 裡面已經有 status: 'pending'，
+    // 但為了查詢效能，通常 Task document 根目錄也會有一個 status 欄位。
+    // 這裡我們同時更新兩者，確保資料一致。
+
+    await _firestore.collection('tasks').doc(taskId).update({
+      'status': 'settled',
+      // 2. 寫入完整結算資訊 (Snapshot Field)
+      'settlement': {
+        'status': 'pending', // 確保這裡初始狀態是 pending
+        ...settlementData, // 展開其他欄位 (allocations, stats, etc.)
+      },
+      // 3. 更新時間
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// 切換任務狀態 (用於 S30->S31 鎖定，或 S31返回 解鎖)
+  Future<void> updateTaskStatus(String taskId, String newStatus) async {
+    await _firestore.collection('tasks').doc(taskId).update({
+      'status': newStatus,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
 }

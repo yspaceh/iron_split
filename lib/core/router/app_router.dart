@@ -191,7 +191,15 @@ class AppRouter {
                   name: 'S31',
                   builder: (context, state) {
                     final taskId = state.pathParameters['taskId']!;
-                    return S31SettlementPaymentInfoPage(taskId: taskId);
+                    final extra = state.extra as Map<String, dynamic>? ?? {};
+                    final checkPointPoolBalance =
+                        extra['checkPointPoolBalance'] as double;
+                    final mergeMap =
+                        extra['mergeMap'] as Map<String, List<String>>;
+                    return S31SettlementPaymentInfoPage(
+                        taskId: taskId,
+                        checkPointPoolBalance: checkPointPoolBalance,
+                        mergeMap: mergeMap);
                   },
                 ),
               ]),
@@ -199,7 +207,10 @@ class AppRouter {
           GoRoute(
             path: 'settlement/result', // Full: /task/:taskId/settlement/result
             name: 'S32',
-            builder: (context, state) => const S32SettlementResultPage(),
+            builder: (context, state) {
+              final taskId = state.pathParameters['taskId']!;
+              return S32SettlementResultPage(taskId: taskId);
+            },
           ),
           // S17_Task.Locked
           GoRoute(

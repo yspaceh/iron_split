@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
+        recordService: context.read<RecordService>(),
         newCurrency: newCurrency,
       ),
       child: const _D09DialogContent(),

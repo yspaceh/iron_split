@@ -198,8 +198,8 @@ class SettlementMemberItem extends StatelessWidget {
 
     // 狀態文字
     final statusText = isReceiving
-        ? t.s30_settlement_confirm.label_refund
-        : t.s30_settlement_confirm.label_payable;
+        ? t.S30_settlement_confirm.label_refund
+        : t.S30_settlement_confirm.label_payable;
 
     final displayAmount =
         CurrencyConstants.formatAmount(amount.abs(), baseCurrency.code);
@@ -267,8 +267,8 @@ class SettlementMemberItem extends StatelessWidget {
 
     // 狀態文字
     final statusText = isReceiving
-        ? t.s30_settlement_confirm.label_refund
-        : t.s30_settlement_confirm.label_payable;
+        ? t.S30_settlement_confirm.label_refund
+        : t.S30_settlement_confirm.label_payable;
 
     final displayAmount =
         CurrencyConstants.formatAmount(amount.abs(), baseCurrency.code);

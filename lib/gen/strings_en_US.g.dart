@@ -50,8 +50,9 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
-	@override late final _TranslationsS30SettlementConfirmEnUs s30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
-	@override late final _TranslationsS31SettlementPaymentInfoEnUs s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
+	@override late final _TranslationsS30SettlementConfirmEnUs S30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoEnUs S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
+	@override late final _TranslationsS32SettlementResultEnUs S32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
@@ -61,9 +62,11 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
 	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
+	@override late final _TranslationsD06SettlementConfirmEnUs D06_settlement_confirm = _TranslationsD06SettlementConfirmEnUs._(_root);
 	@override late final _TranslationsD08TaskClosedConfirmEnUs D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmEnUs._(_root);
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
+	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeEnUs b04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
@@ -79,6 +82,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 
 	// Translations
 	@override late final _TranslationsCommonButtonsEnUs buttons = _TranslationsCommonButtonsEnUs._(_root);
+	@override late final _TranslationsCommonErrorEnUs error = _TranslationsCommonErrorEnUs._(_root);
 	@override late final _TranslationsCommonCategoryEnUs category = _TranslationsCommonCategoryEnUs._(_root);
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
 	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
@@ -265,6 +269,7 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_expense => 'Remaining (Base)';
 	@override String get base_card_title_income => 'Contributors (Source)';
 	@override String get payer_multiple => 'Multiple Payers';
+	@override String msg_leftover_pot({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)';
 }
 
 // Path: S16_TaskCreate_Edit
@@ -309,7 +314,7 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	@override String dialog_mark_cleared_content({required Object name}) => 'Mark ${name} as cleared?';
 }
 
-// Path: s30_settlement_confirm
+// Path: S30_settlement_confirm
 class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementConfirmZhTw {
 	_TranslationsS30SettlementConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -325,7 +330,7 @@ class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementCon
 	@override late final _TranslationsS30SettlementConfirmListItemEnUs list_item = _TranslationsS30SettlementConfirmListItemEnUs._(_root);
 }
 
-// Path: s31_settlement_payment_info
+// Path: S31_settlement_payment_info
 class _TranslationsS31SettlementPaymentInfoEnUs extends TranslationsS31SettlementPaymentInfoZhTw {
 	_TranslationsS31SettlementPaymentInfoEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -337,6 +342,23 @@ class _TranslationsS31SettlementPaymentInfoEnUs extends TranslationsS31Settlemen
 	@override String get sync_save => 'Save as default payment information (stored on this device)';
 	@override String get sync_update => 'Sync and update my default payment information';
 	@override late final _TranslationsS31SettlementPaymentInfoButtonsEnUs buttons = _TranslationsS31SettlementPaymentInfoButtonsEnUs._(_root);
+}
+
+// Path: S32_settlement_result
+class _TranslationsS32SettlementResultEnUs extends TranslationsS32SettlementResultZhTw {
+	_TranslationsS32SettlementResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Settlement Successful';
+	@override String get content => 'Settlement is complete and the task is locked. Please notify members to check the final details.';
+	@override String get waiting_reveal => 'Revealing result...';
+	@override String get remainder_winner_prefix => 'Remainder goes to:';
+	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}\'s result change to \$${prefix} \$${total}';
+	@override String get total_label => 'Total Settlement Amount';
+	@override String share_message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
+	@override late final _TranslationsS32SettlementResultButtonsEnUs buttons = _TranslationsS32SettlementResultButtonsEnUs._(_root);
 }
 
 // Path: S50_Onboarding_Consent
@@ -483,6 +505,18 @@ class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResu
 	@override String get content => 'No record found for this date. Would you like to add one?';
 }
 
+// Path: D06_settlement_confirm
+class _TranslationsD06SettlementConfirmEnUs extends TranslationsD06SettlementConfirmZhTw {
+	_TranslationsD06SettlementConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Settlement';
+	@override String get warning_text => 'The task will be locked upon settlement. You will not be able to add, delete, or edit any records.\nPlease ensure all details are correct.';
+	@override late final _TranslationsD06SettlementConfirmButtonsEnUs buttons = _TranslationsD06SettlementConfirmButtonsEnUs._(_root);
+}
+
 // Path: D08_TaskClosed_Confirm
 class _TranslationsD08TaskClosedConfirmEnUs extends TranslationsD08TaskClosedConfirmZhTw {
 	_TranslationsD08TaskClosedConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -516,6 +550,19 @@ class _TranslationsD10RecordDeleteConfirmEnUs extends TranslationsD10RecordDelet
 	@override String get delete_record_title => 'Delete Record?';
 	@override String delete_record_content({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?';
 	@override String get deleted_success => 'Record deleted';
+}
+
+// Path: D11_random_result
+class _TranslationsD11RandomResultEnUs extends TranslationsD11RandomResultZhTw {
+	_TranslationsD11RandomResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Remainder Roulette Winner';
+	@override String get skip => 'Skip';
+	@override String get winner_reveal => 'It\'s you!';
+	@override late final _TranslationsD11RandomResultButtonsEnUs buttons = _TranslationsD11RandomResultButtonsEnUs._(_root);
 }
 
 // Path: B02_SplitExpense_Edit
@@ -555,7 +602,6 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	@override String get desc_even => 'Selected members split equally, leftover goes to pot';
 	@override String get desc_percent => 'Distribute by percentage';
 	@override String get desc_exact => 'Enter specific amounts, total must match';
-	@override String msg_leftover_pot({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)';
 	@override String get label_weight => 'Weight';
 	@override String error_total_mismatch({required Object diff}) => 'Total mismatch (difference ${diff})';
 }
@@ -612,6 +658,7 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	@override late final _TranslationsErrorAuthRequiredEnUs authRequired = _TranslationsErrorAuthRequiredEnUs._(_root);
 	@override late final _TranslationsErrorAlreadyInTaskEnUs alreadyInTask = _TranslationsErrorAlreadyInTaskEnUs._(_root);
 	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
+	@override late final _TranslationsErrorSettlementEnUs settlement = _TranslationsErrorSettlementEnUs._(_root);
 }
 
 // Path: common.buttons
@@ -630,6 +677,19 @@ class _TranslationsCommonButtonsEnUs extends TranslationsCommonButtonsZhTw {
 	@override String get close => 'Close';
 	@override String get discard => 'Discard';
 	@override String get keep_editing => 'Keep Editing';
+	@override String get refresh => 'Refresh';
+	@override String get ok => 'OK';
+}
+
+// Path: common.error
+class _TranslationsCommonErrorEnUs extends TranslationsCommonErrorZhTw {
+	_TranslationsCommonErrorEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Error';
+	@override String unknown({required Object error}) => 'Unknown error: ${error}';
 }
 
 // Path: common.category
@@ -786,7 +846,7 @@ class _TranslationsS17TaskLockedButtonsEnUs extends TranslationsS17TaskLockedBut
 	@override String get view_payment_details => 'View Payment Details';
 }
 
-// Path: s30_settlement_confirm.buttons
+// Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -796,7 +856,7 @@ class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30Settle
 	@override String get next => 'Payment Info';
 }
 
-// Path: s30_settlement_confirm.steps
+// Path: S30_settlement_confirm.steps
 class _TranslationsS30SettlementConfirmStepsEnUs extends TranslationsS30SettlementConfirmStepsZhTw {
 	_TranslationsS30SettlementConfirmStepsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -807,7 +867,7 @@ class _TranslationsS30SettlementConfirmStepsEnUs extends TranslationsS30Settleme
 	@override String get payment_info => 'Payment Info';
 }
 
-// Path: s30_settlement_confirm.warning
+// Path: S30_settlement_confirm.warning
 class _TranslationsS30SettlementConfirmWarningEnUs extends TranslationsS30SettlementConfirmWarningZhTw {
 	_TranslationsS30SettlementConfirmWarningEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -817,7 +877,7 @@ class _TranslationsS30SettlementConfirmWarningEnUs extends TranslationsS30Settle
 	@override String get random_reveal => 'Remainder will be revealed after settlement!';
 }
 
-// Path: s30_settlement_confirm.list_item
+// Path: S30_settlement_confirm.list_item
 class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30SettlementConfirmListItemZhTw {
 	_TranslationsS30SettlementConfirmListItemEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -831,7 +891,7 @@ class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30Settl
 	@override String get remainder => 'Remainder';
 }
 
-// Path: s31_settlement_payment_info.buttons
+// Path: S31_settlement_payment_info.buttons
 class _TranslationsS31SettlementPaymentInfoButtonsEnUs extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	_TranslationsS31SettlementPaymentInfoButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -840,6 +900,17 @@ class _TranslationsS31SettlementPaymentInfoButtonsEnUs extends TranslationsS31Se
 	// Translations
 	@override String get settle => 'Settle';
 	@override String get prev_step => 'Previous Step';
+}
+
+// Path: S32_settlement_result.buttons
+class _TranslationsS32SettlementResultButtonsEnUs extends TranslationsS32SettlementResultButtonsZhTw {
+	_TranslationsS32SettlementResultButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get share => 'Send Settlement Notification';
+	@override String get back => 'Back to Task';
 }
 
 // Path: S50_Onboarding_Consent.buttons
@@ -939,6 +1010,16 @@ class _TranslationsD05DateJumpNoResultButtonsEnUs extends TranslationsD05DateJum
 	@override String get add => 'Add Record';
 }
 
+// Path: D06_settlement_confirm.buttons
+class _TranslationsD06SettlementConfirmButtonsEnUs extends TranslationsD06SettlementConfirmButtonsZhTw {
+	_TranslationsD06SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm => 'Settle';
+}
+
 // Path: D08_TaskClosed_Confirm.buttons
 class _TranslationsD08TaskClosedConfirmButtonsEnUs extends TranslationsD08TaskClosedConfirmButtonsZhTw {
 	_TranslationsD08TaskClosedConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -947,6 +1028,16 @@ class _TranslationsD08TaskClosedConfirmButtonsEnUs extends TranslationsD08TaskCl
 
 	// Translations
 	@override String get confirm => 'Confirm';
+}
+
+// Path: D11_random_result.buttons
+class _TranslationsD11RandomResultButtonsEnUs extends TranslationsD11RandomResultButtonsZhTw {
+	_TranslationsD11RandomResultButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get close => 'OK';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1046,6 +1137,30 @@ class _TranslationsErrorUnknownEnUs extends TranslationsErrorUnknownZhTw {
 	@override String get message => 'An unexpected error occurred.';
 }
 
+// Path: error.settlement
+class _TranslationsErrorSettlementEnUs extends TranslationsErrorSettlementZhTw {
+	_TranslationsErrorSettlementEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsErrorSettlementDataConflictEnUs data_conflict = _TranslationsErrorSettlementDataConflictEnUs._(_root);
+	@override String get status_invalid => 'The task status is invalid (may be already settled). Please refresh.';
+	@override String get permission_denied => 'Only the creator can execute settlement.';
+	@override String get transaction_failed => 'System error. Settlement failed. Please try again later.';
+}
+
+// Path: error.settlement.data_conflict
+class _TranslationsErrorSettlementDataConflictEnUs extends TranslationsErrorSettlementDataConflictZhTw {
+	_TranslationsErrorSettlementDataConflictEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Data Changed';
+	@override String get message => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.';
+}
+
 /// The flat map containing all translations for locale <en-US>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1063,6 +1178,10 @@ extension on TranslationsEnUs {
 			'common.buttons.close' => 'Close',
 			'common.buttons.discard' => 'Discard',
 			'common.buttons.keep_editing' => 'Keep Editing',
+			'common.buttons.refresh' => 'Refresh',
+			'common.buttons.ok' => 'OK',
+			'common.error.title' => 'Error',
+			'common.error.unknown' => ({required Object error}) => 'Unknown error: ${error}',
 			'common.category.food' => 'Food',
 			'common.category.transport' => 'Transport',
 			'common.category.shopping' => 'Shopping',
@@ -1228,6 +1347,7 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.base_card_title_expense' => 'Remaining (Base)',
 			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
 			'S15_Record_Edit.payer_multiple' => 'Multiple Payers',
+			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.buttons.save' => 'Save',
 			'S16_TaskCreate_Edit.buttons.done' => 'Done',
@@ -1255,24 +1375,33 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.member_payment_status_receive' => 'To Receive',
 			'S17_Task_Locked.dialog_mark_cleared_title' => 'Mark as Cleared',
 			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => 'Mark ${name} as cleared?',
-			's30_settlement_confirm.title' => 'Confirm Settlement',
-			's30_settlement_confirm.buttons.next' => 'Payment Info',
-			's30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
-			's30_settlement_confirm.steps.payment_info' => 'Payment Info',
-			's30_settlement_confirm.warning.random_reveal' => 'Remainder will be revealed after settlement!',
-			's30_settlement_confirm.label_payable' => 'To Pay',
-			's30_settlement_confirm.label_refund' => 'Refund',
-			's30_settlement_confirm.list_item.merged_label' => 'Representative',
-			's30_settlement_confirm.list_item.includes' => 'Includes:',
-			's30_settlement_confirm.list_item.principal' => 'Principal',
-			's30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
-			's30_settlement_confirm.list_item.remainder' => 'Remainder',
-			's31_settlement_payment_info.title' => 'Payment Information',
-			's31_settlement_payment_info.setup_instruction' => 'Used for this settlement only. Default data is encrypted and stored locally.',
-			's31_settlement_payment_info.sync_save' => 'Save as default payment information (stored on this device)',
-			's31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
-			's31_settlement_payment_info.buttons.settle' => 'Settle',
-			's31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
+			'S30_settlement_confirm.title' => 'Confirm Settlement',
+			'S30_settlement_confirm.buttons.next' => 'Payment Info',
+			'S30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
+			'S30_settlement_confirm.steps.payment_info' => 'Payment Info',
+			'S30_settlement_confirm.warning.random_reveal' => 'Remainder will be revealed after settlement!',
+			'S30_settlement_confirm.label_payable' => 'To Pay',
+			'S30_settlement_confirm.label_refund' => 'Refund',
+			'S30_settlement_confirm.list_item.merged_label' => 'Representative',
+			'S30_settlement_confirm.list_item.includes' => 'Includes:',
+			'S30_settlement_confirm.list_item.principal' => 'Principal',
+			'S30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
+			'S30_settlement_confirm.list_item.remainder' => 'Remainder',
+			'S31_settlement_payment_info.title' => 'Payment Information',
+			'S31_settlement_payment_info.setup_instruction' => 'Used for this settlement only. Default data is encrypted and stored locally.',
+			'S31_settlement_payment_info.sync_save' => 'Save as default payment information (stored on this device)',
+			'S31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
+			'S31_settlement_payment_info.buttons.settle' => 'Settle',
+			'S31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
+			'S32_settlement_result.title' => 'Settlement Successful',
+			'S32_settlement_result.content' => 'Settlement is complete and the task is locked. Please notify members to check the final details.',
+			'S32_settlement_result.waiting_reveal' => 'Revealing result...',
+			'S32_settlement_result.remainder_winner_prefix' => 'Remainder goes to:',
+			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}\'s result change to \$${prefix} \$${total}',
+			'S32_settlement_result.total_label' => 'Total Settlement Amount',
+			'S32_settlement_result.share_message' => ({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}',
+			'S32_settlement_result.buttons.share' => 'Send Settlement Notification',
+			'S32_settlement_result.buttons.back' => 'Back to Task',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => 'Start',
 			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
@@ -1343,6 +1472,9 @@ extension on TranslationsEnUs {
 			'D05_DateJump_NoResult.buttons.cancel' => 'Back',
 			'D05_DateJump_NoResult.buttons.add' => 'Add Record',
 			'D05_DateJump_NoResult.content' => 'No record found for this date. Would you like to add one?',
+			'D06_settlement_confirm.title' => 'Confirm Settlement',
+			'D06_settlement_confirm.warning_text' => 'The task will be locked upon settlement. You will not be able to add, delete, or edit any records.\nPlease ensure all details are correct.',
+			'D06_settlement_confirm.buttons.confirm' => 'Settle',
 			'D08_TaskClosed_Confirm.title' => 'Confirm Close',
 			'D08_TaskClosed_Confirm.buttons.confirm' => 'Confirm',
 			'D08_TaskClosed_Confirm.content' => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?',
@@ -1351,6 +1483,10 @@ extension on TranslationsEnUs {
 			'D10_RecordDelete_Confirm.delete_record_title' => 'Delete Record?',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
 			'D10_RecordDelete_Confirm.deleted_success' => 'Record deleted',
+			'D11_random_result.title' => 'Remainder Roulette Winner',
+			'D11_random_result.skip' => 'Skip',
+			'D11_random_result.winner_reveal' => 'It\'s you!',
+			'D11_random_result.buttons.close' => 'OK',
 			'B02_SplitExpense_Edit.title' => 'Edit Item',
 			'B02_SplitExpense_Edit.buttons.save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.name_label' => 'Item Name',
@@ -1372,7 +1508,6 @@ extension on TranslationsEnUs {
 			'B03_SplitMethod_Edit.desc_even' => 'Selected members split equally, leftover goes to pot',
 			'B03_SplitMethod_Edit.desc_percent' => 'Distribute by percentage',
 			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts, total must match',
-			'B03_SplitMethod_Edit.msg_leftover_pot' => ({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)',
 			'B03_SplitMethod_Edit.label_weight' => 'Weight',
 			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => 'Total mismatch (difference ${diff})',
 			'b04_payment_merge.title' => 'Merge Member Payments',
@@ -1409,6 +1544,11 @@ extension on TranslationsEnUs {
 			'error.alreadyInTask.message' => 'You are already in this task.',
 			'error.unknown.title' => 'Error',
 			'error.unknown.message' => 'An unexpected error occurred.',
+			'error.settlement.data_conflict.title' => 'Data Changed',
+			'error.settlement.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
+			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
+			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
+			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
 			_ => null,
 		};
 	}

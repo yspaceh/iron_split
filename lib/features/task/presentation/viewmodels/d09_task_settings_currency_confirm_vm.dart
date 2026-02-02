@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/currency_service.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
@@ -11,6 +12,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
   final CurrencyConstants newCurrency;
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final RecordService _recordService;
 
   bool _isProcessing = false;
 
@@ -20,9 +22,11 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
     required this.taskId,
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
+    required RecordService recordService,
     required this.newCurrency,
   })  : _taskRepo = taskRepo,
-        _recordRepo = recordRepo;
+        _recordRepo = recordRepo,
+        _recordService = recordService;
 
   /// 執行更新邏輯
   /// Returns: true if success, false if failed
@@ -59,8 +63,9 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
           }
         }
 
-        // 執行批次寫入
-        await _recordRepo.updateExchangeRates(taskId, rateMap);
+        // Service 會負責：更新匯率 + 重新計算 Remainder + 批次存檔
+        await _recordService.updateTaskExchangeRates(
+            taskId: taskId, newRates: rateMap);
       }
 
       // 3. 寫入 Activity Log

@@ -6,6 +6,7 @@ import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
@@ -363,6 +364,19 @@ class S15RecordEditViewModel extends ChangeNotifier {
       final now = DateTime.now();
       final createdAt = _originalRecord?.createdAt ?? now;
 
+      final double exchangeRate =
+          double.tryParse(exchangeRateController.text) ?? 1.0;
+
+      final splitResult = BalanceCalculator.calculateSplit(
+        totalAmount: totalAmount,
+        exchangeRate: exchangeRate,
+        splitMethod: _baseSplitMethod,
+        memberIds: _baseMemberIds,
+        details: _baseRawDetails,
+      );
+
+      final double calculatedRemainder = splitResult.remainder;
+
       // 2. 建構 RecordModel 物件 (完全對應您的 Model 定義)
       final newRecord = RecordModel(
         id: recordId, // 編輯時有值，新增時為 null
@@ -387,7 +401,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
         // 金額與匯率 (根據您的 Model，這就是最終金額)
         amount: totalAmount,
         currencyCode: _selectedCurrencyConstants.code, // ✅ 修正名稱: currencyCode
-        exchangeRate: double.tryParse(exchangeRateController.text) ?? 1.0,
+        exchangeRate: exchangeRate,
+        remainder: calculatedRemainder,
 
         // 分帳邏輯
         splitMethod: _baseSplitMethod,
