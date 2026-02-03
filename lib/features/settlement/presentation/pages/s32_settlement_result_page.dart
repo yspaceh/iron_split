@@ -61,10 +61,16 @@ class _S32ContentState extends State<_S32Content> {
 
   // 監聽 VM 變化來觸發 Dialog
   void _checkAndTriggerDialog(S32SettlementResultViewModel vm) {
+    debugPrint('_dialogTriggered: $_dialogTriggered');
     if (_dialogTriggered) return;
+    debugPrint('vm.isLoading: ${vm.isLoading}');
+    debugPrint('vm.task: ${vm.task}');
     if (vm.isLoading || vm.task == null) return; // 資料還沒好
 
     _dialogTriggered = true; // 標記已觸發
+
+    debugPrint('vm.isRandomMode: ${vm.isRandomMode}');
+    debugPrint('vm.remainderWinnerId: ${vm.remainderWinnerId}');
 
     if (vm.isRandomMode && vm.remainderWinnerId != null) {
       // 是 Random 模式 -> 啟動輪盤流程

@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For Haptics
 import 'package:iron_split/core/models/settlement_model.dart';
@@ -36,8 +37,8 @@ class D11RandomResultDialog extends StatefulWidget {
 
 class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   late FixedExtentScrollController _scrollController;
+  late ConfettiController _confettiController;
   bool _isSpinning = true;
-  bool _showConfetti = false; // 控制慶祝特效
 
   // 為了模擬無限滾動，我們將原始名單重複多次
   // 30次重複足夠支撐約 3-4 秒的高速旋轉
@@ -47,6 +48,9 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   @override
   void initState() {
     super.initState();
+
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 3));
 
     // 1. 準備顯示清單 (重複名單)
     _displayList = [];
@@ -92,7 +96,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     HapticFeedback.heavyImpact(); // 停止時重震動
     setState(() {
       _isSpinning = false;
-      _showConfetti = true; // 觸發慶祝狀態
+      _confettiController.play();
     });
   }
 
@@ -110,6 +114,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -120,7 +125,8 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final colorScheme = theme.colorScheme;
 
     // 單一 Item 高度
-    const double itemHeight = 70.0;
+    const double itemHeight = 200.0;
+    const double viewportHeight = 300.0;
 
     return AlertDialog(
       backgroundColor: colorScheme.surface,
@@ -136,7 +142,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
             ?.copyWith(fontWeight: FontWeight.bold),
       ),
       content: SizedBox(
-        height: 250, // 滾輪可視高度
+        height: viewportHeight, // 滾輪可視高度
         width: 300,
         child: Stack(
           alignment: Alignment.center,
@@ -145,7 +151,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
             Container(
               height: itemHeight + 12, // 比 item 稍高
               width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 36),
               decoration: BoxDecoration(
                 color: colorScheme.tertiaryContainer
                     .withValues(alpha: 0.4), // 半透明強調色
@@ -157,51 +163,103 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
               ),
             ),
 
-            // 2. 指針 (Indicators) - 左右兩側的箭頭
-            Positioned(
-              left: 8,
-              child: Icon(Icons.arrow_right,
-                  size: 32, color: colorScheme.tertiary),
-            ),
-            Positioned(
-              right: 8,
-              child:
-                  Icon(Icons.arrow_left, size: 32, color: colorScheme.tertiary),
-            ),
-
             // 3. 垂直滾輪 (The Reel)
-            ListWheelScrollView.useDelegate(
-              controller: _scrollController,
-              itemExtent: itemHeight,
-              perspective: 0.005, // 3D 透視感 (越小越平)
-              diameterRatio: 1.5, // 圓筒直徑比例
-              physics: const NeverScrollableScrollPhysics(), // 禁止手動滑動，只能程式控制
-              childDelegate: ListWheelChildBuilderDelegate(
-                childCount: _displayList.length,
-                builder: (context, index) {
-                  final member = _displayList[index];
-                  return Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CommonAvatar(
-                          avatarId: member.avatar,
-                          name: member.displayName,
-                          isLinked: member.isLinked,
-                          radius: 40,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          member.displayName,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+            Positioned.fill(
+              // 確保滾輪填滿空間
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.transparent,
+                      Colors.black,
+                      Colors.black,
+                      Colors.transparent,
+                      Colors.transparent,
+                    ],
+                    // [修正 3] 重新計算 stops
+                    // 因為視窗變高了(300)，我們要確保遮罩是遮住「非 itemHeight 區域」
+                    // 中間顯示區域比例 = 200 / 300 ≈ 0.66 (佔中間 66%)
+                    // 上方保留空間 = (1 - 0.66) / 2 ≈ 0.17
+                    stops: [
+                      0.0,
+                      0.15, // 從 15% 處開始顯示 (淡入)
+                      0.20, // 20% 處完全清楚 (對應選取框上緣)
+                      0.80, // 80% 處開始變淡 (對應選取框下緣)
+                      0.85, // 85% 處完全消失
+                      1.0,
+                    ],
+                  ).createShader(bounds);
                 },
+                blendMode: BlendMode.dstIn, // 關鍵：只顯示與 Shader 重疊的部分
+                child: ListWheelScrollView.useDelegate(
+                  controller: _scrollController,
+                  itemExtent: itemHeight,
+                  perspective: 0.005, // 3D 透視感 (越小越平)
+                  diameterRatio: 2.0, // 圓筒直徑比例
+                  physics:
+                      const NeverScrollableScrollPhysics(), // 禁止手動滑動，只能程式控制
+                  clipBehavior: Clip.hardEdge,
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: _displayList.length,
+                    builder: (context, index) {
+                      final member = _displayList[index];
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CommonAvatar(
+                              avatarId: member.avatar,
+                              name: member.displayName,
+                              isLinked: member.isLinked,
+                              radius: 56,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Flexible(
+                              child: Text(
+                                member.displayName,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis, // 防止長名溢出
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter, // 從正上方噴下來
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive, // 爆炸式噴發
+                // 如果想要像下雨一樣從天而降，可以用：
+                // blastDirection: pi / 2,
+                // blastDirectionality: BlastDirectionality.directional,
+                shouldLoop: false, // 是否循環播放 (否，噴一次就好)
+                // --- 視覺調整 ---
+                colors: const [
+                  Colors.green,
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.purple
+                ], // 紙花顏色
+                // --- 物理調整 ---
+                emissionFrequency: 0.05, // 噴發頻率 (越大越密)
+                numberOfParticles: 20, // 一次噴多少顆
+                gravity: 0.2, // 重力 (掉落速度)
+                maxBlastForce: 20, // 噴發力度 (噴多遠)
+                minBlastForce: 5,
               ),
             ),
           ],

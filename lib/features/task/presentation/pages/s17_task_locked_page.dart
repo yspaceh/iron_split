@@ -62,8 +62,8 @@ class S17TaskLockedPage extends StatelessWidget {
             title: Text(data['name'] ?? ''),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.go('/landing'), // 唯一出口
+              icon: const Icon(Icons.keyboard_arrow_down),
+              onPressed: () => context.goNamed('S10'), // 唯一出口
             ),
           ),
           body: content,

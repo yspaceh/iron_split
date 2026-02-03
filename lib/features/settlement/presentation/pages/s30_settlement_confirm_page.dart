@@ -192,12 +192,15 @@ class _S30Content extends StatelessWidget {
                       child: GroupBalanceCard(
                         state: vm.balanceState,
                         onCurrencyTap: () => showCurrencyPicker(context, vm),
-                        onRuleTap: () => onRemainderRuleChange(vm),
+                        onRuleTap: vm.balanceState.remainder > 0
+                            ? () => onRemainderRuleChange(vm)
+                            : null,
                       ),
                     ),
 
                     // 3. 隨機模式提示
-                    if (vm.remainderRule == RemainderRuleConstants.random)
+                    if (vm.remainderRule == RemainderRuleConstants.random &&
+                        vm.balanceState.remainder > 0)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: InfoBar(

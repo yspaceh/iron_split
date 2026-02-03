@@ -127,6 +127,7 @@ class _B03SplitMethodEditBottomSheetState
       splitMethod: _splitMethod,
       memberIds: _selectedMemberIds,
       details: _details,
+      baseCurrency: widget.baseCurrency,
     );
   }
 

@@ -124,30 +124,30 @@ class _S31Content extends StatelessWidget {
     }
 
     Future<bool> showRateInfoDialog() async {
-      await CommonAlertDialog.show<bool>(
-        context,
-        title: t.D06_settlement_confirm.title, // "結算確認"
-        // 直接顯示純文字警告，不用再包 Column 或顯示金額
-        content: Text(
-          t.D06_settlement_confirm.warning_text,
-          style: textTheme.bodyMedium,
-        ),
-        actions: [
-          // 取消按鈕
-          AppButton(
-            text: t.common.buttons.cancel,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(false),
-          ),
-          // 確定結算按鈕
-          AppButton(
-            text: t.D06_settlement_confirm.buttons.confirm, // "確定結算"
-            type: AppButtonType.primary,
-            onPressed: () => context.pop(true),
-          ),
-        ],
-      );
-      return false;
+      return await CommonAlertDialog.show<bool>(
+            context,
+            title: t.D06_settlement_confirm.title, // "結算確認"
+            // 直接顯示純文字警告，不用再包 Column 或顯示金額
+            content: Text(
+              t.D06_settlement_confirm.warning_text,
+              style: textTheme.bodyMedium,
+            ),
+            actions: [
+              // 取消按鈕
+              AppButton(
+                text: t.common.buttons.cancel,
+                type: AppButtonType.secondary,
+                onPressed: () => context.pop(false),
+              ),
+              // 確定結算按鈕
+              AppButton(
+                text: t.D06_settlement_confirm.buttons.confirm, // "確定結算"
+                type: AppButtonType.primary,
+                onPressed: () => context.pop(true),
+              ),
+            ],
+          ) ??
+          false;
     }
 
     return Scaffold(
@@ -390,6 +390,7 @@ class _S31Content extends StatelessWidget {
                 type: AppButtonType.primary,
                 onPressed: () async {
                   final bool shouldSettle = await showRateInfoDialog();
+                  debugPrint(shouldSettle.toString());
                   if (shouldSettle == true && context.mounted) {
                     await executeSettlement();
                   }

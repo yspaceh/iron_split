@@ -40,23 +40,25 @@ class CategoryConstant {
 
 const List<CategoryConstant> kAppCategories = [
   CategoryConstant(
-      id: 'fastfood', labelKey: 't.common.category.food', icon: Icons.fastfood),
+      id: 'fastfood',
+      labelKey: 't.common.category.food',
+      icon: Icons.fastfood_outlined),
   CategoryConstant(
       id: 'directions_bus',
       labelKey: 't.common.category.transport',
-      icon: Icons.directions_bus),
+      icon: Icons.directions_bus_outlined),
   CategoryConstant(
       id: 'shopping_bag',
       labelKey: 't.common.category.shopping',
-      icon: Icons.shopping_bag),
+      icon: Icons.shopping_bag_outlined),
   CategoryConstant(
       id: 'movie',
       labelKey: 't.common.category.entertainment',
-      icon: Icons.movie),
+      icon: Icons.movie_outlined),
   CategoryConstant(
       id: 'hotel',
       labelKey: 't.common.category.accommodation',
-      icon: Icons.hotel),
+      icon: Icons.hotel_outlined),
   CategoryConstant(
       id: 'more_horiz',
       labelKey: 't.common.category.others',

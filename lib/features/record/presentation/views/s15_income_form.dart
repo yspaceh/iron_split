@@ -157,7 +157,8 @@ class S15IncomeForm extends StatelessWidget {
                   exchangeRate: rate,
                   splitMethod: baseSplitMethod,
                   memberIds: baseMemberIds,
-                  details: {});
+                  details: {},
+                  baseCurrency: baseCurrencyConstants);
               if (split.remainder > 0) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),

@@ -43,7 +43,7 @@ class RecordItem extends StatelessWidget {
         : theme.colorScheme.errorContainer;
     final iconColor = isIncome
         ? theme.colorScheme.onTertiaryContainer
-        : theme.colorScheme.onError;
+        : theme.colorScheme.primary;
 
     final amountText =
         "${originalCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(displayAmount, originalCurrencyConstants.code)}";

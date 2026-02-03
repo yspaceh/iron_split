@@ -34,7 +34,8 @@ class GroupBalanceCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
-    final bool isLocked = onCurrencyTap == null || onRuleTap == null;
+    final bool isCurrencyTapLocked = onCurrencyTap == null;
+    final bool isRuleTapLocked = onRuleTap == null;
 
     // Dialog 1: 收支明細
     void showBalanceDetails() {
@@ -152,7 +153,7 @@ class GroupBalanceCard extends StatelessWidget {
                   children: [
                     // Left: Currency Selector
                     InkWell(
-                      onTap: !isLocked ? onCurrencyTap : null,
+                      onTap: !isCurrencyTapLocked ? onCurrencyTap : null,
                       borderRadius: BorderRadius.circular(24),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -254,20 +255,20 @@ class GroupBalanceCard extends StatelessWidget {
               ),
 
               // Gap: 8
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 4.0),
 
               // --- Row 3: Chart (12.0) ---
               InkWell(
                 onTap: showBalanceDetails,
                 child: SizedBox(
-                  height: 12.0,
+                  height: 20.0,
                   child: (state.expenseFlex == 0 && state.incomeFlex == 0)
                       ? Container(
                           width: double.infinity,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainer,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         )
                       : Row(
@@ -287,7 +288,7 @@ class GroupBalanceCard extends StatelessWidget {
                                                     .colorScheme.errorContainer,
                                                 borderRadius: const BorderRadius
                                                     .horizontal(
-                                                    left: Radius.circular(6)),
+                                                    left: Radius.circular(10)),
                                               ),
                                             ),
                                           ),
@@ -316,7 +317,7 @@ class GroupBalanceCard extends StatelessWidget {
                                               borderRadius:
                                                   const BorderRadius.horizontal(
                                                       right:
-                                                          Radius.circular(6)),
+                                                          Radius.circular(10)),
                                             ),
                                           ),
                                         ),
@@ -332,7 +333,7 @@ class GroupBalanceCard extends StatelessWidget {
               ),
 
               // Gap: 12
-              const SizedBox(height: 12.0),
+              const SizedBox(height: 8.0),
 
               // --- Row 4: Footer (40.0) ---
               SizedBox(
@@ -395,16 +396,12 @@ class GroupBalanceCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Visibility(
-                              visible: !isLocked,
-                              child: const SizedBox(width: 4),
-                            ),
-                            Visibility(
-                              visible: !isLocked,
-                              child: Icon(Icons.keyboard_arrow_down,
+                            if (!isRuleTapLocked) ...[
+                              const SizedBox(width: 4),
+                              Icon(Icons.keyboard_arrow_down,
                                   size: 16,
                                   color: theme.colorScheme.onSurfaceVariant),
-                            ),
+                            ],
                           ],
                         ),
                       ),

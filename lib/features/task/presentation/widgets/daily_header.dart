@@ -31,21 +31,22 @@ class DailyHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (isToday)
-                Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(t.common.today,
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: theme.colorScheme.onPrimary))),
               Text(dateStr,
                   style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurfaceVariant)),
+              if (isToday)
+                Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Text(t.common.today,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.bold))),
             ],
           ),
           Text(

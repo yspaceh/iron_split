@@ -126,7 +126,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       }
 
       // 2. 寫入 DB
-      final taskData = {
+      final Map<String, dynamic> taskData = {
         'name': taskName,
         'createdBy': user.uid,
         'memberCount': _memberCount,

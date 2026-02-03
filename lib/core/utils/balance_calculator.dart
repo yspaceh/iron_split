@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
@@ -324,15 +327,31 @@ class BalanceCalculator {
     required double exchangeRate,
     required String splitMethod,
     required List<String> memberIds,
-    required Map<String, double> details, // 權重或金額設定
+    required Map<String, double> details,
+    required CurrencyConstants baseCurrency, // [修改] 改傳幣別代碼 (e.g. "TWD", "USD")
   }) {
     final Map<String, double> sourceAmounts = {};
     final Map<String, double> baseAmounts = {};
 
-    // 1. Base Total (四捨五入)
-    final double baseTotal = (totalAmount * exchangeRate).floorToDouble();
+    // 1. 取得該幣別的小數點位數 (與 formatAmount 邏輯同步)
+    // 假設 getCurrencyConstants 是全域可用或已 import 的函式
+    final int baseDecimals = baseCurrency.decimalDigits;
 
-    // 2. 計算總權重
+    // [工具] 計算精度倍數 (例如 2位小數 -> factor = 100)
+    final double factor = pow(10, baseDecimals).toDouble();
+
+    // [工具函式] 依照幣別精度進行無條件捨去
+    // 邏輯：先乘倍數變整數 -> floor -> 再除回倍數
+    double floorToPrecision(double value) {
+      if (baseDecimals == 0) return value.floorToDouble(); // 優化效能
+      return (value * factor).floorToDouble() / factor;
+    }
+
+    // 2. Base Total
+    // 使用 floorToPrecision 確保不會超過總額
+    final double baseTotal = floorToPrecision(totalAmount * exchangeRate);
+
+    // 3. 計算總權重
     double totalWeight = 0.0;
     if (splitMethod == SplitMethodConstants.even) {
       totalWeight = memberIds.length.toDouble();
@@ -342,7 +361,7 @@ class BalanceCalculator {
       }
     }
 
-    // 3. 計算分配
+    // 4. 計算分配
     double allocatedBaseSum = 0.0;
 
     // A. Exact Mode
@@ -351,8 +370,9 @@ class BalanceCalculator {
         final sourceAmount = details[id] ?? 0.0;
         sourceAmounts[id] = sourceAmount;
 
-        // Exact 模式的零頭來自匯率換算的 floor
-        final baseShare = (sourceAmount * exchangeRate).floorToDouble();
+        // 這裡的邏輯：使用者輸入的原幣金額 -> 換算匯率 -> 依照目標幣別精度取整
+        final baseShare = floorToPrecision(sourceAmount * exchangeRate);
+
         baseAmounts[id] = baseShare;
         allocatedBaseSum += baseShare;
       }
@@ -367,21 +387,26 @@ class BalanceCalculator {
 
           final ratio = weight / totalWeight;
 
-          // Source Share (Display): 顯示用，取小數點兩位 floor
+          // Source Share (Display): 顯示用，通常保持 2 位小數供參考
           final sourceShare = (totalAmount * ratio * 100).floorToDouble() / 100;
           sourceAmounts[id] = sourceShare;
 
-          // Base Share (Logic): 邏輯用，轉 Base Currency 後 floor
-          final baseShare = (baseTotal * ratio).floorToDouble();
+          // Base Share (Logic):
+          // 關鍵：依比例分配 baseTotal，並依照幣別精度取整
+          final baseShare = floorToPrecision(baseTotal * ratio);
+
           baseAmounts[id] = baseShare;
           allocatedBaseSum += baseShare;
         }
       }
     }
 
-    // 4. 算出零頭
+    // 5. 算出零頭
     double remainder = baseTotal - allocatedBaseSum;
-    remainder = double.parse(remainder.toStringAsFixed(3)); // 消除浮點誤差
+
+    // [最終修整] 強制轉字串再轉回，消除二進制浮點數誤差 (如 0.00000004)
+    // 直接使用從 getCurrencyConstants 拿到的 baseDecimals
+    remainder = double.parse(remainder.toStringAsFixed(baseDecimals));
 
     return SplitResult(
       sourceAmounts: sourceAmounts,

@@ -16,7 +16,7 @@ class TaskRepository {
     // 查詢 'members' 欄位包含此 key (透過 FieldPath)
     return _firestore
         .collection('tasks')
-        // .where(FieldPath(['members', userId]), isNull: false) // 這是 Map 的查法
+        .where('memberIds', arrayContains: userId)
         // 如果舊專案是用 Array，請改回 arrayContains。這裡依照 Model 是 Map 處理。
         .orderBy('updatedAt', descending: true)
         .snapshots()
@@ -38,14 +38,23 @@ class TaskRepository {
   Stream<TaskModel?> streamTask(String taskId) {
     return _firestore.collection('tasks').doc(taskId).snapshots().map((doc) {
       if (!doc.exists) return null;
-      return TaskModel.fromFirestore(doc);
+      try {
+        return TaskModel.fromFirestore(doc);
+      } catch (e) {
+        // 防止單一資料壞掉導致崩潰
+        print('❌ Error parsing task $taskId: $e');
+        return null;
+      }
     });
   }
 
   /// S13/S14: 更新任務設定 (改餘額規則、改幣別等)
   /// 取代原 S13GroupView 裡的 FirebaseFirestore.instance.update(...)
   Future<void> updateTask(String taskId, Map<String, dynamic> data) async {
-    await _firestore.collection('tasks').doc(taskId).update(data);
+    await _firestore.collection('tasks').doc(taskId).update({
+      ...data,
+      'updatedAt': FieldValue.serverTimestamp(), // 自動更新時間
+    });
   }
 
   /// 更新特定成員的特定欄位 (Partial Update)
@@ -64,8 +73,11 @@ class TaskRepository {
   /// 更新整個成員列表 (Full Replacement)
   Future<void> replaceMembersMap(
       String taskId, Map<String, dynamic> membersMap) async {
+    final List<String> memberIds = membersMap.keys.toList();
     await _firestore.collection('tasks').doc(taskId).update({
       'members': membersMap,
+      'memberIds': memberIds, // 同步更新查詢索引
+      'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
@@ -89,6 +101,13 @@ class TaskRepository {
     // 預設狀態
     taskData['status'] = 'ongoing';
     taskData['activeInviteCode'] = null;
+
+    // 3. [關鍵] 自動生成 memberIds 陣列以供查詢
+    // 假設 taskData['members'] 是一個 Map
+    if (taskData['members'] is Map) {
+      final membersMap = taskData['members'] as Map<String, dynamic>;
+      taskData['memberIds'] = membersMap.keys.toList();
+    }
 
     final docRef = await _firestore.collection('tasks').add(taskData);
     return docRef.id;
@@ -138,8 +157,8 @@ class TaskRepository {
       'status': 'settled',
       // 2. 寫入完整結算資訊 (Snapshot Field)
       'settlement': {
-        'status': 'pending', // 確保這裡初始狀態是 pending
         ...settlementData, // 展開其他欄位 (allocations, stats, etc.)
+        'status': 'pending', // 確保這裡初始狀態是 pending
       },
       // 3. 更新時間
       'updatedAt': FieldValue.serverTimestamp(),

@@ -232,7 +232,7 @@ class SettlementService {
     required double checkPointPoolBalance,
   }) async {
     // 0. 狀態檢查
-    if (task.status == 'settled' || task.status == 'finished') {
+    if (task.status == 'settled' || task.status == 'closed') {
       throw SettlementStatusInvalidException(task.status);
     }
 

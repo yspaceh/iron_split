@@ -368,12 +368,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
           double.tryParse(exchangeRateController.text) ?? 1.0;
 
       final splitResult = BalanceCalculator.calculateSplit(
-        totalAmount: totalAmount,
-        exchangeRate: exchangeRate,
-        splitMethod: _baseSplitMethod,
-        memberIds: _baseMemberIds,
-        details: _baseRawDetails,
-      );
+          totalAmount: totalAmount,
+          exchangeRate: exchangeRate,
+          splitMethod: _baseSplitMethod,
+          memberIds: _baseMemberIds,
+          details: _baseRawDetails,
+          baseCurrency: baseCurrencyConstants);
 
       final double calculatedRemainder = splitResult.remainder;
 

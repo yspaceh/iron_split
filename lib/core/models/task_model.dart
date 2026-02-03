@@ -7,6 +7,7 @@ class TaskModel {
   final String name; // Was 'title'
   final String baseCurrency;
   final Map<String, dynamic> members;
+  final List<String> memberIds;
   final String status; // Was 'mode'/'state', now 'ongoing' etc.
   final String createdBy; // Was 'ownerId'
   final String remainderRule; // Added to match S14
@@ -23,6 +24,7 @@ class TaskModel {
     required this.name,
     required this.baseCurrency,
     required this.members,
+    required this.memberIds,
     required this.status,
     required this.createdBy,
     required this.remainderRule,
@@ -45,6 +47,7 @@ class TaskModel {
         name: 'Error Task',
         baseCurrency: CurrencyConstants.defaultCode,
         members: {},
+        memberIds: [],
         status: 'unknown',
         createdBy: '',
         remainderRule: RemainderRuleConstants.defaultRule,
@@ -81,6 +84,14 @@ class TaskModel {
         ? Map<String, dynamic>.from(data['members'])
         : <String, dynamic>{};
 
+    List<String> parsedMemberIds = [];
+    if (data['memberIds'] is List) {
+      parsedMemberIds = List<String>.from(data['memberIds']);
+    } else {
+      // 兼容舊資料：自動補齊
+      parsedMemberIds = rawMembers.keys.toList();
+    }
+
     // Helper to parse dates safely
     DateTime parseDate(dynamic val, {DateTime? fallback}) {
       if (val is Timestamp) return val.toDate();
@@ -96,6 +107,7 @@ class TaskModel {
       baseCurrency:
           data['baseCurrency'] as String? ?? CurrencyConstants.defaultCode,
       members: sortMembers(rawMembers),
+      memberIds: parsedMemberIds,
       status: data['status'] as String? ?? 'ongoing',
       createdBy: data['createdBy'] as String? ?? '',
       remainderRule: data['remainderRule'] as String? ??
@@ -106,8 +118,9 @@ class TaskModel {
       startDate:
           data['startDate'] != null ? parseDate(data['startDate']) : null,
       endDate: data['endDate'] != null ? parseDate(data['endDate']) : null,
-
-      memberCount: (data['memberCount'] as num?)?.toInt() ?? 1,
+      settlement: data['settlement'] as Map<String, dynamic>?,
+      memberCount:
+          (data['memberCount'] as num?)?.toInt() ?? parsedMemberIds.length,
     );
   }
 
@@ -116,6 +129,7 @@ class TaskModel {
       'name': name,
       'baseCurrency': baseCurrency,
       'members': members,
+      'memberIds': members.keys.toList(),
       'status': status,
       'createdBy': createdBy,
       'remainderRule': remainderRule,

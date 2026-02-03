@@ -109,6 +109,7 @@ class _S16ContentState extends State<_S16Content> {
         }
       } catch (e) {
         if (mounted) {
+          debugPrint(e.toString());
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(Translations.of(context)

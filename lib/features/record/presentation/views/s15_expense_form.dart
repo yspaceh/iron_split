@@ -126,29 +126,26 @@ class S15ExpenseForm extends StatelessWidget {
     // A. 累加所有細項 (Details) 的零頭
     for (var detail in details) {
       final result = BalanceCalculator.calculateSplit(
-        totalAmount: detail.amount,
-        exchangeRate: rate,
-        splitMethod: detail.splitMethod,
-        memberIds: detail.splitMemberIds,
-        details: detail.splitDetails ?? {},
-      );
+          totalAmount: detail.amount,
+          exchangeRate: rate,
+          splitMethod: detail.splitMethod,
+          memberIds: detail.splitMemberIds,
+          details: detail.splitDetails ?? {},
+          baseCurrency: baseCurrencyConstants);
       totalRemainder += result.remainder;
     }
 
     // B. 累加剩餘金額 (Base Remaining) 的零頭 (如果有剩)
     if (baseRemainingAmount > 0 || details.isEmpty) {
       final result = BalanceCalculator.calculateSplit(
-        totalAmount: baseRemainingAmount,
-        exchangeRate: rate,
-        splitMethod: baseSplitMethod,
-        memberIds: baseMemberIds,
-        details: baseRawDetails, // [注意] 必須傳入 baseRawDetails 才能算準
-      );
+          totalAmount: baseRemainingAmount,
+          exchangeRate: rate,
+          splitMethod: baseSplitMethod,
+          memberIds: baseMemberIds,
+          details: baseRawDetails, // [注意] 必須傳入 baseRawDetails 才能算準
+          baseCurrency: baseCurrencyConstants);
       totalRemainder += result.remainder;
     }
-
-    debugPrint(
-        'baseRemainingAmount.toString():${baseRemainingAmount.toString()}');
 
     // C. 消除浮點數誤差
     totalRemainder = double.parse(totalRemainder.toStringAsFixed(3));

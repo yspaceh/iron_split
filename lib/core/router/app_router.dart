@@ -85,6 +85,16 @@ class AppRouter {
         builder: (context, state) => const S16TaskCreateEditPage(),
       ),
 
+      // S17_Task.Locked
+      GoRoute(
+        path: 'locked',
+        name: 'S17',
+        builder: (context, state) {
+          final taskId = state.pathParameters['taskId']!;
+          return S17TaskLockedPage(taskId: taskId);
+        },
+      ),
+
       // S11_Invite.Confirm
       GoRoute(
         path: '/invite/confirm',
@@ -210,15 +220,6 @@ class AppRouter {
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
               return S32SettlementResultPage(taskId: taskId);
-            },
-          ),
-          // S17_Task.Locked
-          GoRoute(
-            path: 'locked',
-            name: 'S17',
-            builder: (context, state) {
-              final taskId = state.pathParameters['taskId']!;
-              return S17TaskLockedPage(taskId: taskId);
             },
           ),
         ],

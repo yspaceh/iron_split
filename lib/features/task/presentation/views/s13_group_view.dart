@@ -143,6 +143,7 @@ class S13GroupView extends StatelessWidget {
                         baseCurrencyConstants: vm.currencyOption, // 從 VM 獲取
                         isPersonal: false,
                       ),
+                      const SizedBox(height: 16),
                       ...dayRecords.map((record) {
                         return RecordItem(
                           record: record,
@@ -182,8 +183,8 @@ class S13GroupView extends StatelessWidget {
                       }),
                       // 保留新增按鈕樣式
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, top: 8, bottom: 16),
                         child: AddOutlinedButton(
                           onPressed: () => context.pushNamed(
                             'S15',

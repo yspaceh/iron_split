@@ -194,7 +194,7 @@ class SettlementMemberItem extends StatelessWidget {
 
     final isReceiving = amount > 0;
     // 金額顏色：綠色或深黑
-    final amountColor = isReceiving ? Colors.green[700] : colorScheme.onSurface;
+    final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
 
     // 狀態文字
     final statusText = isReceiving
