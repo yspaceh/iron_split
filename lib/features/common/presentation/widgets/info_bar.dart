@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class InfoBar extends StatelessWidget {
+  final IconData icon;
   final Text text;
   const InfoBar({
     super.key,
     required this.text,
+    required this.icon,
   });
 
   @override
@@ -19,8 +21,7 @@ class InfoBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.savings,
-              color: theme.colorScheme.onTertiaryContainer, size: 20),
+          Icon(icon, color: theme.colorScheme.onTertiaryContainer, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: text,

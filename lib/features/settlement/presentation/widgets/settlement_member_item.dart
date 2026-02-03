@@ -30,7 +30,7 @@ class SettlementMemberItem extends StatelessWidget {
     final bool isGroup = member.subMembers.isNotEmpty;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.zero,
       elevation: 0,
       clipBehavior: Clip.antiAlias,
       // 如果是群組，給稍微深一點的底色區分；如果是單人，用淺色
@@ -39,7 +39,7 @@ class SettlementMemberItem extends StatelessWidget {
           : colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colorScheme.outlineVariant),
+        // side: BorderSide(color: colorScheme.outlineVariant),
       ),
       child: isGroup
           ? _buildGroupContent(context, colorScheme)

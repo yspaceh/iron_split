@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/settlement/presentation/bottom_sheets/b04_payment_merge_bottom_sheet.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/step_dots.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +67,6 @@ class _S30Content extends StatelessWidget {
     // M3 Theme Access
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
 
     // 使用 watch 監聽變化
     final vm = context.watch<S30SettlementConfirmViewModel>();
@@ -182,62 +182,55 @@ class _S30Content extends StatelessWidget {
         ),
         body: vm.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: GroupBalanceCard(
-                      state: vm.balanceState,
-                      onCurrencyTap: () => showCurrencyPicker(context, vm),
-                      onRuleTap: () => onRemainderRuleChange(vm),
-                    ),
-                  ),
-
-                  // 3. 隨機模式提示
-                  if (vm.remainderRule == RemainderRuleConstants.random)
-                    Container(
-                      width: double.infinity,
-                      // [M3]: 使用 Tertiary (第三色) 作為強調/提示背景
-                      color: colorScheme.tertiaryContainer,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: Row(
-                        children: [
-                          Icon(Icons.casino,
-                              size: 16, color: colorScheme.onTertiaryContainer),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              t.S30_settlement_confirm.warning.random_reveal,
-                              style: textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onTertiaryContainer,
-                              ),
-                            ),
-                          ),
-                        ],
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: GroupBalanceCard(
+                        state: vm.balanceState,
+                        onCurrencyTap: () => showCurrencyPicker(context, vm),
+                        onRuleTap: () => onRemainderRuleChange(vm),
                       ),
                     ),
 
-                  // 4. 成員列表
-                  Expanded(
-                    child: ListView.separated(
-                      // 底部留白讓最後一個項目不會被 BottomBar 擋住
-                      padding: const EdgeInsets.only(bottom: 24, top: 8),
-                      itemCount: vm.settlementMembers.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
-                      itemBuilder: (context, index) {
-                        final member = vm.settlementMembers[index];
-                        return SettlementMemberItem(
-                          member: member,
-                          baseCurrency: vm.baseCurrency,
-                          onActionTap: () =>
-                              _showMergeSettings(context, vm, member),
-                        );
-                      },
+                    // 3. 隨機模式提示
+                    if (vm.remainderRule == RemainderRuleConstants.random)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: InfoBar(
+                          icon: Icons.savings_outlined,
+                          text: Text(
+                            t.S30_settlement_confirm.warning.random_reveal,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: theme.colorScheme.onTertiaryContainer),
+                          ),
+                        ),
+                      ),
+
+                    // 4. 成員列表
+                    Expanded(
+                      child: ListView.separated(
+                        // 底部留白讓最後一個項目不會被 BottomBar 擋住
+                        padding: const EdgeInsets.only(bottom: 24),
+                        itemCount: vm.settlementMembers.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          final member = vm.settlementMembers[index];
+                          return SettlementMemberItem(
+                            member: member,
+                            baseCurrency: vm.baseCurrency,
+                            onActionTap: () =>
+                                _showMergeSettings(context, vm, member),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
         bottomNavigationBar: StickyBottomActionBar(
           children: [

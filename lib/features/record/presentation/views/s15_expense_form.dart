@@ -160,7 +160,7 @@ class S15ExpenseForm extends StatelessWidget {
         CommonPickerField(
           label: t.S15_Record_Edit.label_date,
           value: DateFormat('yyyy/MM/dd (E)').format(selectedDate),
-          icon: Icons.calendar_today,
+          icon: Icons.calendar_today_rounded,
           onTap: onDateTap,
         ),
         const SizedBox(height: 16),
@@ -168,10 +168,11 @@ class S15ExpenseForm extends StatelessWidget {
           label: t.S15_Record_Edit.label_payment_method,
           value: _getPayerDisplayName(t, payerType, payerId),
           icon: payerType == 'prepay'
-              ? Icons.account_balance_wallet
+              ? Icons.account_balance_wallet_rounded
               : Icons.person,
           onTap: onPaymentMethodTap,
           isError: hasPaymentError,
+          isDisabled: baseRemainingAmount <= 0,
         ),
         // 若有錯誤顯示紅字提示 (加在欄位下方)
         if (hasPaymentError)
@@ -295,6 +296,7 @@ class S15ExpenseForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: InfoBar(
+              icon: Icons.savings_outlined,
               text: Text(
                 t.S15_Record_Edit.msg_leftover_pot(
                     amount:

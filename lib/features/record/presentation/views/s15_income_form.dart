@@ -135,47 +135,50 @@ class S15IncomeForm extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 12),
-        RecordCard(
-          t: t,
-          selectedCurrencyConstants: selectedCurrencyConstants,
-          members: members,
-          amount: baseRemainingAmount,
-          methodLabel: baseSplitMethod,
-          memberIds: baseMemberIds,
-          note: t.S15_Record_Edit.base_card_title_income,
-          isBaseCard: true,
-          onTap: onBaseSplitConfigTap,
-          showSplitAction: false,
-          onSplitTap: null,
-        ),
-        Builder(
-          builder: (context) {
-            final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
-            final split = BalanceCalculator.calculateSplit(
-                totalAmount: baseRemainingAmount,
-                exchangeRate: rate,
-                splitMethod: baseSplitMethod,
-                memberIds: baseMemberIds,
-                details: {});
-            if (split.remainder > 0) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: InfoBar(
-                  text: Text(
-                    t.S15_Record_Edit.msg_leftover_pot(
-                        amount:
-                            "${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(split.remainder, baseCurrencyConstants.code)}"),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: theme.colorScheme.onTertiaryContainer),
+        if (baseRemainingAmount > 0) ...[
+          RecordCard(
+            t: t,
+            selectedCurrencyConstants: selectedCurrencyConstants,
+            members: members,
+            amount: baseRemainingAmount,
+            methodLabel: baseSplitMethod,
+            memberIds: baseMemberIds,
+            note: t.S15_Record_Edit.base_card_title_income,
+            isBaseCard: true,
+            onTap: onBaseSplitConfigTap,
+            showSplitAction: false,
+            onSplitTap: null,
+          ),
+          Builder(
+            builder: (context) {
+              final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
+              final split = BalanceCalculator.calculateSplit(
+                  totalAmount: baseRemainingAmount,
+                  exchangeRate: rate,
+                  splitMethod: baseSplitMethod,
+                  memberIds: baseMemberIds,
+                  details: {});
+              if (split.remainder > 0) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: InfoBar(
+                    icon: Icons.savings_outlined,
+                    text: Text(
+                      t.S15_Record_Edit.msg_leftover_pot(
+                          amount:
+                              "${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(split.remainder, baseCurrencyConstants.code)}"),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.onTertiaryContainer),
+                    ),
                   ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        const SizedBox(height: 16),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
         TaskMemoInput(
           memoController: memoController,
         ),

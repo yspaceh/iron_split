@@ -155,10 +155,6 @@ class _S31Content extends StatelessWidget {
       appBar: AppBar(
         title: Text(t.S31_settlement_payment_info.title), // 需新增 i18n
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
         actions: [
           StepDots(currentStep: 2, totalSteps: 2), // Step 2/2
           const SizedBox(width: 24),

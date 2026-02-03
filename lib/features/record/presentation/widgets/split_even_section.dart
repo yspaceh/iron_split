@@ -74,6 +74,7 @@ class SplitEvenSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: InfoBar(
+              icon: Icons.savings_outlined,
               text: Text(
                 t.S15_Record_Edit.msg_leftover_pot(
                     amount:
