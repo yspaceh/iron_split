@@ -330,7 +330,7 @@ class BalanceCalculator {
     final Map<String, double> baseAmounts = {};
 
     // 1. Base Total (四捨五入)
-    final double baseTotal = (totalAmount * exchangeRate).roundToDouble();
+    final double baseTotal = (totalAmount * exchangeRate).floorToDouble();
 
     // 2. 計算總權重
     double totalWeight = 0.0;

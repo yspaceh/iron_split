@@ -7,7 +7,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_picker_fi
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
-import 'package:iron_split/features/common/presentation/widgets/remainder_bar.dart';
+import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -147,6 +147,9 @@ class S15ExpenseForm extends StatelessWidget {
       totalRemainder += result.remainder;
     }
 
+    debugPrint(
+        'baseRemainingAmount.toString():${baseRemainingAmount.toString()}');
+
     // C. 消除浮點數誤差
     totalRemainder = double.parse(totalRemainder.toStringAsFixed(3));
 
@@ -271,7 +274,8 @@ class S15ExpenseForm extends StatelessWidget {
             ),
           ),
         ],
-        if (baseRemainingAmount > 0 || details.isEmpty) ...[
+        if (baseRemainingAmount > 0 ||
+            (details.isEmpty && baseRemainingAmount != 0)) ...[
           RecordCard(
             t: t,
             selectedCurrencyConstants: selectedCurrencyConstants,
@@ -290,9 +294,15 @@ class S15ExpenseForm extends StatelessWidget {
         if (totalRemainder > 0)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: RemainderBar(
-                baseCurrency: baseCurrencyConstants,
-                baseRemainder: totalRemainder),
+            child: InfoBar(
+              text: Text(
+                t.S15_Record_Edit.msg_leftover_pot(
+                    amount:
+                        "${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrencyConstants.code)}"),
+                style: TextStyle(
+                    fontSize: 12, color: theme.colorScheme.onTertiaryContainer),
+              ),
+            ),
           ),
         const SizedBox(height: 16),
         TaskMemoInput(

@@ -603,7 +603,7 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	@override String get desc_percent => 'Distribute by percentage';
 	@override String get desc_exact => 'Enter specific amounts, total must match';
 	@override String get label_weight => 'Weight';
-	@override String error_total_mismatch({required Object diff}) => 'Total mismatch (difference ${diff})';
+	@override String get error_total_mismatch => 'Mismatch';
 }
 
 // Path: b04_payment_merge
@@ -1509,7 +1509,7 @@ extension on TranslationsEnUs {
 			'B03_SplitMethod_Edit.desc_percent' => 'Distribute by percentage',
 			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts, total must match',
 			'B03_SplitMethod_Edit.label_weight' => 'Weight',
-			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => 'Total mismatch (difference ${diff})',
+			'B03_SplitMethod_Edit.error_total_mismatch' => 'Mismatch',
 			'b04_payment_merge.title' => 'Merge Member Payments',
 			'b04_payment_merge.description' => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.',
 			'b04_payment_merge.section_head' => 'Representative',

@@ -462,7 +462,7 @@
     "desc_percent": "Distribute by percentage",
     "desc_exact": "Enter specific amounts, total must match",
     "label_weight": "Weight",
-    "error_total_mismatch": "Total mismatch (difference {diff})"
+    "error_total_mismatch": "Mismatch"
   },
   "b04_payment_merge": {
     "title": "Merge Member Payments",

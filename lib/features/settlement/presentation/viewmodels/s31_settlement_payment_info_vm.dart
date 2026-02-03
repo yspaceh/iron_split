@@ -25,6 +25,9 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   TaskModel? _task;
   List<RecordModel> _records = [];
 
+  StreamSubscription? _taskSubscription;
+  StreamSubscription? _recordSubscription;
+
   // UI States
   bool _isLoading = true;
   PaymentMode _mode = PaymentMode.private;
@@ -104,7 +107,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         }
       }
 
-      _taskRepo.streamTask(taskId).listen((taskData) {
+      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
         if (taskData != null) {
           _task = taskData;
           if (_task != null) {
@@ -114,7 +117,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         }
       });
 
-      _recordRepo.streamRecords(taskId).listen((records) {
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
         _records = records;
         // Records 更新通常不影響 S31 畫面顯示，但要確保變數是最新的
         // 如果需要像 S30 那樣有 _recalculate，可以在這裡呼叫
@@ -230,6 +233,8 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _taskSubscription?.cancel();
+    _recordSubscription?.cancel();
     bankNameCtrl.dispose();
     bankAccountCtrl.dispose();
     for (var c in _appControllers) {

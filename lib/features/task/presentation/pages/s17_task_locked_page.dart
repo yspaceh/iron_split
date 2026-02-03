@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/task/presentation/views/s17_settled_pending_view.dart';
@@ -34,11 +33,6 @@ class S17TaskLockedPage extends StatelessWidget {
             data['settlement'] as Map<String, dynamic>? ?? {};
         final settlementStatus =
             settlementData['status'] as String? ?? 'pending';
-
-        // 判斷當前使用者ID (用於權限控制)
-        final currentUid = FirebaseAuth.instance.currentUser?.uid ?? '';
-        final ownerId = data['createdBy'] as String?;
-        final isCaptain = currentUid == ownerId;
 
         Widget content;
 

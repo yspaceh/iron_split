@@ -458,11 +458,11 @@
     "method_even": "平均分攤",
     "method_percent": "比例分攤",
     "method_exact": "指定金額",
-    "desc_even": "選定成員平分，餘額存入餘額罐",
+    "desc_even": "選定成員平分",
     "desc_percent": "依設定比例分配",
     "desc_exact": "手動輸入金額，總額需吻合",
     "label_weight": "比例",
-    "error_total_mismatch": "總金額不符 (差額 {diff})"
+    "error_total_mismatch": "金額不符"
   },
   "b04_payment_merge": {
     "title": "合併成員款項",

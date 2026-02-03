@@ -1074,8 +1074,8 @@ class TranslationsB03SplitMethodEditZhTw {
 	/// zh-TW: '指定金額'
 	String get method_exact => '指定金額';
 
-	/// zh-TW: '選定成員平分，餘額存入餘額罐'
-	String get desc_even => '選定成員平分，餘額存入餘額罐';
+	/// zh-TW: '選定成員平分'
+	String get desc_even => '選定成員平分';
 
 	/// zh-TW: '依設定比例分配'
 	String get desc_percent => '依設定比例分配';
@@ -1086,8 +1086,8 @@ class TranslationsB03SplitMethodEditZhTw {
 	/// zh-TW: '比例'
 	String get label_weight => '比例';
 
-	/// zh-TW: '總金額不符 (差額 {diff})'
-	String error_total_mismatch({required Object diff}) => '總金額不符 (差額 ${diff})';
+	/// zh-TW: '金額不符'
+	String get error_total_mismatch => '金額不符';
 }
 
 // Path: b04_payment_merge
@@ -2290,11 +2290,11 @@ extension on Translations {
 			'B03_SplitMethod_Edit.method_even' => '平均分攤',
 			'B03_SplitMethod_Edit.method_percent' => '比例分攤',
 			'B03_SplitMethod_Edit.method_exact' => '指定金額',
-			'B03_SplitMethod_Edit.desc_even' => '選定成員平分，餘額存入餘額罐',
+			'B03_SplitMethod_Edit.desc_even' => '選定成員平分',
 			'B03_SplitMethod_Edit.desc_percent' => '依設定比例分配',
 			'B03_SplitMethod_Edit.desc_exact' => '手動輸入金額，總額需吻合',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
-			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '總金額不符 (差額 ${diff})',
+			'B03_SplitMethod_Edit.error_total_mismatch' => '金額不符',
 			'b04_payment_merge.title' => '合併成員款項',
 			'b04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
 			'b04_payment_merge.section_head' => '代表成員',

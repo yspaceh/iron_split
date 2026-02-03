@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/models/task_model.dart'; // 引用現有 Model
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -24,10 +23,38 @@ class S10TaskListViewModel extends ChangeNotifier {
     final filtered = _allTasks.where((task) {
       if (_filterIndex == 0) {
         // 進行中
-        return task.status == 'ongoing';
+        switch (task.status) {
+          case 'ongoing':
+          case 'pending':
+            return true;
+          case 'settled':
+            if (task.settlement?['status'] == 'pending') {
+              return true;
+            } else {
+              return false;
+            }
+          case 'close':
+            return false;
+          default:
+            return false;
+        }
       } else {
-        // 已完成 (包含 closed, settled, archived 等)
-        return task.status != 'ongoing';
+        // 已完成 (包含 closed, settled,等)
+        switch (task.status) {
+          case 'ongoing':
+          case 'pending':
+            return false;
+          case 'settled':
+            if (task.settlement?['status'] == 'cleared') {
+              return true;
+            } else {
+              return false;
+            }
+          case 'close':
+            return true;
+          default:
+            return false;
+        }
       }
     }).toList();
 

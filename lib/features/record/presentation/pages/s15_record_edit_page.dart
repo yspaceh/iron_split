@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -313,16 +314,17 @@ class _S15ContentState extends State<_S15Content> {
               color: Theme.of(context).colorScheme.error,
               onPressed: () => _onDelete(vm),
             ),
-          TextButton(
+        ],
+      ),
+      bottomNavigationBar: StickyBottomActionBar(
+        children: [
+          AppButton(
+            text: t.common.buttons.save,
+            type: AppButtonType.primary,
+            icon: Icons.add,
+            isLoading: vm.isSaving,
             onPressed: vm.isSaving ? null : () => _onSave(vm),
-            child: vm.isSaving
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2))
-                : Text(t.common.buttons.save,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-          )
+          ),
         ],
       ),
       body: Column(

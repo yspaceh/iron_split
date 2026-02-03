@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
@@ -24,6 +26,9 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
 
   TaskModel? _task;
   List<RecordModel> _records = [];
+
+  StreamSubscription? _taskSubscription;
+  StreamSubscription? _recordSubscription;
   bool _isLoading = true;
 
   double _checkPointPoolBalance = 0.0;
@@ -116,14 +121,14 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _taskRepo.streamTask(taskId).listen((taskData) {
+    _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
       if (taskData != null) {
         _task = taskData;
         _recalculate();
       }
     });
 
-    _recordRepo.streamRecords(taskId).listen((records) {
+    _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
       _records = records;
       _recalculate();
     });
@@ -198,5 +203,14 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     } catch (e) {
       debugPrint("Unlock failed: $e");
     }
+  }
+
+  @override
+  void dispose() {
+    // 取消訂閱，防止記憶體洩漏與殭屍回調
+    _taskSubscription?.cancel();
+    _recordSubscription?.cancel();
+
+    super.dispose();
   }
 }

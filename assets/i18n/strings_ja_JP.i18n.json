@@ -460,7 +460,7 @@
     "desc_percent": "パーセンテージで配分",
     "desc_exact": "金額を手動で入力",
     "label_weight": "比例",
-    "error_total_mismatch": "合計金額が一致しません (差額 {diff})"
+    "error_total_mismatch": "一致しません"
   },
   "b04_payment_merge": {
     "title": "メンバー支払いの統合",

@@ -40,8 +40,10 @@ class CommonAlertDialog extends StatelessWidget {
       title: Text(title, style: theme.textTheme.titleLarge),
       content: content, // 如果 content 為 null，AlertDialog 會自動處理佈局
       scrollable: true,
+      actionsAlignment: MainAxisAlignment.end,
       actions: actions,
-      actionsPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      actionsPadding:
+          const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 12),
     );
   }
 }

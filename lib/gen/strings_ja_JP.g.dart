@@ -602,7 +602,7 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	@override String get desc_percent => 'パーセンテージで配分';
 	@override String get desc_exact => '金額を手動で入力';
 	@override String get label_weight => '比例';
-	@override String error_total_mismatch({required Object diff}) => '合計金額が一致しません (差額 ${diff})';
+	@override String get error_total_mismatch => '一致しません';
 }
 
 // Path: b04_payment_merge
@@ -1505,7 +1505,7 @@ extension on TranslationsJaJp {
 			'B03_SplitMethod_Edit.desc_percent' => 'パーセンテージで配分',
 			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
-			'B03_SplitMethod_Edit.error_total_mismatch' => ({required Object diff}) => '合計金額が一致しません (差額 ${diff})',
+			'B03_SplitMethod_Edit.error_total_mismatch' => '一致しません',
 			'b04_payment_merge.title' => 'メンバー支払いの統合',
 			'b04_payment_merge.description' => 'メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。',
 			'b04_payment_merge.section_head' => '代表メンバー',

@@ -5,7 +5,7 @@ import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
-import 'package:iron_split/features/common/presentation/widgets/remainder_bar.dart';
+import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -159,10 +159,18 @@ class S15IncomeForm extends StatelessWidget {
                 details: {});
             if (split.remainder > 0) {
               return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: RemainderBar(
-                      baseCurrency: baseCurrencyConstants,
-                      baseRemainder: split.remainder));
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: InfoBar(
+                  text: Text(
+                    t.S15_Record_Edit.msg_leftover_pot(
+                        amount:
+                            "${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(split.remainder, baseCurrencyConstants.code)}"),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: theme.colorScheme.onTertiaryContainer),
+                  ),
+                ),
+              );
             }
             return const SizedBox.shrink();
           },
