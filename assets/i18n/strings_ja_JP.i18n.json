@@ -75,6 +75,16 @@
       "app_name": "アプリ名（例：LinePay）",
       "app_link": "リンク / ID"
     },
+    "share":{
+      "invite": {
+        "subject": "Iron Split タスク招待",
+        "message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\n連結：{link}"
+      },
+      "settlement": {
+        "subject": "Iron Split タスク精算通知",
+        "message": "精算が完了しました！\nIton Splitアプリを開いて「{taskName}」支払い金額をご確認ください。\nリンク：{link}"
+      }
+    },
     "error_prefix": "エラー: {message}",
     "please_login": "ログインしてください",
     "loading": "読み込み中...",
@@ -265,7 +275,7 @@
       "view_payment_details": "支払/受取口座を確認"
     },
     "retention_notice": "このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。",
-    "label_remainder_absorbed_by": "端数 {amount} は {name} が負担",
+    "label_remainder_absorbed_by": "は {name} が負担",
     "section_pending": "未完了",
     "section_cleared": "完了",
     "member_payment_status_pay": "支払",
@@ -312,7 +322,6 @@
     "remainder_winner_prefix": "残額の受取先：",
     "remainder_winner_total": "${winnerName}さんは${prefix} ${total}になります。",
     "total_label": "今回の精算合計額",
-    "share_message": "精算が完了しました！\nIton Splitアプリを開いて「{taskName}」支払い金額をご確認ください。\nリンク：{link}",
     "buttons": {
       "share": "精算通知を送信",
       "back": "タスクに戻る"
@@ -388,9 +397,7 @@
     "label_currency": "通貨",
     "label_members": "人数",
     "creating_task": "作成中...",
-    "preparing_share": "招待を準備中...",
-    "share_subject": "Iron Split タスク招待",
-    "share_message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\n連結：{link}"
+    "preparing_share": "招待を準備中..."
   },
   "D05_DateJump_NoResult": {
     "title": "記録なし",

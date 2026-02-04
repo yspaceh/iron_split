@@ -88,6 +88,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonCurrencyZhTw currency = TranslationsCommonCurrencyZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
+	late final TranslationsCommonShareZhTw share = TranslationsCommonShareZhTw.internal(_root);
 
 	/// zh-TW: '錯誤: {message}'
 	String error_prefix({required Object message}) => '錯誤: ${message}';
@@ -556,8 +557,8 @@ class TranslationsS17TaskLockedZhTw {
 	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
 	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
 
-	/// zh-TW: '零錢罐 {amount} 由 {name} 吸收'
-	String label_remainder_absorbed_by({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收';
+	/// zh-TW: '由 {name} 吸收'
+	String label_remainder_absorbed_by({required Object name}) => '由 ${name} 吸收';
 
 	/// zh-TW: '待處理'
 	String get section_pending => '待處理';
@@ -650,9 +651,6 @@ class TranslationsS32SettlementResultZhTw {
 
 	/// zh-TW: '本次結算總額'
 	String get total_label => '本次結算總額';
-
-	/// zh-TW: '結算已完成！ 請開啟 Iron Split App 確認「{taskName}」您的支付金額。 連結：{link}'
-	String share_message({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}';
 
 	late final TranslationsS32SettlementResultButtonsZhTw buttons = TranslationsS32SettlementResultButtonsZhTw.internal(_root);
 }
@@ -893,12 +891,6 @@ class TranslationsD03TaskCreateConfirmZhTw {
 
 	/// zh-TW: '準備邀請函...'
 	String get preparing_share => '準備邀請函...';
-
-	/// zh-TW: '邀請加入 Iron Split 任務'
-	String get share_subject => '邀請加入 Iron Split 任務';
-
-	/// zh-TW: '快來加入我的 Iron Split 任務「{taskName}」！ 邀請碼：{code} 連結：{link}'
-	String share_message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}';
 }
 
 // Path: D05_DateJump_NoResult
@@ -1429,6 +1421,17 @@ class TranslationsCommonPaymentInfoZhTw {
 	String get app_link => '連結 / ID';
 }
 
+// Path: common.share
+class TranslationsCommonShareZhTw {
+	TranslationsCommonShareZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsCommonShareInviteZhTw invite = TranslationsCommonShareInviteZhTw.internal(_root);
+	late final TranslationsCommonShareSettlementZhTw settlement = TranslationsCommonShareSettlementZhTw.internal(_root);
+}
+
 // Path: S11_Invite_Confirm.buttons
 class TranslationsS11InviteConfirmButtonsZhTw {
 	TranslationsS11InviteConfirmButtonsZhTw.internal(this._root);
@@ -1931,6 +1934,36 @@ class TranslationsErrorSettlementZhTw {
 	String get transaction_failed => '系統錯誤，結算失敗，請稍後再試。';
 }
 
+// Path: common.share.invite
+class TranslationsCommonShareInviteZhTw {
+	TranslationsCommonShareInviteZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '邀請加入 Iron Split 任務'
+	String get subject => '邀請加入 Iron Split 任務';
+
+	/// zh-TW: '快來加入我的 Iron Split 任務「{taskName}」！ 邀請碼：{code} 連結：{link}'
+	String message({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}';
+}
+
+// Path: common.share.settlement
+class TranslationsCommonShareSettlementZhTw {
+	TranslationsCommonShareSettlementZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: 'Iron Split 任務結算通知'
+	String get subject => 'Iron Split 任務結算通知';
+
+	/// zh-TW: '結算已完成！ 請開啟 Iron Split App 確認「{taskName}」您的支付金額。 連結：{link}'
+	String message({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}';
+}
+
 // Path: error.settlement.data_conflict
 class TranslationsErrorSettlementDataConflictZhTw {
 	TranslationsErrorSettlementDataConflictZhTw.internal(this._root);
@@ -2017,6 +2050,10 @@ extension on Translations {
 			'common.payment_info.bank_account_hint' => '帳號',
 			'common.payment_info.app_name' => 'App 名稱 (如: LinePay)',
 			'common.payment_info.app_link' => '連結 / ID',
+			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
+			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
+			'common.share.settlement.subject' => 'Iron Split 任務結算通知',
+			'common.share.settlement.message' => ({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}',
 			'common.error_prefix' => ({required Object message}) => '錯誤: ${message}',
 			'common.please_login' => '請先登入',
 			'common.loading' => '讀取中...',
@@ -2153,7 +2190,7 @@ extension on Translations {
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
 			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
 			'S17_Task_Locked.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => '零錢罐 ${amount} 由 ${name} 吸收',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => '由 ${name} 吸收',
 			'S17_Task_Locked.section_pending' => '待處理',
 			'S17_Task_Locked.section_cleared' => '已處理',
 			'S17_Task_Locked.member_payment_status_pay' => '應付',
@@ -2184,7 +2221,6 @@ extension on Translations {
 			'S32_settlement_result.remainder_winner_prefix' => '餘額歸屬：',
 			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額變更至${prefix} ${total}',
 			'S32_settlement_result.total_label' => '本次結算總額',
-			'S32_settlement_result.share_message' => ({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}',
 			'S32_settlement_result.buttons.share' => '發送結算通知',
 			'S32_settlement_result.buttons.back' => '返回任務首頁',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
@@ -2251,8 +2287,6 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.label_members' => '人數',
 			'D03_TaskCreate_Confirm.creating_task' => '正在建立任務...',
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
-			'D03_TaskCreate_Confirm.share_subject' => '邀請加入 Iron Split 任務',
-			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'D05_DateJump_NoResult.title' => '無紀錄',
 			'D05_DateJump_NoResult.buttons.cancel' => '返回',
 			'D05_DateJump_NoResult.buttons.add' => '新增紀錄',

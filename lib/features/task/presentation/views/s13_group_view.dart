@@ -74,6 +74,10 @@ class S13GroupView extends StatelessWidget {
       builder: (context, constraints) {
         final double bottomPadding = constraints.maxHeight;
 
+        /// ! CRITICAL LAYOUT CONFIGURATION !
+        /// Used by S13Page to calculate Sticky Header size.
+        final double fixedHeight = 176.0;
+
         return CustomScrollView(
           controller: vm.groupScrollController,
           slivers: [
@@ -91,6 +95,7 @@ class S13GroupView extends StatelessWidget {
                       state: vm.balanceState, // 使用 VM 的 State
                       onCurrencyTap: showCurrencyPicker,
                       onRuleTap: () => onRemainderRuleChange(vm),
+                      fixedHeight: fixedHeight,
                     ),
                   ),
                 ),
@@ -140,14 +145,14 @@ class S13GroupView extends StatelessWidget {
                       DailyHeader(
                         date: date,
                         total: dayTotal,
-                        baseCurrencyConstants: vm.currencyOption, // 從 VM 獲取
+                        baseCurrency: vm.baseCurrency, // 從 VM 獲取
                         isPersonal: false,
                       ),
                       const SizedBox(height: 16),
                       ...dayRecords.map((record) {
                         return RecordItem(
                           record: record,
-                          baseCurrencyConstants: vm.currencyOption,
+                          baseCurrency: vm.baseCurrency,
                           displayAmount: record.amount,
                           onTap: () {
                             context.pushNamed(
@@ -157,7 +162,7 @@ class S13GroupView extends StatelessWidget {
                               extra: {
                                 // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
                                 'poolBalancesByCurrency': vm.poolBalances,
-                                'baseCurrencyConstants': vm.currencyOption,
+                                'baseCurrency': vm.baseCurrency,
                                 'record': record,
                               },
                             );
@@ -191,7 +196,7 @@ class S13GroupView extends StatelessWidget {
                             pathParameters: {'taskId': task.id},
                             extra: {
                               'poolBalancesByCurrency': vm.poolBalances,
-                              'baseCurrencyConstants': vm.currencyOption,
+                              'baseCurrency': vm.baseCurrency,
                               'date': date,
                             },
                           ),

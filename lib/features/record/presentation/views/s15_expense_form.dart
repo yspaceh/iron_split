@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
@@ -21,7 +20,7 @@ class S15ExpenseForm extends StatelessWidget {
   // 2. 接收狀態資料 (顯示用)
   final DateTime selectedDate;
   final CurrencyConstants selectedCurrencyConstants;
-  final CurrencyConstants baseCurrencyConstants;
+  final CurrencyConstants baseCurrency;
   final String selectedCategoryId;
   final bool isRateLoading;
 
@@ -34,6 +33,7 @@ class S15ExpenseForm extends StatelessWidget {
   final String baseSplitMethod;
   final List<String> baseMemberIds;
   final Map<String, double> baseRawDetails;
+  final double totalRemainder;
 
   // 4. 接收支付狀態
   final String payerType;
@@ -59,7 +59,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.exchangeRateController,
     required this.selectedDate,
     required this.selectedCurrencyConstants,
-    required this.baseCurrencyConstants,
+    required this.baseCurrency,
     required this.selectedCategoryId,
     required this.isRateLoading,
     required this.members,
@@ -81,6 +81,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.onDetailEditTap,
     required this.poolBalancesByCurrency,
     required this.baseRawDetails,
+    required this.totalRemainder,
   });
 
   // 支援多種支付型態顯示
@@ -118,37 +119,7 @@ class S15ExpenseForm extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
-    final isForeign = selectedCurrencyConstants != baseCurrencyConstants;
-
-    final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
-    double totalRemainder = 0.0;
-
-    // A. 累加所有細項 (Details) 的零頭
-    for (var detail in details) {
-      final result = BalanceCalculator.calculateSplit(
-          totalAmount: detail.amount,
-          exchangeRate: rate,
-          splitMethod: detail.splitMethod,
-          memberIds: detail.splitMemberIds,
-          details: detail.splitDetails ?? {},
-          baseCurrency: baseCurrencyConstants);
-      totalRemainder += result.remainder;
-    }
-
-    // B. 累加剩餘金額 (Base Remaining) 的零頭 (如果有剩)
-    if (baseRemainingAmount > 0 || details.isEmpty) {
-      final result = BalanceCalculator.calculateSplit(
-          totalAmount: baseRemainingAmount,
-          exchangeRate: rate,
-          splitMethod: baseSplitMethod,
-          memberIds: baseMemberIds,
-          details: baseRawDetails, // [注意] 必須傳入 baseRawDetails 才能算準
-          baseCurrency: baseCurrencyConstants);
-      totalRemainder += result.remainder;
-    }
-
-    // C. 消除浮點數誤差
-    totalRemainder = double.parse(totalRemainder.toStringAsFixed(3));
+    final isForeign = selectedCurrencyConstants != baseCurrency;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -198,7 +169,7 @@ class S15ExpenseForm extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: t.S15_Record_Edit.label_rate(
-                  base: baseCurrencyConstants.code,
+                  base: baseCurrency.code,
                   target: selectedCurrencyConstants.code),
               prefixIcon: IconButton(
                 icon: const Icon(Icons.currency_exchange),
@@ -226,15 +197,15 @@ class S15ExpenseForm extends StatelessWidget {
               final amount = double.tryParse(amountController.text) ?? 0.0;
               final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
               final converted = amount * rate;
-              final formattedAmount = CurrencyConstants.formatAmount(
-                  converted, baseCurrencyConstants.code);
+              final formattedAmount =
+                  CurrencyConstants.formatAmount(converted, baseCurrency.code);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
                   t.S15_Record_Edit.val_converted_amount(
-                      base: baseCurrencyConstants.code,
-                      symbol: baseCurrencyConstants.symbol,
+                      base: baseCurrency.code,
+                      symbol: baseCurrency.symbol,
                       amount: formattedAmount),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
@@ -297,7 +268,7 @@ class S15ExpenseForm extends StatelessWidget {
               text: Text(
                 t.S15_Record_Edit.msg_leftover_pot(
                     amount:
-                        "${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrencyConstants.code)}"),
+                        "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
                 style: TextStyle(
                     fontSize: 12, color: theme.colorScheme.onTertiaryContainer),
               ),

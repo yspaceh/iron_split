@@ -98,7 +98,7 @@ class _S13ContentState extends State<_S13Content> {
     final taskName = vm.task!.name;
     final isCaptain = vm.isCaptain;
     final poolBalances = vm.poolBalances;
-    final currencyOption = vm.currencyOption;
+    final baseCurrency = vm.baseCurrency;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -152,7 +152,7 @@ class _S13ContentState extends State<_S13Content> {
               pathParameters: {'taskId': vm.taskId},
               extra: {
                 'poolBalancesByCurrency': poolBalances,
-                'baseCurrencyConstants': currencyOption,
+                'baseCurrency': baseCurrency,
               },
             ),
           ),

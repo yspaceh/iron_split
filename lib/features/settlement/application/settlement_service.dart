@@ -8,6 +8,7 @@ import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class SettlementService {
   final TaskRepository _taskRepo;
@@ -56,6 +57,8 @@ class SettlementService {
       balances[uid] = BalanceCalculator.calculatePersonalNetBalance(
           allRecords: records,
           uid: uid,
+          baseCurrency:
+              CurrencyConstants.getCurrencyConstants(task.baseCurrency),
           isBaseCurrency: true // 這會使用 record.exchangeRate (已被 D09 更新)
           );
     }
@@ -295,7 +298,15 @@ class SettlementService {
         memberStatus[m.id] = false;
       }
 
-      // 7. 寫入 Firestore
+      // 7. [新增] 產生 Dashboard 快照
+      // 使用與 DashboardService 完全相同的邏輯計算
+      final snapshotState = _generateDashboardSnapshot(
+        task: task,
+        records: records,
+        finalWinnerId: finalWinnerId,
+      );
+
+      // 8. 寫入 Firestore
       await _taskRepo.settleTask(
         taskId: task.id,
         settlementData: {
@@ -305,6 +316,7 @@ class SettlementService {
           "allocations": allocations,
           "memberStatus": memberStatus,
           "receiverInfos": captainPaymentInfoJson,
+          "dashboardSnapshot": snapshotState.toMap(),
         },
       );
 
@@ -313,5 +325,92 @@ class SettlementService {
       if (e is SettlementException) rethrow;
       throw SettlementTransactionFailedException(e.toString());
     }
+  }
+
+  // ==========================================
+  // [新增] 內部產生快照邏輯
+  // 保持與 DashboardService 計算邏輯一致
+  // ==========================================
+  BalanceSummaryState _generateDashboardSnapshot({
+    required TaskModel task,
+    required List<RecordModel> records,
+    String? finalWinnerId,
+  }) {
+    // 1. 核心數值 (使用 Calculator)
+    final double poolBalance =
+        BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
+    final double totalIncome =
+        BalanceCalculator.calculateIncomeTotal(records, isBaseCurrency: true);
+    final double totalExpense =
+        BalanceCalculator.calculateExpenseTotal(records, isBaseCurrency: true);
+    final double remainder =
+        BalanceCalculator.calculateRemainderBuffer(records);
+    final Map<String, double> poolDetail =
+        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
+
+    // 2. 詳細分類 (同 DashboardService)
+    final Map<String, double> expenseDetail = {};
+    final Map<String, double> incomeDetail = {};
+
+    for (var r in records) {
+      if (r.type == 'income') {
+        incomeDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
+      } else {
+        expenseDetail.update(
+            r.originalCurrencyCode, (v) => v + r.originalAmount,
+            ifAbsent: () => r.originalAmount);
+      }
+    }
+
+    // 3. Flex 計算 (同 DashboardService)
+    int expenseFlex = 0;
+    int incomeFlex = 0;
+    final totalVolume = totalExpense.abs() + totalIncome.abs();
+
+    if (totalVolume > 0) {
+      expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
+      incomeFlex = 1000 - expenseFlex;
+    }
+
+    // 4. 取得得主名稱 (用於 S17 顯示 Absorbed By)
+    String? winnerName;
+    if (finalWinnerId != null) {
+      final winner = task.members[finalWinnerId];
+      if (winner != null) {
+        winnerName = winner['displayName'];
+      }
+    }
+
+    return BalanceSummaryState(
+      currencyCode: task.baseCurrency,
+      currencySymbol: '\$', // 如果需要動態符號，可引入 CurrencyConstants
+      poolBalance: poolBalance,
+      totalExpense: totalExpense,
+      totalIncome: totalIncome,
+      remainder: remainder,
+      expenseFlex: expenseFlex,
+      incomeFlex: incomeFlex,
+      ruleKey: task.remainderRule,
+      isLocked: true, // 快照永遠是鎖定狀態
+      expenseDetail: expenseDetail,
+      incomeDetail: incomeDetail,
+      poolDetail: poolDetail,
+      absorbedBy: winnerName,
+      absorbedAmount: null, // S17 通常不顯示具體吸收金額，只顯示人名，如有需要可在此計算
+    );
+  }
+
+  /// S17: 更新成員的付款狀態 (Pending <-> Cleared)
+  /// 只有隊長有權限呼叫此方法
+  Future<void> updateMemberStatus({
+    required String taskId,
+    required String memberId,
+    required bool isCleared,
+  }) async {
+    // 使用 Dot Notation 直接更新 Map 中的特定 Key，不影響其他資料
+    await _taskRepo.updateTask(taskId, {
+      'settlement.memberStatus.$memberId': isCleared,
+    });
   }
 }

@@ -55,7 +55,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   final String taskId;
   final String? recordId;
   final RecordModel? _originalRecord;
-  final CurrencyConstants baseCurrencyConstants;
+  final CurrencyConstants baseCurrency;
   final Map<String, double> poolBalancesByCurrency;
 
   // Getters
@@ -88,12 +88,77 @@ class S15RecordEditViewModel extends ChangeNotifier {
   }
 
   bool get hasPaymentError {
+    // 1. 如果不是選擇「全額公款支付」，則不在此處檢核 (Mixed 模式會有另外的檢核)
     if (_payerType != 'prepay') return false;
+
     final currentAmount = totalAmount;
     if (currentAmount <= 0) return false;
-    final balance =
+
+    // 2. 取得帳面餘額 (這是資料庫目前的餘額，已經扣除過此筆費用的舊金額)
+    double availableBalance =
         poolBalancesByCurrency[_selectedCurrencyConstants.code] ?? 0.0;
-    return balance < (currentAmount - 0.01);
+
+    // 3. [修正邏輯] 校正可用餘額
+    // 如果是「編輯模式」(_originalRecord != null)，
+    // 且「原本就是用同幣別公款支付」，我們要先把舊的金額「加回來」視為可用額度。
+    if (_originalRecord != null &&
+        _originalRecord!.originalCurrencyCode ==
+            _selectedCurrencyConstants.code) {
+      // 情況 A: 原本這筆紀錄就是「全額公款」
+      if (_originalRecord!.payerType == 'prepay') {
+        availableBalance += _originalRecord!.originalAmount;
+      }
+      // 情況 B: 原本這筆紀錄是「混合支付」，且有使用到公款
+      else if (_originalRecord!.payerType == 'mixed' &&
+          _originalRecord!.paymentDetails != null) {
+        final oldPrepayAmount =
+            (_originalRecord!.paymentDetails!['prepayAmount'] as num?)
+                    ?.toDouble() ??
+                0.0;
+        availableBalance += oldPrepayAmount;
+      }
+    }
+
+    // 4. 判斷餘額是否足夠 (容許 0.01 誤差)
+    // 現在 availableBalance 代表「如果我不付這筆錢，錢包裡會有多少錢」
+    return availableBalance < (currentAmount - 0.01);
+  }
+
+  /// 計算總零頭 (Single Source of Truth)
+  /// 供 UI 顯示與 saveRecord 存檔使用，確保兩者一致
+  double get calculatedTotalRemainder {
+    final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
+    double totalRemainder = 0.0;
+
+    // 1. 累加所有細項 (Details) 的零頭
+    for (var detail in _details) {
+      final result = BalanceCalculator.calculateSplit(
+          totalAmount: detail.amount,
+          exchangeRate: rate,
+          splitMethod: detail.splitMethod,
+          memberIds: detail.splitMemberIds,
+          details: detail.splitDetails ?? {},
+          baseCurrency: baseCurrency);
+      totalRemainder += result.remainder;
+    }
+
+    // 2. 累加剩餘金額 (Base Remaining) 的零頭
+    // 邏輯：如果有剩餘金額，或者完全沒有細項(代表只有一筆 Base)，都要算
+    if (baseRemainingAmount > 0 || _details.isEmpty) {
+      final result = BalanceCalculator.calculateSplit(
+          totalAmount:
+              baseRemainingAmount > 0 ? baseRemainingAmount : totalAmount,
+          exchangeRate: rate,
+          splitMethod: _baseSplitMethod,
+          memberIds: _baseMemberIds,
+          details: _baseRawDetails,
+          baseCurrency: baseCurrency);
+      totalRemainder += result.remainder;
+    }
+
+    // 3. 消除浮點數誤差 (與 Form 邏輯一致)
+    return double.parse(
+        totalRemainder.toStringAsFixed(baseCurrency.decimalDigits));
   }
 
   // Constructor
@@ -103,7 +168,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     this.recordId,
     RecordModel? record,
-    this.baseCurrencyConstants = CurrencyConstants.defaultCurrencyConstants,
+    this.baseCurrency = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     DateTime? initialDate,
   })  : _recordRepo = recordRepo,
@@ -143,7 +208,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     } else {
       // Create Mode
       _selectedDate = initialDate ?? DateTime.now();
-      _selectedCurrencyConstants = baseCurrencyConstants;
+      _selectedCurrencyConstants = baseCurrency;
       _loadCurrencyPreference();
     }
 
@@ -169,7 +234,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if (lastCurrency != null) {
       _selectedCurrencyConstants =
           CurrencyConstants.getCurrencyConstants(lastCurrency);
-      if (_selectedCurrencyConstants != baseCurrencyConstants) {
+      if (_selectedCurrencyConstants != baseCurrency) {
         updateCurrency(_selectedCurrencyConstants.code); // Trigger rate fetch
       } else {
         notifyListeners();
@@ -280,7 +345,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // 🔄 [修正] 將 _fetchExchangeRate 改為 fetchExchangeRate (拿掉底線，變為公開)
   Future<void> fetchExchangeRate() async {
-    if (_selectedCurrencyConstants == baseCurrencyConstants) {
+    if (_selectedCurrencyConstants == baseCurrency) {
       exchangeRateController.text = '1.0';
       return;
     }
@@ -288,7 +353,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     notifyListeners();
 
     final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrencyConstants.code, to: baseCurrencyConstants.code);
+        from: _selectedCurrencyConstants.code, to: baseCurrency.code);
 
     _isRateLoading = false;
     if (rate != null) {
@@ -367,16 +432,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
       final double exchangeRate =
           double.tryParse(exchangeRateController.text) ?? 1.0;
 
-      final splitResult = BalanceCalculator.calculateSplit(
-          totalAmount: totalAmount,
-          exchangeRate: exchangeRate,
-          splitMethod: _baseSplitMethod,
-          memberIds: _baseMemberIds,
-          details: _baseRawDetails,
-          baseCurrency: baseCurrencyConstants);
-
-      final double calculatedRemainder = splitResult.remainder;
-
       // 2. 建構 RecordModel 物件 (完全對應您的 Model 定義)
       final newRecord = RecordModel(
         id: recordId, // 編輯時有值，新增時為 null
@@ -402,7 +457,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         amount: totalAmount,
         currencyCode: _selectedCurrencyConstants.code, // ✅ 修正名稱: currencyCode
         exchangeRate: exchangeRate,
-        remainder: calculatedRemainder,
+        remainder: calculatedTotalRemainder,
 
         // 分帳邏輯
         splitMethod: _baseSplitMethod,

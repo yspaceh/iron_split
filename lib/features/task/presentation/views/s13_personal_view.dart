@@ -47,7 +47,7 @@ class S13PersonalView extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: PersonalBalanceCard(
-                      baseCurrencyConstants: vm.currencyOption,
+                      baseCurrency: vm.baseCurrency,
                       netBalance: vm.personalNetBalance, // 從 VM 拿計算好的值
                       uid: vm.currentUserId,
                       memberData: memberData, // 傳入 Map
@@ -101,7 +101,7 @@ class S13PersonalView extends StatelessWidget {
                       DailyHeader(
                           date: date,
                           total: dayMyDebit, // 顯示我的消費
-                          baseCurrencyConstants: vm.currencyOption,
+                          baseCurrency: vm.baseCurrency,
                           isPersonal: true),
                       if (dayRecords.isEmpty)
                         Padding(
@@ -117,14 +117,14 @@ class S13PersonalView extends StatelessWidget {
                         ...dayRecords.map((record) {
                           double displayAmount = record.type == 'income'
                               ? BalanceCalculator.calculatePersonalCredit(
-                                  record, vm.currentUserId,
+                                  record, vm.currentUserId, vm.baseCurrency,
                                   isBaseCurrency: false)
                               : BalanceCalculator.calculatePersonalDebit(
-                                  record, vm.currentUserId,
+                                  record, vm.currentUserId, vm.baseCurrency,
                                   isBaseCurrency: false);
                           return RecordItem(
                             record: record,
-                            baseCurrencyConstants: vm.currencyOption,
+                            baseCurrency: vm.baseCurrency,
                             displayAmount: displayAmount,
                             onTap: () {
                               context.pushNamed(
@@ -134,7 +134,7 @@ class S13PersonalView extends StatelessWidget {
                                 extra: {
                                   // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
                                   'poolBalancesByCurrency': vm.poolBalances,
-                                  'baseCurrencyConstants': vm.currencyOption,
+                                  'baseCurrency': vm.baseCurrency,
                                   'record': record,
                                 },
                               );

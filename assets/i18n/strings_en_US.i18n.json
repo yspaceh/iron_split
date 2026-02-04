@@ -75,6 +75,16 @@
       "rule_order": "Order",
       "rule_member": "Member"
     },
+    "share":{
+      "invite": {
+        "subject": "Join Iron Split Task",
+        "message": "Join my Iron Split task \"{taskName}\"!\nCode: {code}\nLink: {link}"
+      },
+      "settlement": {
+        "subject": "Check Iron Split Task Settlement",
+        "message": "Settlement completed!\nPlease open the Iron Split app to check your \"{taskName}\" payment amount.\nLink：{link}"
+      }
+    },
     "error_prefix": "Error: {message}",
     "please_login": "Please Login",
     "loading": "Loading...",
@@ -243,7 +253,7 @@
       "view_payment_details": "View Payment Details"
     },
     "retention_notice": "Data will be retained for 30 days. Please download your records.",
-    "label_remainder_absorbed_by": "Remainder {amount} absorbed by {name}",
+    "label_remainder_absorbed_by": "absorbed by {name}",
     "section_pending": "Pending",
     "section_cleared": "Cleared",
     "member_payment_status_pay": "To Pay",
@@ -290,7 +300,6 @@
     "remainder_winner_prefix": "Remainder goes to:",
     "remainder_winner_total": "${winnerName}'s result change to ${prefix} ${total}",
     "total_label": "Total Settlement Amount",
-    "share_message": "Settlement completed!\nPlease open the Iron Split app to check your \"{taskName}\" payment amount.\nLink：{link}",
     "buttons": {
       "share": "Send Settlement Notification",
       "back": "Back to Task"
@@ -390,9 +399,7 @@
     "label_currency": "Currency",
     "label_members": "Members",
     "creating_task": "Creating task...",
-    "preparing_share": "Preparing invite...",
-    "share_subject": "Join Iron Split Task",
-    "share_message": "Join my Iron Split task \"{taskName}\"!\nCode: {code}\nLink: {link}"
+    "preparing_share": "Preparing invite..."
   },
   "D05_DateJump_NoResult": {
     "title": "No Record",

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 // Core & Constants
@@ -142,20 +142,29 @@ class _S32ContentState extends State<_S32Content> {
     }
 
     Future<void> onShareTap() async {
-      final inviteLink = vm.generateShareLink();
-
-      // 3. 觸發原生 Share Sheet
-      await SharePlus.instance.share(
-        ShareParams(
-          text: t.S32_settlement_result.share_message(
+      try {
+        if (context.mounted) {
+          await TaskShareHelper.shareSettlement(
+            context: context,
+            taskId: vm.taskId,
             taskName: vm.task!.name,
-            link: inviteLink,
-          ),
-          subject: t.D03_TaskCreate_Confirm.share_subject,
-        ),
-      );
-      if (context.mounted) {
-        onBackToTask();
+          );
+
+          // 3. 導航到任務 Dashboard
+          if (mounted) {
+            onBackToTask();
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          debugPrint(e.toString());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(Translations.of(context)
+                    .common
+                    .error_prefix(message: e.toString()))),
+          );
+        }
       }
     }
 

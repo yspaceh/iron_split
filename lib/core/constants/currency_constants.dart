@@ -17,6 +17,7 @@ class CurrencyConstants {
   });
 
   static const String defaultCode = 'USD';
+  static const String defaultSymbol = '\$';
   static const CurrencyConstants defaultCurrencyConstants =
       CurrencyConstants(code: 'USD', symbol: '\$', decimalDigits: 2);
 

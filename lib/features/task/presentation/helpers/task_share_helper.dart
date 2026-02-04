@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -34,17 +35,38 @@ class TaskShareHelper {
 
     // 2. 統一組裝連結 (Single Source of Truth)
     // 確保這裡的 schema 全 App 只有一個地方定義
-    final inviteLink = 'iron-split://join?code=$code';
+    final link = DeepLinkService().generateJoinLink(taskId);
 
     // 3. 觸發原生 Share Sheet
     await SharePlus.instance.share(
       ShareParams(
-        text: t.D03_TaskCreate_Confirm.share_message(
+        text: t.common.share.invite.message(
           taskName: taskName,
           code: code,
-          link: inviteLink,
+          link: link,
         ),
-        subject: t.D03_TaskCreate_Confirm.share_subject,
+        subject: t.common.share.invite.subject,
+      ),
+    );
+  }
+
+  /// 分享結算通知 (S17/S32 使用)
+  static Future<void> shareSettlement({
+    required BuildContext context,
+    required String taskId,
+    required String taskName,
+  }) async {
+    final t = Translations.of(context);
+    final link = DeepLinkService().generateTaskLink(taskId);
+
+    // 3. 呼叫原生分享
+    await SharePlus.instance.share(
+      ShareParams(
+        text: t.common.share.settlement.message(
+          taskName: taskName,
+          link: link,
+        ),
+        subject: t.common.share.settlement.subject,
       ),
     );
   }

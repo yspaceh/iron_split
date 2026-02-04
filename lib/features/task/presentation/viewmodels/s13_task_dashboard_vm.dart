@@ -70,7 +70,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   Map<String, dynamic> get membersData => _task?.members ?? {};
 
   // 新增：為了支援 UI 顯示 Currency Symbol
-  CurrencyConstants get currencyOption {
+  CurrencyConstants get baseCurrency {
     if (_task == null) {
       return CurrencyConstants.defaultCurrencyConstants; // Default
     }
@@ -139,12 +139,11 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
     // B. 分組與個人數據
     _groupedRecords = _service.groupRecordsByDate(_records);
-    _personalRecords = _service.filterPersonalRecords(_records, currentUserId);
+    _personalRecords =
+        _service.filterPersonalRecords(_records, currentUserId, baseCurrency);
     _personalGroupedRecords = _service.groupRecordsByDate(_personalRecords);
     _personalNetBalance = _service.calculatePersonalNetBalance(
-      allRecords: _records,
-      uid: currentUserId,
-    );
+        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
     final startDate = _task!.startDate ?? DateTime.now();
@@ -316,7 +315,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   // Helper for Daily Header Calculation (給 View 用)
   double calculateDailyPersonalDebit(DateTime date) {
     final dayRecords = _personalGroupedRecords[date] ?? [];
-    return _service.calculateDailyPersonalDebit(dayRecords, currentUserId);
+    return _service.calculateDailyPersonalDebit(
+        dayRecords, currentUserId, baseCurrency);
   }
 
   /// 刪除消費紀錄

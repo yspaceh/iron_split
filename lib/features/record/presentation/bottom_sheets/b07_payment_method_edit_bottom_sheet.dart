@@ -489,7 +489,7 @@ class _B07PaymentMethodEditBottomSheetState
   }
 
   Widget _buildSummaryRow(
-      String label, double amount, CurrencyConstants currencyOption,
+      String label, double amount, CurrencyConstants currencyConstants,
       {Color? color,
       bool isBold = false,
       bool hideAmount = false,
@@ -502,7 +502,7 @@ class _B07PaymentMethodEditBottomSheetState
                 color: color, fontWeight: isBold ? FontWeight.bold : null)),
         Text(
           customValueText ??
-              CurrencyConstants.formatAmount(amount, currencyOption.code),
+              CurrencyConstants.formatAmount(amount, currencyConstants.code),
           style: TextStyle(
               color: color, fontWeight: isBold ? FontWeight.bold : null),
         ),

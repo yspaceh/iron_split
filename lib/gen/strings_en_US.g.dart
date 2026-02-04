@@ -87,6 +87,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
 	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
+	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
 	@override String get please_login => 'Please Login';
 	@override String get loading => 'Loading...';
@@ -305,7 +306,7 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsEnUs buttons = _TranslationsS17TaskLockedButtonsEnUs._(_root);
 	@override String get retention_notice => 'Data will be retained for 30 days. Please download your records.';
-	@override String label_remainder_absorbed_by({required Object amount, required Object name}) => 'Remainder ${amount} absorbed by ${name}';
+	@override String label_remainder_absorbed_by({required Object name}) => 'absorbed by ${name}';
 	@override String get section_pending => 'Pending';
 	@override String get section_cleared => 'Cleared';
 	@override String get member_payment_status_pay => 'To Pay';
@@ -357,7 +358,6 @@ class _TranslationsS32SettlementResultEnUs extends TranslationsS32SettlementResu
 	@override String get remainder_winner_prefix => 'Remainder goes to:';
 	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}\'s result change to \$${prefix} \$${total}';
 	@override String get total_label => 'Total Settlement Amount';
-	@override String share_message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
 	@override late final _TranslationsS32SettlementResultButtonsEnUs buttons = _TranslationsS32SettlementResultButtonsEnUs._(_root);
 }
 
@@ -489,8 +489,6 @@ class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateCon
 	@override String get label_members => 'Members';
 	@override String get creating_task => 'Creating task...';
 	@override String get preparing_share => 'Preparing invite...';
-	@override String get share_subject => 'Join Iron Split Task';
-	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}';
 }
 
 // Path: D05_DateJump_NoResult
@@ -776,6 +774,17 @@ class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRu
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
+}
+
+// Path: common.share
+class _TranslationsCommonShareEnUs extends TranslationsCommonShareZhTw {
+	_TranslationsCommonShareEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsCommonShareInviteEnUs invite = _TranslationsCommonShareInviteEnUs._(_root);
+	@override late final _TranslationsCommonShareSettlementEnUs settlement = _TranslationsCommonShareSettlementEnUs._(_root);
 }
 
 // Path: S11_Invite_Confirm.buttons
@@ -1150,6 +1159,28 @@ class _TranslationsErrorSettlementEnUs extends TranslationsErrorSettlementZhTw {
 	@override String get transaction_failed => 'System error. Settlement failed. Please try again later.';
 }
 
+// Path: common.share.invite
+class _TranslationsCommonShareInviteEnUs extends TranslationsCommonShareInviteZhTw {
+	_TranslationsCommonShareInviteEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get subject => 'Join Iron Split Task';
+	@override String message({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}';
+}
+
+// Path: common.share.settlement
+class _TranslationsCommonShareSettlementEnUs extends TranslationsCommonShareSettlementZhTw {
+	_TranslationsCommonShareSettlementEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get subject => 'Check Iron Split Task Settlement';
+	@override String message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
+}
+
 // Path: error.settlement.data_conflict
 class _TranslationsErrorSettlementDataConflictEnUs extends TranslationsErrorSettlementDataConflictZhTw {
 	_TranslationsErrorSettlementDataConflictEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1232,6 +1263,10 @@ extension on TranslationsEnUs {
 			'common.remainder_rule.rule_random' => 'Random',
 			'common.remainder_rule.rule_order' => 'Order',
 			'common.remainder_rule.rule_member' => 'Member',
+			'common.share.invite.subject' => 'Join Iron Split Task',
+			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
+			'common.share.settlement.subject' => 'Check Iron Split Task Settlement',
+			'common.share.settlement.message' => ({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}',
 			'common.error_prefix' => ({required Object message}) => 'Error: ${message}',
 			'common.please_login' => 'Please Login',
 			'common.loading' => 'Loading...',
@@ -1368,7 +1403,7 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
 			'S17_Task_Locked.buttons.view_payment_details' => 'View Payment Details',
 			'S17_Task_Locked.retention_notice' => 'Data will be retained for 30 days. Please download your records.',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => 'Remainder ${amount} absorbed by ${name}',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'absorbed by ${name}',
 			'S17_Task_Locked.section_pending' => 'Pending',
 			'S17_Task_Locked.section_cleared' => 'Cleared',
 			'S17_Task_Locked.member_payment_status_pay' => 'To Pay',
@@ -1399,7 +1434,6 @@ extension on TranslationsEnUs {
 			'S32_settlement_result.remainder_winner_prefix' => 'Remainder goes to:',
 			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}\'s result change to \$${prefix} \$${total}',
 			'S32_settlement_result.total_label' => 'Total Settlement Amount',
-			'S32_settlement_result.share_message' => ({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}',
 			'S32_settlement_result.buttons.share' => 'Send Settlement Notification',
 			'S32_settlement_result.buttons.back' => 'Back to Task',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
@@ -1466,8 +1500,6 @@ extension on TranslationsEnUs {
 			'D03_TaskCreate_Confirm.label_members' => 'Members',
 			'D03_TaskCreate_Confirm.creating_task' => 'Creating task...',
 			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
-			'D03_TaskCreate_Confirm.share_subject' => 'Join Iron Split Task',
-			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
 			'D05_DateJump_NoResult.title' => 'No Record',
 			'D05_DateJump_NoResult.buttons.cancel' => 'Back',
 			'D05_DateJump_NoResult.buttons.add' => 'Add Record',

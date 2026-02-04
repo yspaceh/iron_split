@@ -53,7 +53,7 @@ class _S10Content extends StatelessWidget {
       ),
       // 還原 FAB
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/tasks/create'),
+        onPressed: () => context.pushNamed('S16'),
         icon: const Icon(Icons.add),
         label: Text(t.S16_TaskCreate_Edit.title), // 使用 S16 的標題 '建立任務'
         shape: const StadiumBorder(),
@@ -160,7 +160,23 @@ class _S10Content extends StatelessWidget {
                             task: task,
                             currentUserId: vm.currentUserId, // 傳入 uid 找頭像
                             isCaptain: vm.isCaptain(task),
-                            onTap: () => context.push('/tasks/${task.id}'),
+                            onTap: () {
+                              switch (task.status) {
+                                case 'ongoing':
+                                case 'pending':
+                                  context.pushNamed('S13', pathParameters: {
+                                    'taskId': task.id,
+                                  });
+                                  break;
+                                case 'settled':
+                                case 'closed':
+                                  context.pushNamed('S17', pathParameters: {
+                                    'taskId': task.id,
+                                  });
+                                  break;
+                                default:
+                              }
+                            },
                             onDelete: () => vm.deleteTask(task.id),
                           );
                         },

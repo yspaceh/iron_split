@@ -8,7 +8,7 @@ import 'package:iron_split/gen/strings.g.dart';
 class RecordItem extends StatelessWidget {
   final RecordModel record;
   final double displayAmount;
-  final CurrencyConstants baseCurrencyConstants;
+  final CurrencyConstants baseCurrency;
   final VoidCallback? onTap;
   final Future<void> Function(BuildContext context)? onDelete;
 
@@ -16,7 +16,7 @@ class RecordItem extends StatelessWidget {
     super.key,
     required this.record,
     required this.displayAmount,
-    required this.baseCurrencyConstants,
+    required this.baseCurrency,
     this.onTap,
     this.onDelete,
   });
@@ -99,9 +99,9 @@ class RecordItem extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (originalCurrencyConstants != baseCurrencyConstants)
+            if (originalCurrencyConstants != baseCurrency)
               Text(
-                "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(displayAmount * exchangeRate, baseCurrencyConstants.code)}",
+                "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(displayAmount * exchangeRate, baseCurrency.code)}",
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.grey,
                 ),

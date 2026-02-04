@@ -11,21 +11,18 @@ import 'dart:ui' as ui;
 class GroupBalanceCard extends StatelessWidget {
   // 唯一的資料來源
   final BalanceSummaryState state;
-
   // 事件回調
   final VoidCallback? onCurrencyTap;
   final VoidCallback? onRuleTap;
+  final double? fixedHeight;
 
   const GroupBalanceCard({
     super.key,
     required this.state,
     this.onCurrencyTap,
     this.onRuleTap,
+    this.fixedHeight,
   });
-
-  /// ! CRITICAL LAYOUT CONFIGURATION !
-  /// Used by S13Page to calculate Sticky Header size.
-  static const double fixedHeight = 176.0;
 
   @override
   Widget build(BuildContext context) {
@@ -362,7 +359,6 @@ class GroupBalanceCard extends StatelessWidget {
                             Icon(Icons.savings_outlined,
                                 size: 20, color: theme.colorScheme.secondary),
                             Text(" : ", style: theme.textTheme.bodyMedium),
-                            const SizedBox(height: 2),
                             Text(
                               "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
                               style: theme.textTheme.bodySmall?.copyWith(
@@ -370,6 +366,18 @@ class GroupBalanceCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(width: 4),
+                            if (state.isLocked && state.absorbedBy != null) ...[
+                              Text(
+                                t.S17_Task_Locked.label_remainder_absorbed_by(
+                                  name: state.absorbedBy ?? "",
+                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ]
                           ],
                         ),
                       ),
@@ -407,26 +415,6 @@ class GroupBalanceCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-              ),
-
-              // S17 Locked View Specific (Absorbed By)
-              Visibility(
-                visible: state.isLocked && state.absorbedBy != null,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8.0), // slightly adjusted for flow
-                  child: Text(
-                    // 使用 S17 的 i18n
-                    t.S17_Task_Locked.label_remainder_absorbed_by(
-                      amount:
-                          "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.absorbedAmount ?? 0, state.currencyCode)}",
-                      name: state.absorbedBy ?? "",
-                    ),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.outline,
-                    ),
-                  ),
                 ),
               ),
             ],

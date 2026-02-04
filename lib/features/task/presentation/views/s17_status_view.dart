@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/s17_task_locked_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-enum LockedMode { closed, cleared }
-
 class S17StatusView extends StatelessWidget {
-  final LockedMode mode;
+  final LockedPageStatus pageStatus;
 
   const S17StatusView({
     super.key,
-    required this.mode,
+    required this.pageStatus,
   });
 
   void _handleDownload(BuildContext context) {
@@ -24,7 +23,7 @@ class S17StatusView extends StatelessWidget {
     final theme = Theme.of(context);
 
     // 根據 Mode 決定圖片路徑 (示意)
-    final imagePath = mode == LockedMode.cleared
+    final imagePath = pageStatus == LockedPageStatus.cleared
         ? 'assets/images/img_settlement_cleared.png'
         : 'assets/images/img_task_closed.png';
 
@@ -42,7 +41,9 @@ class S17StatusView extends StatelessWidget {
             height: 160,
             fit: BoxFit.contain,
             errorBuilder: (_, __, ___) => Icon(
-              mode == LockedMode.cleared ? Icons.check_circle : Icons.lock,
+              pageStatus == LockedPageStatus.cleared
+                  ? Icons.check_circle
+                  : Icons.lock,
               size: 80,
               color: theme.colorScheme.secondary,
             ),

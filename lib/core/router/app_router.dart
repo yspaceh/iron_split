@@ -87,7 +87,7 @@ class AppRouter {
 
       // S17_Task.Locked
       GoRoute(
-        path: 'locked',
+        path: '/locked/:taskId',
         name: 'S17',
         builder: (context, state) {
           final taskId = state.pathParameters['taskId']!;
@@ -170,8 +170,8 @@ class AppRouter {
                   extra['poolBalancesByCurrency'] as Map<String, double>? ?? {};
               final record = extra['record'] as RecordModel?;
               final date = extra['date'] as DateTime?;
-              final baseCurrencyConstants =
-                  extra['baseCurrencyConstants'] as CurrencyConstants? ??
+              final baseCurrency =
+                  extra['baseCurrency'] as CurrencyConstants? ??
                       CurrencyConstants.defaultCurrencyConstants;
 
               return S15RecordEditPage(
@@ -179,7 +179,7 @@ class AppRouter {
                 recordId: recordId,
                 record: record,
                 poolBalancesByCurrency: poolBalancesByCurrency,
-                baseCurrencyConstants: baseCurrencyConstants,
+                baseCurrency: baseCurrency,
                 initialDate: date,
               );
             },

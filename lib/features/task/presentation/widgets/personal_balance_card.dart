@@ -6,14 +6,14 @@ import 'package:iron_split/features/common/presentation/widgets/common_avatar.da
 import 'package:iron_split/gen/strings.g.dart';
 
 class PersonalBalanceCard extends StatelessWidget {
-  final CurrencyConstants baseCurrencyConstants;
+  final CurrencyConstants baseCurrency;
   final double netBalance; // 直接接收計算結果
   final String uid;
   final Map<String, dynamic>? memberData;
 
   const PersonalBalanceCard({
     super.key,
-    required this.baseCurrencyConstants,
+    required this.baseCurrency,
     required this.netBalance,
     required this.uid,
     required this.memberData,
@@ -65,7 +65,7 @@ class PersonalBalanceCard extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 ),
                 Text(
-                  '${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(netBalance.abs(), baseCurrencyConstants.code)}',
+                  '${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(netBalance.abs(), baseCurrency.code)}',
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.bold,

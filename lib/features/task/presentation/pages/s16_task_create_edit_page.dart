@@ -77,7 +77,7 @@ class _S16ContentState extends State<_S16Content> {
         taskName: _nameController.text.trim(),
         startDate: vm.startDate,
         endDate: vm.endDate,
-        baseCurrencyConstants: vm.baseCurrencyConstants,
+        baseCurrency: vm.baseCurrency,
         memberCount: vm.memberCount,
       ),
     );
@@ -198,7 +198,7 @@ class _S16ContentState extends State<_S16Content> {
                         title: t.S16_TaskCreate_Edit.section_settings,
                         children: [
                           TaskCurrencyInput(
-                            currency: vm.baseCurrencyConstants,
+                            currency: vm.baseCurrency,
                             onCurrencyChanged: vm.updateCurrency,
                             enabled: vm.isCurrencyEnabled,
                           ),

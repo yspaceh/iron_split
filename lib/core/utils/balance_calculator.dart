@@ -22,26 +22,32 @@ class BalanceCalculator {
   static double calculatePersonalNetBalance(
       {required List<RecordModel> allRecords,
       required String uid,
+      required CurrencyConstants baseCurrency,
       required bool isBaseCurrency}) {
     double totalPaid = 0.0;
     double totalConsumed = 0.0;
 
     for (var record in allRecords) {
-      totalPaid +=
-          calculatePersonalCredit(record, uid, isBaseCurrency: isBaseCurrency);
-      totalConsumed +=
-          calculatePersonalDebit(record, uid, isBaseCurrency: isBaseCurrency);
+      totalPaid += calculatePersonalCredit(record, uid, baseCurrency,
+          isBaseCurrency: isBaseCurrency);
+      totalConsumed += calculatePersonalDebit(record, uid, baseCurrency,
+          isBaseCurrency: isBaseCurrency);
     }
 
     return totalPaid - totalConsumed;
   }
 
   /// 判斷使用者是否與此紀錄有關
-  static bool isUserInvolved(RecordModel record, String uid) {
-    if (calculatePersonalCredit(record, uid, isBaseCurrency: false) > 0) {
+  static bool isUserInvolved(
+      RecordModel record, String uid, CurrencyConstants baseCurrency) {
+    if (calculatePersonalCredit(record, uid, baseCurrency,
+            isBaseCurrency: false) >
+        0) {
       return true;
     }
-    if (calculatePersonalDebit(record, uid, isBaseCurrency: false) > 0) {
+    if (calculatePersonalDebit(record, uid, baseCurrency,
+            isBaseCurrency: false) >
+        0) {
       return true;
     }
 
@@ -61,17 +67,29 @@ class BalanceCalculator {
   }
 
   /// 公開方法：計算單筆紀錄對使用者的消費影響 (Debit)
-  static double calculatePersonalDebit(RecordModel record, String uid,
+  static double calculatePersonalDebit(
+      RecordModel record, String uid, CurrencyConstants baseCurrency,
       {required bool isBaseCurrency}) {
     if (record.type == 'income') return 0.0;
 
     double totalDebit = 0.0;
     double exchangeRate = isBaseCurrency ? record.exchangeRate : 1.0;
 
-    // 1. 處理細項分攤
+    // 1. 處理細項分攤 (Items)
     if (record.details.isNotEmpty) {
       for (var item in record.details) {
-        totalDebit += _calculateItemDebit(item, uid, exchangeRate);
+        // [關鍵改變] 直接呼叫 calculateSplit 算這一個 Item 的分配
+        final itemSplitResult = calculateSplit(
+          totalAmount: item.amount,
+          exchangeRate: exchangeRate,
+          splitMethod: item.splitMethod,
+          memberIds: item.splitMemberIds,
+          details: item.splitDetails ?? {}, // 權重 map
+          baseCurrency: baseCurrency, // 傳入幣別以決定小數點精度
+        );
+
+        // 取出使用者的份額 (如果沒分到就是 0)
+        totalDebit += itemSplitResult.baseAmounts[uid] ?? 0.0;
       }
     }
 
@@ -81,8 +99,18 @@ class BalanceCalculator {
     double remainingAmount = record.originalAmount - amountCoveredByItems;
 
     if (remainingAmount > 0.001) {
-      totalDebit += _calculateBaseRemainingDebit(
-          record, uid, remainingAmount, exchangeRate);
+      // [關鍵改變] 直接呼叫 calculateSplit 算剩餘金額的分配
+      final mainSplitResult = calculateSplit(
+        totalAmount: remainingAmount,
+        exchangeRate: exchangeRate,
+        splitMethod: record.splitMethod, // 使用 Record 主體的規則
+        memberIds: record.splitMemberIds, // 使用 Record 主體的成員
+        details: record.splitDetails ?? {}, // 使用 Record 主體的權重
+        baseCurrency: baseCurrency,
+      );
+
+      // 取出使用者的份額
+      totalDebit += mainSplitResult.baseAmounts[uid] ?? 0.0;
     }
 
     return totalDebit;
@@ -92,46 +120,61 @@ class BalanceCalculator {
   /// 1. 支援 Expense 類型的代墊計算 (Member Advance)
   /// 2. 支援 Mixed 支付中的代墊部分
   /// 3. 確保 Income 的指定金額 (splitDetails) 也有乘上匯率
-  static double calculatePersonalCredit(RecordModel record, String uid,
+  static double calculatePersonalCredit(
+      RecordModel record, String uid, CurrencyConstants baseCurrency,
       {required bool isBaseCurrency}) {
     // 取得匯率 (若不需要換算則為 1.0)
     double exchangeRate = isBaseCurrency ? record.exchangeRate : 1.0;
 
     // --- 處理支出 (Expense) 的代墊貢獻 ---
     if (record.type == 'expense') {
+      double rawAmount = 0.0;
+
       // 情況 A: 單一成員全額代墊
       if (record.payerType == 'member' && record.payerId == uid) {
-        return record.originalAmount * exchangeRate;
+        rawAmount = record.originalAmount;
       }
-
       // 情況 B: 混合支付 (Mixed) 中的成員代墊部分
-      if (record.payerType == 'mixed' && record.paymentDetails != null) {
-        final advances = record.paymentDetails!['memberAdvances'];
+      else if (record.payerType == 'mixed' && record.paymentDetails != null) {
+        // [修正] 這裡修正了之前提到的 Key 拼字錯誤 memberAdvances -> memberAdvance
+        final advances = record.paymentDetails!['memberAdvance'];
         if (advances is Map && advances.containsKey(uid)) {
-          double amount = (advances[uid] as num).toDouble();
-          return amount * exchangeRate;
+          rawAmount = (advances[uid] as num).toDouble();
         }
       }
-
       // 情況 C: 公款支付 (Prepay) -> 個人貢獻為 0
+      else {
+        return 0.0;
+      }
+
+      // [重點] 這裡也要模擬 calculateSplit 的總額計算邏輯
+      // 必須使用同樣的 floorToPrecision，否則會出現 Payer 付了 300.9，但總 Split 只有 300 的狀況
+      if (rawAmount > 0) {
+        return floorToPrecision(rawAmount * exchangeRate, baseCurrency);
+      }
       return 0.0;
     }
 
     // --- 處理收入 (Income) 的入金貢獻 ---
     if (record.type == 'income') {
-      // 情況 A: 指定金額 (Exact)
-      if (record.splitDetails != null &&
-          record.splitDetails!.containsKey(uid)) {
-        double amount = (record.splitDetails![uid] as num).toDouble();
-        // 修正：原本漏了乘上匯率，這裡補上
-        return amount * exchangeRate;
-      }
+      // 不管是 Even 還是 Exact，Income 的邏輯其實就是「把這筆錢分到參與者頭上」
+      // 這與 calculateSplit 的邏輯完全共用
+      final splitResult = calculateSplit(
+        totalAmount: record.originalAmount,
+        exchangeRate: exchangeRate,
+        splitMethod: record.splitMethod, // 這裡通常是 Even 或 Exact
+        memberIds: record.splitMemberIds,
+        details: record.splitDetails ?? {},
+        baseCurrency: baseCurrency,
+      );
 
-      // 情況 B: 均分 (Even)
-      if (record.splitMemberIds.contains(uid)) {
-        return record.originalAmount *
-            exchangeRate /
-            record.splitMemberIds.length;
+      // 直接取出該使用者的份額 (已經包含 Floor 處理)
+      // 如果 isBaseCurrency 為 true，取 baseAmounts；否則取 sourceAmounts (雖然 Income 通常看 Base)
+      if (isBaseCurrency) {
+        return splitResult.baseAmounts[uid] ?? 0.0;
+      } else {
+        // 如果是要算原幣，理論上 calculateSplit 也有保留 sourceAmounts
+        return splitResult.sourceAmounts[uid] ?? 0.0;
       }
     }
 
@@ -143,61 +186,15 @@ class BalanceCalculator {
   static double calculateRemainderBuffer(List<RecordModel> records) {
     double totalBuffer = 0.0;
     for (var r in records) {
-      // 直接累加，不再重跑分配演算法
-      totalBuffer += r.remainder;
+      if (r.type == 'income') {
+        // 預收：加項
+        totalBuffer += r.remainder;
+      } else if (r.type == 'expense') {
+        // 費用：減項
+        totalBuffer -= r.remainder;
+      }
     }
     return double.parse(totalBuffer.toStringAsFixed(2));
-  }
-
-  // --- 私有計算邏輯 ---
-
-  static double _calculateItemDebit(
-      RecordDetail detail, String uid, double effectiveRate) {
-    if (!detail.splitMemberIds.contains(uid)) return 0.0;
-
-    switch (detail.splitMethod) {
-      case SplitMethodConstants.even:
-        return detail.amount * effectiveRate / detail.splitMemberIds.length;
-      case SplitMethodConstants.exact:
-        return detail.splitDetails?[uid] ?? 0.0;
-      case SplitMethodConstants.percent:
-        return _calculateWeightBasedAmount(
-            detail.amount, detail.splitDetails, uid, effectiveRate);
-      default:
-        return 0.0;
-    }
-  }
-
-  static double _calculateBaseRemainingDebit(
-      RecordModel record, String uid, double amount, double effectiveRate) {
-    if (!record.splitMemberIds.contains(uid)) return 0.0;
-
-    switch (record.splitMethod) {
-      case SplitMethodConstants.even:
-        return amount * effectiveRate / record.splitMemberIds.length;
-      case SplitMethodConstants.exact:
-        return record.splitDetails?[uid] ?? 0.0;
-      case SplitMethodConstants.percent:
-        return _calculateWeightBasedAmount(
-            amount, record.splitDetails, uid, effectiveRate);
-      default:
-        return 0.0;
-    }
-  }
-
-  /// 權重/比例計算核心 (修正比例分攤顯示 JPY 2 的問題)
-  static double _calculateWeightBasedAmount(double totalAmount,
-      Map<String, dynamic>? details, String uid, double effectiveRate) {
-    if (details == null || details.isEmpty) return 0.0;
-
-    double myWeight = (details[uid] as num? ?? 0.0).toDouble();
-    double totalWeights =
-        details.values.fold(0.0, (sum, w) => sum + (w as num).toDouble());
-
-    if (totalWeights > 0) {
-      return totalAmount * effectiveRate * (myWeight / totalWeights);
-    }
-    return 0.0;
   }
 
   /// 計算公款剩餘總價值 (Pool Value in Base Currency)
@@ -319,6 +316,19 @@ class BalanceCalculator {
     return balances;
   }
 
+  // [工具函式] 依照幣別精度進行無條件捨去
+  // 邏輯：先乘倍數變整數 -> floor -> 再除回倍數
+  static double floorToPrecision(double value, CurrencyConstants baseCurrency) {
+    // 1. 取得該幣別的小數點位數 (與 formatAmount 邏輯同步)
+    // 假設 getCurrencyConstants 是全域可用或已 import 的函式
+    final int baseDecimals = baseCurrency.decimalDigits;
+
+    // [工具] 計算精度倍數 (例如 2位小數 -> factor = 100)
+    final double factor = pow(10, baseDecimals).toDouble();
+    if (baseDecimals == 0) return value.floorToDouble(); // 優化效能
+    return (value * factor).floorToDouble() / factor;
+  }
+
   /// [核心修正] 全站統一的分帳計算機
   /// 輸入：總金額、匯率、分帳設定
   /// 輸出：完整的分配結果 (包含 UI 要顯示的金額 + 存檔要用的零頭)
@@ -333,23 +343,10 @@ class BalanceCalculator {
     final Map<String, double> sourceAmounts = {};
     final Map<String, double> baseAmounts = {};
 
-    // 1. 取得該幣別的小數點位數 (與 formatAmount 邏輯同步)
-    // 假設 getCurrencyConstants 是全域可用或已 import 的函式
-    final int baseDecimals = baseCurrency.decimalDigits;
-
-    // [工具] 計算精度倍數 (例如 2位小數 -> factor = 100)
-    final double factor = pow(10, baseDecimals).toDouble();
-
-    // [工具函式] 依照幣別精度進行無條件捨去
-    // 邏輯：先乘倍數變整數 -> floor -> 再除回倍數
-    double floorToPrecision(double value) {
-      if (baseDecimals == 0) return value.floorToDouble(); // 優化效能
-      return (value * factor).floorToDouble() / factor;
-    }
-
     // 2. Base Total
     // 使用 floorToPrecision 確保不會超過總額
-    final double baseTotal = floorToPrecision(totalAmount * exchangeRate);
+    final double baseTotal =
+        floorToPrecision(totalAmount * exchangeRate, baseCurrency);
 
     // 3. 計算總權重
     double totalWeight = 0.0;
@@ -371,7 +368,8 @@ class BalanceCalculator {
         sourceAmounts[id] = sourceAmount;
 
         // 這裡的邏輯：使用者輸入的原幣金額 -> 換算匯率 -> 依照目標幣別精度取整
-        final baseShare = floorToPrecision(sourceAmount * exchangeRate);
+        final baseShare =
+            floorToPrecision(sourceAmount * exchangeRate, baseCurrency);
 
         baseAmounts[id] = baseShare;
         allocatedBaseSum += baseShare;
@@ -393,7 +391,7 @@ class BalanceCalculator {
 
           // Base Share (Logic):
           // 關鍵：依比例分配 baseTotal，並依照幣別精度取整
-          final baseShare = floorToPrecision(baseTotal * ratio);
+          final baseShare = floorToPrecision(baseTotal * ratio, baseCurrency);
 
           baseAmounts[id] = baseShare;
           allocatedBaseSum += baseShare;
@@ -406,7 +404,8 @@ class BalanceCalculator {
 
     // [最終修整] 強制轉字串再轉回，消除二進制浮點數誤差 (如 0.00000004)
     // 直接使用從 getCurrencyConstants 拿到的 baseDecimals
-    remainder = double.parse(remainder.toStringAsFixed(baseDecimals));
+    remainder =
+        double.parse(remainder.toStringAsFixed(baseCurrency.decimalDigits));
 
     return SplitResult(
       sourceAmounts: sourceAmounts,

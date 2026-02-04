@@ -27,7 +27,7 @@ class S15RecordEditPage extends StatelessWidget {
   final String taskId;
   final String? recordId;
   final RecordModel? record;
-  final CurrencyConstants baseCurrencyConstants;
+  final CurrencyConstants baseCurrency;
   final Map<String, double> poolBalancesByCurrency;
   final DateTime? initialDate;
 
@@ -36,7 +36,7 @@ class S15RecordEditPage extends StatelessWidget {
     required this.taskId,
     this.recordId,
     this.record,
-    this.baseCurrencyConstants = CurrencyConstants.defaultCurrencyConstants,
+    this.baseCurrency = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     this.initialDate,
   });
@@ -48,7 +48,7 @@ class S15RecordEditPage extends StatelessWidget {
         taskId: taskId,
         recordId: recordId,
         record: record,
-        baseCurrencyConstants: baseCurrencyConstants,
+        baseCurrency: baseCurrency,
         poolBalancesByCurrency: poolBalancesByCurrency,
         initialDate: initialDate,
         taskRepo: context.read<TaskRepository>(),
@@ -123,7 +123,7 @@ class _S15ContentState extends State<_S15Content> {
       initialMemberIds: vm.baseMemberIds,
       initialDetails: vm.baseRawDetails,
       exchangeRate: rate,
-      baseCurrency: vm.baseCurrencyConstants,
+      baseCurrency: vm.baseCurrency,
     );
 
     if (result != null) vm.updateBaseSplit(result);
@@ -154,7 +154,7 @@ class _S15ContentState extends State<_S15Content> {
       parentTitle: vm.titleController.text,
       availableAmount: vm.baseRemainingAmount,
       exchangeRate: rate,
-      baseCurrency: vm.baseCurrencyConstants,
+      baseCurrency: vm.baseCurrency,
     );
 
     if (result != null) vm.addItem(result);
@@ -179,7 +179,7 @@ class _S15ContentState extends State<_S15Content> {
       parentTitle: vm.titleController.text,
       availableAmount: vm.baseRemainingAmount + detail.amount,
       exchangeRate: rate,
-      baseCurrency: vm.baseCurrencyConstants,
+      baseCurrency: vm.baseCurrency,
     );
 
     if (result == 'DELETE') {
@@ -223,7 +223,7 @@ class _S15ContentState extends State<_S15Content> {
       totalAmount: vm.totalAmount,
       poolBalancesByCurrency: vm.poolBalancesByCurrency,
       selectedCurrency: vm.selectedCurrencyConstants,
-      baseCurrency: vm.baseCurrencyConstants,
+      baseCurrency: vm.baseCurrency,
       members: vm.taskMembers,
       initialUsePrepay:
           vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
@@ -270,24 +270,36 @@ class _S15ContentState extends State<_S15Content> {
 
   Future<void> _onDelete(S15RecordEditViewModel vm) async {
     final t = Translations.of(context);
+
+    // [修正 1] 預先取得 Messenger 參考 (因為 pop 之後 context 就會失效)
+    final messenger = ScaffoldMessenger.of(context);
+
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (ctx) => D10RecordDeleteConfirmDialog(
+      // 建議：防止使用者在刪除過程中誤觸背景關閉 Dialog，導致 ctx 失效
+      barrierDismissible: false,
+      builder: (dialogContext) => D10RecordDeleteConfirmDialog(
         title: vm.titleController.text,
         amount: "${vm.selectedCurrencyConstants.symbol} ${vm.totalAmount}",
         onConfirm: () async {
           await vm.deleteRecord(t);
-          if (mounted) {
-            Navigator.pop(ctx, true);
+
+          // [修正 2] 檢查 Dialog 的 context 是否還掛載著 (Flutter 3.7+ 支援 .mounted)
+          if (dialogContext.mounted) {
+            Navigator.pop(dialogContext, true);
           }
         },
       ),
     );
 
     if (confirm == true && mounted) {
-      context.pop();
-      ScaffoldMessenger.of(context).showSnackBar(
+      // [修正 3] 使用預先取得的 messenger 顯示訊息
+      // 這樣即使下面 pop 了頁面，訊息還是能顯示在螢幕上 (因為 SnackBar 是由 Root Scaffold 管理的)
+      messenger.showSnackBar(
           SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)));
+
+      // [修正 4] 最後再關閉頁面
+      context.pop();
     }
   }
 
@@ -361,7 +373,7 @@ class _S15ContentState extends State<_S15Content> {
                       exchangeRateController: vm.exchangeRateController,
                       selectedDate: vm.selectedDate,
                       selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                      baseCurrencyConstants: vm.baseCurrencyConstants,
+                      baseCurrency: vm.baseCurrency,
                       selectedCategoryId: vm.selectedCategoryId,
                       isRateLoading: vm.isRateLoading,
                       poolBalancesByCurrency: vm.poolBalancesByCurrency,
@@ -371,6 +383,7 @@ class _S15ContentState extends State<_S15Content> {
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
                       baseRawDetails: vm.baseRawDetails,
+                      totalRemainder: vm.calculatedTotalRemainder,
                       payerType: vm.payerType,
                       payerId: vm.payerId,
                       hasPaymentError: vm.hasPaymentError,
@@ -390,10 +403,11 @@ class _S15ContentState extends State<_S15Content> {
                       exchangeRateController: vm.exchangeRateController,
                       selectedDate: vm.selectedDate,
                       selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                      baseCurrencyConstants: vm.baseCurrencyConstants,
+                      baseCurrency: vm.baseCurrency,
                       isRateLoading: vm.isRateLoading,
                       members: vm.taskMembers,
                       baseRemainingAmount: vm.totalAmount,
+                      totalRemainder: vm.calculatedTotalRemainder,
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
                       baseRawDetails: vm.baseRawDetails,

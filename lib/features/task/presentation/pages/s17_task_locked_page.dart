@@ -1,11 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+// Services & Repos
+import 'package:iron_split/features/task/data/task_repository.dart';
+
+// VM
+import 'package:iron_split/features/task/presentation/viewmodels/s17_task_locked_vm.dart';
+
+// Views
 import 'package:iron_split/features/task/presentation/views/s17_settled_pending_view.dart';
 import 'package:iron_split/features/task/presentation/views/s17_status_view.dart';
 
 /// Page Key: S17_Task.Locked
-/// 負責：AppBar, Loading, 路由分發
+/// 負責：MVVM 綁定, 路由出口
 class S17TaskLockedPage extends StatelessWidget {
   final String taskId;
 
@@ -13,62 +21,63 @@ class S17TaskLockedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(taskId)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
-        }
+    return ChangeNotifierProvider(
+      create: (context) => S17TaskLockedViewModel(
+        taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+      ),
+      child: const _S17Content(),
+    );
+  }
+}
 
-        final data = snapshot.data!.data() as Map<String, dynamic>?;
-        if (data == null) return const Scaffold(body: SizedBox());
+class _S17Content extends StatelessWidget {
+  const _S17Content();
 
-        // 狀態判斷
-        final status = data['status'] as String? ?? 'closed';
-        final settlementData =
-            data['settlement'] as Map<String, dynamic>? ?? {};
-        final settlementStatus =
-            settlementData['status'] as String? ?? 'pending';
+  @override
+  Widget build(BuildContext context) {
+    // 監聽 VM 狀態
+    final vm = context.watch<S17TaskLockedViewModel>();
 
-        Widget content;
-
-        // 路由邏輯
-        if (status == 'closed') {
-          // WF33: 手動結束 -> 鎖頭
-          content = const S17StatusView(
-            mode: LockedMode.closed,
-          );
-        } else if (status == 'settled') {
-          if (settlementStatus == 'cleared') {
-            // WF45: 結算完成 -> 打勾
-            content = const S17StatusView(
-              mode: LockedMode.cleared,
-            );
-          } else {
-            // WF41: 結算進行中 -> 儀表板
-            content = S17SettledPendingView();
-          }
-        } else {
-          // 例外處理
-          content = const SizedBox();
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(data['name'] ?? ''),
-            centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(Icons.keyboard_arrow_down),
-              onPressed: () => context.goNamed('S10'), // 唯一出口
-            ),
-          ),
-          body: content,
+    Widget content;
+    switch (vm.status) {
+      case LockedPageStatus.loading:
+        content = const Center(child: CircularProgressIndicator());
+        break;
+      case LockedPageStatus.closed:
+        content = const S17StatusView(pageStatus: LockedPageStatus.closed);
+        break;
+      case LockedPageStatus.cleared:
+        content = const S17StatusView(pageStatus: LockedPageStatus.cleared);
+        break;
+      case LockedPageStatus.pending:
+        // 將 VM 處理好的資料傳給 View
+        // 注意：這裡我們確保 View 是 Dumb 的，它不需要知道 VM 的存在，只需要資料
+        content = S17SettledPendingView(
+          taskId: vm.taskId,
+          taskName: vm.taskName,
+          isCaptain: vm.isCaptain,
+          balanceState: vm.balanceState!,
+          pendingMembers: vm.pendingMembers,
+          clearedMembers: vm.clearedMembers,
         );
-      },
+        break;
+      case LockedPageStatus.error:
+        content = const Center(child: Text('Error loading task'));
+        break;
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(vm.taskName),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.keyboard_arrow_down),
+          // S10 為 Dashboard，這是此流程的唯一出口
+          onPressed: () => context.goNamed('S10'),
+        ),
+      ),
+      body: content,
     );
   }
 }

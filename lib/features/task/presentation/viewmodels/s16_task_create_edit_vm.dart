@@ -16,8 +16,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   // State
   late DateTime _startDate;
   late DateTime _endDate;
-  CurrencyConstants _baseCurrencyConstants =
-      CurrencyConstants.defaultCurrencyConstants;
+  CurrencyConstants _baseCurrency = CurrencyConstants.defaultCurrencyConstants;
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
   bool _isProcessing = false;
@@ -26,7 +25,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   // Getters
   DateTime get startDate => _startDate;
   DateTime get endDate => _endDate;
-  CurrencyConstants get baseCurrencyConstants => _baseCurrencyConstants;
+  CurrencyConstants get baseCurrency => _baseCurrency;
   int get memberCount => _memberCount;
   bool get isCurrencyEnabled => true; // 保留原始邏輯
   bool get isProcessing => _isProcessing;
@@ -47,7 +46,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       _isCurrencyInitialized = true;
       final CurrencyConstants suggestedCurrency =
           CurrencyConstants.detectSystemCurrency();
-      _baseCurrencyConstants = suggestedCurrency;
+      _baseCurrency = suggestedCurrency;
       // 這裡不需 notifyListeners，因為通常是在 build 前或第一幀執行，
       // 若有需要可加，但需注意 notify 時機
     }
@@ -70,7 +69,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   }
 
   void updateCurrency(CurrencyConstants currency) {
-    _baseCurrencyConstants = currency;
+    _baseCurrency = currency;
     notifyListeners();
   }
 
@@ -131,7 +130,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'createdBy': user.uid,
         'memberCount': _memberCount,
         'maxMembers': _memberCount,
-        'baseCurrency': _baseCurrencyConstants.code,
+        'baseCurrency': _baseCurrency.code,
         'startDate': _startDate, // 直接傳 DateTime
         'endDate': _endDate, // 直接傳 DateTime
         'members': membersMap,
@@ -149,7 +148,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         action: LogAction.createTask,
         details: {
           'recordName': taskName,
-          'currency': _baseCurrencyConstants.code,
+          'currency': _baseCurrency.code,
           'memberCount': _memberCount,
           'dateRange': dateStr,
         },

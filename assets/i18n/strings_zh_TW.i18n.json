@@ -75,6 +75,16 @@
       "app_name": "App 名稱 (如: LinePay)",
       "app_link": "連結 / ID"
     },
+    "share":{
+      "invite": {
+        "subject": "邀請加入 Iron Split 任務",
+        "message": "快來加入我的 Iron Split 任務「{taskName}」！\n邀請碼：{code}\n連結：{link}"
+      },
+      "settlement": {
+        "subject": "Iron Split 任務結算通知",
+        "message": "結算已完成！\n請開啟 Iron Split App 確認「{taskName}」您的支付金額。\n連結：{link}"
+      }
+    },
     "error_prefix": "錯誤: {message}",
     "please_login": "請先登入",
     "loading": "讀取中...",
@@ -243,7 +253,7 @@
       "view_payment_details": "查看收退款帳戶"
     },
     "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
-    "label_remainder_absorbed_by": "零錢罐 {amount} 由 {name} 吸收",
+    "label_remainder_absorbed_by": "由 {name} 吸收",
     "section_pending": "待處理",
     "section_cleared": "已處理",
     "member_payment_status_pay": "應付",
@@ -290,7 +300,6 @@
     "remainder_winner_prefix": "餘額歸屬：",
     "remainder_winner_total": "{winnerName}總金額變更至{prefix} {total}",
     "total_label": "本次結算總額",
-    "share_message": "結算已完成！\n請開啟 Iron Split App 確認「{taskName}」您的支付金額。\n連結：{link}",
     "buttons": {
       "share": "發送結算通知",
       "back": "返回任務首頁"
@@ -390,9 +399,7 @@
     "label_currency": "幣別",
     "label_members": "人數",
     "creating_task": "正在建立任務...",
-    "preparing_share": "準備邀請函...",
-    "share_subject": "邀請加入 Iron Split 任務",
-    "share_message": "快來加入我的 Iron Split 任務「{taskName}」！\n邀請碼：{code}\n連結：{link}"
+    "preparing_share": "準備邀請函..."
   },
   "D05_DateJump_NoResult": {
     "title": "無紀錄",

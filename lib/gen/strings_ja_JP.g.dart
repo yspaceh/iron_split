@@ -87,6 +87,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
+	@override late final _TranslationsCommonShareJaJp share = _TranslationsCommonShareJaJp._(_root);
 	@override String error_prefix({required Object message}) => 'エラー: ${message}';
 	@override String get please_login => 'ログインしてください';
 	@override String get loading => '読み込み中...';
@@ -338,7 +339,7 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsJaJp buttons = _TranslationsS17TaskLockedButtonsJaJp._(_root);
 	@override String get retention_notice => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。';
-	@override String label_remainder_absorbed_by({required Object amount, required Object name}) => '端数 ${amount} は ${name} が負担';
+	@override String label_remainder_absorbed_by({required Object name}) => 'は ${name} が負担';
 	@override String get section_pending => '未完了';
 	@override String get section_cleared => '完了';
 	@override String get member_payment_status_pay => '支払';
@@ -390,7 +391,6 @@ class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResu
 	@override String get remainder_winner_prefix => '残額の受取先：';
 	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。';
 	@override String get total_label => '今回の精算合計額';
-	@override String share_message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
 	@override late final _TranslationsS32SettlementResultButtonsJaJp buttons = _TranslationsS32SettlementResultButtonsJaJp._(_root);
 }
 
@@ -488,8 +488,6 @@ class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateCon
 	@override String get label_members => '人数';
 	@override String get creating_task => '作成中...';
 	@override String get preparing_share => '招待を準備中...';
-	@override String get share_subject => 'Iron Split タスク招待';
-	@override String share_message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}';
 }
 
 // Path: D05_DateJump_NoResult
@@ -775,6 +773,17 @@ class _TranslationsCommonPaymentInfoJaJp extends TranslationsCommonPaymentInfoZh
 	@override String get bank_account_hint => '口座番号';
 	@override String get app_name => 'アプリ名（例：LinePay）';
 	@override String get app_link => 'リンク / ID';
+}
+
+// Path: common.share
+class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
+	_TranslationsCommonShareJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsCommonShareInviteJaJp invite = _TranslationsCommonShareInviteJaJp._(_root);
+	@override late final _TranslationsCommonShareSettlementJaJp settlement = _TranslationsCommonShareSettlementJaJp._(_root);
 }
 
 // Path: S50_Onboarding_Consent.buttons
@@ -1148,6 +1157,28 @@ class _TranslationsErrorSettlementJaJp extends TranslationsErrorSettlementZhTw {
 	@override String get transaction_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
 }
 
+// Path: common.share.invite
+class _TranslationsCommonShareInviteJaJp extends TranslationsCommonShareInviteZhTw {
+	_TranslationsCommonShareInviteJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get subject => 'Iron Split タスク招待';
+	@override String message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}';
+}
+
+// Path: common.share.settlement
+class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSettlementZhTw {
+	_TranslationsCommonShareSettlementJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get subject => 'Iron Split タスク精算通知';
+	@override String message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
+}
+
 // Path: error.settlement.data_conflict
 class _TranslationsErrorSettlementDataConflictJaJp extends TranslationsErrorSettlementDataConflictZhTw {
 	_TranslationsErrorSettlementDataConflictJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1230,6 +1261,10 @@ extension on TranslationsJaJp {
 			'common.payment_info.bank_account_hint' => '口座番号',
 			'common.payment_info.app_name' => 'アプリ名（例：LinePay）',
 			'common.payment_info.app_link' => 'リンク / ID',
+			'common.share.invite.subject' => 'Iron Split タスク招待',
+			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
+			'common.share.settlement.subject' => 'Iron Split タスク精算通知',
+			'common.share.settlement.message' => ({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}',
 			'common.error_prefix' => ({required Object message}) => 'エラー: ${message}',
 			'common.please_login' => 'ログインしてください',
 			'common.loading' => '読み込み中...',
@@ -1380,7 +1415,7 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
 			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
 			'S17_Task_Locked.retention_notice' => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object amount, required Object name}) => '端数 ${amount} は ${name} が負担',
+			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'は ${name} が負担',
 			'S17_Task_Locked.section_pending' => '未完了',
 			'S17_Task_Locked.section_cleared' => '完了',
 			'S17_Task_Locked.member_payment_status_pay' => '支払',
@@ -1411,7 +1446,6 @@ extension on TranslationsJaJp {
 			'S32_settlement_result.remainder_winner_prefix' => '残額の受取先：',
 			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。',
 			'S32_settlement_result.total_label' => '今回の精算合計額',
-			'S32_settlement_result.share_message' => ({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}',
 			'S32_settlement_result.buttons.share' => '精算通知を送信',
 			'S32_settlement_result.buttons.back' => 'タスクに戻る',
 			'S52_TaskSettings_Log.title' => '活動履歴',
@@ -1462,8 +1496,6 @@ extension on TranslationsJaJp {
 			'D03_TaskCreate_Confirm.label_members' => '人数',
 			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
 			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
-			'D03_TaskCreate_Confirm.share_subject' => 'Iron Split タスク招待',
-			'D03_TaskCreate_Confirm.share_message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
 			'D05_DateJump_NoResult.title' => '記録なし',
 			'D05_DateJump_NoResult.buttons.cancel' => '戻る',
 			'D05_DateJump_NoResult.buttons.add' => '記録を追加',

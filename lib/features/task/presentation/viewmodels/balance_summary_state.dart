@@ -55,7 +55,7 @@ class BalanceSummaryState extends Equatable {
   factory BalanceSummaryState.initial() {
     return const BalanceSummaryState(
       currencyCode: CurrencyConstants.defaultCode,
-      currencySymbol: '\$',
+      currencySymbol: CurrencyConstants.defaultSymbol,
       poolBalance: 0,
       totalExpense: 0,
       totalIncome: 0,
@@ -67,6 +67,95 @@ class BalanceSummaryState extends Equatable {
       expenseDetail: {},
       incomeDetail: {},
       poolDetail: {},
+    );
+  }
+
+  BalanceSummaryState copyWith({
+    String? currencyCode,
+    String? currencySymbol,
+    double? poolBalance,
+    double? totalExpense,
+    double? totalIncome,
+    double? remainder,
+    int? expenseFlex,
+    int? incomeFlex,
+    String? ruleKey,
+    bool? isLocked,
+    Map<String, double>? expenseDetail,
+    Map<String, double>? incomeDetail,
+    Map<String, double>? poolDetail,
+    String? absorbedBy,
+    double? absorbedAmount,
+  }) {
+    return BalanceSummaryState(
+      currencyCode: currencyCode ?? this.currencyCode,
+      currencySymbol: currencySymbol ?? this.currencySymbol,
+      poolBalance: poolBalance ?? this.poolBalance,
+      totalExpense: totalExpense ?? this.totalExpense,
+      totalIncome: totalIncome ?? this.totalIncome,
+      remainder: remainder ?? this.remainder,
+      expenseFlex: expenseFlex ?? this.expenseFlex,
+      incomeFlex: incomeFlex ?? this.incomeFlex,
+      ruleKey: ruleKey ?? this.ruleKey,
+      isLocked: isLocked ?? this.isLocked,
+      expenseDetail: expenseDetail ?? this.expenseDetail,
+      incomeDetail: incomeDetail ?? this.incomeDetail,
+      poolDetail: poolDetail ?? this.poolDetail,
+      absorbedBy: absorbedBy ?? this.absorbedBy,
+      absorbedAmount: absorbedAmount ?? this.absorbedAmount,
+    );
+  }
+
+  // [新增] 2. toMap: 轉成 JSON 存入 Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      'currencyCode': currencyCode,
+      'currencySymbol': currencySymbol,
+      'poolBalance': poolBalance,
+      'totalExpense': totalExpense,
+      'totalIncome': totalIncome,
+      'remainder': remainder,
+      'expenseFlex': expenseFlex,
+      'incomeFlex': incomeFlex,
+      'ruleKey': ruleKey,
+      'isLocked': isLocked,
+      'expenseDetail': expenseDetail,
+      'incomeDetail': incomeDetail,
+      'poolDetail': poolDetail,
+      'absorbedBy': absorbedBy,
+      'absorbedAmount': absorbedAmount,
+    };
+  }
+
+  // [新增] 3. fromMap: 從 Firestore 讀回物件
+  factory BalanceSummaryState.fromMap(Map<String, dynamic> map) {
+    // Helper to safely parse double from Firestore (can be int or double)
+    double toDouble(dynamic val) => (val as num?)?.toDouble() ?? 0.0;
+
+    // Helper to parse Map<String, double>
+    Map<String, double> toMapDouble(dynamic val) {
+      if (val == null) return {};
+      return Map<String, dynamic>.from(val).map(
+        (k, v) => MapEntry(k, (v as num).toDouble()),
+      );
+    }
+
+    return BalanceSummaryState(
+      currencyCode: map['currencyCode'] ?? '',
+      currencySymbol: map['currencySymbol'] ?? '',
+      poolBalance: toDouble(map['poolBalance']),
+      totalExpense: toDouble(map['totalExpense']),
+      totalIncome: toDouble(map['totalIncome']),
+      remainder: toDouble(map['remainder']),
+      expenseFlex: map['expenseFlex'] as int? ?? 0,
+      incomeFlex: map['incomeFlex'] as int? ?? 0,
+      ruleKey: map['ruleKey'] ?? '',
+      isLocked: map['isLocked'] ?? false,
+      expenseDetail: toMapDouble(map['expenseDetail']),
+      incomeDetail: toMapDouble(map['incomeDetail']),
+      poolDetail: toMapDouble(map['poolDetail']),
+      absorbedBy: map['absorbedBy'] as String?,
+      absorbedAmount: (map['absorbedAmount'] as num?)?.toDouble(),
     );
   }
 

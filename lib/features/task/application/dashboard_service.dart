@@ -1,3 +1,4 @@
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -61,9 +62,12 @@ class DashboardService {
       incomeFlex = 1000 - expenseFlex;
     }
 
+    CurrencyConstants baseCurrency =
+        CurrencyConstants.getCurrencyConstants(task.baseCurrency);
+
     return BalanceSummaryState(
       currencyCode: task.baseCurrency,
-      currencySymbol: '\$',
+      currencySymbol: baseCurrency.symbol,
       poolBalance: poolBalance,
       totalExpense: totalExpense,
       totalIncome: totalIncome,
@@ -129,29 +133,31 @@ class DashboardService {
     }
   }
 
-  List<RecordModel> filterPersonalRecords(
-      List<RecordModel> allRecords, String uid) {
+  List<RecordModel> filterPersonalRecords(List<RecordModel> allRecords,
+      String uid, CurrencyConstants baseCurrency) {
     return allRecords.where((record) {
-      return BalanceCalculator.isUserInvolved(record, uid);
+      return BalanceCalculator.isUserInvolved(record, uid, baseCurrency);
     }).toList();
   }
 
-  double calculatePersonalNetBalance({
-    required List<RecordModel> allRecords,
-    required String uid,
-  }) {
+  double calculatePersonalNetBalance(
+      {required List<RecordModel> allRecords,
+      required String uid,
+      required CurrencyConstants baseCurrency}) {
     return BalanceCalculator.calculatePersonalNetBalance(
-      allRecords: allRecords,
-      uid: uid,
-      isBaseCurrency: true,
-    );
+        allRecords: allRecords,
+        uid: uid,
+        isBaseCurrency: true,
+        baseCurrency: baseCurrency);
   }
 
-  double calculateDailyPersonalDebit(List<RecordModel> dayRecords, String uid) {
+  double calculateDailyPersonalDebit(List<RecordModel> dayRecords, String uid,
+      CurrencyConstants baseCurrency) {
     double dayMyDebit = 0;
     for (var r in dayRecords) {
       // 直接使用 Calculator 算出該筆紀錄我的消費額 (Debit)
-      double myDebitBase = BalanceCalculator.calculatePersonalDebit(r, uid,
+      double myDebitBase = BalanceCalculator.calculatePersonalDebit(
+          r, uid, baseCurrency,
           isBaseCurrency: true); // 這裡直接取 Base Currency
       dayMyDebit += myDebitBase;
     }

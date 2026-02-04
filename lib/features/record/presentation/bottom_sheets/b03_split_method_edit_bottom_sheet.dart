@@ -413,11 +413,11 @@ class _B03SplitMethodEditBottomSheetState
                   ),
                   if (widget.exchangeRate != 1.0)
                     Builder(builder: (context) {
-                      final baseCurrencyConstants =
+                      final baseCurrency =
                           CurrencyConstants.getCurrencyConstants(
                               widget.baseCurrency.code);
                       return Text(
-                        "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrencyConstants.code)}",
+                        "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: Colors.grey, fontSize: 10),
                       );
@@ -490,11 +490,11 @@ class _B03SplitMethodEditBottomSheetState
                       ),
                       if (widget.exchangeRate != 1.0)
                         Builder(builder: (context) {
-                          final baseCurrencyConstants =
+                          final baseCurrency =
                               CurrencyConstants.getCurrencyConstants(
                                   widget.baseCurrency.code);
                           return Text(
-                            "≈ ${baseCurrencyConstants.code}${baseCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrencyConstants.code)}",
+                            "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
                             style: theme.textTheme.bodySmall
                                 ?.copyWith(color: Colors.grey, fontSize: 10),
                           );
