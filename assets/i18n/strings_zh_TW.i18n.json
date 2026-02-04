@@ -120,7 +120,8 @@
     "empty_completed": "沒有已完成的任務",
     "date_tbd": "日期未定",
     "delete_confirm_title": "確認刪除",
-    "delete_confirm_content": "確定要刪除這個任務嗎？"
+    "delete_confirm_content": "確定要刪除這個任務嗎？",
+    "label_settlement": "已結算"
   },
   "S11_Invite_Confirm": {
     "title": "加入任務",
@@ -158,7 +159,7 @@
     },
     "tab_group": "大家",
     "tab_personal": "個人",
-    "label_prepay_balance": "公款餘額",
+    "label_prepay_balance": "預收款餘額",
     "label_my_balance": "我的收支",
     "label_remainder": "暫存零頭: {amount}",
     "label_balance": "結餘",
@@ -252,7 +253,7 @@
       "notify_members": "通知成員",
       "view_payment_details": "查看收退款帳戶"
     },
-    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。",
+    "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄",
     "label_remainder_absorbed_by": "由 {name} 吸收",
     "section_pending": "待處理",
     "section_cleared": "已處理",
@@ -471,7 +472,7 @@
     "label_weight": "比例",
     "error_total_mismatch": "金額不符"
   },
-  "b04_payment_merge": {
+  "B04_payment_merge": {
     "title": "合併成員款項",
     "description": "將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。",
     "section_head": "代表成員",
@@ -481,6 +482,12 @@
     "buttons": {
       "cancel": "取消",
       "confirm": "合併"
+    }
+  },
+  "B06_payment_info_detail": {
+    "label_copied": "已複製到剪貼簿",
+    "buttons": {
+      "copy": "複製"
     }
   },
   "B07_PaymentMethod_Edit": {

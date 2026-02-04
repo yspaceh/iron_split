@@ -29,8 +29,6 @@ class TaskListItem extends StatelessWidget {
 
     // 1. 還原：找出我在這個任務裡的資料 (Avatar & DisplayName)
     final myMemberData = task.members[currentUserId] ?? {};
-    final myAvatar = myMemberData['avatar'] ?? 'cow'; // 預設 cow
-    final myDisplayName = myMemberData['displayName'] as String?;
 
     // 2. 還原：日期區間顯示邏輯
     String periodText = t.S10_Home_TaskList.date_tbd; // '日期未定'
@@ -39,103 +37,90 @@ class TaskListItem extends StatelessWidget {
           '${dateFormat.format(task.startDate!)} - ${dateFormat.format(task.endDate!)}';
     }
 
+    final bool isSettled = task.status == 'settled';
+
     // 3. 卡片本體
-    Widget cardContent = Card(
+    return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // 核心修正：這裡顯示的是「我在這個任務的頭像」，而非任務 Icon
-              CommonAvatar(
-                avatarId: myAvatar,
-                name: myDisplayName,
-                radius: 28,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    // 日期顯示
-                    Row(
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CommonAvatar(
+                      avatarId: myMemberData['avatar'],
+                      name: myMemberData['displayName'],
+                      isLinked: myMemberData['isLinked'] ?? false),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.date_range,
-                            size: 16, color: colorScheme.primary),
-                        const SizedBox(width: 4),
                         Text(
-                          periodText,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                          task.name,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        // 日期顯示
+                        Row(
+                          children: [
+                            Icon(Icons.date_range,
+                                size: 16, color: colorScheme.primary),
+                            const SizedBox(width: 4),
+                            Text(
+                              periodText,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
+                  Icon(Icons.chevron_right,
+                      color: colorScheme.onSurfaceVariant),
+                ],
+              ),
+            ),
+          ),
+          if (isSettled)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary, // 藍底
+                  borderRadius: const BorderRadius.only(
+                    // 左下角做圓角設計，右上角不需要設定(因為被 Card 裁切了)
+                    bottomLeft: Radius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  t.S10_Home_TaskList.label_settlement,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimary, // 白字
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
                 ),
               ),
-              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
-    );
-
-    // 4. 側滑刪除 (保持不變)
-    if (!isCaptain) {
-      return cardContent;
-    }
-
-    return Dismissible(
-      key: Key(task.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        decoration: BoxDecoration(
-          color: colorScheme.error,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Icon(Icons.delete_outline, color: colorScheme.onError),
-      ),
-      confirmDismiss: (direction) async {
-        return await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(t.S10_Home_TaskList.delete_confirm_title),
-            content: Text(t.S10_Home_TaskList.delete_confirm_content),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: Text(t.common.buttons.cancel),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: Text(t.common.buttons.delete),
-              ),
-            ],
-          ),
-        );
-      },
-      onDismissed: (direction) {
-        onDelete();
-      },
-      child: cardContent,
     );
   }
 }

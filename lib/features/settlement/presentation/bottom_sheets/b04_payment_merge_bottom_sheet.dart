@@ -77,7 +77,7 @@ class _B04PaymentMergeBottomSheetState
     final textTheme = theme.textTheme;
 
     return CommonBottomSheet(
-      title: t.b04_payment_merge.title,
+      title: t.B04_payment_merge.title,
       bottomActionBar: StickyBottomActionBar.sheet(
         children: [
           AppButton(
@@ -119,7 +119,7 @@ class _B04PaymentMergeBottomSheetState
                         ),
                       ),
                       Text(
-                        t.b04_payment_merge.section_head,
+                        t.B04_payment_merge.section_head,
                         style: textTheme.labelSmall?.copyWith(
                           color: colorScheme.primary,
                           fontWeight: FontWeight.bold,

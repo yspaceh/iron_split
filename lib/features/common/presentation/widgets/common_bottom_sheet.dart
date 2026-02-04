@@ -92,7 +92,10 @@ class CommonBottomSheet extends StatelessWidget {
                     ]
                   : null,
             ),
-            body: children,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: children,
+            ),
             bottomNavigationBar: bottomActionBar,
           ),
         ),

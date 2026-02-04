@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
+import 'package:iron_split/features/task/presentation/widgets/retention_banner.dart';
+import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 
 // Services & Repos
@@ -38,6 +43,36 @@ class _S17Content extends StatelessWidget {
   Widget build(BuildContext context) {
     // 監聽 VM 狀態
     final vm = context.watch<S17TaskLockedViewModel>();
+    final t = Translations.of(context);
+
+    void onDownload(BuildContext context) {
+      // TODO: Implement Download Logic
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Download (TODO)")),
+      );
+    }
+
+    Future<void> onShareTap() async {
+      try {
+        if (context.mounted) {
+          await TaskShareHelper.shareSettlement(
+            context: context,
+            taskId: vm.taskId,
+            taskName: vm.taskName,
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          debugPrint(e.toString());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(Translations.of(context)
+                    .common
+                    .error_prefix(message: e.toString()))),
+          );
+        }
+      }
+    }
 
     Widget content;
     switch (vm.status) {
@@ -55,7 +90,7 @@ class _S17Content extends StatelessWidget {
         // 注意：這裡我們確保 View 是 Dumb 的，它不需要知道 VM 的存在，只需要資料
         content = S17SettledPendingView(
           taskId: vm.taskId,
-          taskName: vm.taskName,
+          task: vm.task,
           isCaptain: vm.isCaptain,
           balanceState: vm.balanceState!,
           pendingMembers: vm.pendingMembers,
@@ -63,6 +98,7 @@ class _S17Content extends StatelessWidget {
         );
         break;
       case LockedPageStatus.error:
+        //TODO: Replace with Error View
         content = const Center(child: Text('Error loading task'));
         break;
     }
@@ -72,12 +108,39 @@ class _S17Content extends StatelessWidget {
         title: Text(vm.taskName),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.keyboard_arrow_down),
+          icon: Icon(Icons.adaptive.arrow_back),
           // S10 為 Dashboard，這是此流程的唯一出口
           onPressed: () => context.goNamed('S10'),
         ),
       ),
-      body: content,
+      bottomNavigationBar: vm.status == LockedPageStatus.loading ||
+              vm.status == LockedPageStatus.error
+          ? null
+          : StickyBottomActionBar(
+              children: [
+                // 通知成員
+                AppButton(
+                  text: t.S17_Task_Locked.buttons.notify_members,
+                  type: AppButtonType.secondary,
+                  onPressed: onShareTap,
+                ),
+                // 下載帳單
+                AppButton(
+                  text: t.S17_Task_Locked.buttons.download,
+                  type: AppButtonType.primary,
+                  onPressed: () => onDownload(context),
+                ),
+              ],
+            ),
+      body: Column(
+        children: [
+          if ((vm.status == LockedPageStatus.loading ||
+                  vm.status == LockedPageStatus.error) &&
+              vm.remainingDays != null)
+            RetentionBanner(days: vm.remainingDays!),
+          Expanded(child: content),
+        ],
+      ),
     );
   }
 }

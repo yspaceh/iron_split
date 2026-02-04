@@ -69,7 +69,8 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
-	@override late final _TranslationsB04PaymentMergeEnUs b04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
+	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
+	@override late final _TranslationsB06PaymentInfoDetailEnUs B06_payment_info_detail = _TranslationsB06PaymentInfoDetailEnUs._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
 }
@@ -145,6 +146,7 @@ class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 	@override String get date_tbd => 'Date TBD';
 	@override String get delete_confirm_title => 'Delete Task';
 	@override String get delete_confirm_content => 'Are you sure you want to delete this task?';
+	@override String get label_settlement => 'Settlement';
 }
 
 // Path: S11_Invite_Confirm
@@ -305,7 +307,7 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsEnUs buttons = _TranslationsS17TaskLockedButtonsEnUs._(_root);
-	@override String get retention_notice => 'Data will be retained for 30 days. Please download your records.';
+	@override String retention_notice({required Object days}) => 'Data will be deleted after ${days} days. Please download your records in time.';
 	@override String label_remainder_absorbed_by({required Object name}) => 'absorbed by ${name}';
 	@override String get section_pending => 'Pending';
 	@override String get section_cleared => 'Cleared';
@@ -604,7 +606,7 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	@override String get error_total_mismatch => 'Mismatch';
 }
 
-// Path: b04_payment_merge
+// Path: B04_payment_merge
 class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 	_TranslationsB04PaymentMergeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -618,6 +620,17 @@ class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 	@override String get status_payable => 'Payable';
 	@override String get status_receivable => 'Receivable';
 	@override late final _TranslationsB04PaymentMergeButtonsEnUs buttons = _TranslationsB04PaymentMergeButtonsEnUs._(_root);
+}
+
+// Path: B06_payment_info_detail
+class _TranslationsB06PaymentInfoDetailEnUs extends TranslationsB06PaymentInfoDetailZhTw {
+	_TranslationsB06PaymentInfoDetailEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get label_copied => 'Copied to clipboard';
+	@override late final _TranslationsB06PaymentInfoDetailButtonsEnUs buttons = _TranslationsB06PaymentInfoDetailButtonsEnUs._(_root);
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -1069,7 +1082,7 @@ class _TranslationsB03SplitMethodEditButtonsEnUs extends TranslationsB03SplitMet
 	@override String get adjust_weight => 'Adjust Weight';
 }
 
-// Path: b04_payment_merge.buttons
+// Path: B04_payment_merge.buttons
 class _TranslationsB04PaymentMergeButtonsEnUs extends TranslationsB04PaymentMergeButtonsZhTw {
 	_TranslationsB04PaymentMergeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1078,6 +1091,16 @@ class _TranslationsB04PaymentMergeButtonsEnUs extends TranslationsB04PaymentMerg
 	// Translations
 	@override String get cancel => 'Cancel';
 	@override String get confirm => 'Merge';
+}
+
+// Path: B06_payment_info_detail.buttons
+class _TranslationsB06PaymentInfoDetailButtonsEnUs extends TranslationsB06PaymentInfoDetailButtonsZhTw {
+	_TranslationsB06PaymentInfoDetailButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get copy => 'Copy';
 }
 
 // Path: error.taskFull
@@ -1297,6 +1320,7 @@ extension on TranslationsEnUs {
 			'S10_Home_TaskList.date_tbd' => 'Date TBD',
 			'S10_Home_TaskList.delete_confirm_title' => 'Delete Task',
 			'S10_Home_TaskList.delete_confirm_content' => 'Are you sure you want to delete this task?',
+			'S10_Home_TaskList.label_settlement' => 'Settlement',
 			'S11_Invite_Confirm.title' => 'Join Task',
 			'S11_Invite_Confirm.subtitle' => 'You are invited to join:',
 			'S11_Invite_Confirm.buttons.confirm' => 'Join',
@@ -1402,7 +1426,7 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.buttons.download' => 'Download Records',
 			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
 			'S17_Task_Locked.buttons.view_payment_details' => 'View Payment Details',
-			'S17_Task_Locked.retention_notice' => 'Data will be retained for 30 days. Please download your records.',
+			'S17_Task_Locked.retention_notice' => ({required Object days}) => 'Data will be deleted after ${days} days. Please download your records in time.',
 			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'absorbed by ${name}',
 			'S17_Task_Locked.section_pending' => 'Pending',
 			'S17_Task_Locked.section_cleared' => 'Cleared',
@@ -1542,14 +1566,16 @@ extension on TranslationsEnUs {
 			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts, total must match',
 			'B03_SplitMethod_Edit.label_weight' => 'Weight',
 			'B03_SplitMethod_Edit.error_total_mismatch' => 'Mismatch',
-			'b04_payment_merge.title' => 'Merge Member Payments',
-			'b04_payment_merge.description' => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.',
-			'b04_payment_merge.section_head' => 'Representative',
-			'b04_payment_merge.section_candidates' => 'Select Members',
-			'b04_payment_merge.status_payable' => 'Payable',
-			'b04_payment_merge.status_receivable' => 'Receivable',
-			'b04_payment_merge.buttons.cancel' => 'Cancel',
-			'b04_payment_merge.buttons.confirm' => 'Merge',
+			'B04_payment_merge.title' => 'Merge Member Payments',
+			'B04_payment_merge.description' => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.',
+			'B04_payment_merge.section_head' => 'Representative',
+			'B04_payment_merge.section_candidates' => 'Select Members',
+			'B04_payment_merge.status_payable' => 'Payable',
+			'B04_payment_merge.status_receivable' => 'Receivable',
+			'B04_payment_merge.buttons.cancel' => 'Cancel',
+			'B04_payment_merge.buttons.confirm' => 'Merge',
+			'B06_payment_info_detail.label_copied' => 'Copied to clipboard',
+			'B06_payment_info_detail.buttons.copy' => 'Copy',
 			'B07_PaymentMethod_Edit.title' => 'Select Funding Source',
 			'B07_PaymentMethod_Edit.type_member' => 'Member Advance',
 			'B07_PaymentMethod_Edit.type_prepay' => 'Public Fund',

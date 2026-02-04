@@ -120,7 +120,8 @@
     "empty_completed": "No finished tasks",
     "date_tbd": "Date TBD",
     "delete_confirm_title": "Delete Task",
-    "delete_confirm_content": "Are you sure you want to delete this task?"
+    "delete_confirm_content": "Are you sure you want to delete this task?",
+    "label_settlement": "Settlement"
   },
   "S11_Invite_Confirm": {
     "title": "Join Task",
@@ -252,7 +253,7 @@
       "notify_members": "Notify Members",
       "view_payment_details": "View Payment Details"
     },
-    "retention_notice": "Data will be retained for 30 days. Please download your records.",
+    "retention_notice": "Data will be deleted after {days} days. Please download your records in time.",
     "label_remainder_absorbed_by": "absorbed by {name}",
     "section_pending": "Pending",
     "section_cleared": "Cleared",
@@ -471,7 +472,7 @@
     "label_weight": "Weight",
     "error_total_mismatch": "Mismatch"
   },
-  "b04_payment_merge": {
+  "B04_payment_merge": {
     "title": "Merge Member Payments",
     "description": "Merge members under a representative. Payments and refunds will be consolidated for easier collection.",
     "section_head": "Representative",
@@ -481,6 +482,12 @@
     "buttons": {
       "cancel": "Cancel",
       "confirm": "Merge"
+    }
+  },
+  "B06_payment_info_detail": {
+    "label_copied": "Copied to clipboard",
+    "buttons": {
+      "copy": "Copy"
     }
   },
   "B07_PaymentMethod_Edit": {

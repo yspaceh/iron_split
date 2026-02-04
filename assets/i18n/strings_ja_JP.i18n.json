@@ -144,7 +144,8 @@
     "empty_completed": "完了したタスクはありません",
     "date_tbd": "日付未定",
     "delete_confirm_title": "削除の確認",
-    "delete_confirm_content": "このタスクを削除してもよろしいですか？"
+    "delete_confirm_content": "このタスクを削除してもよろしいですか？",
+    "label_settlement": "精算済み"
   },
   "S11_Invite_Confirm": {
     "title": "タスクに参加",
@@ -274,7 +275,7 @@
       "notify_members": "メンバーに通知",
       "view_payment_details": "支払/受取口座を確認"
     },
-    "retention_notice": "このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。",
+    "retention_notice": "{days} 日後にデータは自動削除されます。期間内にダウンロードしてください。",
     "label_remainder_absorbed_by": "は {name} が負担",
     "section_pending": "未完了",
     "section_cleared": "完了",
@@ -469,7 +470,7 @@
     "label_weight": "比例",
     "error_total_mismatch": "一致しません"
   },
-  "b04_payment_merge": {
+  "B04_payment_merge": {
     "title": "メンバー支払いの統合",
     "description": "メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。",
     "section_head": "代表メンバー",
@@ -479,6 +480,12 @@
     "buttons": {
       "cancel": "キャンセル",
       "confirm": "統合"
+    }
+  },
+  "B06_payment_info_detail": {
+    "label_copied": "コピーしました",
+    "buttons": {
+      "copy": "コピー"
     }
   },
   "B07_PaymentMethod_Edit": {

@@ -69,7 +69,8 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
-	@override late final _TranslationsB04PaymentMergeJaJp b04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
+	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
+	@override late final _TranslationsB06PaymentInfoDetailJaJp B06_payment_info_detail = _TranslationsB06PaymentInfoDetailJaJp._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
 }
@@ -179,6 +180,7 @@ class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 	@override String get date_tbd => '日付未定';
 	@override String get delete_confirm_title => '削除の確認';
 	@override String get delete_confirm_content => 'このタスクを削除してもよろしいですか？';
+	@override String get label_settlement => '精算済み';
 }
 
 // Path: S11_Invite_Confirm
@@ -338,7 +340,7 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsJaJp buttons = _TranslationsS17TaskLockedButtonsJaJp._(_root);
-	@override String get retention_notice => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。';
+	@override String retention_notice({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。';
 	@override String label_remainder_absorbed_by({required Object name}) => 'は ${name} が負担';
 	@override String get section_pending => '未完了';
 	@override String get section_cleared => '完了';
@@ -603,7 +605,7 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	@override String get error_total_mismatch => '一致しません';
 }
 
-// Path: b04_payment_merge
+// Path: B04_payment_merge
 class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	_TranslationsB04PaymentMergeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -617,6 +619,17 @@ class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	@override String get status_payable => '支払';
 	@override String get status_receivable => '受取';
 	@override late final _TranslationsB04PaymentMergeButtonsJaJp buttons = _TranslationsB04PaymentMergeButtonsJaJp._(_root);
+}
+
+// Path: B06_payment_info_detail
+class _TranslationsB06PaymentInfoDetailJaJp extends TranslationsB06PaymentInfoDetailZhTw {
+	_TranslationsB06PaymentInfoDetailJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get label_copied => 'コピーしました';
+	@override late final _TranslationsB06PaymentInfoDetailButtonsJaJp buttons = _TranslationsB06PaymentInfoDetailButtonsJaJp._(_root);
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -1067,7 +1080,7 @@ class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMet
 	@override String get adjust_weight => '比率を調整';
 }
 
-// Path: b04_payment_merge.buttons
+// Path: B04_payment_merge.buttons
 class _TranslationsB04PaymentMergeButtonsJaJp extends TranslationsB04PaymentMergeButtonsZhTw {
 	_TranslationsB04PaymentMergeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1076,6 +1089,16 @@ class _TranslationsB04PaymentMergeButtonsJaJp extends TranslationsB04PaymentMerg
 	// Translations
 	@override String get cancel => 'キャンセル';
 	@override String get confirm => '統合';
+}
+
+// Path: B06_payment_info_detail.buttons
+class _TranslationsB06PaymentInfoDetailButtonsJaJp extends TranslationsB06PaymentInfoDetailButtonsZhTw {
+	_TranslationsB06PaymentInfoDetailButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get copy => 'コピー';
 }
 
 // Path: error.taskFull
@@ -1311,6 +1334,7 @@ extension on TranslationsJaJp {
 			'S10_Home_TaskList.date_tbd' => '日付未定',
 			'S10_Home_TaskList.delete_confirm_title' => '削除の確認',
 			'S10_Home_TaskList.delete_confirm_content' => 'このタスクを削除してもよろしいですか？',
+			'S10_Home_TaskList.label_settlement' => '精算済み',
 			'S11_Invite_Confirm.title' => 'タスクに参加',
 			'S11_Invite_Confirm.subtitle' => '以下のタスクに招待されました：',
 			'S11_Invite_Confirm.buttons.confirm' => '参加',
@@ -1414,7 +1438,7 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.buttons.download' => '記録をダウンロード',
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
 			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
-			'S17_Task_Locked.retention_notice' => 'このタスクは終了しました。データは30日間保持されます。記録をダウンロードしてください。',
+			'S17_Task_Locked.retention_notice' => ({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。',
 			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'は ${name} が負担',
 			'S17_Task_Locked.section_pending' => '未完了',
 			'S17_Task_Locked.section_cleared' => '完了',
@@ -1538,14 +1562,16 @@ extension on TranslationsJaJp {
 			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
 			'B03_SplitMethod_Edit.error_total_mismatch' => '一致しません',
-			'b04_payment_merge.title' => 'メンバー支払いの統合',
-			'b04_payment_merge.description' => 'メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。',
-			'b04_payment_merge.section_head' => '代表メンバー',
-			'b04_payment_merge.section_candidates' => '統合するメンバーを選択',
-			'b04_payment_merge.status_payable' => '支払',
-			'b04_payment_merge.status_receivable' => '受取',
-			'b04_payment_merge.buttons.cancel' => 'キャンセル',
-			'b04_payment_merge.buttons.confirm' => '統合',
+			'B04_payment_merge.title' => 'メンバー支払いの統合',
+			'B04_payment_merge.description' => 'メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。',
+			'B04_payment_merge.section_head' => '代表メンバー',
+			'B04_payment_merge.section_candidates' => '統合するメンバーを選択',
+			'B04_payment_merge.status_payable' => '支払',
+			'B04_payment_merge.status_receivable' => '受取',
+			'B04_payment_merge.buttons.cancel' => 'キャンセル',
+			'B04_payment_merge.buttons.confirm' => '統合',
+			'B06_payment_info_detail.label_copied' => 'コピーしました',
+			'B06_payment_info_detail.buttons.copy' => 'コピー',
 			'B07_PaymentMethod_Edit.title' => '資金源を選択',
 			'B07_PaymentMethod_Edit.type_member' => 'メンバー立替',
 			'B07_PaymentMethod_Edit.type_prepay' => '公費払い',

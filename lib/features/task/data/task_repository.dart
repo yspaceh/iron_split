@@ -172,4 +172,16 @@ class TaskRepository {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
+
+  /// 通用部分更新 (Generic Partial Update)
+  /// 支援 Dot Notation 更新巢狀欄位
+  /// 例如: updateTaskPartial(taskId, {'settlement.receiverInfos': jsonString})
+  /// 這樣只會更新 receiverInfos，不會覆蓋掉整個 settlement 物件
+  Future<void> updateTaskReceiverInfos(
+      String taskId, String captainPaymentInfoJson) async {
+    await _firestore.collection('tasks').doc(taskId).update({
+      'settlement.receiverInfos': captainPaymentInfoJson,
+      'updatedAt': FieldValue.serverTimestamp(), // 確保每次更新都有時間戳記
+    });
+  }
 }

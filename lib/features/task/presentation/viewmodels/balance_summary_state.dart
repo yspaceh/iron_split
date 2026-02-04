@@ -141,8 +141,8 @@ class BalanceSummaryState extends Equatable {
     }
 
     return BalanceSummaryState(
-      currencyCode: map['currencyCode'] ?? '',
-      currencySymbol: map['currencySymbol'] ?? '',
+      currencyCode: map['currencyCode'] ?? CurrencyConstants.defaultCode,
+      currencySymbol: map['currencySymbol'] ?? CurrencyConstants.defaultSymbol,
       poolBalance: toDouble(map['poolBalance']),
       totalExpense: toDouble(map['totalExpense']),
       totalIncome: toDouble(map['totalIncome']),

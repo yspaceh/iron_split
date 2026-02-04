@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
-import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/settlement/presentation/bottom_sheets/b06_payment_info_detail_bottom_sheet.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/settlement_member_item.dart';
-import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 
 class S17SettledPendingView extends StatelessWidget {
   final String taskId;
-  final String taskName;
+  final TaskModel? task;
   final bool isCaptain;
 
   // 這些資料由母頁面 (S17TaskLockedPage) 傳入
@@ -23,12 +23,12 @@ class S17SettledPendingView extends StatelessWidget {
 
   const S17SettledPendingView({
     super.key,
-    required this.taskId,
     required this.isCaptain,
     required this.balanceState,
     required this.pendingMembers,
     required this.clearedMembers,
-    required this.taskName,
+    this.task,
+    required this.taskId,
   });
 
   @override
@@ -37,28 +37,6 @@ class S17SettledPendingView extends StatelessWidget {
     final settlementService = context.read<SettlementService>();
     final CurrencyConstants baseCurrency =
         CurrencyConstants.getCurrencyConstants(balanceState.currencyCode);
-
-    Future<void> onShareTap() async {
-      try {
-        if (context.mounted) {
-          await TaskShareHelper.shareSettlement(
-            context: context,
-            taskId: taskId,
-            taskName: taskName,
-          );
-        }
-      } catch (e) {
-        if (context.mounted) {
-          debugPrint(e.toString());
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(Translations.of(context)
-                    .common
-                    .error_prefix(message: e.toString()))),
-          );
-        }
-      }
-    }
 
     return Column(
       children: [
@@ -76,7 +54,17 @@ class S17SettledPendingView extends StatelessWidget {
               AppButton(
                 text: t.S17_Task_Locked.buttons.view_payment_details,
                 type: AppButtonType.secondary,
-                onPressed: onShareTap,
+                onPressed: () {
+                  final currentTask = task;
+
+                  // 3. 檢查 null
+                  if (currentTask == null) {
+                    // 這裡通常不會發生，因為 S17 頁面載入成功才會有按鈕
+                    return;
+                  }
+                  B06PaymentInfoDetailBottomSheet.show(context,
+                      task: currentTask, isCaptain: isCaptain);
+                },
               ),
 
               const SizedBox(height: 24),
@@ -92,7 +80,11 @@ class S17SettledPendingView extends StatelessWidget {
                     isActionEnabled: isCaptain,
                     actionIcon: Icons.check_circle_outline,
                     onActionTap: () {
-                      //TODO: B06
+                      settlementService.updateMemberStatus(
+                        taskId: taskId,
+                        memberId: member.id,
+                        isCleared: true,
+                      );
                     },
                   )),
 
@@ -120,30 +112,6 @@ class S17SettledPendingView extends StatelessWidget {
               const SizedBox(height: 100), // Bottom padding for sticky bar
             ],
           ),
-        ),
-
-        // 5. 底部按鈕區
-        StickyBottomActionBar(
-          children: [
-            // 通知成員
-            AppButton(
-              text: t.S17_Task_Locked.buttons.notify_members,
-              type: AppButtonType.secondary,
-              onPressed: onShareTap,
-            ),
-            // 下載帳單
-            AppButton(
-              text: t.S17_Task_Locked.buttons.download,
-              type: AppButtonType.primary,
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  // TODO: Add logic
-                  const SnackBar(
-                      content: Text('Feature coming soon: PDF Export')),
-                );
-              },
-            ),
-          ],
         ),
       ],
     );

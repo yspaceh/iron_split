@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/error/exceptions.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/add_outlined_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/info_card.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -163,200 +162,14 @@ class _S31Content extends StatelessWidget {
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 1. 頂部摘要 (Placeholder)
-                  InfoCard(
-                    icon: Icons.privacy_tip_outlined,
-                    child: Text(
-                      t.S31_settlement_payment_info
-                          .setup_instruction, // 剛修訂過的精簡文案
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant, // M3 建議的次要內容文字色
-                        height: 1.5, // 增加行高，提升閱讀舒適度
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 2. 模式選擇 (Radio Group)
-                  Text(t.common.payment_info.method_label,
-                      style: textTheme.titleMedium),
-                  const SizedBox(height: 8),
-
-                  _buildRadioOption(
-                    context,
-                    value: PaymentMode.private,
-                    groupValue: vm.mode,
-                    label: t.common.payment_info.mode_private, // "私訊聯絡"
-                    desc: t.common.payment_info
-                        .mode_private_desc, // "不顯示收款資訊，請成員直接詢問"
-                    onChanged: (v) => vm.setMode(v!),
-                  ),
-                  _buildRadioOption(
-                    context,
-                    value: PaymentMode.specific,
-                    groupValue: vm.mode,
-                    label: t.common.payment_info.mode_public, // "提供收款資訊"
-                    desc:
-                        t.common.payment_info.mode_public_desc, // "顯示銀行帳號或支付連結"
-                    onChanged: (v) => vm.setMode(v!),
-                  ),
-
-                  // 3. 詳細輸入區 (Condition)
-                  if (vm.mode == PaymentMode.specific) ...[
-                    const SizedBox(height: 16),
-                    const Divider(),
-                    const SizedBox(height: 16),
-
-                    // A. 現金
-                    CheckboxListTile(
-                      value: vm.acceptCash,
-                      onChanged: vm.toggleAcceptCash,
-                      title: Text(t.common.payment_info.type_cash),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-
-                    // B. 銀行轉帳
-                    CheckboxListTile(
-                      value: vm.enableBank,
-                      onChanged: vm.toggleEnableBank,
-                      title: Text(t.common.payment_info.type_bank),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    if (vm.enableBank)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40, bottom: 16),
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: vm.bankNameCtrl,
-                              decoration: InputDecoration(
-                                labelText: t.common.payment_info
-                                    .bank_name_hint, // "銀行代碼 / 名稱"
-                                isDense: true,
-                                border: const OutlineInputBorder(),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            TextField(
-                              controller: vm.bankAccountCtrl,
-                              decoration: InputDecoration(
-                                labelText: t.common.payment_info
-                                    .bank_account_hint, // "帳號"
-                                isDense: true,
-                                border: const OutlineInputBorder(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                    // C. 其他支付 App
-                    CheckboxListTile(
-                      value: vm.enableApps,
-                      onChanged: vm.toggleEnableApps,
-                      title: Text(t.common.payment_info.type_apps),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    if (vm.enableApps) ...[
-                      ...vm.appControllers.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final ctrl = entry.value;
-                        return Container(
-                          // [視覺分組關鍵]: 使用 Container 包裹，並給予淺色背景
-                          margin: const EdgeInsets.only(left: 40, bottom: 12),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            // M3: 使用 surfaceContainerLow (或 lowest) 來做為區塊背景
-                            borderRadius: BorderRadius.circular(12),
-                            // 選用：加個極細邊框讓邊界更清晰
-                            border: Border.all(
-                                color: colorScheme.outlineVariant
-                                    .withValues(alpha: 0.5)),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // 第一行：App 名稱 + 刪除按鈕
-                              Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.center, // 對齊中心
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: ctrl.nameCtrl,
-                                      decoration: InputDecoration(
-                                        labelText: t.common.payment_info
-                                            .app_name, // "App 名稱"
-                                        hintText: "e.g. LinePay", // 可選：給個提示
-                                        isDense: true,
-                                        // M3: 在有背景色的容器內，可以使用 filled: true + fillColors.surface
-                                        // 或者保持 outline，這裡維持 outline 比較清爽
-                                        border: const OutlineInputBorder(),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 12),
-                                      ),
-                                    ),
-                                  ),
-                                  // 刪除按鈕 (緊跟在名稱旁邊)
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    // 使用 onSurfaceVariant 顏色比較不那麼刺眼，除非要強調危險
-                                    color: colorScheme.onSurfaceVariant,
-                                    onPressed: () => vm.removeApp(index),
-                                    tooltip: t.common.buttons.delete,
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 12), // 上下行的間距
-
-                              // 第二行：連結/ID (獨佔一行，顯示完整內容)
-                              TextField(
-                                controller: ctrl.linkCtrl,
-                                decoration: InputDecoration(
-                                  labelText: t.common.payment_info
-                                      .app_link, // "連結 / ID"
-                                  isDense: true,
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 12),
-                                  // 可選：加上連結圖示，強化語意
-                                  prefixIcon: const Icon(Icons.link, size: 20),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                      // 新增按鈕
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40),
-                        child: AddOutlinedButton(
-                          onPressed: vm.addApp,
-                        ),
-                      ),
-                    ],
-                  ],
-
-                  // 底部留白，避免鍵盤遮擋
-                  const SizedBox(height: 80),
-                ],
-              ),
+              child: PaymentInfoForm(controller: vm.formController),
             ),
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Sync Checkbox (Smart Display)
-          if (vm.showSyncOption && vm.mode == PaymentMode.specific)
+          if (vm.showSyncOption &&
+              vm.formController.mode == PaymentMode.specific)
             Container(
               color: colorScheme.surfaceContainerLow,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -399,53 +212,6 @@ class _S31Content extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildRadioOption(
-    BuildContext context, {
-    required PaymentMode value,
-    required PaymentMode groupValue,
-    required String label,
-    required String desc,
-    required ValueChanged<PaymentMode?> onChanged,
-  }) {
-    final theme = Theme.of(context);
-    final isSelected = value == groupValue;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
-            : null,
-        border: Border.all(
-          color: isSelected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.outlineVariant,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: RadioListTile<PaymentMode>(
-        value: value,
-        groupValue: groupValue,
-        onChanged: onChanged,
-        title: Text(
-          label,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        subtitle: Text(
-          desc,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        activeColor: theme.colorScheme.primary,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
       ),
     );
   }

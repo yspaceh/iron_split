@@ -8,6 +8,7 @@ import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
@@ -30,17 +31,9 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // UI States
   bool _isLoading = true;
-  PaymentMode _mode = PaymentMode.private;
 
-  // Specific Info States
-  bool _acceptCash = true;
-  bool _enableBank = false;
-  final TextEditingController bankNameCtrl = TextEditingController();
-  final TextEditingController bankAccountCtrl = TextEditingController();
-
-  bool _enableApps = false;
-  // 為了方便編輯，這裡用 List<Map> 或 Controller Group，簡單起見直接操作 Model
-  List<PaymentAppEditingController> _appControllers = [];
+  // 這裡使用 late，在 init() 讀取完 Storage 後再初始化
+  late PaymentInfoFormController formController;
 
   // Sync Checkbox State
   bool _isSyncChecked = true;
@@ -48,19 +41,15 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // Getters
   bool get isLoading => _isLoading;
-  PaymentMode get mode => _mode;
-  bool get acceptCash => _acceptCash;
-  bool get enableBank => _enableBank;
-  bool get enableApps => _enableApps;
-  List<PaymentAppEditingController> get appControllers => _appControllers;
   bool get isSyncChecked => _isSyncChecked;
-
   bool get isDataReady => _task != null;
 
   // 判斷是否需要顯示 Sync Checkbox (如果有變更 或 原本沒資料)
   bool get showSyncOption {
-    if (_mode == PaymentMode.private) return false; // 私訊模式通常不需存為預設銀行資料
-    final current = _buildCurrentModel();
+    if (formController.mode == PaymentMode.private) {
+      return false; // 私訊模式通常不需存為預設銀行資料
+    }
+    final current = formController.buildModel();
     // 如果沒有預設值，或者目前輸入的跟預設值不一樣，就顯示
     return _loadedDefault == null || current != _loadedDefault;
   }
@@ -89,23 +78,12 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
       if (jsonStr != null) {
         final data = PaymentInfoModel.fromJson(jsonStr);
         _loadedDefault = data;
-        _mode = data.mode;
-        _acceptCash = data.acceptCash;
-
-        if (data.bankName != null || data.bankAccount != null) {
-          _enableBank = true;
-          bankNameCtrl.text = data.bankName ?? '';
-          bankAccountCtrl.text = data.bankAccount ?? '';
-        }
-
-        if (data.paymentApps.isNotEmpty) {
-          _enableApps = true;
-          _appControllers = data.paymentApps
-              .map((e) =>
-                  PaymentAppEditingController(name: e.name, link: e.link))
-              .toList();
-        }
       }
+      // 初始化 Controller 並注入預設值
+      formController = PaymentInfoFormController(initialData: _loadedDefault);
+
+      // [關鍵] 監聽 Controller 變化 -> 通知 View 更新 (影響 showSyncOption 的顯示)
+      formController.addListener(notifyListeners);
 
       _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
         if (taskData != null) {
@@ -132,42 +110,6 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // --- Actions ---
 
-  void setMode(PaymentMode val) {
-    _mode = val;
-    notifyListeners();
-  }
-
-  void toggleAcceptCash(bool? val) {
-    _acceptCash = val ?? false;
-    notifyListeners();
-  }
-
-  void toggleEnableBank(bool? val) {
-    _enableBank = val ?? false;
-    notifyListeners();
-  }
-
-  void toggleEnableApps(bool? val) {
-    _enableApps = val ?? false;
-    if (_enableApps && _appControllers.isEmpty) {
-      addApp(); // 預設新增一行
-    }
-    notifyListeners();
-  }
-
-  void addApp() {
-    _appControllers.add(PaymentAppEditingController());
-    notifyListeners();
-  }
-
-  void removeApp(int index) {
-    _appControllers.removeAt(index);
-    if (_appControllers.isEmpty) {
-      // 若刪光了，是否要自動關閉 checkbox? 視 UX 而定，這裡保留
-    }
-    notifyListeners();
-  }
-
   void toggleSync(bool? val) {
     _isSyncChecked = val ?? false;
     notifyListeners();
@@ -181,7 +123,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
     try {
       // 1. 儲存個人偏好 (Local)
-      final myPaymentInfo = _buildCurrentModel();
+      final myPaymentInfo = formController.buildModel();
       await _saveLocalPreference(myPaymentInfo);
 
       // 3. 呼叫 Service
@@ -204,57 +146,19 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> _saveLocalPreference(PaymentInfoModel info) async {
-    if (_mode == PaymentMode.specific && _isSyncChecked && showSyncOption) {
+    if (formController.mode == PaymentMode.specific &&
+        _isSyncChecked &&
+        showSyncOption) {
       await _storage.write(key: _storageKey, value: info.toJson());
     }
-  }
-
-  PaymentInfoModel _buildCurrentModel() {
-    if (_mode == PaymentMode.private) {
-      return const PaymentInfoModel(mode: PaymentMode.private);
-    }
-
-    final apps = _enableApps
-        ? _appControllers
-            .where((c) => c.nameCtrl.text.isNotEmpty) // 過濾空的
-            .map((c) =>
-                PaymentAppInfo(name: c.nameCtrl.text, link: c.linkCtrl.text))
-            .toList()
-        : <PaymentAppInfo>[];
-
-    return PaymentInfoModel(
-      mode: PaymentMode.specific,
-      acceptCash: _acceptCash,
-      bankName: _enableBank ? bankNameCtrl.text : null,
-      bankAccount: _enableBank ? bankAccountCtrl.text : null,
-      paymentApps: apps,
-    );
   }
 
   @override
   void dispose() {
     _taskSubscription?.cancel();
     _recordSubscription?.cancel();
-    bankNameCtrl.dispose();
-    bankAccountCtrl.dispose();
-    for (var c in _appControllers) {
-      c.dispose();
-    }
+    formController.removeListener(notifyListeners);
+    formController.dispose();
     super.dispose();
-  }
-}
-
-// Helper Controller for Dynamic List
-class PaymentAppEditingController {
-  final TextEditingController nameCtrl;
-  final TextEditingController linkCtrl;
-
-  PaymentAppEditingController({String name = '', String link = ''})
-      : nameCtrl = TextEditingController(text: name),
-        linkCtrl = TextEditingController(text: link);
-
-  void dispose() {
-    nameCtrl.dispose();
-    linkCtrl.dispose();
   }
 }

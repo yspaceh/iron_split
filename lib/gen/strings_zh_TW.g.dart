@@ -70,7 +70,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD11RandomResultZhTw D11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
-	late final TranslationsB04PaymentMergeZhTw b04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
+	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
+	late final TranslationsB06PaymentInfoDetailZhTw B06_payment_info_detail = TranslationsB06PaymentInfoDetailZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
 }
@@ -206,6 +207,9 @@ class TranslationsS10HomeTaskListZhTw {
 
 	/// zh-TW: '確定要刪除這個任務嗎？'
 	String get delete_confirm_content => '確定要刪除這個任務嗎？';
+
+	/// zh-TW: '已結算'
+	String get label_settlement => '已結算';
 }
 
 // Path: S11_Invite_Confirm
@@ -294,8 +298,8 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '個人'
 	String get tab_personal => '個人';
 
-	/// zh-TW: '公款餘額'
-	String get label_prepay_balance => '公款餘額';
+	/// zh-TW: '預收款餘額'
+	String get label_prepay_balance => '預收款餘額';
 
 	/// zh-TW: '我的收支'
 	String get label_my_balance => '我的收支';
@@ -554,8 +558,8 @@ class TranslationsS17TaskLockedZhTw {
 	// Translations
 	late final TranslationsS17TaskLockedButtonsZhTw buttons = TranslationsS17TaskLockedButtonsZhTw.internal(_root);
 
-	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
-	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
+	/// zh-TW: '資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄'
+	String retention_notice({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載您的紀錄';
 
 	/// zh-TW: '由 {name} 吸收'
 	String label_remainder_absorbed_by({required Object name}) => '由 ${name} 吸收';
@@ -1082,7 +1086,7 @@ class TranslationsB03SplitMethodEditZhTw {
 	String get error_total_mismatch => '金額不符';
 }
 
-// Path: b04_payment_merge
+// Path: B04_payment_merge
 class TranslationsB04PaymentMergeZhTw {
 	TranslationsB04PaymentMergeZhTw.internal(this._root);
 
@@ -1109,6 +1113,20 @@ class TranslationsB04PaymentMergeZhTw {
 	String get status_receivable => '可退';
 
 	late final TranslationsB04PaymentMergeButtonsZhTw buttons = TranslationsB04PaymentMergeButtonsZhTw.internal(_root);
+}
+
+// Path: B06_payment_info_detail
+class TranslationsB06PaymentInfoDetailZhTw {
+	TranslationsB06PaymentInfoDetailZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '已複製到剪貼簿'
+	String get label_copied => '已複製到剪貼簿';
+
+	late final TranslationsB06PaymentInfoDetailButtonsZhTw buttons = TranslationsB06PaymentInfoDetailButtonsZhTw.internal(_root);
 }
 
 // Path: B07_PaymentMethod_Edit
@@ -1810,7 +1828,7 @@ class TranslationsB03SplitMethodEditButtonsZhTw {
 	String get adjust_weight => '調整權重';
 }
 
-// Path: b04_payment_merge.buttons
+// Path: B04_payment_merge.buttons
 class TranslationsB04PaymentMergeButtonsZhTw {
 	TranslationsB04PaymentMergeButtonsZhTw.internal(this._root);
 
@@ -1823,6 +1841,18 @@ class TranslationsB04PaymentMergeButtonsZhTw {
 
 	/// zh-TW: '合併'
 	String get confirm => '合併';
+}
+
+// Path: B06_payment_info_detail.buttons
+class TranslationsB06PaymentInfoDetailButtonsZhTw {
+	TranslationsB06PaymentInfoDetailButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '複製'
+	String get copy => '複製';
 }
 
 // Path: error.taskFull
@@ -2084,6 +2114,7 @@ extension on Translations {
 			'S10_Home_TaskList.date_tbd' => '日期未定',
 			'S10_Home_TaskList.delete_confirm_title' => '確認刪除',
 			'S10_Home_TaskList.delete_confirm_content' => '確定要刪除這個任務嗎？',
+			'S10_Home_TaskList.label_settlement' => '已結算',
 			'S11_Invite_Confirm.title' => '加入任務',
 			'S11_Invite_Confirm.subtitle' => '您受邀加入以下任務：',
 			'S11_Invite_Confirm.buttons.confirm' => '加入',
@@ -2109,7 +2140,7 @@ extension on Translations {
 			'S13_Task_Dashboard.buttons.download' => '下載記錄',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',
-			'S13_Task_Dashboard.label_prepay_balance' => '公款餘額',
+			'S13_Task_Dashboard.label_prepay_balance' => '預收款餘額',
 			'S13_Task_Dashboard.label_my_balance' => '我的收支',
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
 			'S13_Task_Dashboard.label_balance' => '結餘',
@@ -2189,7 +2220,7 @@ extension on Translations {
 			'S17_Task_Locked.buttons.download' => '下載紀錄',
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
 			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
-			'S17_Task_Locked.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
+			'S17_Task_Locked.retention_notice' => ({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載您的紀錄',
 			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => '由 ${name} 吸收',
 			'S17_Task_Locked.section_pending' => '待處理',
 			'S17_Task_Locked.section_cleared' => '已處理',
@@ -2329,14 +2360,16 @@ extension on Translations {
 			'B03_SplitMethod_Edit.desc_exact' => '手動輸入金額，總額需吻合',
 			'B03_SplitMethod_Edit.label_weight' => '比例',
 			'B03_SplitMethod_Edit.error_total_mismatch' => '金額不符',
-			'b04_payment_merge.title' => '合併成員款項',
-			'b04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
-			'b04_payment_merge.section_head' => '代表成員',
-			'b04_payment_merge.section_candidates' => '選擇合併成員',
-			'b04_payment_merge.status_payable' => '應付',
-			'b04_payment_merge.status_receivable' => '可退',
-			'b04_payment_merge.buttons.cancel' => '取消',
-			'b04_payment_merge.buttons.confirm' => '合併',
+			'B04_payment_merge.title' => '合併成員款項',
+			'B04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
+			'B04_payment_merge.section_head' => '代表成員',
+			'B04_payment_merge.section_candidates' => '選擇合併成員',
+			'B04_payment_merge.status_payable' => '應付',
+			'B04_payment_merge.status_receivable' => '可退',
+			'B04_payment_merge.buttons.cancel' => '取消',
+			'B04_payment_merge.buttons.confirm' => '合併',
+			'B06_payment_info_detail.label_copied' => '已複製到剪貼簿',
+			'B06_payment_info_detail.buttons.copy' => '複製',
 			'B07_PaymentMethod_Edit.title' => '選擇資金來源',
 			'B07_PaymentMethod_Edit.type_member' => '成員墊付',
 			'B07_PaymentMethod_Edit.type_prepay' => '公款支付',
