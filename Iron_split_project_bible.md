@@ -143,7 +143,8 @@
 
 ### 5.7 結算流程
 
-- 結算按下後：進入結算預覽 -> 支付確認 -> 結果頁。
+- 結算按下後：進入結算預覽 -> 填寫收款資訊 -> 結果頁。
+- 結算時填寫的收款資訊支援「同步儲存為本機預設值」，供下次開團自動帶入。
 - 結算完成後：任務鎖定唯讀、開始 30 天倒數（到期清除）。
 
 ### 5.8 匯出（PDF）
@@ -294,13 +295,23 @@
   // 2. 結算當下資訊
   "finalizedAt": Timestamp, // S30 按下確認的時間
   "baseCurrency": "TWD",    // 結算鎖定的幣別 (Snapshot)
+  "remainderWinnerId": "uid_xxx",
 
+  // [移入] 收款資訊
+  "receiverInfos": {
+      "mode": "specific",
+      "acceptCash": true,
+      "bankName": "XX Bank",
+      "bankAccount": "12345...",
+      "paymentApps": [...]
+  },
   // 3. 統計數據快照 (供 S17 BalanceCard 直接顯示)
-  "stats": {
-    "totalExpense": 15000.0,
-    "totalIncome": 15000.0,
-    "poolBalance": -200.0,  // 公款餘額
-    "remainder": 3.0        // 餘額罐金額 (吸收值)
+  "dashboardSnapshot": {
+      "poolBalance": 100.0,
+      "totalIncome": 500.0,
+      "totalExpense": 400.0,
+      "expenseDetail": {...},
+      ...
   },
 
   // 4. 成員分帳表 (Allocations) - 核心快照
@@ -353,16 +364,6 @@
 "uid_B": number
 }
 }
-
-### Sub-collection: `tasks/{taskId}/settlements` (S30 Logic)
-
-| Field           | Type      | Description                                               |
-| :-------------- | :-------- | :-------------------------------------------------------- |
-| closedAt        | timestamp | 結算鎖定時間                                              |
-| transferActions | array     | `[{from: B, to: A, amount: 100, status}]`                 |
-| status          | string    | 匯款狀態 `pending` / `paid`                               |
-| receiverInfos   | map       | 暫存收款資訊 (MVP Privacy)                                |
-|                 |           | `{ "uid_A": "Bank Code 822...", "uid_B": "PayPay Link" }` |
 
 ### 7.5 外部 API
 
@@ -606,7 +607,7 @@ lib/
 ## 15.5 記帳與餘額顯示規範 (Record & Balance UX)
 
 1.  **S13 Dashboard - 餘額顯示**：
-    - 主數字顯示 **「公款總價值 (Cash on Hand)」**，而非會計淨額。
+    - 主數字顯示**「專案淨額 (Net Balance)」** (總預收 - 總支出)，反映預算執行狀況（盈餘或透支）。點擊餘額區域後，Dialog 內才顯示「分幣別公款庫存 (Physical Inventory)」。
     - 點擊餘額區域，彈出 `Dialog` 顯示 **「分幣別庫存明細」** (e.g., JPY 20,000, TWD 500)。
 
 2.  **S15 Record Edit - 智慧支付選單 (Smart Picker)**：
@@ -648,6 +649,7 @@ lib/
     - 更新 `status` = `settled`, `settlement.status` = `pending`。
     - 跳轉至 **S17 (Mode: Settled, State: Pending)** (儀表板畫面)。
 3.  **Transition to Cleared (S17)**
+    - S17 頁面頂部會顯示「資料保留倒數天數」Banner，提醒使用者盡快下載。
     - 隊長在 S17 將所有成員標記為「已處理」。
     - 更新 `settlement.status` = `cleared`。
     - S17 UI 自動切換為 **Mode: Settled, State: Cleared** (打勾畫面)。
@@ -686,7 +688,11 @@ lib/
     - 需建立 `firestore.indexes.json`，特別是針對 `tasks/{id}/records` 的 `date` (desc) + `member` 複合查詢。
 
 ## 變更紀錄（append-only）
-
+- 2026-02-05: Logic & Schema Refinement (v2.2):
+    - **Firestore (7.4)**: 廢除 `settlements` sub-collection，將 `receiverInfos` 與 `dashboardSnapshot` 結構整合至 Task Document 的 `settlement` Map 中，確保資料結構一致性。
+    - **S13 Dashboard (15.5)**: 修正餘額顯示邏輯，主畫面改為顯示「淨額 (Net Balance)」，原「公款庫存」移至彈窗明細中顯示。
+    - **S17 Lifecycle (15.7)**: 新增「資料保留倒數」機制，結算後 30 天自動刪除明細，並於 UI 顯示倒數 Banner。
+    - **S31/B05 UX**: 新增收款資訊「同步儲存為本機預設值」功能，提供 B05 編輯時亦可更新系統預設值的選項。
 - 2026-01-30: 結算流程架構確立 (S17/S30)
   - **Schema Update**:
     - `tasks` Collection: 擴充 `status` (`ongoing`/`settled`/`closed`)；新增 `settlement` 欄位 (Map) 作為結算快照 (Snapshot)，包含 `allocations`, `stats`, `memberStatus`。
