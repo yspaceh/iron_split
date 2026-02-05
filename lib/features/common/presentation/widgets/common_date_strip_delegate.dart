@@ -27,7 +27,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
 
     return Container(
       height: height,
-      color: theme.colorScheme.surface,
+      color: theme.colorScheme.surfaceContainerLow,
       child: Column(
         children: [
           Expanded(

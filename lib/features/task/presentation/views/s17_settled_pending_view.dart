@@ -56,31 +56,37 @@ class _S17SettledPendingViewState extends State<S17SettledPendingView> {
 
     return Column(
       children: [
+        // 1. 頂部資訊卡 (Locked Mode)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: GroupBalanceCard(state: widget.balanceState),
+        ),
+
+        const SizedBox(height: 16),
+
+        // 3. 切換按鈕 (SegmentedButton)
+        ExcludeSemantics(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: CustomSlidingSegment<int>(
+              selectedValue: _selectedIndex,
+              onValueChanged: (int newValue) {
+                setState(() {
+                  _selectedIndex = newValue;
+                });
+              },
+              segments: {
+                0: "${t.S17_Task_Locked.section_pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
+                1: "${t.S17_Task_Locked.section_cleared} (${widget.clearedMembers.length})", // "已處理"
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             children: [
-              // 1. 頂部資訊卡 (Locked Mode)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: GroupBalanceCard(state: widget.balanceState),
-              ),
-
-              // 3. 切換按鈕 (SegmentedButton)
-
-              CustomSlidingSegment<int>(
-                selectedValue: _selectedIndex,
-                onValueChanged: (int newValue) {
-                  setState(() {
-                    _selectedIndex = newValue;
-                  });
-                },
-                segments: {
-                  0: "${t.S17_Task_Locked.section_pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
-                  1: "${t.S17_Task_Locked.section_cleared} (${widget.clearedMembers.length})", // "已處理"
-                },
-              ),
-              const SizedBox(height: 8),
               if (_selectedIndex == 0)
                 // 2. 收款資訊區
                 AppButton(

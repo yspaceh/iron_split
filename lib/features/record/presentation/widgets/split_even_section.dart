@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/common/presentation/widgets/commonSelectionTile.dart';
+import 'package:iron_split/features/common/presentation/widgets/common_selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 

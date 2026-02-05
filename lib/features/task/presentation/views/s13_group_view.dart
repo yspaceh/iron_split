@@ -11,7 +11,7 @@ import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
-import 'package:iron_split/features/task/presentation/widgets/record_item.dart';
+import 'package:iron_split/features/record/presentation/widgets/record_item.dart';
 import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
@@ -150,40 +150,43 @@ class S13GroupView extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       ...dayRecords.map((record) {
-                        return RecordItem(
-                          record: record,
-                          baseCurrency: vm.baseCurrency,
-                          displayAmount: record.amount,
-                          onTap: () {
-                            context.pushNamed(
-                              'S15',
-                              pathParameters: {'taskId': task.id},
-                              queryParameters: {'id': record.id},
-                              extra: {
-                                // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
-                                'poolBalancesByCurrency': vm.poolBalances,
-                                'baseCurrency': vm.baseCurrency,
-                                'record': record,
-                              },
-                            );
-                          },
-                          onDelete: (ctx) async {
-                            // 呼叫 Repo 進行刪除
-                            try {
-                              await vm.deleteRecord(record.id!);
-                              // 顯示 SnackBar
-                              if (ctx.mounted) {
-                                ScaffoldMessenger.of(ctx).showSnackBar(
-                                  SnackBar(
-                                      content: Text(Translations.of(ctx)
-                                          .D10_RecordDelete_Confirm
-                                          .deleted_success)),
-                                );
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: RecordItem(
+                            record: record,
+                            baseCurrency: vm.baseCurrency,
+                            displayAmount: record.amount,
+                            onTap: () {
+                              context.pushNamed(
+                                'S15',
+                                pathParameters: {'taskId': task.id},
+                                queryParameters: {'id': record.id},
+                                extra: {
+                                  // 需要帶過去的資料由這裡決定，RecordItem 不用當搬運工
+                                  'poolBalancesByCurrency': vm.poolBalances,
+                                  'baseCurrency': vm.baseCurrency,
+                                  'record': record,
+                                },
+                              );
+                            },
+                            onDelete: (ctx) async {
+                              // 呼叫 Repo 進行刪除
+                              try {
+                                await vm.deleteRecord(record.id!);
+                                // 顯示 SnackBar
+                                if (ctx.mounted) {
+                                  ScaffoldMessenger.of(ctx).showSnackBar(
+                                    SnackBar(
+                                        content: Text(Translations.of(ctx)
+                                            .D10_RecordDelete_Confirm
+                                            .deleted_success)),
+                                  );
+                                }
+                              } catch (e) {
+                                // TODO: 需追加錯誤處理
                               }
-                            } catch (e) {
-                              // TODO: 需追加錯誤處理
-                            }
-                          },
+                            },
+                          ),
                         );
                       }),
                       // 保留新增按鈕樣式

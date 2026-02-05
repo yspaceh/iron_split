@@ -25,7 +25,8 @@ class CustomSlidingSegment<T> extends StatelessWidget {
     final keys = segments.keys.toList();
     final selectedIndex = keys.indexOf(selectedValue);
 
-    final backgroundColor = colorScheme.surfaceContainerHighest;
+    final backgroundColor =
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
 
     return Container(
       height: 46, // 固定高度，符合手指點擊範圍
@@ -85,7 +86,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
                             ? colorScheme.onSurface // 深黑灰
                             : colorScheme.onSurfaceVariant, // 冷灰
                         fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                            isSelected ? FontWeight.w600 : FontWeight.normal,
                         fontSize: 14, // 精緻的小字
                       ),
                       child: Row(

@@ -7,7 +7,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_amount
 import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
-import 'package:iron_split/features/task/presentation/widgets/record_card.dart';
+import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class S15ExpenseForm extends StatelessWidget {
