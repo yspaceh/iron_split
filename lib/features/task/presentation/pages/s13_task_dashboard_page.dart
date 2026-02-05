@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -52,14 +53,9 @@ class _S13ContentState extends State<_S13Content> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     // 監聽 ViewModel
     final vm = context.watch<S13TaskDashboardViewModel>();
-
-    // 取得當前 Tab Index
-    final int currentTabIndex = vm.currentTabIndex;
 
     if (vm.isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -101,7 +97,6 @@ class _S13ContentState extends State<_S13Content> {
     final baseCurrency = vm.baseCurrency;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(
             taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title_active),
@@ -162,34 +157,21 @@ class _S13ContentState extends State<_S13Content> {
         children: [
           // Segmented Button
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<int>(
-                segments: [
-                  ButtonSegment(
-                      value: 0,
-                      label: Text(t.S13_Task_Dashboard.tab_group),
-                      icon: const Icon(Icons.groups)),
-                  ButtonSegment(
-                      value: 1,
-                      label: Text(t.S13_Task_Dashboard.tab_personal),
-                      icon: const Icon(Icons.person)),
-                ],
-                selected: {currentTabIndex},
-                onSelectionChanged: (Set<int> newSelection) {
-                  // 通知 VM 切換，VM 會負責更新 currentTabIndex 並觸發自動捲動檢查
-                  vm.setTabIndex(newSelection.first);
-                },
-                showSelectedIcon: false,
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // [修正] 改用 CustomSlidingSegment
+            child: CustomSlidingSegment<int>(
+              selectedValue: vm.currentTabIndex,
+              onValueChanged: (val) => vm.setTabIndex(val),
+              segments: {
+                0: t.S13_Task_Dashboard.tab_group,
+                1: t.S13_Task_Dashboard.tab_personal,
+              },
             ),
           ),
 
           // Content Switcher
           Expanded(
-            child: currentTabIndex == 0
+            child: vm.currentTabIndex == 0
                 // S13GroupView (重構後不需傳參數，直接吃 Provider)
                 ? const S13GroupView()
                 // S13PersonalView (重構後不需傳參數，直接吃 Provider)

@@ -41,9 +41,7 @@ class TaskListItem extends StatelessWidget {
 
     // 3. 卡片本體
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: EdgeInsets.symmetric(horizontal: 16),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [

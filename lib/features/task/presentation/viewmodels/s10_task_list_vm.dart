@@ -28,11 +28,6 @@ class S10TaskListViewModel extends ChangeNotifier {
           case 'pending':
             return true;
           case 'settled':
-            if (task.settlement?['status'] == 'pending') {
-              return true;
-            } else {
-              return false;
-            }
           case 'close':
             return false;
           default:
@@ -45,11 +40,6 @@ class S10TaskListViewModel extends ChangeNotifier {
           case 'pending':
             return false;
           case 'settled':
-            if (task.settlement?['status'] == 'cleared') {
-              return true;
-            } else {
-              return false;
-            }
           case 'close':
             return true;
           default:

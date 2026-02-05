@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
@@ -343,23 +344,14 @@ class _S15ContentState extends State<_S15Content> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<int>(
-                segments: [
-                  ButtonSegment(
-                      value: 0,
-                      label: Text(t.S15_Record_Edit.tab_expense),
-                      icon: const Icon(Icons.receipt_long)),
-                  ButtonSegment(
-                      value: 1,
-                      label: Text(t.S15_Record_Edit.tab_income),
-                      icon: const Icon(Icons.savings_outlined)),
-                ],
-                selected: {vm.recordTypeIndex},
-                onSelectionChanged: (val) => vm.setRecordType(val.first),
-                showSelectedIcon: false,
-              ),
+            // [修正] 改用 CustomSlidingSegment
+            child: CustomSlidingSegment<int>(
+              selectedValue: vm.recordTypeIndex,
+              onValueChanged: (val) => vm.setRecordType(val),
+              segments: {
+                0: t.S15_Record_Edit.tab_expense,
+                1: t.S15_Record_Edit.tab_income,
+              },
             ),
           ),
           Expanded(

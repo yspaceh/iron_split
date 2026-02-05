@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s10_task_list_vm.dart';
@@ -63,66 +64,18 @@ class _S10Content extends StatelessWidget {
       body: Column(
         children: [
           // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            color: colorScheme.surface,
-            child: Column(
-              children: [
-                // Mascot 區塊 (還原)
-                Container(
-                  height: 120,
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerLowest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.catching_pokemon,
-                        size: 64,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        t.S10_Home_TaskList.mascot_preparing, // "鐵公雞準備中..."
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: colorScheme.outline),
-                      )
-                    ],
-                  ),
-                ),
-
-                // Segmented Button (還原 Icon)
-                SizedBox(
-                  width: double.infinity,
-                  child: SegmentedButton<int>(
-                    segments: [
-                      ButtonSegment(
-                        value: 0,
-                        label: Text(t.S10_Home_TaskList.tab_in_progress),
-                        icon: const Icon(Icons.directions_run), // 還原 Icon
-                      ),
-                      ButtonSegment(
-                        value: 1,
-                        label: Text(t.S10_Home_TaskList.tab_completed),
-                        icon: const Icon(Icons.done_all), // 還原 Icon
-                      ),
-                    ],
-                    selected: {vm.filterIndex},
-                    onSelectionChanged: (newSelection) {
-                      vm.setFilter(newSelection.first);
-                    },
-                  ),
-                ),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // [修正] 改用 CustomSlidingSegment
+            child: CustomSlidingSegment<int>(
+              selectedValue: vm.filterIndex,
+              onValueChanged: (val) => vm.setFilter(val),
+              segments: {
+                0: t.S10_Home_TaskList.tab_in_progress,
+                1: t.S10_Home_TaskList.tab_completed,
+              },
             ),
           ),
-
-          const Divider(height: 1),
 
           // 2. 任務列表
           Expanded(
@@ -148,13 +101,12 @@ class _S10Content extends StatelessWidget {
                         ),
                       )
                     : ListView.separated(
-                        padding: const EdgeInsets.fromLTRB(
-                            16, 16, 16, 80), // 底部留白給 FAB
+                        padding: const EdgeInsets.only(
+                            top: 8, bottom: 80), // 底部留白給 FAB
                         itemCount: vm.displayTasks.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
                         itemBuilder: (context, index) {
                           final task = vm.displayTasks[index];
-
                           // 使用 TaskListItem (已修正邏輯)
                           return TaskListItem(
                             task: task,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
@@ -34,6 +35,21 @@ class GroupBalanceCard extends StatelessWidget {
     final bool isCurrencyTapLocked = onCurrencyTap == null;
     final bool isRuleTapLocked = onRuleTap == null;
     final double netBalance = state.totalIncome - state.totalExpense;
+    // --- 1. 統一管理顏色變數 (從 Theme 取得) ---
+    // 支出使用主色 (Iron Wine)
+    final Color expenseColor = colorScheme.primary;
+    // 收入使用第三色 (我們在 AppTheme 定義為 Forest Green)
+    final Color incomeColor = colorScheme.tertiary;
+    // 中性色/零值
+    final Color neutralColor = colorScheme.outline;
+    // Footer 背景色 (使用極淡的表面色變體)
+    final Color footerBgColor =
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+    // 邊框色
+    final Color borderColor = colorScheme.outlineVariant.withValues(alpha: 0.5);
+
+    final Color deepExpenseColor = AppTheme.expenseDeep;
+    final Color deepIncomeColor = AppTheme.incomeDeep;
 
     String _getAmountWithSymbol(double amount, String currencyCode) {
       final currencyConstants =
@@ -94,324 +110,420 @@ class GroupBalanceCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // return Padding(
-              //   padding: const EdgeInsets.symmetric(vertical: 4),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(e.key,
-              //           style: const TextStyle(fontWeight: FontWeight.bold)),
-              //       Text(
-              //         "$currencySymbol ${CurrencyConstants.formatAmount(amount, e.key)}",
-              //         style: TextStyle(
-              //           color: isNegative
-              //               ? theme.colorScheme.error
-              //               : theme.colorScheme.primary,
-              //           fontWeight: FontWeight.bold,
-              //           fontFamily: 'RobotoMono',
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // );
             ],
           ));
     }
 
     return Card(
       margin: EdgeInsets.zero,
+      // Card 顏色與形狀已由 AppTheme 全局控制 (純白 + 微邊框)
       child: InkWell(
         onTap: showBalanceDetails,
-        child: Container(
+        borderRadius: BorderRadius.circular(20),
+        child: SizedBox(
           height: fixedHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Column(
-              children: [
-                // --- Row 1: Header (44.0) ---
-                SizedBox(
-                  height: 44.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left: Currency Selector
-                      InkWell(
-                        onTap: !isCurrencyTapLocked ? onCurrencyTap : null,
-                        borderRadius: BorderRadius.circular(24),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 8),
-                          child: Text(state.currencyCode,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
-                              )),
-                        ),
-                      ),
-
-                      // Right: Balance
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(t.S13_Task_Dashboard.label_balance,
-                              style: theme.textTheme.labelSmall),
-                          Text.rich(
-                            TextSpan(
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                fontFamily: 'RobotoMono',
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // --- Top Content ---
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                child: Column(
+                  children: [
+                    // (A) Header: Currency Chip
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: isCurrencyTapLocked ? null : onCurrencyTap,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: footerBgColor, // 使用變數
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: borderColor, // 使用變數
+                                width: 1,
                               ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                TextSpan(
-                                  text:
-                                      "${netBalance < 0 ? "-" : ""} ${state.currencySymbol} ${CurrencyConstants.formatAmount(netBalance.abs(), state.currencyCode)}",
-                                  style: TextStyle(
-                                    color: netBalance > 0
-                                        ? theme.colorScheme.tertiary
-                                        : netBalance < 0
-                                            ? theme.colorScheme.error
-                                            : theme.colorScheme.outline,
+                                Text(
+                                  state.currencyCode,
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onSurface,
                                   ),
                                 ),
+                                if (!isCurrencyTapLocked) ...[
+                                  const SizedBox(width: 4),
+                                  Icon(Icons.keyboard_arrow_down,
+                                      size: 14, color: colorScheme.onSurface),
+                                ],
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
 
-                // Gap: 8
-                const SizedBox(height: 8.0),
-
-                // --- Row 2: Legend (20.0) ---
-                SizedBox(
-                  height: 20.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.errorContainer,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "${t.S13_Task_Dashboard.label_total_expense} : ${state.currencySymbol} ${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
-                            style: theme.textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade400,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "${t.S13_Task_Dashboard.label_total_prepay} : ${state.currencySymbol} ${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
-                            style: theme.textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Gap: 8
-                const SizedBox(height: 4.0),
-
-                // --- Row 3: Chart (12.0) ---
-                InkWell(
-                  onTap: showBalanceDetails,
-                  child: SizedBox(
-                    height: 20.0,
-                    child: (state.expenseFlex == 0 && state.incomeFlex == 0)
-                        ? Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainer,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          )
-                        : Row(
-                            children: [
-                              // Left Bar (Expenses - Red)
-                              Expanded(
-                                child: Directionality(
-                                  textDirection: ui.TextDirection.rtl,
-                                  child: state.expenseFlex > 0
-                                      ? Row(
-                                          children: [
-                                            Flexible(
-                                              flex: state.expenseFlex,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: theme.colorScheme
-                                                      .errorContainer,
-                                                  borderRadius:
-                                                      const BorderRadius
-                                                          .horizontal(
-                                                          left: Radius.circular(
-                                                              10)),
-                                                ),
-                                              ),
-                                            ),
-                                            if ((1000 - state.expenseFlex) > 0)
-                                              Spacer(
-                                                  flex:
-                                                      1000 - state.expenseFlex),
-                                          ],
-                                        )
-                                      : const SizedBox(),
-                                ),
+                    // (B) Core: Big Number (Net Balance)
+                    Center(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: state.currencySymbol,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                // 使用變數判斷顏色
+                                color: netBalance < 0
+                                    ? expenseColor
+                                    : (netBalance > 0
+                                        ? incomeColor
+                                        : neutralColor),
+                                fontWeight: FontWeight.bold,
                               ),
-
-                              Container(
-                                  width: 2, color: theme.colorScheme.surface),
-
-                              // Right Bar (Pot Income Only - Green)
-                              Expanded(
-                                child: state.incomeFlex > 0
-                                    ? Row(
-                                        children: [
-                                          Flexible(
-                                            flex: state.incomeFlex,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.green.shade400,
-                                                borderRadius: const BorderRadius
-                                                    .horizontal(
-                                                    right: Radius.circular(10)),
-                                              ),
-                                            ),
-                                          ),
-                                          if ((1000 - state.incomeFlex) > 0)
-                                            Spacer(
-                                                flex: 1000 - state.incomeFlex),
-                                        ],
-                                      )
-                                    : const SizedBox(),
+                            ),
+                            const TextSpan(text: " "),
+                            TextSpan(
+                              text: CurrencyConstants.formatAmount(
+                                  netBalance.abs(), state.currencyCode),
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontFamily: 'RobotoMono',
+                                fontWeight: FontWeight.w700,
+                                // 使用變數判斷顏色
+                                color: netBalance < 0
+                                    ? expenseColor
+                                    : (netBalance > 0
+                                        ? incomeColor
+                                        : neutralColor),
+                                letterSpacing: -1.0,
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${t.S13_Task_Dashboard.label_total_expense} ",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
-                  ),
+                        ),
+                        Text(
+                          "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "|",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "${t.S13_Task_Dashboard.label_total_prepay} ",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
+              ),
 
-                // Gap: 12
-                const SizedBox(height: 8.0),
+              const Spacer(),
 
-                // --- Row 4: Footer (40.0) ---
-                SizedBox(
-                  height: 40.0,
+              // --- Bottom Footer ---
+              InkWell(
+                onTap: onRuleTap,
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(20)),
+                child: Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: footerBgColor, // 使用變數
+                    border: Border(
+                      top: BorderSide(
+                        color: borderColor, // 使用變數
+                        width: 1,
+                      ),
+                    ),
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(20)),
+                  ),
                   child: Row(
                     children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: isCurrencyTapLocked && isRuleTapLocked
-                            ? null
-                            : () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        t.S15_Record_Edit.msg_leftover_pot(
-                                            amount:
-                                                "${state.currencyCode}${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}")),
-                                    behavior: SnackBarBehavior.floating,
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.savings_outlined,
-                                  size: 20, color: theme.colorScheme.secondary),
-                              Text(" : ", style: theme.textTheme.bodyMedium),
-                              Text(
-                                "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.secondary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              if (state.isLocked &&
-                                  state.absorbedBy != null) ...[
-                                Text(
-                                  t.S17_Task_Locked.label_remainder_absorbed_by(
-                                    name: state.absorbedBy ?? "",
-                                  ),
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.secondary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ]
-                            ],
-                          ),
+                      Icon(Icons.savings_outlined,
+                          size: 18, color: colorScheme.onSurfaceVariant),
+                      const SizedBox(width: 8),
+                      Text(
+                        "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontFamily: 'RobotoMono',
+                          color: colorScheme.onSurface,
                         ),
                       ),
                       const Spacer(),
-                      InkWell(
-                        onTap: onRuleTap,
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(16),
+                      if (state.isLocked && state.absorbedBy != null)
+                        Text(
+                          t.S17_Task_Locked.label_remainder_absorbed_by(
+                              name: state.absorbedBy ?? ""),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                RemainderRuleConstants.getLabel(
-                                    context, state.ruleKey),
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              if (!isRuleTapLocked) ...[
-                                const SizedBox(width: 4),
-                                Icon(Icons.keyboard_arrow_down,
-                                    size: 16,
-                                    color: theme.colorScheme.onSurfaceVariant),
-                              ],
-                            ],
+                        )
+                      else
+                        Text(
+                          RemainderRuleConstants.getLabel(
+                              context, state.ruleKey),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
+                      if (!isRuleTapLocked) ...[
+                        const SizedBox(width: 4),
+                        Icon(Icons.chevron_right,
+                            size: 16, color: colorScheme.onSurfaceVariant),
+                      ],
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
+
+    // Card(
+    //   margin: EdgeInsets.zero,
+    //   child: InkWell(
+    //     onTap: showBalanceDetails,
+    //     borderRadius: BorderRadius.circular(20),
+    //     child: SizedBox(
+    //       height: fixedHeight,
+    //       child: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Padding(
+    //             padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+    //             child: Column(
+    //               children: [
+    //                 // (A) Header: Currency Chip
+    //                 Row(
+    //                   children: [
+    //                     InkWell(
+    //                       onTap: isCurrencyTapLocked ? null : onCurrencyTap,
+    //                       borderRadius: BorderRadius.circular(16),
+    //                       child: Container(
+    //                         padding: const EdgeInsets.symmetric(
+    //                             horizontal: 10, vertical: 4),
+    //                         decoration: BoxDecoration(
+    //                           color: footerBgColor, // 使用變數
+    //                           borderRadius: BorderRadius.circular(16),
+    //                           border: Border.all(
+    //                             color: borderColor, // 使用變數
+    //                             width: 1,
+    //                           ),
+    //                         ),
+    //                         child: Row(
+    //                           mainAxisSize: MainAxisSize.min,
+    //                           children: [
+    //                             Text(
+    //                               state.currencyCode,
+    //                               style: theme.textTheme.labelMedium?.copyWith(
+    //                                 fontWeight: FontWeight.bold,
+    //                                 color: colorScheme.onSurface,
+    //                               ),
+    //                             ),
+    //                             if (!isCurrencyTapLocked) ...[
+    //                               const SizedBox(width: 4),
+    //                               Icon(Icons.keyboard_arrow_down,
+    //                                   size: 14, color: colorScheme.onSurface),
+    //                             ],
+    //                           ],
+    //                         ),
+    //                       ),
+    //                     ),
+    //                     const Spacer(),
+    //                   ],
+    //                 ),
+    //                 const SizedBox(height: 12),
+
+    //                 // (B) Core: Big Number (Net Balance)
+    //                 Center(
+    //                   child: Text.rich(
+    //                     TextSpan(
+    //                       children: [
+    //                         TextSpan(
+    //                           text: state.currencySymbol,
+    //                           style: theme.textTheme.titleLarge?.copyWith(
+    //                             // 使用變數判斷顏色
+    //                             color: netBalance < 0
+    //                                 ? expenseColor
+    //                                 : (netBalance > 0
+    //                                     ? incomeColor
+    //                                     : neutralColor),
+    //                             fontWeight: FontWeight.bold,
+    //                           ),
+    //                         ),
+    //                         const TextSpan(text: " "),
+    //                         TextSpan(
+    //                           text: CurrencyConstants.formatAmount(
+    //                               netBalance.abs(), state.currencyCode),
+    //                           style: TextStyle(
+    //                             fontSize: 36,
+    //                             fontFamily: 'RobotoMono',
+    //                             fontWeight: FontWeight.w700,
+    //                             // 使用變數判斷顏色
+    //                             color: netBalance < 0
+    //                                 ? expenseColor
+    //                                 : (netBalance > 0
+    //                                     ? incomeColor
+    //                                     : neutralColor),
+    //                             letterSpacing: -1.0,
+    //                           ),
+    //                         ),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ),
+
+    //                 Text(
+    //                   t.S13_Task_Dashboard.label_balance,
+    //                   style: theme.textTheme.bodySmall?.copyWith(
+    //                     color: colorScheme.onSurfaceVariant,
+    //                   ),
+    //                 ),
+
+    //                 const SizedBox(height: 20),
+
+    //                 // --- Row 4: Footer (40.0) ---
+    //                 SizedBox(
+    //                   height: 40.0,
+    //                   child: Row(
+    //                     children: [
+    //                       InkWell(
+    //                         borderRadius: BorderRadius.circular(16),
+    //                         onTap: isCurrencyTapLocked && isRuleTapLocked
+    //                             ? null
+    //                             : () {
+    //                                 ScaffoldMessenger.of(context).showSnackBar(
+    //                                   SnackBar(
+    //                                     content: Text(
+    //                                         t.S15_Record_Edit.msg_leftover_pot(
+    //                                             amount:
+    //                                                 "${state.currencyCode}${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}")),
+    //                                     behavior: SnackBarBehavior.floating,
+    //                                     duration: const Duration(seconds: 2),
+    //                                   ),
+    //                                 );
+    //                               },
+    //                         child: Container(
+    //                           padding: EdgeInsets.symmetric(
+    //                               horizontal: 8, vertical: 4),
+    //                           child: Row(
+    //                             mainAxisSize: MainAxisSize.min,
+    //                             children: [
+    //                               Icon(Icons.savings_outlined,
+    //                                   size: 20,
+    //                                   color: theme.colorScheme.secondary),
+    //                               Text(" : ",
+    //                                   style: theme.textTheme.bodyMedium),
+    //                               Text(
+    //                                 "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
+    //                                 style: theme.textTheme.bodySmall?.copyWith(
+    //                                   color: theme.colorScheme.secondary,
+    //                                   fontWeight: FontWeight.bold,
+    //                                 ),
+    //                               ),
+    //                               const SizedBox(width: 4),
+    //                               if (state.isLocked &&
+    //                                   state.absorbedBy != null) ...[
+    //                                 Text(
+    //                                   t.S17_Task_Locked
+    //                                       .label_remainder_absorbed_by(
+    //                                     name: state.absorbedBy ?? "",
+    //                                   ),
+    //                                   style:
+    //                                       theme.textTheme.bodySmall?.copyWith(
+    //                                     color: theme.colorScheme.secondary,
+    //                                     fontWeight: FontWeight.bold,
+    //                                   ),
+    //                                 ),
+    //                               ]
+    //                             ],
+    //                           ),
+    //                         ),
+    //                       ),
+    //                       const Spacer(),
+    //                       InkWell(
+    //                         onTap: onRuleTap,
+    //                         borderRadius: BorderRadius.circular(16),
+    //                         child: Container(
+    //                           padding: const EdgeInsets.symmetric(
+    //                               horizontal: 12, vertical: 6),
+    //                           decoration: BoxDecoration(
+    //                             color:
+    //                                 theme.colorScheme.surfaceContainerHighest,
+    //                             borderRadius: BorderRadius.circular(16),
+    //                           ),
+    //                           child: Row(
+    //                             mainAxisSize: MainAxisSize.min,
+    //                             children: [
+    //                               Text(
+    //                                 RemainderRuleConstants.getLabel(
+    //                                     context, state.ruleKey),
+    //                                 style:
+    //                                     theme.textTheme.labelMedium?.copyWith(
+    //                                   color: theme.colorScheme.onSurfaceVariant,
+    //                                   fontWeight: FontWeight.bold,
+    //                                 ),
+    //                               ),
+    //                               if (!isRuleTapLocked) ...[
+    //                                 const SizedBox(width: 4),
+    //                                 Icon(Icons.keyboard_arrow_down,
+    //                                     size: 16,
+    //                                     color:
+    //                                         theme.colorScheme.onSurfaceVariant),
+    //                               ],
+    //                             ],
+    //                           ),
+    //                         ),
+    //                       ),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }

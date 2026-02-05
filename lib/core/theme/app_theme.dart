@@ -27,6 +27,9 @@ class AppTheme {
   static const _incomeGreen = Color(0xFF2E7D32);
   static const _incomeBg = Color(0xFFE8F5E9);
 
+  static const Color expenseDeep = Color(0xFF5D2226); // 深栗色 (Dark Maroon)
+  static const Color incomeDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -78,7 +81,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: _pureWhite,
         elevation: 0,
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: _neutralGrey, width: 1),
