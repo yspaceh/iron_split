@@ -104,43 +104,40 @@ class _S17Content extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(vm.taskName),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.adaptive.arrow_back),
-          // S10 為 Dashboard，這是此流程的唯一出口
-          onPressed: () => context.goNamed('S10'),
+        appBar: AppBar(
+          title: Text(vm.taskName),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.adaptive.arrow_back),
+            // S10 為 Dashboard，這是此流程的唯一出口
+            onPressed: () => context.goNamed('S10'),
+          ),
         ),
-      ),
-      bottomNavigationBar: vm.status == LockedPageStatus.loading ||
-              vm.status == LockedPageStatus.error
-          ? null
-          : StickyBottomActionBar(
-              children: [
-                // 通知成員
-                AppButton(
-                  text: t.S17_Task_Locked.buttons.notify_members,
-                  type: AppButtonType.secondary,
-                  onPressed: onShareTap,
-                ),
-                // 下載帳單
-                AppButton(
-                  text: t.S17_Task_Locked.buttons.download,
-                  type: AppButtonType.primary,
-                  onPressed: () => onDownload(context),
-                ),
-              ],
-            ),
-      body: Column(
-        children: [
-          if ((vm.status == LockedPageStatus.loading ||
-                  vm.status == LockedPageStatus.error) &&
-              vm.remainingDays != null)
-            RetentionBanner(days: vm.remainingDays!),
-          Expanded(child: content),
-        ],
-      ),
-    );
+        bottomNavigationBar: vm.status == LockedPageStatus.loading ||
+                vm.status == LockedPageStatus.error
+            ? null
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RetentionBanner(days: vm.remainingDays!),
+                  StickyBottomActionBar(
+                    children: [
+                      // 通知成員
+                      AppButton(
+                        text: t.S17_Task_Locked.buttons.notify_members,
+                        type: AppButtonType.secondary,
+                        onPressed: onShareTap,
+                      ),
+                      // 下載帳單
+                      AppButton(
+                        text: t.S17_Task_Locked.buttons.download,
+                        type: AppButtonType.primary,
+                        onPressed: () => onDownload(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+        body: content);
   }
 }

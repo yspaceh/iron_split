@@ -120,13 +120,7 @@ class GroupBalanceCard extends StatelessWidget {
     }
 
     return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerLow,
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colorScheme.outlineVariant),
-      ),
       child: InkWell(
         onTap: showBalanceDetails,
         child: Container(

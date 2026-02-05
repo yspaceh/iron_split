@@ -33,14 +33,6 @@ class SettlementMemberItem extends StatelessWidget {
       margin: EdgeInsets.zero,
       elevation: 0,
       clipBehavior: Clip.antiAlias,
-      // 如果是群組，給稍微深一點的底色區分；如果是單人，用淺色
-      color: isGroup
-          ? colorScheme.surfaceContainer
-          : colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        // side: BorderSide(color: colorScheme.outlineVariant),
-      ),
       child: isGroup
           ? _buildGroupContent(context, colorScheme)
           : _buildSingleRow(context, colorScheme),
