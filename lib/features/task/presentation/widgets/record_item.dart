@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -32,7 +30,6 @@ class RecordItem extends StatelessWidget {
     final isIncome = record.type == 'income';
     final originalCurrencyConstants = CurrencyConstants.getCurrencyConstants(
         record.currencyCode); // 注意這裡用 currencyCode
-    final exchangeRate = record.exchangeRate;
 
     // UI 顯示邏輯 (Icon, Color, Title) 可以保留在 View 層
     final category = CategoryConstant.getCategoryById(record.categoryId);
@@ -61,24 +58,10 @@ class RecordItem extends StatelessWidget {
       confirmDismiss: (direction) async {
         if (onDelete == null) return false;
 
-        return await CommonAlertDialog.show<bool>(
-          context,
-          title: t.D10_RecordDelete_Confirm.delete_record_title,
-          content: Text(t.D10_RecordDelete_Confirm.delete_record_content(
-              title: title, amount: amountText)),
-          actions: [
-            AppButton(
-              text: t.common.buttons.close,
-              type: AppButtonType.secondary,
-              onPressed: () => context.pop(false),
-            ),
-            AppButton(
-              text: t.common.buttons.close,
-              type: AppButtonType.primary,
-              onPressed: () => context.pop(true),
-            ),
-          ],
-        );
+        return await D10RecordDeleteConfirmDialog.show<bool>(context,
+            recordTitle: title,
+            currency: originalCurrencyConstants,
+            amount: amount.original);
       },
       onDismissed: (direction) {
         if (onDelete != null) {

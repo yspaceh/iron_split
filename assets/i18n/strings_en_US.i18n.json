@@ -229,7 +229,7 @@
       "payment_method": "Payment Method",
       "amount": "Amount",
       "rate_with_base": "Exchange Rate (1 {base} = ? {target})",
-      "rate": "Exchange Rate (1 {base} = ? {target})",
+      "rate": "Exchange Rate",
       "memo": "Memo"
     },
     "placeholder": {

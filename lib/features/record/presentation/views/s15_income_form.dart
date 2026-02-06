@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_exchange_rate_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
@@ -60,8 +61,6 @@ class S15IncomeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. 取得翻譯與主題
     final t = Translations.of(context); // 這裡定義 t
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
@@ -75,65 +74,27 @@ class S15IncomeForm extends StatelessWidget {
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         TaskAmountInput(
-            onCurrencyChanged: onCurrencyChanged,
-            amountController: amountController,
-            selectedCurrencyConstants: selectedCurrencyConstants),
+          onCurrencyChanged: onCurrencyChanged,
+          amountController: amountController,
+          selectedCurrencyConstants: selectedCurrencyConstants,
+          isIncome: true,
+        ),
         if (isForeign) ...[
-          const SizedBox(height: 16),
-          TextFormField(
+          const SizedBox(height: 8),
+          TaskExchangeRateInput(
             controller: exchangeRateController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label.rate(
-                  base: baseCurrency.code,
-                  target: selectedCurrencyConstants.code),
-              prefixIcon: IconButton(
-                icon: const Icon(Icons.currency_exchange),
-                onPressed: isRateLoading ? null : onFetchExchangeRate,
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (isRateLoading)
-                    const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator(strokeWidth: 2)),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline),
-                    onPressed: onShowRateInfo,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Builder(
-            builder: (context) {
-              final amount = double.tryParse(amountController.text) ?? 0.0;
-              final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
-              final converted = amount * rate;
-
-              final formattedAmount =
-                  CurrencyConstants.formatAmount(converted, baseCurrency.code);
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 4, left: 4),
-                child: Text(
-                  t.S15_Record_Edit.val.converted_amount(
-                      base: baseCurrency.code,
-                      symbol: baseCurrency.symbol,
-                      amount: formattedAmount),
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-              );
-            },
+            baseCurrency: baseCurrency,
+            targetCurrency: selectedCurrencyConstants,
+            amountController: amountController,
+            isRateLoading: isRateLoading,
+            onFetchRate: onFetchExchangeRate,
+            onShowRateInfo: onShowRateInfo,
+            isIncome: true,
           ),
         ],
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         if (baseRemainingAmount > 0) ...[
           RecordCard(
             t: t,
@@ -147,22 +108,18 @@ class S15IncomeForm extends StatelessWidget {
             onTap: onBaseSplitConfigTap,
             showSplitAction: false,
             onSplitTap: null,
+            isIncome: true,
           ),
           Builder(
             builder: (context) {
               if (totalRemainder > 0) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: InfoBar(
-                    icon: Icons.savings_outlined,
-                    text: Text(
-                      t.S15_Record_Edit.msg_leftover_pot(
-                          amount:
-                              "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.onTertiaryContainer),
-                    ),
+                return InfoBar(
+                  icon: Icons.savings_outlined,
+                  text: Text(
+                    t.S15_Record_Edit.msg_leftover_pot(
+                        amount:
+                            "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
+                    style: TextStyle(fontSize: 12),
                   ),
                 );
               }

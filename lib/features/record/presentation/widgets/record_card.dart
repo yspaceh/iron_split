@@ -16,6 +16,7 @@ class RecordCard extends StatelessWidget {
   final VoidCallback? onSplitTap;
   final CurrencyConstants selectedCurrencyConstants;
   final List<Map<String, dynamic>> members;
+  final bool isIncome;
 
   const RecordCard({
     super.key,
@@ -30,22 +31,26 @@ class RecordCard extends StatelessWidget {
     required this.members,
     this.isBaseCard = false,
     this.showSplitAction = false,
+    this.isIncome = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+
+    // [風格調整]：Blueprint / Outlined Style
+    // 背景純白，搭配細灰色邊框，強調這是「計算結果/容器」而非輸入框
     return Card(
       clipBehavior: Clip.antiAlias,
-      // 稍微加深底色，讓卡片更明顯
-      color: isBaseCard
-          ? colorScheme.surfaceContainerHighest
-          : colorScheme.surfaceContainer,
+      color: theme.colorScheme.surface, // 純白背景
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide.none,
+        // 加上淡灰色邊框 (Outline)
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+          width: 1,
+        ),
       ),
       child: Column(
         children: [
@@ -57,67 +62,85 @@ class RecordCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Row 1: 金額 + 分帳標籤
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // 金額顯示
                       Text(
                         "${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(amount, selectedCurrencyConstants.code)}",
                         style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800, // 加粗
-                          color: colorScheme.onSurface, // 深黑色
+                          fontWeight: FontWeight.w800,
+                          color: isIncome
+                              ? theme.colorScheme.tertiary
+                              : theme.colorScheme.primary,
+                          letterSpacing: -0.5, // 稍微緊湊一點的數字感
                         ),
                       ),
+
+                      // [風格調整] 分帳標籤：淡色膠囊
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 10, vertical: 4), // 稍微寬一點
                         decoration: BoxDecoration(
-                          color: colorScheme.primary, // 改用實心主色
-                          borderRadius: BorderRadius.circular(8),
+                          // 使用淡色背景 (SecondaryContainer 或 PrimaryContainer)
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           SplitMethodConstants.getLabel(context, methodLabel),
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onPrimary, // 白字
+                            // 使用深色文字
+                            color: theme.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 12),
+
+                  // Row 2: 名稱 + 成員頭像
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end, // 底部對齊
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // 左邊：說明文字 (給予彈性空間，但保留右邊給頭像)
+                      // 左邊：項目名稱 (Note) 或 Base Title
                       Expanded(
-                        flex: 4, // 左邊佔 40%
+                        flex: 4,
                         child: note != null
                             ? Text(
-                                note ?? '',
+                                note!,
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w500),
-                                maxLines: 2, // 允許換行
+                                  color: theme.colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               )
                             : (isBaseCard
-                                ? Text(t.S15_Record_Edit.base_card_title,
+                                ? Text(
+                                    t.S15_Record_Edit.base_card_title,
                                     style: TextStyle(
-                                        color: colorScheme.onSurfaceVariant,
-                                        fontWeight: FontWeight.w500))
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
                                 : const SizedBox.shrink()),
                       ),
+
                       const SizedBox(width: 8),
-                      // 右邊：頭像區 (給予更多空間顯示兩行)
+
+                      // 右邊：成員頭像 (維持原樣)
                       Expanded(
-                        flex: 6, // 右邊佔 60%
+                        flex: 6,
                         child: Align(
-                          alignment: Alignment.bottomRight,
+                          alignment: Alignment.centerRight,
                           child: CommonAvatarStack(
                             allMembers: members,
                             targetMemberIds: memberIds,
-                            radius: 11,
+                            radius: 11, // 頭像大小維持
                             fontSize: 10,
                           ),
                         ),
@@ -129,25 +152,37 @@ class RecordCard extends StatelessWidget {
             ),
           ),
 
-          // 下半部：分拆按鈕 (黏在卡片底部)
+          // 下半部：分拆按鈕 (僅 Base Card 且還有餘額時顯示)
           if (showSplitAction && onSplitTap != null) ...[
-            Divider(height: 1, color: colorScheme.outlineVariant),
+            // 分隔線改淡一點
+            Divider(
+              height: 1,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+            ),
             InkWell(
               onTap: onSplitTap,
+              // 增加按壓回饋顏色
+              overlayColor: WidgetStateProperty.all(
+                  theme.colorScheme.primary.withValues(alpha: 0.05)),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 14), // 增加點擊高度
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, size: 18, color: colorScheme.primary),
+                    Icon(
+                      Icons.add, // 改用圓框加號，更有按鈕感
+                      size: 16,
+                      color: theme.colorScheme.primary,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       t.S15_Record_Edit.buttons.add_item,
                       style: TextStyle(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
                       ),
                     ),
                   ],

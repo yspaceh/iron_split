@@ -886,7 +886,7 @@ class _TranslationsS15RecordEditLabelEnUs extends TranslationsS15RecordEditLabel
 	@override String get payment_method => 'Payment Method';
 	@override String get amount => 'Amount';
 	@override String rate_with_base({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})';
-	@override String rate({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})';
+	@override String get rate => 'Exchange Rate';
 	@override String get memo => 'Memo';
 }
 
@@ -1541,7 +1541,7 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.label.payment_method' => 'Payment Method',
 			'S15_Record_Edit.label.amount' => 'Amount',
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
-			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.rate' => 'Exchange Rate',
 			'S15_Record_Edit.label.memo' => 'Memo',
 			'S15_Record_Edit.placeholder.category.food' => 'Dinner',
 			'S15_Record_Edit.placeholder.category.transport' => 'Transportation',

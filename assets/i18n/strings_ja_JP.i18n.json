@@ -252,7 +252,7 @@
       "payment_method": "支払方法",
       "amount": "金額",
       "rate_with_base": "為替レート（1 {base} = ? {target}）",
-      "rate": "為替レート（1 {base} = ? {target}）",
+      "rate": "為替レート",
       "memo": "メモ"
     },
     "placeholder": {

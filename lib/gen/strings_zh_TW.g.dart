@@ -1521,8 +1521,8 @@ class TranslationsS15RecordEditLabelZhTw {
 	/// zh-TW: '匯率 (1 {base} = ? {target})'
 	String rate_with_base({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})';
 
-	/// zh-TW: '匯率 (1 {base} = ? {target})'
-	String rate({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})';
+	/// zh-TW: '匯率'
+	String get rate => '匯率';
 
 	/// zh-TW: '備註'
 	String get memo => '備註';
@@ -1537,8 +1537,8 @@ class TranslationsS15RecordEditPlaceholderZhTw {
 	// Translations
 	late final TranslationsS15RecordEditPlaceholderCategoryZhTw category = TranslationsS15RecordEditPlaceholderCategoryZhTw.internal(_root);
 
-	/// zh-TW: '如：{category}'
-	String item({required Object category}) => '如：${category}';
+	/// zh-TW: '例：{category}'
+	String item({required Object category}) => '例：${category}';
 
 	/// zh-TW: '例：備註事項'
 	String get memo => '例：備註事項';
@@ -2355,7 +2355,7 @@ extension on Translations {
 			'S15_Record_Edit.label.payment_method' => '支付方式',
 			'S15_Record_Edit.label.amount' => '金額',
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
-			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.rate' => '匯率',
 			'S15_Record_Edit.label.memo' => '備註',
 			'S15_Record_Edit.placeholder.category.food' => '晚餐',
 			'S15_Record_Edit.placeholder.category.transport' => '車費',
@@ -2363,7 +2363,7 @@ extension on Translations {
 			'S15_Record_Edit.placeholder.category.entertainment' => '電影票',
 			'S15_Record_Edit.placeholder.category.accommodation' => '住宿費',
 			'S15_Record_Edit.placeholder.category.others' => '其他費用',
-			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '如：${category}',
+			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '例：${category}',
 			'S15_Record_Edit.placeholder.memo' => '例：備註事項',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -34,7 +35,7 @@ class TaskItemInput extends StatelessWidget {
 
     return Row(
       // [對齊策略]：對齊底部，讓左側方塊跟右側輸入框平行
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 左側：類別按鈕 (風格化)
         Padding(
@@ -52,9 +53,7 @@ class TaskItemInput extends StatelessWidget {
               ),
               child: Icon(
                 CategoryConstant.getCategoryById(selectedCategoryId).icon,
-                // [降噪]：改用深灰色 (onSurfaceVariant)，而非主色 (Primary)
-                // 這樣畫面會更沉穩，不會到處都是顏色
-                color: colorScheme.onSurfaceVariant,
+                color: AppTheme.expenseDeep,
                 size: 24,
               ),
             ),
@@ -69,8 +68,9 @@ class TaskItemInput extends StatelessWidget {
             controller: titleController,
             labelText: t.S15_Record_Edit.label.title,
             // 加一點提示文字，增加 UX
-            hintText: t.S15_Record_Edit.placeholder
-                .item(category: selectedCategoryId),
+            hintText: t.S15_Record_Edit.placeholder.item(
+                category:
+                    CategoryConstant.getPlaceholder(t, selectedCategoryId)),
             validator: (v) =>
                 v?.isEmpty == true ? t.error.message.required : null,
           ),

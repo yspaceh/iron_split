@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -235,27 +236,13 @@ class _S15ContentState extends State<_S15Content> {
     // [修正 1] 預先取得 Messenger 參考 (因為 pop 之後 context 就會失效)
     final messenger = ScaffoldMessenger.of(context);
 
-    final confirm = await CommonAlertDialog.show<bool>(
-      context,
-      title: t.D10_RecordDelete_Confirm.delete_record_title,
-      content: Text(t.D10_RecordDelete_Confirm.delete_record_content(
-          title: vm.titleController.text,
-          amount: "${vm.selectedCurrencyConstants.symbol} ${vm.totalAmount}")),
-      actions: [
-        AppButton(
-          text: t.common.buttons.close,
-          type: AppButtonType.secondary,
-          onPressed: () => context.pop(false),
-        ),
-        AppButton(
-          text: t.common.buttons.close,
-          type: AppButtonType.primary,
-          onPressed: () => context.pop(true),
-        ),
-      ],
-    );
+    final confirm = await D10RecordDeleteConfirmDialog.show<bool>(context,
+        recordTitle: vm.titleController.text,
+        currency: vm.selectedCurrencyConstants,
+        amount: vm.totalAmount);
 
-    if (confirm == true && mounted) {
+    if (confirm == true && context.mounted) {
+      await vm.deleteRecord(t);
       // [修正 3] 使用預先取得的 messenger 顯示訊息
       // 這樣即使下面 pop 了頁面，訊息還是能顯示在螢幕上 (因為 SnackBar 是由 Root Scaffold 管理的)
       messenger.showSnackBar(

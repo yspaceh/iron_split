@@ -116,8 +116,6 @@ class S15ExpenseForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. 取得翻譯與主題
     final t = Translations.of(context); // 這裡定義 t
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
@@ -131,7 +129,7 @@ class S15ExpenseForm extends StatelessWidget {
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         // 2. 支付方式 (保留外部邏輯，因為邏輯太複雜不適合封裝)
         AppSelectField(
           labelText: t.S15_Record_Edit.label.payment_method,
@@ -141,18 +139,20 @@ class S15ExpenseForm extends StatelessWidget {
               ? t.B07_PaymentMethod_Edit.err_balance_not_enough
               : null,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         TaskItemInput(
             onCategoryChanged: onCategoryChanged,
             titleController: titleController,
             selectedCategoryId: selectedCategoryId),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         TaskAmountInput(
-            onCurrencyChanged: onCurrencyChanged,
-            amountController: amountController,
-            selectedCurrencyConstants: selectedCurrencyConstants),
+          onCurrencyChanged: onCurrencyChanged,
+          amountController: amountController,
+          selectedCurrencyConstants: selectedCurrencyConstants,
+          isIncome: false,
+        ),
         if (isForeign) ...[
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           TaskExchangeRateInput(
             controller: exchangeRateController,
             baseCurrency: baseCurrency,
@@ -161,20 +161,11 @@ class S15ExpenseForm extends StatelessWidget {
             isRateLoading: isRateLoading,
             onFetchRate: onFetchExchangeRate,
             onShowRateInfo: onShowRateInfo,
+            isIncome: false,
           ),
         ],
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         if (details.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            child: Text(
-              t.S15_Record_Edit.section.items,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           ...details.map(
             (detail) => Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
@@ -188,6 +179,7 @@ class S15ExpenseForm extends StatelessWidget {
                 note: detail.name,
                 isBaseCard: false,
                 onTap: () => onDetailEditTap(detail),
+                isIncome: false,
               ),
             ),
           ),
@@ -204,26 +196,22 @@ class S15ExpenseForm extends StatelessWidget {
             note: null,
             isBaseCard: true,
             onTap: () => onBaseSplitConfigTap(),
-            // 只有基本卡片且有餘額時，顯示分拆按鈕
             showSplitAction: baseRemainingAmount > 0,
             onSplitTap: onAddItemTap,
+            isIncome: false,
           ),
         ],
         if (totalRemainder > 0)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: InfoBar(
-              icon: Icons.savings_outlined,
-              text: Text(
-                t.S15_Record_Edit.msg_leftover_pot(
-                    amount:
-                        "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
-                style: TextStyle(
-                    fontSize: 12, color: theme.colorScheme.onTertiaryContainer),
-              ),
+          InfoBar(
+            icon: Icons.savings_outlined,
+            text: Text(
+              t.S15_Record_Edit.msg_leftover_pot(
+                  amount:
+                      "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
+              style: TextStyle(fontSize: 12),
             ),
           ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         TaskMemoInput(
           memoController: memoController,
         ),

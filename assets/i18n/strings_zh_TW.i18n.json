@@ -229,7 +229,7 @@
       "payment_method": "支付方式",
       "amount": "金額",
       "rate_with_base": "匯率 (1 {base} = ? {target})",
-      "rate": "匯率 (1 {base} = ? {target})",
+      "rate": "匯率",
       "memo": "備註"
     },
     "placeholder" : {
@@ -241,7 +241,7 @@
         "accommodation": "住宿費",
         "others": "其他費用"
       },
-      "item": "如：{category}",
+      "item": "例：{category}",
       "memo": "例：備註事項"
     }
   },

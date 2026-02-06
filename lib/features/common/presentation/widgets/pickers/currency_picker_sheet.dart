@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
 
 class CurrencyPickerSheet {
   /// 彈出統一的幣別選擇器
@@ -9,32 +10,45 @@ class CurrencyPickerSheet {
     required String initialCode,
     required Function(CurrencyConstants selected) onSelected,
   }) {
-    // 1. 取得初始索引
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     int selectedIndex =
         kSupportedCurrencies.indexWhere((e) => e.code == initialCode);
     if (selectedIndex == -1) selectedIndex = 0;
 
-    // 2. 呼叫共用的 WheelPicker
-    // 注意：這裡不加 await，因為 showCommonWheelPicker 回傳 void
     showCommonWheelPicker(
       context: context,
       onConfirm: () {
-        // 當使用者在彈窗點擊「確定」時，才執行回調
         onSelected(kSupportedCurrencies[selectedIndex]);
       },
       child: CupertinoPicker(
+        // [參數調整] 增加原生感
+        magnification: 1.22,
+        useMagnifier: true,
         itemExtent: 40,
-        // 設定初始選中項
         scrollController:
             FixedExtentScrollController(initialItem: selectedIndex),
         onSelectedItemChanged: (index) {
-          selectedIndex = index; // 更新暫存索引
+          selectedIndex = index;
         },
+        selectionOverlay: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
         children: kSupportedCurrencies.map((e) {
           return Center(
             child: Text(
-              "${e.code} (${e.symbol}) - ${e.getLocalizedName(context)}",
-              style: const TextStyle(fontSize: 16),
+              "${e.code} ${e.symbol} - ${e.getLocalizedName(context)}",
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontFamily: '.SF Pro Display',
+              ),
             ),
           );
         }).toList(),

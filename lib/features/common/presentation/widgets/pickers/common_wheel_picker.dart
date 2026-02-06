@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/gen/strings.g.dart'; // 確保能讀取 i18n
+import 'package:iron_split/gen/strings.g.dart';
 
 /// 統一的滾輪選擇器 BottomSheet
-/// 負責顯示「取消/完成」與容器樣式
 void showCommonWheelPicker({
   required BuildContext context,
-  required Widget child, // 傳入 CupertinoPicker 或 CupertinoDatePicker
-  VoidCallback? onConfirm, // 按下「完成」時的 callback
+  required Widget child,
+  VoidCallback? onConfirm,
 }) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+  final t = Translations.of(context);
+
   // 收起鍵盤
   FocusScope.of(context).unfocus();
 
   showModalBottomSheet(
     context: context,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    // 讓 BottomSheet 圓角好看一點
+    backgroundColor: colorScheme.surface, // 純白背景
+    // [修正] 恢復頂部圓角 16
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (ctx) => SafeArea(
       child: SizedBox(
-        height: 320,
+        height: 320, // 保持高度以容納大字體
         child: Column(
           children: [
-            // 1. 頂部工具列 (取消 / 完成)
+            // 1. 頂部工具列
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
@@ -34,31 +37,34 @@ void showCommonWheelPicker({
                     onPressed: () => Navigator.pop(ctx),
                     child: Text(
                       t.common.buttons.cancel,
-                      style: const TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant, // 深灰色
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                   // 完成按鈕
                   TextButton(
                     onPressed: () {
-                      // 先執行確認邏輯 (儲存變數)
                       onConfirm?.call();
-                      // 再關閉視窗
                       Navigator.pop(ctx);
                     },
                     child: Text(
-                      t.S16_TaskCreate_Edit.buttons.done,
+                      t.common.buttons.confirm,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: colorScheme.primary, // 主色
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const Divider(height: 1),
-            // 2. 內容區 (Picker)
+            // [修正] 加強分隔線，使其清晰可見
+            Divider(height: 1, color: colorScheme.outlineVariant),
+
+            // 2. 內容區
             Expanded(child: child),
           ],
         ),

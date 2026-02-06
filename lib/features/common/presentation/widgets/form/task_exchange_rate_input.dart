@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -13,6 +14,7 @@ class TaskExchangeRateInput extends StatelessWidget {
     required this.isRateLoading,
     required this.onFetchRate,
     required this.onShowRateInfo,
+    this.isIncome = false,
   });
 
   final TextEditingController controller;
@@ -22,6 +24,7 @@ class TaskExchangeRateInput extends StatelessWidget {
   final bool isRateLoading;
   final VoidCallback onFetchRate;
   final VoidCallback onShowRateInfo;
+  final bool isIncome;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class TaskExchangeRateInput extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
           // [UI 統一]：對齊底部，確保左側按鈕跟右側輸入框平行 (跟 TaskAmountInput 一樣)
@@ -59,12 +62,16 @@ class TaskExchangeRateInput extends StatelessWidget {
                             height: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              color: colorScheme.primary,
+                              color: isIncome == true
+                                  ? AppTheme.incomeDeep
+                                  : AppTheme.expenseDeep,
                             ),
                           )
                         : Icon(
                             Icons.sync_alt_rounded, // 更新/交換圖示
-                            color: colorScheme.primary,
+                            color: isIncome == true
+                                ? AppTheme.incomeDeep
+                                : AppTheme.expenseDeep,
                             size: 24,
                           ),
                   ),
@@ -80,7 +87,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                 controller: controller,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                labelText: t.S15_Record_Edit.label.rate(
+                labelText: t.S15_Record_Edit.label.rate_with_base(
                   base: baseCurrency.code,
                   target: targetCurrency.code,
                 ),
@@ -96,7 +103,8 @@ class TaskExchangeRateInput extends StatelessWidget {
                   // [關鍵]：禁止輸入 0 或 負數
                   if (rate <= 0) {
                     // 建議新增翻譯: "匯率必須大於 0"
-                    return "Rate > 0";
+                    return t.error.message
+                        .zero(key: t.S15_Record_Edit.label.rate);
                   }
                   return null;
                 },
@@ -133,16 +141,13 @@ class TaskExchangeRateInput extends StatelessWidget {
                     final formattedAmount = CurrencyConstants.formatAmount(
                         converted, baseCurrency.code);
 
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8, left: 4),
-                      child: Text(
-                        t.S15_Record_Edit.val.converted_amount(
-                            base: baseCurrency.code,
-                            symbol: baseCurrency.symbol,
-                            amount: formattedAmount),
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: colorScheme.onSurfaceVariant),
-                      ),
+                    return Text(
+                      t.S15_Record_Edit.val.converted_amount(
+                          base: baseCurrency.code,
+                          symbol: baseCurrency.symbol,
+                          amount: formattedAmount),
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: colorScheme.onSurfaceVariant),
                     );
                   },
                 );

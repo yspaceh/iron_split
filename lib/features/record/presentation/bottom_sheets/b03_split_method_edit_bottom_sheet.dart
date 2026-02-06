@@ -7,7 +7,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_button.dart'
 import 'package:iron_split/features/common/presentation/widgets/common_selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 

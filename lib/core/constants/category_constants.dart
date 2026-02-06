@@ -36,6 +36,24 @@ class CategoryConstant {
         return t.common.category.others;
     }
   }
+
+  static String getPlaceholder(Translations t, String? id) {
+    switch (id) {
+      case 'fastfood':
+        return t.S15_Record_Edit.placeholder.category.food;
+      case 'directions_bus':
+        return t.S15_Record_Edit.placeholder.category.transport;
+      case 'shopping_bag':
+        return t.S15_Record_Edit.placeholder.category.shopping;
+      case 'movie':
+        return t.S15_Record_Edit.placeholder.category.entertainment;
+      case 'hotel':
+        return t.S15_Record_Edit.placeholder.category.accommodation;
+      case 'more_horiz':
+      default:
+        return t.S15_Record_Edit.placeholder.category.others;
+    }
+  }
 }
 
 const List<CategoryConstant> kAppCategories = [

@@ -905,7 +905,7 @@ class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabel
 	@override String get payment_method => '支払方法';
 	@override String get amount => '金額';
 	@override String rate_with_base({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
-	@override String rate({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
+	@override String get rate => '為替レート';
 	@override String get memo => 'メモ';
 }
 
@@ -1555,7 +1555,7 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.label.payment_method' => '支払方法',
 			'S15_Record_Edit.label.amount' => '金額',
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
-			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
+			'S15_Record_Edit.label.rate' => '為替レート',
 			'S15_Record_Edit.label.memo' => 'メモ',
 			'S15_Record_Edit.placeholder.category.food' => '夕食',
 			'S15_Record_Edit.placeholder.category.transport' => '交通費',
