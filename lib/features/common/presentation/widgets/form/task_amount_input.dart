@@ -8,23 +8,29 @@ import 'package:iron_split/gen/strings.g.dart';
 class TaskAmountInput extends StatelessWidget {
   const TaskAmountInput({
     super.key,
-    required this.onCurrencyChanged,
+    // [重構] onCurrencyChanged 改為可空 (Nullable)，因為如果不顯示 Picker 就不需要它
+    this.onCurrencyChanged,
     required this.amountController,
     required this.selectedCurrencyConstants,
     this.isIncome = false,
+    // [新增] 控制是否顯示左側幣別選擇器
+    this.showCurrencyPicker = true,
   });
 
-  final ValueChanged<String> onCurrencyChanged;
+  final ValueChanged<String>? onCurrencyChanged;
   final TextEditingController amountController;
   final CurrencyConstants selectedCurrencyConstants;
   final bool isIncome;
+  final bool showCurrencyPicker;
 
   void _showCurrencyPicker(BuildContext context) {
+    if (onCurrencyChanged == null) return;
+
     CurrencyPickerSheet.show(
       context: context,
       initialCode: selectedCurrencyConstants.code,
       onSelected: (currency) {
-        onCurrencyChanged(currency.code);
+        onCurrencyChanged!(currency.code);
       },
     );
   }
@@ -35,51 +41,52 @@ class TaskAmountInput extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    // 定義金額顏色 (支出紅/收入綠)
+    final amountColor = isIncome ? AppTheme.incomeDeep : AppTheme.expenseDeep;
+
     return Row(
-      // 保持 start 對齊，避免錯誤訊息出現時左側跑版
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 左側：幣別按鈕
-        InkWell(
-          onTap: () => _showCurrencyPicker(context),
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            height: 64,
-            width: 56,
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  selectedCurrencyConstants.symbol,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: isIncome == true
-                        ? AppTheme.incomeDeep
-                        : AppTheme.expenseDeep,
-                    fontWeight: FontWeight.w700,
-                    height: 1.0,
+        // 1. 左側：幣別選擇按鈕 (只在 showCurrencyPicker 為 true 時顯示)
+        if (showCurrencyPicker) ...[
+          InkWell(
+            onTap: () => _showCurrencyPicker(context),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              height: 64,
+              width: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    selectedCurrencyConstants.symbol,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: amountColor,
+                      fontWeight: FontWeight.w700,
+                      height: 1.0,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  selectedCurrencyConstants.code,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 2),
+                  Text(
+                    selectedCurrencyConstants.code,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+          const SizedBox(width: 8),
+        ],
 
-        const SizedBox(width: 8),
-
-        // 右側：金額輸入
+        // 2. 右側：金額輸入
         Expanded(
           child: AppTextField(
             controller: amountController,
@@ -88,35 +95,35 @@ class TaskAmountInput extends StatelessWidget {
                 0, selectedCurrencyConstants.code),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
 
-            // [精準驗證邏輯]
+            // [新增] 如果左側沒顯示 Picker，我們在輸入框內顯示幣別符號，
+            // 這樣使用者才知道現在輸入的是什麼幣
+            prefixIcon: !showCurrencyPicker
+                ? null // 這裡如果想用 IconData 可以傳，但我們想顯示文字符號
+                : null,
+            // 使用 leading 屬性 (如果您的 AppTextField 有支援 widget leading)
+            // 或是利用 prefixText (AppTextField 需要支援)
+            // 假設 AppTextField 暫時只支援 prefixIcon (IconData)，
+            // 我們可以利用 suffixText 或是改用 decoration 來顯示幣別
+
+            // 這裡為了簡單，如果不顯示 Picker，我們可以在 suffix 顯示幣別代碼
+            suffixText:
+                !showCurrencyPicker ? selectedCurrencyConstants.code : null,
+
             validator: (v) {
-              // 1. 空值檢查
               if (v == null || v.isEmpty) {
-                // 回傳 "此欄位必填"
                 return t.error.message.required;
               }
-
               final value = double.tryParse(v);
-
-              // 2. 格式檢查 (亂填文字)
               if (value == null) {
-                // 回傳 "格式錯誤"
                 return t.error.message.format;
               }
-
-              // 3. 零值檢查 (這裡放您的新訊息)
               if (value == 0) {
-                // [在此處放入您準備好的錯誤訊息]
-                // 例如: t.S15_Record_Edit.error_amount_zero
                 return t.error.message
                     .zero(key: t.S15_Record_Edit.label.amount);
               }
-
-              // 4. 負數檢查 (如果您的 App 不允許負支出)
               if (value < 0) {
                 return t.error.message.invalid_amount;
               }
-
               return null;
             },
           ),

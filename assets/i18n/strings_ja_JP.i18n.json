@@ -471,8 +471,9 @@
     "buttons": {
       "save": "決定"
     },
-    "name_label": "項目名",
-    "amount_label": "金額",
+    "label": {
+      "sub_item": "項目名"
+    },
     "split_button_prefix": "負担設定",
     "hint_memo": "メモ",
     "section_members": "メンバー配分",
@@ -481,7 +482,10 @@
     "error_total_mismatch": "合計金額が一致しません",
     "error_percent_mismatch": "合計は100%である必要があります",
     "hint_amount": "金額",
-    "hint_percent": "%"
+    "hint_percent": "%",
+    "placeholder" : {
+      "sub_item": "例：内訳"
+    }
   },
   "B03_SplitMethod_Edit": {
     "title": "割り勘方法を選択",

@@ -472,8 +472,9 @@
     "buttons": {
       "save": "Confirm Split"
     },
-    "name_label": "Item Name",
-    "amount_label": "Amount",
+    "label":{
+      "sub_item": "Item Name"
+    },
     "split_button_prefix": "Split by",
     "hint_memo": "Memo",
     "section_members": "Members",
@@ -482,7 +483,10 @@
     "error_total_mismatch": "Total mismatch",
     "error_percent_mismatch": "Total must be 100%",
     "hint_amount": "Amount",
-    "hint_percent": "%"
+    "hint_percent": "%",
+    "placeholder" : {
+      "sub_item": "e.g. Sub-item"
+    }
   },
   "B03_SplitMethod_Edit": {
     "title": "Choose Split Method",

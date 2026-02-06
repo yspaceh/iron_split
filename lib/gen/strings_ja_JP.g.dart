@@ -544,8 +544,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	// Translations
 	@override String get title => '明細編集';
 	@override late final _TranslationsB02SplitExpenseEditButtonsJaJp buttons = _TranslationsB02SplitExpenseEditButtonsJaJp._(_root);
-	@override String get name_label => '項目名';
-	@override String get amount_label => '金額';
+	@override late final _TranslationsB02SplitExpenseEditLabelJaJp label = _TranslationsB02SplitExpenseEditLabelJaJp._(_root);
 	@override String get split_button_prefix => '負担設定';
 	@override String get hint_memo => 'メモ';
 	@override String get section_members => 'メンバー配分';
@@ -555,6 +554,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	@override String get error_percent_mismatch => '合計は100%である必要があります';
 	@override String get hint_amount => '金額';
 	@override String get hint_percent => '%';
+	@override late final _TranslationsB02SplitExpenseEditPlaceholderJaJp placeholder = _TranslationsB02SplitExpenseEditPlaceholderJaJp._(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -1166,6 +1166,26 @@ class _TranslationsB02SplitExpenseEditButtonsJaJp extends TranslationsB02SplitEx
 	@override String get save => '決定';
 }
 
+// Path: B02_SplitExpense_Edit.label
+class _TranslationsB02SplitExpenseEditLabelJaJp extends TranslationsB02SplitExpenseEditLabelZhTw {
+	_TranslationsB02SplitExpenseEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get sub_item => '項目名';
+}
+
+// Path: B02_SplitExpense_Edit.placeholder
+class _TranslationsB02SplitExpenseEditPlaceholderJaJp extends TranslationsB02SplitExpenseEditPlaceholderZhTw {
+	_TranslationsB02SplitExpenseEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get sub_item => '例：内訳';
+}
+
 // Path: B03_SplitMethod_Edit.buttons
 class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMethodEditButtonsZhTw {
 	_TranslationsB03SplitMethodEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1687,8 +1707,7 @@ extension on TranslationsJaJp {
 			'D11_random_result.buttons.close' => 'OK',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.save' => '決定',
-			'B02_SplitExpense_Edit.name_label' => '項目名',
-			'B02_SplitExpense_Edit.amount_label' => '金額',
+			'B02_SplitExpense_Edit.label.sub_item' => '項目名',
 			'B02_SplitExpense_Edit.split_button_prefix' => '負担設定',
 			'B02_SplitExpense_Edit.hint_memo' => 'メモ',
 			'B02_SplitExpense_Edit.section_members' => 'メンバー配分',
@@ -1698,6 +1717,7 @@ extension on TranslationsJaJp {
 			'B02_SplitExpense_Edit.error_percent_mismatch' => '合計は100%である必要があります',
 			'B02_SplitExpense_Edit.hint_amount' => '金額',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：内訳',
 			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率を調整',
 			'B03_SplitMethod_Edit.method_even' => '均等分攤',

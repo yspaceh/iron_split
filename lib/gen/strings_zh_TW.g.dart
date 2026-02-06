@@ -906,12 +906,7 @@ class TranslationsB02SplitExpenseEditZhTw {
 	String get title => '編輯細項';
 
 	late final TranslationsB02SplitExpenseEditButtonsZhTw buttons = TranslationsB02SplitExpenseEditButtonsZhTw.internal(_root);
-
-	/// zh-TW: '項目名稱'
-	String get name_label => '項目名稱';
-
-	/// zh-TW: '金額'
-	String get amount_label => '金額';
+	late final TranslationsB02SplitExpenseEditLabelZhTw label = TranslationsB02SplitExpenseEditLabelZhTw.internal(_root);
 
 	/// zh-TW: '分攤設定'
 	String get split_button_prefix => '分攤設定';
@@ -939,6 +934,8 @@ class TranslationsB02SplitExpenseEditZhTw {
 
 	/// zh-TW: '%'
 	String get hint_percent => '%';
+
+	late final TranslationsB02SplitExpenseEditPlaceholderZhTw placeholder = TranslationsB02SplitExpenseEditPlaceholderZhTw.internal(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -1907,6 +1904,30 @@ class TranslationsB02SplitExpenseEditButtonsZhTw {
 	String get save => '確認分拆';
 }
 
+// Path: B02_SplitExpense_Edit.label
+class TranslationsB02SplitExpenseEditLabelZhTw {
+	TranslationsB02SplitExpenseEditLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '項目名稱'
+	String get sub_item => '項目名稱';
+}
+
+// Path: B02_SplitExpense_Edit.placeholder
+class TranslationsB02SplitExpenseEditPlaceholderZhTw {
+	TranslationsB02SplitExpenseEditPlaceholderZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '例：子項目'
+	String get sub_item => '例：子項目';
+}
+
 // Path: B03_SplitMethod_Edit.buttons
 class TranslationsB03SplitMethodEditButtonsZhTw {
 	TranslationsB03SplitMethodEditButtonsZhTw.internal(this._root);
@@ -2503,8 +2524,7 @@ extension on Translations {
 			'D11_random_result.buttons.close' => '確定',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.buttons.save' => '確認分拆',
-			'B02_SplitExpense_Edit.name_label' => '項目名稱',
-			'B02_SplitExpense_Edit.amount_label' => '金額',
+			'B02_SplitExpense_Edit.label.sub_item' => '項目名稱',
 			'B02_SplitExpense_Edit.split_button_prefix' => '分攤設定',
 			'B02_SplitExpense_Edit.hint_memo' => '備註',
 			'B02_SplitExpense_Edit.section_members' => '成員分配',
@@ -2514,6 +2534,7 @@ extension on Translations {
 			'B02_SplitExpense_Edit.error_percent_mismatch' => '總比例必須為 100%',
 			'B02_SplitExpense_Edit.hint_amount' => '金額',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：子項目',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
 			'B03_SplitMethod_Edit.method_even' => '平均分攤',

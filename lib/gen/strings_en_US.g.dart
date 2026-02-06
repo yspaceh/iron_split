@@ -545,8 +545,7 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	// Translations
 	@override String get title => 'Edit Item';
 	@override late final _TranslationsB02SplitExpenseEditButtonsEnUs buttons = _TranslationsB02SplitExpenseEditButtonsEnUs._(_root);
-	@override String get name_label => 'Item Name';
-	@override String get amount_label => 'Amount';
+	@override late final _TranslationsB02SplitExpenseEditLabelEnUs label = _TranslationsB02SplitExpenseEditLabelEnUs._(_root);
 	@override String get split_button_prefix => 'Split by';
 	@override String get hint_memo => 'Memo';
 	@override String get section_members => 'Members';
@@ -556,6 +555,7 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	@override String get error_percent_mismatch => 'Total must be 100%';
 	@override String get hint_amount => 'Amount';
 	@override String get hint_percent => '%';
+	@override late final _TranslationsB02SplitExpenseEditPlaceholderEnUs placeholder = _TranslationsB02SplitExpenseEditPlaceholderEnUs._(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -1167,6 +1167,26 @@ class _TranslationsB02SplitExpenseEditButtonsEnUs extends TranslationsB02SplitEx
 	@override String get save => 'Confirm Split';
 }
 
+// Path: B02_SplitExpense_Edit.label
+class _TranslationsB02SplitExpenseEditLabelEnUs extends TranslationsB02SplitExpenseEditLabelZhTw {
+	_TranslationsB02SplitExpenseEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get sub_item => 'Item Name';
+}
+
+// Path: B02_SplitExpense_Edit.placeholder
+class _TranslationsB02SplitExpenseEditPlaceholderEnUs extends TranslationsB02SplitExpenseEditPlaceholderZhTw {
+	_TranslationsB02SplitExpenseEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get sub_item => 'e.g. Sub-item';
+}
+
 // Path: B03_SplitMethod_Edit.buttons
 class _TranslationsB03SplitMethodEditButtonsEnUs extends TranslationsB03SplitMethodEditButtonsZhTw {
 	_TranslationsB03SplitMethodEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1689,8 +1709,7 @@ extension on TranslationsEnUs {
 			'D11_random_result.buttons.close' => 'OK',
 			'B02_SplitExpense_Edit.title' => 'Edit Item',
 			'B02_SplitExpense_Edit.buttons.save' => 'Confirm Split',
-			'B02_SplitExpense_Edit.name_label' => 'Item Name',
-			'B02_SplitExpense_Edit.amount_label' => 'Amount',
+			'B02_SplitExpense_Edit.label.sub_item' => 'Item Name',
 			'B02_SplitExpense_Edit.split_button_prefix' => 'Split by',
 			'B02_SplitExpense_Edit.hint_memo' => 'Memo',
 			'B02_SplitExpense_Edit.section_members' => 'Members',
@@ -1700,6 +1719,7 @@ extension on TranslationsEnUs {
 			'B02_SplitExpense_Edit.error_percent_mismatch' => 'Total must be 100%',
 			'B02_SplitExpense_Edit.hint_amount' => 'Amount',
 			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.placeholder.sub_item' => 'e.g. Sub-item',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => 'Adjust Weight',
 			'B03_SplitMethod_Edit.method_even' => 'Even',

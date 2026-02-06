@@ -6,6 +6,9 @@ import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -240,33 +243,22 @@ class _B02SplitExpenseEditBottomSheetState
               ),
 
               // 2. Name
-              TextFormField(
+              AppTextField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: t.B02_SplitExpense_Edit.name_label,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                textInputAction: TextInputAction.next,
-                validator: (v) => v?.isEmpty == true ? t.common.required : null,
+                labelText: t.B02_SplitExpense_Edit.label.sub_item,
+                // 加一點提示文字，增加 UX
+                hintText: t.B02_SplitExpense_Edit.placeholder.sub_item,
+                validator: (v) =>
+                    v?.isEmpty == true ? t.error.message.required : null,
               ),
               const SizedBox(height: 16),
 
               // 3. Amount
-              TextFormField(
-                controller: _amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: t.B02_SplitExpense_Edit.amount_label,
-                  prefixText: "${widget.selectedCurrency.symbol} ",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                textInputAction: TextInputAction.done,
-                validator: (v) => (double.tryParse(v ?? '') ?? 0) <= 0
-                    ? t.error.message.zero(key: t.S15_Record_Edit.label.amount)
-                    : null,
+              TaskAmountInput(
+                amountController: _amountController,
+                selectedCurrencyConstants: widget.selectedCurrency,
+                isIncome: false,
+                showCurrencyPicker: false,
               ),
               const SizedBox(height: 16),
 
@@ -310,20 +302,9 @@ class _B02SplitExpenseEditBottomSheetState
               const SizedBox(height: 16),
 
               // 5. Memo
-              TextFormField(
-                controller: _memoController,
-                keyboardType: TextInputType.multiline,
-                minLines: 2,
-                maxLines: 4, // 允許稍微長一點
-                decoration: InputDecoration(
-                  labelText: t.B02_SplitExpense_Edit.hint_memo,
-                  alignLabelWithHint: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: const EdgeInsets.all(16),
-                ),
+              TaskMemoInput(
+                memoController: _memoController,
               ),
-
               // 底部安全留白
               const SizedBox(height: 32),
             ],

@@ -472,8 +472,9 @@
     "buttons": {
       "save": "確認分拆"
     },
-    "name_label": "項目名稱",
-    "amount_label": "金額",
+    "label": {
+      "sub_item": "項目名稱"
+    },
     "split_button_prefix": "分攤設定",
     "hint_memo": "備註",
     "section_members": "成員分配",
@@ -482,7 +483,10 @@
     "error_total_mismatch": "總金額不符",
     "error_percent_mismatch": "總比例必須為 100%",
     "hint_amount": "金額",
-    "hint_percent": "%"
+    "hint_percent": "%",
+    "placeholder" : {
+      "sub_item": "例：子項目"
+    }
   },
   "B03_SplitMethod_Edit": {
     "title": "選擇分攤方式",
