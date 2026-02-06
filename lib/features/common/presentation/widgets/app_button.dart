@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum AppButtonType { primary, secondary }
 
@@ -36,7 +37,6 @@ class AppButton extends StatelessWidget {
         minimumSize: const Size.fromHeight(height), // 高度 40
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        // [M3 修正]: 使用 StadiumBorder (全圓角)
         shape: const StadiumBorder(),
         elevation: 0, // M3 FilledButton 預設無陰影
       );
@@ -44,12 +44,18 @@ class AppButton extends StatelessWidget {
       // [Secondary] -> OutlinedButton
       baseStyle = OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(height), // 高度 40
-        // M3 Secondary 通常用 Outline
         side: BorderSide(color: colorScheme.outline),
         foregroundColor: colorScheme.primary,
         shape: const StadiumBorder(),
       );
     }
+
+    final VoidCallback? handledOnPressed = (onPressed == null || isLoading)
+        ? null
+        : () {
+            HapticFeedback.lightImpact(); // 輕微震動
+            onPressed!();
+          };
 
     // 根據類型回傳對應的 Flutter M3 元件
     Widget buttonContent = Row(
@@ -87,13 +93,13 @@ class AppButton extends StatelessWidget {
 
     if (type == AppButtonType.primary) {
       return FilledButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: handledOnPressed,
         style: baseStyle,
         child: buttonContent,
       );
     } else {
       return OutlinedButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: handledOnPressed,
         style: baseStyle,
         child: buttonContent,
       );

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class StickyBottomActionBar extends StatelessWidget {
@@ -28,9 +30,6 @@ class StickyBottomActionBar extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // 統一背景色，保持清爽
-    final backgroundColor = colorScheme.surface;
-
     // 內容本體 (按鈕列)
     Widget content = SafeArea(
       top: false,
@@ -56,7 +55,7 @@ class StickyBottomActionBar extends StatelessWidget {
     if (isSheetMode) {
       // --- Sheet Mode: 內縮分隔線 (Inset Divider) ---
       return Container(
-        color: backgroundColor,
+        color: colorScheme.surface,
         child: Column(
           mainAxisSize: MainAxisSize.min, // 緊縮高度
           children: [
@@ -73,19 +72,23 @@ class StickyBottomActionBar extends StatelessWidget {
         ),
       );
     } else {
-      // --- Page Mode: 全寬度陰影 (Full-width Shadow) ---
-      return Container(
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05), // 極淡陰影
-              blurRadius: 3,
-              offset: const Offset(0, -1),
-            )
-          ],
+      final backgroundColor = colorScheme.surface.withValues(alpha: 0.85);
+      return ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              border: Border(
+                top: BorderSide(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: content,
+          ),
         ),
-        child: content,
       );
     }
   }

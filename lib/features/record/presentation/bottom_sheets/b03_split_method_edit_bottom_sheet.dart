@@ -373,8 +373,7 @@ class _B03SplitMethodEditBottomSheetState
 
     // 使用新的計算邏輯
     final result = _getSplitResult();
-    final sourceAmounts = result.sourceAmounts;
-    final baseAmounts = result.baseAmounts;
+    final memberAmounts = result.memberAmounts;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,8 +381,8 @@ class _B03SplitMethodEditBottomSheetState
         ...widget.allMembers.map((m) {
           final id = m['id'];
           final isSelected = _selectedMemberIds.contains(id);
-          final amount = sourceAmounts[id] ?? 0.0;
-          final baseAmount = baseAmounts[id] ?? 0.0;
+          final amount = memberAmounts[id]?.original ?? 0.0;
+          final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
           return CommonSelectionTile(
             isSelected: isSelected,
@@ -437,8 +436,7 @@ class _B03SplitMethodEditBottomSheetState
     final theme = Theme.of(context);
 
     final result = _getSplitResult();
-    final sourceAmounts = result.sourceAmounts;
-    final baseAmounts = result.baseAmounts;
+    final memberAmounts = result.memberAmounts;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,8 +445,8 @@ class _B03SplitMethodEditBottomSheetState
           final id = m['id'];
           final weight = _details[id] ?? 0.0;
           final isSelected = weight > 0;
-          final amount = sourceAmounts[id] ?? 0.0;
-          final baseAmount = baseAmounts[id] ?? 0.0;
+          final amount = memberAmounts[id]?.original ?? 0.0;
+          final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
           return CommonSelectionTile(
             isSelected: isSelected,

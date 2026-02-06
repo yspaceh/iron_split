@@ -189,7 +189,9 @@ class _S53Content extends StatelessWidget {
               ),
             ],
           ),
+          extendBody: true,
           bottomNavigationBar: StickyBottomActionBar(
+            isSheetMode: false,
             children: [
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.invite,

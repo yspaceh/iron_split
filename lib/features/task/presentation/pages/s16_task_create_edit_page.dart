@@ -221,6 +221,7 @@ class _S16ContentState extends State<_S16Content> {
               ),
             ),
             bottomNavigationBar: StickyBottomActionBar(
+              isSheetMode: false,
               children: [
                 AppButton(
                   text: t.S16_TaskCreate_Edit.buttons.save,

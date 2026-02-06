@@ -47,8 +47,8 @@ class SplitEvenSection extends StatelessWidget {
         ...allMembers.map((m) {
           final id = m['id'];
           final isSelected = selectedMemberIds.contains(id);
-          final amount = splitResult.sourceAmounts[id] ?? 0.0;
-          final baseAmount = splitResult.baseAmounts[id] ?? 0.0;
+          final amount = splitResult.memberAmounts[id]?.original ?? 0.0;
+          final baseAmount = splitResult.memberAmounts[id]?.base ?? 0.0;
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 4),

@@ -235,6 +235,8 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override String get label_balance => '残高';
 	@override String get label_total_expense => '総費用';
 	@override String get label_total_prepay => '総預り金';
+	@override String get label_total_expense_personal => '総費用';
+	@override String get label_total_prepay_personal => '総預り金(';
 	@override String get label_remainder_pot => '端数ポット';
 	@override String get empty_records => '記録がありません';
 	@override String get nav_to_record => '記録ページへ移動します...';
@@ -848,8 +850,10 @@ class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashbo
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get record => '記録';
+	@override String get record => '記録を追加';
 	@override String get settlement => '精算';
+	@override String get download => '記録ダウンロード';
+	@override String get add => '追加';
 }
 
 // Path: S15_Record_Edit.buttons
@@ -1355,8 +1359,10 @@ extension on TranslationsJaJp {
 			'S12_TaskClose_Notice.buttons.close' => 'タスク終了',
 			'S12_TaskClose_Notice.content' => 'このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
 			'S13_Task_Dashboard.title_active' => 'ダッシュボード',
-			'S13_Task_Dashboard.buttons.record' => '記録',
+			'S13_Task_Dashboard.buttons.record' => '記録を追加',
 			'S13_Task_Dashboard.buttons.settlement' => '精算',
+			'S13_Task_Dashboard.buttons.download' => '記録ダウンロード',
+			'S13_Task_Dashboard.buttons.add' => '追加',
 			'S13_Task_Dashboard.tab_group' => 'グループ',
 			'S13_Task_Dashboard.tab_personal' => '個人',
 			'S13_Task_Dashboard.label_prepay_balance' => 'プール残高',
@@ -1365,6 +1371,8 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.label_balance' => '残高',
 			'S13_Task_Dashboard.label_total_expense' => '総費用',
 			'S13_Task_Dashboard.label_total_prepay' => '総預り金',
+			'S13_Task_Dashboard.label_total_expense_personal' => '総費用',
+			'S13_Task_Dashboard.label_total_prepay_personal' => '総預り金(',
 			'S13_Task_Dashboard.label_remainder_pot' => '端数ポット',
 			'S13_Task_Dashboard.empty_records' => '記録がありません',
 			'S13_Task_Dashboard.nav_to_record' => '記録ページへ移動します...',

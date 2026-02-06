@@ -153,9 +153,10 @@
   "S13_Task_Dashboard": {
     "title_active": "任務主頁",
     "buttons": {
-      "record": "記一筆",
+      "record": "新增紀錄",
       "settlement": "結算",
-      "download": "下載記錄"
+      "download": "下載記錄",
+      "add":"新增"
     },
     "tab_group": "大家",
     "tab_personal": "個人",
@@ -164,7 +165,9 @@
     "label_remainder": "暫存零頭: {amount}",
     "label_balance": "結餘",
     "label_total_expense": "總費用",
-    "label_total_prepay": "總預收",
+    "label_total_prepay": "前受合計",
+    "label_total_expense_personal": "總費用",
+    "label_total_prepay_personal": "前受合計（立替含）",
     "label_remainder_pot": "零頭罐",
     "empty_records": "尚無收支紀錄",
     "nav_to_record": "準備前往記帳頁面...",
@@ -176,7 +179,7 @@
     "personal_daily_total": "個人本日支出",
     "personal_to_receive": "應收",
     "personal_to_pay": "應付",
-    "personal_empty_desc": "這天沒有與你有關的紀錄",
+    "personal_empty_desc": "無有關紀錄",
     "total_amount_label": "總金額",
     "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。"
   },

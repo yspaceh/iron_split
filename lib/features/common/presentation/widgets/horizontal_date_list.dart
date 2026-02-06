@@ -22,8 +22,7 @@ class HorizontalDateList extends StatefulWidget {
 class _HorizontalDateListState extends State<HorizontalDateList> {
   final ScrollController _scrollController = ScrollController();
 
-  // Container(60) + Margin(4*2) = 68.0
-  static const double _itemWidth = 68.0;
+  static const double _itemWidth = 48;
 
   @override
   void initState() {
@@ -54,15 +53,17 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
     int index = date.difference(widget.startDate).inDays;
     if (index < 0) index = 0;
 
-    double targetOffset = index * _itemWidth;
+    double centeredOffset = (index * _itemWidth) -
+        (MediaQuery.of(context).size.width / 2) +
+        (_itemWidth / 2);
 
     // [Fix 2] Clamp targetOffset to maxScroll
-    if (targetOffset > maxScroll) {
-      targetOffset = maxScroll;
-    }
-    if (targetOffset < minScroll) {
-      targetOffset = minScroll;
-    }
+    if (centeredOffset > maxScroll) centeredOffset = maxScroll;
+    if (centeredOffset < minScroll) centeredOffset = minScroll;
+
+    double targetOffset = index * _itemWidth;
+    if (targetOffset > maxScroll) targetOffset = maxScroll;
+    if (targetOffset < minScroll) targetOffset = minScroll;
 
     if (animate) {
       _scrollController.animateTo(
@@ -92,41 +93,77 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
       controller: _scrollController,
       scrollDirection: Axis.horizontal,
       itemCount: dates.length,
+      padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         final date = dates[index];
         final isToday = DateUtils.isSameDay(date, DateTime.now());
         final isSelected = DateUtils.isSameDay(date, widget.selectedDate);
-        final dateStr = DateFormat('MM/dd').format(date);
+        // 格式化：星期 (WED) 全大寫
+        final weekStr = DateFormat('E').format(date).toUpperCase();
+        // 格式化：日期 (05)
+        final dayStr = DateFormat('dd').format(date);
 
         return InkWell(
           onTap: () => widget.onDateSelected(date),
-          child: Container(
-            width: 60,
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            width: _itemWidth,
             child: Stack(
               children: [
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    height: 40, // 豎向膠囊高度
+                    width: 32, // 寬度
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? theme.colorScheme.primary
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
+                          ? theme.colorScheme.primary // 選中：酒紅底
+                          : Colors.transparent, // 未選：透明
+                      borderRadius: BorderRadius.circular(10), // 圓角矩形
+                      // 如果是今天但未選中，可以加個外框？(可選)
+                      // border: isToday && !isSelected
+                      //    ? Border.all(color: colorScheme.outline, width: 1)
+                      //    : null,
                     ),
-                    child: Text(dateStr,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isSelected
-                                ? theme.colorScheme.onPrimary
-                                : theme.colorScheme.onSurface)),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            dayStr,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: isSelected
+                                  ? theme.colorScheme.onPrimary // 選中：白字
+                                  : theme.colorScheme.onSurface, // 未選：深灰字
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 12,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Text(
+                      weekStr,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: isSelected
+                            ? theme.colorScheme.onPrimary // 選中時星期也變紅？還是維持灰？
+                            : theme.colorScheme.onSurfaceVariant, // 灰色
+                        fontSize: 8,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
                 if (isToday)
                   Positioned(
-                    bottom: 6,
+                    bottom: 11,
                     left: 0,
                     right: 0,
                     child: Center(
@@ -134,7 +171,10 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
+                          color: isSelected
+                              ? theme.colorScheme.onPrimary
+                                  .withValues(alpha: 0.9)
+                              : theme.colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
                       ),

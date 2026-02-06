@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/features/task/presentation/widgets/personal_balance_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
-import 'package:iron_split/features/record/presentation/widgets/record_item.dart';
+import 'package:iron_split/features/task/presentation/widgets/record_item.dart';
 import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -15,12 +16,11 @@ import 'package:iron_split/gen/strings.g.dart';
 class S13PersonalView extends StatelessWidget {
   const S13PersonalView({super.key});
 
-  static const double _kCardHeight = 140.0;
+  static const double _kCardHeight = 176.0;
   static const double _kDateStripHeight = 56.0;
 
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context);
     final vm = context.watch<S13TaskDashboardViewModel>();
     final task = vm.task;
 
@@ -48,9 +48,12 @@ class S13PersonalView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: PersonalBalanceCard(
                       baseCurrency: vm.baseCurrency,
-                      netBalance: vm.personalNetBalance, // 從 VM 拿計算好的值
+                      netBalance: vm.personalNetBalance,
+                      totalExpense: vm.personalTotalExpense,
+                      totalIncome: vm.personalTotalIncome,
                       uid: vm.currentUserId,
-                      memberData: memberData, // 傳入 Map
+                      memberData: memberData,
+                      fixedHeight: _kCardHeight, // 傳入 Map
                     ),
                   ),
                 ),
@@ -88,9 +91,6 @@ class S13PersonalView extends StatelessWidget {
                   // 取出個人的分組紀錄
                   final dayRecords = vm.personalGroupedRecords[date] ?? [];
 
-                  // 計算當日個人消費 (呼叫 VM Helper)
-                  final dayMyDebit = vm.calculateDailyPersonalDebit(date);
-
                   final dateKeyStr = DateFormat('yyyyMMdd').format(date);
                   final key = vm.dateKeys[dateKeyStr];
 
@@ -99,33 +99,21 @@ class S13PersonalView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DailyHeader(
-                          date: date,
-                          total: dayMyDebit, // 顯示我的消費
-                          baseCurrency: vm.baseCurrency,
-                          isPersonal: true),
-                      if (dayRecords.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(
-                            child: Text(
-                              t.S13_Task_Dashboard.personal_empty_desc,
-                              style: TextStyle(color: Colors.grey.shade400),
-                            ),
-                          ),
-                        )
-                      else
-                        ...dayRecords.map((record) {
-                          double displayAmount = record.type == 'income'
-                              ? BalanceCalculator.calculatePersonalCredit(
-                                  record, vm.currentUserId, vm.baseCurrency,
-                                  isBaseCurrency: false)
-                              : BalanceCalculator.calculatePersonalDebit(
-                                  record, vm.currentUserId, vm.baseCurrency,
-                                  isBaseCurrency: false);
-                          return RecordItem(
+                        date: date,
+                        isEmpty: dayRecords.isEmpty,
+                      ),
+                      ...dayRecords.map((record) {
+                        DualAmount displayAmount = record.type == 'income'
+                            ? BalanceCalculator.calculatePersonalCredit(
+                                record, vm.currentUserId, vm.baseCurrency)
+                            : BalanceCalculator.calculatePersonalDebit(
+                                record, vm.currentUserId, vm.baseCurrency);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: RecordItem(
                             record: record,
                             baseCurrency: vm.baseCurrency,
-                            displayAmount: displayAmount,
+                            amount: displayAmount,
                             onTap: () {
                               context.pushNamed(
                                 'S15',
@@ -156,8 +144,9 @@ class S13PersonalView extends StatelessWidget {
                                 // TODO: 需追加錯誤處理
                               }
                             },
-                          );
-                        }),
+                          ),
+                        );
+                      }),
                     ],
                   );
                 }).toList(),

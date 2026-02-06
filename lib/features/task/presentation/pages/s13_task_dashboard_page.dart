@@ -119,7 +119,9 @@ class _S13ContentState extends State<_S13Content> {
           ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: StickyBottomActionBar(
+        isSheetMode: false,
         children: [
           Visibility(
             visible: isCaptain,

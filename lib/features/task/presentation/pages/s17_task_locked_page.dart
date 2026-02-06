@@ -113,6 +113,7 @@ class _S17Content extends StatelessWidget {
             onPressed: () => context.goNamed('S10'),
           ),
         ),
+        extendBody: true,
         bottomNavigationBar: vm.status == LockedPageStatus.loading ||
                 vm.status == LockedPageStatus.error
             ? null
@@ -121,6 +122,7 @@ class _S17Content extends StatelessWidget {
                 children: [
                   RetentionBanner(days: vm.remainingDays!),
                   StickyBottomActionBar(
+                    isSheetMode: false,
                     children: [
                       // 通知成員
                       AppButton(

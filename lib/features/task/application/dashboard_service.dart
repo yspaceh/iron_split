@@ -140,27 +140,37 @@ class DashboardService {
     }).toList();
   }
 
-  double calculatePersonalNetBalance(
+  DualAmount calculatePersonalNetBalance(
       {required List<RecordModel> allRecords,
       required String uid,
       required CurrencyConstants baseCurrency}) {
     return BalanceCalculator.calculatePersonalNetBalance(
-        allRecords: allRecords,
-        uid: uid,
-        isBaseCurrency: true,
-        baseCurrency: baseCurrency);
+        allRecords: allRecords, uid: uid, baseCurrency: baseCurrency);
   }
 
-  double calculateDailyPersonalDebit(List<RecordModel> dayRecords, String uid,
-      CurrencyConstants baseCurrency) {
-    double dayMyDebit = 0;
-    for (var r in dayRecords) {
-      // 直接使用 Calculator 算出該筆紀錄我的消費額 (Debit)
-      double myDebitBase = BalanceCalculator.calculatePersonalDebit(
-          r, uid, baseCurrency,
-          isBaseCurrency: true); // 這裡直接取 Base Currency
-      dayMyDebit += myDebitBase;
+  DualAmount calculatePersonalDebit(
+      {required List<RecordModel> allRecords,
+      required String uid,
+      required CurrencyConstants baseCurrency}) {
+    DualAmount totalConsumed = DualAmount.zero;
+
+    for (var record in allRecords) {
+      totalConsumed +=
+          BalanceCalculator.calculatePersonalDebit(record, uid, baseCurrency);
     }
-    return dayMyDebit;
+    return totalConsumed;
+  }
+
+  DualAmount calculatePersonalCredit(
+      {required List<RecordModel> allRecords,
+      required String uid,
+      required CurrencyConstants baseCurrency}) {
+    DualAmount totalPaid = DualAmount.zero;
+
+    for (var record in allRecords) {
+      totalPaid +=
+          BalanceCalculator.calculatePersonalCredit(record, uid, baseCurrency);
+    }
+    return totalPaid;
   }
 }

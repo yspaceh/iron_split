@@ -99,7 +99,9 @@ class _S52Content extends StatelessWidget {
           ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: StickyBottomActionBar(
+        isSheetMode: false,
         children: [
           AppButton(
               text: t.S52_TaskSettings_Log.buttons.export_csv,

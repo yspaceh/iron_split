@@ -200,7 +200,9 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override String label_remainder({required Object amount}) => 'Buffer: ${amount}';
 	@override String get label_balance => 'Balance';
 	@override String get label_total_expense => 'Total Expense';
-	@override String get label_total_prepay => 'Total Pre-collected';
+	@override String get label_total_prepay => 'Total Advance';
+	@override String get label_total_expense_personal => 'Total Expense';
+	@override String get label_total_prepay_personal => 'Total Advance (incl. Reimbursed)';
 	@override String get label_remainder_pot => 'Remainder Pot';
 	@override String get empty_records => 'No records';
 	@override String get nav_to_record => 'Navigating to record page...';
@@ -829,9 +831,10 @@ class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashbo
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get record => 'Record';
+	@override String get record => 'Add record';
 	@override String get settlement => 'Settlement';
 	@override String get download => 'Download Records';
+	@override String get add => 'Add';
 }
 
 // Path: S15_Record_Edit.buttons
@@ -1341,9 +1344,10 @@ extension on TranslationsEnUs {
 			'S12_TaskClose_Notice.buttons.close' => 'Close Task',
 			'S12_TaskClose_Notice.content' => 'Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.',
 			'S13_Task_Dashboard.title_active' => 'Dashboard',
-			'S13_Task_Dashboard.buttons.record' => 'Record',
+			'S13_Task_Dashboard.buttons.record' => 'Add record',
 			'S13_Task_Dashboard.buttons.settlement' => 'Settlement',
 			'S13_Task_Dashboard.buttons.download' => 'Download Records',
+			'S13_Task_Dashboard.buttons.add' => 'Add',
 			'S13_Task_Dashboard.tab_group' => 'Group',
 			'S13_Task_Dashboard.tab_personal' => 'Personal',
 			'S13_Task_Dashboard.label_prepay_balance' => 'Pool Balance',
@@ -1351,7 +1355,9 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => 'Buffer: ${amount}',
 			'S13_Task_Dashboard.label_balance' => 'Balance',
 			'S13_Task_Dashboard.label_total_expense' => 'Total Expense',
-			'S13_Task_Dashboard.label_total_prepay' => 'Total Pre-collected',
+			'S13_Task_Dashboard.label_total_prepay' => 'Total Advance',
+			'S13_Task_Dashboard.label_total_expense_personal' => 'Total Expense',
+			'S13_Task_Dashboard.label_total_prepay_personal' => 'Total Advance (incl. Reimbursed)',
 			'S13_Task_Dashboard.label_remainder_pot' => 'Remainder Pot',
 			'S13_Task_Dashboard.empty_records' => 'No records',
 			'S13_Task_Dashboard.nav_to_record' => 'Navigating to record page...',

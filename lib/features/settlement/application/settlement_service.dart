@@ -55,12 +55,10 @@ class SettlementService {
     final Map<String, double> balances = {};
     for (var uid in task.members.keys) {
       balances[uid] = BalanceCalculator.calculatePersonalNetBalance(
-          allRecords: records,
-          uid: uid,
-          baseCurrency:
-              CurrencyConstants.getCurrencyConstants(task.baseCurrency),
-          isBaseCurrency: true // 這會使用 record.exchangeRate (已被 D09 更新)
-          );
+        allRecords: records,
+        uid: uid,
+        baseCurrency: CurrencyConstants.getCurrencyConstants(task.baseCurrency),
+      ).base;
     }
     return balances;
   }

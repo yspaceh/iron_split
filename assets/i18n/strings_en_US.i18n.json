@@ -153,9 +153,10 @@
   "S13_Task_Dashboard": {
     "title_active": "Dashboard",
     "buttons": {
-      "record": "Record",
+      "record": "Add record",
       "settlement": "Settlement",
-      "download": "Download Records"
+      "download": "Download Records",
+      "add":"Add"
     },
     "tab_group": "Group",
     "tab_personal": "Personal",
@@ -164,7 +165,9 @@
     "label_remainder": "Buffer: {amount}",
     "label_balance": "Balance",
     "label_total_expense": "Total Expense",
-    "label_total_prepay": "Total Pre-collected",
+    "label_total_prepay": "Total Advance",
+    "label_total_expense_personal": "Total Expense",
+    "label_total_prepay_personal": "Total Advance (incl. Reimbursed)",
     "label_remainder_pot": "Remainder Pot",
     "empty_records": "No records",
     "nav_to_record": "Navigating to record page...",

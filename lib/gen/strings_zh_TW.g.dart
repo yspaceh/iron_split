@@ -313,8 +313,14 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '總費用'
 	String get label_total_expense => '總費用';
 
-	/// zh-TW: '總預收'
-	String get label_total_prepay => '總預收';
+	/// zh-TW: '前受合計'
+	String get label_total_prepay => '前受合計';
+
+	/// zh-TW: '總費用'
+	String get label_total_expense_personal => '總費用';
+
+	/// zh-TW: '前受合計（立替含）'
+	String get label_total_prepay_personal => '前受合計（立替含）';
 
 	/// zh-TW: '零頭罐'
 	String get label_remainder_pot => '零頭罐';
@@ -349,8 +355,8 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '應付'
 	String get personal_to_pay => '應付';
 
-	/// zh-TW: '這天沒有與你有關的紀錄'
-	String get personal_empty_desc => '這天沒有與你有關的紀錄';
+	/// zh-TW: '無有關紀錄'
+	String get personal_empty_desc => '無有關紀錄';
 
 	/// zh-TW: '總金額'
 	String get total_amount_label => '總金額';
@@ -1488,14 +1494,17 @@ class TranslationsS13TaskDashboardButtonsZhTw {
 
 	// Translations
 
-	/// zh-TW: '記一筆'
-	String get record => '記一筆';
+	/// zh-TW: '新增紀錄'
+	String get record => '新增紀錄';
 
 	/// zh-TW: '結算'
 	String get settlement => '結算';
 
 	/// zh-TW: '下載記錄'
 	String get download => '下載記錄';
+
+	/// zh-TW: '新增'
+	String get add => '新增';
 }
 
 // Path: S15_Record_Edit.buttons
@@ -2135,9 +2144,10 @@ extension on Translations {
 			'S12_TaskClose_Notice.content' => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。',
 			'S12_TaskClose_Notice.buttons.close' => '結束任務',
 			'S13_Task_Dashboard.title_active' => '任務主頁',
-			'S13_Task_Dashboard.buttons.record' => '記一筆',
+			'S13_Task_Dashboard.buttons.record' => '新增紀錄',
 			'S13_Task_Dashboard.buttons.settlement' => '結算',
 			'S13_Task_Dashboard.buttons.download' => '下載記錄',
+			'S13_Task_Dashboard.buttons.add' => '新增',
 			'S13_Task_Dashboard.tab_group' => '大家',
 			'S13_Task_Dashboard.tab_personal' => '個人',
 			'S13_Task_Dashboard.label_prepay_balance' => '預收款餘額',
@@ -2145,7 +2155,9 @@ extension on Translations {
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
 			'S13_Task_Dashboard.label_balance' => '結餘',
 			'S13_Task_Dashboard.label_total_expense' => '總費用',
-			'S13_Task_Dashboard.label_total_prepay' => '總預收',
+			'S13_Task_Dashboard.label_total_prepay' => '前受合計',
+			'S13_Task_Dashboard.label_total_expense_personal' => '總費用',
+			'S13_Task_Dashboard.label_total_prepay_personal' => '前受合計（立替含）',
 			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
 			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
@@ -2157,7 +2169,7 @@ extension on Translations {
 			'S13_Task_Dashboard.personal_daily_total' => '個人本日支出',
 			'S13_Task_Dashboard.personal_to_receive' => '應收',
 			'S13_Task_Dashboard.personal_to_pay' => '應付',
-			'S13_Task_Dashboard.personal_empty_desc' => '這天沒有與你有關的紀錄',
+			'S13_Task_Dashboard.personal_empty_desc' => '無有關紀錄',
 			'S13_Task_Dashboard.total_amount_label' => '總金額',
 			'S13_Task_Dashboard.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
 			'S14_Task_Settings.title' => '任務設定',

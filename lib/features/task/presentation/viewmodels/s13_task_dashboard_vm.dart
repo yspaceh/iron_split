@@ -46,7 +46,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   // Personal View 專用 State
   List<RecordModel> _personalRecords = [];
   Map<DateTime, List<RecordModel>> _personalGroupedRecords = {};
-  double _personalNetBalance = 0.0;
+  DualAmount _personalNetBalance = DualAmount.zero;
+  DualAmount _personalTotalExpense = DualAmount.zero;
+  DualAmount _personalTotalIncome = DualAmount.zero;
 
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId;
@@ -62,7 +64,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   List<RecordModel> get personalRecords => _personalRecords;
   Map<DateTime, List<RecordModel>> get personalGroupedRecords =>
       _personalGroupedRecords;
-  double get personalNetBalance => _personalNetBalance;
+  DualAmount get personalNetBalance => _personalNetBalance;
+  DualAmount get personalTotalExpense => _personalTotalExpense;
+  DualAmount get personalTotalIncome => _personalTotalIncome;
   ScrollController get activeScrollController =>
       _currentTabIndex == 0 ? groupScrollController : personalScrollController;
   String get remainderRule => _remainderRule;
@@ -143,6 +147,10 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
         _service.filterPersonalRecords(_records, currentUserId, baseCurrency);
     _personalGroupedRecords = _service.groupRecordsByDate(_personalRecords);
     _personalNetBalance = _service.calculatePersonalNetBalance(
+        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
+    _personalTotalExpense = _service.calculatePersonalDebit(
+        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
+    _personalTotalIncome = _service.calculatePersonalCredit(
         allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
@@ -310,13 +318,6 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       action: LogAction.updateSettings,
       details: logDetails,
     );
-  }
-
-  // Helper for Daily Header Calculation (給 View 用)
-  double calculateDailyPersonalDebit(DateTime date) {
-    final dayRecords = _personalGroupedRecords[date] ?? [];
-    return _service.calculateDailyPersonalDebit(
-        dayRecords, currentUserId, baseCurrency);
   }
 
   /// 刪除消費紀錄

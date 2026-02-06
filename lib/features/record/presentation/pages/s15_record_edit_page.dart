@@ -15,7 +15,6 @@ import 'package:iron_split/features/record/presentation/views/s15_expense_form.d
 import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
 // Import Dialogs & Sheets
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
-import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
@@ -275,22 +274,24 @@ class _S15ContentState extends State<_S15Content> {
     // [修正 1] 預先取得 Messenger 參考 (因為 pop 之後 context 就會失效)
     final messenger = ScaffoldMessenger.of(context);
 
-    final confirm = await showDialog<bool>(
-      context: context,
-      // 建議：防止使用者在刪除過程中誤觸背景關閉 Dialog，導致 ctx 失效
-      barrierDismissible: false,
-      builder: (dialogContext) => D10RecordDeleteConfirmDialog(
-        title: vm.titleController.text,
-        amount: "${vm.selectedCurrencyConstants.symbol} ${vm.totalAmount}",
-        onConfirm: () async {
-          await vm.deleteRecord(t);
-
-          // [修正 2] 檢查 Dialog 的 context 是否還掛載著 (Flutter 3.7+ 支援 .mounted)
-          if (dialogContext.mounted) {
-            Navigator.pop(dialogContext, true);
-          }
-        },
-      ),
+    final confirm = await CommonAlertDialog.show<bool>(
+      context,
+      title: t.D10_RecordDelete_Confirm.delete_record_title,
+      content: Text(t.D10_RecordDelete_Confirm.delete_record_content(
+          title: vm.titleController.text,
+          amount: "${vm.selectedCurrencyConstants.symbol} ${vm.totalAmount}")),
+      actions: [
+        AppButton(
+          text: t.common.buttons.close,
+          type: AppButtonType.secondary,
+          onPressed: () => context.pop(false),
+        ),
+        AppButton(
+          text: t.common.buttons.close,
+          type: AppButtonType.primary,
+          onPressed: () => context.pop(true),
+        ),
+      ],
     );
 
     if (confirm == true && mounted) {
@@ -329,7 +330,9 @@ class _S15ContentState extends State<_S15Content> {
             ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: StickyBottomActionBar(
+        isSheetMode: false,
         children: [
           AppButton(
             text: t.common.buttons.save,

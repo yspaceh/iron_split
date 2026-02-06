@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:iron_split/features/common/presentation/widgets/horizontal_date_list.dart'; // 引用上一輪做的列表
 import 'package:iron_split/gen/strings.g.dart'; // 為了 Locale
 
@@ -24,55 +25,93 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
+    // 格式化月份： 02
+    final monthNum = DateFormat('MM').format(selectedDate);
+    // 格式化月份縮寫：FEB (全大寫)
+    final monthStr = DateFormat('MMM').format(selectedDate).toUpperCase();
 
     return Container(
       height: height,
       color: theme.colorScheme.surfaceContainerLow,
-      child: Column(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                // 1. 共用的日曆按鈕
-                IconButton(
-                  icon: const Icon(Icons.calendar_month),
-                  onPressed: () async {
-                    // 處理 Locale 邏輯 (複製自您原本的代碼)
-                    Locale activeLocale =
-                        TranslationProvider.of(context).flutterLocale;
-                    if (activeLocale.languageCode == 'zh') {
-                      activeLocale = const Locale.fromSubtags(
-                          languageCode: 'zh',
-                          scriptCode: 'Hant',
-                          countryCode: 'TW');
-                    }
+          // 1. 共用的日曆按鈕
+          // 1. 左側固定月份 (Sticky Month Label)
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () async {
+                // 點擊月份開啟日曆 (保留原本邏輯)
+                Locale activeLocale =
+                    TranslationProvider.of(context).flutterLocale;
+                if (activeLocale.languageCode == 'zh') {
+                  activeLocale = const Locale.fromSubtags(
+                      languageCode: 'zh',
+                      scriptCode: 'Hant',
+                      countryCode: 'TW');
+                }
 
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate,
-                      firstDate: startDate.subtract(const Duration(days: 365)),
-                      lastDate: endDate.add(const Duration(days: 365)),
-                      locale: activeLocale,
-                      builder: (context, child) => Theme(
-                        data: Theme.of(context).copyWith(
-                            colorScheme: Theme.of(context).colorScheme),
-                        child: child!,
-                      ),
-                    );
-                    if (picked != null) onDateSelected(picked);
-                  },
-                ),
-
-                // 2. 共用的日期滾動列表
-                Expanded(
-                  child: HorizontalDateList(
-                    startDate: startDate,
-                    endDate: endDate,
-                    selectedDate: selectedDate,
-                    onDateSelected: onDateSelected,
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: startDate.subtract(const Duration(days: 365)),
+                  lastDate: endDate.add(const Duration(days: 365)),
+                  locale: activeLocale,
+                  builder: (context, child) => Theme(
+                    data: Theme.of(context)
+                        .copyWith(colorScheme: Theme.of(context).colorScheme),
+                    child: child!,
                   ),
+                );
+                if (picked != null) onDateSelected(picked);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 12, top: 4, bottom: 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // 月份數字 (02)
+                    Text(
+                      monthNum,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w900, // 特粗
+                        color: theme.colorScheme.primary, // 酒紅色
+                        height: 1.0,
+                      ),
+                    ),
+                    // 月份縮寫 (FEB)
+                    Text(
+                      monthStr,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary, // 酒紅色
+                        fontSize: 10,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ),
+          ),
+
+          // 分隔線 (Optional，視視覺需求決定要不要加)
+          Container(
+            width: 1,
+            height: 32,
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            margin: const EdgeInsets.only(right: 4),
+          ),
+
+          // 2. 共用的日期滾動列表
+          Expanded(
+            child: HorizontalDateList(
+              startDate: startDate,
+              endDate: endDate,
+              selectedDate: selectedDate,
+              onDateSelected: onDateSelected,
             ),
           ),
         ],

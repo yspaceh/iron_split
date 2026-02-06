@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/features/common/presentation/widgets/add_outlined_button.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d05_date_jump_no_result_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_date_strip_delegate.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/widgets/daily_header.dart';
-import 'package:iron_split/features/record/presentation/widgets/record_item.dart';
+import 'package:iron_split/features/task/presentation/widgets/record_item.dart';
 import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
 import 'package:iron_split/features/task/presentation/widgets/sticky_header_delegate.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashboard_vm.dart';
@@ -19,6 +18,8 @@ import 'package:iron_split/features/task/presentation/viewmodels/s13_task_dashbo
 class S13GroupView extends StatelessWidget {
   const S13GroupView({super.key});
 
+  /// ! CRITICAL LAYOUT CONFIGURATION !
+  /// Used by S13Page to calculate Sticky Header size.
   static const double _kCardHeight = 176.0;
   static const double _kDateStripHeight = 56.0;
 
@@ -74,10 +75,6 @@ class S13GroupView extends StatelessWidget {
       builder: (context, constraints) {
         final double bottomPadding = constraints.maxHeight;
 
-        /// ! CRITICAL LAYOUT CONFIGURATION !
-        /// Used by S13Page to calculate Sticky Header size.
-        final double fixedHeight = 176.0;
-
         return CustomScrollView(
           controller: vm.groupScrollController,
           slivers: [
@@ -95,7 +92,7 @@ class S13GroupView extends StatelessWidget {
                       state: vm.balanceState, // 使用 VM 的 State
                       onCurrencyTap: showCurrencyPicker,
                       onRuleTap: () => onRemainderRuleChange(vm),
-                      fixedHeight: fixedHeight,
+                      fixedHeight: _kCardHeight,
                     ),
                   ),
                 ),
@@ -129,12 +126,6 @@ class S13GroupView extends StatelessWidget {
               child: Column(
                 children: vm.displayDates.map((date) {
                   final dayRecords = vm.groupedRecords[date] ?? [];
-
-                  // 保留 BalanceCalculator 邏輯
-                  final dayTotal = BalanceCalculator.calculateExpenseTotal(
-                      dayRecords,
-                      isBaseCurrency: true);
-
                   final dateKeyStr = DateFormat('yyyyMMdd').format(date);
                   final key = vm.dateKeys[dateKeyStr];
 
@@ -144,18 +135,25 @@ class S13GroupView extends StatelessWidget {
                     children: [
                       DailyHeader(
                         date: date,
-                        total: dayTotal,
-                        baseCurrency: vm.baseCurrency, // 從 VM 獲取
-                        isPersonal: false,
+                        onAddTap: () => context.pushNamed(
+                          'S15',
+                          pathParameters: {'taskId': task.id},
+                          extra: {
+                            'poolBalancesByCurrency': vm.poolBalances,
+                            'baseCurrency': vm.baseCurrency,
+                            'date': date,
+                          },
+                        ),
                       ),
-                      const SizedBox(height: 16),
                       ...dayRecords.map((record) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: RecordItem(
                             record: record,
                             baseCurrency: vm.baseCurrency,
-                            displayAmount: record.amount,
+                            amount: DualAmount(
+                                original: record.amount,
+                                base: record.amount * record.exchangeRate),
                             onTap: () {
                               context.pushNamed(
                                 'S15',
@@ -189,22 +187,7 @@ class S13GroupView extends StatelessWidget {
                           ),
                         );
                       }),
-                      // 保留新增按鈕樣式
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16, right: 16, top: 8, bottom: 16),
-                        child: AddOutlinedButton(
-                          onPressed: () => context.pushNamed(
-                            'S15',
-                            pathParameters: {'taskId': task.id},
-                            extra: {
-                              'poolBalancesByCurrency': vm.poolBalances,
-                              'baseCurrency': vm.baseCurrency,
-                              'date': date,
-                            },
-                          ),
-                        ),
-                      ),
+                      if (dayRecords.isNotEmpty) const SizedBox(height: 8),
                     ],
                   );
                 }).toList(),

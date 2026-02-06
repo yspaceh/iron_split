@@ -177,8 +177,10 @@
   "S13_Task_Dashboard": {
     "title_active": "ダッシュボード",
     "buttons": {
-      "record": "記録",
-      "settlement": "精算"
+      "record": "記録を追加",
+      "settlement": "精算",
+      "download": "記録ダウンロード",
+      "add":"追加"
     },
     "tab_group": "グループ",
     "tab_personal": "個人",
@@ -188,6 +190,8 @@
     "label_balance": "残高",
     "label_total_expense": "総費用",
     "label_total_prepay": "総預り金",
+    "label_total_expense_personal": "総費用",
+    "label_total_prepay_personal": "総預り金(",
     "label_remainder_pot": "端数ポット",
     "empty_records": "記録がありません",
     "nav_to_record": "記録ページへ移動します...",
