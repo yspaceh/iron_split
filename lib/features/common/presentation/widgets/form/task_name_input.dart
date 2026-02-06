@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskNameInput extends StatelessWidget {
@@ -12,38 +13,32 @@ class TaskNameInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    // 定義最大長度，方便維護
+    const int maxLength = 20;
 
-    // [修正] 使用 ValueListenableBuilder 監聽文字變化
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, child) {
-        return TextFormField(
+        return AppTextField(
           controller: controller,
           autofocus: true,
-          maxLength: 20,
+
+          // 標題設定 (符合新風格)
+          labelText: t.S16_TaskCreate_Edit.label.name, // 或 field_name
+          hintText: t.S16_TaskCreate_Edit.placeholder.name,
+
+          // 限制設定
+          maxLength: maxLength,
           inputFormatters: [
             FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
           ],
-          decoration: InputDecoration(
-            hintText: t.S16_TaskCreate_Edit.field_name_hint,
-            counterText: "",
-            // 這裡現在會隨著 value (輸入內容) 即時更新了
-            suffixText: "${value.text.length}/20",
-            suffixStyle: TextStyle(color: colorScheme.onSurfaceVariant),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            filled: true,
-            fillColor:
-                colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-          ),
+
+          // [關鍵] 動態傳入計數文字
+          suffixText: "${value.text.length}/$maxLength",
+
+          // 驗證邏輯
           validator: (val) => (val == null || val.trim().isEmpty)
-              ? t.S16_TaskCreate_Edit.error_name_empty
+              ? t.error.message.empty(key: t.S16_TaskCreate_Edit.label.name)
               : null,
         );
       },

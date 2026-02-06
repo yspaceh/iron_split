@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_exchange_rate_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_item_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -41,10 +42,10 @@ class S15ExpenseForm extends StatelessWidget {
   final bool hasPaymentError;
 
   // 5. 定義動作 (當使用者點擊時，通知 Parent 執行)
-  final VoidCallback onDateTap;
+  final ValueChanged<DateTime> onDateChanged;
+  final ValueChanged<String> onCategoryChanged;
+  final ValueChanged<String> onCurrencyChanged;
   final VoidCallback onPaymentMethodTap;
-  final VoidCallback onCategoryTap;
-  final VoidCallback onCurrencyTap;
   final VoidCallback onFetchExchangeRate;
   final VoidCallback onShowRateInfo;
   final VoidCallback onBaseSplitConfigTap; // 點擊剩餘金額卡片時
@@ -70,10 +71,8 @@ class S15ExpenseForm extends StatelessWidget {
     required this.payerType,
     required this.payerId,
     required this.hasPaymentError,
-    required this.onDateTap,
+    required this.onDateChanged,
     required this.onPaymentMethodTap,
-    required this.onCategoryTap,
-    required this.onCurrencyTap,
     required this.onFetchExchangeRate,
     required this.onShowRateInfo,
     required this.onBaseSplitConfigTap,
@@ -82,6 +81,8 @@ class S15ExpenseForm extends StatelessWidget {
     required this.poolBalancesByCurrency,
     required this.baseRawDetails,
     required this.totalRemainder,
+    required this.onCategoryChanged,
+    required this.onCurrencyChanged,
   });
 
   // 支援多種支付型態顯示
@@ -108,7 +109,7 @@ class S15ExpenseForm extends StatelessWidget {
       (m) => m['id'] == id,
       orElse: () => {'displayName': '?'},
     );
-    return t.S15_Record_Edit.val_member_paid(name: member['displayName']);
+    return t.S15_Record_Edit.val.member_paid(name: member['displayName']);
   }
 
   @override
@@ -125,93 +126,41 @@ class S15ExpenseForm extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CommonPickerField(
-          label: t.S15_Record_Edit.label_date,
-          value: DateFormat('yyyy/MM/dd (E)').format(selectedDate),
-          icon: Icons.calendar_today_rounded,
-          onTap: onDateTap,
+        TaskDateInput(
+          label: t.S15_Record_Edit.label.date,
+          date: selectedDate,
+          onDateChanged: onDateChanged,
         ),
         const SizedBox(height: 16),
-        CommonPickerField(
-          label: t.S15_Record_Edit.label_payment_method,
-          value: _getPayerDisplayName(t, payerType, payerId),
-          icon: payerType == 'prepay'
-              ? Icons.account_balance_wallet_rounded
-              : Icons.person,
-          onTap: onPaymentMethodTap,
-          isError: hasPaymentError,
-          isDisabled: baseRemainingAmount <= 0,
+        // 2. 支付方式 (保留外部邏輯，因為邏輯太複雜不適合封裝)
+        AppSelectField(
+          labelText: t.S15_Record_Edit.label.payment_method,
+          text: _getPayerDisplayName(t, payerType, payerId),
+          onTap: baseRemainingAmount <= 0 ? () {} : onPaymentMethodTap,
+          errorText: hasPaymentError
+              ? t.B07_PaymentMethod_Edit.err_balance_not_enough
+              : null,
         ),
-        // 若有錯誤顯示紅字提示 (加在欄位下方)
-        if (hasPaymentError)
-          Padding(
-            padding: const EdgeInsets.only(left: 12, top: 4),
-            child: Text(
-              t.B07_PaymentMethod_Edit.err_balance_not_enough,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.error, fontSize: 12),
-            ),
-          ),
         const SizedBox(height: 16),
         TaskItemInput(
-            onCategoryTap: onCategoryTap,
+            onCategoryChanged: onCategoryChanged,
             titleController: titleController,
             selectedCategoryId: selectedCategoryId),
         const SizedBox(height: 16),
         TaskAmountInput(
-            onCurrencyTap: onCurrencyTap,
+            onCurrencyChanged: onCurrencyChanged,
             amountController: amountController,
             selectedCurrencyConstants: selectedCurrencyConstants),
         if (isForeign) ...[
           const SizedBox(height: 16),
-          TextFormField(
+          TaskExchangeRateInput(
             controller: exchangeRateController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label_rate(
-                  base: baseCurrency.code,
-                  target: selectedCurrencyConstants.code),
-              prefixIcon: IconButton(
-                icon: const Icon(Icons.currency_exchange),
-                onPressed: isRateLoading ? null : onFetchExchangeRate,
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (isRateLoading)
-                    const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator(strokeWidth: 2)),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline),
-                    onPressed: onShowRateInfo,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Builder(
-            builder: (context) {
-              final amount = double.tryParse(amountController.text) ?? 0.0;
-              final rate = double.tryParse(exchangeRateController.text) ?? 0.0;
-              final converted = amount * rate;
-              final formattedAmount =
-                  CurrencyConstants.formatAmount(converted, baseCurrency.code);
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 4, left: 4),
-                child: Text(
-                  t.S15_Record_Edit.val_converted_amount(
-                      base: baseCurrency.code,
-                      symbol: baseCurrency.symbol,
-                      amount: formattedAmount),
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-              );
-            },
+            baseCurrency: baseCurrency,
+            targetCurrency: selectedCurrencyConstants,
+            amountController: amountController,
+            isRateLoading: isRateLoading,
+            onFetchRate: onFetchExchangeRate,
+            onShowRateInfo: onShowRateInfo,
           ),
         ],
         const SizedBox(height: 12),
@@ -219,7 +168,7 @@ class S15ExpenseForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: Text(
-              t.S15_Record_Edit.section_items,
+              t.S15_Record_Edit.section.items,
               style: theme.textTheme.titleSmall?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.bold,

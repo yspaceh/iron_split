@@ -210,54 +210,62 @@
     "section_remainder": "残高"
   },
   "S15_Record_Edit": {
-    "title_create": "記録を追加",
-    "title_edit": "記録を編集",
-    "buttons": {
-      "save": "保存",
-      "close": "閉じる"
+    "title": {
+      "add": "記録を追加",
+      "edit": "記録を編集"
     },
-    "section_split": "割り勘情報",
-    "label_date": "日付",
-    "label_title": "項目名",
-    "hint_title": "何に使いましたか？",
-    "label_payment_method": "支払方法",
-    "val_prepay": "前受金 (Prepay)",
-    "val_member_paid": "{name} が立替",
-    "label_amount": "金額",
-    "label_rate": "レート (1 {base} = ? {target})",
-    "label_memo": "メモ",
-    "hint_memo": "備考を入力...",
-    "val_split_details": "詳細を編集",
-    "val_split_summary": "計 {amount} を{method}で割り勘",
-    "info_rate_source": "レートの提供元",
-    "msg_rate_source": "為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。",
-    "val_converted_amount": "≈ {base}{symbol} {amount}",
-    "val_split_remaining": "残り金額",
-    "err_amount_not_enough": "残り金額不足",
-    "val_mock_note": "項目メモ",
-    "tab_expense": "支出",
-    "tab_income": "受取",
-    "msg_income_developing": "受取機能は開発中です...",
-    "msg_not_implemented": "この機能はまだ実装されていません",
-    "err_input_amount": "先に金額を入力してください",
-    "section_items": "詳細内訳",
-    "add_item": "明細追加",
-    "base_card_title": "残額 (Base)",
-    "type_income_title": "預り金",
-    "base_card_title_expense": "残額 (Base)",
-    "base_card_title_income": "資金提供者",
+    "buttons": {
+      "save": "記録を保存",
+      "close": "閉じる",
+      "add_item": "内訳を追加"
+    },
+    "section": {
+      "split": "分担情報",
+      "items": "内訳分割"
+    },
+    "val": {
+      "prepay": "前受",
+      "member_paid": "{name} が立替",
+      "split_details": "内訳分割",
+      "split_summary": "合計 {amount} を {method} で分担",
+      "converted_amount": "≈ {base}{symbol} {amount}",
+      "split_remaining": "残額",
+      "mock_note": "内訳の説明"
+    },
+    "tab": {
+      "expense": "費用",
+      "income": "前受"
+    },
+    "base_card_title": "残額（Base）",
+    "type_income_title": "前受金",
+    "base_card_title_expense": "残額（Base）",
+    "base_card_title_income": "資金元（入金者）",
     "payer_multiple": "複数人",
-    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）",
-    "placeholder" : {
-      "category" : {
+    "msg_leftover_pot": "残額 {amount} は残高ポットに保存され（精算時に分配されます）",
+    "rate_dialog": {
+      "title": "為替レートの出典",
+      "message": "為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。"
+    },
+    "label": {
+      "date": "日付",
+      "title": "項目名",
+      "payment_method": "支払方法",
+      "amount": "金額",
+      "rate_with_base": "為替レート（1 {base} = ? {target}）",
+      "rate": "為替レート（1 {base} = ? {target}）",
+      "memo": "メモ"
+    },
+    "placeholder": {
+      "category": {
         "food": "夕食",
         "transport": "交通費",
         "shopping": "お土産",
         "entertainment": "映画チケット",
         "accommodation": "宿泊費",
-        "others": "その他"
+        "others": "その他費用"
       },
-      "item": "例：{category}"
+      "item": "例：{category}",
+      "memo": "例：補足事項"
     }
   },
   "S16_TaskCreate_Edit": {
@@ -266,19 +274,23 @@
       "save": "保存",
       "done": "完了"
     },
-    "section_name": "タスク名",
-    "section_period": "期間",
-    "section_settings": "設定",
-    "field_name_hint": "例：東京5日間の旅",
-    "field_name_counter": "{current}/20",
-    "field_start_date": "開始日",
-    "field_end_date": "終了日",
-    "field_currency": "通貨",
-    "field_member_count": "参加人数",
-    "error_name_empty": "タスク名を入力してください",
-    "label_name": "タスク名",
-    "label_date": "日付",
-    "label_currency": "通貨"
+    "section": {
+      "name": "タスク名",
+      "period": "期間",
+      "settings": "設定"
+    },
+    "label": {
+      "name": "タスク名",
+      "name_counter": "{current}/{max}",
+      "start_date": "開始日",
+      "end_date": "終了日",
+      "currency": "通貨",
+      "member_count": "参加人数",
+      "date": "日付"
+    },
+    "placeholder" : {
+      "name": "例：東京5日間の旅"
+    }
   },
   "S17_Task_Locked": {
     "buttons": {
@@ -555,9 +567,13 @@
       "permission_denied": "精算を実行できるのは作成者のみです。",
       "transaction_failed": "システムエラーが発生しました。後でもう一度お試しください。"
     },
-    "text_input": {
-      "invalid_amount": " 金額が正しくありません",
-      "required": "必須項目です"
+    "message": {
+      "invalid_amount": "金額が無効です",
+      "required": "必須項目です",
+      "empty": "{key}を入力してください",
+      "format": "形式が正しくありません",
+      "zero": "{key}は0にできません",
+      "amount_not_enough": "残額が不足しています"
     }
   }
 }

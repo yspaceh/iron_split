@@ -229,41 +229,19 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_create => 'Add Expense';
-	@override String get title_edit => 'Edit Record';
+	@override late final _TranslationsS15RecordEditTitleEnUs title = _TranslationsS15RecordEditTitleEnUs._(_root);
 	@override late final _TranslationsS15RecordEditButtonsEnUs buttons = _TranslationsS15RecordEditButtonsEnUs._(_root);
-	@override String get section_split => 'Split Info';
-	@override String get label_date => 'Date';
-	@override String get label_title => 'Item Name';
-	@override String get hint_title => 'What is this for?';
-	@override String get label_payment_method => 'Paid By';
-	@override String get val_prepay => 'Prepay';
-	@override String val_member_paid({required Object name}) => 'Paid by ${name}';
-	@override String get label_amount => 'Amount';
-	@override String label_rate({required Object base, required Object target}) => 'Rate (1 ${base} = ? ${target})';
-	@override String get label_memo => 'Memo';
-	@override String get hint_memo => 'Add a note...';
-	@override String get val_split_details => 'Split Details';
-	@override String val_split_summary({required Object amount, required Object method}) => 'Total ${amount} split by ${method}';
-	@override String get info_rate_source => 'Rate Source';
-	@override String get msg_rate_source => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.';
-	@override String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
-	@override String get val_split_remaining => 'Remaining Amount';
-	@override String get err_amount_not_enough => 'Insufficient remaining amount';
-	@override String get val_mock_note => 'Item Note';
-	@override String get tab_expense => 'Expense';
-	@override String get tab_income => 'Income';
-	@override String get msg_income_developing => 'Income feature coming soon...';
-	@override String get msg_not_implemented => 'Feature not implemented yet';
-	@override String get err_input_amount => 'Please enter amount first';
-	@override String get section_items => 'Itemized Splits';
-	@override String get add_item => 'Add Item';
-	@override String get base_card_title => 'Remaining Balance (Base)';
-	@override String get type_income_title => 'Income';
-	@override String get base_card_title_expense => 'Remaining (Base)';
-	@override String get base_card_title_income => 'Contributors (Source)';
-	@override String get payer_multiple => 'Multiple Payers';
-	@override String msg_leftover_pot({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)';
+	@override late final _TranslationsS15RecordEditSectionEnUs section = _TranslationsS15RecordEditSectionEnUs._(_root);
+	@override late final _TranslationsS15RecordEditValEnUs val = _TranslationsS15RecordEditValEnUs._(_root);
+	@override late final _TranslationsS15RecordEditTabEnUs tab = _TranslationsS15RecordEditTabEnUs._(_root);
+	@override String get base_card_title => 'Remaining Amount (Base)';
+	@override String get type_income_title => 'Advance Payment';
+	@override String get base_card_title_expense => 'Remaining Amount (Base)';
+	@override String get base_card_title_income => 'Source of Funds (Payer)';
+	@override String get payer_multiple => 'Multiple';
+	@override String msg_leftover_pot({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot (distributed at settlement)';
+	@override late final _TranslationsS15RecordEditRateDialogEnUs rate_dialog = _TranslationsS15RecordEditRateDialogEnUs._(_root);
+	@override late final _TranslationsS15RecordEditLabelEnUs label = _TranslationsS15RecordEditLabelEnUs._(_root);
 	@override late final _TranslationsS15RecordEditPlaceholderEnUs placeholder = _TranslationsS15RecordEditPlaceholderEnUs._(_root);
 }
 
@@ -276,19 +254,9 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	// Translations
 	@override String get title => 'New Task';
 	@override late final _TranslationsS16TaskCreateEditButtonsEnUs buttons = _TranslationsS16TaskCreateEditButtonsEnUs._(_root);
-	@override String get section_name => 'Task Name';
-	@override String get section_period => 'Period';
-	@override String get section_settings => 'Settings';
-	@override String get field_name_hint => 'e.g. Tokyo Trip';
-	@override String field_name_counter({required Object current}) => '${current}/20';
-	@override String get field_start_date => 'Start Date';
-	@override String get field_end_date => 'End Date';
-	@override String get field_currency => 'Currency';
-	@override String get field_member_count => 'Members';
-	@override String get error_name_empty => 'Please enter task name';
-	@override String get label_name => 'Task Name';
-	@override String get label_date => 'Date';
-	@override String get label_currency => 'Currency';
+	@override late final _TranslationsS16TaskCreateEditSectionEnUs section = _TranslationsS16TaskCreateEditSectionEnUs._(_root);
+	@override late final _TranslationsS16TaskCreateEditLabelEnUs label = _TranslationsS16TaskCreateEditLabelEnUs._(_root);
+	@override late final _TranslationsS16TaskCreateEditPlaceholderEnUs placeholder = _TranslationsS16TaskCreateEditPlaceholderEnUs._(_root);
 }
 
 // Path: S17_Task_Locked
@@ -668,7 +636,7 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	// Translations
 	@override late final _TranslationsErrorDialogEnUs dialog = _TranslationsErrorDialogEnUs._(_root);
 	@override late final _TranslationsErrorSettlementEnUs settlement = _TranslationsErrorSettlementEnUs._(_root);
-	@override late final _TranslationsErrorTextInputEnUs text_input = _TranslationsErrorTextInputEnUs._(_root);
+	@override late final _TranslationsErrorMessageEnUs message = _TranslationsErrorMessageEnUs._(_root);
 }
 
 // Path: common.buttons
@@ -834,6 +802,17 @@ class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashbo
 	@override String get add => 'Add';
 }
 
+// Path: S15_Record_Edit.title
+class _TranslationsS15RecordEditTitleEnUs extends TranslationsS15RecordEditTitleZhTw {
+	_TranslationsS15RecordEditTitleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get add => 'Add Record';
+	@override String get edit => 'Edit Record';
+}
+
 // Path: S15_Record_Edit.buttons
 class _TranslationsS15RecordEditButtonsEnUs extends TranslationsS15RecordEditButtonsZhTw {
 	_TranslationsS15RecordEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -841,8 +820,74 @@ class _TranslationsS15RecordEditButtonsEnUs extends TranslationsS15RecordEditBut
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get save => 'Save';
+	@override String get save => 'Save Record';
 	@override String get close => 'Close';
+	@override String get add_item => 'Add Item';
+}
+
+// Path: S15_Record_Edit.section
+class _TranslationsS15RecordEditSectionEnUs extends TranslationsS15RecordEditSectionZhTw {
+	_TranslationsS15RecordEditSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get split => 'Split Information';
+	@override String get items => 'Itemized Split';
+}
+
+// Path: S15_Record_Edit.val
+class _TranslationsS15RecordEditValEnUs extends TranslationsS15RecordEditValZhTw {
+	_TranslationsS15RecordEditValEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => 'Advance';
+	@override String member_paid({required Object name}) => '${name} paid';
+	@override String get split_details => 'Itemized Split';
+	@override String split_summary({required Object amount, required Object method}) => 'Total ${amount} split by ${method}';
+	@override String converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
+	@override String get split_remaining => 'Remaining Amount';
+	@override String get mock_note => 'Item description';
+}
+
+// Path: S15_Record_Edit.tab
+class _TranslationsS15RecordEditTabEnUs extends TranslationsS15RecordEditTabZhTw {
+	_TranslationsS15RecordEditTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get expense => 'Expense';
+	@override String get income => 'Advance';
+}
+
+// Path: S15_Record_Edit.rate_dialog
+class _TranslationsS15RecordEditRateDialogEnUs extends TranslationsS15RecordEditRateDialogZhTw {
+	_TranslationsS15RecordEditRateDialogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Exchange Rate Source';
+	@override String get message => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.';
+}
+
+// Path: S15_Record_Edit.label
+class _TranslationsS15RecordEditLabelEnUs extends TranslationsS15RecordEditLabelZhTw {
+	_TranslationsS15RecordEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get date => 'Date';
+	@override String get title => 'Item Name';
+	@override String get payment_method => 'Payment Method';
+	@override String get amount => 'Amount';
+	@override String rate_with_base({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})';
+	@override String rate({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})';
+	@override String get memo => 'Memo';
 }
 
 // Path: S15_Record_Edit.placeholder
@@ -853,7 +898,8 @@ class _TranslationsS15RecordEditPlaceholderEnUs extends TranslationsS15RecordEdi
 
 	// Translations
 	@override late final _TranslationsS15RecordEditPlaceholderCategoryEnUs category = _TranslationsS15RecordEditPlaceholderCategoryEnUs._(_root);
-	@override String item({required Object category}) => 'e.g.${category}';
+	@override String item({required Object category}) => 'e.g. ${category}';
+	@override String get memo => 'e.g. Notes';
 }
 
 // Path: S16_TaskCreate_Edit.buttons
@@ -865,6 +911,44 @@ class _TranslationsS16TaskCreateEditButtonsEnUs extends TranslationsS16TaskCreat
 	// Translations
 	@override String get save => 'Save';
 	@override String get done => 'Done';
+}
+
+// Path: S16_TaskCreate_Edit.section
+class _TranslationsS16TaskCreateEditSectionEnUs extends TranslationsS16TaskCreateEditSectionZhTw {
+	_TranslationsS16TaskCreateEditSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'Name';
+	@override String get period => 'Period';
+	@override String get settings => 'Settings';
+}
+
+// Path: S16_TaskCreate_Edit.label
+class _TranslationsS16TaskCreateEditLabelEnUs extends TranslationsS16TaskCreateEditLabelZhTw {
+	_TranslationsS16TaskCreateEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'Task name';
+	@override String name_counter({required Object current, required Object max}) => '${current}/${max}';
+	@override String get start_date => 'Start Date';
+	@override String get end_date => 'End Date';
+	@override String get currency => 'Currency';
+	@override String get member_count => 'Members';
+	@override String get date => 'Date';
+}
+
+// Path: S16_TaskCreate_Edit.placeholder
+class _TranslationsS16TaskCreateEditPlaceholderEnUs extends TranslationsS16TaskCreateEditPlaceholderZhTw {
+	_TranslationsS16TaskCreateEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'e.g. Tokyo Trip';
 }
 
 // Path: S17_Task_Locked.buttons
@@ -1142,15 +1226,19 @@ class _TranslationsErrorSettlementEnUs extends TranslationsErrorSettlementZhTw {
 	@override String get transaction_failed => 'System error. Settlement failed. Please try again later.';
 }
 
-// Path: error.text_input
-class _TranslationsErrorTextInputEnUs extends TranslationsErrorTextInputZhTw {
-	_TranslationsErrorTextInputEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: error.message
+class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
+	_TranslationsErrorMessageEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get invalid_amount => 'Invalid amount. Please check your input.';
+	@override String get invalid_amount => 'Invalid amount';
 	@override String get required => 'This field is required';
+	@override String empty({required Object key}) => 'Please enter ${key}';
+	@override String get format => 'Invalid format';
+	@override String zero({required Object key}) => '${key} cannot be 0';
+	@override String get amount_not_enough => 'Insufficient remaining amount';
 }
 
 // Path: common.share.invite
@@ -1187,7 +1275,7 @@ class _TranslationsS15RecordEditPlaceholderCategoryEnUs extends TranslationsS15R
 	@override String get shopping => 'Souvenirs';
 	@override String get entertainment => 'Movie tickets';
 	@override String get accommodation => 'Accommodation';
-	@override String get others => 'Other';
+	@override String get others => 'Other expenses';
 }
 
 // Path: error.dialog.task_full
@@ -1424,65 +1512,59 @@ extension on TranslationsEnUs {
 			'S14_Task_Settings.menu_history' => 'History',
 			'S14_Task_Settings.menu_end_task' => 'End Task',
 			'S14_Task_Settings.section_remainder' => 'Remainder',
-			'S15_Record_Edit.title_create' => 'Add Expense',
-			'S15_Record_Edit.title_edit' => 'Edit Record',
-			'S15_Record_Edit.buttons.save' => 'Save',
+			'S15_Record_Edit.title.add' => 'Add Record',
+			'S15_Record_Edit.title.edit' => 'Edit Record',
+			'S15_Record_Edit.buttons.save' => 'Save Record',
 			'S15_Record_Edit.buttons.close' => 'Close',
-			'S15_Record_Edit.section_split' => 'Split Info',
-			'S15_Record_Edit.label_date' => 'Date',
-			'S15_Record_Edit.label_title' => 'Item Name',
-			'S15_Record_Edit.hint_title' => 'What is this for?',
-			'S15_Record_Edit.label_payment_method' => 'Paid By',
-			'S15_Record_Edit.val_prepay' => 'Prepay',
-			'S15_Record_Edit.val_member_paid' => ({required Object name}) => 'Paid by ${name}',
-			'S15_Record_Edit.label_amount' => 'Amount',
-			'S15_Record_Edit.label_rate' => ({required Object base, required Object target}) => 'Rate (1 ${base} = ? ${target})',
-			'S15_Record_Edit.label_memo' => 'Memo',
-			'S15_Record_Edit.hint_memo' => 'Add a note...',
-			'S15_Record_Edit.val_split_details' => 'Split Details',
-			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => 'Total ${amount} split by ${method}',
-			'S15_Record_Edit.info_rate_source' => 'Rate Source',
-			'S15_Record_Edit.msg_rate_source' => 'Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.',
-			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val_split_remaining' => 'Remaining Amount',
-			'S15_Record_Edit.err_amount_not_enough' => 'Insufficient remaining amount',
-			'S15_Record_Edit.val_mock_note' => 'Item Note',
-			'S15_Record_Edit.tab_expense' => 'Expense',
-			'S15_Record_Edit.tab_income' => 'Income',
-			'S15_Record_Edit.msg_income_developing' => 'Income feature coming soon...',
-			'S15_Record_Edit.msg_not_implemented' => 'Feature not implemented yet',
-			'S15_Record_Edit.err_input_amount' => 'Please enter amount first',
-			'S15_Record_Edit.section_items' => 'Itemized Splits',
-			'S15_Record_Edit.add_item' => 'Add Item',
-			'S15_Record_Edit.base_card_title' => 'Remaining Balance (Base)',
-			'S15_Record_Edit.type_income_title' => 'Income',
-			'S15_Record_Edit.base_card_title_expense' => 'Remaining (Base)',
-			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
-			'S15_Record_Edit.payer_multiple' => 'Multiple Payers',
-			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)',
+			'S15_Record_Edit.buttons.add_item' => 'Add Item',
+			'S15_Record_Edit.section.split' => 'Split Information',
+			'S15_Record_Edit.section.items' => 'Itemized Split',
+			'S15_Record_Edit.val.prepay' => 'Advance',
+			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} paid',
+			'S15_Record_Edit.val.split_details' => 'Itemized Split',
+			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => 'Total ${amount} split by ${method}',
+			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			'S15_Record_Edit.val.split_remaining' => 'Remaining Amount',
+			'S15_Record_Edit.val.mock_note' => 'Item description',
+			'S15_Record_Edit.tab.expense' => 'Expense',
+			'S15_Record_Edit.tab.income' => 'Advance',
+			'S15_Record_Edit.base_card_title' => 'Remaining Amount (Base)',
+			'S15_Record_Edit.type_income_title' => 'Advance Payment',
+			'S15_Record_Edit.base_card_title_expense' => 'Remaining Amount (Base)',
+			'S15_Record_Edit.base_card_title_income' => 'Source of Funds (Payer)',
+			'S15_Record_Edit.payer_multiple' => 'Multiple',
+			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot (distributed at settlement)',
+			'S15_Record_Edit.rate_dialog.title' => 'Exchange Rate Source',
+			'S15_Record_Edit.rate_dialog.message' => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.',
+			'S15_Record_Edit.label.date' => 'Date',
+			'S15_Record_Edit.label.title' => 'Item Name',
+			'S15_Record_Edit.label.payment_method' => 'Payment Method',
+			'S15_Record_Edit.label.amount' => 'Amount',
+			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.memo' => 'Memo',
 			'S15_Record_Edit.placeholder.category.food' => 'Dinner',
 			'S15_Record_Edit.placeholder.category.transport' => 'Transportation',
 			'S15_Record_Edit.placeholder.category.shopping' => 'Souvenirs',
 			'S15_Record_Edit.placeholder.category.entertainment' => 'Movie tickets',
 			'S15_Record_Edit.placeholder.category.accommodation' => 'Accommodation',
-			'S15_Record_Edit.placeholder.category.others' => 'Other',
-			'S15_Record_Edit.placeholder.item' => ({required Object category}) => 'e.g.${category}',
+			'S15_Record_Edit.placeholder.category.others' => 'Other expenses',
+			'S15_Record_Edit.placeholder.item' => ({required Object category}) => 'e.g. ${category}',
+			'S15_Record_Edit.placeholder.memo' => 'e.g. Notes',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.buttons.save' => 'Save',
 			'S16_TaskCreate_Edit.buttons.done' => 'Done',
-			'S16_TaskCreate_Edit.section_name' => 'Task Name',
-			'S16_TaskCreate_Edit.section_period' => 'Period',
-			'S16_TaskCreate_Edit.section_settings' => 'Settings',
-			'S16_TaskCreate_Edit.field_name_hint' => 'e.g. Tokyo Trip',
-			'S16_TaskCreate_Edit.field_name_counter' => ({required Object current}) => '${current}/20',
-			'S16_TaskCreate_Edit.field_start_date' => 'Start Date',
-			'S16_TaskCreate_Edit.field_end_date' => 'End Date',
-			'S16_TaskCreate_Edit.field_currency' => 'Currency',
-			'S16_TaskCreate_Edit.field_member_count' => 'Members',
-			'S16_TaskCreate_Edit.error_name_empty' => 'Please enter task name',
-			'S16_TaskCreate_Edit.label_name' => 'Task Name',
-			'S16_TaskCreate_Edit.label_date' => 'Date',
-			'S16_TaskCreate_Edit.label_currency' => 'Currency',
+			'S16_TaskCreate_Edit.section.name' => 'Name',
+			'S16_TaskCreate_Edit.section.period' => 'Period',
+			'S16_TaskCreate_Edit.section.settings' => 'Settings',
+			'S16_TaskCreate_Edit.label.name' => 'Task name',
+			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			'S16_TaskCreate_Edit.label.start_date' => 'Start Date',
+			'S16_TaskCreate_Edit.label.end_date' => 'End Date',
+			'S16_TaskCreate_Edit.label.currency' => 'Currency',
+			'S16_TaskCreate_Edit.label.member_count' => 'Members',
+			'S16_TaskCreate_Edit.label.date' => 'Date',
+			'S16_TaskCreate_Edit.placeholder.name' => 'e.g. Tokyo Trip',
 			'S17_Task_Locked.buttons.download' => 'Download Records',
 			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
 			'S17_Task_Locked.buttons.view_payment_details' => 'View Payment Details',
@@ -1669,8 +1751,12 @@ extension on TranslationsEnUs {
 			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
 			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
 			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
-			'error.text_input.invalid_amount' => 'Invalid amount. Please check your input.',
-			'error.text_input.required' => 'This field is required',
+			'error.message.invalid_amount' => 'Invalid amount',
+			'error.message.required' => 'This field is required',
+			'error.message.empty' => ({required Object key}) => 'Please enter ${key}',
+			'error.message.format' => 'Invalid format',
+			'error.message.zero' => ({required Object key}) => '${key} cannot be 0',
+			'error.message.amount_not_enough' => 'Insufficient remaining amount',
 			_ => null,
 		};
 	}

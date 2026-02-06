@@ -262,41 +262,19 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_create => '記録を追加';
-	@override String get title_edit => '記録を編集';
+	@override late final _TranslationsS15RecordEditTitleJaJp title = _TranslationsS15RecordEditTitleJaJp._(_root);
 	@override late final _TranslationsS15RecordEditButtonsJaJp buttons = _TranslationsS15RecordEditButtonsJaJp._(_root);
-	@override String get section_split => '割り勘情報';
-	@override String get label_date => '日付';
-	@override String get label_title => '項目名';
-	@override String get hint_title => '何に使いましたか？';
-	@override String get label_payment_method => '支払方法';
-	@override String get val_prepay => '前受金 (Prepay)';
-	@override String val_member_paid({required Object name}) => '${name} が立替';
-	@override String get label_amount => '金額';
-	@override String label_rate({required Object base, required Object target}) => 'レート (1 ${base} = ? ${target})';
-	@override String get label_memo => 'メモ';
-	@override String get hint_memo => '備考を入力...';
-	@override String get val_split_details => '詳細を編集';
-	@override String val_split_summary({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘';
-	@override String get info_rate_source => 'レートの提供元';
-	@override String get msg_rate_source => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。';
-	@override String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
-	@override String get val_split_remaining => '残り金額';
-	@override String get err_amount_not_enough => '残り金額不足';
-	@override String get val_mock_note => '項目メモ';
-	@override String get tab_expense => '支出';
-	@override String get tab_income => '受取';
-	@override String get msg_income_developing => '受取機能は開発中です...';
-	@override String get msg_not_implemented => 'この機能はまだ実装されていません';
-	@override String get err_input_amount => '先に金額を入力してください';
-	@override String get section_items => '詳細内訳';
-	@override String get add_item => '明細追加';
-	@override String get base_card_title => '残額 (Base)';
-	@override String get type_income_title => '預り金';
-	@override String get base_card_title_expense => '残額 (Base)';
-	@override String get base_card_title_income => '資金提供者';
+	@override late final _TranslationsS15RecordEditSectionJaJp section = _TranslationsS15RecordEditSectionJaJp._(_root);
+	@override late final _TranslationsS15RecordEditValJaJp val = _TranslationsS15RecordEditValJaJp._(_root);
+	@override late final _TranslationsS15RecordEditTabJaJp tab = _TranslationsS15RecordEditTabJaJp._(_root);
+	@override String get base_card_title => '残額（Base）';
+	@override String get type_income_title => '前受金';
+	@override String get base_card_title_expense => '残額（Base）';
+	@override String get base_card_title_income => '資金元（入金者）';
 	@override String get payer_multiple => '複数人';
-	@override String msg_leftover_pot({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）';
+	@override String msg_leftover_pot({required Object amount}) => '残額 ${amount} は残高ポットに保存され（精算時に分配されます）';
+	@override late final _TranslationsS15RecordEditRateDialogJaJp rate_dialog = _TranslationsS15RecordEditRateDialogJaJp._(_root);
+	@override late final _TranslationsS15RecordEditLabelJaJp label = _TranslationsS15RecordEditLabelJaJp._(_root);
 	@override late final _TranslationsS15RecordEditPlaceholderJaJp placeholder = _TranslationsS15RecordEditPlaceholderJaJp._(_root);
 }
 
@@ -309,19 +287,9 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	// Translations
 	@override String get title => 'タスク作成';
 	@override late final _TranslationsS16TaskCreateEditButtonsJaJp buttons = _TranslationsS16TaskCreateEditButtonsJaJp._(_root);
-	@override String get section_name => 'タスク名';
-	@override String get section_period => '期間';
-	@override String get section_settings => '設定';
-	@override String get field_name_hint => '例：東京5日間の旅';
-	@override String field_name_counter({required Object current}) => '${current}/20';
-	@override String get field_start_date => '開始日';
-	@override String get field_end_date => '終了日';
-	@override String get field_currency => '通貨';
-	@override String get field_member_count => '参加人数';
-	@override String get error_name_empty => 'タスク名を入力してください';
-	@override String get label_name => 'タスク名';
-	@override String get label_date => '日付';
-	@override String get label_currency => '通貨';
+	@override late final _TranslationsS16TaskCreateEditSectionJaJp section = _TranslationsS16TaskCreateEditSectionJaJp._(_root);
+	@override late final _TranslationsS16TaskCreateEditLabelJaJp label = _TranslationsS16TaskCreateEditLabelJaJp._(_root);
+	@override late final _TranslationsS16TaskCreateEditPlaceholderJaJp placeholder = _TranslationsS16TaskCreateEditPlaceholderJaJp._(_root);
 }
 
 // Path: S17_Task_Locked
@@ -667,7 +635,7 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	// Translations
 	@override late final _TranslationsErrorDialogJaJp dialog = _TranslationsErrorDialogJaJp._(_root);
 	@override late final _TranslationsErrorSettlementJaJp settlement = _TranslationsErrorSettlementJaJp._(_root);
-	@override late final _TranslationsErrorTextInputJaJp text_input = _TranslationsErrorTextInputJaJp._(_root);
+	@override late final _TranslationsErrorMessageJaJp message = _TranslationsErrorMessageJaJp._(_root);
 }
 
 // Path: common.buttons
@@ -853,6 +821,17 @@ class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashbo
 	@override String get add => '追加';
 }
 
+// Path: S15_Record_Edit.title
+class _TranslationsS15RecordEditTitleJaJp extends TranslationsS15RecordEditTitleZhTw {
+	_TranslationsS15RecordEditTitleJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get add => '記録を追加';
+	@override String get edit => '記録を編集';
+}
+
 // Path: S15_Record_Edit.buttons
 class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditButtonsZhTw {
 	_TranslationsS15RecordEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -860,8 +839,74 @@ class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditBut
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get save => '保存';
+	@override String get save => '記録を保存';
 	@override String get close => '閉じる';
+	@override String get add_item => '内訳を追加';
+}
+
+// Path: S15_Record_Edit.section
+class _TranslationsS15RecordEditSectionJaJp extends TranslationsS15RecordEditSectionZhTw {
+	_TranslationsS15RecordEditSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get split => '分担情報';
+	@override String get items => '内訳分割';
+}
+
+// Path: S15_Record_Edit.val
+class _TranslationsS15RecordEditValJaJp extends TranslationsS15RecordEditValZhTw {
+	_TranslationsS15RecordEditValJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => '前受';
+	@override String member_paid({required Object name}) => '${name} が立替';
+	@override String get split_details => '内訳分割';
+	@override String split_summary({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担';
+	@override String converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
+	@override String get split_remaining => '残額';
+	@override String get mock_note => '内訳の説明';
+}
+
+// Path: S15_Record_Edit.tab
+class _TranslationsS15RecordEditTabJaJp extends TranslationsS15RecordEditTabZhTw {
+	_TranslationsS15RecordEditTabJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get expense => '費用';
+	@override String get income => '前受';
+}
+
+// Path: S15_Record_Edit.rate_dialog
+class _TranslationsS15RecordEditRateDialogJaJp extends TranslationsS15RecordEditRateDialogZhTw {
+	_TranslationsS15RecordEditRateDialogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '為替レートの出典';
+	@override String get message => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。';
+}
+
+// Path: S15_Record_Edit.label
+class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabelZhTw {
+	_TranslationsS15RecordEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get date => '日付';
+	@override String get title => '項目名';
+	@override String get payment_method => '支払方法';
+	@override String get amount => '金額';
+	@override String rate_with_base({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
+	@override String rate({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
+	@override String get memo => 'メモ';
 }
 
 // Path: S15_Record_Edit.placeholder
@@ -873,6 +918,7 @@ class _TranslationsS15RecordEditPlaceholderJaJp extends TranslationsS15RecordEdi
 	// Translations
 	@override late final _TranslationsS15RecordEditPlaceholderCategoryJaJp category = _TranslationsS15RecordEditPlaceholderCategoryJaJp._(_root);
 	@override String item({required Object category}) => '例：${category}';
+	@override String get memo => '例：補足事項';
 }
 
 // Path: S16_TaskCreate_Edit.buttons
@@ -884,6 +930,44 @@ class _TranslationsS16TaskCreateEditButtonsJaJp extends TranslationsS16TaskCreat
 	// Translations
 	@override String get save => '保存';
 	@override String get done => '完了';
+}
+
+// Path: S16_TaskCreate_Edit.section
+class _TranslationsS16TaskCreateEditSectionJaJp extends TranslationsS16TaskCreateEditSectionZhTw {
+	_TranslationsS16TaskCreateEditSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'タスク名';
+	@override String get period => '期間';
+	@override String get settings => '設定';
+}
+
+// Path: S16_TaskCreate_Edit.label
+class _TranslationsS16TaskCreateEditLabelJaJp extends TranslationsS16TaskCreateEditLabelZhTw {
+	_TranslationsS16TaskCreateEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => 'タスク名';
+	@override String name_counter({required Object current, required Object max}) => '${current}/${max}';
+	@override String get start_date => '開始日';
+	@override String get end_date => '終了日';
+	@override String get currency => '通貨';
+	@override String get member_count => '参加人数';
+	@override String get date => '日付';
+}
+
+// Path: S16_TaskCreate_Edit.placeholder
+class _TranslationsS16TaskCreateEditPlaceholderJaJp extends TranslationsS16TaskCreateEditPlaceholderZhTw {
+	_TranslationsS16TaskCreateEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get name => '例：東京5日間の旅';
 }
 
 // Path: S17_Task_Locked.buttons
@@ -1141,15 +1225,19 @@ class _TranslationsErrorSettlementJaJp extends TranslationsErrorSettlementZhTw {
 	@override String get transaction_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
 }
 
-// Path: error.text_input
-class _TranslationsErrorTextInputJaJp extends TranslationsErrorTextInputZhTw {
-	_TranslationsErrorTextInputJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: error.message
+class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
+	_TranslationsErrorMessageJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get invalid_amount => ' 金額が正しくありません';
+	@override String get invalid_amount => '金額が無効です';
 	@override String get required => '必須項目です';
+	@override String empty({required Object key}) => '${key}を入力してください';
+	@override String get format => '形式が正しくありません';
+	@override String zero({required Object key}) => '${key}は0にできません';
+	@override String get amount_not_enough => '残額が不足しています';
 }
 
 // Path: common.share.invite
@@ -1186,7 +1274,7 @@ class _TranslationsS15RecordEditPlaceholderCategoryJaJp extends TranslationsS15R
 	@override String get shopping => 'お土産';
 	@override String get entertainment => '映画チケット';
 	@override String get accommodation => '宿泊費';
-	@override String get others => 'その他';
+	@override String get others => 'その他費用';
 }
 
 // Path: error.dialog.task_full
@@ -1438,65 +1526,59 @@ extension on TranslationsJaJp {
 			'S14_Task_Settings.menu_history' => '履歴',
 			'S14_Task_Settings.menu_end_task' => 'タスク終了',
 			'S14_Task_Settings.section_remainder' => '残高',
-			'S15_Record_Edit.title_create' => '記録を追加',
-			'S15_Record_Edit.title_edit' => '記録を編集',
-			'S15_Record_Edit.buttons.save' => '保存',
+			'S15_Record_Edit.title.add' => '記録を追加',
+			'S15_Record_Edit.title.edit' => '記録を編集',
+			'S15_Record_Edit.buttons.save' => '記録を保存',
 			'S15_Record_Edit.buttons.close' => '閉じる',
-			'S15_Record_Edit.section_split' => '割り勘情報',
-			'S15_Record_Edit.label_date' => '日付',
-			'S15_Record_Edit.label_title' => '項目名',
-			'S15_Record_Edit.hint_title' => '何に使いましたか？',
-			'S15_Record_Edit.label_payment_method' => '支払方法',
-			'S15_Record_Edit.val_prepay' => '前受金 (Prepay)',
-			'S15_Record_Edit.val_member_paid' => ({required Object name}) => '${name} が立替',
-			'S15_Record_Edit.label_amount' => '金額',
-			'S15_Record_Edit.label_rate' => ({required Object base, required Object target}) => 'レート (1 ${base} = ? ${target})',
-			'S15_Record_Edit.label_memo' => 'メモ',
-			'S15_Record_Edit.hint_memo' => '備考を入力...',
-			'S15_Record_Edit.val_split_details' => '詳細を編集',
-			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '計 ${amount} を${method}で割り勘',
-			'S15_Record_Edit.info_rate_source' => 'レートの提供元',
-			'S15_Record_Edit.msg_rate_source' => '為替レートはOpen Exchange Rates (無料版) を参照しています。正確なレートは両替レシート等をご確認ください。',
-			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val_split_remaining' => '残り金額',
-			'S15_Record_Edit.err_amount_not_enough' => '残り金額不足',
-			'S15_Record_Edit.val_mock_note' => '項目メモ',
-			'S15_Record_Edit.tab_expense' => '支出',
-			'S15_Record_Edit.tab_income' => '受取',
-			'S15_Record_Edit.msg_income_developing' => '受取機能は開発中です...',
-			'S15_Record_Edit.msg_not_implemented' => 'この機能はまだ実装されていません',
-			'S15_Record_Edit.err_input_amount' => '先に金額を入力してください',
-			'S15_Record_Edit.section_items' => '詳細内訳',
-			'S15_Record_Edit.add_item' => '明細追加',
-			'S15_Record_Edit.base_card_title' => '残額 (Base)',
-			'S15_Record_Edit.type_income_title' => '預り金',
-			'S15_Record_Edit.base_card_title_expense' => '残額 (Base)',
-			'S15_Record_Edit.base_card_title_income' => '資金提供者',
+			'S15_Record_Edit.buttons.add_item' => '内訳を追加',
+			'S15_Record_Edit.section.split' => '分担情報',
+			'S15_Record_Edit.section.items' => '内訳分割',
+			'S15_Record_Edit.val.prepay' => '前受',
+			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} が立替',
+			'S15_Record_Edit.val.split_details' => '内訳分割',
+			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担',
+			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			'S15_Record_Edit.val.split_remaining' => '残額',
+			'S15_Record_Edit.val.mock_note' => '内訳の説明',
+			'S15_Record_Edit.tab.expense' => '費用',
+			'S15_Record_Edit.tab.income' => '前受',
+			'S15_Record_Edit.base_card_title' => '残額（Base）',
+			'S15_Record_Edit.type_income_title' => '前受金',
+			'S15_Record_Edit.base_card_title_expense' => '残額（Base）',
+			'S15_Record_Edit.base_card_title_income' => '資金元（入金者）',
 			'S15_Record_Edit.payer_multiple' => '複数人',
-			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）',
+			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '残額 ${amount} は残高ポットに保存され（精算時に分配されます）',
+			'S15_Record_Edit.rate_dialog.title' => '為替レートの出典',
+			'S15_Record_Edit.rate_dialog.message' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
+			'S15_Record_Edit.label.date' => '日付',
+			'S15_Record_Edit.label.title' => '項目名',
+			'S15_Record_Edit.label.payment_method' => '支払方法',
+			'S15_Record_Edit.label.amount' => '金額',
+			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
+			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
+			'S15_Record_Edit.label.memo' => 'メモ',
 			'S15_Record_Edit.placeholder.category.food' => '夕食',
 			'S15_Record_Edit.placeholder.category.transport' => '交通費',
 			'S15_Record_Edit.placeholder.category.shopping' => 'お土産',
 			'S15_Record_Edit.placeholder.category.entertainment' => '映画チケット',
 			'S15_Record_Edit.placeholder.category.accommodation' => '宿泊費',
-			'S15_Record_Edit.placeholder.category.others' => 'その他',
+			'S15_Record_Edit.placeholder.category.others' => 'その他費用',
 			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '例：${category}',
+			'S15_Record_Edit.placeholder.memo' => '例：補足事項',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '完了',
-			'S16_TaskCreate_Edit.section_name' => 'タスク名',
-			'S16_TaskCreate_Edit.section_period' => '期間',
-			'S16_TaskCreate_Edit.section_settings' => '設定',
-			'S16_TaskCreate_Edit.field_name_hint' => '例：東京5日間の旅',
-			'S16_TaskCreate_Edit.field_name_counter' => ({required Object current}) => '${current}/20',
-			'S16_TaskCreate_Edit.field_start_date' => '開始日',
-			'S16_TaskCreate_Edit.field_end_date' => '終了日',
-			'S16_TaskCreate_Edit.field_currency' => '通貨',
-			'S16_TaskCreate_Edit.field_member_count' => '参加人数',
-			'S16_TaskCreate_Edit.error_name_empty' => 'タスク名を入力してください',
-			'S16_TaskCreate_Edit.label_name' => 'タスク名',
-			'S16_TaskCreate_Edit.label_date' => '日付',
-			'S16_TaskCreate_Edit.label_currency' => '通貨',
+			'S16_TaskCreate_Edit.section.name' => 'タスク名',
+			'S16_TaskCreate_Edit.section.period' => '期間',
+			'S16_TaskCreate_Edit.section.settings' => '設定',
+			'S16_TaskCreate_Edit.label.name' => 'タスク名',
+			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			'S16_TaskCreate_Edit.label.start_date' => '開始日',
+			'S16_TaskCreate_Edit.label.end_date' => '終了日',
+			'S16_TaskCreate_Edit.label.currency' => '通貨',
+			'S16_TaskCreate_Edit.label.member_count' => '参加人数',
+			'S16_TaskCreate_Edit.label.date' => '日付',
+			'S16_TaskCreate_Edit.placeholder.name' => '例：東京5日間の旅',
 			'S17_Task_Locked.buttons.download' => '記録をダウンロード',
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
 			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
@@ -1667,8 +1749,12 @@ extension on TranslationsJaJp {
 			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
 			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
 			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
-			'error.text_input.invalid_amount' => ' 金額が正しくありません',
-			'error.text_input.required' => '必須項目です',
+			'error.message.invalid_amount' => '金額が無効です',
+			'error.message.required' => '必須項目です',
+			'error.message.empty' => ({required Object key}) => '${key}を入力してください',
+			'error.message.format' => '形式が正しくありません',
+			'error.message.zero' => ({required Object key}) => '${key}は0にできません',
+			'error.message.amount_not_enough' => '残額が不足しています',
 			_ => null,
 		};
 	}

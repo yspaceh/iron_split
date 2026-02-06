@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,6 @@ import 'package:iron_split/features/task/presentation/viewmodels/s14_task_settin
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/form_section.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_currency_input.dart';
-import 'package:iron_split/features/common/presentation/widgets/form/task_date_range_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_remainder_rule_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -128,7 +128,7 @@ class _S14ContentState extends State<_S14Content> {
         padding: const EdgeInsets.all(16),
         children: [
           // --- 1. 名稱區塊 ---
-          Text(t.S16_TaskCreate_Edit.section_name,
+          Text(t.S16_TaskCreate_Edit.section.name,
               style: theme.textTheme.titleSmall
                   ?.copyWith(color: colorScheme.primary)),
           const SizedBox(height: 8),
@@ -142,15 +142,17 @@ class _S14ContentState extends State<_S14Content> {
 
           // --- 2. 期間設定 ---
           TaskFormSectionCard(
-            title: t.S16_TaskCreate_Edit.section_period,
+            title: t.S16_TaskCreate_Edit.section.name,
             children: [
-              TaskDateRangeInput(
-                startDate: vm.startDate!,
-                endDate: vm.endDate!,
-                onStartDateChanged: (val) =>
-                    vm.updateDateRange(val, vm.endDate!),
-                onEndDateChanged: (val) =>
-                    vm.updateDateRange(vm.startDate!, val),
+              TaskDateInput(
+                label: t.S16_TaskCreate_Edit.label.start_date,
+                date: vm.startDate!,
+                onDateChanged: (val) => vm.updateDateRange(val, vm.endDate!),
+              ),
+              TaskDateInput(
+                label: t.S16_TaskCreate_Edit.label.end_date,
+                date: vm.endDate!,
+                onDateChanged: (val) => vm.updateDateRange(vm.startDate!, val),
               ),
             ],
           ),
@@ -159,7 +161,7 @@ class _S14ContentState extends State<_S14Content> {
 
           // --- 3. 詳細設定 ---
           TaskFormSectionCard(
-            title: t.S16_TaskCreate_Edit.section_settings,
+            title: t.S16_TaskCreate_Edit.section.settings,
             children: [
               TaskCurrencyInput(
                 currency: vm.currency!,
@@ -177,7 +179,6 @@ class _S14ContentState extends State<_S14Content> {
                 rule:
                     RemainderRuleConstants.getLabel(context, vm.remainderRule),
                 onTap: () => _onRemainderRuleChange(context, vm),
-                enabled: true,
               ),
             ],
           ),

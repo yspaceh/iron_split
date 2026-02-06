@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
@@ -9,7 +10,6 @@ import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_currency_input.dart';
-import 'package:iron_split/features/common/presentation/widgets/form/task_date_range_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_member_count_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -166,7 +166,7 @@ class _S16ContentState extends State<_S16Content> {
                     padding: const EdgeInsets.all(16),
                     children: [
                       // --- 1. 名稱區塊 ---
-                      Text(t.S16_TaskCreate_Edit.section_name,
+                      Text(t.S16_TaskCreate_Edit.section.name,
                           style: theme.textTheme.titleSmall
                               ?.copyWith(color: colorScheme.primary)),
                       const SizedBox(height: 8),
@@ -177,13 +177,19 @@ class _S16ContentState extends State<_S16Content> {
 
                       // --- 2. 期間設定 (卡片分組) ---
                       TaskFormSectionCard(
-                        title: t.S16_TaskCreate_Edit.section_period,
+                        title: t.S16_TaskCreate_Edit.section.name,
                         children: [
-                          TaskDateRangeInput(
-                            startDate: vm.startDate,
-                            endDate: vm.endDate,
-                            onStartDateChanged: vm.updateStartDate,
-                            onEndDateChanged: vm.updateEndDate,
+                          TaskDateInput(
+                            label: t.S16_TaskCreate_Edit.label.start_date,
+                            date: vm.startDate,
+                            onDateChanged: (val) =>
+                                vm.updateDateRange(val, vm.endDate),
+                          ),
+                          TaskDateInput(
+                            label: t.S16_TaskCreate_Edit.label.end_date,
+                            date: vm.endDate,
+                            onDateChanged: (val) =>
+                                vm.updateDateRange(vm.startDate, val),
                           ),
                         ],
                       ),
@@ -192,7 +198,7 @@ class _S16ContentState extends State<_S16Content> {
 
                       // --- 3. 詳細設定 (卡片分組) ---
                       TaskFormSectionCard(
-                        title: t.S16_TaskCreate_Edit.section_settings,
+                        title: t.S16_TaskCreate_Edit.section.settings,
                         children: [
                           TaskCurrencyInput(
                             currency: vm.baseCurrency,

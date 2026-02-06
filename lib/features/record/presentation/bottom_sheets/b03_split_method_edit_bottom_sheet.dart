@@ -291,7 +291,7 @@ class _B03SplitMethodEditBottomSheetState
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(t.S15_Record_Edit.label_amount,
+                    Text(t.S15_Record_Edit.label.amount,
                         style: theme.textTheme.bodySmall),
                     Text(
                       "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.totalAmount, widget.selectedCurrency.code)}",

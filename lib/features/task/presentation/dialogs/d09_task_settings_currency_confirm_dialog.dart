@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -19,6 +21,17 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
     required this.newCurrency,
   });
 
+  static Future<T?> show<T>(BuildContext context,
+      {required String taskId, required CurrencyConstants newCurrency}) {
+    return showDialog(
+      context: context,
+      builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
+        taskId: taskId,
+        newCurrency: newCurrency,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -36,44 +49,31 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
 
 class _D09DialogContent extends StatelessWidget {
   const _D09DialogContent();
-
-  Future<void> _onConfirm(
-      BuildContext context, D09TaskSettingsCurrencyConfirmViewModel vm) async {
-    final success = await vm.handleConfirm();
-    if (context.mounted) {
-      context.pop(success);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
     final vm = context.watch<D09TaskSettingsCurrencyConfirmViewModel>();
 
-    return AlertDialog(
-      title: Text(t.D09_TaskSettings_CurrencyConfirm.title),
+    return CommonAlertDialog(
+      title: t.D09_TaskSettings_CurrencyConfirm.title,
       content: Text(
           "${t.D09_TaskSettings_CurrencyConfirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})"),
       actions: [
-        // 取消按鈕
-        TextButton(
-          onPressed: vm.isProcessing ? null : () => context.pop(false),
-          child: Text(t.common.buttons.cancel),
+        AppButton(
+          text: t.common.buttons.cancel,
+          type: AppButtonType.secondary,
+          onPressed: () => context.pop(false),
         ),
-        // 確認按鈕
-        TextButton(
-          onPressed: vm.isProcessing ? null : () => _onConfirm(context, vm),
-          style: TextButton.styleFrom(
-            foregroundColor: theme.colorScheme.error,
-          ),
-          child: vm.isProcessing
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(t.common.buttons.confirm),
+        AppButton(
+          text: t.common.buttons.confirm,
+          type: AppButtonType.primary,
+          isLoading: vm.isProcessing,
+          onPressed: () async {
+            final success = await vm.handleConfirm();
+            if (context.mounted) {
+              context.pop(success);
+            }
+          },
         ),
       ],
     );

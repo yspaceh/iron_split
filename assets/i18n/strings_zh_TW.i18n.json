@@ -187,44 +187,51 @@
     "section_remainder": "剩餘款"
   },
   "S15_Record_Edit": {
-    "title_create": "記一筆",
-    "title_edit": "編輯紀錄",
+    "title": {
+      "add": "新增紀錄",
+      "edit": "編輯紀錄"
+    },
     "buttons": {
       "save": "儲存紀錄",
-      "close": "關閉"
+      "close": "關閉",
+      "add_item": "新增細項"
     },
-    "section_split": "分攤資訊",
-    "label_date": "日期",
-    "label_title": "項目名稱",
-    "hint_title": "輸入消費項目 ()",
-    "label_payment_method": "支付方式",
-    "val_prepay": "預收",
-    "val_member_paid": "{name} 先付",
-    "label_amount": "金額",
-    "label_rate": "匯率 (1 {base} = ? {target})",
-    "label_memo": "備註",
-    "hint_memo": "輸入備註...",
-    "val_split_details": "細項分拆",
-    "val_split_summary": "總計 {amount} 由 {method} 分攤",
-    "info_rate_source": "匯率來源",
-    "msg_rate_source": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。",
-    "val_converted_amount": "≈ {base}{symbol} {amount}",
-    "val_split_remaining": "剩餘金額",
-    "err_amount_not_enough": "剩餘金額不足",
-    "val_mock_note": "細項說明",
-    "tab_expense": "支出",
-    "tab_income": "預收",
-    "msg_income_developing": "預收功能開發中...",
-    "msg_not_implemented": "此功能尚未實作",
-    "err_input_amount": "請先輸入金額",
-    "section_items": "細項分拆",
-    "add_item": "新增細項",
+    "section": {
+      "split": "分攤資訊",
+      "items": "細項分拆"
+    },
+    "val": {
+      "prepay": "預收",
+      "member_paid": "{name} 先付",
+      "split_details": "細項分拆",
+      "split_summary": "總計 {amount} 由 {method} 分攤",
+      "converted_amount": "≈ {base}{symbol} {amount}",
+      "split_remaining": "剩餘金額",
+      "mock_note": "細項說明"
+    },
+    "tab": {
+      "expense": "費用",
+      "income": "預收"
+    },
     "base_card_title": "剩餘金額 (Base)",
     "type_income_title": "預收款",
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
     "payer_multiple": "多人",
     "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
+    "rate_dialog" : {
+      "title": "匯率來源",
+      "message": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。"
+    },
+    "label" : {
+      "date": "日期",
+      "title": "項目名稱",
+      "payment_method": "支付方式",
+      "amount": "金額",
+      "rate_with_base": "匯率 (1 {base} = ? {target})",
+      "rate": "匯率 (1 {base} = ? {target})",
+      "memo": "備註"
+    },
     "placeholder" : {
       "category" : {
         "food": "晚餐",
@@ -234,7 +241,8 @@
         "accommodation": "住宿費",
         "others": "其他費用"
       },
-      "item": "如：{category}"
+      "item": "如：{category}",
+      "memo": "例：備註事項"
     }
   },
   "S16_TaskCreate_Edit": {
@@ -243,19 +251,23 @@
       "save": "保存",
       "done": "確定"
     },
-    "section_name": "任務名稱",
-    "section_period": "任務期間",
-    "section_settings": "結算設定",
-    "field_name_hint": "例如：東京五日遊",
-    "field_name_counter": "{current}/20",
-    "field_start_date": "開始日期",
-    "field_end_date": "結束日期",
-    "field_currency": "結算幣別",
-    "field_member_count": "參加人數",
-    "error_name_empty": "請輸入任務名稱",
-    "label_name": "任務名稱",
-    "label_date": "日期",
-    "label_currency": "貨幣"
+    "section":{
+      "name": "任務名稱",
+      "period": "任務期間",
+      "settings": "結算設定"
+    },
+    "label" : {
+      "name": "任務名稱",
+      "name_counter": "{current}/{max}",
+      "start_date": "開始日期",
+      "end_date": "結束日期",
+      "currency": "結算幣別",
+      "member_count": "參加人數",
+      "date": "日期"
+    },
+    "placeholder" : {
+      "name": "例：東京五日遊"
+    }
   },
   "S17_Task_Locked": {
     "buttons": {
@@ -556,9 +568,13 @@
       "permission_denied": "只有建立者可以執行結算。",
       "transaction_failed": "系統錯誤，結算失敗，請稍後再試。"
     },
-    "text_input": {
+    "message": {
       "invalid_amount": "金額無效",
-      "required": "此欄位為必填"
+      "required": "此欄位為必填",
+      "empty": "請輸入{key}",
+      "format": "格式錯誤",
+      "zero": "{key}不可為 0",
+      "amount_not_enough": "剩餘金額不足"
     }
   }
 }

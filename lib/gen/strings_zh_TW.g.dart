@@ -381,92 +381,11 @@ class TranslationsS15RecordEditZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// zh-TW: '記一筆'
-	String get title_create => '記一筆';
-
-	/// zh-TW: '編輯紀錄'
-	String get title_edit => '編輯紀錄';
-
+	late final TranslationsS15RecordEditTitleZhTw title = TranslationsS15RecordEditTitleZhTw.internal(_root);
 	late final TranslationsS15RecordEditButtonsZhTw buttons = TranslationsS15RecordEditButtonsZhTw.internal(_root);
-
-	/// zh-TW: '分攤資訊'
-	String get section_split => '分攤資訊';
-
-	/// zh-TW: '日期'
-	String get label_date => '日期';
-
-	/// zh-TW: '項目名稱'
-	String get label_title => '項目名稱';
-
-	/// zh-TW: '輸入消費項目 ()'
-	String get hint_title => '輸入消費項目 ()';
-
-	/// zh-TW: '支付方式'
-	String get label_payment_method => '支付方式';
-
-	/// zh-TW: '預收'
-	String get val_prepay => '預收';
-
-	/// zh-TW: '{name} 先付'
-	String val_member_paid({required Object name}) => '${name} 先付';
-
-	/// zh-TW: '金額'
-	String get label_amount => '金額';
-
-	/// zh-TW: '匯率 (1 {base} = ? {target})'
-	String label_rate({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})';
-
-	/// zh-TW: '備註'
-	String get label_memo => '備註';
-
-	/// zh-TW: '輸入備註...'
-	String get hint_memo => '輸入備註...';
-
-	/// zh-TW: '細項分拆'
-	String get val_split_details => '細項分拆';
-
-	/// zh-TW: '總計 {amount} 由 {method} 分攤'
-	String val_split_summary({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤';
-
-	/// zh-TW: '匯率來源'
-	String get info_rate_source => '匯率來源';
-
-	/// zh-TW: '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。'
-	String get msg_rate_source => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。';
-
-	/// zh-TW: '≈ {base}{symbol} {amount}'
-	String val_converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
-
-	/// zh-TW: '剩餘金額'
-	String get val_split_remaining => '剩餘金額';
-
-	/// zh-TW: '剩餘金額不足'
-	String get err_amount_not_enough => '剩餘金額不足';
-
-	/// zh-TW: '細項說明'
-	String get val_mock_note => '細項說明';
-
-	/// zh-TW: '支出'
-	String get tab_expense => '支出';
-
-	/// zh-TW: '預收'
-	String get tab_income => '預收';
-
-	/// zh-TW: '預收功能開發中...'
-	String get msg_income_developing => '預收功能開發中...';
-
-	/// zh-TW: '此功能尚未實作'
-	String get msg_not_implemented => '此功能尚未實作';
-
-	/// zh-TW: '請先輸入金額'
-	String get err_input_amount => '請先輸入金額';
-
-	/// zh-TW: '細項分拆'
-	String get section_items => '細項分拆';
-
-	/// zh-TW: '新增細項'
-	String get add_item => '新增細項';
+	late final TranslationsS15RecordEditSectionZhTw section = TranslationsS15RecordEditSectionZhTw.internal(_root);
+	late final TranslationsS15RecordEditValZhTw val = TranslationsS15RecordEditValZhTw.internal(_root);
+	late final TranslationsS15RecordEditTabZhTw tab = TranslationsS15RecordEditTabZhTw.internal(_root);
 
 	/// zh-TW: '剩餘金額 (Base)'
 	String get base_card_title => '剩餘金額 (Base)';
@@ -486,6 +405,8 @@ class TranslationsS15RecordEditZhTw {
 	/// zh-TW: '餘額 {amount} 將存入餘額罐 (結算時分配)'
 	String msg_leftover_pot({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)';
 
+	late final TranslationsS15RecordEditRateDialogZhTw rate_dialog = TranslationsS15RecordEditRateDialogZhTw.internal(_root);
+	late final TranslationsS15RecordEditLabelZhTw label = TranslationsS15RecordEditLabelZhTw.internal(_root);
 	late final TranslationsS15RecordEditPlaceholderZhTw placeholder = TranslationsS15RecordEditPlaceholderZhTw.internal(_root);
 }
 
@@ -501,45 +422,9 @@ class TranslationsS16TaskCreateEditZhTw {
 	String get title => '新增任務';
 
 	late final TranslationsS16TaskCreateEditButtonsZhTw buttons = TranslationsS16TaskCreateEditButtonsZhTw.internal(_root);
-
-	/// zh-TW: '任務名稱'
-	String get section_name => '任務名稱';
-
-	/// zh-TW: '任務期間'
-	String get section_period => '任務期間';
-
-	/// zh-TW: '結算設定'
-	String get section_settings => '結算設定';
-
-	/// zh-TW: '例如：東京五日遊'
-	String get field_name_hint => '例如：東京五日遊';
-
-	/// zh-TW: '{current}/20'
-	String field_name_counter({required Object current}) => '${current}/20';
-
-	/// zh-TW: '開始日期'
-	String get field_start_date => '開始日期';
-
-	/// zh-TW: '結束日期'
-	String get field_end_date => '結束日期';
-
-	/// zh-TW: '結算幣別'
-	String get field_currency => '結算幣別';
-
-	/// zh-TW: '參加人數'
-	String get field_member_count => '參加人數';
-
-	/// zh-TW: '請輸入任務名稱'
-	String get error_name_empty => '請輸入任務名稱';
-
-	/// zh-TW: '任務名稱'
-	String get label_name => '任務名稱';
-
-	/// zh-TW: '日期'
-	String get label_date => '日期';
-
-	/// zh-TW: '貨幣'
-	String get label_currency => '貨幣';
+	late final TranslationsS16TaskCreateEditSectionZhTw section = TranslationsS16TaskCreateEditSectionZhTw.internal(_root);
+	late final TranslationsS16TaskCreateEditLabelZhTw label = TranslationsS16TaskCreateEditLabelZhTw.internal(_root);
+	late final TranslationsS16TaskCreateEditPlaceholderZhTw placeholder = TranslationsS16TaskCreateEditPlaceholderZhTw.internal(_root);
 }
 
 // Path: S17_Task_Locked
@@ -1197,7 +1082,7 @@ class TranslationsErrorZhTw {
 	// Translations
 	late final TranslationsErrorDialogZhTw dialog = TranslationsErrorDialogZhTw.internal(_root);
 	late final TranslationsErrorSettlementZhTw settlement = TranslationsErrorSettlementZhTw.internal(_root);
-	late final TranslationsErrorTextInputZhTw text_input = TranslationsErrorTextInputZhTw.internal(_root);
+	late final TranslationsErrorMessageZhTw message = TranslationsErrorMessageZhTw.internal(_root);
 }
 
 // Path: common.buttons
@@ -1505,6 +1390,21 @@ class TranslationsS13TaskDashboardButtonsZhTw {
 	String get add => '新增';
 }
 
+// Path: S15_Record_Edit.title
+class TranslationsS15RecordEditTitleZhTw {
+	TranslationsS15RecordEditTitleZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '新增紀錄'
+	String get add => '新增紀錄';
+
+	/// zh-TW: '編輯紀錄'
+	String get edit => '編輯紀錄';
+}
+
 // Path: S15_Record_Edit.buttons
 class TranslationsS15RecordEditButtonsZhTw {
 	TranslationsS15RecordEditButtonsZhTw.internal(this._root);
@@ -1518,6 +1418,114 @@ class TranslationsS15RecordEditButtonsZhTw {
 
 	/// zh-TW: '關閉'
 	String get close => '關閉';
+
+	/// zh-TW: '新增細項'
+	String get add_item => '新增細項';
+}
+
+// Path: S15_Record_Edit.section
+class TranslationsS15RecordEditSectionZhTw {
+	TranslationsS15RecordEditSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '分攤資訊'
+	String get split => '分攤資訊';
+
+	/// zh-TW: '細項分拆'
+	String get items => '細項分拆';
+}
+
+// Path: S15_Record_Edit.val
+class TranslationsS15RecordEditValZhTw {
+	TranslationsS15RecordEditValZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '預收'
+	String get prepay => '預收';
+
+	/// zh-TW: '{name} 先付'
+	String member_paid({required Object name}) => '${name} 先付';
+
+	/// zh-TW: '細項分拆'
+	String get split_details => '細項分拆';
+
+	/// zh-TW: '總計 {amount} 由 {method} 分攤'
+	String split_summary({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤';
+
+	/// zh-TW: '≈ {base}{symbol} {amount}'
+	String converted_amount({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}';
+
+	/// zh-TW: '剩餘金額'
+	String get split_remaining => '剩餘金額';
+
+	/// zh-TW: '細項說明'
+	String get mock_note => '細項說明';
+}
+
+// Path: S15_Record_Edit.tab
+class TranslationsS15RecordEditTabZhTw {
+	TranslationsS15RecordEditTabZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '費用'
+	String get expense => '費用';
+
+	/// zh-TW: '預收'
+	String get income => '預收';
+}
+
+// Path: S15_Record_Edit.rate_dialog
+class TranslationsS15RecordEditRateDialogZhTw {
+	TranslationsS15RecordEditRateDialogZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '匯率來源'
+	String get title => '匯率來源';
+
+	/// zh-TW: '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。'
+	String get message => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。';
+}
+
+// Path: S15_Record_Edit.label
+class TranslationsS15RecordEditLabelZhTw {
+	TranslationsS15RecordEditLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '日期'
+	String get date => '日期';
+
+	/// zh-TW: '項目名稱'
+	String get title => '項目名稱';
+
+	/// zh-TW: '支付方式'
+	String get payment_method => '支付方式';
+
+	/// zh-TW: '金額'
+	String get amount => '金額';
+
+	/// zh-TW: '匯率 (1 {base} = ? {target})'
+	String rate_with_base({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})';
+
+	/// zh-TW: '匯率 (1 {base} = ? {target})'
+	String rate({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})';
+
+	/// zh-TW: '備註'
+	String get memo => '備註';
 }
 
 // Path: S15_Record_Edit.placeholder
@@ -1531,6 +1539,9 @@ class TranslationsS15RecordEditPlaceholderZhTw {
 
 	/// zh-TW: '如：{category}'
 	String item({required Object category}) => '如：${category}';
+
+	/// zh-TW: '例：備註事項'
+	String get memo => '例：備註事項';
 }
 
 // Path: S16_TaskCreate_Edit.buttons
@@ -1546,6 +1557,66 @@ class TranslationsS16TaskCreateEditButtonsZhTw {
 
 	/// zh-TW: '確定'
 	String get done => '確定';
+}
+
+// Path: S16_TaskCreate_Edit.section
+class TranslationsS16TaskCreateEditSectionZhTw {
+	TranslationsS16TaskCreateEditSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務名稱'
+	String get name => '任務名稱';
+
+	/// zh-TW: '任務期間'
+	String get period => '任務期間';
+
+	/// zh-TW: '結算設定'
+	String get settings => '結算設定';
+}
+
+// Path: S16_TaskCreate_Edit.label
+class TranslationsS16TaskCreateEditLabelZhTw {
+	TranslationsS16TaskCreateEditLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務名稱'
+	String get name => '任務名稱';
+
+	/// zh-TW: '{current}/{max}'
+	String name_counter({required Object current, required Object max}) => '${current}/${max}';
+
+	/// zh-TW: '開始日期'
+	String get start_date => '開始日期';
+
+	/// zh-TW: '結束日期'
+	String get end_date => '結束日期';
+
+	/// zh-TW: '結算幣別'
+	String get currency => '結算幣別';
+
+	/// zh-TW: '參加人數'
+	String get member_count => '參加人數';
+
+	/// zh-TW: '日期'
+	String get date => '日期';
+}
+
+// Path: S16_TaskCreate_Edit.placeholder
+class TranslationsS16TaskCreateEditPlaceholderZhTw {
+	TranslationsS16TaskCreateEditPlaceholderZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '例：東京五日遊'
+	String get name => '例：東京五日遊';
 }
 
 // Path: S17_Task_Locked.buttons
@@ -1909,9 +1980,9 @@ class TranslationsErrorSettlementZhTw {
 	String get transaction_failed => '系統錯誤，結算失敗，請稍後再試。';
 }
 
-// Path: error.text_input
-class TranslationsErrorTextInputZhTw {
-	TranslationsErrorTextInputZhTw.internal(this._root);
+// Path: error.message
+class TranslationsErrorMessageZhTw {
+	TranslationsErrorMessageZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -1922,6 +1993,18 @@ class TranslationsErrorTextInputZhTw {
 
 	/// zh-TW: '此欄位為必填'
 	String get required => '此欄位為必填';
+
+	/// zh-TW: '請輸入{key}'
+	String empty({required Object key}) => '請輸入${key}';
+
+	/// zh-TW: '格式錯誤'
+	String get format => '格式錯誤';
+
+	/// zh-TW: '{key}不可為 0'
+	String zero({required Object key}) => '${key}不可為 0';
+
+	/// zh-TW: '剩餘金額不足'
+	String get amount_not_enough => '剩餘金額不足';
 }
 
 // Path: common.share.invite
@@ -2243,42 +2326,37 @@ extension on Translations {
 			'S14_Task_Settings.menu_history' => '歷史紀錄',
 			'S14_Task_Settings.menu_end_task' => '結束任務',
 			'S14_Task_Settings.section_remainder' => '剩餘款',
-			'S15_Record_Edit.title_create' => '記一筆',
-			'S15_Record_Edit.title_edit' => '編輯紀錄',
+			'S15_Record_Edit.title.add' => '新增紀錄',
+			'S15_Record_Edit.title.edit' => '編輯紀錄',
 			'S15_Record_Edit.buttons.save' => '儲存紀錄',
 			'S15_Record_Edit.buttons.close' => '關閉',
-			'S15_Record_Edit.section_split' => '分攤資訊',
-			'S15_Record_Edit.label_date' => '日期',
-			'S15_Record_Edit.label_title' => '項目名稱',
-			'S15_Record_Edit.hint_title' => '輸入消費項目 ()',
-			'S15_Record_Edit.label_payment_method' => '支付方式',
-			'S15_Record_Edit.val_prepay' => '預收',
-			'S15_Record_Edit.val_member_paid' => ({required Object name}) => '${name} 先付',
-			'S15_Record_Edit.label_amount' => '金額',
-			'S15_Record_Edit.label_rate' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
-			'S15_Record_Edit.label_memo' => '備註',
-			'S15_Record_Edit.hint_memo' => '輸入備註...',
-			'S15_Record_Edit.val_split_details' => '細項分拆',
-			'S15_Record_Edit.val_split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
-			'S15_Record_Edit.info_rate_source' => '匯率來源',
-			'S15_Record_Edit.msg_rate_source' => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。',
-			'S15_Record_Edit.val_converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val_split_remaining' => '剩餘金額',
-			'S15_Record_Edit.err_amount_not_enough' => '剩餘金額不足',
-			'S15_Record_Edit.val_mock_note' => '細項說明',
-			'S15_Record_Edit.tab_expense' => '支出',
-			'S15_Record_Edit.tab_income' => '預收',
-			'S15_Record_Edit.msg_income_developing' => '預收功能開發中...',
-			'S15_Record_Edit.msg_not_implemented' => '此功能尚未實作',
-			'S15_Record_Edit.err_input_amount' => '請先輸入金額',
-			'S15_Record_Edit.section_items' => '細項分拆',
-			'S15_Record_Edit.add_item' => '新增細項',
+			'S15_Record_Edit.buttons.add_item' => '新增細項',
+			'S15_Record_Edit.section.split' => '分攤資訊',
+			'S15_Record_Edit.section.items' => '細項分拆',
+			'S15_Record_Edit.val.prepay' => '預收',
+			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} 先付',
+			'S15_Record_Edit.val.split_details' => '細項分拆',
+			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
+			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			'S15_Record_Edit.val.split_remaining' => '剩餘金額',
+			'S15_Record_Edit.val.mock_note' => '細項說明',
+			'S15_Record_Edit.tab.expense' => '費用',
+			'S15_Record_Edit.tab.income' => '預收',
 			'S15_Record_Edit.base_card_title' => '剩餘金額 (Base)',
 			'S15_Record_Edit.type_income_title' => '預收款',
 			'S15_Record_Edit.base_card_title_expense' => '剩餘金額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
 			'S15_Record_Edit.payer_multiple' => '多人',
 			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)',
+			'S15_Record_Edit.rate_dialog.title' => '匯率來源',
+			'S15_Record_Edit.rate_dialog.message' => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。',
+			'S15_Record_Edit.label.date' => '日期',
+			'S15_Record_Edit.label.title' => '項目名稱',
+			'S15_Record_Edit.label.payment_method' => '支付方式',
+			'S15_Record_Edit.label.amount' => '金額',
+			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.rate' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
+			'S15_Record_Edit.label.memo' => '備註',
 			'S15_Record_Edit.placeholder.category.food' => '晚餐',
 			'S15_Record_Edit.placeholder.category.transport' => '車費',
 			'S15_Record_Edit.placeholder.category.shopping' => '紀念品',
@@ -2286,22 +2364,21 @@ extension on Translations {
 			'S15_Record_Edit.placeholder.category.accommodation' => '住宿費',
 			'S15_Record_Edit.placeholder.category.others' => '其他費用',
 			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '如：${category}',
+			'S15_Record_Edit.placeholder.memo' => '例：備註事項',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '確定',
-			'S16_TaskCreate_Edit.section_name' => '任務名稱',
-			'S16_TaskCreate_Edit.section_period' => '任務期間',
-			'S16_TaskCreate_Edit.section_settings' => '結算設定',
-			'S16_TaskCreate_Edit.field_name_hint' => '例如：東京五日遊',
-			'S16_TaskCreate_Edit.field_name_counter' => ({required Object current}) => '${current}/20',
-			'S16_TaskCreate_Edit.field_start_date' => '開始日期',
-			'S16_TaskCreate_Edit.field_end_date' => '結束日期',
-			'S16_TaskCreate_Edit.field_currency' => '結算幣別',
-			'S16_TaskCreate_Edit.field_member_count' => '參加人數',
-			'S16_TaskCreate_Edit.error_name_empty' => '請輸入任務名稱',
-			'S16_TaskCreate_Edit.label_name' => '任務名稱',
-			'S16_TaskCreate_Edit.label_date' => '日期',
-			'S16_TaskCreate_Edit.label_currency' => '貨幣',
+			'S16_TaskCreate_Edit.section.name' => '任務名稱',
+			'S16_TaskCreate_Edit.section.period' => '任務期間',
+			'S16_TaskCreate_Edit.section.settings' => '結算設定',
+			'S16_TaskCreate_Edit.label.name' => '任務名稱',
+			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			'S16_TaskCreate_Edit.label.start_date' => '開始日期',
+			'S16_TaskCreate_Edit.label.end_date' => '結束日期',
+			'S16_TaskCreate_Edit.label.currency' => '結算幣別',
+			'S16_TaskCreate_Edit.label.member_count' => '參加人數',
+			'S16_TaskCreate_Edit.label.date' => '日期',
+			'S16_TaskCreate_Edit.placeholder.name' => '例：東京五日遊',
 			'S17_Task_Locked.buttons.download' => '下載紀錄',
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
 			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
@@ -2488,8 +2565,12 @@ extension on Translations {
 			'error.settlement.status_invalid' => '此任務狀態異常（可能已被結算），請刷新頁面。',
 			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
 			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
-			'error.text_input.invalid_amount' => '金額無效',
-			'error.text_input.required' => '此欄位為必填',
+			'error.message.invalid_amount' => '金額無效',
+			'error.message.required' => '此欄位為必填',
+			'error.message.empty' => ({required Object key}) => '請輸入${key}',
+			'error.message.format' => '格式錯誤',
+			'error.message.zero' => ({required Object key}) => '${key}不可為 0',
+			'error.message.amount_not_enough' => '剩餘金額不足',
 			_ => null,
 		};
 	}

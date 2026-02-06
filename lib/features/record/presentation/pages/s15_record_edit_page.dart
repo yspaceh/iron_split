@@ -9,14 +9,10 @@ import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/cupertino.dart'; // For DatePicker
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/record/presentation/views/s15_expense_form.dart';
 import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_wheel_picker.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
@@ -74,37 +70,6 @@ class _S15ContentState extends State<_S15Content> {
     context.read<S15RecordEditViewModel>().initCurrency();
   }
 
-  // --- Handlers (Bridge between VM and UI) ---
-
-  void _onDateTap(S15RecordEditViewModel vm) {
-    DateTime tempDate = vm.selectedDate;
-    showCommonWheelPicker(
-      context: context,
-      onConfirm: () => vm.updateDate(tempDate),
-      child: CupertinoDatePicker(
-        initialDateTime: vm.selectedDate,
-        mode: CupertinoDatePickerMode.date,
-        onDateTimeChanged: (val) => tempDate = val,
-      ),
-    );
-  }
-
-  void _onCategoryTap(S15RecordEditViewModel vm) {
-    CategoryPickerSheet.show(
-      context: context,
-      initialCategoryId: vm.selectedCategoryId,
-      onSelected: (cat) => vm.updateCategory(cat.id),
-    );
-  }
-
-  void _onCurrencyTap(S15RecordEditViewModel vm) {
-    CurrencyPickerSheet.show(
-      context: context,
-      initialCode: vm.selectedCurrencyConstants.code,
-      onSelected: (curr) => vm.updateCurrency(curr.code),
-    );
-  }
-
   // Show B03
   Future<void> _onBaseSplitConfigTap(S15RecordEditViewModel vm) async {
     final amountToSplit =
@@ -131,9 +96,8 @@ class _S15ContentState extends State<_S15Content> {
   // Show B02 (Create)
   Future<void> _onAddItemTap(S15RecordEditViewModel vm) async {
     if (vm.baseRemainingAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              Translations.of(context).S15_Record_Edit.err_amount_not_enough)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.error.message.amount_not_enough)));
       return;
     }
 
@@ -192,8 +156,8 @@ class _S15ContentState extends State<_S15Content> {
     final t = Translations.of(context);
     CommonAlertDialog.show(
       context,
-      title: t.S15_Record_Edit.info_rate_source,
-      content: Text(t.S15_Record_Edit.msg_rate_source),
+      title: t.S15_Record_Edit.rate_dialog.title,
+      content: Text(t.S15_Record_Edit.rate_dialog.message),
       actions: [
         AppButton(
           text: t.common.buttons.close,
@@ -314,10 +278,11 @@ class _S15ContentState extends State<_S15Content> {
     return Scaffold(
       appBar: AppBar(
         title: Text(vm.recordId == null
-            ? t.S15_Record_Edit.title_create
-            : t.S15_Record_Edit.title_edit),
+            ? t.S15_Record_Edit.title.add
+            : t.S15_Record_Edit.title.edit),
         leading: IconButton(
-            icon: const Icon(Icons.close), onPressed: () => _onClose(vm)),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () => _onClose(vm)),
         actions: [
           if (vm.recordId != null)
             IconButton(
@@ -349,8 +314,8 @@ class _S15ContentState extends State<_S15Content> {
               selectedValue: vm.recordTypeIndex,
               onValueChanged: (val) => vm.setRecordType(val),
               segments: {
-                0: t.S15_Record_Edit.tab_expense,
-                1: t.S15_Record_Edit.tab_income,
+                0: t.S15_Record_Edit.tab.expense,
+                1: t.S15_Record_Edit.tab.income,
               },
             ),
           ),
@@ -379,10 +344,10 @@ class _S15ContentState extends State<_S15Content> {
                       payerType: vm.payerType,
                       payerId: vm.payerId,
                       hasPaymentError: vm.hasPaymentError,
-                      onDateTap: () => _onDateTap(vm),
                       onPaymentMethodTap: () => _onPaymentMethodTap(vm),
-                      onCategoryTap: () => _onCategoryTap(vm),
-                      onCurrencyTap: () => _onCurrencyTap(vm),
+                      onDateChanged: vm.updateDate,
+                      onCategoryChanged: vm.updateCategory,
+                      onCurrencyChanged: vm.updateCurrency,
                       onFetchExchangeRate: vm.fetchExchangeRate,
                       onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
@@ -403,8 +368,8 @@ class _S15ContentState extends State<_S15Content> {
                       baseSplitMethod: vm.baseSplitMethod,
                       baseMemberIds: vm.baseMemberIds,
                       baseRawDetails: vm.baseRawDetails,
-                      onDateTap: () => _onDateTap(vm),
-                      onCurrencyTap: () => _onCurrencyTap(vm),
+                      onDateChanged: vm.updateDate,
+                      onCurrencyChanged: vm.updateCurrency,
                       onFetchExchangeRate: vm.fetchExchangeRate,
                       onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),

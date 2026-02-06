@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskMemoInput extends StatelessWidget {
@@ -10,19 +11,17 @@ class TaskMemoInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    // 直接替換為 AppTextField
+    return AppTextField(
       controller: memoController,
+      labelText: t.S15_Record_Edit.label.memo, // 標題
+      hintText: t.S15_Record_Edit.placeholder.memo, // 增加一點提示 (Optional)
+
+      // 多行設定
       keyboardType: TextInputType.multiline,
-      minLines: 2,
-      maxLines: 2,
-      decoration: InputDecoration(
-        labelText: t.S15_Record_Edit.label_memo,
-        alignLabelWithHint: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        contentPadding: const EdgeInsets.all(16),
-      ),
+      maxLines: 3, // 稍微高一點，讓備註欄位看起來不一樣
+
+      // AppTextField 內部已經設定好 "淡灰底 + 圓角 16"
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_picker_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
@@ -29,8 +28,8 @@ class S15IncomeForm extends StatelessWidget {
   final double totalRemainder;
 
   // 4. Callbacks (動作)
-  final VoidCallback onDateTap;
-  final VoidCallback onCurrencyTap;
+  final ValueChanged<DateTime> onDateChanged;
+  final ValueChanged<String> onCurrencyChanged;
   final VoidCallback onFetchExchangeRate;
   final VoidCallback onShowRateInfo;
   final VoidCallback onBaseSplitConfigTap;
@@ -48,13 +47,13 @@ class S15IncomeForm extends StatelessWidget {
     required this.baseRemainingAmount,
     required this.baseSplitMethod,
     required this.baseMemberIds,
-    required this.onDateTap,
-    required this.onCurrencyTap,
     required this.onFetchExchangeRate,
     required this.onShowRateInfo,
     required this.onBaseSplitConfigTap,
     required this.baseRawDetails,
     required this.totalRemainder,
+    required this.onDateChanged,
+    required this.onCurrencyChanged,
   });
 
   @override
@@ -71,15 +70,14 @@ class S15IncomeForm extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CommonPickerField(
-          label: t.S15_Record_Edit.label_date,
-          value: DateFormat('yyyy/MM/dd (E)').format(selectedDate),
-          icon: Icons.calendar_today,
-          onTap: onDateTap,
+        TaskDateInput(
+          label: t.S15_Record_Edit.label.date,
+          date: selectedDate,
+          onDateChanged: onDateChanged,
         ),
         const SizedBox(height: 16),
         TaskAmountInput(
-            onCurrencyTap: onCurrencyTap,
+            onCurrencyChanged: onCurrencyChanged,
             amountController: amountController,
             selectedCurrencyConstants: selectedCurrencyConstants),
         if (isForeign) ...[
@@ -88,7 +86,7 @@ class S15IncomeForm extends StatelessWidget {
             controller: exchangeRateController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label_rate(
+              labelText: t.S15_Record_Edit.label.rate(
                   base: baseCurrency.code,
                   target: selectedCurrencyConstants.code),
               prefixIcon: IconButton(
@@ -124,7 +122,7 @@ class S15IncomeForm extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 4, left: 4),
                 child: Text(
-                  t.S15_Record_Edit.val_converted_amount(
+                  t.S15_Record_Edit.val.converted_amount(
                       base: baseCurrency.code,
                       symbol: baseCurrency.symbol,
                       amount: formattedAmount),

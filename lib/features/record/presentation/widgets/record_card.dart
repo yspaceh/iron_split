@@ -144,7 +144,7 @@ class RecordCard extends StatelessWidget {
                     Icon(Icons.add, size: 18, color: colorScheme.primary),
                     const SizedBox(width: 8),
                     Text(
-                      t.S15_Record_Edit.add_item,
+                      t.S15_Record_Edit.buttons.add_item,
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.bold,

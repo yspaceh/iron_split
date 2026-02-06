@@ -109,7 +109,7 @@ class _B02SplitExpenseEditBottomSheetState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                Translations.of(context).S15_Record_Edit.err_input_amount)),
+                t.error.message.zero(key: t.S15_Record_Edit.label.amount))),
       );
       return;
     }
@@ -265,7 +265,7 @@ class _B02SplitExpenseEditBottomSheetState
                 ),
                 textInputAction: TextInputAction.done,
                 validator: (v) => (double.tryParse(v ?? '') ?? 0) <= 0
-                    ? t.S15_Record_Edit.err_input_amount
+                    ? t.error.message.zero(key: t.S15_Record_Edit.label.amount)
                     : null,
               ),
               const SizedBox(height: 16),

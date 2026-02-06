@@ -45,40 +45,36 @@ class _S53Content extends StatelessWidget {
     final t = Translations.of(context);
     final controller = TextEditingController(text: currentName);
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(t.S53_TaskSettings_Members.title),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: t.S53_TaskSettings_Members.member_name,
-              border: const OutlineInputBorder(),
-            ),
-            textInputAction: TextInputAction.done,
-            onSubmitted: (val) {
-              Navigator.pop(context);
-              vm.renameMember(membersMap, memberId, val);
+    CommonAlertDialog.show(context,
+        title: t.S53_TaskSettings_Members.title,
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: t.S53_TaskSettings_Members.member_name,
+            border: const OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.done,
+          onSubmitted: (val) {
+            Navigator.pop(context);
+            vm.renameMember(membersMap, memberId, val);
+          },
+        ),
+        actions: [
+          AppButton(
+            text: t.common.buttons.cancel,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(),
+          ),
+          AppButton(
+            text: t.common.buttons.confirm,
+            type: AppButtonType.primary,
+            onPressed: () {
+              context.pop();
+              vm.renameMember(membersMap, memberId, controller.text);
             },
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(t.common.buttons.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                vm.renameMember(membersMap, memberId, controller.text);
-              },
-              child: Text(t.common.buttons.confirm),
-            ),
-          ],
-        );
-      },
-    );
+        ]);
   }
 
   Future<void> _handleDelete(

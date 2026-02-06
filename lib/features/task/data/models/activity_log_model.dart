@@ -129,11 +129,11 @@ class ActivityLogModel {
 
       switch (type) {
         case 'task_name':
-          return "${t.S16_TaskCreate_Edit.label_name}: $val";
+          return "${t.S16_TaskCreate_Edit.label.name}: $val";
         case 'date_range':
-          return "${t.S16_TaskCreate_Edit.label_date}: $val";
+          return "${t.S16_TaskCreate_Edit.label.date}: $val";
         case 'currency':
-          return "${t.S16_TaskCreate_Edit.label_currency}: $val";
+          return "${t.S16_TaskCreate_Edit.label.currency}: $val";
         case 'remainder_rule':
           String ruleName = RemainderRuleConstants.getLabel(context, val);
           return "${t.S14_Task_Settings.section_remainder}: $ruleName";

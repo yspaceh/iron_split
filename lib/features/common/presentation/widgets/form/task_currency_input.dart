@@ -35,7 +35,7 @@ class TaskCurrencyInput extends StatelessWidget {
     // [重構] 直接使用 AppSelectField
     return AppSelectField(
       // 標題：結算幣別
-      labelText: t.S16_TaskCreate_Edit.field_currency,
+      labelText: t.S16_TaskCreate_Edit.label.currency,
 
       // 內容：顯示幣別代碼 (例如: TWD)
       // 小技巧：如果想顯示更豐富，可以改為 "${currency.code} (${currency.symbol})"

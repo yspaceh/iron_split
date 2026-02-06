@@ -187,54 +187,62 @@
     "section_remainder": "Remainder"
   },
   "S15_Record_Edit": {
-    "title_create": "Add Expense",
-    "title_edit": "Edit Record",
-    "buttons": {
-      "save": "Save",
-      "close": "Close"
+    "title": {
+      "add": "Add Record",
+      "edit": "Edit Record"
     },
-    "section_split": "Split Info",
-    "label_date": "Date",
-    "label_title": "Item Name",
-    "hint_title": "What is this for?",
-    "label_payment_method": "Paid By",
-    "val_prepay": "Prepay",
-    "val_member_paid": "Paid by {name}",
-    "label_amount": "Amount",
-    "label_rate": "Rate (1 {base} = ? {target})",
-    "label_memo": "Memo",
-    "hint_memo": "Add a note...",
-    "val_split_details": "Split Details",
-    "val_split_summary": "Total {amount} split by {method}",
-    "info_rate_source": "Rate Source",
-    "msg_rate_source": "Exchange rates are provided by Open Exchange Rates (Free Tier) for reference only. Please refer to your actual exchange receipt.",
-    "val_converted_amount": "≈ {base}{symbol} {amount}",
-    "val_split_remaining": "Remaining Amount",
-    "err_amount_not_enough": "Insufficient remaining amount",
-    "val_mock_note": "Item Note",
-    "tab_expense": "Expense",
-    "tab_income": "Income",
-    "msg_income_developing": "Income feature coming soon...",
-    "msg_not_implemented": "Feature not implemented yet",
-    "err_input_amount": "Please enter amount first",
-    "section_items": "Itemized Splits",
-    "add_item": "Add Item",
-    "base_card_title": "Remaining Balance (Base)",
-    "type_income_title": "Income",
-    "base_card_title_expense": "Remaining (Base)",
-    "base_card_title_income": "Contributors (Source)",
-    "payer_multiple": "Multiple Payers",
-    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)",
-    "placeholder" : {
-      "category" : {
+    "buttons": {
+      "save": "Save Record",
+      "close": "Close",
+      "add_item": "Add Item"
+    },
+    "section": {
+      "split": "Split Information",
+      "items": "Itemized Split"
+    },
+    "val": {
+      "prepay": "Advance",
+      "member_paid": "{name} paid",
+      "split_details": "Itemized Split",
+      "split_summary": "Total {amount} split by {method}",
+      "converted_amount": "≈ {base}{symbol} {amount}",
+      "split_remaining": "Remaining Amount",
+      "mock_note": "Item description"
+    },
+    "tab": {
+      "expense": "Expense",
+      "income": "Advance"
+    },
+    "base_card_title": "Remaining Amount (Base)",
+    "type_income_title": "Advance Payment",
+    "base_card_title_expense": "Remaining Amount (Base)",
+    "base_card_title_income": "Source of Funds (Payer)",
+    "payer_multiple": "Multiple",
+    "msg_leftover_pot": "Remaining amount {amount} will be stored in the leftover pot (distributed at settlement)",
+    "rate_dialog": {
+      "title": "Exchange Rate Source",
+      "message": "Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate."
+    },
+    "label": {
+      "date": "Date",
+      "title": "Item Name",
+      "payment_method": "Payment Method",
+      "amount": "Amount",
+      "rate_with_base": "Exchange Rate (1 {base} = ? {target})",
+      "rate": "Exchange Rate (1 {base} = ? {target})",
+      "memo": "Memo"
+    },
+    "placeholder": {
+      "category": {
         "food": "Dinner",
         "transport": "Transportation",
         "shopping": "Souvenirs",
         "entertainment": "Movie tickets",
         "accommodation": "Accommodation",
-        "others": "Other"
+        "others": "Other expenses"
       },
-      "item": "e.g.{category}"
+      "item": "e.g. {category}",
+      "memo": "e.g. Notes"
     }
   },
   "S16_TaskCreate_Edit": {
@@ -243,19 +251,23 @@
       "save": "Save",
       "done": "Done"
     },
-    "section_name": "Task Name",
-    "section_period": "Period",
-    "section_settings": "Settings",
-    "field_name_hint": "e.g. Tokyo Trip",
-    "field_name_counter": "{current}/20",
-    "field_start_date": "Start Date",
-    "field_end_date": "End Date",
-    "field_currency": "Currency",
-    "field_member_count": "Members",
-    "error_name_empty": "Please enter task name",
-    "label_name": "Task Name",
-    "label_date": "Date",
-    "label_currency": "Currency"
+    "section":{
+      "name": "Name",
+      "period": "Period",
+      "settings": "Settings"
+    },
+    "label":{
+      "name": "Task name",
+      "name_counter": "{current}/{max}",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "currency": "Currency",
+      "member_count": "Members",
+      "date": "Date"
+    },
+    "placeholder" : {
+      "name": "e.g. Tokyo Trip"
+    }
   },
   "S17_Task_Locked": {
     "buttons": {
@@ -556,9 +568,13 @@
       "permission_denied": "Only the creator can execute settlement.",
       "transaction_failed": "System error. Settlement failed. Please try again later."
     },
-    "text_input": {
-      "invalid_amount": "Invalid amount. Please check your input.",
-      "required": "This field is required"
+    "message": {
+      "invalid_amount": "Invalid amount",
+      "required": "This field is required",
+      "empty": "Please enter {key}",
+      "format": "Invalid format",
+      "zero": "{key} cannot be 0",
+      "amount_not_enough": "Insufficient remaining amount"
     }
   }
 }

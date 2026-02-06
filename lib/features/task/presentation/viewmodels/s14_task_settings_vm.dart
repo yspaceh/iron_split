@@ -96,19 +96,22 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   }
 
   Future<void> updateDateRange(DateTime start, DateTime end) async {
+    // [新增] 核心防呆邏輯
+    // 如果「開始日」跑到了「結束日」後面，就強制把「結束日」拉過來跟「開始日」同一天
+    if (start.isAfter(end)) {
+      end = start;
+    }
+
     _startDate = start;
     _endDate = end;
     notifyListeners();
 
-    // ✅ 改用 Repo (注意 Timestamp 轉換通常由 Repo 或 Model 處理，
-    // 但因為 Repo.updateTask 接收 Map，這裡還是要傳 Timestamp 給 Firestore)
-    // 如果您的 Repo 夠聰明，可以傳 DateTime，但在 updateMap 裡通常直接傳值
     await _taskRepo.updateTask(taskId, {
-      'startDate':
-          start, // 假設 Repo 內部或 Firestore SDK 會自動處理 DateTime 轉 Timestamp
-      'endDate': end,
+      'startDate': start,
+      'endDate': end, // 這裡會自動存入修正後的 end
     });
 
+    // Log 也會紀錄修正後的日期
     final dateStr =
         "${DateFormat('yyyy/MM/dd').format(start)} - ${DateFormat('yyyy/MM/dd').format(end)}";
 

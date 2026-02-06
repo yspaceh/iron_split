@@ -54,17 +54,16 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
   // --- Setters (Update State) ---
 
-  void updateStartDate(DateTime date) {
-    _startDate = date;
-    // 防呆：結束日不能早於開始日 (可選)
-    if (_endDate.isBefore(_startDate)) {
-      _endDate = _startDate;
+  void updateDateRange(DateTime start, DateTime end) {
+    // 核心防呆：如果「開始」晚於「結束」，強制將「結束」拉到跟「開始」同一天
+    if (start.isAfter(end)) {
+      end = start;
     }
-    notifyListeners();
-  }
 
-  void updateEndDate(DateTime date) {
-    _endDate = date;
+    _startDate = start;
+    _endDate = end;
+
+    // 只有一次通知，效能更好
     notifyListeners();
   }
 
