@@ -107,10 +107,6 @@
     "unknown": "不明な操作",
     "close_task": "タスク終了"
   },
-  "dialog": {
-    "unsaved_changes_title": "未保存の変更",
-    "unsaved_changes_content": "変更内容は保存されません。"
-  },
   "S50_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
     "buttons": {
@@ -404,6 +400,10 @@
     "creating_task": "作成中...",
     "preparing_share": "招待を準備中..."
   },
+  "D04_CommonUnsaved_Confirm": {
+    "title": "未保存の変更",
+    "content": "変更内容は保存されません。"
+  },
   "D05_DateJump_NoResult": {
     "title": "記録なし",
     "buttons": {
@@ -509,38 +509,43 @@
     "msg_auto_fill_prepay": "公費残高を自動入力しました"
   },
   "error": {
-    "taskFull": {
-      "title": "タスク満員",
-      "message": "メンバー数が上限 {limit} 人に達しています。隊長に連絡してください。"
-    },
-    "expiredCode": {
-      "title": "招待コード期限切れ",
-      "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
-    },
-    "invalidCode": {
-      "title": "Invalid Link",
-      "message": "無効な招待リンクです。"
-    },
-    "authRequired": {
-      "title": "ログインが必要",
-      "message": "タスクに参加するにはログインしてください。"
-    },
-    "alreadyInTask": {
-      "title": "既に参加済",
-      "message": "既にこのタスクのメンバーです。"
-    },
-    "unknown": {
-      "title": "エラー",
-      "message": "予期せぬエラーが発生しました。"
-    },
-    "settlement": {
+    "dialog": {
+      "task_full": {
+        "title": "タスク満員",
+        "message": "メンバー数が上限 {limit} 人に達しています。隊長に連絡してください。"
+      },
+      "expired_code": {
+        "title": "招待コード期限切れ",
+        "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
+      },
+      "invalid_code": {
+        "title": "無効な招待リンク",
+        "message": "無効な招待リンクです。"
+      },
+      "auth_required": {
+        "title": "ログインが必要",
+        "message": "タスクに参加するにはログインしてください。"
+      },
+      "already_in_task": {
+        "title": "既に参加済",
+        "message": "既にこのタスクのメンバーです。"
+      },
+      "unknown": {
+        "title": "エラー",
+        "message": "予期せぬエラーが発生しました。"
+      },
       "data_conflict": {
         "title": "データ更新あり",
         "message": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。"
-      },
+      }
+    },
+    "settlement": {
       "status_invalid": "タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。",
       "permission_denied": "精算を実行できるのは作成者のみです。",
       "transaction_failed": "システムエラーが発生しました。後でもう一度お試しください。"
+    },
+    "text_input": {
+      "invalid_amount": " 金額が正しくありません"
     }
   }
 }

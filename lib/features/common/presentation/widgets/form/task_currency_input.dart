@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskCurrencyInput extends StatelessWidget {
@@ -16,6 +17,8 @@ class TaskCurrencyInput extends StatelessWidget {
   final bool enabled;
 
   void _showCurrencyPicker(BuildContext context) {
+    if (!enabled) return; // 再次確保防呆
+
     CurrencyPickerSheet.show(
       context: context,
       initialCode: currency.code,
@@ -27,47 +30,24 @@ class TaskCurrencyInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildRowItem(
-      context: context,
-      icon: Icons.currency_exchange,
-      label: t.S16_TaskCreate_Edit.field_currency,
-      value: currency.code,
-      onTap: enabled ? () => _showCurrencyPicker(context) : null,
-      enabled: enabled,
-    );
-  }
+    final t = Translations.of(context);
 
-  Widget _buildRowItem({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required String value,
-    required VoidCallback? onTap,
-    required bool enabled,
-  }) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: theme.colorScheme.primary),
-            const SizedBox(width: 16),
-            Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
-            Text(
-              value,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(Icons.chevron_right,
-                size: 20, color: theme.colorScheme.outline),
-          ],
-        ),
-      ),
+    // [重構] 直接使用 AppSelectField
+    return AppSelectField(
+      // 標題：結算幣別
+      labelText: t.S16_TaskCreate_Edit.field_currency,
+
+      // 內容：顯示幣別代碼 (例如: TWD)
+      // 小技巧：如果想顯示更豐富，可以改為 "${currency.code} (${currency.symbol})"
+      text: currency.code,
+
+      // 圖示：維持原本的交換圖示，AppSelectField 會自動幫你變成灰色
+      prefixIcon: Icons.currency_exchange,
+
+      // 點擊事件
+      onTap: enabled ? () => _showCurrencyPicker(context) : () {},
+
+      // 錯誤處理：目前幣別通常有預設值，不太會有 error，若有可傳 errorText
     );
   }
 }

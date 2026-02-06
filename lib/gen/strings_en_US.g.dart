@@ -41,7 +41,6 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
-	@override late final _TranslationsDialogEnUs dialog = _TranslationsDialogEnUs._(_root);
 	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
 	@override late final _TranslationsS11InviteConfirmEnUs S11_Invite_Confirm = _TranslationsS11InviteConfirmEnUs._(_root);
 	@override late final _TranslationsS12TaskCloseNoticeEnUs S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeEnUs._(_root);
@@ -61,6 +60,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
+	@override late final _TranslationsD04CommonUnsavedConfirmEnUs D04_CommonUnsaved_Confirm = _TranslationsD04CommonUnsavedConfirmEnUs._(_root);
 	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
 	@override late final _TranslationsD06SettlementConfirmEnUs D06_settlement_confirm = _TranslationsD06SettlementConfirmEnUs._(_root);
 	@override late final _TranslationsD08TaskClosedConfirmEnUs D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmEnUs._(_root);
@@ -117,17 +117,6 @@ class _TranslationsLogActionEnUs extends TranslationsLogActionZhTw {
 	@override String get settle_up => 'Settle Up';
 	@override String get unknown => 'Unknown Action';
 	@override String get close_task => 'Close Task';
-}
-
-// Path: dialog
-class _TranslationsDialogEnUs extends TranslationsDialogZhTw {
-	_TranslationsDialogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get unsaved_changes_title => 'Unsaved Changes?';
-	@override String get unsaved_changes_content => 'Changes you made will not be saved.';
 }
 
 // Path: S10_Home_TaskList
@@ -495,6 +484,17 @@ class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateCon
 	@override String get preparing_share => 'Preparing invite...';
 }
 
+// Path: D04_CommonUnsaved_Confirm
+class _TranslationsD04CommonUnsavedConfirmEnUs extends TranslationsD04CommonUnsavedConfirmZhTw {
+	_TranslationsD04CommonUnsavedConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Unsaved Changes?';
+	@override String get content => 'Changes you made will not be saved.';
+}
+
 // Path: D05_DateJump_NoResult
 class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResultZhTw {
 	_TranslationsD05DateJumpNoResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -665,13 +665,9 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsErrorTaskFullEnUs taskFull = _TranslationsErrorTaskFullEnUs._(_root);
-	@override late final _TranslationsErrorExpiredCodeEnUs expiredCode = _TranslationsErrorExpiredCodeEnUs._(_root);
-	@override late final _TranslationsErrorInvalidCodeEnUs invalidCode = _TranslationsErrorInvalidCodeEnUs._(_root);
-	@override late final _TranslationsErrorAuthRequiredEnUs authRequired = _TranslationsErrorAuthRequiredEnUs._(_root);
-	@override late final _TranslationsErrorAlreadyInTaskEnUs alreadyInTask = _TranslationsErrorAlreadyInTaskEnUs._(_root);
-	@override late final _TranslationsErrorUnknownEnUs unknown = _TranslationsErrorUnknownEnUs._(_root);
+	@override late final _TranslationsErrorDialogEnUs dialog = _TranslationsErrorDialogEnUs._(_root);
 	@override late final _TranslationsErrorSettlementEnUs settlement = _TranslationsErrorSettlementEnUs._(_root);
+	@override late final _TranslationsErrorTextInputEnUs text_input = _TranslationsErrorTextInputEnUs._(_root);
 }
 
 // Path: common.buttons
@@ -1106,70 +1102,20 @@ class _TranslationsB06PaymentInfoDetailButtonsEnUs extends TranslationsB06Paymen
 	@override String get copy => 'Copy';
 }
 
-// Path: error.taskFull
-class _TranslationsErrorTaskFullEnUs extends TranslationsErrorTaskFullZhTw {
-	_TranslationsErrorTaskFullEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: error.dialog
+class _TranslationsErrorDialogEnUs extends TranslationsErrorDialogZhTw {
+	_TranslationsErrorDialogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Task Full';
-	@override String message({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.';
-}
-
-// Path: error.expiredCode
-class _TranslationsErrorExpiredCodeEnUs extends TranslationsErrorExpiredCodeZhTw {
-	_TranslationsErrorExpiredCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Invite Expired';
-	@override String message({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.';
-}
-
-// Path: error.invalidCode
-class _TranslationsErrorInvalidCodeEnUs extends TranslationsErrorInvalidCodeZhTw {
-	_TranslationsErrorInvalidCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Invalid Link';
-	@override String get message => 'Invalid invite link.';
-}
-
-// Path: error.authRequired
-class _TranslationsErrorAuthRequiredEnUs extends TranslationsErrorAuthRequiredZhTw {
-	_TranslationsErrorAuthRequiredEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Login Required';
-	@override String get message => 'Please login to join task.';
-}
-
-// Path: error.alreadyInTask
-class _TranslationsErrorAlreadyInTaskEnUs extends TranslationsErrorAlreadyInTaskZhTw {
-	_TranslationsErrorAlreadyInTaskEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Already Member';
-	@override String get message => 'You are already in this task.';
-}
-
-// Path: error.unknown
-class _TranslationsErrorUnknownEnUs extends TranslationsErrorUnknownZhTw {
-	_TranslationsErrorUnknownEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Error';
-	@override String get message => 'An unexpected error occurred.';
+	@override late final _TranslationsErrorDialogTaskFullEnUs task_full = _TranslationsErrorDialogTaskFullEnUs._(_root);
+	@override late final _TranslationsErrorDialogExpiredCodeEnUs expired_code = _TranslationsErrorDialogExpiredCodeEnUs._(_root);
+	@override late final _TranslationsErrorDialogInvalidCodeEnUs invalid_code = _TranslationsErrorDialogInvalidCodeEnUs._(_root);
+	@override late final _TranslationsErrorDialogAuthRequiredEnUs auth_required = _TranslationsErrorDialogAuthRequiredEnUs._(_root);
+	@override late final _TranslationsErrorDialogAlreadyInTaskEnUs already_in_task = _TranslationsErrorDialogAlreadyInTaskEnUs._(_root);
+	@override late final _TranslationsErrorDialogUnknownEnUs unknown = _TranslationsErrorDialogUnknownEnUs._(_root);
+	@override late final _TranslationsErrorDialogDataConflictEnUs data_conflict = _TranslationsErrorDialogDataConflictEnUs._(_root);
 }
 
 // Path: error.settlement
@@ -1179,10 +1125,19 @@ class _TranslationsErrorSettlementEnUs extends TranslationsErrorSettlementZhTw {
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsErrorSettlementDataConflictEnUs data_conflict = _TranslationsErrorSettlementDataConflictEnUs._(_root);
 	@override String get status_invalid => 'The task status is invalid (may be already settled). Please refresh.';
 	@override String get permission_denied => 'Only the creator can execute settlement.';
 	@override String get transaction_failed => 'System error. Settlement failed. Please try again later.';
+}
+
+// Path: error.text_input
+class _TranslationsErrorTextInputEnUs extends TranslationsErrorTextInputZhTw {
+	_TranslationsErrorTextInputEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalid_amount => 'Invalid amount. Please check your input.';
 }
 
 // Path: common.share.invite
@@ -1207,9 +1162,75 @@ class _TranslationsCommonShareSettlementEnUs extends TranslationsCommonShareSett
 	@override String message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
 }
 
-// Path: error.settlement.data_conflict
-class _TranslationsErrorSettlementDataConflictEnUs extends TranslationsErrorSettlementDataConflictZhTw {
-	_TranslationsErrorSettlementDataConflictEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: error.dialog.task_full
+class _TranslationsErrorDialogTaskFullEnUs extends TranslationsErrorDialogTaskFullZhTw {
+	_TranslationsErrorDialogTaskFullEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Task Full';
+	@override String message({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.';
+}
+
+// Path: error.dialog.expired_code
+class _TranslationsErrorDialogExpiredCodeEnUs extends TranslationsErrorDialogExpiredCodeZhTw {
+	_TranslationsErrorDialogExpiredCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Invite Expired';
+	@override String message({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.';
+}
+
+// Path: error.dialog.invalid_code
+class _TranslationsErrorDialogInvalidCodeEnUs extends TranslationsErrorDialogInvalidCodeZhTw {
+	_TranslationsErrorDialogInvalidCodeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Invalid Link';
+	@override String get message => 'Invalid invite link.';
+}
+
+// Path: error.dialog.auth_required
+class _TranslationsErrorDialogAuthRequiredEnUs extends TranslationsErrorDialogAuthRequiredZhTw {
+	_TranslationsErrorDialogAuthRequiredEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Login Required';
+	@override String get message => 'Please login to join task.';
+}
+
+// Path: error.dialog.already_in_task
+class _TranslationsErrorDialogAlreadyInTaskEnUs extends TranslationsErrorDialogAlreadyInTaskZhTw {
+	_TranslationsErrorDialogAlreadyInTaskEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Already Member';
+	@override String get message => 'You are already in this task.';
+}
+
+// Path: error.dialog.unknown
+class _TranslationsErrorDialogUnknownEnUs extends TranslationsErrorDialogUnknownZhTw {
+	_TranslationsErrorDialogUnknownEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Error';
+	@override String get message => 'An unexpected error occurred.';
+}
+
+// Path: error.dialog.data_conflict
+class _TranslationsErrorDialogDataConflictEnUs extends TranslationsErrorDialogDataConflictZhTw {
+	_TranslationsErrorDialogDataConflictEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
@@ -1312,8 +1333,6 @@ extension on TranslationsEnUs {
 			'log_action.settle_up' => 'Settle Up',
 			'log_action.unknown' => 'Unknown Action',
 			'log_action.close_task' => 'Close Task',
-			'dialog.unsaved_changes_title' => 'Unsaved Changes?',
-			'dialog.unsaved_changes_content' => 'Changes you made will not be saved.',
 			'S10_Home_TaskList.title' => 'My Tasks',
 			'S10_Home_TaskList.tab_in_progress' => 'Active',
 			'S10_Home_TaskList.tab_completed' => 'Finished',
@@ -1530,6 +1549,8 @@ extension on TranslationsEnUs {
 			'D03_TaskCreate_Confirm.label_members' => 'Members',
 			'D03_TaskCreate_Confirm.creating_task' => 'Creating task...',
 			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
+			'D04_CommonUnsaved_Confirm.title' => 'Unsaved Changes?',
+			'D04_CommonUnsaved_Confirm.content' => 'Changes you made will not be saved.',
 			'D05_DateJump_NoResult.title' => 'No Record',
 			'D05_DateJump_NoResult.buttons.cancel' => 'Back',
 			'D05_DateJump_NoResult.buttons.add' => 'Add Record',
@@ -1596,23 +1617,24 @@ extension on TranslationsEnUs {
 			'B07_PaymentMethod_Edit.status_balanced' => 'Balanced',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => 'Remaining: ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => 'Public fund balance auto-filled',
-			'error.taskFull.title' => 'Task Full',
-			'error.taskFull.message' => ({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.',
-			'error.expiredCode.title' => 'Invite Expired',
-			'error.expiredCode.message' => ({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.',
-			'error.invalidCode.title' => 'Invalid Link',
-			'error.invalidCode.message' => 'Invalid invite link.',
-			'error.authRequired.title' => 'Login Required',
-			'error.authRequired.message' => 'Please login to join task.',
-			'error.alreadyInTask.title' => 'Already Member',
-			'error.alreadyInTask.message' => 'You are already in this task.',
-			'error.unknown.title' => 'Error',
-			'error.unknown.message' => 'An unexpected error occurred.',
-			'error.settlement.data_conflict.title' => 'Data Changed',
-			'error.settlement.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
+			'error.dialog.task_full.title' => 'Task Full',
+			'error.dialog.task_full.message' => ({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.',
+			'error.dialog.expired_code.title' => 'Invite Expired',
+			'error.dialog.expired_code.message' => ({required Object minutes}) => 'Invite link expired (${minutes} mins). Please ask captain for a new one.',
+			'error.dialog.invalid_code.title' => 'Invalid Link',
+			'error.dialog.invalid_code.message' => 'Invalid invite link.',
+			'error.dialog.auth_required.title' => 'Login Required',
+			'error.dialog.auth_required.message' => 'Please login to join task.',
+			'error.dialog.already_in_task.title' => 'Already Member',
+			'error.dialog.already_in_task.message' => 'You are already in this task.',
+			'error.dialog.unknown.title' => 'Error',
+			'error.dialog.unknown.message' => 'An unexpected error occurred.',
+			'error.dialog.data_conflict.title' => 'Data Changed',
+			'error.dialog.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
 			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
 			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
 			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
+			'error.text_input.invalid_amount' => 'Invalid amount. Please check your input.',
 			_ => null,
 		};
 	}

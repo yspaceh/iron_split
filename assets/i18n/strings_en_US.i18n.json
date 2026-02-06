@@ -107,10 +107,6 @@
     "unknown": "Unknown Action",
     "close_task": "Close Task"
   },
-  "dialog": {
-    "unsaved_changes_title": "Unsaved Changes?",
-    "unsaved_changes_content": "Changes you made will not be saved."
-  },
   "S10_Home_TaskList": {
     "title": "My Tasks",
     "tab_in_progress": "Active",
@@ -405,6 +401,10 @@
     "creating_task": "Creating task...",
     "preparing_share": "Preparing invite..."
   },
+  "D04_CommonUnsaved_Confirm": {
+    "title": "Unsaved Changes?",
+    "content": "Changes you made will not be saved."
+  },
   "D05_DateJump_NoResult": {
     "title": "No Record",
     "buttons": {
@@ -510,38 +510,43 @@
     "msg_auto_fill_prepay": "Public fund balance auto-filled"
   },
   "error": {
-    "taskFull": {
-      "title": "Task Full",
-      "message": "Task member limit ({limit}) reached. Please contact captain."
-    },
-    "expiredCode": {
-      "title": "Invite Expired",
-      "message": "Invite link expired ({minutes} mins). Please ask captain for a new one."
-    },
-    "invalidCode": {
-      "title": "Invalid Link",
-      "message": "Invalid invite link."
-    },
-    "authRequired": {
-      "title": "Login Required",
-      "message": "Please login to join task."
-    },
-    "alreadyInTask": {
-      "title": "Already Member",
-      "message": "You are already in this task."
-    },
-    "unknown": {
-      "title": "Error",
-      "message": "An unexpected error occurred."
-    },
-    "settlement": {
+    "dialog" : {
+      "task_full": {
+        "title": "Task Full",
+        "message": "Task member limit ({limit}) reached. Please contact captain."
+      },
+      "expired_code": {
+        "title": "Invite Expired",
+        "message": "Invite link expired ({minutes} mins). Please ask captain for a new one."
+      },
+      "invalid_code": {
+        "title": "Invalid Link",
+        "message": "Invalid invite link."
+      },
+      "auth_required": {
+        "title": "Login Required",
+        "message": "Please login to join task."
+      },
+      "already_in_task": {
+        "title": "Already Member",
+        "message": "You are already in this task."
+      },
+      "unknown": {
+        "title": "Error",
+        "message": "An unexpected error occurred."
+      },
       "data_conflict": {
         "title": "Data Changed",
         "message": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy."
-      },
+      }
+    },
+    "settlement": {
       "status_invalid": "The task status is invalid (may be already settled). Please refresh.",
       "permission_denied": "Only the creator can execute settlement.",
       "transaction_failed": "System error. Settlement failed. Please try again later."
+    },
+    "text_input": {
+      "invalid_amount": "Invalid amount. Please check your input."
     }
   }
 }

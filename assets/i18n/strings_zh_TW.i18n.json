@@ -107,10 +107,6 @@
     "unknown": "未知操作",
     "close_task": "結束任務"
   },
-  "dialog": {
-    "unsaved_changes_title": "尚未儲存",
-    "unsaved_changes_content": "變更將不會被儲存，確定要離開嗎？"
-  },
   "S10_Home_TaskList": {
     "title": "我的任務",
     "tab_in_progress": "進行中",
@@ -405,6 +401,10 @@
     "creating_task": "正在建立任務...",
     "preparing_share": "準備邀請函..."
   },
+  "D04_CommonUnsaved_Confirm": {
+    "title": "尚未儲存",
+    "content": "變更將不會被儲存，確定要離開嗎？"
+  },
   "D05_DateJump_NoResult": {
     "title": "無紀錄",
     "buttons": {
@@ -510,38 +510,43 @@
     "msg_auto_fill_prepay": "已自動填入公款餘額"
   },
   "error": {
-    "taskFull": {
-      "title": "任務已滿",
-      "message": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
-    },
-    "expiredCode": {
-      "title": "邀請碼已過期",
-      "message": "此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。"
-    },
-    "invalidCode": {
-      "title": "連結無效",
-      "message": "無效的邀請連結，請確認是否正確或已被刪除。"
-    },
-    "authRequired": {
-      "title": "需要登入",
-      "message": "請先登入後再加入任務。"
-    },
-    "alreadyInTask": {
-      "title": "您已是成員",
-      "message": "您已經在這個任務中了。"
-    },
-    "unknown": {
-      "title": "發生錯誤",
-      "message": "發生未預期的錯誤，請稍後再試。"
-    },
-    "settlement": {
+    "dialog" : {
+      "task_full": {
+        "title": "任務已滿",
+        "message": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
+      },
+      "expired_code": {
+        "title": "邀請碼已過期",
+        "message": "此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。"
+      },
+      "invalid_code": {
+        "title": "連結無效",
+        "message": "無效的邀請連結，請確認是否正確或已被刪除。"
+      },
+      "auth_required": {
+        "title": "需要登入",
+        "message": "請先登入後再加入任務。"
+      },
+      "already_in_task": {
+        "title": "您已是成員",
+        "message": "您已經在這個任務中了。"
+      },
+      "unknown": {
+        "title": "發生錯誤",
+        "message": "發生未預期的錯誤，請稍後再試。"
+      },
       "data_conflict": {
         "title": "帳目已變動",
         "message": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。"
-      },
+      }
+    },
+    "settlement": {
       "status_invalid": "此任務狀態異常（可能已被結算），請刷新頁面。",
       "permission_denied": "只有建立者可以執行結算。",
       "transaction_failed": "系統錯誤，結算失敗，請稍後再試。"
+    },
+    "text_input": {
+      "invalid_amount": "金額無效"
     }
   }
 }

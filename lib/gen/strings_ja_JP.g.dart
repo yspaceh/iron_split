@@ -41,7 +41,6 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
-	@override late final _TranslationsDialogJaJp dialog = _TranslationsDialogJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
 	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS10HomeTaskListJaJp S10_Home_TaskList = _TranslationsS10HomeTaskListJaJp._(_root);
@@ -61,6 +60,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
+	@override late final _TranslationsD04CommonUnsavedConfirmJaJp D04_CommonUnsaved_Confirm = _TranslationsD04CommonUnsavedConfirmJaJp._(_root);
 	@override late final _TranslationsD05DateJumpNoResultJaJp D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJaJp._(_root);
 	@override late final _TranslationsD06SettlementConfirmJaJp D06_settlement_confirm = _TranslationsD06SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsD08TaskClosedConfirmJaJp D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmJaJp._(_root);
@@ -117,17 +117,6 @@ class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
 	@override String get settle_up => '精算実行';
 	@override String get unknown => '不明な操作';
 	@override String get close_task => 'タスク終了';
-}
-
-// Path: dialog
-class _TranslationsDialogJaJp extends TranslationsDialogZhTw {
-	_TranslationsDialogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get unsaved_changes_title => '未保存の変更';
-	@override String get unsaved_changes_content => '変更内容は保存されません。';
 }
 
 // Path: S50_Onboarding_Consent
@@ -494,6 +483,17 @@ class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateCon
 	@override String get preparing_share => '招待を準備中...';
 }
 
+// Path: D04_CommonUnsaved_Confirm
+class _TranslationsD04CommonUnsavedConfirmJaJp extends TranslationsD04CommonUnsavedConfirmZhTw {
+	_TranslationsD04CommonUnsavedConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '未保存の変更';
+	@override String get content => '変更内容は保存されません。';
+}
+
 // Path: D05_DateJump_NoResult
 class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResultZhTw {
 	_TranslationsD05DateJumpNoResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -664,13 +664,9 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsErrorTaskFullJaJp taskFull = _TranslationsErrorTaskFullJaJp._(_root);
-	@override late final _TranslationsErrorExpiredCodeJaJp expiredCode = _TranslationsErrorExpiredCodeJaJp._(_root);
-	@override late final _TranslationsErrorInvalidCodeJaJp invalidCode = _TranslationsErrorInvalidCodeJaJp._(_root);
-	@override late final _TranslationsErrorAuthRequiredJaJp authRequired = _TranslationsErrorAuthRequiredJaJp._(_root);
-	@override late final _TranslationsErrorAlreadyInTaskJaJp alreadyInTask = _TranslationsErrorAlreadyInTaskJaJp._(_root);
-	@override late final _TranslationsErrorUnknownJaJp unknown = _TranslationsErrorUnknownJaJp._(_root);
+	@override late final _TranslationsErrorDialogJaJp dialog = _TranslationsErrorDialogJaJp._(_root);
 	@override late final _TranslationsErrorSettlementJaJp settlement = _TranslationsErrorSettlementJaJp._(_root);
+	@override late final _TranslationsErrorTextInputJaJp text_input = _TranslationsErrorTextInputJaJp._(_root);
 }
 
 // Path: common.buttons
@@ -1105,70 +1101,20 @@ class _TranslationsB06PaymentInfoDetailButtonsJaJp extends TranslationsB06Paymen
 	@override String get copy => 'コピー';
 }
 
-// Path: error.taskFull
-class _TranslationsErrorTaskFullJaJp extends TranslationsErrorTaskFullZhTw {
-	_TranslationsErrorTaskFullJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: error.dialog
+class _TranslationsErrorDialogJaJp extends TranslationsErrorDialogZhTw {
+	_TranslationsErrorDialogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'タスク満員';
-	@override String message({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。';
-}
-
-// Path: error.expiredCode
-class _TranslationsErrorExpiredCodeJaJp extends TranslationsErrorExpiredCodeZhTw {
-	_TranslationsErrorExpiredCodeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '招待コード期限切れ';
-	@override String message({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。';
-}
-
-// Path: error.invalidCode
-class _TranslationsErrorInvalidCodeJaJp extends TranslationsErrorInvalidCodeZhTw {
-	_TranslationsErrorInvalidCodeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Invalid Link';
-	@override String get message => '無効な招待リンクです。';
-}
-
-// Path: error.authRequired
-class _TranslationsErrorAuthRequiredJaJp extends TranslationsErrorAuthRequiredZhTw {
-	_TranslationsErrorAuthRequiredJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'ログインが必要';
-	@override String get message => 'タスクに参加するにはログインしてください。';
-}
-
-// Path: error.alreadyInTask
-class _TranslationsErrorAlreadyInTaskJaJp extends TranslationsErrorAlreadyInTaskZhTw {
-	_TranslationsErrorAlreadyInTaskJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '既に参加済';
-	@override String get message => '既にこのタスクのメンバーです。';
-}
-
-// Path: error.unknown
-class _TranslationsErrorUnknownJaJp extends TranslationsErrorUnknownZhTw {
-	_TranslationsErrorUnknownJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'エラー';
-	@override String get message => '予期せぬエラーが発生しました。';
+	@override late final _TranslationsErrorDialogTaskFullJaJp task_full = _TranslationsErrorDialogTaskFullJaJp._(_root);
+	@override late final _TranslationsErrorDialogExpiredCodeJaJp expired_code = _TranslationsErrorDialogExpiredCodeJaJp._(_root);
+	@override late final _TranslationsErrorDialogInvalidCodeJaJp invalid_code = _TranslationsErrorDialogInvalidCodeJaJp._(_root);
+	@override late final _TranslationsErrorDialogAuthRequiredJaJp auth_required = _TranslationsErrorDialogAuthRequiredJaJp._(_root);
+	@override late final _TranslationsErrorDialogAlreadyInTaskJaJp already_in_task = _TranslationsErrorDialogAlreadyInTaskJaJp._(_root);
+	@override late final _TranslationsErrorDialogUnknownJaJp unknown = _TranslationsErrorDialogUnknownJaJp._(_root);
+	@override late final _TranslationsErrorDialogDataConflictJaJp data_conflict = _TranslationsErrorDialogDataConflictJaJp._(_root);
 }
 
 // Path: error.settlement
@@ -1178,10 +1124,19 @@ class _TranslationsErrorSettlementJaJp extends TranslationsErrorSettlementZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsErrorSettlementDataConflictJaJp data_conflict = _TranslationsErrorSettlementDataConflictJaJp._(_root);
 	@override String get status_invalid => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
 	@override String get permission_denied => '精算を実行できるのは作成者のみです。';
 	@override String get transaction_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
+}
+
+// Path: error.text_input
+class _TranslationsErrorTextInputJaJp extends TranslationsErrorTextInputZhTw {
+	_TranslationsErrorTextInputJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalid_amount => ' 金額が正しくありません';
 }
 
 // Path: common.share.invite
@@ -1206,9 +1161,75 @@ class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSett
 	@override String message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
 }
 
-// Path: error.settlement.data_conflict
-class _TranslationsErrorSettlementDataConflictJaJp extends TranslationsErrorSettlementDataConflictZhTw {
-	_TranslationsErrorSettlementDataConflictJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: error.dialog.task_full
+class _TranslationsErrorDialogTaskFullJaJp extends TranslationsErrorDialogTaskFullZhTw {
+	_TranslationsErrorDialogTaskFullJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク満員';
+	@override String message({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。';
+}
+
+// Path: error.dialog.expired_code
+class _TranslationsErrorDialogExpiredCodeJaJp extends TranslationsErrorDialogExpiredCodeZhTw {
+	_TranslationsErrorDialogExpiredCodeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '招待コード期限切れ';
+	@override String message({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。';
+}
+
+// Path: error.dialog.invalid_code
+class _TranslationsErrorDialogInvalidCodeJaJp extends TranslationsErrorDialogInvalidCodeZhTw {
+	_TranslationsErrorDialogInvalidCodeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '無効な招待リンク';
+	@override String get message => '無効な招待リンクです。';
+}
+
+// Path: error.dialog.auth_required
+class _TranslationsErrorDialogAuthRequiredJaJp extends TranslationsErrorDialogAuthRequiredZhTw {
+	_TranslationsErrorDialogAuthRequiredJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'ログインが必要';
+	@override String get message => 'タスクに参加するにはログインしてください。';
+}
+
+// Path: error.dialog.already_in_task
+class _TranslationsErrorDialogAlreadyInTaskJaJp extends TranslationsErrorDialogAlreadyInTaskZhTw {
+	_TranslationsErrorDialogAlreadyInTaskJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '既に参加済';
+	@override String get message => '既にこのタスクのメンバーです。';
+}
+
+// Path: error.dialog.unknown
+class _TranslationsErrorDialogUnknownJaJp extends TranslationsErrorDialogUnknownZhTw {
+	_TranslationsErrorDialogUnknownJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'エラー';
+	@override String get message => '予期せぬエラーが発生しました。';
+}
+
+// Path: error.dialog.data_conflict
+class _TranslationsErrorDialogDataConflictJaJp extends TranslationsErrorDialogDataConflictZhTw {
+	_TranslationsErrorDialogDataConflictJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
@@ -1311,8 +1332,6 @@ extension on TranslationsJaJp {
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
-			'dialog.unsaved_changes_title' => '未保存の変更',
-			'dialog.unsaved_changes_content' => '変更内容は保存されません。',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
 			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
 			'S50_Onboarding_Consent.content_prefix' => '開始することで、',
@@ -1528,6 +1547,8 @@ extension on TranslationsJaJp {
 			'D03_TaskCreate_Confirm.label_members' => '人数',
 			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
 			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
+			'D04_CommonUnsaved_Confirm.title' => '未保存の変更',
+			'D04_CommonUnsaved_Confirm.content' => '変更内容は保存されません。',
 			'D05_DateJump_NoResult.title' => '記録なし',
 			'D05_DateJump_NoResult.buttons.cancel' => '戻る',
 			'D05_DateJump_NoResult.buttons.add' => '記録を追加',
@@ -1594,23 +1615,24 @@ extension on TranslationsJaJp {
 			'B07_PaymentMethod_Edit.status_balanced' => '一致',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '残り: ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '公費残高を自動入力しました',
-			'error.taskFull.title' => 'タスク満員',
-			'error.taskFull.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
-			'error.expiredCode.title' => '招待コード期限切れ',
-			'error.expiredCode.message' => ({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。',
-			'error.invalidCode.title' => 'Invalid Link',
-			'error.invalidCode.message' => '無効な招待リンクです。',
-			'error.authRequired.title' => 'ログインが必要',
-			'error.authRequired.message' => 'タスクに参加するにはログインしてください。',
-			'error.alreadyInTask.title' => '既に参加済',
-			'error.alreadyInTask.message' => '既にこのタスクのメンバーです。',
-			'error.unknown.title' => 'エラー',
-			'error.unknown.message' => '予期せぬエラーが発生しました。',
-			'error.settlement.data_conflict.title' => 'データ更新あり',
-			'error.settlement.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
+			'error.dialog.task_full.title' => 'タスク満員',
+			'error.dialog.task_full.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
+			'error.dialog.expired_code.title' => '招待コード期限切れ',
+			'error.dialog.expired_code.message' => ({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。',
+			'error.dialog.invalid_code.title' => '無効な招待リンク',
+			'error.dialog.invalid_code.message' => '無効な招待リンクです。',
+			'error.dialog.auth_required.title' => 'ログインが必要',
+			'error.dialog.auth_required.message' => 'タスクに参加するにはログインしてください。',
+			'error.dialog.already_in_task.title' => '既に参加済',
+			'error.dialog.already_in_task.message' => '既にこのタスクのメンバーです。',
+			'error.dialog.unknown.title' => 'エラー',
+			'error.dialog.unknown.message' => '予期せぬエラーが発生しました。',
+			'error.dialog.data_conflict.title' => 'データ更新あり',
+			'error.dialog.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
 			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
 			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
+			'error.text_input.invalid_amount' => ' 金額が正しくありません',
 			_ => null,
 		};
 	}

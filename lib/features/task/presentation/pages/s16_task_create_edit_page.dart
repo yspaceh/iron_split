@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
 import 'package:provider/provider.dart';
-import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_currency_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_range_input.dart';
@@ -123,12 +123,23 @@ class _S16ContentState extends State<_S16Content> {
 
   // 判斷是否需要攔截
   Future<void> _handleClose() async {
-    final shouldLeave = await showDialog<bool>(
-      context: context,
-      builder: (context) => const D04CommonUnsavedConfirmDialog(),
-    );
+    final confirm = await CommonAlertDialog.show<bool>(context,
+        title: t.D04_CommonUnsaved_Confirm.title,
+        content: Text(t.D04_CommonUnsaved_Confirm.content),
+        actions: [
+          AppButton(
+            text: t.common.buttons.discard,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(true),
+          ),
+          AppButton(
+            text: t.common.buttons.keep_editing,
+            type: AppButtonType.primary,
+            onPressed: () => context.pop(false),
+          ),
+        ]);
 
-    if (shouldLeave == true && mounted) {
+    if (confirm == true && mounted) {
       context.pop();
     }
   }

@@ -78,9 +78,9 @@ class _S31Content extends StatelessWidget {
         // 跳出警告 Dialog，並等待使用者按下按鈕
         await CommonAlertDialog.show(
           context,
-          title: t.error.settlement.data_conflict.title,
+          title: t.error.dialog.data_conflict.title,
           content: Text(
-            t.error.settlement.data_conflict.message,
+            t.error.dialog.data_conflict.message,
             style: theme.textTheme.bodyMedium,
           ),
           actions: [

@@ -42,7 +42,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	// Translations
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
-	late final TranslationsDialogZhTw dialog = TranslationsDialogZhTw.internal(_root);
 	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
 	late final TranslationsS11InviteConfirmZhTw S11_Invite_Confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
 	late final TranslationsS12TaskCloseNoticeZhTw S12_TaskClose_Notice = TranslationsS12TaskCloseNoticeZhTw.internal(_root);
@@ -62,6 +61,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
 	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
+	late final TranslationsD04CommonUnsavedConfirmZhTw D04_CommonUnsaved_Confirm = TranslationsD04CommonUnsavedConfirmZhTw.internal(_root);
 	late final TranslationsD05DateJumpNoResultZhTw D05_DateJump_NoResult = TranslationsD05DateJumpNoResultZhTw.internal(_root);
 	late final TranslationsD06SettlementConfirmZhTw D06_settlement_confirm = TranslationsD06SettlementConfirmZhTw.internal(_root);
 	late final TranslationsD08TaskClosedConfirmZhTw D08_TaskClosed_Confirm = TranslationsD08TaskClosedConfirmZhTw.internal(_root);
@@ -156,21 +156,6 @@ class TranslationsLogActionZhTw {
 
 	/// zh-TW: '結束任務'
 	String get close_task => '結束任務';
-}
-
-// Path: dialog
-class TranslationsDialogZhTw {
-	TranslationsDialogZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '尚未儲存'
-	String get unsaved_changes_title => '尚未儲存';
-
-	/// zh-TW: '變更將不會被儲存，確定要離開嗎？'
-	String get unsaved_changes_content => '變更將不會被儲存，確定要離開嗎？';
 }
 
 // Path: S10_Home_TaskList
@@ -903,6 +888,21 @@ class TranslationsD03TaskCreateConfirmZhTw {
 	String get preparing_share => '準備邀請函...';
 }
 
+// Path: D04_CommonUnsaved_Confirm
+class TranslationsD04CommonUnsavedConfirmZhTw {
+	TranslationsD04CommonUnsavedConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '尚未儲存'
+	String get title => '尚未儲存';
+
+	/// zh-TW: '變更將不會被儲存，確定要離開嗎？'
+	String get content => '變更將不會被儲存，確定要離開嗎？';
+}
+
 // Path: D05_DateJump_NoResult
 class TranslationsD05DateJumpNoResultZhTw {
 	TranslationsD05DateJumpNoResultZhTw.internal(this._root);
@@ -1193,13 +1193,9 @@ class TranslationsErrorZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final TranslationsErrorTaskFullZhTw taskFull = TranslationsErrorTaskFullZhTw.internal(_root);
-	late final TranslationsErrorExpiredCodeZhTw expiredCode = TranslationsErrorExpiredCodeZhTw.internal(_root);
-	late final TranslationsErrorInvalidCodeZhTw invalidCode = TranslationsErrorInvalidCodeZhTw.internal(_root);
-	late final TranslationsErrorAuthRequiredZhTw authRequired = TranslationsErrorAuthRequiredZhTw.internal(_root);
-	late final TranslationsErrorAlreadyInTaskZhTw alreadyInTask = TranslationsErrorAlreadyInTaskZhTw.internal(_root);
-	late final TranslationsErrorUnknownZhTw unknown = TranslationsErrorUnknownZhTw.internal(_root);
+	late final TranslationsErrorDialogZhTw dialog = TranslationsErrorDialogZhTw.internal(_root);
 	late final TranslationsErrorSettlementZhTw settlement = TranslationsErrorSettlementZhTw.internal(_root);
+	late final TranslationsErrorTextInputZhTw text_input = TranslationsErrorTextInputZhTw.internal(_root);
 }
 
 // Path: common.buttons
@@ -1864,94 +1860,20 @@ class TranslationsB06PaymentInfoDetailButtonsZhTw {
 	String get copy => '複製';
 }
 
-// Path: error.taskFull
-class TranslationsErrorTaskFullZhTw {
-	TranslationsErrorTaskFullZhTw.internal(this._root);
+// Path: error.dialog
+class TranslationsErrorDialogZhTw {
+	TranslationsErrorDialogZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// zh-TW: '任務已滿'
-	String get title => '任務已滿';
-
-	/// zh-TW: '此任務成員數已達上限 {limit} 人，請聯繫隊長。'
-	String message({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。';
-}
-
-// Path: error.expiredCode
-class TranslationsErrorExpiredCodeZhTw {
-	TranslationsErrorExpiredCodeZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '邀請碼已過期'
-	String get title => '邀請碼已過期';
-
-	/// zh-TW: '此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。'
-	String message({required Object minutes}) => '此邀請連結已失效（時限 ${minutes} 分鐘）。請請隊長重新產生。';
-}
-
-// Path: error.invalidCode
-class TranslationsErrorInvalidCodeZhTw {
-	TranslationsErrorInvalidCodeZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '連結無效'
-	String get title => '連結無效';
-
-	/// zh-TW: '無效的邀請連結，請確認是否正確或已被刪除。'
-	String get message => '無效的邀請連結，請確認是否正確或已被刪除。';
-}
-
-// Path: error.authRequired
-class TranslationsErrorAuthRequiredZhTw {
-	TranslationsErrorAuthRequiredZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '需要登入'
-	String get title => '需要登入';
-
-	/// zh-TW: '請先登入後再加入任務。'
-	String get message => '請先登入後再加入任務。';
-}
-
-// Path: error.alreadyInTask
-class TranslationsErrorAlreadyInTaskZhTw {
-	TranslationsErrorAlreadyInTaskZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '您已是成員'
-	String get title => '您已是成員';
-
-	/// zh-TW: '您已經在這個任務中了。'
-	String get message => '您已經在這個任務中了。';
-}
-
-// Path: error.unknown
-class TranslationsErrorUnknownZhTw {
-	TranslationsErrorUnknownZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '發生錯誤'
-	String get title => '發生錯誤';
-
-	/// zh-TW: '發生未預期的錯誤，請稍後再試。'
-	String get message => '發生未預期的錯誤，請稍後再試。';
+	late final TranslationsErrorDialogTaskFullZhTw task_full = TranslationsErrorDialogTaskFullZhTw.internal(_root);
+	late final TranslationsErrorDialogExpiredCodeZhTw expired_code = TranslationsErrorDialogExpiredCodeZhTw.internal(_root);
+	late final TranslationsErrorDialogInvalidCodeZhTw invalid_code = TranslationsErrorDialogInvalidCodeZhTw.internal(_root);
+	late final TranslationsErrorDialogAuthRequiredZhTw auth_required = TranslationsErrorDialogAuthRequiredZhTw.internal(_root);
+	late final TranslationsErrorDialogAlreadyInTaskZhTw already_in_task = TranslationsErrorDialogAlreadyInTaskZhTw.internal(_root);
+	late final TranslationsErrorDialogUnknownZhTw unknown = TranslationsErrorDialogUnknownZhTw.internal(_root);
+	late final TranslationsErrorDialogDataConflictZhTw data_conflict = TranslationsErrorDialogDataConflictZhTw.internal(_root);
 }
 
 // Path: error.settlement
@@ -1961,7 +1883,6 @@ class TranslationsErrorSettlementZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final TranslationsErrorSettlementDataConflictZhTw data_conflict = TranslationsErrorSettlementDataConflictZhTw.internal(_root);
 
 	/// zh-TW: '此任務狀態異常（可能已被結算），請刷新頁面。'
 	String get status_invalid => '此任務狀態異常（可能已被結算），請刷新頁面。';
@@ -1971,6 +1892,18 @@ class TranslationsErrorSettlementZhTw {
 
 	/// zh-TW: '系統錯誤，結算失敗，請稍後再試。'
 	String get transaction_failed => '系統錯誤，結算失敗，請稍後再試。';
+}
+
+// Path: error.text_input
+class TranslationsErrorTextInputZhTw {
+	TranslationsErrorTextInputZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '金額無效'
+	String get invalid_amount => '金額無效';
 }
 
 // Path: common.share.invite
@@ -2003,9 +1936,99 @@ class TranslationsCommonShareSettlementZhTw {
 	String message({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}';
 }
 
-// Path: error.settlement.data_conflict
-class TranslationsErrorSettlementDataConflictZhTw {
-	TranslationsErrorSettlementDataConflictZhTw.internal(this._root);
+// Path: error.dialog.task_full
+class TranslationsErrorDialogTaskFullZhTw {
+	TranslationsErrorDialogTaskFullZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務已滿'
+	String get title => '任務已滿';
+
+	/// zh-TW: '此任務成員數已達上限 {limit} 人，請聯繫隊長。'
+	String message({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。';
+}
+
+// Path: error.dialog.expired_code
+class TranslationsErrorDialogExpiredCodeZhTw {
+	TranslationsErrorDialogExpiredCodeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '邀請碼已過期'
+	String get title => '邀請碼已過期';
+
+	/// zh-TW: '此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。'
+	String message({required Object minutes}) => '此邀請連結已失效（時限 ${minutes} 分鐘）。請請隊長重新產生。';
+}
+
+// Path: error.dialog.invalid_code
+class TranslationsErrorDialogInvalidCodeZhTw {
+	TranslationsErrorDialogInvalidCodeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '連結無效'
+	String get title => '連結無效';
+
+	/// zh-TW: '無效的邀請連結，請確認是否正確或已被刪除。'
+	String get message => '無效的邀請連結，請確認是否正確或已被刪除。';
+}
+
+// Path: error.dialog.auth_required
+class TranslationsErrorDialogAuthRequiredZhTw {
+	TranslationsErrorDialogAuthRequiredZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '需要登入'
+	String get title => '需要登入';
+
+	/// zh-TW: '請先登入後再加入任務。'
+	String get message => '請先登入後再加入任務。';
+}
+
+// Path: error.dialog.already_in_task
+class TranslationsErrorDialogAlreadyInTaskZhTw {
+	TranslationsErrorDialogAlreadyInTaskZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '您已是成員'
+	String get title => '您已是成員';
+
+	/// zh-TW: '您已經在這個任務中了。'
+	String get message => '您已經在這個任務中了。';
+}
+
+// Path: error.dialog.unknown
+class TranslationsErrorDialogUnknownZhTw {
+	TranslationsErrorDialogUnknownZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '發生錯誤'
+	String get title => '發生錯誤';
+
+	/// zh-TW: '發生未預期的錯誤，請稍後再試。'
+	String get message => '發生未預期的錯誤，請稍後再試。';
+}
+
+// Path: error.dialog.data_conflict
+class TranslationsErrorDialogDataConflictZhTw {
+	TranslationsErrorDialogDataConflictZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -2112,8 +2135,6 @@ extension on Translations {
 			'log_action.settle_up' => '執行結算',
 			'log_action.unknown' => '未知操作',
 			'log_action.close_task' => '結束任務',
-			'dialog.unsaved_changes_title' => '尚未儲存',
-			'dialog.unsaved_changes_content' => '變更將不會被儲存，確定要離開嗎？',
 			'S10_Home_TaskList.title' => '我的任務',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '已完成',
@@ -2330,6 +2351,8 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.label_members' => '人數',
 			'D03_TaskCreate_Confirm.creating_task' => '正在建立任務...',
 			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
+			'D04_CommonUnsaved_Confirm.title' => '尚未儲存',
+			'D04_CommonUnsaved_Confirm.content' => '變更將不會被儲存，確定要離開嗎？',
 			'D05_DateJump_NoResult.title' => '無紀錄',
 			'D05_DateJump_NoResult.buttons.cancel' => '返回',
 			'D05_DateJump_NoResult.buttons.add' => '新增紀錄',
@@ -2396,23 +2419,24 @@ extension on Translations {
 			'B07_PaymentMethod_Edit.status_balanced' => '金額吻合',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '尚差 ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '已自動填入公款餘額',
-			'error.taskFull.title' => '任務已滿',
-			'error.taskFull.message' => ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。',
-			'error.expiredCode.title' => '邀請碼已過期',
-			'error.expiredCode.message' => ({required Object minutes}) => '此邀請連結已失效（時限 ${minutes} 分鐘）。請請隊長重新產生。',
-			'error.invalidCode.title' => '連結無效',
-			'error.invalidCode.message' => '無效的邀請連結，請確認是否正確或已被刪除。',
-			'error.authRequired.title' => '需要登入',
-			'error.authRequired.message' => '請先登入後再加入任務。',
-			'error.alreadyInTask.title' => '您已是成員',
-			'error.alreadyInTask.message' => '您已經在這個任務中了。',
-			'error.unknown.title' => '發生錯誤',
-			'error.unknown.message' => '發生未預期的錯誤，請稍後再試。',
-			'error.settlement.data_conflict.title' => '帳目已變動',
-			'error.settlement.data_conflict.message' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
+			'error.dialog.task_full.title' => '任務已滿',
+			'error.dialog.task_full.message' => ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。',
+			'error.dialog.expired_code.title' => '邀請碼已過期',
+			'error.dialog.expired_code.message' => ({required Object minutes}) => '此邀請連結已失效（時限 ${minutes} 分鐘）。請請隊長重新產生。',
+			'error.dialog.invalid_code.title' => '連結無效',
+			'error.dialog.invalid_code.message' => '無效的邀請連結，請確認是否正確或已被刪除。',
+			'error.dialog.auth_required.title' => '需要登入',
+			'error.dialog.auth_required.message' => '請先登入後再加入任務。',
+			'error.dialog.already_in_task.title' => '您已是成員',
+			'error.dialog.already_in_task.message' => '您已經在這個任務中了。',
+			'error.dialog.unknown.title' => '發生錯誤',
+			'error.dialog.unknown.message' => '發生未預期的錯誤，請稍後再試。',
+			'error.dialog.data_conflict.title' => '帳目已變動',
+			'error.dialog.data_conflict.message' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
 			'error.settlement.status_invalid' => '此任務狀態異常（可能已被結算），請刷新頁面。',
 			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
 			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
+			'error.text_input.invalid_amount' => '金額無效',
 			_ => null,
 		};
 	}
