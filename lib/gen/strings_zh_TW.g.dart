@@ -399,8 +399,8 @@ class TranslationsS15RecordEditZhTw {
 	/// zh-TW: '項目名稱'
 	String get label_title => '項目名稱';
 
-	/// zh-TW: '輸入消費項目 (如：晚餐)'
-	String get hint_title => '輸入消費項目 (如：晚餐)';
+	/// zh-TW: '輸入消費項目 ()'
+	String get hint_title => '輸入消費項目 ()';
 
 	/// zh-TW: '支付方式'
 	String get label_payment_method => '支付方式';
@@ -485,6 +485,8 @@ class TranslationsS15RecordEditZhTw {
 
 	/// zh-TW: '餘額 {amount} 將存入餘額罐 (結算時分配)'
 	String msg_leftover_pot({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)';
+
+	late final TranslationsS15RecordEditPlaceholderZhTw placeholder = TranslationsS15RecordEditPlaceholderZhTw.internal(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -1518,6 +1520,19 @@ class TranslationsS15RecordEditButtonsZhTw {
 	String get close => '關閉';
 }
 
+// Path: S15_Record_Edit.placeholder
+class TranslationsS15RecordEditPlaceholderZhTw {
+	TranslationsS15RecordEditPlaceholderZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsS15RecordEditPlaceholderCategoryZhTw category = TranslationsS15RecordEditPlaceholderCategoryZhTw.internal(_root);
+
+	/// zh-TW: '如：{category}'
+	String item({required Object category}) => '如：${category}';
+}
+
 // Path: S16_TaskCreate_Edit.buttons
 class TranslationsS16TaskCreateEditButtonsZhTw {
 	TranslationsS16TaskCreateEditButtonsZhTw.internal(this._root);
@@ -1904,6 +1919,9 @@ class TranslationsErrorTextInputZhTw {
 
 	/// zh-TW: '金額無效'
 	String get invalid_amount => '金額無效';
+
+	/// zh-TW: '此欄位為必填'
+	String get required => '此欄位為必填';
 }
 
 // Path: common.share.invite
@@ -1934,6 +1952,33 @@ class TranslationsCommonShareSettlementZhTw {
 
 	/// zh-TW: '結算已完成！ 請開啟 Iron Split App 確認「{taskName}」您的支付金額。 連結：{link}'
 	String message({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}';
+}
+
+// Path: S15_Record_Edit.placeholder.category
+class TranslationsS15RecordEditPlaceholderCategoryZhTw {
+	TranslationsS15RecordEditPlaceholderCategoryZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '晚餐'
+	String get food => '晚餐';
+
+	/// zh-TW: '車費'
+	String get transport => '車費';
+
+	/// zh-TW: '紀念品'
+	String get shopping => '紀念品';
+
+	/// zh-TW: '電影票'
+	String get entertainment => '電影票';
+
+	/// zh-TW: '住宿費'
+	String get accommodation => '住宿費';
+
+	/// zh-TW: '其他費用'
+	String get others => '其他費用';
 }
 
 // Path: error.dialog.task_full
@@ -2205,7 +2250,7 @@ extension on Translations {
 			'S15_Record_Edit.section_split' => '分攤資訊',
 			'S15_Record_Edit.label_date' => '日期',
 			'S15_Record_Edit.label_title' => '項目名稱',
-			'S15_Record_Edit.hint_title' => '輸入消費項目 (如：晚餐)',
+			'S15_Record_Edit.hint_title' => '輸入消費項目 ()',
 			'S15_Record_Edit.label_payment_method' => '支付方式',
 			'S15_Record_Edit.val_prepay' => '預收',
 			'S15_Record_Edit.val_member_paid' => ({required Object name}) => '${name} 先付',
@@ -2234,6 +2279,13 @@ extension on Translations {
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
 			'S15_Record_Edit.payer_multiple' => '多人',
 			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)',
+			'S15_Record_Edit.placeholder.category.food' => '晚餐',
+			'S15_Record_Edit.placeholder.category.transport' => '車費',
+			'S15_Record_Edit.placeholder.category.shopping' => '紀念品',
+			'S15_Record_Edit.placeholder.category.entertainment' => '電影票',
+			'S15_Record_Edit.placeholder.category.accommodation' => '住宿費',
+			'S15_Record_Edit.placeholder.category.others' => '其他費用',
+			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '如：${category}',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '確定',
@@ -2437,6 +2489,7 @@ extension on Translations {
 			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
 			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
 			'error.text_input.invalid_amount' => '金額無效',
+			'error.text_input.required' => '此欄位為必填',
 			_ => null,
 		};
 	}

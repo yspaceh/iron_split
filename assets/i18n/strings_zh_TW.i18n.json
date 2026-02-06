@@ -196,7 +196,7 @@
     "section_split": "分攤資訊",
     "label_date": "日期",
     "label_title": "項目名稱",
-    "hint_title": "輸入消費項目 (如：晚餐)",
+    "hint_title": "輸入消費項目 ()",
     "label_payment_method": "支付方式",
     "val_prepay": "預收",
     "val_member_paid": "{name} 先付",
@@ -224,7 +224,18 @@
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
     "payer_multiple": "多人",
-    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)"
+    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
+    "placeholder" : {
+      "category" : {
+        "food": "晚餐",
+        "transport": "車費",
+        "shopping": "紀念品",
+        "entertainment": "電影票",
+        "accommodation": "住宿費",
+        "others": "其他費用"
+      },
+      "item": "如：{category}"
+    }
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
@@ -546,7 +557,8 @@
       "transaction_failed": "系統錯誤，結算失敗，請稍後再試。"
     },
     "text_input": {
-      "invalid_amount": "金額無效"
+      "invalid_amount": "金額無效",
+      "required": "此欄位為必填"
     }
   }
 }

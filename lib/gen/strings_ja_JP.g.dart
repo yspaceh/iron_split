@@ -297,6 +297,7 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_income => '資金提供者';
 	@override String get payer_multiple => '複数人';
 	@override String msg_leftover_pot({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）';
+	@override late final _TranslationsS15RecordEditPlaceholderJaJp placeholder = _TranslationsS15RecordEditPlaceholderJaJp._(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -863,6 +864,17 @@ class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditBut
 	@override String get close => '閉じる';
 }
 
+// Path: S15_Record_Edit.placeholder
+class _TranslationsS15RecordEditPlaceholderJaJp extends TranslationsS15RecordEditPlaceholderZhTw {
+	_TranslationsS15RecordEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsS15RecordEditPlaceholderCategoryJaJp category = _TranslationsS15RecordEditPlaceholderCategoryJaJp._(_root);
+	@override String item({required Object category}) => '例：${category}';
+}
+
 // Path: S16_TaskCreate_Edit.buttons
 class _TranslationsS16TaskCreateEditButtonsJaJp extends TranslationsS16TaskCreateEditButtonsZhTw {
 	_TranslationsS16TaskCreateEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1137,6 +1149,7 @@ class _TranslationsErrorTextInputJaJp extends TranslationsErrorTextInputZhTw {
 
 	// Translations
 	@override String get invalid_amount => ' 金額が正しくありません';
+	@override String get required => '必須項目です';
 }
 
 // Path: common.share.invite
@@ -1159,6 +1172,21 @@ class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSett
 	// Translations
 	@override String get subject => 'Iron Split タスク精算通知';
 	@override String message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
+}
+
+// Path: S15_Record_Edit.placeholder.category
+class _TranslationsS15RecordEditPlaceholderCategoryJaJp extends TranslationsS15RecordEditPlaceholderCategoryZhTw {
+	_TranslationsS15RecordEditPlaceholderCategoryJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get food => '夕食';
+	@override String get transport => '交通費';
+	@override String get shopping => 'お土産';
+	@override String get entertainment => '映画チケット';
+	@override String get accommodation => '宿泊費';
+	@override String get others => 'その他';
 }
 
 // Path: error.dialog.task_full
@@ -1446,6 +1474,13 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.base_card_title_income' => '資金提供者',
 			'S15_Record_Edit.payer_multiple' => '複数人',
 			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '残り ${amount} は残高罐に保存されます（決算時に分配）',
+			'S15_Record_Edit.placeholder.category.food' => '夕食',
+			'S15_Record_Edit.placeholder.category.transport' => '交通費',
+			'S15_Record_Edit.placeholder.category.shopping' => 'お土産',
+			'S15_Record_Edit.placeholder.category.entertainment' => '映画チケット',
+			'S15_Record_Edit.placeholder.category.accommodation' => '宿泊費',
+			'S15_Record_Edit.placeholder.category.others' => 'その他',
+			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '例：${category}',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '完了',
@@ -1633,6 +1668,7 @@ extension on TranslationsJaJp {
 			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
 			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
 			'error.text_input.invalid_amount' => ' 金額が正しくありません',
+			'error.text_input.required' => '必須項目です',
 			_ => null,
 		};
 	}

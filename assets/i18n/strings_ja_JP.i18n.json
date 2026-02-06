@@ -247,7 +247,18 @@
     "base_card_title_expense": "残額 (Base)",
     "base_card_title_income": "資金提供者",
     "payer_multiple": "複数人",
-    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）"
+    "msg_leftover_pot": "残り {amount} は残高罐に保存されます（決算時に分配）",
+    "placeholder" : {
+      "category" : {
+        "food": "夕食",
+        "transport": "交通費",
+        "shopping": "お土産",
+        "entertainment": "映画チケット",
+        "accommodation": "宿泊費",
+        "others": "その他"
+      },
+      "item": "例：{category}"
+    }
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
@@ -545,7 +556,8 @@
       "transaction_failed": "システムエラーが発生しました。後でもう一度お試しください。"
     },
     "text_input": {
-      "invalid_amount": " 金額が正しくありません"
+      "invalid_amount": " 金額が正しくありません",
+      "required": "必須項目です"
     }
   }
 }

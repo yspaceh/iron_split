@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -259,21 +260,7 @@ class _S15ContentState extends State<_S15Content> {
       context.pop();
       return;
     }
-    final confirm = await CommonAlertDialog.show<bool>(context,
-        title: t.D04_CommonUnsaved_Confirm.title,
-        content: Text(t.D04_CommonUnsaved_Confirm.content),
-        actions: [
-          AppButton(
-            text: t.common.buttons.discard,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(true),
-          ),
-          AppButton(
-            text: t.common.buttons.keep_editing,
-            type: AppButtonType.primary,
-            onPressed: () => context.pop(false),
-          ),
-        ]);
+    final confirm = await D04CommonUnsavedConfirmDialog.show<bool>(context);
 
     if (confirm == true && mounted) context.pop();
   }

@@ -264,6 +264,7 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_income => 'Contributors (Source)';
 	@override String get payer_multiple => 'Multiple Payers';
 	@override String msg_leftover_pot({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)';
+	@override late final _TranslationsS15RecordEditPlaceholderEnUs placeholder = _TranslationsS15RecordEditPlaceholderEnUs._(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -844,6 +845,17 @@ class _TranslationsS15RecordEditButtonsEnUs extends TranslationsS15RecordEditBut
 	@override String get close => 'Close';
 }
 
+// Path: S15_Record_Edit.placeholder
+class _TranslationsS15RecordEditPlaceholderEnUs extends TranslationsS15RecordEditPlaceholderZhTw {
+	_TranslationsS15RecordEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsS15RecordEditPlaceholderCategoryEnUs category = _TranslationsS15RecordEditPlaceholderCategoryEnUs._(_root);
+	@override String item({required Object category}) => 'e.g.${category}';
+}
+
 // Path: S16_TaskCreate_Edit.buttons
 class _TranslationsS16TaskCreateEditButtonsEnUs extends TranslationsS16TaskCreateEditButtonsZhTw {
 	_TranslationsS16TaskCreateEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1138,6 +1150,7 @@ class _TranslationsErrorTextInputEnUs extends TranslationsErrorTextInputZhTw {
 
 	// Translations
 	@override String get invalid_amount => 'Invalid amount. Please check your input.';
+	@override String get required => 'This field is required';
 }
 
 // Path: common.share.invite
@@ -1160,6 +1173,21 @@ class _TranslationsCommonShareSettlementEnUs extends TranslationsCommonShareSett
 	// Translations
 	@override String get subject => 'Check Iron Split Task Settlement';
 	@override String message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
+}
+
+// Path: S15_Record_Edit.placeholder.category
+class _TranslationsS15RecordEditPlaceholderCategoryEnUs extends TranslationsS15RecordEditPlaceholderCategoryZhTw {
+	_TranslationsS15RecordEditPlaceholderCategoryEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get food => 'Dinner';
+	@override String get transport => 'Transportation';
+	@override String get shopping => 'Souvenirs';
+	@override String get entertainment => 'Movie tickets';
+	@override String get accommodation => 'Accommodation';
+	@override String get others => 'Other';
 }
 
 // Path: error.dialog.task_full
@@ -1432,6 +1460,13 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.base_card_title_income' => 'Contributors (Source)',
 			'S15_Record_Edit.payer_multiple' => 'Multiple Payers',
 			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => 'Leftover ${amount} will go to pot (distributed at settlement)',
+			'S15_Record_Edit.placeholder.category.food' => 'Dinner',
+			'S15_Record_Edit.placeholder.category.transport' => 'Transportation',
+			'S15_Record_Edit.placeholder.category.shopping' => 'Souvenirs',
+			'S15_Record_Edit.placeholder.category.entertainment' => 'Movie tickets',
+			'S15_Record_Edit.placeholder.category.accommodation' => 'Accommodation',
+			'S15_Record_Edit.placeholder.category.others' => 'Other',
+			'S15_Record_Edit.placeholder.item' => ({required Object category}) => 'e.g.${category}',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.buttons.save' => 'Save',
 			'S16_TaskCreate_Edit.buttons.done' => 'Done',
@@ -1635,6 +1670,7 @@ extension on TranslationsEnUs {
 			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
 			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
 			'error.text_input.invalid_amount' => 'Invalid amount. Please check your input.',
+			'error.text_input.required' => 'This field is required',
 			_ => null,
 		};
 	}

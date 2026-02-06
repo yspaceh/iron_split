@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskItemInput extends StatelessWidget {
@@ -18,36 +19,49 @@ class TaskItemInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final t = Translations.of(context);
+
     return Row(
+      // [對齊策略]：對齊底部，讓左側方塊跟右側輸入框平行
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        InkWell(
-          onTap: onCategoryTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: colorScheme.outlineVariant),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              CategoryConstant.getCategoryById(selectedCategoryId).icon,
-              color: colorScheme.primary,
-              size: 24,
+        // 左側：類別按鈕 (風格化)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2), // 微調高度以對齊
+          child: InkWell(
+            onTap: onCategoryTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              height: 54, // 與 AppTextField 高度一致
+              width: 54, // 正方形
+              decoration: BoxDecoration(
+                // [風格統一]：淡灰底，無邊框
+                color: colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                CategoryConstant.getCategoryById(selectedCategoryId).icon,
+                // [降噪]：改用深灰色 (onSurfaceVariant)，而非主色 (Primary)
+                // 這樣畫面會更沉穩，不會到處都是顏色
+                color: colorScheme.onSurfaceVariant,
+                size: 24,
+              ),
             ),
           ),
         ),
+
         const SizedBox(width: 12),
+
+        // 右側：標題輸入 (使用 AppTextField)
         Expanded(
-          child: TextFormField(
+          child: AppTextField(
             controller: titleController,
-            decoration: InputDecoration(
-              labelText: t.S15_Record_Edit.label_title,
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            ),
-            validator: (v) => v?.isEmpty == true ? "Required" : null,
+            labelText: t.S15_Record_Edit.label_title,
+            // 加一點提示文字，增加 UX
+            hintText: t.S15_Record_Edit.placeholder
+                .item(category: selectedCategoryId),
+            validator: (v) =>
+                v?.isEmpty == true ? t.error.text_input.required : null,
           ),
         ),
       ],

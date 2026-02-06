@@ -224,7 +224,18 @@
     "base_card_title_expense": "Remaining (Base)",
     "base_card_title_income": "Contributors (Source)",
     "payer_multiple": "Multiple Payers",
-    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)"
+    "msg_leftover_pot": "Leftover {amount} will go to pot (distributed at settlement)",
+    "placeholder" : {
+      "category" : {
+        "food": "Dinner",
+        "transport": "Transportation",
+        "shopping": "Souvenirs",
+        "entertainment": "Movie tickets",
+        "accommodation": "Accommodation",
+        "others": "Other"
+      },
+      "item": "e.g.{category}"
+    }
   },
   "S16_TaskCreate_Edit": {
     "title": "New Task",
@@ -546,7 +557,8 @@
       "transaction_failed": "System error. Settlement failed. Please try again later."
     },
     "text_input": {
-      "invalid_amount": "Invalid amount. Please check your input."
+      "invalid_amount": "Invalid amount. Please check your input.",
+      "required": "This field is required"
     }
   }
 }

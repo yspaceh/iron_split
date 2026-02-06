@@ -70,15 +70,8 @@ class S13PersonalView extends StatelessWidget {
                 selectedDate: vm.selectedDateInStrip,
                 onDateSelected: (date) {
                   vm.handleDateJump(date, onNoResult: () {
-                    // Personal View 的 No Result 判斷邏輯其實跟 Group 一樣
-                    // 只要該日期沒有紀錄且不在範圍內就彈窗
-                    showDialog(
-                      context: context,
-                      builder: (context) => D05DateJumpNoResultDialog(
-                        targetDate: date,
-                        taskId: task.id,
-                      ),
-                    );
+                    D05DateJumpNoResultDialog.show(context,
+                        targetDate: date, taskId: task.id);
                   });
                 },
               ),
