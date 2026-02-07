@@ -42,6 +42,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       _selectedGhostId = null; // 重置選擇
     } catch (e) {
       // 這裡簡化錯誤傳遞，實際專案可解析 FirebaseException
+      // TODO: handle error
       onError('UNKNOWN', e.toString(), null);
     } finally {
       _isLoading = false;
@@ -70,7 +71,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       );
       onSuccess(taskId);
     } catch (e) {
-      // TODO: 錯誤處理
+      // TODO: handle error
       // 這裡可以解析 e 來決定傳什麼 error code
       // 暫時傳遞原始錯誤訊息，由 UI 轉譯
       onError('UNKNOWN', e.toString(), null);

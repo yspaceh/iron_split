@@ -57,7 +57,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
         details: {'memberName': newMember['displayName']},
       );
     } catch (e) {
-      debugPrint("Add member failed: $e");
+      // TODO: handle error
     } finally {
       _isProcessing = false;
       notifyListeners();
@@ -85,7 +85,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       await _taskRepo
           .updateMemberFields(taskId, memberId, {'displayName': trimmedName});
     } catch (e) {
-      debugPrint("Rename failed: $e");
+      // TODO: handle error
     } finally {
       _isProcessing = false;
       notifyListeners();
@@ -131,7 +131,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
       return true; // Deleted
     } catch (e) {
-      debugPrint("Delete member failed: $e");
+      // TODO: handle error
       return false; // Error treated as blocked/failed
     } finally {
       _isProcessing = false;
@@ -149,7 +149,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
         taskName: taskName,
       );
     } catch (e) {
-      debugPrint("Invite Error: $e");
+      // TODO: handle error
     } finally {
       _isProcessing = false;
       notifyListeners();

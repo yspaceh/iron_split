@@ -170,6 +170,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       notifyListeners();
       return (taskId: taskId, inviteCode: inviteCode);
     } catch (e) {
+      // TODO: handle error
       _isProcessing = false;
       notifyListeners();
       rethrow; // 拋出異常讓 Page 處理 (顯示 SnackBar)

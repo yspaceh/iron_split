@@ -497,6 +497,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
+      // TODO: handle error
       rethrow;
     } finally {
       _isSaving = false;
@@ -592,6 +593,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
           });
       return true;
     } catch (e) {
+      // TODO: handle error
       rethrow;
     }
   }

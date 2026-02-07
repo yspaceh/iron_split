@@ -390,8 +390,6 @@ class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSetting
 	@override String get title => 'Member Management';
 	@override late final _TranslationsS53TaskSettingsMembersButtonsEnUs buttons = _TranslationsS53TaskSettingsMembersButtonsEnUs._(_root);
 	@override String get label_default_ratio => 'Default Ratio';
-	@override String get dialog_delete_error_title => 'Member Deletion Error';
-	@override String get dialog_delete_error_content => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.';
 	@override String get member_default_name => 'Member';
 	@override String get member_name => 'Member Name';
 }
@@ -1226,6 +1224,7 @@ class _TranslationsErrorDialogEnUs extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogAlreadyInTaskEnUs already_in_task = _TranslationsErrorDialogAlreadyInTaskEnUs._(_root);
 	@override late final _TranslationsErrorDialogUnknownEnUs unknown = _TranslationsErrorDialogUnknownEnUs._(_root);
 	@override late final _TranslationsErrorDialogDeleteFailedEnUs delete_failed = _TranslationsErrorDialogDeleteFailedEnUs._(_root);
+	@override late final _TranslationsErrorDialogMemberDeleteFailedEnUs member_delete_failed = _TranslationsErrorDialogMemberDeleteFailedEnUs._(_root);
 	@override late final _TranslationsErrorDialogDataConflictEnUs data_conflict = _TranslationsErrorDialogDataConflictEnUs._(_root);
 }
 
@@ -1374,6 +1373,17 @@ class _TranslationsErrorDialogDeleteFailedEnUs extends TranslationsErrorDialogDe
 	// Translations
 	@override String get title => 'Delete Failed';
 	@override String get message => 'Deleted failed. Please try again later.';
+}
+
+// Path: error.dialog.member_delete_failed
+class _TranslationsErrorDialogMemberDeleteFailedEnUs extends TranslationsErrorDialogMemberDeleteFailedZhTw {
+	_TranslationsErrorDialogMemberDeleteFailedEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Member Deletion Error';
+	@override String get message => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.';
 }
 
 // Path: error.dialog.data_conflict
@@ -1671,8 +1681,6 @@ extension on TranslationsEnUs {
 			'S53_TaskSettings_Members.buttons.add' => 'Add Member',
 			'S53_TaskSettings_Members.buttons.invite' => 'Invite',
 			'S53_TaskSettings_Members.label_default_ratio' => 'Default Ratio',
-			'S53_TaskSettings_Members.dialog_delete_error_title' => 'Member Deletion Error',
-			'S53_TaskSettings_Members.dialog_delete_error_content' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S53_TaskSettings_Members.member_name' => 'Member Name',
 			'S71_SystemSettings_Tos.title' => 'Terms of Service',
@@ -1774,6 +1782,8 @@ extension on TranslationsEnUs {
 			'error.dialog.unknown.message' => 'An unexpected error occurred.',
 			'error.dialog.delete_failed.title' => 'Delete Failed',
 			'error.dialog.delete_failed.message' => 'Deleted failed. Please try again later.',
+			'error.dialog.member_delete_failed.title' => 'Member Deletion Error',
+			'error.dialog.member_delete_failed.message' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
 			'error.dialog.data_conflict.title' => 'Data Changed',
 			'error.dialog.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
 			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',

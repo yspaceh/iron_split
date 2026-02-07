@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; // [新增] 引入 Input
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/member_item.dart';
 import 'package:provider/provider.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s53_task_settings_members_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -42,39 +43,16 @@ class _S53Content extends StatelessWidget {
       Map<String, dynamic> membersMap,
       String memberId,
       String currentName) {
-    final t = Translations.of(context);
-    final controller = TextEditingController(text: currentName);
-
-    CommonAlertDialog.show(context,
-        title: t.S53_TaskSettings_Members.title,
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            labelText: t.S53_TaskSettings_Members.member_name,
-            border: const OutlineInputBorder(),
-          ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (val) {
-            Navigator.pop(context);
-            vm.renameMember(membersMap, memberId, val);
-          },
-        ),
-        actions: [
-          AppButton(
-            text: t.common.buttons.cancel,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(),
-          ),
-          AppButton(
-            text: t.common.buttons.confirm,
-            type: AppButtonType.primary,
-            onPressed: () {
-              context.pop();
-              vm.renameMember(membersMap, memberId, controller.text);
-            },
-          ),
-        ]);
+    // [修改] 改為呼叫下方的私有 Dialog Widget
+    showDialog(
+      context: context,
+      builder: (context) => _RenameMemberDialog(
+        initialName: currentName,
+        onConfirm: (newName) {
+          vm.renameMember(membersMap, memberId, newName);
+        },
+      ),
+    );
   }
 
   Future<void> _handleDelete(
@@ -89,21 +67,10 @@ class _S53Content extends StatelessWidget {
 
     // If failed (blocked), show dialog
     if (!success && context.mounted) {
-      // 這裡假設 VM 回傳 false 代表因為有資料而擋下
-      // (如果是因為錯誤，通常 VM 內部已經 catch 並 log 了，也可以選擇回傳 enum 來區分錯誤類型)
-      // 簡單起見，我們再次檢查資料 (或者信任 VM 的回傳)
-      // 實際上我們應該在 VM 回傳更具體的狀態，但此處先假設 false = blocked
-      await CommonAlertDialog.show(
+      CommonErrorDialog.show(
         context,
-        title: t.S53_TaskSettings_Members.dialog_delete_error_title,
-        content: Text(t.S53_TaskSettings_Members.dialog_delete_error_content),
-        actions: [
-          AppButton(
-            text: t.common.buttons.close,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(),
-          ),
-        ],
+        title: t.error.dialog.member_delete_failed.title,
+        content: t.error.dialog.member_delete_failed.message,
       );
     }
   }
@@ -117,7 +84,6 @@ class _S53Content extends StatelessWidget {
       stream: vm.taskStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          // TODO: 這邊的錯誤處理語言要處理
           return Center(child: Text("Error: ${snapshot.error}"));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -130,6 +96,7 @@ class _S53Content extends StatelessWidget {
         final taskName = task.name;
         final createdBy = task.createdBy;
         final membersMap = task.members;
+
         // Sort Logic (UI Layer)
         final List<MapEntry<String, dynamic>> membersList =
             membersMap.entries.toList();
@@ -208,6 +175,85 @@ class _S53Content extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+// [新增] 私有的重新命名 Dialog，整合了 TaskNameInput
+class _RenameMemberDialog extends StatefulWidget {
+  final String initialName;
+  final ValueChanged<String> onConfirm;
+
+  const _RenameMemberDialog({
+    required this.initialName,
+    required this.onConfirm,
+  });
+
+  @override
+  State<_RenameMemberDialog> createState() => _RenameMemberDialogState();
+}
+
+class _RenameMemberDialogState extends State<_RenameMemberDialog> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final newName = _controller.text.trim();
+    if (newName.isEmpty) return;
+
+    // 關閉 Dialog
+    Navigator.of(context).pop();
+    // 回調新名稱
+    widget.onConfirm(newName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+
+    return CommonAlertDialog(
+      title: t.S53_TaskSettings_Members.title,
+      // 使用 SizedBox 確保輸入框有足夠寬度，避免在 Alert 中縮成一團
+      content: SizedBox(
+        width: double.maxFinite,
+        child: TaskNameInput(
+          controller: _controller,
+          maxLength: 10,
+          label: t.S53_TaskSettings_Members.member_name,
+          placeholder: t.S53_TaskSettings_Members.member_name,
+        ),
+      ),
+      actions: [
+        AppButton(
+          text: t.common.buttons.cancel,
+          type: AppButtonType.secondary,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        // 使用 ValueListenableBuilder 監聽輸入框，控制按鈕啟用狀態
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _controller,
+          builder: (context, value, child) {
+            final isValid = value.text.trim().isNotEmpty;
+            return AppButton(
+              text: t.common.buttons.confirm,
+              type: AppButtonType.primary,
+              // 若無內容則 disable 按鈕
+              onPressed: isValid ? _submit : null,
+            );
+          },
+        ),
+      ],
     );
   }
 }

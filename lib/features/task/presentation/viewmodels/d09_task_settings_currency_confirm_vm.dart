@@ -80,7 +80,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      debugPrint('Failed to update currency: $e');
+      // TODO: handle error
       return false;
     } finally {
       _isProcessing = false;

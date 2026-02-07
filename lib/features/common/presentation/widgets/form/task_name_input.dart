@@ -10,12 +10,14 @@ class TaskNameInput extends StatelessWidget {
     this.maxLength,
     required this.label,
     required this.placeholder,
+    this.fillColor,
   });
 
   final TextEditingController controller;
   final int? maxLength;
   final String label;
   final String placeholder;
+  final Color? fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +30,9 @@ class TaskNameInput extends StatelessWidget {
         return AppTextField(
           controller: controller,
           autofocus: true,
-
-          // 標題設定 (符合新風格)
           labelText: label, // 或 field_name
           hintText: placeholder,
-
-          // 限制設定
+          fillColor: fillColor,
           maxLength: inputMaxLength,
           inputFormatters: [
             FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),

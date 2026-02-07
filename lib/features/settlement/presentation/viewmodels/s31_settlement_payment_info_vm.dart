@@ -101,6 +101,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         // 如果需要像 S30 那樣有 _recalculate，可以在這裡呼叫
       });
     } catch (e) {
+      // TODO: handle error
       debugPrint("Error loading payment info: $e");
     } finally {
       _isLoading = false;
@@ -137,6 +138,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
       return true;
     } catch (e) {
+      // TODO: handle error
       debugPrint("Settlement Execution Failed: $e");
       rethrow;
     } finally {

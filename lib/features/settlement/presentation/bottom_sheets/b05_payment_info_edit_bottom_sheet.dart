@@ -96,7 +96,7 @@ class _B05Content extends StatelessWidget {
                       context.pop();
                     }
                   } catch (e) {
-                    //TODO: Handle Error
+                    // TODO: handle error
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(e.toString())),

@@ -112,6 +112,7 @@ class _S31Content extends StatelessWidget {
           ],
         );
       } catch (e) {
+        // TODO: handle error
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

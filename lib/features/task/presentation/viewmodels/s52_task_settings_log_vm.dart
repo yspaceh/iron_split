@@ -84,6 +84,7 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
+      // TODO: handle error
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

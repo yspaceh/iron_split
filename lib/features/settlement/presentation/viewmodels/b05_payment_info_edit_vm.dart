@@ -39,6 +39,7 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
         initialData = PaymentInfoModel.fromJson(rawData);
       }
     } catch (e) {
+      // TODO: handle error
       debugPrint("Error parsing receiverInfos in B05: $e");
     }
 
@@ -70,6 +71,7 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
         _loadedDefault = PaymentInfoModel.fromJson(jsonStr);
       }
     } catch (e) {
+      // TODO: handle error
       debugPrint("Error loading local preference: $e");
     } finally {
       _isLoading = false;
@@ -103,6 +105,7 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
       isSaving = false;
       notifyListeners();
     } catch (e) {
+      // TODO: handle error
       isSaving = false;
       notifyListeners();
       rethrow;

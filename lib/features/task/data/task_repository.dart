@@ -41,8 +41,7 @@ class TaskRepository {
       try {
         return TaskModel.fromFirestore(doc);
       } catch (e) {
-        // 防止單一資料壞掉導致崩潰
-        print('❌ Error parsing task $taskId: $e');
+        // TODO: handle error
         return null;
       }
     });

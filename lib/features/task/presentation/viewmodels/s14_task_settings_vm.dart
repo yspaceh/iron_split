@@ -68,6 +68,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
+      // TODO: handle error
       _isLoading = false;
       notifyListeners();
     }

@@ -33,6 +33,7 @@ class PendingInviteLocalStore {
         return null;
       }
     } catch (e) {
+      // TODO: handle error
       await clear();
       return null;
     }

@@ -50,7 +50,7 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
       _currentAvatar = newAvatar;
       _canReroll = false;
     } catch (e) {
-      debugPrint('Reroll failed: $e');
+      // TODO: handle error
     } finally {
       _isUpdating = false;
       notifyListeners();
@@ -66,7 +66,7 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
         'hasSeenRoleIntro': true,
       });
     } catch (e) {
-      debugPrint('Update seen status failed: $e');
+      // TODO: handle error
       // 這裡不 throw，因為即使失敗也要讓使用者進入 Dashboard
     }
   }

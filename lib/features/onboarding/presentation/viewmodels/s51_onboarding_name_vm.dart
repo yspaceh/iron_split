@@ -46,6 +46,7 @@ class S51OnboardingNameViewModel extends ChangeNotifier {
       await _service.submitName(_currentName);
       onSuccess();
     } catch (e) {
+      // TODO: handle error
       onError(e.toString());
     } finally {
       _isSaving = false;

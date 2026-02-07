@@ -27,11 +27,13 @@ class CurrencyService {
           return (rate as num).toDouble();
         }
       } else {
+        // TODO: handle error
         // TODO: Handle non-200 status codes (e.g., log to Crashlytics)
         debugPrint(
             'API Error: Status ${response.statusCode}, Body: ${response.body}');
       }
     } catch (e) {
+      // TODO: handle error
       // TODO: Log error to Crashlytics or Analytics
       debugPrint('API Exception: $e');
     }

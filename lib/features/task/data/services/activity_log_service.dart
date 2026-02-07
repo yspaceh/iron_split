@@ -28,8 +28,7 @@ class ActivityLogService {
 
       await logRef.set(logData);
     } catch (e) {
-      // Log 寫入失敗不應阻擋主流程，僅印出錯誤
-      print('❌ Failed to write activity log: $e');
+      // TODO: handle error
     }
   }
 

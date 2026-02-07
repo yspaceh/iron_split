@@ -14,6 +14,7 @@ class InviteRepository {
       return Map<String, dynamic>.from(result.data);
     } catch (e) {
       // 這裡可以做更細緻的錯誤轉換，暫時透傳
+      // TODO: handle error
       rethrow;
     }
   }
@@ -33,6 +34,7 @@ class InviteRepository {
       });
       return result.data['taskId'] as String;
     } catch (e) {
+      // TODO: handle error
       rethrow;
     }
   }

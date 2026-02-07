@@ -363,6 +363,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       );
       return true;
     } catch (e) {
+      // TODO: handle error
       rethrow; // 拋出異常，讓 UI 層 (RecordItem) 可以顯示 SnackBar 錯誤訊息
     }
   }
@@ -373,7 +374,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       await _taskRepo.updateTaskStatus(taskId, 'pending');
       return true;
     } catch (e) {
-      // 鎖定失敗 (例如網路錯誤)，不允許進入 S30
+      // TODO: handle error
       return false;
     }
   }

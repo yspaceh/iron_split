@@ -33,7 +33,7 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      debugPrint("Close task failed: $e");
+      // TODO: handle error
       return false;
     } finally {
       _isProcessing = false;

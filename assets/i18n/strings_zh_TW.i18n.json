@@ -382,8 +382,6 @@
       "invite": "發送邀請"
     },
     "label_default_ratio": "預設比例",
-    "dialog_delete_error_title": "無法刪除成員",
-    "dialog_delete_error_content": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
     "member_default_name": "成員",
     "member_name": "成員名稱"
   },
@@ -559,6 +557,10 @@
       "delete_failed": {
         "title": "刪除失敗",
         "message": "刪除失敗，請稍後再試。"
+      },
+      "member_delete_failed": {
+        "title": "無法刪除成員",
+        "message": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。"
       },
       "data_conflict": {
         "title": "帳目已變動",

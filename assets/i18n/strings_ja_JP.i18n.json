@@ -381,8 +381,6 @@
       "invite": "招待送信"
     },
     "label_default_ratio": "デフォルト比率",
-    "dialog_delete_error_title": "メンバー削除エラー",
-    "dialog_delete_error_content": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。",
     "member_default_name": "メンバー",
     "member_name": "メンバー名"
   },
@@ -558,6 +556,10 @@
       "delete_failed": {
         "title": "削除失敗",
         "message": "削除に失敗しました。後でもう一度お試しください。"
+      },
+      "member_delete_failed": {
+        "title": "メンバー削除エラー",
+        "message": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。"
       },
       "data_conflict": {
         "title": "データ更新あり",

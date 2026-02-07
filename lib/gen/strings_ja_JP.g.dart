@@ -389,8 +389,6 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	@override String get title => 'メンバー管理';
 	@override late final _TranslationsS53TaskSettingsMembersButtonsJaJp buttons = _TranslationsS53TaskSettingsMembersButtonsJaJp._(_root);
 	@override String get label_default_ratio => 'デフォルト比率';
-	@override String get dialog_delete_error_title => 'メンバー削除エラー';
-	@override String get dialog_delete_error_content => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 	@override String get member_default_name => 'メンバー';
 	@override String get member_name => 'メンバー名';
 }
@@ -1225,6 +1223,7 @@ class _TranslationsErrorDialogJaJp extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogAlreadyInTaskJaJp already_in_task = _TranslationsErrorDialogAlreadyInTaskJaJp._(_root);
 	@override late final _TranslationsErrorDialogUnknownJaJp unknown = _TranslationsErrorDialogUnknownJaJp._(_root);
 	@override late final _TranslationsErrorDialogDeleteFailedJaJp delete_failed = _TranslationsErrorDialogDeleteFailedJaJp._(_root);
+	@override late final _TranslationsErrorDialogMemberDeleteFailedJaJp member_delete_failed = _TranslationsErrorDialogMemberDeleteFailedJaJp._(_root);
 	@override late final _TranslationsErrorDialogDataConflictJaJp data_conflict = _TranslationsErrorDialogDataConflictJaJp._(_root);
 }
 
@@ -1373,6 +1372,17 @@ class _TranslationsErrorDialogDeleteFailedJaJp extends TranslationsErrorDialogDe
 	// Translations
 	@override String get title => '削除失敗';
 	@override String get message => '削除に失敗しました。後でもう一度お試しください。';
+}
+
+// Path: error.dialog.member_delete_failed
+class _TranslationsErrorDialogMemberDeleteFailedJaJp extends TranslationsErrorDialogMemberDeleteFailedZhTw {
+	_TranslationsErrorDialogMemberDeleteFailedJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'メンバー削除エラー';
+	@override String get message => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 }
 
 // Path: error.dialog.data_conflict
@@ -1669,8 +1679,6 @@ extension on TranslationsJaJp {
 			'S53_TaskSettings_Members.buttons.add' => 'メンバー追加',
 			'S53_TaskSettings_Members.buttons.invite' => '招待送信',
 			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',
-			'S53_TaskSettings_Members.dialog_delete_error_title' => 'メンバー削除エラー',
-			'S53_TaskSettings_Members.dialog_delete_error_content' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',
 			'S71_SystemSettings_Tos.title' => '利用規約',
@@ -1772,6 +1780,8 @@ extension on TranslationsJaJp {
 			'error.dialog.unknown.message' => '予期せぬエラーが発生しました。',
 			'error.dialog.delete_failed.title' => '削除失敗',
 			'error.dialog.delete_failed.message' => '削除に失敗しました。後でもう一度お試しください。',
+			'error.dialog.member_delete_failed.title' => 'メンバー削除エラー',
+			'error.dialog.member_delete_failed.message' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'error.dialog.data_conflict.title' => 'データ更新あり',
 			'error.dialog.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',

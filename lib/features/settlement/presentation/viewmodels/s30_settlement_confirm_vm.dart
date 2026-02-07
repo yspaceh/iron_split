@@ -201,6 +201,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
       // pending -> ongoing
       await _taskRepo.updateTaskStatus(taskId, 'ongoing');
     } catch (e) {
+      // TODO: handle error
       debugPrint("Unlock failed: $e");
     }
   }

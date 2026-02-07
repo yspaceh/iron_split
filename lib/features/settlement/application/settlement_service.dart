@@ -320,6 +320,7 @@ class SettlementService {
 
       return finalWinnerId;
     } catch (e) {
+      // TODO: handle error
       if (e is SettlementException) rethrow;
       throw SettlementTransactionFailedException(e.toString());
     }

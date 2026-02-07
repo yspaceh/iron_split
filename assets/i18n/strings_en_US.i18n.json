@@ -382,8 +382,6 @@
       "invite": "Invite"
     },
     "label_default_ratio": "Default Ratio",
-    "dialog_delete_error_title": "Member Deletion Error",
-    "dialog_delete_error_content": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.",
     "member_default_name": "Member",
     "member_name": "Member Name"
   },
@@ -559,6 +557,10 @@
       "delete_failed": {
         "title": "Delete Failed",
         "message": "Deleted failed. Please try again later."
+      },
+      "member_delete_failed": {
+        "title": "Member Deletion Error",
+        "message": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again."
       },
       "data_conflict": {
         "title": "Data Changed",

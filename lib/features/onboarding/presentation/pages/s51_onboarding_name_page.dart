@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; // [新增]
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -13,7 +14,6 @@ class S51OnboardingNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 注入 VM
     return ChangeNotifierProvider(
       create: (_) => S51OnboardingNameViewModel(
         service: OnboardingService(authRepo: AuthRepository()),
@@ -34,65 +34,15 @@ class _S51ContentState extends State<_S51Content> {
   final _controller = TextEditingController();
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // 監聽文字變動並同步給 VM
+    _controller.addListener(_onTextChanged);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final vm = context.watch<S51OnboardingNameViewModel>();
-
-    return Scaffold(
-      appBar: AppBar(title: Text(t.S51_Onboarding_Name.title)), // "怎麼稱呼您？"
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              Text(
-                t.S51_Onboarding_Name.description, // "請輸入您在分帳時顯示的名稱..."
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: _controller,
-                enabled: !vm.isSaving,
-                maxLength: 10,
-                // 連結 VM
-                onChanged: vm.onNameChanged,
-                onSubmitted: (_) => _submit(context, vm),
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
-                ],
-                decoration: InputDecoration(
-                  hintText: t.S51_Onboarding_Name.field_hint, // "例如：Iron Man"
-                  counterText: t.S51_Onboarding_Name.field_counter(
-                      current: vm.currentLength),
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: FilledButton(
-                  onPressed: (vm.isValid && !vm.isSaving)
-                      ? () => _submit(context, vm)
-                      : null,
-                  child: vm.isSaving
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(t.S51_Onboarding_Name.buttons.next), // "設定完成"
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _onTextChanged() {
+    // 安全讀取 VM 並更新狀態
+    context.read<S51OnboardingNameViewModel>().onNameChanged(_controller.text);
   }
 
   void _submit(BuildContext context, S51OnboardingNameViewModel vm) {
@@ -100,6 +50,52 @@ class _S51ContentState extends State<_S51Content> {
       onSuccess: () => context.pushNamed('S10'), // 假設下個頁面是任務列表
       onError: (msg) => ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(msg))),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final vm = context.watch<S51OnboardingNameViewModel>();
+
+    return Scaffold(
+      appBar: AppBar(title: Text(t.S51_Onboarding_Name.title)),
+      bottomNavigationBar: StickyBottomActionBar(
+        children: [
+          AppButton(
+            text: t.S51_Onboarding_Name.buttons.next,
+            type: AppButtonType.primary,
+            isLoading: vm.isSaving,
+            onPressed: (vm.isValid && !vm.isSaving)
+                ? () => _submit(context, vm)
+                : null,
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              Text(t.S51_Onboarding_Name.description),
+              const SizedBox(height: 24),
+              TaskNameInput(
+                controller: _controller,
+                maxLength: 10,
+                label: t.S51_Onboarding_Name.title,
+                placeholder: t.S51_Onboarding_Name.field_hint, // "例如：Iron Man"
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
