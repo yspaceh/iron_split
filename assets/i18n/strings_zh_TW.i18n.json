@@ -11,7 +11,8 @@
       "discard": "放棄變更",
       "keep_editing": "繼續編輯",
       "ok": "確定",
-      "refresh": "重新整理"
+      "refresh": "重新整理",
+      "retry": "重試"
     },
     "error": {
       "title": "錯誤",
@@ -584,7 +585,9 @@
       "income_is_used": "此款項已被使用",
       "permission_denied": "權限不足",
       "network_error" : "網路連線異常，請稍後再試",
-      "record_not_found" : "找不到這筆資料，請重新整理後再試"
+      "data_not_found" : "找不到資料，請稍後再試",
+      "load_failed": "載入失敗，請稍後再試",
+      "enter_first": "請先輸入{key}"
     }
   }
 }

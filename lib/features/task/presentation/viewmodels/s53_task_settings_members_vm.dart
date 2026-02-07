@@ -13,6 +13,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
   final String taskId;
   bool _isProcessing = false;
 
+  Stream<TaskModel?>? _taskStream;
   bool get isProcessing => _isProcessing;
 
   S53TaskSettingsMembersViewModel(
@@ -23,7 +24,16 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
         _recordRepo = recordRepo;
 
   // 直接暴露 Firestore Stream 給 UI 使用 (也可以在 VM 內 listen)
-  Stream<TaskModel?> get taskStream => _taskRepo.streamTask(taskId);
+  Stream<TaskModel?> get taskStream {
+    _taskStream ??= _taskRepo.streamTask(taskId);
+    return _taskStream!;
+  }
+
+  void retryLoad() {
+    _taskStream = _taskRepo.streamTask(taskId);
+
+    notifyListeners();
+  }
 
   Future<void> addMember(
       Map<String, dynamic> currentMembersMap, Translations t) async {
@@ -154,5 +164,31 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       _isProcessing = false;
       notifyListeners();
     }
+  }
+
+  /// 將成員 Map 轉換為排序後的 List
+  List<MapEntry<String, dynamic>> getSortedMembers(TaskModel task) {
+    final membersMap = task.members;
+    final List<MapEntry<String, dynamic>> membersList =
+        membersMap.entries.toList();
+
+    membersList.sort((a, b) {
+      final dataA = a.value as Map<String, dynamic>;
+      final dataB = b.value as Map<String, dynamic>;
+
+      final bool isALinked =
+          dataA['status'] == 'linked' || (dataA['isLinked'] == true);
+      final bool isBLinked =
+          dataB['status'] == 'linked' || (dataB['isLinked'] == true);
+
+      if (isALinked && !isBLinked) return -1;
+      if (!isALinked && isBLinked) return 1;
+
+      final int tA = dataA['createdAt'] as int? ?? 0;
+      final int tB = dataB['createdAt'] as int? ?? 0;
+      return tA.compareTo(tB);
+    });
+
+    return membersList;
   }
 }

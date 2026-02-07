@@ -648,6 +648,7 @@ class _TranslationsCommonButtonsEnUs extends TranslationsCommonButtonsZhTw {
 	@override String get keep_editing => 'Keep Editing';
 	@override String get refresh => 'Refresh';
 	@override String get ok => 'OK';
+	@override String get retry => 'Retry';
 }
 
 // Path: common.error
@@ -1258,7 +1259,9 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get income_is_used => 'This amount has already been used';
 	@override String get permission_denied => 'Permission denied';
 	@override String get network_error => 'Network error. Please try again later';
-	@override String get record_not_found => 'Data not found. Please refresh and try again';
+	@override String get data_not_found => 'Data not found. Please try again later';
+	@override String get load_failed => 'Load failed. Please try again later';
+	@override String enter_first({required Object key}) => 'Please enter ${key} first';
 }
 
 // Path: common.share.invite
@@ -1416,6 +1419,7 @@ extension on TranslationsEnUs {
 			'common.buttons.keep_editing' => 'Keep Editing',
 			'common.buttons.refresh' => 'Refresh',
 			'common.buttons.ok' => 'OK',
+			'common.buttons.retry' => 'Retry',
 			'common.error.title' => 'Error',
 			'common.error.unknown' => ({required Object error}) => 'Unknown error: ${error}',
 			'common.category.food' => 'Food',
@@ -1800,7 +1804,9 @@ extension on TranslationsEnUs {
 			'error.message.income_is_used' => 'This amount has already been used',
 			'error.message.permission_denied' => 'Permission denied',
 			'error.message.network_error' => 'Network error. Please try again later',
-			'error.message.record_not_found' => 'Data not found. Please refresh and try again',
+			'error.message.data_not_found' => 'Data not found. Please try again later',
+			'error.message.load_failed' => 'Load failed. Please try again later',
+			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first',
 			_ => null,
 		};
 	}

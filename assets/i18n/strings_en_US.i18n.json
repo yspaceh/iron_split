@@ -11,7 +11,8 @@
       "discard": "Discard",
       "keep_editing": "Keep Editing",
       "refresh": "Refresh",
-      "ok": "OK"
+      "ok": "OK",
+      "retry": "Retry"
     },
     "error": {
       "title": "Error",
@@ -584,7 +585,9 @@
       "income_is_used": "This amount has already been used",
       "permission_denied": "Permission denied",
       "network_error": "Network error. Please try again later",
-      "record_not_found" : "Data not found. Please refresh and try again"
+      "data_not_found" : "Data not found. Please try again later",
+      "load_failed": "Load failed. Please try again later",
+      "enter_first": "Please enter {key} first"
     }
   }
 }

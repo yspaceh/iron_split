@@ -1095,6 +1095,9 @@ class TranslationsCommonButtonsZhTw {
 
 	/// zh-TW: '重新整理'
 	String get refresh => '重新整理';
+
+	/// zh-TW: '重試'
+	String get retry => '重試';
 }
 
 // Path: common.error
@@ -2020,8 +2023,14 @@ class TranslationsErrorMessageZhTw {
 	/// zh-TW: '網路連線異常，請稍後再試'
 	String get network_error => '網路連線異常，請稍後再試';
 
-	/// zh-TW: '找不到這筆資料，請重新整理後再試'
-	String get record_not_found => '找不到這筆資料，請重新整理後再試';
+	/// zh-TW: '找不到資料，請稍後再試'
+	String get data_not_found => '找不到資料，請稍後再試';
+
+	/// zh-TW: '載入失敗，請稍後再試'
+	String get load_failed => '載入失敗，請稍後再試';
+
+	/// zh-TW: '請先輸入{key}'
+	String enter_first({required Object key}) => '請先輸入${key}';
 }
 
 // Path: common.share.invite
@@ -2235,6 +2244,7 @@ extension on Translations {
 			'common.buttons.keep_editing' => '繼續編輯',
 			'common.buttons.ok' => '確定',
 			'common.buttons.refresh' => '重新整理',
+			'common.buttons.retry' => '重試',
 			'common.error.title' => '錯誤',
 			'common.error.unknown' => ({required Object error}) => '發生未知錯誤: ${error}',
 			'common.category.food' => '飲食',
@@ -2619,7 +2629,9 @@ extension on Translations {
 			'error.message.income_is_used' => '此款項已被使用',
 			'error.message.permission_denied' => '權限不足',
 			'error.message.network_error' => '網路連線異常，請稍後再試',
-			'error.message.record_not_found' => '找不到這筆資料，請重新整理後再試',
+			'error.message.data_not_found' => '找不到資料，請稍後再試',
+			'error.message.load_failed' => '載入失敗，請稍後再試',
+			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}',
 			_ => null,
 		};
 	}

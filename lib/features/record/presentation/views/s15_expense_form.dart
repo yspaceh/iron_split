@@ -134,7 +134,7 @@ class S15ExpenseForm extends StatelessWidget {
         AppSelectField(
           labelText: t.S15_Record_Edit.label.payment_method,
           text: _getPayerDisplayName(t, payerType, payerId),
-          onTap: baseRemainingAmount <= 0 ? () {} : onPaymentMethodTap,
+          onTap: onPaymentMethodTap,
           errorText: hasPaymentError
               ? t.B07_PaymentMethod_Edit.err_balance_not_enough
               : null,

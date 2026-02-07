@@ -11,7 +11,8 @@
       "discard": "破棄",
       "keep_editing": "編集を続ける",
       "refresh": "更新",
-      "ok": "OK"
+      "ok": "OK",
+      "retry": "リトライ"
     },
     "error": {
       "title": "エラー",
@@ -583,7 +584,9 @@
       "income_is_used": "この金額はすでに使用されています",
       "permission_denied": "権限がありません",
       "network_error": "ネットワークエラーが発生しました。しばらくしてから再試行してください",
-      "record_not_found" : "データが見つかりません。ページを更新して再試行してください"
+      "data_not_found" : "データが見つかりません。しばらくしてから再試行してください",
+      "load_failed": "ロードが失敗しました。しばらくしてから再試行してください",
+      "enter_first": "{key}を先に入力してください"
     }
   }
 }

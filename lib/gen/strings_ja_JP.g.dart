@@ -647,6 +647,7 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get keep_editing => '編集を続ける';
 	@override String get refresh => '更新';
 	@override String get ok => 'OK';
+	@override String get retry => 'リトライ';
 }
 
 // Path: common.error
@@ -1257,7 +1258,9 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get income_is_used => 'この金額はすでに使用されています';
 	@override String get permission_denied => '権限がありません';
 	@override String get network_error => 'ネットワークエラーが発生しました。しばらくしてから再試行してください';
-	@override String get record_not_found => 'データが見つかりません。ページを更新して再試行してください';
+	@override String get data_not_found => 'データが見つかりません。しばらくしてから再試行してください';
+	@override String get load_failed => 'ロードが失敗しました。しばらくしてから再試行してください';
+	@override String enter_first({required Object key}) => '${key}を先に入力してください';
 }
 
 // Path: common.share.invite
@@ -1415,6 +1418,7 @@ extension on TranslationsJaJp {
 			'common.buttons.keep_editing' => '編集を続ける',
 			'common.buttons.refresh' => '更新',
 			'common.buttons.ok' => 'OK',
+			'common.buttons.retry' => 'リトライ',
 			'common.error.title' => 'エラー',
 			'common.error.unknown' => ({required Object error}) => '不明なエラー: ${error}',
 			'common.category.food' => '食事',
@@ -1798,7 +1802,9 @@ extension on TranslationsJaJp {
 			'error.message.income_is_used' => 'この金額はすでに使用されています',
 			'error.message.permission_denied' => '権限がありません',
 			'error.message.network_error' => 'ネットワークエラーが発生しました。しばらくしてから再試行してください',
-			'error.message.record_not_found' => 'データが見つかりません。ページを更新して再試行してください',
+			'error.message.data_not_found' => 'データが見つかりません。しばらくしてから再試行してください',
+			'error.message.load_failed' => 'ロードが失敗しました。しばらくしてから再試行してください',
+			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください',
 			_ => null,
 		};
 	}

@@ -101,8 +101,10 @@ class _S15ContentState extends State<_S15Content> {
   // Show B02 (Create)
   Future<void> _onAddItemTap(S15RecordEditViewModel vm) async {
     if (vm.baseRemainingAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.error.message.amount_not_enough)));
+      AppToast.showError(
+        context,
+        t.error.message.enter_first(key: t.S15_Record_Edit.label.amount),
+      );
       return;
     }
 
@@ -208,8 +210,8 @@ class _S15ContentState extends State<_S15Content> {
     final t = Translations.of(context);
 
     if (vm.recordTypeIndex == 0 && vm.hasPaymentError) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(t.B07_PaymentMethod_Edit.err_balance_not_enough)));
+      AppToast.showError(
+          context, t.B07_PaymentMethod_Edit.err_balance_not_enough);
       return;
     }
 
@@ -217,10 +219,9 @@ class _S15ContentState extends State<_S15Content> {
       await vm.saveRecord(t);
       if (mounted) context.pop();
     } catch (e) {
-      // TODO: handle error
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        final msg = ErrorMapper.map(context, e);
+        AppToast.showError(context, msg);
       }
     }
   }

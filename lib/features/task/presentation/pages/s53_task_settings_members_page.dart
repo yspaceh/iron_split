@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; // [新增] 引入 Input
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -84,36 +87,57 @@ class _S53Content extends StatelessWidget {
       stream: vm.taskStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
+          return Scaffold(
+            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            // 1. 中間是共用純文字 View
+            body: CommonStateView(
+              message: ErrorMapper.map(context, snapshot.error),
+            ),
+            // 2. 底部是 StickyBar + 重試按鈕
+            bottomNavigationBar: StickyBottomActionBar(
+              children: [
+                AppButton(
+                  text: t.common.buttons.retry,
+                  type: AppButtonType.primary,
+                  onPressed: () {
+                    // 重試邏輯 (例如 vm.refresh() 或 pop)
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Scaffold(
+            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            body: const Center(child: CircularProgressIndicator()),
+          );
         }
 
         final task = snapshot.data;
-        if (task == null) return const SizedBox();
+        if (task == null) {
+          return Scaffold(
+            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            // [修改] 使用極簡文字 View
+            body: CommonStateView(message: t.error.message.data_not_found),
+            bottomNavigationBar: StickyBottomActionBar(
+              children: [
+                AppButton(
+                  text: t.common.buttons.back,
+                  type: AppButtonType.primary,
+                  onPressed: () => context.pop(),
+                ),
+              ],
+            ),
+          );
+        }
 
         final taskName = task.name;
         final createdBy = task.createdBy;
         final membersMap = task.members;
 
-        // Sort Logic (UI Layer)
-        final List<MapEntry<String, dynamic>> membersList =
-            membersMap.entries.toList();
-
-        membersList.sort((a, b) {
-          final dataA = a.value as Map<String, dynamic>;
-          final dataB = b.value as Map<String, dynamic>;
-          final bool isALinked =
-              dataA['status'] == 'linked' || (dataA['isLinked'] == true);
-          final bool isBLinked =
-              dataB['status'] == 'linked' || (dataB['isLinked'] == true);
-          if (isALinked && !isBLinked) return -1;
-          if (!isALinked && isBLinked) return 1;
-          final int tA = dataA['createdAt'] as int? ?? 0;
-          final int tB = dataB['createdAt'] as int? ?? 0;
-          return tA.compareTo(tB);
-        });
+        final membersList = vm.getSortedMembers(task);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
