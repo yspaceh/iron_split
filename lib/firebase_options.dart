@@ -53,11 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDPDcx-5Wa-1gjmTh9emsXmV18TDOvXDv8',
+    apiKey: 'AIzaSyCJthXMTDF-s8Lx2mK2FNd4op7nquaviyA',
     appId: '1:742367506307:ios:fb1ffaa897d5673a19d0b6',
     messagingSenderId: '742367506307',
     projectId: 'iron-split',
     storageBucket: 'iron-split.firebasestorage.app',
     iosBundleId: 'com.ironsplit.app',
   );
+
 }

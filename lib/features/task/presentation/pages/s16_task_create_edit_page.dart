@@ -109,7 +109,6 @@ class _S16ContentState extends State<_S16Content> {
         }
       } catch (e) {
         if (mounted) {
-          debugPrint(e.toString());
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(Translations.of(context)
@@ -171,7 +170,12 @@ class _S16ContentState extends State<_S16Content> {
                               ?.copyWith(color: colorScheme.primary)),
                       const SizedBox(height: 8),
 
-                      TaskNameInput(controller: _nameController),
+                      TaskNameInput(
+                        controller: _nameController,
+                        label: t.S16_TaskCreate_Edit.label.name,
+                        placeholder: t.S16_TaskCreate_Edit.placeholder.name,
+                        maxLength: 20,
+                      ),
 
                       const SizedBox(height: 24),
 

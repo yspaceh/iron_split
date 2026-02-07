@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/gen/strings.g.dart';
+
+class CommonErrorDialog extends StatelessWidget {
+  final String title;
+  final String content;
+
+  const CommonErrorDialog(
+      {super.key, required this.title, required this.content});
+
+  static void show(BuildContext context,
+      {required String title, required String content}) {
+    showDialog(
+      context: context,
+      builder: (context) => CommonErrorDialog(
+        title: title,
+        content: content,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CommonAlertDialog(
+      title: title,
+      content: Text(content),
+      actions: [
+        AppButton(
+          text: t.common.buttons.close,
+          type: AppButtonType.primary,
+          onPressed: () => context.pop(),
+        ),
+      ],
+    );
+  }
+}

@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase 設定檔 (因為包含 API Key 且可能引起 GitHub 警告)
+ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+
+# 環境變數 (Cline 的 Gemini Key 放在這裡)
+.env
+.env.local

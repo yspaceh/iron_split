@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/app_error_codes.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
@@ -321,14 +322,31 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   /// 刪除消費紀錄
-  Future<void> deleteRecord(String recordId) async {
+  Future<bool> deleteRecord(String recordId) async {
     try {
-      // 1. 為了寫 Log，先從目前的列表找出該筆紀錄的資訊
-      // 如果找不到 (極端情況)，這裡會拋出異常，或者你可以給預設值
       final record = _records.firstWhere(
         (r) => r.id == recordId,
-        orElse: () => throw Exception("Record not found in current list"),
+        // [修正] 使用標準錯誤代碼
+        orElse: () => throw Exception(AppErrorCodes.recordNotFound),
       );
+
+      // 如果是收入/預收 (Income)，必須檢查相依性與餘額
+      if (record.type == 'income') {
+        // A. 檢查是否被其他紀錄引用 (payerId)
+        final isReferenced =
+            await _recordRepo.isRecordReferenced(taskId, recordId);
+        if (isReferenced) return false;
+
+        // B. 檢查餘額 (Pool Balance)
+        // 如果刪除這筆收入，餘額是否會變成負數？
+        // poolBalances 是當前餘額 (包含此筆收入)
+        final currentBalance = poolBalances[record.currencyCode] ?? 0.0;
+
+        // 如果當前餘額小於此筆收入金額 (容許 0.01 誤差)，代表錢已經花掉了
+        if (currentBalance < (record.amount - 0.01)) {
+          return false;
+        }
+      }
 
       // 2. 呼叫 Repository 執行刪除
       await _recordRepo.deleteRecord(taskId, recordId);
@@ -343,12 +361,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
           'currency': record.currencyCode, // 注意：Model 的欄位是 currencyCode
         },
       );
-
-      // 注意：不需要手動從 _records 移除或 notifyListeners
-      // 因為 _recordRepo.streamRecords 會監聽到 Firestore 變更，
-      // 自動觸發 _recordSub -> _recalculate -> notifyListeners
+      return true;
     } catch (e) {
-      debugPrint("Delete record failed: $e");
       rethrow; // 拋出異常，讓 UI 層 (RecordItem) 可以顯示 SnackBar 錯誤訊息
     }
   }

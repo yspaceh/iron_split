@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+
+class AppToast {
+  AppToast._();
+
+  // 1. 一般訊息 -> 使用 inverseSurface (自動對應到 _darkGrey #333333)
+  static void show(BuildContext context, String message) {
+    final theme = Theme.of(context);
+    _showSnackBar(
+      context,
+      message,
+      backgroundColor: theme.colorScheme.inverseSurface,
+      icon: Icons.info_outline_rounded,
+    );
+  }
+
+  // 2. 錯誤訊息 -> 使用 error (自動對應到 _orangeRed #FF3B30)
+  static void showError(BuildContext context, String message) {
+    final theme = Theme.of(context);
+    _showSnackBar(
+      context,
+      message,
+      backgroundColor: theme.colorScheme.error,
+      icon: Icons.error_outline_rounded,
+    );
+  }
+
+  // 3. 成功訊息 -> 使用 tertiary (自動對應到 _incomeGreen #2E7D32)
+  static void showSuccess(BuildContext context, String message) {
+    final theme = Theme.of(context);
+    _showSnackBar(
+      context,
+      message,
+      backgroundColor: theme.colorScheme.tertiary,
+      icon: Icons.check_circle_outline_rounded,
+    );
+  }
+
+  // 底層實作：統一的圓角懸浮風格
+  static void _showSnackBar(
+    BuildContext context,
+    String message, {
+    required Color backgroundColor,
+    required IconData icon,
+  }) {
+    // 先隱藏舊的，避免堆疊
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        // [風格設定]
+        behavior: SnackBarBehavior.floating, // 懸浮
+        backgroundColor: backgroundColor,
+        elevation: 4,
+
+        // 圓角：配合您的 Input Border (16px)
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+
+        // 留白：讓它浮在內容之上
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+        // 內容佈局
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white, // 白字配深底/紅底最清晰
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

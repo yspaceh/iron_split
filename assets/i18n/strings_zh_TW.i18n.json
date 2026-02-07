@@ -473,17 +473,10 @@
       "save": "確認分拆"
     },
     "label": {
-      "sub_item": "項目名稱"
+      "sub_item": "細項名稱",
+      "split_method": "分攤設定"
     },
-    "split_button_prefix": "分攤設定",
-    "hint_memo": "備註",
-    "section_members": "成員分配",
-    "label_remainder": "剩餘: {amount}",
-    "label_total": "總計: {current}/{target}",
-    "error_total_mismatch": "總金額不符",
-    "error_percent_mismatch": "總比例必須為 100%",
-    "hint_amount": "金額",
-    "hint_percent": "%",
+    "item_name_empty" : "項目名稱尚未輸入",
     "placeholder" : {
       "sub_item": "例：子項目"
     }
@@ -493,6 +486,7 @@
     "buttons": {
       "adjust_weight": "調整權重"
     },
+    "label_total": "總計: {current}/{target}",
     "method_even": "平均分攤",
     "method_percent": "比例分攤",
     "method_exact": "指定金額",
@@ -562,6 +556,10 @@
         "title": "發生錯誤",
         "message": "發生未預期的錯誤，請稍後再試。"
       },
+      "delete_failed": {
+        "title": "刪除失敗",
+        "message": "刪除失敗，請稍後再試。"
+      },
       "data_conflict": {
         "title": "帳目已變動",
         "message": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。"
@@ -573,12 +571,18 @@
       "transaction_failed": "系統錯誤，結算失敗，請稍後再試。"
     },
     "message": {
+      "unknown": "發生未預期的錯誤",
       "invalid_amount": "金額無效",
       "required": "此欄位為必填",
       "empty": "請輸入{key}",
       "format": "格式錯誤",
       "zero": "{key}不可為 0",
-      "amount_not_enough": "剩餘金額不足"
+      "amount_not_enough": "剩餘金額不足",
+      "amount_mismatch": "金額不符",
+      "income_is_used": "此款項已被使用",
+      "permission_denied": "權限不足",
+      "network_error" : "網路連線異常，請稍後再試",
+      "record_not_found" : "找不到這筆資料，請重新整理後再試"
     }
   }
 }

@@ -8,13 +8,14 @@ import 'package:iron_split/gen/strings.g.dart';
 class TaskAmountInput extends StatelessWidget {
   const TaskAmountInput({
     super.key,
-    // [重構] onCurrencyChanged 改為可空 (Nullable)，因為如果不顯示 Picker 就不需要它
     this.onCurrencyChanged,
     required this.amountController,
     required this.selectedCurrencyConstants,
     this.isIncome = false,
-    // [新增] 控制是否顯示左側幣別選擇器
     this.showCurrencyPicker = true,
+    this.fillColor,
+    // [新增] 外部驗證器
+    this.externalValidator,
   });
 
   final ValueChanged<String>? onCurrencyChanged;
@@ -22,6 +23,8 @@ class TaskAmountInput extends StatelessWidget {
   final CurrencyConstants selectedCurrencyConstants;
   final bool isIncome;
   final bool showCurrencyPicker;
+  final Color? fillColor;
+  final String? Function(double value)? externalValidator;
 
   void _showCurrencyPicker(BuildContext context) {
     if (onCurrencyChanged == null) return;
@@ -41,13 +44,11 @@ class TaskAmountInput extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // 定義金額顏色 (支出紅/收入綠)
     final amountColor = isIncome ? AppTheme.incomeDeep : AppTheme.expenseDeep;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. 左側：幣別選擇按鈕 (只在 showCurrencyPicker 為 true 時顯示)
         if (showCurrencyPicker) ...[
           InkWell(
             onTap: () => _showCurrencyPicker(context),
@@ -85,27 +86,16 @@ class TaskAmountInput extends StatelessWidget {
           ),
           const SizedBox(width: 8),
         ],
-
-        // 2. 右側：金額輸入
         Expanded(
           child: AppTextField(
             controller: amountController,
+            fillColor: fillColor,
             labelText: t.S15_Record_Edit.label.amount,
             hintText: CurrencyConstants.formatAmount(
                 0, selectedCurrencyConstants.code),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
 
-            // [新增] 如果左側沒顯示 Picker，我們在輸入框內顯示幣別符號，
-            // 這樣使用者才知道現在輸入的是什麼幣
-            prefixIcon: !showCurrencyPicker
-                ? null // 這裡如果想用 IconData 可以傳，但我們想顯示文字符號
-                : null,
-            // 使用 leading 屬性 (如果您的 AppTextField 有支援 widget leading)
-            // 或是利用 prefixText (AppTextField 需要支援)
-            // 假設 AppTextField 暫時只支援 prefixIcon (IconData)，
-            // 我們可以利用 suffixText 或是改用 decoration 來顯示幣別
-
-            // 這裡為了簡單，如果不顯示 Picker，我們可以在 suffix 顯示幣別代碼
+            // 如果不顯示 Picker，就在後面顯示幣別代碼
             suffixText:
                 !showCurrencyPicker ? selectedCurrencyConstants.code : null,
 
@@ -113,7 +103,11 @@ class TaskAmountInput extends StatelessWidget {
               if (v == null || v.isEmpty) {
                 return t.error.message.required;
               }
-              final value = double.tryParse(v);
+
+              // [修正] 必須先移除逗號，否則 tryParse 會失敗
+              final cleanValue = v.replaceAll(',', '');
+              final value = double.tryParse(cleanValue);
+
               if (value == null) {
                 return t.error.message.format;
               }
@@ -124,6 +118,12 @@ class TaskAmountInput extends StatelessWidget {
               if (value < 0) {
                 return t.error.message.invalid_amount;
               }
+
+              // [新增] 執行外部驗證 (例如檢查餘額)
+              if (externalValidator != null) {
+                return externalValidator!(value);
+              }
+
               return null;
             },
           ),

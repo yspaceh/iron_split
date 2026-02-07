@@ -135,7 +135,12 @@ class _S14ContentState extends State<_S14Content> {
 
           Focus(
             focusNode: _nameFocusNode,
-            child: TaskNameInput(controller: vm.nameController),
+            child: TaskNameInput(
+              controller: vm.nameController,
+              label: t.S16_TaskCreate_Edit.label.name,
+              placeholder: t.S16_TaskCreate_Edit.placeholder.name,
+              maxLength: 20,
+            ),
           ),
 
           const SizedBox(height: 24),

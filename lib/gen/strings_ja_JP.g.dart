@@ -545,15 +545,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	@override String get title => '明細編集';
 	@override late final _TranslationsB02SplitExpenseEditButtonsJaJp buttons = _TranslationsB02SplitExpenseEditButtonsJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditLabelJaJp label = _TranslationsB02SplitExpenseEditLabelJaJp._(_root);
-	@override String get split_button_prefix => '負担設定';
-	@override String get hint_memo => 'メモ';
-	@override String get section_members => 'メンバー配分';
-	@override String label_remainder({required Object amount}) => '残り: ${amount}';
-	@override String label_total({required Object current, required Object target}) => '合計: ${current}/${target}';
-	@override String get error_total_mismatch => '合計金額が一致しません';
-	@override String get error_percent_mismatch => '合計は100%である必要があります';
-	@override String get hint_amount => '金額';
-	@override String get hint_percent => '%';
+	@override String get item_name_empty => '親項目名を入力してない';
 	@override late final _TranslationsB02SplitExpenseEditPlaceholderJaJp placeholder = _TranslationsB02SplitExpenseEditPlaceholderJaJp._(_root);
 }
 
@@ -566,6 +558,7 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	// Translations
 	@override String get title => '割り勘方法を選択';
 	@override late final _TranslationsB03SplitMethodEditButtonsJaJp buttons = _TranslationsB03SplitMethodEditButtonsJaJp._(_root);
+	@override String label_total({required Object current, required Object target}) => '合計: ${current}/${target}';
 	@override String get method_even => '均等分攤';
 	@override String get method_percent => '割合分攤';
 	@override String get method_exact => '金額指定';
@@ -1173,7 +1166,8 @@ class _TranslationsB02SplitExpenseEditLabelJaJp extends TranslationsB02SplitExpe
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get sub_item => '項目名';
+	@override String get sub_item => '子項目名';
+	@override String get split_method => '負担設定';
 }
 
 // Path: B02_SplitExpense_Edit.placeholder
@@ -1230,6 +1224,7 @@ class _TranslationsErrorDialogJaJp extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogAuthRequiredJaJp auth_required = _TranslationsErrorDialogAuthRequiredJaJp._(_root);
 	@override late final _TranslationsErrorDialogAlreadyInTaskJaJp already_in_task = _TranslationsErrorDialogAlreadyInTaskJaJp._(_root);
 	@override late final _TranslationsErrorDialogUnknownJaJp unknown = _TranslationsErrorDialogUnknownJaJp._(_root);
+	@override late final _TranslationsErrorDialogDeleteFailedJaJp delete_failed = _TranslationsErrorDialogDeleteFailedJaJp._(_root);
 	@override late final _TranslationsErrorDialogDataConflictJaJp data_conflict = _TranslationsErrorDialogDataConflictJaJp._(_root);
 }
 
@@ -1252,12 +1247,18 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
+	@override String get unknown => '予期せぬエラーが発生しました';
 	@override String get invalid_amount => '金額が無効です';
 	@override String get required => '必須項目です';
 	@override String empty({required Object key}) => '${key}を入力してください';
 	@override String get format => '形式が正しくありません';
 	@override String zero({required Object key}) => '${key}は0にできません';
 	@override String get amount_not_enough => '残額が不足しています';
+	@override String get amount_mismatch => '金額が一致しません';
+	@override String get income_is_used => 'この金額はすでに使用されています';
+	@override String get permission_denied => '権限がありません';
+	@override String get network_error => 'ネットワークエラーが発生しました。しばらくしてから再試行してください';
+	@override String get record_not_found => 'データが見つかりません。ページを更新して再試行してください';
 }
 
 // Path: common.share.invite
@@ -1361,6 +1362,17 @@ class _TranslationsErrorDialogUnknownJaJp extends TranslationsErrorDialogUnknown
 	// Translations
 	@override String get title => 'エラー';
 	@override String get message => '予期せぬエラーが発生しました。';
+}
+
+// Path: error.dialog.delete_failed
+class _TranslationsErrorDialogDeleteFailedJaJp extends TranslationsErrorDialogDeleteFailedZhTw {
+	_TranslationsErrorDialogDeleteFailedJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '削除失敗';
+	@override String get message => '削除に失敗しました。後でもう一度お試しください。';
 }
 
 // Path: error.dialog.data_conflict
@@ -1707,19 +1719,13 @@ extension on TranslationsJaJp {
 			'D11_random_result.buttons.close' => 'OK',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.save' => '決定',
-			'B02_SplitExpense_Edit.label.sub_item' => '項目名',
-			'B02_SplitExpense_Edit.split_button_prefix' => '負担設定',
-			'B02_SplitExpense_Edit.hint_memo' => 'メモ',
-			'B02_SplitExpense_Edit.section_members' => 'メンバー配分',
-			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => '残り: ${amount}',
-			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '合計: ${current}/${target}',
-			'B02_SplitExpense_Edit.error_total_mismatch' => '合計金額が一致しません',
-			'B02_SplitExpense_Edit.error_percent_mismatch' => '合計は100%である必要があります',
-			'B02_SplitExpense_Edit.hint_amount' => '金額',
-			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.label.sub_item' => '子項目名',
+			'B02_SplitExpense_Edit.label.split_method' => '負担設定',
+			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してない',
 			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：内訳',
 			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率を調整',
+			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => '合計: ${current}/${target}',
 			'B03_SplitMethod_Edit.method_even' => '均等分攤',
 			'B03_SplitMethod_Edit.method_percent' => '割合分攤',
 			'B03_SplitMethod_Edit.method_exact' => '金額指定',
@@ -1764,17 +1770,25 @@ extension on TranslationsJaJp {
 			'error.dialog.already_in_task.message' => '既にこのタスクのメンバーです。',
 			'error.dialog.unknown.title' => 'エラー',
 			'error.dialog.unknown.message' => '予期せぬエラーが発生しました。',
+			'error.dialog.delete_failed.title' => '削除失敗',
+			'error.dialog.delete_failed.message' => '削除に失敗しました。後でもう一度お試しください。',
 			'error.dialog.data_conflict.title' => 'データ更新あり',
 			'error.dialog.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
 			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
 			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
+			'error.message.unknown' => '予期せぬエラーが発生しました',
 			'error.message.invalid_amount' => '金額が無効です',
 			'error.message.required' => '必須項目です',
 			'error.message.empty' => ({required Object key}) => '${key}を入力してください',
 			'error.message.format' => '形式が正しくありません',
 			'error.message.zero' => ({required Object key}) => '${key}は0にできません',
 			'error.message.amount_not_enough' => '残額が不足しています',
+			'error.message.amount_mismatch' => '金額が一致しません',
+			'error.message.income_is_used' => 'この金額はすでに使用されています',
+			'error.message.permission_denied' => '権限がありません',
+			'error.message.network_error' => 'ネットワークエラーが発生しました。しばらくしてから再試行してください',
+			'error.message.record_not_found' => 'データが見つかりません。ページを更新して再試行してください',
 			_ => null,
 		};
 	}

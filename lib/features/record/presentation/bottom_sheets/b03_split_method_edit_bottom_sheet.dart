@@ -142,19 +142,6 @@ class _B03SplitMethodEditBottomSheetState
     });
   }
 
-  String _getMethodDesc() {
-    switch (_splitMethod) {
-      case SplitMethodConstants.even:
-        return t.B03_SplitMethod_Edit.desc_even;
-      case SplitMethodConstants.percent:
-        return t.B03_SplitMethod_Edit.desc_percent;
-      case SplitMethodConstants.exact:
-        return t.B03_SplitMethod_Edit.desc_exact;
-      default:
-        return t.B03_SplitMethod_Edit.desc_even;
-    }
-  }
-
   void _switchMethod(String newMethod) {
     setState(() {
       _splitMethod = newMethod;
@@ -174,6 +161,19 @@ class _B03SplitMethodEditBottomSheetState
         }
       }
     });
+  }
+
+  String _getMethodDesc() {
+    switch (_splitMethod) {
+      case SplitMethodConstants.even:
+        return t.B03_SplitMethod_Edit.desc_even;
+      case SplitMethodConstants.percent:
+        return t.B03_SplitMethod_Edit.desc_percent;
+      case SplitMethodConstants.exact:
+        return t.B03_SplitMethod_Edit.desc_exact;
+      default:
+        return t.B03_SplitMethod_Edit.desc_even;
+    }
   }
 
   // 驗證是否可保存
@@ -592,7 +592,7 @@ class _B03SplitMethodEditBottomSheetState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(t.B02_SplitExpense_Edit.label_total(
+              Text(t.B03_SplitMethod_Edit.label_total(
                   current: CurrencyConstants.formatAmount(
                       currentSum, widget.selectedCurrency.code),
                   target: CurrencyConstants.formatAmount(

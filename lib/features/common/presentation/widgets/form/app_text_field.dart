@@ -6,9 +6,7 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
-  // 原本的單純圖示資料
   final IconData? prefixIcon;
-  // [新增] 支援複雜的前綴組件 (例如 IconButton)
   final Widget? leading;
   final Widget? suffixIcon;
   final bool obscureText;
@@ -23,6 +21,8 @@ class AppTextField extends StatelessWidget {
   final String? suffixText;
 
   final bool isRequired;
+  final Color? fillColor;
+  final FocusNode? focusNode;
 
   const AppTextField({
     super.key,
@@ -30,7 +30,6 @@ class AppTextField extends StatelessWidget {
     this.hintText,
     this.labelText,
     this.prefixIcon,
-    // [新增]
     this.leading,
     this.suffixIcon,
     this.obscureText = false,
@@ -43,6 +42,8 @@ class AppTextField extends StatelessWidget {
     this.autofocus = false,
     this.suffixText,
     this.isRequired = false,
+    this.fillColor,
+    this.focusNode,
   });
 
   @override
@@ -51,9 +52,24 @@ class AppTextField extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final borderStyle = UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide.none,
+    final borderRadius = BorderRadius.circular(16);
+
+    // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
+    final normalBorderStyle = OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(
+        color: fillColor ?? colorScheme.surface,
+        width: 1.0,
+      ),
+    );
+
+    // 2. 錯誤狀態：紅色全框 (因為沒有 labelText，所以不會有缺口！)
+    final errorBorderStyle = OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(
+        color: colorScheme.error,
+        width: 1.0,
+      ),
     );
 
     final effectiveValidator = validator ??
@@ -66,73 +82,95 @@ class AppTextField extends StatelessWidget {
               }
             : null);
 
-    // [新增邏輯] 決定前綴顯示什麼
     Widget? buildPrefix() {
-      // 1. 如果有傳入複雜組件 (leading)，優先使用
-      if (leading != null) {
-        return leading;
-      }
-      // 2. 如果只有傳入圖示資料 (prefixIcon)，則自動包裝成統一樣式的 Icon
+      if (leading != null) return leading;
       if (prefixIcon != null) {
         return Icon(prefixIcon, color: colorScheme.onSurfaceVariant, size: 20);
       }
-      // 3. 都沒有則不顯示
       return null;
     }
 
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      validator: effectiveValidator,
-      maxLines: maxLines,
-      maxLength: maxLength,
-      inputFormatters: inputFormatters,
-      autofocus: autofocus,
-      style: theme.textTheme.bodyLarge?.copyWith(
-        fontWeight: FontWeight.w500,
-        color: colorScheme.onSurface,
-        height: 1.5,
-      ),
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: theme.textTheme.labelMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
+    // 使用 Stack 來手動佈局 Label，達成「在 Container 內」且「不切斷邊框」的效果
+    return Stack(
+      children: [
+        // Layer 1: 輸入框本體
+        TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          onChanged: onChanged,
+          validator: effectiveValidator,
+          maxLines: maxLines,
+          maxLength: maxLength,
+          inputFormatters: inputFormatters,
+          autofocus: autofocus,
+          textAlignVertical: TextAlignVertical.bottom,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: colorScheme.onSurface,
+            height: 1.5,
+          ),
+          decoration: InputDecoration(
+            // [關鍵] 不使用內建 labelText，避免 OutlineBorder 切出缺口
+            labelText: null,
+            // [關鍵] 使用 contentPadding 把輸入文字往下推
+            // Top: 26 (留位置給上面的 Label)
+            // Bottom: 10 (下方留白)
+            // 這樣整體高度大約會是 64px 左右
+            contentPadding:
+                const EdgeInsets.only(left: 16, right: 16, top: 28, bottom: 12),
+
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              fontSize: 14,
+            ),
+
+            counterText: maxLength != null ? "" : null,
+            suffixText: suffixText,
+            suffixStyle: theme.textTheme.labelMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.bold,
+            ),
+
+            filled: true,
+            fillColor: fillColor ?? colorScheme.surface,
+
+            prefixIcon: buildPrefix(),
+            suffixIcon: suffixIcon,
+
+            // 邊框設定
+            border: normalBorderStyle,
+            enabledBorder: normalBorderStyle,
+            focusedBorder: normalBorderStyle,
+
+            // 錯誤時顯示完整的紅框
+            errorBorder: errorBorderStyle,
+            focusedErrorBorder: errorBorderStyle,
+          ),
         ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
 
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-          fontSize: 14,
-        ),
-
-        counterText: maxLength != null ? "" : null,
-        suffixText: suffixText,
-        suffixStyle: theme.textTheme.labelMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.bold,
-        ),
-
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
-        filled: true,
-        fillColor: colorScheme.surface,
-
-        // [修改] 使用新的建構邏輯
-        prefixIcon: buildPrefix(),
-
-        suffixIcon: suffixIcon,
-
-        border: borderStyle,
-        enabledBorder: borderStyle,
-        focusedBorder: borderStyle,
-        errorBorder: borderStyle,
-      ),
+        // Layer 2: 手動繪製 Label (固定在左上角)
+        if (labelText != null)
+          Positioned(
+            top: 12, // 距離頂部
+            left: (prefixIcon != null || leading != null)
+                ? 48
+                : 20, // 如果有 icon 要避開
+            child: IgnorePointer(
+              // 讓點擊穿透 Label，直接點到輸入框
+              child: Text(
+                labelText!,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10, // 小字體
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

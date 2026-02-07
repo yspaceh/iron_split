@@ -468,22 +468,15 @@
     }
   },
   "B02_SplitExpense_Edit": {
-    "title": "Edit Item",
+    "title": "Edit Sub Item",
     "buttons": {
       "save": "Confirm Split"
     },
     "label":{
-      "sub_item": "Item Name"
+      "sub_item": "Sub Item Name",
+      "split_method": "Split Method"
     },
-    "split_button_prefix": "Split by",
-    "hint_memo": "Memo",
-    "section_members": "Members",
-    "label_remainder": "Remaining: {amount}",
-    "label_total": "Total: {current}/{target}",
-    "error_total_mismatch": "Total mismatch",
-    "error_percent_mismatch": "Total must be 100%",
-    "hint_amount": "Amount",
-    "hint_percent": "%",
+    "item_name_empty" : "Parent item name is empty",
     "placeholder" : {
       "sub_item": "e.g. Sub-item"
     }
@@ -493,6 +486,7 @@
     "buttons": {
       "adjust_weight": "Adjust Weight"
     },
+    "label_total": "Total: {current}/{target}",
     "method_even": "Even",
     "method_percent": "By Percentage",
     "method_exact": "Exact Amount",
@@ -562,6 +556,10 @@
         "title": "Error",
         "message": "An unexpected error occurred."
       },
+      "delete_failed": {
+        "title": "Delete Failed",
+        "message": "Deleted failed. Please try again later."
+      },
       "data_conflict": {
         "title": "Data Changed",
         "message": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy."
@@ -573,12 +571,18 @@
       "transaction_failed": "System error. Settlement failed. Please try again later."
     },
     "message": {
+      "unknown": "An unexpected error occurred",
       "invalid_amount": "Invalid amount",
       "required": "This field is required",
       "empty": "Please enter {key}",
       "format": "Invalid format",
       "zero": "{key} cannot be 0",
-      "amount_not_enough": "Insufficient remaining amount"
+      "amount_not_enough": "Insufficient remaining amount",
+      "amount_mismatch": "Amount mismatch",
+      "income_is_used": "This amount has already been used",
+      "permission_denied": "Permission denied",
+      "network_error": "Network error. Please try again later",
+      "record_not_found" : "Data not found. Please refresh and try again"
     }
   }
 }

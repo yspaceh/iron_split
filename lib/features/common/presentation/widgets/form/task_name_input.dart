@@ -7,14 +7,20 @@ class TaskNameInput extends StatelessWidget {
   const TaskNameInput({
     super.key,
     required this.controller,
+    this.maxLength,
+    required this.label,
+    required this.placeholder,
   });
 
   final TextEditingController controller;
+  final int? maxLength;
+  final String label;
+  final String placeholder;
 
   @override
   Widget build(BuildContext context) {
     // 定義最大長度，方便維護
-    const int maxLength = 20;
+    int inputMaxLength = maxLength ?? 20;
 
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
@@ -24,21 +30,21 @@ class TaskNameInput extends StatelessWidget {
           autofocus: true,
 
           // 標題設定 (符合新風格)
-          labelText: t.S16_TaskCreate_Edit.label.name, // 或 field_name
-          hintText: t.S16_TaskCreate_Edit.placeholder.name,
+          labelText: label, // 或 field_name
+          hintText: placeholder,
 
           // 限制設定
-          maxLength: maxLength,
+          maxLength: inputMaxLength,
           inputFormatters: [
             FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
           ],
 
           // [關鍵] 動態傳入計數文字
-          suffixText: "${value.text.length}/$maxLength",
+          suffixText: "${value.text.length}/$inputMaxLength",
 
           // 驗證邏輯
           validator: (val) => (val == null || val.trim().isEmpty)
-              ? t.error.message.empty(key: t.S16_TaskCreate_Edit.label.name)
+              ? t.error.message.empty(key: label)
               : null,
         );
       },

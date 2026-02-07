@@ -6,14 +6,17 @@ class TaskMemoInput extends StatelessWidget {
   const TaskMemoInput({
     super.key,
     required this.memoController,
+    this.fillColor,
   });
   final TextEditingController memoController;
+  final Color? fillColor;
 
   @override
   Widget build(BuildContext context) {
     // 直接替換為 AppTextField
     return AppTextField(
       controller: memoController,
+      fillColor: fillColor,
       labelText: t.S15_Record_Edit.label.memo, // 標題
       hintText: t.S15_Record_Edit.placeholder.memo, // 增加一點提示 (Optional)
 

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
@@ -233,23 +237,41 @@ class _S15ContentState extends State<_S15Content> {
   Future<void> _onDelete(S15RecordEditViewModel vm) async {
     final t = Translations.of(context);
 
-    // [修正 1] 預先取得 Messenger 參考 (因為 pop 之後 context 就會失效)
-    final messenger = ScaffoldMessenger.of(context);
-
     final confirm = await D10RecordDeleteConfirmDialog.show<bool>(context,
         recordTitle: vm.titleController.text,
         currency: vm.selectedCurrencyConstants,
         amount: vm.totalAmount);
 
     if (confirm == true && context.mounted) {
-      await vm.deleteRecord(t);
-      // [修正 3] 使用預先取得的 messenger 顯示訊息
-      // 這樣即使下面 pop 了頁面，訊息還是能顯示在螢幕上 (因為 SnackBar 是由 Root Scaffold 管理的)
-      messenger.showSnackBar(
-          SnackBar(content: Text(t.D10_RecordDelete_Confirm.deleted_success)));
+      try {
+        final success = await vm.deleteRecord(t);
+        if (success) {
+          // A. 刪除成功
+          AppToast.showSuccess(
+              context, t.D10_RecordDelete_Confirm.deleted_success);
 
-      // [修正 4] 最後再關閉頁面
-      context.pop();
+          if (context.mounted) context.pop();
+        } else {
+          // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
+          if (context.mounted) {
+            CommonErrorDialog.show(context,
+                title: t.error.dialog.delete_failed.title,
+                content: t.error.dialog.delete_failed.message);
+          }
+        }
+      } catch (e) {
+        if (!context.mounted) return;
+
+        final eStr = e.toString();
+        final friendlyMessage = ErrorMapper.map(context, e);
+
+        if (eStr.contains(AppErrorCodes.recordNotFound)) {
+          CommonErrorDialog.show(context,
+              title: t.error.dialog.unknown.title, content: friendlyMessage);
+        } else {
+          AppToast.showError(context, friendlyMessage);
+        }
+      }
     }
   }
 

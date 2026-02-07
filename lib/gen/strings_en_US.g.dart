@@ -543,18 +543,10 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Edit Item';
+	@override String get title => 'Edit Sub Item';
 	@override late final _TranslationsB02SplitExpenseEditButtonsEnUs buttons = _TranslationsB02SplitExpenseEditButtonsEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditLabelEnUs label = _TranslationsB02SplitExpenseEditLabelEnUs._(_root);
-	@override String get split_button_prefix => 'Split by';
-	@override String get hint_memo => 'Memo';
-	@override String get section_members => 'Members';
-	@override String label_remainder({required Object amount}) => 'Remaining: ${amount}';
-	@override String label_total({required Object current, required Object target}) => 'Total: ${current}/${target}';
-	@override String get error_total_mismatch => 'Total mismatch';
-	@override String get error_percent_mismatch => 'Total must be 100%';
-	@override String get hint_amount => 'Amount';
-	@override String get hint_percent => '%';
+	@override String get item_name_empty => 'Parent item name is empty';
 	@override late final _TranslationsB02SplitExpenseEditPlaceholderEnUs placeholder = _TranslationsB02SplitExpenseEditPlaceholderEnUs._(_root);
 }
 
@@ -567,6 +559,7 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	// Translations
 	@override String get title => 'Choose Split Method';
 	@override late final _TranslationsB03SplitMethodEditButtonsEnUs buttons = _TranslationsB03SplitMethodEditButtonsEnUs._(_root);
+	@override String label_total({required Object current, required Object target}) => 'Total: ${current}/${target}';
 	@override String get method_even => 'Even';
 	@override String get method_percent => 'By Percentage';
 	@override String get method_exact => 'Exact Amount';
@@ -1174,7 +1167,8 @@ class _TranslationsB02SplitExpenseEditLabelEnUs extends TranslationsB02SplitExpe
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get sub_item => 'Item Name';
+	@override String get sub_item => 'Sub Item Name';
+	@override String get split_method => 'Split Method';
 }
 
 // Path: B02_SplitExpense_Edit.placeholder
@@ -1231,6 +1225,7 @@ class _TranslationsErrorDialogEnUs extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogAuthRequiredEnUs auth_required = _TranslationsErrorDialogAuthRequiredEnUs._(_root);
 	@override late final _TranslationsErrorDialogAlreadyInTaskEnUs already_in_task = _TranslationsErrorDialogAlreadyInTaskEnUs._(_root);
 	@override late final _TranslationsErrorDialogUnknownEnUs unknown = _TranslationsErrorDialogUnknownEnUs._(_root);
+	@override late final _TranslationsErrorDialogDeleteFailedEnUs delete_failed = _TranslationsErrorDialogDeleteFailedEnUs._(_root);
 	@override late final _TranslationsErrorDialogDataConflictEnUs data_conflict = _TranslationsErrorDialogDataConflictEnUs._(_root);
 }
 
@@ -1253,12 +1248,18 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
+	@override String get unknown => 'An unexpected error occurred';
 	@override String get invalid_amount => 'Invalid amount';
 	@override String get required => 'This field is required';
 	@override String empty({required Object key}) => 'Please enter ${key}';
 	@override String get format => 'Invalid format';
 	@override String zero({required Object key}) => '${key} cannot be 0';
 	@override String get amount_not_enough => 'Insufficient remaining amount';
+	@override String get amount_mismatch => 'Amount mismatch';
+	@override String get income_is_used => 'This amount has already been used';
+	@override String get permission_denied => 'Permission denied';
+	@override String get network_error => 'Network error. Please try again later';
+	@override String get record_not_found => 'Data not found. Please refresh and try again';
 }
 
 // Path: common.share.invite
@@ -1362,6 +1363,17 @@ class _TranslationsErrorDialogUnknownEnUs extends TranslationsErrorDialogUnknown
 	// Translations
 	@override String get title => 'Error';
 	@override String get message => 'An unexpected error occurred.';
+}
+
+// Path: error.dialog.delete_failed
+class _TranslationsErrorDialogDeleteFailedEnUs extends TranslationsErrorDialogDeleteFailedZhTw {
+	_TranslationsErrorDialogDeleteFailedEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Delete Failed';
+	@override String get message => 'Deleted failed. Please try again later.';
 }
 
 // Path: error.dialog.data_conflict
@@ -1707,21 +1719,15 @@ extension on TranslationsEnUs {
 			'D11_random_result.skip' => 'Skip',
 			'D11_random_result.winner_reveal' => 'It\'s you!',
 			'D11_random_result.buttons.close' => 'OK',
-			'B02_SplitExpense_Edit.title' => 'Edit Item',
+			'B02_SplitExpense_Edit.title' => 'Edit Sub Item',
 			'B02_SplitExpense_Edit.buttons.save' => 'Confirm Split',
-			'B02_SplitExpense_Edit.label.sub_item' => 'Item Name',
-			'B02_SplitExpense_Edit.split_button_prefix' => 'Split by',
-			'B02_SplitExpense_Edit.hint_memo' => 'Memo',
-			'B02_SplitExpense_Edit.section_members' => 'Members',
-			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => 'Remaining: ${amount}',
-			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
-			'B02_SplitExpense_Edit.error_total_mismatch' => 'Total mismatch',
-			'B02_SplitExpense_Edit.error_percent_mismatch' => 'Total must be 100%',
-			'B02_SplitExpense_Edit.hint_amount' => 'Amount',
-			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.label.sub_item' => 'Sub Item Name',
+			'B02_SplitExpense_Edit.label.split_method' => 'Split Method',
+			'B02_SplitExpense_Edit.item_name_empty' => 'Parent item name is empty',
 			'B02_SplitExpense_Edit.placeholder.sub_item' => 'e.g. Sub-item',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => 'Adjust Weight',
+			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
 			'B03_SplitMethod_Edit.method_even' => 'Even',
 			'B03_SplitMethod_Edit.method_percent' => 'By Percentage',
 			'B03_SplitMethod_Edit.method_exact' => 'Exact Amount',
@@ -1766,17 +1772,25 @@ extension on TranslationsEnUs {
 			'error.dialog.already_in_task.message' => 'You are already in this task.',
 			'error.dialog.unknown.title' => 'Error',
 			'error.dialog.unknown.message' => 'An unexpected error occurred.',
+			'error.dialog.delete_failed.title' => 'Delete Failed',
+			'error.dialog.delete_failed.message' => 'Deleted failed. Please try again later.',
 			'error.dialog.data_conflict.title' => 'Data Changed',
 			'error.dialog.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
 			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
 			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
 			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
+			'error.message.unknown' => 'An unexpected error occurred',
 			'error.message.invalid_amount' => 'Invalid amount',
 			'error.message.required' => 'This field is required',
 			'error.message.empty' => ({required Object key}) => 'Please enter ${key}',
 			'error.message.format' => 'Invalid format',
 			'error.message.zero' => ({required Object key}) => '${key} cannot be 0',
 			'error.message.amount_not_enough' => 'Insufficient remaining amount',
+			'error.message.amount_mismatch' => 'Amount mismatch',
+			'error.message.income_is_used' => 'This amount has already been used',
+			'error.message.permission_denied' => 'Permission denied',
+			'error.message.network_error' => 'Network error. Please try again later',
+			'error.message.record_not_found' => 'Data not found. Please refresh and try again',
 			_ => null,
 		};
 	}

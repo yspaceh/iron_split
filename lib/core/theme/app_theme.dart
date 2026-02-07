@@ -15,6 +15,8 @@ class AppTheme {
   static const _pureWhite = Color(0xFFFFFFFF);
   static const _neutralGrey = Color(0xFFE0E3E5); // 邊框/底色用淺灰
 
+  static const _orangeRed = Color(0xFFFF3B30);
+
   // [最終定案] 文字色階 (Pure Greyscale)
   // Level 1: 重 (標題) - 接近純黑，極高對比
   static const _obsidian = Color(0xFF212121);
@@ -22,6 +24,7 @@ class AppTheme {
   // Level 2: 中 (次要文字/未選中) - 純中性灰，不帶藍也不帶紅
   // 這是搭配 #212121 最平衡的顏色
   static const _mediumGrey = Color(0xFF616161);
+  static const _darkGrey = const Color(0xFF333333);
 
   // 收入色
   static const _incomeGreen = Color(0xFF2E7D32);
@@ -42,6 +45,9 @@ class AppTheme {
         surface: _pureWhite,
         onSurface: _obsidian,
 
+        error: _orangeRed,
+        errorContainer: _orangeRed.withValues(alpha: 0.1),
+
         // --- 關鍵修正區 ---
         // 強制指定次要內容為純中性灰 (#616161)
         // 這會直接影響 CustomSlidingSegment 的未選中文字顏色
@@ -61,6 +67,9 @@ class AppTheme {
         tertiary: _incomeGreen,
         tertiaryContainer: _incomeBg,
         onTertiaryContainer: _incomeGreen,
+
+        inverseSurface: _darkGrey,
+        onInverseSurface: Colors.white,
       ),
 
       scaffoldBackgroundColor: _slateBg,
@@ -144,6 +153,31 @@ class AppTheme {
         // 次要資訊：使用 #616161，清晰且不搶戲
         bodyMedium: TextStyle(color: _mediumGrey),
         labelLarge: TextStyle(color: _obsidian, fontWeight: FontWeight.w600),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        // 1. 行為：懸浮 (Floating)
+        behavior: SnackBarBehavior.floating,
+
+        // 2. 形狀：16px 圓角
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+
+        // 3. 位置與間距：留白讓它看起來像浮起來的膠囊
+        // 注意：如果下方有 FAB 或 NavigationBar，Flutter 會自動避開
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+        // 4. 預設顏色：使用深灰色 (Inverse Surface) 搭配白字
+        // 這樣在白底 App 上對比度最高，看起來最乾淨
+        backgroundColor: _darkGrey,
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+
+        // 5. 陰影：稍微加一點點，增加層次感
+        elevation: 4,
       ),
     );
   }

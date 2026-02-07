@@ -908,32 +908,8 @@ class TranslationsB02SplitExpenseEditZhTw {
 	late final TranslationsB02SplitExpenseEditButtonsZhTw buttons = TranslationsB02SplitExpenseEditButtonsZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditLabelZhTw label = TranslationsB02SplitExpenseEditLabelZhTw.internal(_root);
 
-	/// zh-TW: '分攤設定'
-	String get split_button_prefix => '分攤設定';
-
-	/// zh-TW: '備註'
-	String get hint_memo => '備註';
-
-	/// zh-TW: '成員分配'
-	String get section_members => '成員分配';
-
-	/// zh-TW: '剩餘: {amount}'
-	String label_remainder({required Object amount}) => '剩餘: ${amount}';
-
-	/// zh-TW: '總計: {current}/{target}'
-	String label_total({required Object current, required Object target}) => '總計: ${current}/${target}';
-
-	/// zh-TW: '總金額不符'
-	String get error_total_mismatch => '總金額不符';
-
-	/// zh-TW: '總比例必須為 100%'
-	String get error_percent_mismatch => '總比例必須為 100%';
-
-	/// zh-TW: '金額'
-	String get hint_amount => '金額';
-
-	/// zh-TW: '%'
-	String get hint_percent => '%';
+	/// zh-TW: '項目名稱尚未輸入'
+	String get item_name_empty => '項目名稱尚未輸入';
 
 	late final TranslationsB02SplitExpenseEditPlaceholderZhTw placeholder = TranslationsB02SplitExpenseEditPlaceholderZhTw.internal(_root);
 }
@@ -950,6 +926,9 @@ class TranslationsB03SplitMethodEditZhTw {
 	String get title => '選擇分攤方式';
 
 	late final TranslationsB03SplitMethodEditButtonsZhTw buttons = TranslationsB03SplitMethodEditButtonsZhTw.internal(_root);
+
+	/// zh-TW: '總計: {current}/{target}'
+	String label_total({required Object current, required Object target}) => '總計: ${current}/${target}';
 
 	/// zh-TW: '平均分攤'
 	String get method_even => '平均分攤';
@@ -1912,8 +1891,11 @@ class TranslationsB02SplitExpenseEditLabelZhTw {
 
 	// Translations
 
-	/// zh-TW: '項目名稱'
-	String get sub_item => '項目名稱';
+	/// zh-TW: '細項名稱'
+	String get sub_item => '細項名稱';
+
+	/// zh-TW: '分攤設定'
+	String get split_method => '分攤設定';
 }
 
 // Path: B02_SplitExpense_Edit.placeholder
@@ -1980,6 +1962,7 @@ class TranslationsErrorDialogZhTw {
 	late final TranslationsErrorDialogAuthRequiredZhTw auth_required = TranslationsErrorDialogAuthRequiredZhTw.internal(_root);
 	late final TranslationsErrorDialogAlreadyInTaskZhTw already_in_task = TranslationsErrorDialogAlreadyInTaskZhTw.internal(_root);
 	late final TranslationsErrorDialogUnknownZhTw unknown = TranslationsErrorDialogUnknownZhTw.internal(_root);
+	late final TranslationsErrorDialogDeleteFailedZhTw delete_failed = TranslationsErrorDialogDeleteFailedZhTw.internal(_root);
 	late final TranslationsErrorDialogDataConflictZhTw data_conflict = TranslationsErrorDialogDataConflictZhTw.internal(_root);
 }
 
@@ -2009,6 +1992,9 @@ class TranslationsErrorMessageZhTw {
 
 	// Translations
 
+	/// zh-TW: '發生未預期的錯誤'
+	String get unknown => '發生未預期的錯誤';
+
 	/// zh-TW: '金額無效'
 	String get invalid_amount => '金額無效';
 
@@ -2026,6 +2012,21 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '剩餘金額不足'
 	String get amount_not_enough => '剩餘金額不足';
+
+	/// zh-TW: '金額不符'
+	String get amount_mismatch => '金額不符';
+
+	/// zh-TW: '此款項已被使用'
+	String get income_is_used => '此款項已被使用';
+
+	/// zh-TW: '權限不足'
+	String get permission_denied => '權限不足';
+
+	/// zh-TW: '網路連線異常，請稍後再試'
+	String get network_error => '網路連線異常，請稍後再試';
+
+	/// zh-TW: '找不到這筆資料，請重新整理後再試'
+	String get record_not_found => '找不到這筆資料，請重新整理後再試';
 }
 
 // Path: common.share.invite
@@ -2173,6 +2174,21 @@ class TranslationsErrorDialogUnknownZhTw {
 
 	/// zh-TW: '發生未預期的錯誤，請稍後再試。'
 	String get message => '發生未預期的錯誤，請稍後再試。';
+}
+
+// Path: error.dialog.delete_failed
+class TranslationsErrorDialogDeleteFailedZhTw {
+	TranslationsErrorDialogDeleteFailedZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '刪除失敗'
+	String get title => '刪除失敗';
+
+	/// zh-TW: '刪除失敗，請稍後再試。'
+	String get message => '刪除失敗，請稍後再試。';
 }
 
 // Path: error.dialog.data_conflict
@@ -2524,19 +2540,13 @@ extension on Translations {
 			'D11_random_result.buttons.close' => '確定',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.buttons.save' => '確認分拆',
-			'B02_SplitExpense_Edit.label.sub_item' => '項目名稱',
-			'B02_SplitExpense_Edit.split_button_prefix' => '分攤設定',
-			'B02_SplitExpense_Edit.hint_memo' => '備註',
-			'B02_SplitExpense_Edit.section_members' => '成員分配',
-			'B02_SplitExpense_Edit.label_remainder' => ({required Object amount}) => '剩餘: ${amount}',
-			'B02_SplitExpense_Edit.label_total' => ({required Object current, required Object target}) => '總計: ${current}/${target}',
-			'B02_SplitExpense_Edit.error_total_mismatch' => '總金額不符',
-			'B02_SplitExpense_Edit.error_percent_mismatch' => '總比例必須為 100%',
-			'B02_SplitExpense_Edit.hint_amount' => '金額',
-			'B02_SplitExpense_Edit.hint_percent' => '%',
+			'B02_SplitExpense_Edit.label.sub_item' => '細項名稱',
+			'B02_SplitExpense_Edit.label.split_method' => '分攤設定',
+			'B02_SplitExpense_Edit.item_name_empty' => '項目名稱尚未輸入',
 			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：子項目',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
+			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => '總計: ${current}/${target}',
 			'B03_SplitMethod_Edit.method_even' => '平均分攤',
 			'B03_SplitMethod_Edit.method_percent' => '比例分攤',
 			'B03_SplitMethod_Edit.method_exact' => '指定金額',
@@ -2581,17 +2591,25 @@ extension on Translations {
 			'error.dialog.already_in_task.message' => '您已經在這個任務中了。',
 			'error.dialog.unknown.title' => '發生錯誤',
 			'error.dialog.unknown.message' => '發生未預期的錯誤，請稍後再試。',
+			'error.dialog.delete_failed.title' => '刪除失敗',
+			'error.dialog.delete_failed.message' => '刪除失敗，請稍後再試。',
 			'error.dialog.data_conflict.title' => '帳目已變動',
 			'error.dialog.data_conflict.message' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
 			'error.settlement.status_invalid' => '此任務狀態異常（可能已被結算），請刷新頁面。',
 			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
 			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
+			'error.message.unknown' => '發生未預期的錯誤',
 			'error.message.invalid_amount' => '金額無效',
 			'error.message.required' => '此欄位為必填',
 			'error.message.empty' => ({required Object key}) => '請輸入${key}',
 			'error.message.format' => '格式錯誤',
 			'error.message.zero' => ({required Object key}) => '${key}不可為 0',
 			'error.message.amount_not_enough' => '剩餘金額不足',
+			'error.message.amount_mismatch' => '金額不符',
+			'error.message.income_is_used' => '此款項已被使用',
+			'error.message.permission_denied' => '權限不足',
+			'error.message.network_error' => '網路連線異常，請稍後再試',
+			'error.message.record_not_found' => '找不到這筆資料，請重新整理後再試',
 			_ => null,
 		};
 	}

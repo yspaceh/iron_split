@@ -472,17 +472,10 @@
       "save": "決定"
     },
     "label": {
-      "sub_item": "項目名"
+      "sub_item": "子項目名",
+      "split_method": "負担設定"
     },
-    "split_button_prefix": "負担設定",
-    "hint_memo": "メモ",
-    "section_members": "メンバー配分",
-    "label_remainder": "残り: {amount}",
-    "label_total": "合計: {current}/{target}",
-    "error_total_mismatch": "合計金額が一致しません",
-    "error_percent_mismatch": "合計は100%である必要があります",
-    "hint_amount": "金額",
-    "hint_percent": "%",
+    "item_name_empty" : "親項目名を入力してない",
     "placeholder" : {
       "sub_item": "例：内訳"
     }
@@ -492,6 +485,7 @@
     "buttons": {
       "adjust_weight": "比率を調整"
     },
+    "label_total": "合計: {current}/{target}",
     "method_even": "均等分攤",
     "method_percent": "割合分攤",
     "method_exact": "金額指定",
@@ -561,6 +555,10 @@
         "title": "エラー",
         "message": "予期せぬエラーが発生しました。"
       },
+      "delete_failed": {
+        "title": "削除失敗",
+        "message": "削除に失敗しました。後でもう一度お試しください。"
+      },
       "data_conflict": {
         "title": "データ更新あり",
         "message": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。"
@@ -572,12 +570,18 @@
       "transaction_failed": "システムエラーが発生しました。後でもう一度お試しください。"
     },
     "message": {
+      "unknown": "予期せぬエラーが発生しました",
       "invalid_amount": "金額が無効です",
       "required": "必須項目です",
       "empty": "{key}を入力してください",
       "format": "形式が正しくありません",
       "zero": "{key}は0にできません",
-      "amount_not_enough": "残額が不足しています"
+      "amount_not_enough": "残額が不足しています",
+      "amount_mismatch": "金額が一致しません",
+      "income_is_used": "この金額はすでに使用されています",
+      "permission_denied": "権限がありません",
+      "network_error": "ネットワークエラーが発生しました。しばらくしてから再試行してください",
+      "record_not_found" : "データが見つかりません。ページを更新して再試行してください"
     }
   }
 }

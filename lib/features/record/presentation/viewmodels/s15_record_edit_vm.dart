@@ -557,8 +557,30 @@ class S15RecordEditViewModel extends ChangeNotifier {
     };
   }
 
-  Future<void> deleteRecord(Translations t) async {
+  Future<bool> deleteRecord(Translations t) async {
     try {
+      if (recordId == null) return false;
+
+      final isIncome = _recordTypeIndex == 1; // 假設 Tab Index 1 = Income
+
+      if (isIncome) {
+        // A. 檢查資料庫是否有其他紀錄明確指向此 ID
+        final isReferenced =
+            await _recordRepo.isRecordReferenced(taskId, recordId!);
+        if (isReferenced) return false;
+
+        // B. 檢查餘額 (Pool Balance)
+        // 如果刪除這筆收入，餘額是否會變成負數？
+        // poolBalancesByCurrency 是 "包含" 此筆收入的當前餘額
+        double currentBalance =
+            poolBalancesByCurrency[_selectedCurrencyConstants.code] ?? 0.0;
+
+        // 如果當前餘額小於此筆收入金額 (容許 0.01 誤差)，代表已經花掉了
+        if (currentBalance < (totalAmount - 0.01)) {
+          return false;
+        }
+      }
+
       await _recordRepo.deleteRecord(taskId, recordId!);
       ActivityLogService.log(
           taskId: taskId,
@@ -568,6 +590,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
             'amount': totalAmount,
             'currency': _selectedCurrencyConstants.code
           });
+      return true;
     } catch (e) {
       rethrow;
     }

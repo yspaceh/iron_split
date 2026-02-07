@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/app_error_codes.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/features/task/presentation/widgets/personal_balance_card.dart';
 import 'package:provider/provider.dart';
@@ -123,18 +127,40 @@ class S13PersonalView extends StatelessWidget {
                             onDelete: (ctx) async {
                               // 呼叫 Repo 進行刪除
                               try {
-                                await vm.deleteRecord(record.id!);
+                                final success =
+                                    await vm.deleteRecord(record.id!);
                                 // 顯示 SnackBar
-                                if (ctx.mounted) {
-                                  ScaffoldMessenger.of(ctx).showSnackBar(
-                                    SnackBar(
-                                        content: Text(Translations.of(ctx)
-                                            .D10_RecordDelete_Confirm
-                                            .deleted_success)),
-                                  );
+                                if (success) {
+                                  if (ctx.mounted) {
+                                    AppToast.showSuccess(
+                                        ctx,
+                                        t.D10_RecordDelete_Confirm
+                                            .deleted_success);
+                                  }
+                                } else {
+                                  // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
+                                  if (context.mounted) {
+                                    CommonErrorDialog.show(ctx,
+                                        title:
+                                            t.error.dialog.delete_failed.title,
+                                        content: t.error.dialog.delete_failed
+                                            .message);
+                                  }
                                 }
                               } catch (e) {
-                                // TODO: 需追加錯誤處理
+                                if (!ctx.mounted) return;
+
+                                final eStr = e.toString();
+                                final friendlyMessage = ErrorMapper.map(ctx, e);
+
+                                if (eStr
+                                    .contains(AppErrorCodes.recordNotFound)) {
+                                  CommonErrorDialog.show(ctx,
+                                      title: t.error.dialog.unknown.title,
+                                      content: friendlyMessage);
+                                } else {
+                                  AppToast.showError(ctx, friendlyMessage);
+                                }
                               }
                             },
                           ),

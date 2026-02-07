@@ -68,7 +68,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                             ),
                           )
                         : Icon(
-                            Icons.sync_alt_rounded, // 更新/交換圖示
+                            Icons.currency_exchange_outlined, // 更新/交換圖示
                             color: isIncome == true
                                 ? AppTheme.incomeDeep
                                 : AppTheme.expenseDeep,

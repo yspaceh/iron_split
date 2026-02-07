@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppSelectField extends StatelessWidget {
-  final String text; // 目前選中的內容
+  final String text;
   final String? hintText;
   final String? labelText;
   final IconData? prefixIcon;
-  final VoidCallback onTap; // 點擊觸發 BottomSheet
-  final String? errorText; // 外部傳入的錯誤訊息 (如果有)
+  final VoidCallback onTap;
+  final String? errorText;
+  final Color? fillColor;
+  final Widget? trailing;
 
   const AppSelectField({
     super.key,
@@ -16,6 +18,8 @@ class AppSelectField extends StatelessWidget {
     this.labelText,
     this.prefixIcon,
     this.errorText,
+    this.fillColor,
+    this.trailing,
   });
 
   @override
@@ -24,64 +28,110 @@ class AppSelectField extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final bool isEmpty = text.isEmpty;
 
-    // 同步使用 UnderlineInputBorder
-    final borderStyle = UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide.none,
+    final borderRadius = BorderRadius.circular(16);
+
+    // 1. 正常狀態：透明邊框
+    final normalBorderStyle = OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: const BorderSide(
+        color: Colors.transparent,
+        width: 1.0,
+      ),
+    );
+
+    // 2. 錯誤狀態：紅色邊框
+    final errorBorderStyle = OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(
+        color: colorScheme.error,
+        width: 1.0,
+      ),
     );
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: IgnorePointer(
-        ignoring: true, // 讓 InkWell 處理點擊
-        child: TextFormField(
-          key: ValueKey(text), // 強制刷新
-          initialValue: isEmpty ? null : text,
-          readOnly: true,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: colorScheme.onSurface,
-            height: 1.5,
-          ),
-          decoration: InputDecoration(
-            // 標題設定
-            labelText: labelText,
-            labelStyle: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+      borderRadius: borderRadius,
+      child: Stack(
+        children: [
+          IgnorePointer(
+            ignoring: true,
+            child: TextFormField(
+              key: ValueKey(text),
+              initialValue: isEmpty ? null : text,
+              readOnly: true,
+              // [關鍵] 對齊底部
+              textAlignVertical: TextAlignVertical.bottom,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: colorScheme.onSurface,
+                height: 1.5,
+              ),
+              decoration: InputDecoration(
+                labelText: null, // 禁用內建 Label
+
+                contentPadding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 28, bottom: 12),
+
+                hintText: isEmpty ? hintText : null,
+                hintStyle: TextStyle(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    fontSize: 14),
+
+                filled: true,
+                fillColor: fillColor ?? colorScheme.surface,
+
+                prefixIcon: prefixIcon != null
+                    ? Icon(prefixIcon,
+                        color: colorScheme.onSurfaceVariant, size: 20)
+                    : null,
+
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (trailing != null) ...[
+                      trailing!,
+                      const SizedBox(width: 8),
+                    ],
+                    Icon(
+                      Icons.expand_more_rounded,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                ),
+                suffixIconConstraints: const BoxConstraints(
+                  minHeight: 48,
+                  minWidth: 48,
+                ),
+
+                border: normalBorderStyle,
+                enabledBorder: normalBorderStyle,
+                focusedBorder: normalBorderStyle,
+
+                // 錯誤狀態
+                errorBorder: errorBorderStyle,
+                focusedErrorBorder: errorBorderStyle,
+
+                errorText: errorText,
+              ),
             ),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-
-            hintText: isEmpty ? hintText : null,
-            hintStyle: TextStyle(
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                fontSize: 14),
-
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
-            filled: true,
-            fillColor: colorScheme.surface, // 白色背景
-
-            prefixIcon: prefixIcon != null
-                ? Icon(prefixIcon,
-                    color: colorScheme.onSurfaceVariant, size: 20)
-                : null,
-
-            suffixIcon: Icon(
-              Icons.expand_more_rounded,
-              color: colorScheme.onSurfaceVariant,
-            ),
-
-            border: borderStyle,
-            enabledBorder: borderStyle,
-            focusedBorder: borderStyle,
-            errorBorder: borderStyle,
-            errorText: errorText,
           ),
-        ),
+
+          // 手動繪製 Label (固定在左上)
+          if (labelText != null)
+            Positioned(
+              top: 12,
+              left: (prefixIcon != null) ? 48 : 20,
+              child: Text(
+                labelText!,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

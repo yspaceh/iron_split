@@ -164,4 +164,22 @@ class RecordRepository {
 
     return false;
   }
+
+  /// 檢查此紀錄是否被其他紀錄引用 (例如作為 payerId)
+  /// 主要用於防止刪除已被使用的預收款 (Income/Prepay)
+  Future<bool> isRecordReferenced(String taskId, String recordId) async {
+    // 1. 檢查是否有任何紀錄的 payerId 指向此 recordId
+    final payerQuery = await _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .collection('records')
+        .where('payerId', isEqualTo: recordId)
+        .limit(1)
+        .get();
+
+    if (payerQuery.docs.isNotEmpty) return true;
+
+    // 2. 如果未來有其他引用方式 (例如關聯轉帳)，也可以在這裡檢查
+    return false;
+  }
 }

@@ -9,6 +9,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_bottom_sh
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_memo_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -81,12 +82,15 @@ class _B02SplitExpenseEditBottomSheetState
   late List<String> _splitMemberIds;
   late Map<String, double>? _splitDetails;
 
+  String? _splitMethodError;
+
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.detail?.name ?? '');
-    _amountController =
-        TextEditingController(text: widget.detail?.amount.toString() ?? '');
+    _amountController = TextEditingController(
+        text: CurrencyConstants.formatAmount(
+            widget.detail?.amount ?? 0, widget.selectedCurrency.code));
     _memoController = TextEditingController(text: widget.detail?.memo ?? '');
 
     _splitMethod =
@@ -105,17 +109,22 @@ class _B02SplitExpenseEditBottomSheetState
   }
 
   Future<void> _handleSplitConfig() async {
-    final amount = double.tryParse(_amountController.text) ?? 0.0;
+    final amountText = _amountController.text.replaceAll(',', '');
+    final amount = double.tryParse(amountText) ?? 0.0;
 
-    // 防呆：金額為 0 不能分帳
+    // 2. 檢查金額是否為 0
     if (amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                t.error.message.zero(key: t.S15_Record_Edit.label.amount))),
-      );
+      setState(() {
+        _splitMethodError =
+            t.error.message.empty(key: t.S15_Record_Edit.label.amount);
+      });
       return;
     }
+
+    // 3. 如果金額正常，清空之前的錯誤訊息
+    setState(() {
+      _splitMethodError = null;
+    });
 
     final result = await B03SplitMethodEditBottomSheet.show(
       context,
@@ -141,10 +150,9 @@ class _B02SplitExpenseEditBottomSheetState
 
   void _onSave() {
     if (_formKey.currentState!.validate()) {
-      final amount = double.parse(_amountController.text);
-      // [最後防線] 如果 splitDetails 存在，檢查總和是否吻合
-      // 如果不吻合 (且不是比例模式)，理論上應該要重算，但這裡為了簡單，
-      // 如果發現金額變了但 splitDetails 沒清乾淨，這裡強制清空讓 S15 處理
+      final amountText = _amountController.text.replaceAll(',', '');
+      final amount = double.parse(amountText);
+
       Map<String, double>? finalSplitDetails = _splitDetails;
       if (finalSplitDetails != null) {
         final sum = finalSplitDetails.values.fold(0.0, (p, c) => p + c);
@@ -173,11 +181,8 @@ class _B02SplitExpenseEditBottomSheetState
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // ✅ 使用 CommonBottomSheet
     return CommonBottomSheet(
       title: t.B02_SplitExpense_Edit.title,
-
-      // ✅ 右上角放刪除按鈕 (如果有 detail)
       actions: [
         if (widget.detail != null)
           IconButton(
@@ -187,8 +192,6 @@ class _B02SplitExpenseEditBottomSheetState
             tooltip: t.common.buttons.delete,
           ),
       ],
-
-      // ✅ 底部按鈕：使用 .sheet 樣式 (內縮分隔線)
       bottomActionBar: StickyBottomActionBar.sheet(
         children: [
           AppButton(
@@ -198,112 +201,99 @@ class _B02SplitExpenseEditBottomSheetState
           ),
         ],
       ),
-
-      // ✅ 內容區
       children: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: 16),
-
-              // 1. Context Header (Parent Title + Available Amount)
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                margin: const EdgeInsets.only(bottom: 24),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8, vertical: 16), // 減少上下間距
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end, // 底部對齊
                   children: [
+                    // 左側：母項目標題
                     Expanded(
                       child: Text(
-                        widget.parentTitle,
+                        widget.parentTitle.isNotEmpty
+                            ? widget.parentTitle
+                            : t.B02_SplitExpense_Edit.item_name_empty,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
+                          color: widget.parentTitle.isNotEmpty
+                              ? colorScheme.onSurface
+                              : colorScheme.outline,
                         ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+
+                    // 右側：剩餘金額 (大紅字)
                     Text(
                       "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.availableAmount, widget.selectedCurrency.code)}",
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.primary, // 使用紅色強調限制
+                        height: 1.2,
                       ),
                     ),
                   ],
                 ),
               ),
+              Divider(
+                height: 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              ),
+
+              const SizedBox(height: 16),
 
               // 2. Name
               AppTextField(
                 controller: _nameController,
+                fillColor: colorScheme.surfaceContainerLow,
                 labelText: t.B02_SplitExpense_Edit.label.sub_item,
-                // 加一點提示文字，增加 UX
                 hintText: t.B02_SplitExpense_Edit.placeholder.sub_item,
                 validator: (v) =>
                     v?.isEmpty == true ? t.error.message.required : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
 
               // 3. Amount
               TaskAmountInput(
                 amountController: _amountController,
+                fillColor: colorScheme.surfaceContainerLow,
                 selectedCurrencyConstants: widget.selectedCurrency,
                 isIncome: false,
                 showCurrencyPicker: false,
+                externalValidator: (val) {
+                  if (val > widget.availableAmount) {
+                    return t.error.message.amount_not_enough;
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
 
               // 4. Split Config Button
-              InkWell(
+              AppSelectField(
+                text: SplitMethodConstants.getLabel(context, _splitMethod),
                 onTap: _handleSplitConfig,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: colorScheme.outline),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.call_split,
-                          color: colorScheme.onSurfaceVariant),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          t.B02_SplitExpense_Edit.split_button_prefix,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      // Avatar Stack
-                      CommonAvatarStack(
-                        allMembers: widget.allMembers,
-                        targetMemberIds: _splitMemberIds,
-                        radius: 12,
-                        fontSize: 10,
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.chevron_right),
-                    ],
-                  ),
+                fillColor: colorScheme.surfaceContainerLow,
+                labelText: t.B02_SplitExpense_Edit.label.split_method,
+                trailing: CommonAvatarStack(
+                  allMembers: widget.allMembers,
+                  targetMemberIds: _splitMemberIds,
+                  radius: 12,
+                  fontSize: 10,
                 ),
+                errorText: _splitMethodError,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
 
               // 5. Memo
               TaskMemoInput(
                 memoController: _memoController,
+                fillColor: colorScheme.surfaceContainerLow,
               ),
               // 底部安全留白
               const SizedBox(height: 32),
