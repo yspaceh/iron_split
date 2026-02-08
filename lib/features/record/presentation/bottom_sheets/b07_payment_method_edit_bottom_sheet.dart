@@ -333,6 +333,7 @@ class _B07PaymentMethodEditBottomSheetState
                 SelectionCard(
                   title: t.B07_PaymentMethod_Edit.type_prepay,
                   isSelected: _usePrepay,
+                  isRadio: false,
                   onToggle: _onPrepayToggle,
                   // 如果收合時也想顯示金額在右側，可在此傳入 trailing
                   child: Column(
@@ -375,6 +376,7 @@ class _B07PaymentMethodEditBottomSheetState
                 SelectionCard(
                   title: t.B07_PaymentMethod_Edit.type_member,
                   isSelected: _useAdvance,
+                  isRadio: false,
                   onToggle: _onAdvanceToggle,
                   child: Column(
                     children: widget.members.map((m) {

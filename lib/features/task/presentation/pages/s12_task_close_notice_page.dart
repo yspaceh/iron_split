@@ -101,7 +101,6 @@ class _S12Content extends StatelessWidget {
           child: Text(
             t.S12_TaskClose_Notice.content,
             style: theme.textTheme.bodyLarge,
-            textAlign: TextAlign.center,
           ),
         ),
       ),

@@ -58,9 +58,18 @@
     },
     "remainder_rule": {
       "title": "端数処理",
-      "rule_random": "ランダム",
-      "rule_order": "順番",
-      "rule_member": "指定"
+      "rule": {
+        "random": "ランダム",
+        "order": "順番",
+        "member": "指定"
+      },
+      "description": {
+        "remainder": "端数 {amount} は、為替レートの換算や割り勘の計算で生じる差額です。",
+        "random": "割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。",
+        "order": "メンバーの参加順に、端数がなくなるまで順番に配分します。",
+        "member": "特定のメンバーを指定し、常にその人が端数を負担するようにします。"
+      },
+      "message_remainder": "残額 {amount} は残高ポットに保存され、精算時に分配されます"
     },
     "split_method": {
       "even": "均等",
@@ -254,7 +263,6 @@
     "base_card_title_expense": "残額（Base）",
     "base_card_title_income": "資金元（入金者）",
     "payer_multiple": "複数人",
-    "msg_leftover_pot": "残額 {amount} は残高ポットに保存され（精算時に分配されます）",
     "rate_dialog": {
       "title": "為替レートの出典",
       "message": "為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。"

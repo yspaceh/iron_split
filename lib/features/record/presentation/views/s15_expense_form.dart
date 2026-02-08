@@ -205,7 +205,7 @@ class S15ExpenseForm extends StatelessWidget {
           InfoBar(
             icon: Icons.savings_outlined,
             text: Text(
-              t.S15_Record_Edit.msg_leftover_pot(
+              t.common.remainder_rule.message_remainder(
                   amount:
                       "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
               style: TextStyle(fontSize: 12),

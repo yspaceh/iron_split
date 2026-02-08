@@ -271,7 +271,6 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_expense => '残額（Base）';
 	@override String get base_card_title_income => '資金元（入金者）';
 	@override String get payer_multiple => '複数人';
-	@override String msg_leftover_pot({required Object amount}) => '残額 ${amount} は残高ポットに保存され（精算時に分配されます）';
 	@override late final _TranslationsS15RecordEditRateDialogJaJp rate_dialog = _TranslationsS15RecordEditRateDialogJaJp._(_root);
 	@override late final _TranslationsS15RecordEditLabelJaJp label = _TranslationsS15RecordEditLabelJaJp._(_root);
 	@override late final _TranslationsS15RecordEditPlaceholderJaJp placeholder = _TranslationsS15RecordEditPlaceholderJaJp._(_root);
@@ -713,9 +712,9 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 
 	// Translations
 	@override String get title => '端数処理';
-	@override String get rule_random => 'ランダム';
-	@override String get rule_order => '順番';
-	@override String get rule_member => '指定';
+	@override late final _TranslationsCommonRemainderRuleRuleJaJp rule = _TranslationsCommonRemainderRuleRuleJaJp._(_root);
+	@override late final _TranslationsCommonRemainderRuleDescriptionJaJp description = _TranslationsCommonRemainderRuleDescriptionJaJp._(_root);
+	@override String message_remainder({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます';
 }
 
 // Path: common.split_method
@@ -1305,6 +1304,31 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get rate_fetch_failed => '為替レートを';
 }
 
+// Path: common.remainder_rule.rule
+class _TranslationsCommonRemainderRuleRuleJaJp extends TranslationsCommonRemainderRuleRuleZhTw {
+	_TranslationsCommonRemainderRuleRuleJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get random => 'ランダム';
+	@override String get order => '順番';
+	@override String get member => '指定';
+}
+
+// Path: common.remainder_rule.description
+class _TranslationsCommonRemainderRuleDescriptionJaJp extends TranslationsCommonRemainderRuleDescriptionZhTw {
+	_TranslationsCommonRemainderRuleDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String remainder({required Object amount}) => '端数 ${amount} は、為替レートの換算や割り勘の計算で生じる差額です。';
+	@override String get random => '割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。';
+	@override String get order => 'メンバーの参加順に、端数がなくなるまで順番に配分します。';
+	@override String get member => '特定のメンバーを指定し、常にその人が端数を負担するようにします。';
+}
+
 // Path: common.share.invite
 class _TranslationsCommonShareInviteJaJp extends TranslationsCommonShareInviteZhTw {
 	_TranslationsCommonShareInviteJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1498,9 +1522,14 @@ extension on TranslationsJaJp {
 			'common.currency.try_' => 'トルコリラ',
 			'common.currency.inr' => 'インドルピー',
 			'common.remainder_rule.title' => '端数処理',
-			'common.remainder_rule.rule_random' => 'ランダム',
-			'common.remainder_rule.rule_order' => '順番',
-			'common.remainder_rule.rule_member' => '指定',
+			'common.remainder_rule.rule.random' => 'ランダム',
+			'common.remainder_rule.rule.order' => '順番',
+			'common.remainder_rule.rule.member' => '指定',
+			'common.remainder_rule.description.remainder' => ({required Object amount}) => '端数 ${amount} は、為替レートの換算や割り勘の計算で生じる差額です。',
+			'common.remainder_rule.description.random' => '割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。',
+			'common.remainder_rule.description.order' => 'メンバーの参加順に、端数がなくなるまで順番に配分します。',
+			'common.remainder_rule.description.member' => '特定のメンバーを指定し、常にその人が端数を負担するようにします。',
+			'common.remainder_rule.message_remainder' => ({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます',
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '割合',
 			'common.split_method.exact' => '金額指定',
@@ -1641,7 +1670,6 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.base_card_title_expense' => '残額（Base）',
 			'S15_Record_Edit.base_card_title_income' => '資金元（入金者）',
 			'S15_Record_Edit.payer_multiple' => '複数人',
-			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '残額 ${amount} は残高ポットに保存され（精算時に分配されます）',
 			'S15_Record_Edit.rate_dialog.title' => '為替レートの出典',
 			'S15_Record_Edit.rate_dialog.message' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
 			'S15_Record_Edit.label.date' => '日付',

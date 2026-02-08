@@ -47,7 +47,9 @@ class S13GroupView extends StatelessWidget {
       final result = await B01BalanceRuleEditBottomSheet.show(context,
           initialRule: task.remainderRule,
           initialMemberId: task.remainderAbsorberId,
-          members: membersList);
+          members: membersList,
+          currentRemainder: vm.balanceState.remainder,
+          baseCurrency: vm.baseCurrency);
 
       if (result != null && context.mounted) {
         await vm.updateRemainderRule(result['rule'], result['memberId']);

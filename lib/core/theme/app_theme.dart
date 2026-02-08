@@ -32,6 +32,7 @@ class AppTheme {
 
   static const Color expenseDeep = Color(0xFF5D2226); // 深栗色 (Dark Maroon)
   static const Color incomeDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
+  static const Color starGold = Color(0xFFFBC02D);
 
   static ThemeData get lightTheme {
     return ThemeData(

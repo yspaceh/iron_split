@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_card.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -11,12 +14,16 @@ class B01BalanceRuleEditBottomSheet extends StatefulWidget {
   final String initialRule; // 'random', 'order', 'member'
   final String? initialMemberId; // 如果規則是 member，當前選中的人
   final List<Map<String, dynamic>> members; // 成員清單
+  final double currentRemainder;
+  final CurrencyConstants baseCurrency;
 
   const B01BalanceRuleEditBottomSheet({
     super.key,
     required this.initialRule,
     this.initialMemberId,
     required this.members,
+    required this.currentRemainder,
+    required this.baseCurrency,
   });
 
   static Future<Map<String, dynamic>?> show(
@@ -24,6 +31,8 @@ class B01BalanceRuleEditBottomSheet extends StatefulWidget {
     required String initialRule,
     String? initialMemberId,
     required List<Map<String, dynamic>> members,
+    required double currentRemainder,
+    required CurrencyConstants baseCurrency,
   }) {
     return showModalBottomSheet<Map<String, dynamic>>(
       context: context,
@@ -34,6 +43,8 @@ class B01BalanceRuleEditBottomSheet extends StatefulWidget {
         initialRule: initialRule,
         initialMemberId: initialMemberId,
         members: members,
+        currentRemainder: currentRemainder,
+        baseCurrency: baseCurrency,
       ),
     );
   }
@@ -47,8 +58,6 @@ class _B01BalanceRuleEditBottomSheetState
     extends State<B01BalanceRuleEditBottomSheet> {
   late String _selectedRule;
   String? _selectedMemberId;
-
-  final List<String> _ruleOptions = RemainderRuleConstants.allRules;
 
   @override
   void initState() {
@@ -75,25 +84,23 @@ class _B01BalanceRuleEditBottomSheetState
     }
   }
 
-  void _showRuleInfo(String rule) {
-    debugPrint("Show info for $rule");
-    // 未來可在此呼叫 Dialog 顯示說明
+  void _onToggleRule(String rule) {
+    setState(() {
+      _selectedRule = rule;
+      // 如果切換到其他規則，不一定要清空 memberId，保留上次選擇可能體驗更好
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
-    // ✅ 使用 CommonBottomSheetPage
     return CommonBottomSheet(
       title: t.common.remainder_rule.title, // "零頭處理"
-
-      // ✅ 底部按鈕區：使用 .sheet 建構子 (內縮分隔線)
       bottomActionBar: StickyBottomActionBar.sheet(
         children: [
-          // 取消按鈕 (雖然左上角有 X，但為了與 B04 一致，底部也放一個)
+          // 取消按鈕
           AppButton(
             text: t.common.buttons.cancel,
             type: AppButtonType.secondary,
@@ -108,142 +115,81 @@ class _B01BalanceRuleEditBottomSheetState
           ),
         ],
       ),
-
-      // ✅ 內容捲動區
       children: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          // 產生規則選項
-          ..._ruleOptions.map((rule) {
-            final isSelected = _selectedRule == rule;
-            return Column(
-              children: [
-                // 規則選項 ListTile
-                ListTile(
-                  onTap: () {
-                    setState(() {
-                      _selectedRule = rule;
-                    });
-                  },
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-                  leading: Radio<String>(
-                    value: rule,
-                    groupValue: _selectedRule,
-                    activeColor: colorScheme.primary,
-                    onChanged: (val) {
-                      if (val != null) {
-                        setState(() => _selectedRule = val);
-                      }
-                    },
-                  ),
-                  title: Text(
-                    RemainderRuleConstants.getLabel(context, rule),
-                    style: TextStyle(
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurface,
-                    ),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Icons.info_outline,
-                      size: 20,
-                      color: colorScheme.outline,
-                    ),
-                    onPressed: () => _showRuleInfo(rule),
-                  ),
-                ),
-
-                // 展開區域：只有選 member 時顯示成員清單
-                if (rule == RemainderRuleConstants.member && isSelected)
-                  _buildMemberSelectionArea(theme),
-
-                // 分隔線 (除了最後一個)
-                if (rule != _ruleOptions.last)
-                  Divider(
-                    indent: 16,
-                    endIndent: 16,
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-                  ),
-              ],
-            );
-          }),
-
-          // 底部留白
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  // --- 成員選擇區塊 ---
-  Widget _buildMemberSelectionArea(ThemeData theme) {
-    return Container(
-      width: double.infinity,
-      color: theme.colorScheme.surfaceContainerLow, // 稍微深一點的背景色，區隔層級
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(72, 12, 16, 8),
-            child: Text(
-              "請選擇請客對象", // 建議補上 i18n
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: theme.colorScheme.primary),
+          Text(
+            t.common.remainder_rule.description.remainder(
+              amount:
+                  "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(widget.currentRemainder, widget.baseCurrency.code)}",
             ),
           ),
-          ...widget.members.map((m) {
-            final id = m['id'];
-            final isMe = id == _selectedMemberId;
-
-            return InkWell(
-              onTap: () {
-                setState(() => _selectedMemberId = id);
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                child: Row(
-                  children: [
-                    // 為了對齊上面的 Radio，這裡做一點縮排
-                    const SizedBox(width: 48),
-
-                    CommonAvatar(
-                      avatarId: m['avatar'],
-                      name: m['displayName'],
-                      radius: 14,
-                      isLinked: m['isLinked'] ?? false,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        m['displayName'],
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isMe
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
-                          fontWeight:
-                              isMe ? FontWeight.bold : FontWeight.normal,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    if (isMe)
-                      Icon(Icons.check_circle,
-                          color: theme.colorScheme.primary, size: 20)
-                    else
-                      Icon(Icons.circle_outlined,
-                          color:
-                              theme.colorScheme.outline.withValues(alpha: 0.5),
-                          size: 20),
-                  ],
+          const SizedBox(height: 16),
+          SelectionCard(
+            title: RemainderRuleConstants.getLabel(
+                context, RemainderRuleConstants.random),
+            isSelected: _selectedRule == RemainderRuleConstants.random,
+            isRadio: true, // [Radio 樣式]
+            onToggle: () => _onToggleRule(RemainderRuleConstants.random),
+            child: Text(
+              t.common.remainder_rule.description.random,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SelectionCard(
+            title: RemainderRuleConstants.getLabel(
+                context, RemainderRuleConstants.order),
+            isSelected: _selectedRule == RemainderRuleConstants.order,
+            isRadio: true, // [Radio 樣式]
+            onToggle: () => _onToggleRule(RemainderRuleConstants.order),
+            child: Text(
+              t.common.remainder_rule.description.order,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SelectionCard(
+            title: RemainderRuleConstants.getLabel(
+                context, RemainderRuleConstants.member),
+            isSelected: _selectedRule == RemainderRuleConstants.member,
+            isRadio: true, // [Radio 樣式]
+            onToggle: () => _onToggleRule(RemainderRuleConstants.member),
+            child: Column(children: [
+              Text(
+                t.common.remainder_rule.description.member,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-            );
-          }),
+              const SizedBox(height: 12),
+              // 成員清單
+              ...widget.members.map((m) {
+                final id = m['id'];
+                final isMe = id == _selectedMemberId;
+                return SelectionTile(
+                  title: m['displayName'],
+                  isSelected: isMe,
+                  isRadio: true,
+                  isSelectedBackgroundColor: theme.colorScheme.surface,
+                  backgroundColor: theme.colorScheme.surfaceContainerLow,
+                  onTap: () {
+                    setState(() => _selectedMemberId = id);
+                  },
+                  leading: CommonAvatar(
+                    avatarId: m['avatar'],
+                    name: m['displayName'],
+                    isLinked: m['isLinked'] ?? false,
+                  ),
+                );
+              }),
+            ]),
+          ),
+          const SizedBox(height: 32),
         ],
       ),
     );

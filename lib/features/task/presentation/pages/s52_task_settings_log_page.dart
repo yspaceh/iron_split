@@ -67,9 +67,6 @@ class _S52Content extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.history,
-                            size: 48, color: theme.colorScheme.outline),
-                        const SizedBox(height: 16),
                         Text(
                           t.S52_TaskSettings_Log.empty_log,
                           style: theme.textTheme.bodyLarge?.copyWith(
@@ -82,9 +79,13 @@ class _S52Content extends StatelessWidget {
                 }
 
                 return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: logs.length,
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 1),
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                    color: theme.colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.2),
+                  ),
                   itemBuilder: (context, index) {
                     final log = logs[index];
 
@@ -107,7 +108,6 @@ class _S52Content extends StatelessWidget {
               text: t.S52_TaskSettings_Log.buttons.export_csv,
               type: AppButtonType.secondary,
               isLoading: vm.isExporting,
-              icon: Icons.download,
               onPressed: vm.isExporting ? null : () => vm.exportCsv(context)),
         ],
       ),

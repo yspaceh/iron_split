@@ -299,14 +299,14 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '總費用'
 	String get label_total_expense => '總費用';
 
-	/// zh-TW: '前受合計'
-	String get label_total_prepay => '前受合計';
+	/// zh-TW: '總預收'
+	String get label_total_prepay => '總預收';
 
 	/// zh-TW: '總費用'
 	String get label_total_expense_personal => '總費用';
 
-	/// zh-TW: '前受合計（立替含）'
-	String get label_total_prepay_personal => '前受合計（立替含）';
+	/// zh-TW: '總預收（含代墊）'
+	String get label_total_prepay_personal => '總預收（含代墊）';
 
 	/// zh-TW: '零頭罐'
 	String get label_remainder_pot => '零頭罐';
@@ -393,9 +393,6 @@ class TranslationsS15RecordEditZhTw {
 
 	/// zh-TW: '多人'
 	String get payer_multiple => '多人';
-
-	/// zh-TW: '餘額 {amount} 將存入餘額罐 (結算時分配)'
-	String msg_leftover_pot({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)';
 
 	late final TranslationsS15RecordEditRateDialogZhTw rate_dialog = TranslationsS15RecordEditRateDialogZhTw.internal(_root);
 	late final TranslationsS15RecordEditLabelZhTw label = TranslationsS15RecordEditLabelZhTw.internal(_root);
@@ -1215,14 +1212,11 @@ class TranslationsCommonRemainderRuleZhTw {
 	/// zh-TW: '零頭處理'
 	String get title => '零頭處理';
 
-	/// zh-TW: '餘額輪盤'
-	String get rule_random => '餘額輪盤';
+	late final TranslationsCommonRemainderRuleRuleZhTw rule = TranslationsCommonRemainderRuleRuleZhTw.internal(_root);
+	late final TranslationsCommonRemainderRuleDescriptionZhTw description = TranslationsCommonRemainderRuleDescriptionZhTw.internal(_root);
 
-	/// zh-TW: '順序輪替'
-	String get rule_order => '順序輪替';
-
-	/// zh-TW: '指定成員'
-	String get rule_member => '指定成員';
+	/// zh-TW: '零頭 {amount} 將存入零頭罐,結算時分配'
+	String message_remainder({required Object amount}) => '零頭 ${amount} 將存入零頭罐,結算時分配';
 }
 
 // Path: common.split_method
@@ -2080,6 +2074,45 @@ class TranslationsErrorMessageZhTw {
 	String get rate_fetch_failed => '為替レートの更新失敗';
 }
 
+// Path: common.remainder_rule.rule
+class TranslationsCommonRemainderRuleRuleZhTw {
+	TranslationsCommonRemainderRuleRuleZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '隨機指定'
+	String get random => '隨機指定';
+
+	/// zh-TW: '順序輪替'
+	String get order => '順序輪替';
+
+	/// zh-TW: '指定成員'
+	String get member => '指定成員';
+}
+
+// Path: common.remainder_rule.description
+class TranslationsCommonRemainderRuleDescriptionZhTw {
+	TranslationsCommonRemainderRuleDescriptionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '零頭 {amount} 源自於匯率換算或分攤計算時產生的微小差額。'
+	String remainder({required Object amount}) => '零頭 ${amount} 源自於匯率換算或分攤計算時產生的微小差額。';
+
+	/// zh-TW: '系統將在每次結算時，隨機挑選一位幸運兒來吸收所有零頭。'
+	String get random => '系統將在每次結算時，隨機挑選一位幸運兒來吸收所有零頭。';
+
+	/// zh-TW: '依照成員加入的順序，將零頭依序分配，直到分完為止。'
+	String get order => '依照成員加入的順序，將零頭依序分配，直到分完為止。';
+
+	/// zh-TW: '指定一位特定的成員，固定由他/她來吸收所有的零頭。'
+	String get member => '指定一位特定的成員，固定由他/她來吸收所有的零頭。';
+}
+
 // Path: common.share.invite
 class TranslationsCommonShareInviteZhTw {
 	TranslationsCommonShareInviteZhTw.internal(this._root);
@@ -2329,9 +2362,14 @@ extension on Translations {
 			'common.currency.try_' => '土耳其里拉',
 			'common.currency.inr' => '印度盧比',
 			'common.remainder_rule.title' => '零頭處理',
-			'common.remainder_rule.rule_random' => '餘額輪盤',
-			'common.remainder_rule.rule_order' => '順序輪替',
-			'common.remainder_rule.rule_member' => '指定成員',
+			'common.remainder_rule.rule.random' => '隨機指定',
+			'common.remainder_rule.rule.order' => '順序輪替',
+			'common.remainder_rule.rule.member' => '指定成員',
+			'common.remainder_rule.description.remainder' => ({required Object amount}) => '零頭 ${amount} 源自於匯率換算或分攤計算時產生的微小差額。',
+			'common.remainder_rule.description.random' => '系統將在每次結算時，隨機挑選一位幸運兒來吸收所有零頭。',
+			'common.remainder_rule.description.order' => '依照成員加入的順序，將零頭依序分配，直到分完為止。',
+			'common.remainder_rule.description.member' => '指定一位特定的成員，固定由他/她來吸收所有的零頭。',
+			'common.remainder_rule.message_remainder' => ({required Object amount}) => '零頭 ${amount} 將存入零頭罐,結算時分配',
 			'common.split_method.even' => '平均分攤',
 			'common.split_method.percent' => '比例分攤',
 			'common.split_method.exact' => '指定金額',
@@ -2411,9 +2449,9 @@ extension on Translations {
 			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
 			'S13_Task_Dashboard.label_balance' => '結餘',
 			'S13_Task_Dashboard.label_total_expense' => '總費用',
-			'S13_Task_Dashboard.label_total_prepay' => '前受合計',
+			'S13_Task_Dashboard.label_total_prepay' => '總預收',
 			'S13_Task_Dashboard.label_total_expense_personal' => '總費用',
-			'S13_Task_Dashboard.label_total_prepay_personal' => '前受合計（立替含）',
+			'S13_Task_Dashboard.label_total_prepay_personal' => '總預收（含代墊）',
 			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
 			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
 			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
@@ -2457,7 +2495,6 @@ extension on Translations {
 			'S15_Record_Edit.base_card_title_expense' => '剩餘金額 (Base)',
 			'S15_Record_Edit.base_card_title_income' => '資金來源 (入金者)',
 			'S15_Record_Edit.payer_multiple' => '多人',
-			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => '餘額 ${amount} 將存入餘額罐 (結算時分配)',
 			'S15_Record_Edit.rate_dialog.title' => '匯率來源',
 			'S15_Record_Edit.rate_dialog.message' => '匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。',
 			'S15_Record_Edit.label.date' => '日期',

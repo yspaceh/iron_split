@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
@@ -254,7 +255,7 @@ class _B03SplitMethodEditBottomSheetState
                   icon: Icons.savings_outlined,
                   backgroundColor: colorScheme.surface,
                   text: Text(
-                    t.S15_Record_Edit.msg_leftover_pot(
+                    t.common.remainder_rule.message_remainder(
                         amount:
                             "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(_selectedMemberIds.isEmpty ? 0 : result.remainder, widget.baseCurrency.code)}"),
                     style: TextStyle(fontSize: 12),
@@ -306,6 +307,7 @@ class _B03SplitMethodEditBottomSheetState
 
           return SelectionTile(
             isSelected: isSelected,
+            isRadio: false,
             onTap: () {
               setState(() {
                 if (isSelected) {
@@ -370,6 +372,7 @@ class _B03SplitMethodEditBottomSheetState
 
           return SelectionTile(
             isSelected: isSelected,
+            isRadio: false,
             onTap: () {
               setState(() {
                 if (!isSelected) {
@@ -420,22 +423,23 @@ class _B03SplitMethodEditBottomSheetState
                 ),
                 const SizedBox(height: 8),
                 AppStepper(
-                  text: "${weight.toStringAsFixed(1)}x",
+                  text: SplitRatioHelper.format(weight),
                   onDecrease: () {
                     setState(() {
-                      double newW = (weight - 0.5).clamp(0.0, 2.0);
+                      double newW = SplitRatioHelper.decrease(weight);
+                      _details[id] = newW;
                       if (newW == 0.0) {
-                        _details[id] = 0.0;
                         _selectedMemberIds.remove(id);
-                      } else {
-                        _details[id] = newW;
                       }
                     });
                   },
                   onIncrease: () {
                     setState(() {
-                      double newW = (weight + 0.5).clamp(0.0, 2.0);
+                      double newW = SplitRatioHelper.increase(weight);
                       _details[id] = newW;
+                      if (newW > 0 && !_selectedMemberIds.contains(id)) {
+                        _selectedMemberIds.add(id);
+                      }
                     });
                   },
                 ),
@@ -481,6 +485,7 @@ class _B03SplitMethodEditBottomSheetState
 
           return SelectionTile(
             isSelected: isSelected,
+            isRadio: false,
             onTap: () {
               setState(() {
                 if (!isSelected) {

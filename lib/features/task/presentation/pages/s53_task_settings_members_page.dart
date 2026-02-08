@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; // [新增] 引入 Input
+import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; // [新增]
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // [新增]
+import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
-import 'package:iron_split/features/task/presentation/widgets/member_item.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s53_task_settings_members_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -39,14 +42,14 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
 class _S53Content extends StatelessWidget {
   const _S53Content();
 
-  // Dialog Logic (UI Layer)
+  // --- Logic Helpers ---
+
   void _showRenameDialog(
       BuildContext context,
       S53TaskSettingsMembersViewModel vm,
       Map<String, dynamic> membersMap,
       String memberId,
       String currentName) {
-    // [修改] 改為呼叫下方的私有 Dialog Widget
     showDialog(
       context: context,
       builder: (context) => _RenameMemberDialog(
@@ -64,11 +67,8 @@ class _S53Content extends StatelessWidget {
       Map<String, dynamic> membersMap,
       String memberId) async {
     final t = Translations.of(context);
-
-    // Call VM to attempt delete
     final success = await vm.deleteMember(membersMap, memberId);
 
-    // If failed (blocked), show dialog
     if (!success && context.mounted) {
       CommonInfoDialog.show(
         context,
@@ -78,36 +78,47 @@ class _S53Content extends StatelessWidget {
     }
   }
 
+  // 權重調整邏輯
+  void _updateRatio(
+    S53TaskSettingsMembersViewModel vm,
+    Map<String, dynamic> membersMap,
+    String memberId,
+    double newRatio, // 直接傳入算好的值
+  ) {
+    // 這裡只負責呼叫 VM 更新，數學計算交給 Helper 做了
+    vm.updateRatio(membersMap, memberId, newRatio);
+  }
+
+  // --- UI Build ---
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final vm = context.watch<S53TaskSettingsMembersViewModel>();
 
     return StreamBuilder<TaskModel?>(
       stream: vm.taskStream,
       builder: (context, snapshot) {
+        // Error State
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
-            // 1. 中間是共用純文字 View
             body: CommonStateView(
               message: ErrorMapper.map(context, snapshot.error),
             ),
-            // 2. 底部是 StickyBar + 重試按鈕
             bottomNavigationBar: StickyBottomActionBar(
               children: [
                 AppButton(
                   text: t.common.buttons.retry,
                   type: AppButtonType.primary,
-                  onPressed: () {
-                    // 重試邏輯 (例如 vm.refresh() 或 pop)
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),
           );
         }
+        // Loading State
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
@@ -115,11 +126,11 @@ class _S53Content extends StatelessWidget {
           );
         }
 
+        // Empty/Null State
         final task = snapshot.data;
         if (task == null) {
           return Scaffold(
             appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
-            // [修改] 使用極簡文字 View
             body: CommonStateView(message: t.error.message.data_not_found),
             bottomNavigationBar: StickyBottomActionBar(
               children: [
@@ -136,7 +147,6 @@ class _S53Content extends StatelessWidget {
         final taskName = task.name;
         final createdBy = task.createdBy;
         final membersMap = task.members;
-
         final membersList = vm.getSortedMembers(task);
 
         return Scaffold(
@@ -145,36 +155,141 @@ class _S53Content extends StatelessWidget {
             title: Text(t.S53_TaskSettings_Members.title),
             centerTitle: true,
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: membersList.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final entry = membersList[index];
-                    final memberId = entry.key;
-                    final memberData = entry.value as Map<String, dynamic>;
+          body: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            itemCount: membersList.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final entry = membersList[index];
+              final memberId = entry.key;
+              final memberData = entry.value as Map<String, dynamic>;
+              final bool isOwner = (memberId == createdBy);
+              final isLinked = memberData['status'] == 'linked' ||
+                  (memberData['isLinked'] == true);
 
-                    final bool isOwner = (memberId == createdBy);
+              // 取得目前權重，預設 1.0 (注意這裡要處理 dynamic -> double 的轉型安全)
+              // 舊資料的 defaultSplitRatio 可能不存在
+              final rawRatio = memberData['defaultSplitRatio'] ?? 1.0;
+              final double currentRatio = (rawRatio as num).toDouble();
 
-                    return MemberItem(
-                      key: ValueKey(memberId),
-                      member: memberData,
-                      isOwner: isOwner,
-                      onRatioChanged: (val) =>
-                          vm.updateRatio(membersMap, memberId, val),
-                      onDelete: () =>
-                          _handleDelete(context, vm, membersMap, memberId),
-                      onEdit: () => _showRenameDialog(context, vm, membersMap,
-                          memberId, memberData['displayName'] ?? ''),
-                      isProcessing: vm.isProcessing,
-                    );
-                  },
+              // [核心] 成員卡片
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface, // 白色卡片
+                  borderRadius: BorderRadius.circular(16), // 圓角 16
+                  // 可選：加上淡淡的陰影增加層次感，或者保持平面
                 ),
-              ),
-            ],
+                child: Row(
+                  children: [
+                    CommonAvatar(
+                      avatarId: memberData['avatar'],
+                      name: memberData['displayName'],
+                      isLinked: memberData['isLinked'] ?? false,
+                      radius: 32,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: Text(
+                              memberData['displayName'],
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: isOwner
+                                    ? Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Icon(
+                                          Icons.star, // 或 star_rounded
+                                          size: 22,
+                                          color: AppTheme.starGold,
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () => _handleDelete(
+                                            context, vm, membersMap, memberId),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(
+                                            Icons.delete_outline,
+                                            color: theme.colorScheme.error,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                              if (!isLinked) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  width: 1,
+                                  height: 20, // 不用撐滿，短一點比較精緻
+                                  color: theme.colorScheme.onSurfaceVariant
+                                      .withValues(alpha: 0.2), // 與頭像的距離
+                                ),
+                                const SizedBox(width: 8),
+                                InkWell(
+                                  onTap: () => _showRenameDialog(
+                                      context,
+                                      vm,
+                                      membersMap,
+                                      memberId,
+                                      memberData['displayName'] ?? ''),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: theme.colorScheme.onSurface,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              const Spacer(),
+                              AppStepper(
+                                text: SplitRatioHelper.format(currentRatio),
+                                onDecrease: vm.isProcessing
+                                    ? null
+                                    : () => _updateRatio(
+                                          vm,
+                                          membersMap,
+                                          memberId,
+                                          SplitRatioHelper.decrease(
+                                              currentRatio), // 這裡！
+                                        ),
+                                onIncrease: vm.isProcessing
+                                    ? null
+                                    : () => _updateRatio(
+                                          vm,
+                                          membersMap,
+                                          memberId,
+                                          SplitRatioHelper.increase(
+                                              currentRatio), // 這裡！
+                                        ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           extendBody: true,
           bottomNavigationBar: StickyBottomActionBar(
@@ -183,7 +298,6 @@ class _S53Content extends StatelessWidget {
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.invite,
                 type: AppButtonType.secondary,
-                icon: Icons.share,
                 onPressed: vm.isProcessing
                     ? null
                     : () => vm.inviteMember(context, taskName),
@@ -191,7 +305,6 @@ class _S53Content extends StatelessWidget {
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.add,
                 type: AppButtonType.primary,
-                icon: Icons.person_add_alt_1,
                 onPressed:
                     vm.isProcessing ? null : () => vm.addMember(membersMap, t),
               ),
@@ -203,7 +316,7 @@ class _S53Content extends StatelessWidget {
   }
 }
 
-// [新增] 私有的重新命名 Dialog，整合了 TaskNameInput
+// Rename Dialog 保持不變
 class _RenameMemberDialog extends StatefulWidget {
   final String initialName;
   final ValueChanged<String> onConfirm;
@@ -235,25 +348,23 @@ class _RenameMemberDialogState extends State<_RenameMemberDialog> {
   void _submit() {
     final newName = _controller.text.trim();
     if (newName.isEmpty) return;
-
-    // 關閉 Dialog
     Navigator.of(context).pop();
-    // 回調新名稱
     widget.onConfirm(newName);
   }
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
 
     return CommonAlertDialog(
       title: t.S53_TaskSettings_Members.title,
-      // 使用 SizedBox 確保輸入框有足夠寬度，避免在 Alert 中縮成一團
       content: SizedBox(
         width: double.maxFinite,
         child: TaskNameInput(
           controller: _controller,
           maxLength: 10,
+          fillColor: theme.colorScheme.surfaceContainerLow,
           label: t.S53_TaskSettings_Members.member_name,
           placeholder: t.S53_TaskSettings_Members.member_name,
         ),
@@ -264,7 +375,6 @@ class _RenameMemberDialogState extends State<_RenameMemberDialog> {
           type: AppButtonType.secondary,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        // 使用 ValueListenableBuilder 監聽輸入框，控制按鈕啟用狀態
         ValueListenableBuilder<TextEditingValue>(
           valueListenable: _controller,
           builder: (context, value, child) {
@@ -272,7 +382,6 @@ class _RenameMemberDialogState extends State<_RenameMemberDialog> {
             return AppButton(
               text: t.common.buttons.confirm,
               type: AppButtonType.primary,
-              // 若無內容則 disable 按鈕
               onPressed: isValid ? _submit : null,
             );
           },

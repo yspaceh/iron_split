@@ -72,9 +72,18 @@
     },
     "remainder_rule": {
       "title": "Remainder Rule",
-      "rule_random": "Random",
-      "rule_order": "Order",
-      "rule_member": "Member"
+      "rule": {
+        "random": "Random",
+        "order": "Order",
+        "member": "Member"
+      },
+      "description": {
+        "remainder": "Remainders {amount} caused by exchange rate conversions or split rounding.",
+        "random": "The system will randomly select one lucky person to absorb the remainder.",
+        "order": "Distributes the remainder sequentially based on the order members joined.",
+        "member": "Select a specific member to always absorb the remainder."
+      },
+      "message_remainder": "Remaining amount {amount} will be stored in the leftover pot, distributed at settlement."
     },
     "split_method": {
       "even": "Even",
@@ -231,7 +240,6 @@
     "base_card_title_expense": "Remaining Amount (Base)",
     "base_card_title_income": "Source of Funds (Payer)",
     "payer_multiple": "Multiple",
-    "msg_leftover_pot": "Remaining amount {amount} will be stored in the leftover pot (distributed at settlement)",
     "rate_dialog": {
       "title": "Exchange Rate Source",
       "message": "Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate."

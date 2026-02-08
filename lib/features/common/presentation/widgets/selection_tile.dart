@@ -1,7 +1,7 @@
 // lib/features/common/presentation/widgets/selection_tile.dart
 
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/widgets/circular_checkbox.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_indicator.dart';
 
 class SelectionTile extends StatelessWidget {
   final bool isSelected;
@@ -10,6 +10,8 @@ class SelectionTile extends StatelessWidget {
   final String title;
   final Widget? trailing;
   final Color? backgroundColor;
+  final Color? isSelectedBackgroundColor;
+  final bool isRadio;
 
   const SelectionTile({
     super.key,
@@ -19,6 +21,8 @@ class SelectionTile extends StatelessWidget {
     required this.title,
     this.trailing,
     this.backgroundColor,
+    required this.isRadio,
+    this.isSelectedBackgroundColor,
   });
 
   @override
@@ -39,16 +43,17 @@ class SelectionTile extends StatelessWidget {
             // [修改] 跟隨 SelectionCard 的配色邏輯
             // 未選中是 Surface (實心)，選中是 SurfaceContainerLow (或依需求微調)
             // 如果原本想要選中時有顏色，可以改回 primaryContainer.withOpacity
-            color: backgroundColor ??
-                (isSelected
-                    ? colorScheme.surfaceContainerLow
-                    : colorScheme.surface),
+            color: isSelected
+                ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
+                : backgroundColor ?? colorScheme.surface,
             borderRadius: BorderRadius.circular(16), // [修改] 統一為 16
           ),
           child: Row(
             children: [
-              // 圓形 Checkbox
-              CircularCheckbox(isSelected: isSelected),
+              SelectionIndicator(
+                isSelected: isSelected,
+                isRadio: isRadio, // 傳遞樣式
+              ),
               const SizedBox(width: 8),
               leading,
               const SizedBox(width: 8),

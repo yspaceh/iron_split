@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S14TaskSettingsViewModel extends ChangeNotifier {
-  final TaskRepository _taskRepo; // ✅ 注入 Repo
+  final TaskRepository _taskRepo;
+  final RecordRepository _recordRepo;
   final String taskId;
 
   // UI State
@@ -17,7 +20,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   DateTime? _endDate;
   CurrencyConstants? _currency;
   String _remainderRule = RemainderRuleConstants.defaultRule;
-  String? _remainderAbsorberId; // ✅ 新增：B01 需要知道目前是誰請客
+  String? _remainderAbsorberId;
   bool _isLoading = true;
 
   // Logic Helper
@@ -25,14 +28,17 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   String? _createdBy;
   Map<String, dynamic> _membersData = {};
 
+  double _currentRemainder = 0.0;
+
   // Getters
   DateTime? get startDate => _startDate;
   DateTime? get endDate => _endDate;
   CurrencyConstants? get currency => _currency;
   String get remainderRule => _remainderRule;
-  String? get remainderAbsorberId => _remainderAbsorberId; // ✅ 新增 Getter
+  String? get remainderAbsorberId => _remainderAbsorberId;
   bool get isLoading => _isLoading;
   Map<String, dynamic> get membersData => _membersData;
+  double get currentRemainder => _currentRemainder;
 
   bool get isOwner {
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
@@ -41,13 +47,13 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
   S14TaskSettingsViewModel({
     required this.taskId,
-    required TaskRepository taskRepo, // ✅ 建構子注入
-  }) : _taskRepo = taskRepo;
+    required TaskRepository taskRepo,
+    required RecordRepository recordRepo,
+  })  : _taskRepo = taskRepo,
+        _recordRepo = recordRepo;
 
   Future<void> init() async {
     try {
-      // ✅ 改用 Repo 讀取 (使用 Stream.first 或是 getTask)
-      // 這裡假設我們要讀取一次最新狀態
       final task = await _taskRepo.streamTask(taskId).first;
 
       if (task != null) {
@@ -59,10 +65,13 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
         _currency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
 
         _remainderRule = task.remainderRule;
-        _remainderAbsorberId = task.remainderAbsorberId; // ✅ 讀取 ID
+        _remainderAbsorberId = task.remainderAbsorberId;
 
         _createdBy = task.createdBy;
         _membersData = task.members;
+
+        final records = await _recordRepo.getRecordsOnce(taskId);
+        _currentRemainder = BalanceCalculator.calculateRemainderBuffer(records);
 
         _isLoading = false;
         notifyListeners();
@@ -83,7 +92,6 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
     _initialName = newName;
 
-    // ✅ 改用 Repo
     await _taskRepo.updateTask(taskId, {'name': newName});
 
     await ActivityLogService.log(
@@ -141,7 +149,6 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
           newRule == RemainderRuleConstants.member ? newAbsorberId : null,
     };
 
-    // 3. ✅ 改用 Repo
     await _taskRepo.updateTask(taskId, updateData);
 
     // 4. Activity Log

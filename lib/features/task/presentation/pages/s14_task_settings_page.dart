@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +25,10 @@ class S14TaskSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => S14TaskSettingsViewModel(
-        taskId: taskId,
-        taskRepo: context.read<TaskRepository>(),
-      )..init(),
+          taskId: taskId,
+          taskRepo: context.read<TaskRepository>(),
+          recordRepo: context.read<RecordRepository>())
+        ..init(),
       child: const _S14Content(),
     );
   }
@@ -94,12 +96,12 @@ class _S14ContentState extends State<_S14Content> {
     }).toList();
 
     // 2. 呼叫 B01
-    final result = await B01BalanceRuleEditBottomSheet.show(
-      context,
-      initialRule: vm.remainderRule,
-      initialMemberId: vm.remainderAbsorberId,
-      members: membersList,
-    );
+    final result = await B01BalanceRuleEditBottomSheet.show(context,
+        initialRule: vm.remainderRule,
+        initialMemberId: vm.remainderAbsorberId,
+        members: membersList,
+        currentRemainder: vm.currentRemainder, // 從 VM 拿
+        baseCurrency: vm.currency!);
 
     // 3. 處理回傳
     if (result != null && mounted) {

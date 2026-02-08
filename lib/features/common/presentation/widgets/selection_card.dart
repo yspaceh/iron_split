@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/common/presentation/widgets/circular_checkbox.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_indicator.dart';
 
 /// 可展開的選擇卡片
 class SelectionCard extends StatelessWidget {
@@ -7,6 +7,7 @@ class SelectionCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onToggle;
   final Widget child;
+  final bool isRadio;
 
   const SelectionCard({
     super.key,
@@ -14,6 +15,7 @@ class SelectionCard extends StatelessWidget {
     required this.isSelected,
     required this.onToggle,
     required this.child,
+    required this.isRadio,
   });
 
   @override
@@ -42,7 +44,10 @@ class SelectionCard extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  CircularCheckbox(isSelected: isSelected),
+                  SelectionIndicator(
+                    isSelected: isSelected,
+                    isRadio: isRadio, // 傳遞樣式
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     title,

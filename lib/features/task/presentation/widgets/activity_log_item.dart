@@ -33,7 +33,7 @@ class ActivityLogItem extends StatelessWidget {
         t.S53_TaskSettings_Members.member_default_name;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -75,7 +75,7 @@ class ActivityLogItem extends StatelessWidget {
                 // 3. 詳細內容 (Sub Line) - 例如 "- drink (...)\n- base (...)"
                 // 只有在有資料時才顯示
                 if (info.subLine != null) ...[
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Container(
                     padding: const EdgeInsets.only(left: 8, top: 2, bottom: 2),
                     decoration: BoxDecoration(
@@ -98,14 +98,14 @@ class ActivityLogItem extends StatelessWidget {
                   ),
                 ],
 
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
 
                 // 4. 時間與操作者 (Footer)
                 Text(
                   "$operatorName • $timeStr",
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
-                    fontSize: 11,
+                    fontSize: 12,
                   ),
                 ),
               ],

@@ -238,7 +238,6 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get base_card_title_expense => 'Remaining Amount (Base)';
 	@override String get base_card_title_income => 'Source of Funds (Payer)';
 	@override String get payer_multiple => 'Multiple';
-	@override String msg_leftover_pot({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot (distributed at settlement)';
 	@override late final _TranslationsS15RecordEditRateDialogEnUs rate_dialog = _TranslationsS15RecordEditRateDialogEnUs._(_root);
 	@override late final _TranslationsS15RecordEditLabelEnUs label = _TranslationsS15RecordEditLabelEnUs._(_root);
 	@override late final _TranslationsS15RecordEditPlaceholderEnUs placeholder = _TranslationsS15RecordEditPlaceholderEnUs._(_root);
@@ -735,9 +734,9 @@ class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRu
 
 	// Translations
 	@override String get title => 'Remainder Rule';
-	@override String get rule_random => 'Random';
-	@override String get rule_order => 'Order';
-	@override String get rule_member => 'Member';
+	@override late final _TranslationsCommonRemainderRuleRuleEnUs rule = _TranslationsCommonRemainderRuleRuleEnUs._(_root);
+	@override late final _TranslationsCommonRemainderRuleDescriptionEnUs description = _TranslationsCommonRemainderRuleDescriptionEnUs._(_root);
+	@override String message_remainder({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot, distributed at settlement.';
 }
 
 // Path: common.split_method
@@ -1305,6 +1304,31 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get delete_failed => 'Exchange rate update failed';
 }
 
+// Path: common.remainder_rule.rule
+class _TranslationsCommonRemainderRuleRuleEnUs extends TranslationsCommonRemainderRuleRuleZhTw {
+	_TranslationsCommonRemainderRuleRuleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get random => 'Random';
+	@override String get order => 'Order';
+	@override String get member => 'Member';
+}
+
+// Path: common.remainder_rule.description
+class _TranslationsCommonRemainderRuleDescriptionEnUs extends TranslationsCommonRemainderRuleDescriptionZhTw {
+	_TranslationsCommonRemainderRuleDescriptionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String remainder({required Object amount}) => 'Remainders ${amount} caused by exchange rate conversions or split rounding.';
+	@override String get random => 'The system will randomly select one lucky person to absorb the remainder.';
+	@override String get order => 'Distributes the remainder sequentially based on the order members joined.';
+	@override String get member => 'Select a specific member to always absorb the remainder.';
+}
+
 // Path: common.share.invite
 class _TranslationsCommonShareInviteEnUs extends TranslationsCommonShareInviteZhTw {
 	_TranslationsCommonShareInviteEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1510,9 +1534,14 @@ extension on TranslationsEnUs {
 			'common.payment_info.app_name' => 'App name (e.g. LinePay)',
 			'common.payment_info.app_link' => 'Link / ID',
 			'common.remainder_rule.title' => 'Remainder Rule',
-			'common.remainder_rule.rule_random' => 'Random',
-			'common.remainder_rule.rule_order' => 'Order',
-			'common.remainder_rule.rule_member' => 'Member',
+			'common.remainder_rule.rule.random' => 'Random',
+			'common.remainder_rule.rule.order' => 'Order',
+			'common.remainder_rule.rule.member' => 'Member',
+			'common.remainder_rule.description.remainder' => ({required Object amount}) => 'Remainders ${amount} caused by exchange rate conversions or split rounding.',
+			'common.remainder_rule.description.random' => 'The system will randomly select one lucky person to absorb the remainder.',
+			'common.remainder_rule.description.order' => 'Distributes the remainder sequentially based on the order members joined.',
+			'common.remainder_rule.description.member' => 'Select a specific member to always absorb the remainder.',
+			'common.remainder_rule.message_remainder' => ({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot, distributed at settlement.',
 			'common.split_method.even' => 'Even',
 			'common.split_method.percent' => 'By Percentage',
 			'common.split_method.exact' => 'Exact Amount',
@@ -1626,7 +1655,6 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.base_card_title_expense' => 'Remaining Amount (Base)',
 			'S15_Record_Edit.base_card_title_income' => 'Source of Funds (Payer)',
 			'S15_Record_Edit.payer_multiple' => 'Multiple',
-			'S15_Record_Edit.msg_leftover_pot' => ({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot (distributed at settlement)',
 			'S15_Record_Edit.rate_dialog.title' => 'Exchange Rate Source',
 			'S15_Record_Edit.rate_dialog.message' => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.',
 			'S15_Record_Edit.label.date' => 'Date',

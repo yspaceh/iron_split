@@ -58,9 +58,18 @@
     },
     "remainder_rule": {
       "title": "零頭處理",
-      "rule_random": "餘額輪盤",
-      "rule_order": "順序輪替",
-      "rule_member": "指定成員"
+      "rule": {
+        "random": "隨機指定",
+        "order": "順序輪替",
+        "member": "指定成員"
+      },
+      "description": {
+        "remainder": "零頭 {amount} 源自於匯率換算或分攤計算時產生的微小差額。",
+        "random": "系統將在每次結算時，隨機挑選一位幸運兒來吸收所有零頭。",
+        "order": "依照成員加入的順序，將零頭依序分配，直到分完為止。",
+        "member": "指定一位特定的成員，固定由他/她來吸收所有的零頭。"
+      },
+      "message_remainder": "零頭 {amount} 將存入零頭罐,結算時分配"
     },
     "split_method": {
       "even": "平均分攤",
@@ -167,9 +176,9 @@
     "label_remainder": "暫存零頭: {amount}",
     "label_balance": "結餘",
     "label_total_expense": "總費用",
-    "label_total_prepay": "前受合計",
+    "label_total_prepay": "總預收",
     "label_total_expense_personal": "總費用",
-    "label_total_prepay_personal": "前受合計（立替含）",
+    "label_total_prepay_personal": "總預收（含代墊）",
     "label_remainder_pot": "零頭罐",
     "empty_records": "尚無收支紀錄",
     "nav_to_record": "準備前往記帳頁面...",
@@ -231,7 +240,6 @@
     "base_card_title_expense": "剩餘金額 (Base)",
     "base_card_title_income": "資金來源 (入金者)",
     "payer_multiple": "多人",
-    "msg_leftover_pot": "餘額 {amount} 將存入餘額罐 (結算時分配)",
     "rate_dialog" : {
       "title": "匯率來源",
       "message": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。"

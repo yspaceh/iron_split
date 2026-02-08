@@ -112,6 +112,8 @@ class _S30Content extends StatelessWidget {
         initialRule: task.remainderRule,
         initialMemberId: task.remainderAbsorberId,
         members: membersList,
+        currentRemainder: vm.balanceState.remainder,
+        baseCurrency: vm.baseCurrency,
       );
 
       if (result != null && context.mounted) {
