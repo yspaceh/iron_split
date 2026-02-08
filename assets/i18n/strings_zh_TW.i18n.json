@@ -187,10 +187,17 @@
   },
   "S14_Task_Settings": {
     "title": "任務設定",
-    "menu_member_settings": "成員設定",
-    "menu_history": "歷史紀錄",
-    "menu_end_task": "結束任務",
-    "section_remainder": "剩餘款"
+    "section":{
+      "task_name": "任務名稱",
+      "task_period": "任務期間",
+      "settlement": "結算設定",
+      "other": "其他設定"
+    },
+    "menu" : {
+      "member_settings": "成員設定",
+      "history": "歷史紀錄",
+      "close_task": "結束任務"
+    }
   },
   "S15_Record_Edit": {
     "title": {
@@ -258,9 +265,9 @@
       "done": "確定"
     },
     "section":{
-      "name": "任務名稱",
-      "period": "任務期間",
-      "settings": "結算設定"
+      "task_name": "任務名稱",
+      "task_period": "任務期間",
+      "settlement": "結算設定"
     },
     "label" : {
       "name": "任務名稱",

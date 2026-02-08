@@ -14,8 +14,7 @@ class TaskRemainderRuleInput extends StatelessWidget {
     // 直接替換為 AppSelectField
     return AppSelectField(
       labelText: t.common.remainder_rule.title, // 標題：零頭處理
-      text: rule, // 內容：餘額輪盤 / 第一人吸收...
-      prefixIcon: Icons.calculate_outlined,
+      text: rule,
       onTap: onTap,
     );
   }

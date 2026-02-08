@@ -187,10 +187,17 @@
   },
   "S14_Task_Settings": {
     "title": "Task Settings",
-    "menu_member_settings": "Member Settings",
-    "menu_history": "History",
-    "menu_end_task": "End Task",
-    "section_remainder": "Remainder"
+    "section":{
+      "task_name": "Task Name",
+      "task_period": "Task Period",
+      "settlement": "Settlement Settings",
+      "other": "Other Settings"
+    },
+    "menu" : {
+      "member_settings": "Member Settings",
+      "history": "History",
+      "close_task": "End Task"
+    }
   },
   "S15_Record_Edit": {
     "title": {
@@ -258,9 +265,9 @@
       "done": "Done"
     },
     "section":{
-      "name": "Name",
-      "period": "Period",
-      "settings": "Settings"
+      "task_name": "Task Name",
+      "task_period": "Task Period",
+      "settlement": "Settlement Settings"
     },
     "label":{
       "name": "Task name",

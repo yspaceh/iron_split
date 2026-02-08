@@ -27,7 +27,7 @@ import 'package:iron_split/features/common/presentation/widgets/group_balance_ca
 import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 
 // Widgets - Feature Specific
-import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/settlement_member_item.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
 

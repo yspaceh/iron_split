@@ -362,17 +362,8 @@ class TranslationsS14TaskSettingsZhTw {
 	/// zh-TW: '任務設定'
 	String get title => '任務設定';
 
-	/// zh-TW: '成員設定'
-	String get menu_member_settings => '成員設定';
-
-	/// zh-TW: '歷史紀錄'
-	String get menu_history => '歷史紀錄';
-
-	/// zh-TW: '結束任務'
-	String get menu_end_task => '結束任務';
-
-	/// zh-TW: '剩餘款'
-	String get section_remainder => '剩餘款';
+	late final TranslationsS14TaskSettingsSectionZhTw section = TranslationsS14TaskSettingsSectionZhTw.internal(_root);
+	late final TranslationsS14TaskSettingsMenuZhTw menu = TranslationsS14TaskSettingsMenuZhTw.internal(_root);
 }
 
 // Path: S15_Record_Edit
@@ -1359,6 +1350,45 @@ class TranslationsS13TaskDashboardButtonsZhTw {
 	String get add => '新增';
 }
 
+// Path: S14_Task_Settings.section
+class TranslationsS14TaskSettingsSectionZhTw {
+	TranslationsS14TaskSettingsSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務名稱'
+	String get task_name => '任務名稱';
+
+	/// zh-TW: '任務期間'
+	String get task_period => '任務期間';
+
+	/// zh-TW: '結算設定'
+	String get settlement => '結算設定';
+
+	/// zh-TW: '其他設定'
+	String get other => '其他設定';
+}
+
+// Path: S14_Task_Settings.menu
+class TranslationsS14TaskSettingsMenuZhTw {
+	TranslationsS14TaskSettingsMenuZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '成員設定'
+	String get member_settings => '成員設定';
+
+	/// zh-TW: '歷史紀錄'
+	String get history => '歷史紀錄';
+
+	/// zh-TW: '結束任務'
+	String get close_task => '結束任務';
+}
+
 // Path: S15_Record_Edit.title
 class TranslationsS15RecordEditTitleZhTw {
 	TranslationsS15RecordEditTitleZhTw.internal(this._root);
@@ -1537,13 +1567,13 @@ class TranslationsS16TaskCreateEditSectionZhTw {
 	// Translations
 
 	/// zh-TW: '任務名稱'
-	String get name => '任務名稱';
+	String get task_name => '任務名稱';
 
 	/// zh-TW: '任務期間'
-	String get period => '任務期間';
+	String get task_period => '任務期間';
 
 	/// zh-TW: '結算設定'
-	String get settings => '結算設定';
+	String get settlement => '結算設定';
 }
 
 // Path: S16_TaskCreate_Edit.label
@@ -2399,10 +2429,13 @@ extension on Translations {
 			'S13_Task_Dashboard.total_amount_label' => '總金額',
 			'S13_Task_Dashboard.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
 			'S14_Task_Settings.title' => '任務設定',
-			'S14_Task_Settings.menu_member_settings' => '成員設定',
-			'S14_Task_Settings.menu_history' => '歷史紀錄',
-			'S14_Task_Settings.menu_end_task' => '結束任務',
-			'S14_Task_Settings.section_remainder' => '剩餘款',
+			'S14_Task_Settings.section.task_name' => '任務名稱',
+			'S14_Task_Settings.section.task_period' => '任務期間',
+			'S14_Task_Settings.section.settlement' => '結算設定',
+			'S14_Task_Settings.section.other' => '其他設定',
+			'S14_Task_Settings.menu.member_settings' => '成員設定',
+			'S14_Task_Settings.menu.history' => '歷史紀錄',
+			'S14_Task_Settings.menu.close_task' => '結束任務',
 			'S15_Record_Edit.title.add' => '新增紀錄',
 			'S15_Record_Edit.title.edit' => '編輯紀錄',
 			'S15_Record_Edit.buttons.save' => '儲存紀錄',
@@ -2445,9 +2478,9 @@ extension on Translations {
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '確定',
-			'S16_TaskCreate_Edit.section.name' => '任務名稱',
-			'S16_TaskCreate_Edit.section.period' => '任務期間',
-			'S16_TaskCreate_Edit.section.settings' => '結算設定',
+			'S16_TaskCreate_Edit.section.task_name' => '任務名稱',
+			'S16_TaskCreate_Edit.section.task_period' => '任務期間',
+			'S16_TaskCreate_Edit.section.settlement' => '結算設定',
 			'S16_TaskCreate_Edit.label.name' => '任務名稱',
 			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S16_TaskCreate_Edit.label.start_date' => '開始日期',

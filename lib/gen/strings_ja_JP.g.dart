@@ -250,10 +250,8 @@ class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
 
 	// Translations
 	@override String get title => 'タスク設定';
-	@override String get menu_member_settings => 'メンバー設定';
-	@override String get menu_history => '履歴';
-	@override String get menu_end_task => 'タスク終了';
-	@override String get section_remainder => '残高';
+	@override late final _TranslationsS14TaskSettingsSectionJaJp section = _TranslationsS14TaskSettingsSectionJaJp._(_root);
+	@override late final _TranslationsS14TaskSettingsMenuJaJp menu = _TranslationsS14TaskSettingsMenuJaJp._(_root);
 }
 
 // Path: S15_Record_Edit
@@ -819,6 +817,31 @@ class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashbo
 	@override String get add => '追加';
 }
 
+// Path: S14_Task_Settings.section
+class _TranslationsS14TaskSettingsSectionJaJp extends TranslationsS14TaskSettingsSectionZhTw {
+	_TranslationsS14TaskSettingsSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get task_name => 'タスク名';
+	@override String get task_period => 'タスク期間';
+	@override String get settlement => '精算設定';
+	@override String get other => 'その他設定';
+}
+
+// Path: S14_Task_Settings.menu
+class _TranslationsS14TaskSettingsMenuJaJp extends TranslationsS14TaskSettingsMenuZhTw {
+	_TranslationsS14TaskSettingsMenuJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get member_settings => 'メンバー設定';
+	@override String get history => '履歴';
+	@override String get close_task => 'タスク終了';
+}
+
 // Path: S15_Record_Edit.title
 class _TranslationsS15RecordEditTitleJaJp extends TranslationsS15RecordEditTitleZhTw {
 	_TranslationsS15RecordEditTitleJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -937,9 +960,9 @@ class _TranslationsS16TaskCreateEditSectionJaJp extends TranslationsS16TaskCreat
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get name => 'タスク名';
-	@override String get period => '期間';
-	@override String get settings => '設定';
+	@override String get task_name => 'タスク名';
+	@override String get task_period => 'タスク期間';
+	@override String get settlement => '精算設定';
 }
 
 // Path: S16_TaskCreate_Edit.label
@@ -1590,10 +1613,13 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.personal_empty_desc' => 'この日のあなたに関連する記録はありません',
 			'S13_Task_Dashboard.total_amount_label' => '合計金額',
 			'S14_Task_Settings.title' => 'タスク設定',
-			'S14_Task_Settings.menu_member_settings' => 'メンバー設定',
-			'S14_Task_Settings.menu_history' => '履歴',
-			'S14_Task_Settings.menu_end_task' => 'タスク終了',
-			'S14_Task_Settings.section_remainder' => '残高',
+			'S14_Task_Settings.section.task_name' => 'タスク名',
+			'S14_Task_Settings.section.task_period' => 'タスク期間',
+			'S14_Task_Settings.section.settlement' => '精算設定',
+			'S14_Task_Settings.section.other' => 'その他設定',
+			'S14_Task_Settings.menu.member_settings' => 'メンバー設定',
+			'S14_Task_Settings.menu.history' => '履歴',
+			'S14_Task_Settings.menu.close_task' => 'タスク終了',
 			'S15_Record_Edit.title.add' => '記録を追加',
 			'S15_Record_Edit.title.edit' => '記録を編集',
 			'S15_Record_Edit.buttons.save' => '記録を保存',
@@ -1636,9 +1662,9 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '完了',
-			'S16_TaskCreate_Edit.section.name' => 'タスク名',
-			'S16_TaskCreate_Edit.section.period' => '期間',
-			'S16_TaskCreate_Edit.section.settings' => '設定',
+			'S16_TaskCreate_Edit.section.task_name' => 'タスク名',
+			'S16_TaskCreate_Edit.section.task_period' => 'タスク期間',
+			'S16_TaskCreate_Edit.section.settlement' => '精算設定',
 			'S16_TaskCreate_Edit.label.name' => 'タスク名',
 			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S16_TaskCreate_Edit.label.start_date' => '開始日',

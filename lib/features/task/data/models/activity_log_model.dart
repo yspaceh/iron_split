@@ -136,7 +136,7 @@ class ActivityLogModel {
           return "${t.S16_TaskCreate_Edit.label.currency}: $val";
         case 'remainder_rule':
           String ruleName = RemainderRuleConstants.getLabel(context, val);
-          return "${t.S14_Task_Settings.section_remainder}: $ruleName";
+          return "${t.common.remainder_rule.title}: $ruleName";
         default:
           return "$val";
       }

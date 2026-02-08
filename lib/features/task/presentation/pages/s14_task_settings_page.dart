@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
-import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
+import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s14_task_settings_vm.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d09_task_settings_currency_confirm_dialog.dart';
-import 'package:iron_split/features/common/presentation/widgets/form_section.dart';
+import 'package:iron_split/features/common/presentation/widgets/section_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_currency_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_remainder_rule_input.dart';
@@ -109,8 +110,6 @@ class _S14ContentState extends State<_S14Content> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final vm = context.watch<S14TaskSettingsViewModel>();
 
     if (vm.isLoading ||
@@ -125,156 +124,93 @@ class _S14ContentState extends State<_S14Content> {
         title: Text(t.S14_Task_Settings.title),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // --- 1. 名稱區塊 ---
-          Text(t.S16_TaskCreate_Edit.section.name,
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(color: colorScheme.primary)),
-          const SizedBox(height: 8),
-
-          Focus(
-            focusNode: _nameFocusNode,
-            child: TaskNameInput(
-              controller: vm.nameController,
-              label: t.S16_TaskCreate_Edit.label.name,
-              placeholder: t.S16_TaskCreate_Edit.placeholder.name,
-              maxLength: 20,
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // --- 2. 期間設定 ---
-          TaskFormSectionCard(
-            title: t.S16_TaskCreate_Edit.section.name,
+          SectionWrapper(
+              title: t.S14_Task_Settings.section.task_name,
+              children: [
+                Focus(
+                  focusNode: _nameFocusNode,
+                  child: TaskNameInput(
+                    controller: vm.nameController,
+                    label: t.S16_TaskCreate_Edit.label.name,
+                    placeholder: t.S16_TaskCreate_Edit.placeholder.name,
+                    maxLength: 20,
+                  ),
+                ),
+              ]),
+          SectionWrapper(
+              title: t.S14_Task_Settings.section.task_period,
+              children: [
+                TaskDateInput(
+                  label: t.S16_TaskCreate_Edit.label.start_date,
+                  date: vm.startDate!,
+                  onDateChanged: (val) => vm.updateDateRange(val, vm.endDate!),
+                ),
+                const SizedBox(height: 8),
+                TaskDateInput(
+                  label: t.S16_TaskCreate_Edit.label.end_date,
+                  date: vm.endDate!,
+                  onDateChanged: (val) =>
+                      vm.updateDateRange(vm.startDate!, val),
+                ),
+              ]),
+          SectionWrapper(
+              title: t.S14_Task_Settings.section.settlement,
+              children: [
+                TaskCurrencyInput(
+                  currency: vm.currency!,
+                  onCurrencyChanged: (val) =>
+                      _onCurrencyChange(context, vm, val),
+                  enabled: true,
+                ),
+                const SizedBox(height: 8),
+                TaskRemainderRuleInput(
+                  rule: RemainderRuleConstants.getLabel(
+                      context, vm.remainderRule),
+                  onTap: () => _onRemainderRuleChange(context, vm),
+                ),
+              ]),
+          SectionWrapper(
+            title: t.S14_Task_Settings.section.other,
             children: [
-              TaskDateInput(
-                label: t.S16_TaskCreate_Edit.label.start_date,
-                date: vm.startDate!,
-                onDateChanged: (val) => vm.updateDateRange(val, vm.endDate!),
+              NavTile(
+                title: t.S14_Task_Settings.menu.member_settings,
+                onTap: () {
+                  context.pushNamed(
+                    'S53',
+                    pathParameters: {'taskId': vm.taskId},
+                  );
+                },
               ),
-              TaskDateInput(
-                label: t.S16_TaskCreate_Edit.label.end_date,
-                date: vm.endDate!,
-                onDateChanged: (val) => vm.updateDateRange(vm.startDate!, val),
+              const SizedBox(height: 8),
+              NavTile(
+                title: t.S14_Task_Settings.menu.history,
+                onTap: () {
+                  context.pushNamed(
+                    'S52',
+                    pathParameters: {'taskId': vm.taskId},
+                    extra: vm.membersData,
+                  );
+                },
               ),
             ],
           ),
-
-          const SizedBox(height: 24),
-
-          // --- 3. 詳細設定 ---
-          TaskFormSectionCard(
-            title: t.S16_TaskCreate_Edit.section.settings,
-            children: [
-              TaskCurrencyInput(
-                currency: vm.currency!,
-                onCurrencyChanged: (val) => _onCurrencyChange(context, vm, val),
-                enabled: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: theme.dividerColor),
-              ),
-              TaskRemainderRuleInput(
-                rule:
-                    RemainderRuleConstants.getLabel(context, vm.remainderRule),
-                onTap: () => _onRemainderRuleChange(context, vm),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
           // Settings Navigation
-          _buildNavTile(
-            context: context,
-            icon: Icons.people_outline,
-            title: t.S14_Task_Settings.menu_member_settings,
-            onTap: () {
-              context.pushNamed(
-                'S53',
-                pathParameters: {'taskId': vm.taskId},
-              );
-            },
-          ),
-          const SizedBox(height: 12),
-
-          _buildNavTile(
-            context: context,
-            icon: Icons.history,
-            title: t.S14_Task_Settings.menu_history,
-            onTap: () {
-              context.pushNamed(
-                'S52',
-                pathParameters: {'taskId': vm.taskId},
-                extra: vm.membersData,
-              );
-            },
-          ),
 
           if (vm.isOwner) ...[
-            const SizedBox(height: 40),
-            _buildNavTile(
-              context: context,
-              icon: Icons.check_circle_outline,
-              title: t.S14_Task_Settings.menu_end_task,
+            const SizedBox(height: 16),
+            NavTile(
+              title: t.S14_Task_Settings.menu.close_task,
               isDestructive: true,
               onTap: () {
-                context.push('/task/${vm.taskId}/close');
+                context.pushNamed('S12', pathParameters: {'taskId': vm.taskId});
               },
             ),
           ],
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 32),
         ],
-      ),
-    );
-  }
-
-  Widget _buildNavTile({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    bool isDestructive = false,
-  }) {
-    final theme = Theme.of(context);
-    final color = isDestructive
-        ? theme.colorScheme.error
-        : theme.colorScheme.onSurfaceVariant;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: isDestructive
-                  ? theme.colorScheme.error.withValues(alpha: 0.3)
-                  : theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(width: 16),
-            Expanded(
-                child: Text(title,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: isDestructive ? color : null,
-                      fontWeight: isDestructive ? FontWeight.bold : null,
-                    ))),
-            Icon(Icons.arrow_forward_ios,
-                size: 16, color: theme.colorScheme.outline),
-          ],
-        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ class AppSelectField extends StatelessWidget {
   final String? hintText;
   final String? labelText;
   final IconData? prefixIcon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String? errorText;
   final Color? fillColor;
   final Widget? trailing;

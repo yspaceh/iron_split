@@ -210,10 +210,17 @@
   },
   "S14_Task_Settings": {
     "title": "タスク設定",
-    "menu_member_settings": "メンバー設定",
-    "menu_history": "履歴",
-    "menu_end_task": "タスク終了",
-    "section_remainder": "残高"
+    "section":{
+      "task_name": "タスク名",
+      "task_period": "タスク期間",
+      "settlement": "精算設定",
+      "other": "その他設定"
+    },
+    "menu" : {
+      "member_settings": "メンバー設定",
+      "history": "履歴",
+      "close_task": "タスク終了"
+    }
   },
   "S15_Record_Edit": {
     "title": {
@@ -281,9 +288,9 @@
       "done": "完了"
     },
     "section": {
-      "name": "タスク名",
-      "period": "期間",
-      "settings": "設定"
+      "task_name": "タスク名",
+      "task_period": "タスク期間",
+      "settlement": "精算設定"
     },
     "label": {
       "name": "タスク名",

@@ -13,7 +13,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_curren
 import 'package:iron_split/features/common/presentation/widgets/form/task_member_count_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/gen/strings.g.dart';
-import 'package:iron_split/features/common/presentation/widgets/form_section.dart';
+import 'package:iron_split/features/common/presentation/widgets/section_wrapper.dart';
 
 /// Page Key: S16_TaskCreate.Edit
 class S16TaskCreateEditPage extends StatelessWidget {
@@ -133,9 +133,6 @@ class _S16ContentState extends State<_S16Content> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    // 監聽 VM 狀態
     final vm = context.watch<S16TaskCreateEditViewModel>();
 
     return Stack(
@@ -147,7 +144,6 @@ class _S16ContentState extends State<_S16Content> {
             await _handleClose();
           },
           child: Scaffold(
-            backgroundColor: colorScheme.surface,
             appBar: AppBar(
               title: Text(t.S16_TaskCreate_Edit.title),
               leading: IconButton(
@@ -165,64 +161,48 @@ class _S16ContentState extends State<_S16Content> {
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-                      // --- 1. 名稱區塊 ---
-                      Text(t.S16_TaskCreate_Edit.section.name,
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(color: colorScheme.primary)),
-                      const SizedBox(height: 8),
-
-                      TaskNameInput(
-                        controller: _nameController,
-                        label: t.S16_TaskCreate_Edit.label.name,
-                        placeholder: t.S16_TaskCreate_Edit.placeholder.name,
-                        maxLength: 20,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // --- 2. 期間設定 (卡片分組) ---
-                      TaskFormSectionCard(
-                        title: t.S16_TaskCreate_Edit.section.name,
-                        children: [
-                          TaskDateInput(
-                            label: t.S16_TaskCreate_Edit.label.start_date,
-                            date: vm.startDate,
-                            onDateChanged: (val) =>
-                                vm.updateDateRange(val, vm.endDate),
-                          ),
-                          TaskDateInput(
-                            label: t.S16_TaskCreate_Edit.label.end_date,
-                            date: vm.endDate,
-                            onDateChanged: (val) =>
-                                vm.updateDateRange(vm.startDate, val),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // --- 3. 詳細設定 (卡片分組) ---
-                      TaskFormSectionCard(
-                        title: t.S16_TaskCreate_Edit.section.settings,
-                        children: [
-                          TaskCurrencyInput(
-                            currency: vm.baseCurrency,
-                            onCurrencyChanged: vm.updateCurrency,
-                            enabled: vm.isCurrencyEnabled,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Container(
-                                height: 1,
-                                width: double.infinity,
-                                color: theme.dividerColor),
-                          ),
-                          TaskMemberCountInput(
-                            value: vm.memberCount,
-                            onChanged: vm.updateMemberCount,
-                          ),
-                        ],
-                      ),
+                      SectionWrapper(
+                          title: t.S16_TaskCreate_Edit.section.task_name,
+                          children: [
+                            TaskNameInput(
+                              controller: _nameController,
+                              label: t.S16_TaskCreate_Edit.label.name,
+                              placeholder:
+                                  t.S16_TaskCreate_Edit.placeholder.name,
+                              maxLength: 20,
+                            )
+                          ]),
+                      SectionWrapper(
+                          title: t.S16_TaskCreate_Edit.section.task_period,
+                          children: [
+                            TaskDateInput(
+                              label: t.S16_TaskCreate_Edit.label.start_date,
+                              date: vm.startDate,
+                              onDateChanged: (val) =>
+                                  vm.updateDateRange(val, vm.endDate),
+                            ),
+                            const SizedBox(height: 8),
+                            TaskDateInput(
+                              label: t.S16_TaskCreate_Edit.label.end_date,
+                              date: vm.endDate,
+                              onDateChanged: (val) =>
+                                  vm.updateDateRange(vm.startDate, val),
+                            ),
+                          ]),
+                      SectionWrapper(
+                          title: t.S16_TaskCreate_Edit.section.settlement,
+                          children: [
+                            TaskCurrencyInput(
+                              currency: vm.baseCurrency,
+                              onCurrencyChanged: vm.updateCurrency,
+                              enabled: vm.isCurrencyEnabled,
+                            ),
+                            const SizedBox(height: 8),
+                            TaskMemberCountInput(
+                              value: vm.memberCount,
+                              onChanged: vm.updateMemberCount,
+                            ),
+                          ]),
                     ],
                   ),
                 ),

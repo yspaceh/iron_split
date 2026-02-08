@@ -5,7 +5,7 @@ import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
-import 'package:iron_split/features/record/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
+import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

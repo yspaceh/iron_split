@@ -217,10 +217,8 @@ class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
 
 	// Translations
 	@override String get title => 'Task Settings';
-	@override String get menu_member_settings => 'Member Settings';
-	@override String get menu_history => 'History';
-	@override String get menu_end_task => 'End Task';
-	@override String get section_remainder => 'Remainder';
+	@override late final _TranslationsS14TaskSettingsSectionEnUs section = _TranslationsS14TaskSettingsSectionEnUs._(_root);
+	@override late final _TranslationsS14TaskSettingsMenuEnUs menu = _TranslationsS14TaskSettingsMenuEnUs._(_root);
 }
 
 // Path: S15_Record_Edit
@@ -800,6 +798,31 @@ class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashbo
 	@override String get add => 'Add';
 }
 
+// Path: S14_Task_Settings.section
+class _TranslationsS14TaskSettingsSectionEnUs extends TranslationsS14TaskSettingsSectionZhTw {
+	_TranslationsS14TaskSettingsSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get task_name => 'Task Name';
+	@override String get task_period => 'Task Period';
+	@override String get settlement => 'Settlement Settings';
+	@override String get other => 'Other Settings';
+}
+
+// Path: S14_Task_Settings.menu
+class _TranslationsS14TaskSettingsMenuEnUs extends TranslationsS14TaskSettingsMenuZhTw {
+	_TranslationsS14TaskSettingsMenuEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get member_settings => 'Member Settings';
+	@override String get history => 'History';
+	@override String get close_task => 'End Task';
+}
+
 // Path: S15_Record_Edit.title
 class _TranslationsS15RecordEditTitleEnUs extends TranslationsS15RecordEditTitleZhTw {
 	_TranslationsS15RecordEditTitleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -918,9 +941,9 @@ class _TranslationsS16TaskCreateEditSectionEnUs extends TranslationsS16TaskCreat
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get name => 'Name';
-	@override String get period => 'Period';
-	@override String get settings => 'Settings';
+	@override String get task_name => 'Task Name';
+	@override String get task_period => 'Task Period';
+	@override String get settlement => 'Settlement Settings';
 }
 
 // Path: S16_TaskCreate_Edit.label
@@ -1575,10 +1598,13 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.total_amount_label' => 'Total Bill',
 			'S13_Task_Dashboard.retention_notice' => 'This task is closed. Data retained for 30 days.',
 			'S14_Task_Settings.title' => 'Task Settings',
-			'S14_Task_Settings.menu_member_settings' => 'Member Settings',
-			'S14_Task_Settings.menu_history' => 'History',
-			'S14_Task_Settings.menu_end_task' => 'End Task',
-			'S14_Task_Settings.section_remainder' => 'Remainder',
+			'S14_Task_Settings.section.task_name' => 'Task Name',
+			'S14_Task_Settings.section.task_period' => 'Task Period',
+			'S14_Task_Settings.section.settlement' => 'Settlement Settings',
+			'S14_Task_Settings.section.other' => 'Other Settings',
+			'S14_Task_Settings.menu.member_settings' => 'Member Settings',
+			'S14_Task_Settings.menu.history' => 'History',
+			'S14_Task_Settings.menu.close_task' => 'End Task',
 			'S15_Record_Edit.title.add' => 'Add Record',
 			'S15_Record_Edit.title.edit' => 'Edit Record',
 			'S15_Record_Edit.buttons.save' => 'Save Record',
@@ -1621,9 +1647,9 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.buttons.save' => 'Save',
 			'S16_TaskCreate_Edit.buttons.done' => 'Done',
-			'S16_TaskCreate_Edit.section.name' => 'Name',
-			'S16_TaskCreate_Edit.section.period' => 'Period',
-			'S16_TaskCreate_Edit.section.settings' => 'Settings',
+			'S16_TaskCreate_Edit.section.task_name' => 'Task Name',
+			'S16_TaskCreate_Edit.section.task_period' => 'Task Period',
+			'S16_TaskCreate_Edit.section.settlement' => 'Settlement Settings',
 			'S16_TaskCreate_Edit.label.name' => 'Task name',
 			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S16_TaskCreate_Edit.label.start_date' => 'Start Date',
