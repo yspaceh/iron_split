@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class SplitMethodConstants {
+class SplitMethodConstant {
   // 定義 Key (避免打錯字)
   static const String even = 'even';
   static const String exact = 'exact';

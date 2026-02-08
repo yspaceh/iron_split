@@ -12,6 +12,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_memo_i
 import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/summary_row.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B02SplitExpenseEditBottomSheet extends StatefulWidget {
@@ -94,7 +95,7 @@ class _B02SplitExpenseEditBottomSheetState
     _memoController = TextEditingController(text: widget.detail?.memo ?? '');
 
     _splitMethod =
-        widget.detail?.splitMethod ?? SplitMethodConstants.defaultMethod;
+        widget.detail?.splitMethod ?? SplitMethodConstant.defaultMethod;
     _splitMemberIds = widget.detail?.splitMemberIds ??
         widget.allMembers.map((m) => m['id'] as String).toList();
     _splitDetails = widget.detail?.splitDetails;
@@ -158,7 +159,7 @@ class _B02SplitExpenseEditBottomSheetState
         final sum = finalSplitDetails.values.fold(0.0, (p, c) => p + c);
         if ((sum - amount).abs() > 0.1) {
           finalSplitDetails = null; // 強制失效，回退到自動均分
-          _splitMethod = SplitMethodConstants.defaultMethod;
+          _splitMethod = SplitMethodConstant.defaultMethod;
         }
       }
       final newItem = RecordDetail(
@@ -207,44 +208,23 @@ class _B02SplitExpenseEditBottomSheetState
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 16), // 減少上下間距
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end, // 底部對齊
-                  children: [
-                    // 左側：母項目標題
-                    Expanded(
-                      child: Text(
-                        widget.parentTitle.isNotEmpty
-                            ? widget.parentTitle
-                            : t.B02_SplitExpense_Edit.item_name_empty,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: widget.parentTitle.isNotEmpty
-                              ? colorScheme.onSurface
-                              : colorScheme.outline,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                    // 右側：剩餘金額 (大紅字)
-                    Text(
-                      "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.availableAmount, widget.selectedCurrency.code)}",
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.primary, // 使用紅色強調限制
-                        height: 1.2,
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.only(top: 8), // 減少上下間距
+                child: SummaryRow(
+                  label: widget.parentTitle.isNotEmpty
+                      ? widget.parentTitle
+                      : t.B02_SplitExpense_Edit.item_name_empty,
+                  amount: widget.availableAmount,
+                  currencyConstants: widget.selectedCurrency,
+                  labelColor:
+                      widget.parentTitle.isEmpty ? colorScheme.outline : null,
+                  valueColor: colorScheme.primary,
                 ),
               ),
+              const SizedBox(height: 16),
               Divider(
                 height: 1,
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
               ),
-
               const SizedBox(height: 16),
 
               // 2. Name
@@ -276,7 +256,7 @@ class _B02SplitExpenseEditBottomSheetState
 
               // 4. Split Config Button
               AppSelectField(
-                text: SplitMethodConstants.getLabel(context, _splitMethod),
+                text: SplitMethodConstant.getLabel(context, _splitMethod),
                 onTap: _handleSplitConfig,
                 fillColor: colorScheme.surfaceContainerLow,
                 labelText: t.B02_SplitExpense_Edit.label.split_method,

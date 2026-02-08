@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -79,66 +80,28 @@ class _S12Content extends StatelessWidget {
         title: Text(t.S12_TaskClose_Notice.title),
         centerTitle: true,
       ),
+      bottomNavigationBar: StickyBottomActionBar(
+        children: [
+          AppButton(
+            text: t.common.buttons.back,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(),
+          ),
+          AppButton(
+            text: t.S12_TaskClose_Notice.buttons.close,
+            type: AppButtonType.primary,
+            isLoading: vm.isProcessing,
+            onPressed: () => _showConfirmDialog(context, vm),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              // 警示 Icon
-              Icon(
-                Icons.warning_amber_rounded,
-                size: 80,
-                color: theme.colorScheme.error,
-              ),
-              const SizedBox(height: 24),
-
-              // 標題
-              Text(
-                t.S12_TaskClose_Notice.title,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.error,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-
-              // 內文說明
-              Text(
-                t.S12_TaskClose_Notice.content,
-                style: theme.textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const Spacer(),
-
-              // 結束按鈕
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: vm.isProcessing
-                      ? null
-                      : () => _showConfirmDialog(context, vm),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(color: theme.colorScheme.error), // 紅色邊框
-                    foregroundColor: theme.colorScheme.error, // 紅色文字/Icon
-                  ),
-                  icon: vm.isProcessing
-                      ? const SizedBox.shrink()
-                      : const Icon(Icons.lock_outline),
-                  label: vm.isProcessing
-                      ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                              color: theme.colorScheme.error, strokeWidth: 2),
-                        )
-                      : Text(t.S12_TaskClose_Notice.buttons.close),
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            t.S12_TaskClose_Notice.content,
+            style: theme.textTheme.bodyLarge,
+            textAlign: TextAlign.center,
           ),
         ),
       ),

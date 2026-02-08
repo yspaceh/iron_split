@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/app_error_codes.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
@@ -25,13 +27,15 @@ class S15RecordEditViewModel extends ChangeNotifier {
   // Basic State
   late DateTime _selectedDate;
   late CurrencyConstants _selectedCurrencyConstants;
-  String _selectedCategoryId = 'fastfood';
+  String _selectedCategoryId = CategoryConstant.defaultCategory;
   int _recordTypeIndex = 0; // 0: expense, 1: income
 
   // Loading State
   bool _isRateLoading = false;
   bool _isSaving = false;
-  bool _isLoadingTaskData = true;
+
+  LoadStatus _initStatus = LoadStatus.loading;
+  String? _initErrorCode;
 
   // Payment State
   String _payerType = 'prepay';
@@ -43,7 +47,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // Split State
   final List<RecordDetail> _details = [];
-  String _baseSplitMethod = SplitMethodConstants.defaultMethod;
+  String _baseSplitMethod = SplitMethodConstant.defaultMethod;
   List<String> _baseMemberIds = [];
   Map<String, double> _baseRawDetails = {}; // For advanced split
 
@@ -66,7 +70,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   bool get isRateLoading => _isRateLoading;
   bool get isSaving => _isSaving;
-  bool get isLoadingTaskData => _isLoadingTaskData;
+  LoadStatus get initStatus => _initStatus;
+  String? get initErrorCode => _initErrorCode;
 
   String get payerType => _payerType;
   String get payerId => _payerId;
@@ -130,7 +135,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
     double totalRemainder = 0.0;
 
-    // 1. 累加所有細項 (Details) 的零頭
+    // 1. 計算已加入的 Details
     for (var detail in _details) {
       final result = BalanceCalculator.calculateSplit(
           totalAmount: detail.amount,
@@ -142,8 +147,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       totalRemainder += result.remainder;
     }
 
-    // 2. 累加剩餘金額 (Base Remaining) 的零頭
-    // 邏輯：如果有剩餘金額，或者完全沒有細項(代表只有一筆 Base)，都要算
+    // 2. 計算剩餘未分配的 Base Card
     if (baseRemainingAmount > 0 || _details.isEmpty) {
       final result = BalanceCalculator.calculateSplit(
           totalAmount:
@@ -156,9 +160,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
       totalRemainder += result.remainder;
     }
 
-    // 3. 消除浮點數誤差 (與 Form 邏輯一致)
-    return double.parse(
-        totalRemainder.toStringAsFixed(baseCurrency.decimalDigits));
+    // 修正精度
+    return BalanceCalculator.floorToPrecision(totalRemainder, baseCurrency);
   }
 
   // Constructor
@@ -244,7 +247,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   Future<void> fetchTaskData() async {
     try {
-      _isLoadingTaskData = true;
+      _initStatus = LoadStatus.loading;
+      _initErrorCode = null;
       notifyListeners();
 
       // 1. 改用 Repo 拿資料 (會拿到 TaskModel?)
@@ -253,9 +257,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
       // 2. 判斷 task 是否存在 (取代 docSnapshot.exists)
       if (task != null) {
         // 3. 資料轉換: TaskModel -> List<Map>
-        // TaskModel 裡的 members 已經是 Map<String, dynamic> 了，直接轉即可
-        // 我們不再需要判斷 "if (rawMembers is List)"，因為 Model 層已經規範好了
-
         List<Map<String, dynamic>> realMembers = task.members.entries.map((e) {
           // 確保是深拷貝或新 Map，以免汙染 Model
           final memberMap = Map<String, dynamic>.from(e.value);
@@ -290,11 +291,16 @@ class S15RecordEditViewModel extends ChangeNotifier {
         if (_originalRecord == null) {
           _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
         }
+        _initStatus = LoadStatus.success;
+      } else {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.taskNotFound;
       }
     } catch (e) {
-      debugPrint("Error fetching task: $e");
+      _initStatus = LoadStatus.error;
+      _initErrorCode =
+          e is FirebaseException ? e.code : AppErrorCodes.taskLoadFailed;
     } finally {
-      _isLoadingTaskData = false;
       notifyListeners();
     }
   }
@@ -304,10 +310,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
       _lastKnownAmount = currentAmount;
       // Reset Logic
-      if (_details.isNotEmpty ||
-          _baseSplitMethod != SplitMethodConstants.even) {
+      if (_details.isNotEmpty || _baseSplitMethod != SplitMethodConstant.even) {
         _details.clear();
-        _baseSplitMethod = SplitMethodConstants.defaultMethod;
+        _baseSplitMethod = SplitMethodConstant.defaultMethod;
         if (_taskMembers.isNotEmpty) {
           _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
         }
@@ -343,23 +348,27 @@ class S15RecordEditViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 🔄 [修正] 將 _fetchExchangeRate 改為 fetchExchangeRate (拿掉底線，變為公開)
   Future<void> fetchExchangeRate() async {
     if (_selectedCurrencyConstants == baseCurrency) {
       exchangeRateController.text = '1.0';
       return;
     }
-    _isRateLoading = true;
-    notifyListeners();
+    try {
+      _isRateLoading = true;
+      notifyListeners();
 
-    final rate = await CurrencyService.fetchRate(
-        from: _selectedCurrencyConstants.code, to: baseCurrency.code);
-
-    _isRateLoading = false;
-    if (rate != null) {
-      exchangeRateController.text = rate.toString();
+      final rate = await CurrencyService.fetchRate(
+          from: _selectedCurrencyConstants.code, to: baseCurrency.code);
+      if (rate != null) {
+        exchangeRateController.text = rate.toString();
+      }
+    } catch (e) {
+      debugPrint("Rate fetch failed: $e");
+      throw AppErrorCodes.rateFetchFailed;
+    } finally {
+      _isRateLoading = false; // 確保 Loading 結束
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   // Split & Payment Data Updates (Called after bottom sheets)
@@ -455,7 +464,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
         // 金額與匯率 (根據您的 Model，這就是最終金額)
         amount: totalAmount,
-        currencyCode: _selectedCurrencyConstants.code, // ✅ 修正名稱: currencyCode
+        currencyCode: _selectedCurrencyConstants.code,
         exchangeRate: exchangeRate,
         remainder: calculatedTotalRemainder,
 
@@ -465,7 +474,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         splitDetails: _baseRawDetails, // Map<String, double> 符合型別
 
         // 細項
-        details: isIncome ? [] : _details, // ✅ 直接傳 List<RecordDetail>
+        details: isIncome ? [] : _details, // 直接傳 List<RecordDetail>
 
         // 其他
         memo: memoController.text,
@@ -497,8 +506,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      // TODO: handle error
-      rethrow;
+      // 捕捉錯誤並轉拋 AppErrorCode (如果它還不是 Code)
+      if (e is FirebaseException) rethrow;
+      // 其他未知錯誤，包裝成 SAVE_FAILED
+      throw AppErrorCodes.saveFailed;
     } finally {
       _isSaving = false;
       notifyListeners();
@@ -593,8 +604,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
           });
       return true;
     } catch (e) {
-      // TODO: handle error
-      rethrow;
+      if (e is FirebaseException) rethrow;
+      // 包裝成 DELETE_FAILED
+      throw AppErrorCodes.deleteFailed;
     }
   }
 

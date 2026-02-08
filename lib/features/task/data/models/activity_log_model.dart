@@ -189,7 +189,7 @@ class ActivityLogModel {
 
       if (details.containsKey('splitMethod')) {
         final method =
-            SplitMethodConstants.getLabel(context, details['splitMethod']);
+            SplitMethodConstant.getLabel(context, details['splitMethod']);
         buffer.write(details['splitMethod']);
         buffer.write(" ($method)");
       }
@@ -246,7 +246,7 @@ class ActivityLogModel {
       // 基本模式顯示簡略分帳
       if (mode == 'basic' && groups.isNotEmpty) {
         final g = groups.first;
-        final method = SplitMethodConstants.getLabel(context, g['method']);
+        final method = SplitMethodConstant.getLabel(context, g['method']);
         final unit = t.S52_TaskSettings_Log.unit_members;
         bufferMain.write(" / ${g['count']}$unit $method");
       }
@@ -283,7 +283,7 @@ class ActivityLogModel {
           final label = g['label'];
           final amt = CurrencyConstants.formatAmount(g['amount'], currency);
           final count = g['count'];
-          final method = SplitMethodConstants.getLabel(context, g['method']);
+          final method = SplitMethodConstant.getLabel(context, g['method']);
           final unit = t.S52_TaskSettings_Log.unit_members;
           // 格式: "- drink (JPY 1,000 / 2人 平分)"
           return "- $label ($currency $amt / $count$unit $method)";

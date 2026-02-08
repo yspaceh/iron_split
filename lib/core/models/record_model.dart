@@ -18,7 +18,7 @@ class RecordDetail {
     required this.name,
     required this.amount,
     this.memo,
-    this.splitMethod = SplitMethodConstants.defaultMethod,
+    this.splitMethod = SplitMethodConstant.defaultMethod,
     required this.splitMemberIds,
     this.splitDetails,
   });
@@ -41,7 +41,7 @@ class RecordDetail {
       name: map['name'] ?? '',
       amount: (map['amount'] ?? 0).toDouble(),
       memo: map['memo'],
-      splitMethod: map['splitMethod'] ?? SplitMethodConstants.defaultMethod,
+      splitMethod: map['splitMethod'] ?? SplitMethodConstant.defaultMethod,
       splitMemberIds: List<String>.from(map['splitMemberIds'] ?? []),
       splitDetails: map['splitDetails'] != null
           ? Map<String, double>.from(map['splitDetails'])
@@ -86,7 +86,7 @@ class RecordModel {
     required this.currencyCode,
     this.exchangeRate = 1.0,
     this.remainder = 0.0,
-    this.splitMethod = SplitMethodConstants.defaultMethod,
+    this.splitMethod = SplitMethodConstant.defaultMethod,
     this.splitMemberIds = const [],
     this.splitDetails,
     this.memo,
@@ -205,7 +205,7 @@ class RecordModel {
       currencyCode: data['currency'] ?? CurrencyConstants.defaultCode,
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
       remainder: (data['remainder'] ?? 0).toDouble(),
-      splitMethod: data['splitMethod'] ?? SplitMethodConstants.defaultMethod,
+      splitMethod: data['splitMethod'] ?? SplitMethodConstant.defaultMethod,
       splitMemberIds: List<String>.from(data['splitMemberIds'] ?? []),
       splitDetails: data['splitDetails'] != null
           ? Map<String, double>.from(data['splitDetails'])

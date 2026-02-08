@@ -1,4 +1,5 @@
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -16,11 +17,10 @@ class DashboardService {
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
 
     // 2. [Chart Stats] 圖表用的總收入與總支出 (歷史總量)
-    final double totalIncome =
-        BalanceCalculator.calculateIncomeTotal(records, isBaseCurrency: true);
+    final double totalIncome = BalanceCalculator.calculateIncomeTotal(records);
 
     final double totalExpense =
-        BalanceCalculator.calculateExpenseTotal(records, isBaseCurrency: true);
+        BalanceCalculator.calculateExpenseTotal(records);
 
     // 3. [Remainder] 零錢罐
     final double remainder =

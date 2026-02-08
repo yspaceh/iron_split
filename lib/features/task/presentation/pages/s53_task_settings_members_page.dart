@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; // [新增] 引入 Input
@@ -70,7 +70,7 @@ class _S53Content extends StatelessWidget {
 
     // If failed (blocked), show dialog
     if (!success && context.mounted) {
-      CommonErrorDialog.show(
+      CommonInfoDialog.show(
         context,
         title: t.error.dialog.member_delete_failed.title,
         content: t.error.dialog.member_delete_failed.message,

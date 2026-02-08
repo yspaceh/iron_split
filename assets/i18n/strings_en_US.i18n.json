@@ -587,7 +587,10 @@
       "network_error": "Network error. Please try again later",
       "data_not_found" : "Data not found. Please try again later",
       "load_failed": "Load failed. Please try again later",
-      "enter_first": "Please enter {key} first"
+      "enter_first": "Please enter {key} first",
+      "save_failed": "Save failed. Please try again later",
+      "delete_failed": "Exchange rate update failed"
+
     }
   }
 }

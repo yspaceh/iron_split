@@ -88,7 +88,7 @@ class RecordCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          SplitMethodConstants.getLabel(context, methodLabel),
+                          SplitMethodConstant.getLabel(context, methodLabel),
                           style: theme.textTheme.labelSmall?.copyWith(
                             // 使用深色文字
                             color: theme.colorScheme.onSurfaceVariant,

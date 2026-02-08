@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
@@ -73,6 +74,30 @@ class _S15ContentState extends State<_S15Content> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     context.read<S15RecordEditViewModel>().initCurrency();
+  }
+
+  Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {
+    try {
+      await vm.updateCurrency(code);
+    } catch (e) {
+      if (mounted) {
+        // [攔截錯誤] 顯示 Toast
+        final msg = ErrorMapper.map(context, e);
+        AppToast.showError(context, msg);
+      }
+    }
+  }
+
+  Future<void> _onFetchExchangeRate(S15RecordEditViewModel vm) async {
+    try {
+      await vm.fetchExchangeRate();
+    } catch (e) {
+      if (mounted) {
+        // [攔截錯誤] 顯示 Toast
+        final msg = ErrorMapper.map(context, e);
+        AppToast.showError(context, msg);
+      }
+    }
   }
 
   // Show B03
@@ -161,24 +186,20 @@ class _S15ContentState extends State<_S15Content> {
 
   void _showRateInfoDialog() {
     final t = Translations.of(context);
-    CommonAlertDialog.show(
+    CommonInfoDialog.show(
       context,
       title: t.S15_Record_Edit.rate_dialog.title,
-      content: Text(t.S15_Record_Edit.rate_dialog.message),
-      actions: [
-        AppButton(
-          text: t.common.buttons.close,
-          type: AppButtonType.primary,
-          onPressed: () => context.pop(),
-        ),
-      ],
+      content: t.S15_Record_Edit.rate_dialog.message,
     );
   }
 
   // Show B07
   Future<void> _onPaymentMethodTap(S15RecordEditViewModel vm) async {
     if (vm.totalAmount <= 0) {
-      // TODO: 建議補上 SnackBar 提示
+      AppToast.showError(
+        context,
+        t.error.message.enter_first(key: t.S15_Record_Edit.label.amount),
+      );
       return;
     }
 
@@ -219,9 +240,14 @@ class _S15ContentState extends State<_S15Content> {
       await vm.saveRecord(t);
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted) {
-        final msg = ErrorMapper.map(context, e);
-        AppToast.showError(context, msg);
+      if (!context.mounted) return;
+      final eStr = e.toString();
+      final friendlyMessage = ErrorMapper.map(context, e);
+      if (eStr.contains(AppErrorCodes.saveFailed)) {
+        CommonInfoDialog.show(context,
+            title: t.error.dialog.unknown.title, content: friendlyMessage);
+      } else {
+        AppToast.showError(context, friendlyMessage);
       }
     }
   }
@@ -256,7 +282,7 @@ class _S15ContentState extends State<_S15Content> {
         } else {
           // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
           if (context.mounted) {
-            CommonErrorDialog.show(context,
+            CommonInfoDialog.show(context,
                 title: t.error.dialog.delete_failed.title,
                 content: t.error.dialog.delete_failed.message);
           }
@@ -268,7 +294,7 @@ class _S15ContentState extends State<_S15Content> {
         final friendlyMessage = ErrorMapper.map(context, e);
 
         if (eStr.contains(AppErrorCodes.recordNotFound)) {
-          CommonErrorDialog.show(context,
+          CommonInfoDialog.show(context,
               title: t.error.dialog.unknown.title, content: friendlyMessage);
         } else {
           AppToast.showError(context, friendlyMessage);
@@ -282,8 +308,46 @@ class _S15ContentState extends State<_S15Content> {
     final t = Translations.of(context);
     final vm = context.watch<S15RecordEditViewModel>();
 
-    if (vm.isLoadingTaskData) {
+    if (vm.initStatus == LoadStatus.loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (vm.initStatus == LoadStatus.error) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(vm.recordId == null
+              ? t.S15_Record_Edit.title.add
+              : t.S15_Record_Edit.title.edit),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () => _onClose(vm)),
+          actions: [
+            if (vm.recordId != null)
+              IconButton(
+                icon: const Icon(Icons.delete_outline),
+                color: Theme.of(context).colorScheme.error,
+                onPressed: () => _onDelete(vm),
+              ),
+          ],
+        ),
+        // 1. 中間是共用純文字 View
+        body: CommonStateView(
+          message: ErrorMapper.map(context, vm.initErrorCode),
+        ),
+        // 2. 底部是 StickyBar + 重試按鈕
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            AppButton(
+              text: t.common.buttons.retry,
+              type: AppButtonType.primary,
+              onPressed: () {
+                // 重試邏輯 (例如 vm.refresh() 或 pop)
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
@@ -358,8 +422,8 @@ class _S15ContentState extends State<_S15Content> {
                       onPaymentMethodTap: () => _onPaymentMethodTap(vm),
                       onDateChanged: vm.updateDate,
                       onCategoryChanged: vm.updateCategory,
-                      onCurrencyChanged: vm.updateCurrency,
-                      onFetchExchangeRate: vm.fetchExchangeRate,
+                      onCurrencyChanged: (code) => _onUpdateCurrency(vm, code),
+                      onFetchExchangeRate: () => _onFetchExchangeRate(vm),
                       onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
                       onAddItemTap: () => _onAddItemTap(vm),
@@ -380,8 +444,8 @@ class _S15ContentState extends State<_S15Content> {
                       baseMemberIds: vm.baseMemberIds,
                       baseRawDetails: vm.baseRawDetails,
                       onDateChanged: vm.updateDate,
-                      onCurrencyChanged: vm.updateCurrency,
-                      onFetchExchangeRate: vm.fetchExchangeRate,
+                      onCurrencyChanged: (code) => _onUpdateCurrency(vm, code),
+                      onFetchExchangeRate: () => _onFetchExchangeRate(vm),
                       onShowRateInfo: () => _showRateInfoDialog(),
                       onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
                     ),

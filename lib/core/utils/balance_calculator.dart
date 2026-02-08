@@ -2,16 +2,18 @@ import 'dart:math';
 
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
-import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class SplitResult {
   final Map<String, DualAmount> memberAmounts;
   final double remainder; // 零頭 (基準幣別)
+  final DualAmount totalAmount;
 
   SplitResult({
     required this.memberAmounts,
     required this.remainder,
+    required this.totalAmount,
   });
 }
 
@@ -220,12 +222,9 @@ class BalanceCalculator {
   /// 適用於：Group View, Personal View (篩選後), Settlement
   /// 回傳：(總收入, 總支出, 淨餘額)
   static ({double totalIncome, double totalExpense, double netBalance})
-      calculateBaseTotals(List<RecordModel> records,
-          {required bool isBaseCurrency}) {
-    double totalIncome =
-        calculateIncomeTotal(records, isBaseCurrency: isBaseCurrency);
-    double totalExpense =
-        calculateExpenseTotal(records, isBaseCurrency: isBaseCurrency);
+      calculateBaseTotals(List<RecordModel> records) {
+    double totalIncome = calculateIncomeTotal(records);
+    double totalExpense = calculateExpenseTotal(records);
 
     return (
       totalIncome: totalIncome,
@@ -234,12 +233,10 @@ class BalanceCalculator {
     );
   }
 
-  static double calculateExpenseTotal(List<RecordModel> records,
-      {required bool isBaseCurrency}) {
+  static double calculateExpenseTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      final exchangeRate = isBaseCurrency ? r.exchangeRate : 1.0;
-      final double baseAmount = r.originalAmount * exchangeRate;
+      final double baseAmount = r.originalAmount * r.exchangeRate;
       if (r.type == 'expense') {
         total += baseAmount;
       }
@@ -247,12 +244,10 @@ class BalanceCalculator {
     return total;
   }
 
-  static double calculateIncomeTotal(List<RecordModel> records,
-      {required bool isBaseCurrency}) {
+  static double calculateIncomeTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      final exchangeRate = isBaseCurrency ? r.exchangeRate : 1.0;
-      final double baseAmount = r.originalAmount * exchangeRate;
+      final double baseAmount = r.originalAmount * r.exchangeRate;
       if (r.type == 'income') {
         total += baseAmount;
       }
@@ -298,39 +293,37 @@ class BalanceCalculator {
     return balances;
   }
 
-  // [工具函式] 依照幣別精度進行無條件捨去
-  // 邏輯：先乘倍數變整數 -> floor -> 再除回倍數
-  static double floorToPrecision(double value, CurrencyConstants baseCurrency) {
-    // 1. 取得該幣別的小數點位數 (與 formatAmount 邏輯同步)
-    // 假設 getCurrencyConstants 是全域可用或已 import 的函式
-    final int baseDecimals = baseCurrency.decimalDigits;
-
-    // [工具] 計算精度倍數 (例如 2位小數 -> factor = 100)
-    final double factor = pow(10, baseDecimals).toDouble();
-    if (baseDecimals == 0) return value.floorToDouble(); // 優化效能
-    return (value * factor).floorToDouble() / factor;
+  /// [核心] 通用無條件捨去邏輯
+  /// 將金額換算並無條件捨去到該幣別的小數位數
+  static double floorToPrecision(
+      double amount, CurrencyConstants currencyConstants) {
+    final int precision = currencyConstants.decimalDigits;
+    final double multiplier = pow(10, precision).toDouble();
+    return (amount * multiplier).floorToDouble() / multiplier;
   }
 
   /// [核心修正] 全站統一的分帳計算機
   /// 輸入：總金額、匯率、分帳設定
   /// 輸出：完整的分配結果 (包含 UI 要顯示的金額 + 存檔要用的零頭)
   static SplitResult calculateSplit({
-    required double totalAmount,
-    required double exchangeRate,
+    required double totalAmount, // 原始總金額
+    required double exchangeRate, // 匯率
     required String splitMethod,
     required List<String> memberIds,
-    required Map<String, double> details,
+    required Map<String, double> details, // 權重或指定金額
     required CurrencyConstants baseCurrency,
   }) {
-    final Map<String, DualAmount> memberAmounts = {};
-
+    // 1. 計算基準總額 (Total Base) - 無條件捨去
     final double baseTotal =
         floorToPrecision(totalAmount * exchangeRate, baseCurrency);
 
+    final Map<String, DualAmount> memberAmounts = {};
+
+    // 準備計算總權重 (僅用於 Percent 模式)
     double totalWeight = 0.0;
-    if (splitMethod == SplitMethodConstants.even) {
+    if (splitMethod == SplitMethodConstant.even) {
       totalWeight = memberIds.length.toDouble();
-    } else if (splitMethod == SplitMethodConstants.percent) {
+    } else if (splitMethod == SplitMethodConstant.percent) {
       for (var id in memberIds) {
         totalWeight += details[id] ?? 0.0;
       }
@@ -338,23 +331,35 @@ class BalanceCalculator {
 
     double allocatedBaseSum = 0.0;
 
-    if (splitMethod == SplitMethodConstants.exact) {
+    // 2. 分配邏輯
+    if (splitMethod == SplitMethodConstant.exact) {
+      // 指定金額模式
       for (var id in memberIds) {
         final sourceAmount = details[id] ?? 0.0;
+        // 每個人的 Base 也各自 Floor
         final baseShare =
             floorToPrecision(sourceAmount * exchangeRate, baseCurrency);
+
         memberAmounts[id] = DualAmount(original: sourceAmount, base: baseShare);
         allocatedBaseSum += baseShare;
       }
     } else {
+      // 均分或比例模式
       if (totalWeight > 0) {
         for (var id in memberIds) {
-          double weight = (splitMethod == SplitMethodConstants.even)
+          double weight = (splitMethod == SplitMethodConstant.even)
               ? 1.0
               : (details[id] ?? 0.0);
           final ratio = weight / totalWeight;
+
+          // 原始金額分配 (保留2位小數或依照原幣別精度? 這裡通常保留2位足夠)
           final sourceShare = (totalAmount * ratio * 100).floorToDouble() / 100;
+
+          // 基準金額分配 (Floor)
+          // 注意：這裡用 baseTotal * ratio，而不是 totalAmount * rate * ratio
+          // 確保分攤總和趨近於 baseTotal
           final baseShare = floorToPrecision(baseTotal * ratio, baseCurrency);
+
           memberAmounts[id] =
               DualAmount(original: sourceShare, base: baseShare);
           allocatedBaseSum += baseShare;
@@ -362,13 +367,17 @@ class BalanceCalculator {
       }
     }
 
+    // 3. 計算餘額 (Remainder)
+    // Remainder = Base Total - Sum(Allocated Base)
     double baseRemainder = baseTotal - allocatedBaseSum;
-    baseRemainder =
-        double.parse(baseRemainder.toStringAsFixed(baseCurrency.decimalDigits));
+
+    // 修正精度問題 (雖然理論上整數運算不會有，但 double 運算還是保險起見)
+    baseRemainder = floorToPrecision(baseRemainder, baseCurrency);
 
     return SplitResult(
       memberAmounts: memberAmounts,
       remainder: baseRemainder,
+      totalAmount: DualAmount(original: totalAmount, base: baseTotal), // 回傳總額
     );
   }
 }

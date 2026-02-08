@@ -2031,6 +2031,15 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '請先輸入{key}'
 	String enter_first({required Object key}) => '請先輸入${key}';
+
+	/// zh-TW: '儲存失敗，請稍後再試'
+	String get save_failed => '儲存失敗，請稍後再試';
+
+	/// zh-TW: '刪除失敗，請稍後再試'
+	String get delete_failed => '刪除失敗，請稍後再試';
+
+	/// zh-TW: '為替レートの更新失敗'
+	String get rate_fetch_failed => '為替レートの更新失敗';
 }
 
 // Path: common.share.invite
@@ -2632,6 +2641,9 @@ extension on Translations {
 			'error.message.data_not_found' => '找不到資料，請稍後再試',
 			'error.message.load_failed' => '載入失敗，請稍後再試',
 			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}',
+			'error.message.save_failed' => '儲存失敗，請稍後再試',
+			'error.message.delete_failed' => '刪除失敗，請稍後再試',
+			'error.message.rate_fetch_failed' => '為替レートの更新失敗',
 			_ => null,
 		};
 	}

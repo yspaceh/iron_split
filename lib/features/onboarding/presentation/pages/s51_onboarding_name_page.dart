@@ -70,6 +70,11 @@ class _S51ContentState extends State<_S51Content> {
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(
+            text: t.common.buttons.back,
+            type: AppButtonType.secondary,
+            onPressed: () => context.pop(),
+          ),
+          AppButton(
             text: t.S51_Onboarding_Name.buttons.next,
             type: AppButtonType.primary,
             isLoading: vm.isSaving,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_error_dialog.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
-import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/features/task/presentation/widgets/personal_balance_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -140,7 +140,7 @@ class S13PersonalView extends StatelessWidget {
                                 } else {
                                   // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
                                   if (context.mounted) {
-                                    CommonErrorDialog.show(ctx,
+                                    CommonInfoDialog.show(ctx,
                                         title:
                                             t.error.dialog.delete_failed.title,
                                         content: t.error.dialog.delete_failed
@@ -155,7 +155,7 @@ class S13PersonalView extends StatelessWidget {
 
                                 if (eStr
                                     .contains(AppErrorCodes.recordNotFound)) {
-                                  CommonErrorDialog.show(ctx,
+                                  CommonInfoDialog.show(ctx,
                                       title: t.error.dialog.unknown.title,
                                       content: friendlyMessage);
                                 } else {

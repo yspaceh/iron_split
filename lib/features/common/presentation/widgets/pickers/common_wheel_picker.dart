@@ -62,7 +62,9 @@ void showCommonWheelPicker({
               ),
             ),
             // [修正] 加強分隔線，使其清晰可見
-            Divider(height: 1, color: colorScheme.outlineVariant),
+            Divider(
+                height: 1,
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
 
             // 2. 內容區
             Expanded(child: child),

@@ -19,6 +19,7 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool autofocus;
   final String? suffixText;
+  final String? prefixText;
 
   final bool isRequired;
   final Color? fillColor;
@@ -44,6 +45,7 @@ class AppTextField extends StatelessWidget {
     this.isRequired = false,
     this.fillColor,
     this.focusNode,
+    this.prefixText,
   });
 
   @override
@@ -128,17 +130,22 @@ class AppTextField extends StatelessWidget {
             ),
 
             counterText: maxLength != null ? "" : null,
+            suffixIcon: suffixIcon,
             suffixText: suffixText,
             suffixStyle: theme.textTheme.labelMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.bold,
             ),
+            prefixText: prefixText,
+            prefixIcon: buildPrefix(),
+            prefixStyle: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: colorScheme.onSurface,
+              height: 1.5,
+            ),
 
             filled: true,
             fillColor: fillColor ?? colorScheme.surface,
-
-            prefixIcon: buildPrefix(),
-            suffixIcon: suffixIcon,
 
             // 邊框設定
             border: normalBorderStyle,

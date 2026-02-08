@@ -338,10 +338,9 @@ class SettlementService {
     // 1. 核心數值 (使用 Calculator)
     final double poolBalance =
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
-    final double totalIncome =
-        BalanceCalculator.calculateIncomeTotal(records, isBaseCurrency: true);
+    final double totalIncome = BalanceCalculator.calculateIncomeTotal(records);
     final double totalExpense =
-        BalanceCalculator.calculateExpenseTotal(records, isBaseCurrency: true);
+        BalanceCalculator.calculateExpenseTotal(records);
     final double remainder =
         BalanceCalculator.calculateRemainderBuffer(records);
     final Map<String, double> poolDetail =

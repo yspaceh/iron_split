@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
-import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class RecordItem extends StatelessWidget {

@@ -1261,6 +1261,9 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get data_not_found => 'データが見つかりません。しばらくしてから再試行してください';
 	@override String get load_failed => 'ロードが失敗しました。しばらくしてから再試行してください';
 	@override String enter_first({required Object key}) => '${key}を先に入力してください';
+	@override String get save_failed => '保存に失敗しました。しばらくしてから再試行してください';
+	@override String get delete_failed => '削除に失敗しました。しばらくしてから再試行してください';
+	@override String get rate_fetch_failed => '為替レートを';
 }
 
 // Path: common.share.invite
@@ -1805,6 +1808,9 @@ extension on TranslationsJaJp {
 			'error.message.data_not_found' => 'データが見つかりません。しばらくしてから再試行してください',
 			'error.message.load_failed' => 'ロードが失敗しました。しばらくしてから再試行してください',
 			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください',
+			'error.message.save_failed' => '保存に失敗しました。しばらくしてから再試行してください',
+			'error.message.delete_failed' => '削除に失敗しました。しばらくしてから再試行してください',
+			'error.message.rate_fetch_failed' => '為替レートを',
 			_ => null,
 		};
 	}

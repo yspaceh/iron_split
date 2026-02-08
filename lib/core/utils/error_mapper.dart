@@ -20,12 +20,26 @@ class ErrorMapper {
 
     // 2. 資料同步類
     if (eStr.contains(AppErrorCodes.recordNotFound)) {
-      return t.error.message.data_not_found; // 需確認 i18n key 是否存在
+      return t.error.message.data_not_found;
+    }
+    if (eStr.contains(AppErrorCodes.taskNotFound)) {
+      return t.error.message.data_not_found;
     }
 
-    // [新增] 載入失敗類
+    // 載入失敗類
     if (eStr.contains(AppErrorCodes.taskLoadFailed)) {
       return t.error.message.load_failed; // "載入失敗"
+    }
+
+    // 儲存與刪除
+    if (eStr.contains(AppErrorCodes.saveFailed)) {
+      return t.error.message.save_failed; // "儲存失敗，請稍後再試"
+    }
+    if (eStr.contains(AppErrorCodes.deleteFailed)) {
+      return t.error.message.delete_failed; // "刪除失敗，請稍後再試"
+    }
+    if (eStr.contains(AppErrorCodes.rateFetchFailed)) {
+      return t.error.message.rate_fetch_failed; // "匯率更新失敗"
     }
 
     // 3. 系統/Firebase 類

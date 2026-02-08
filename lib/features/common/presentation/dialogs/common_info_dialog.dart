@@ -4,18 +4,18 @@ import 'package:iron_split/features/common/presentation/dialogs/common_alert_dia
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class CommonErrorDialog extends StatelessWidget {
+class CommonInfoDialog extends StatelessWidget {
   final String title;
   final String content;
 
-  const CommonErrorDialog(
+  const CommonInfoDialog(
       {super.key, required this.title, required this.content});
 
   static void show(BuildContext context,
       {required String title, required String content}) {
     showDialog(
       context: context,
-      builder: (context) => CommonErrorDialog(
+      builder: (context) => CommonInfoDialog(
         title: title,
         content: content,
       ),

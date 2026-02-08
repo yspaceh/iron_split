@@ -19,6 +19,8 @@ class CategoryConstant {
     );
   }
 
+  static const String defaultCategory = 'fastfood';
+
   String getName(Translations t) {
     switch (id) {
       case 'fastfood':

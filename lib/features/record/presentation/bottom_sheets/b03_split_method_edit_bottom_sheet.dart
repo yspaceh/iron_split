@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
@@ -7,8 +6,10 @@ import 'package:iron_split/features/common/presentation/widgets/app_button.dart'
 import 'package:iron_split/features/common/presentation/widgets/common_selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
+import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
+import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/settlement/presentation/widgets/summary_row.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class B03SplitMethodEditBottomSheet extends StatefulWidget {
@@ -104,7 +105,7 @@ class _B03SplitMethodEditBottomSheetState
 
     // 防呆：如果進來時沒選人，且是 Even 模式，預設全選
     if (_selectedMemberIds.isEmpty &&
-        _splitMethod == SplitMethodConstants.even) {
+        _splitMethod == SplitMethodConstant.even) {
       _selectedMemberIds =
           widget.allMembers.map((m) => m['id'] as String).toList();
     }
@@ -133,7 +134,7 @@ class _B03SplitMethodEditBottomSheetState
 
   void _switchToExactMode() {
     setState(() {
-      _splitMethod = SplitMethodConstants.exact;
+      _splitMethod = SplitMethodConstant.exact;
       // 關鍵：清空選取與細節，讓使用者從零開始輸入
       _selectedMemberIds.clear();
       _details.clear();
@@ -146,13 +147,13 @@ class _B03SplitMethodEditBottomSheetState
     setState(() {
       _splitMethod = newMethod;
       // 切換模式時的數據轉換邏輯
-      if (newMethod == SplitMethodConstants.percent) {
+      if (newMethod == SplitMethodConstant.percent) {
         // 切換到比例：載入預設權重
         _details.clear();
         for (var id in _selectedMemberIds) {
           _details[id] = widget.defaultMemberWeights[id] ?? 1.0;
         }
-      } else if (newMethod == SplitMethodConstants.exact) {
+      } else if (newMethod == SplitMethodConstant.exact) {
         // 切換到金額：清空，讓使用者自己打
         _details.clear();
         _switchToExactMode();
@@ -163,24 +164,11 @@ class _B03SplitMethodEditBottomSheetState
     });
   }
 
-  String _getMethodDesc() {
-    switch (_splitMethod) {
-      case SplitMethodConstants.even:
-        return t.B03_SplitMethod_Edit.desc_even;
-      case SplitMethodConstants.percent:
-        return t.B03_SplitMethod_Edit.desc_percent;
-      case SplitMethodConstants.exact:
-        return t.B03_SplitMethod_Edit.desc_exact;
-      default:
-        return t.B03_SplitMethod_Edit.desc_even;
-    }
-  }
-
   // 驗證是否可保存
   bool get _isValid {
     if (_selectedMemberIds.isEmpty) return false;
 
-    if (_splitMethod == SplitMethodConstants.exact) {
+    if (_splitMethod == SplitMethodConstant.exact) {
       final sum = _details.values.fold(0.0, (prev, curr) => prev + curr);
       // 允許 0.1 的浮點誤差
       return (sum - widget.totalAmount).abs() < 0.1;
@@ -190,35 +178,14 @@ class _B03SplitMethodEditBottomSheetState
 
   // --- UI Builders ---
 
-  void _showMethodPicker(Translations t) {
-    // Pass t
-    String tempMethod = _splitMethod;
-
-    showCommonWheelPicker(
-      context: context,
-      onConfirm: () => _switchMethod(tempMethod),
-      child: CupertinoPicker(
-        itemExtent: 40,
-        scrollController: FixedExtentScrollController(
-            initialItem: SplitMethodConstants.allRules.indexOf(_splitMethod)),
-        onSelectedItemChanged: (index) =>
-            tempMethod = SplitMethodConstants.allRules[index],
-        children: SplitMethodConstants.allRules
-            .map((e) =>
-                Center(child: Text(SplitMethodConstants.getLabel(context, e))))
-            .toList(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final result = _getSplitResult();
-
-    String methodLabel = SplitMethodConstants.getLabel(context, _splitMethod);
+    final int selectedIndex =
+        SplitMethodConstant.allRules.indexOf(_splitMethod);
 
     //  使用 CommonBottomSheet
     return CommonBottomSheet(
@@ -248,95 +215,60 @@ class _B03SplitMethodEditBottomSheetState
       children: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(_getMethodDesc(),
-                    style: const TextStyle(color: Colors.grey)),
-                InkWell(
-                  onTap: () => _showMethodPicker(t),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(methodLabel,
-                            style: TextStyle(
-                                color: colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.bold)),
-                        const SizedBox(width: 4),
-                        Icon(Icons.keyboard_arrow_down,
-                            color: colorScheme.onPrimaryContainer),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: CustomSlidingSegment<int>(
+              selectedValue: selectedIndex,
+              onValueChanged: (val) {
+                setState(() {
+                  _switchMethod(SplitMethodConstant.allRules[val]);
+                });
+              },
+              segments: {
+                0: SplitMethodConstant.getLabel(
+                    context, SplitMethodConstant.even),
+                1: SplitMethodConstant.getLabel(
+                    context, SplitMethodConstant.exact),
+                2: SplitMethodConstant.getLabel(
+                    context, SplitMethodConstant.percent),
+              },
             ),
           ),
           // 1. Info Bar (金額 & 方式) - 固定在上方
-          // 直接沿用您原始代碼的 Padding -> Row 結構
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(t.S15_Record_Edit.label.amount,
-                        style: theme.textTheme.bodySmall),
-                    Text(
-                      "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(widget.totalAmount, widget.selectedCurrency.code)}",
-                      style: theme.textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    if (widget.exchangeRate != 1.0)
-                      Text(
-                        "≈ ${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(widget.totalAmount * widget.exchangeRate, widget.baseCurrency.code)}",
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
+                SummaryRow(
+                    label: t.S15_Record_Edit.label.amount,
+                    amount: widget.totalAmount,
+                    currencyConstants: widget.selectedCurrency),
+                if (widget.exchangeRate != 1.0) ...[
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      "≈ ${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, widget.baseCurrency.code)}",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
                       ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: GestureDetector(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(t.S15_Record_Edit.msg_leftover_pot(
-                              amount:
-                                  "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.remainder, widget.baseCurrency.code)}")),
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.savings_outlined,
-                            size: 20, color: theme.colorScheme.secondary),
-                        const SizedBox(height: 2),
-                        Text(
-                          "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(_selectedMemberIds.isEmpty ? 0 : result.remainder, widget.baseCurrency.code)}",
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.secondary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
                     ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                Divider(
+                  height: 1,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                ),
+                InfoBar(
+                  icon: Icons.savings_outlined,
+                  backgroundColor: colorScheme.surface,
+                  text: Text(
+                    t.S15_Record_Edit.msg_leftover_pot(
+                        amount:
+                            "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(_selectedMemberIds.isEmpty ? 0 : result.remainder, widget.baseCurrency.code)}"),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ),
               ],
@@ -347,15 +279,14 @@ class _B03SplitMethodEditBottomSheetState
           // 使用 Expanded 佔滿剩餘高度，內部使用 ListView 實現捲動
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 // 注意：這裡假設您的原始檔案中有定義 _buildEvenSection 等方法
                 // 否則這裡會報錯。如果您需要我補上這些方法的空殼或實作，請告知。
-                if (_splitMethod == SplitMethodConstants.even)
+                if (_splitMethod == SplitMethodConstant.even)
                   _buildEvenSection(t),
-                if (_splitMethod == SplitMethodConstants.percent)
+                if (_splitMethod == SplitMethodConstant.percent)
                   _buildPercentSection(t),
-                if (_splitMethod == SplitMethodConstants.exact)
+                if (_splitMethod == SplitMethodConstant.exact)
                   _buildExactSection(t),
                 const SizedBox(height: 40),
               ],
@@ -663,7 +594,8 @@ class _B03SplitMethodEditBottomSheetState
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: Colors.grey.withOpacity(0.3), // 淡淡的邊框，不會太搶眼
+                          color:
+                              Colors.grey.withValues(alpha: 0.3), // 淡淡的邊框，不會太搶眼
                           width: 1.0,
                         ),
                       ),

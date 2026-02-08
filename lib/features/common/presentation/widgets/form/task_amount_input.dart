@@ -94,11 +94,9 @@ class TaskAmountInput extends StatelessWidget {
             hintText: CurrencyConstants.formatAmount(
                 0, selectedCurrencyConstants.code),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-
-            // 如果不顯示 Picker，就在後面顯示幣別代碼
-            suffixText:
-                !showCurrencyPicker ? selectedCurrencyConstants.code : null,
-
+            prefixText: !showCurrencyPicker
+                ? '${selectedCurrencyConstants.symbol} '
+                : null,
             validator: (v) {
               if (v == null || v.isEmpty) {
                 return t.error.message.required;

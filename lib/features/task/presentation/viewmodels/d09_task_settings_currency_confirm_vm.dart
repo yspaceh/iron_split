@@ -65,7 +65,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
 
         // Service 會負責：更新匯率 + 重新計算 Remainder + 批次存檔
         await _recordService.updateTaskExchangeRates(
-            taskId: taskId, newRates: rateMap);
+            taskId: taskId, newRates: rateMap, baseCurrency: newCurrency);
       }
 
       // 3. 寫入 Activity Log

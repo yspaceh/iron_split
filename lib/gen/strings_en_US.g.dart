@@ -1262,6 +1262,8 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get data_not_found => 'Data not found. Please try again later';
 	@override String get load_failed => 'Load failed. Please try again later';
 	@override String enter_first({required Object key}) => 'Please enter ${key} first';
+	@override String get save_failed => 'Save failed. Please try again later';
+	@override String get delete_failed => 'Exchange rate update failed';
 }
 
 // Path: common.share.invite
@@ -1807,6 +1809,8 @@ extension on TranslationsEnUs {
 			'error.message.data_not_found' => 'Data not found. Please try again later',
 			'error.message.load_failed' => 'Load failed. Please try again later',
 			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first',
+			'error.message.save_failed' => 'Save failed. Please try again later',
+			'error.message.delete_failed' => 'Exchange rate update failed',
 			_ => null,
 		};
 	}

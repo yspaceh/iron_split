@@ -182,4 +182,31 @@ class RecordRepository {
     // 2. 如果未來有其他引用方式 (例如關聯轉帳)，也可以在這裡檢查
     return false;
   }
+
+  /// 專門用於更新匯率與零頭的批次寫入
+  /// Service 層算好後，把一包 (ID, 新匯率, 新零頭) 丟進來，這裡只負責寫入
+  Future<void> batchUpdateRatesAndRemainders(
+    String taskId,
+    List<({String id, double rate, double remainder})> updates,
+  ) async {
+    if (updates.isEmpty) return;
+
+    final batch = _firestore.batch();
+
+    for (var update in updates) {
+      final docRef = _firestore
+          .collection('tasks')
+          .doc(taskId)
+          .collection('records')
+          .doc(update.id);
+
+      batch.update(docRef, {
+        'exchangeRate': update.rate,
+        'remainder': update.remainder,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    await batch.commit();
+  }
 }
