@@ -408,8 +408,6 @@ class _B07PaymentMethodEditBottomSheetState
                                     _onMemberAdvanceChanged(id, val),
                                 hintText: '0',
                                 currencyConstants: widget.selectedCurrency,
-                                decimalDigits:
-                                    widget.selectedCurrency.decimalDigits,
                               ),
                             ),
                           ],

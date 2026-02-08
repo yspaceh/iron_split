@@ -49,9 +49,7 @@ class SelectionCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurface,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],

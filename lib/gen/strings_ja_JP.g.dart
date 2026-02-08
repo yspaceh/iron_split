@@ -87,6 +87,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCategoryJaJp category = _TranslationsCommonCategoryJaJp._(_root);
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
+	@override late final _TranslationsCommonSplitMethodJaJp split_method = _TranslationsCommonSplitMethodJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override late final _TranslationsCommonShareJaJp share = _TranslationsCommonShareJaJp._(_root);
 	@override String error_prefix({required Object message}) => 'エラー: ${message}';
@@ -556,15 +557,8 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	// Translations
 	@override String get title => '割り勘方法を選択';
 	@override late final _TranslationsB03SplitMethodEditButtonsJaJp buttons = _TranslationsB03SplitMethodEditButtonsJaJp._(_root);
-	@override String label_total({required Object current, required Object target}) => '合計: ${current}/${target}';
-	@override String get method_even => '均等分攤';
-	@override String get method_percent => '割合分攤';
-	@override String get method_exact => '金額指定';
-	@override String get desc_even => '選択したメンバーで均等割';
-	@override String get desc_percent => 'パーセンテージで配分';
-	@override String get desc_exact => '金額を手動で入力';
-	@override String get label_weight => '比例';
-	@override String get error_total_mismatch => '一致しません';
+	@override late final _TranslationsB03SplitMethodEditLabelJaJp label = _TranslationsB03SplitMethodEditLabelJaJp._(_root);
+	@override String get mismatch => '一致しません';
 }
 
 // Path: B04_payment_merge
@@ -724,6 +718,18 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 	@override String get rule_random => 'ランダム';
 	@override String get rule_order => '順番';
 	@override String get rule_member => '指定';
+}
+
+// Path: common.split_method
+class _TranslationsCommonSplitMethodJaJp extends TranslationsCommonSplitMethodZhTw {
+	_TranslationsCommonSplitMethodJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get even => '均等';
+	@override String get percent => '割合';
+	@override String get exact => '金額指定';
 }
 
 // Path: common.payment_info
@@ -1189,6 +1195,16 @@ class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMet
 	@override String get adjust_weight => '比率を調整';
 }
 
+// Path: B03_SplitMethod_Edit.label
+class _TranslationsB03SplitMethodEditLabelJaJp extends TranslationsB03SplitMethodEditLabelZhTw {
+	_TranslationsB03SplitMethodEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String total({required Object current, required Object target}) => '${current} / ${target}';
+}
+
 // Path: B04_payment_merge.buttons
 class _TranslationsB04PaymentMergeButtonsJaJp extends TranslationsB04PaymentMergeButtonsZhTw {
 	_TranslationsB04PaymentMergeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1462,6 +1478,9 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.rule_random' => 'ランダム',
 			'common.remainder_rule.rule_order' => '順番',
 			'common.remainder_rule.rule_member' => '指定',
+			'common.split_method.even' => '均等',
+			'common.split_method.percent' => '割合',
+			'common.split_method.exact' => '金額指定',
 			'common.payment_info.method_label' => '受取方法',
 			'common.payment_info.mode_private' => '直接連絡してもらう',
 			'common.payment_info.mode_private_desc' => '詳細情報は表示せず、メンバーが直接あなたに連絡します',
@@ -1740,15 +1759,8 @@ extension on TranslationsJaJp {
 			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：内訳',
 			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率を調整',
-			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => '合計: ${current}/${target}',
-			'B03_SplitMethod_Edit.method_even' => '均等分攤',
-			'B03_SplitMethod_Edit.method_percent' => '割合分攤',
-			'B03_SplitMethod_Edit.method_exact' => '金額指定',
-			'B03_SplitMethod_Edit.desc_even' => '選択したメンバーで均等割',
-			'B03_SplitMethod_Edit.desc_percent' => 'パーセンテージで配分',
-			'B03_SplitMethod_Edit.desc_exact' => '金額を手動で入力',
-			'B03_SplitMethod_Edit.label_weight' => '比例',
-			'B03_SplitMethod_Edit.error_total_mismatch' => '一致しません',
+			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
+			'B03_SplitMethod_Edit.mismatch' => '一致しません',
 			'B04_payment_merge.title' => 'メンバー支払いの統合',
 			'B04_payment_merge.description' => 'メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。',
 			'B04_payment_merge.section_head' => '代表メンバー',

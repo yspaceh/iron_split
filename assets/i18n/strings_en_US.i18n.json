@@ -76,6 +76,11 @@
       "rule_order": "Order",
       "rule_member": "Member"
     },
+    "split_method": {
+      "even": "Even",
+      "percent": "By Percentage",
+      "exact": "Exact Amount"
+    },
     "share":{
       "invite": {
         "subject": "Join Iron Split Task",
@@ -485,15 +490,10 @@
     "buttons": {
       "adjust_weight": "Adjust Weight"
     },
-    "label_total": "Total: {current}/{target}",
-    "method_even": "Even",
-    "method_percent": "By Percentage",
-    "method_exact": "Exact Amount",
-    "desc_even": "Selected members split equally, leftover goes to pot",
-    "desc_percent": "Distribute by percentage",
-    "desc_exact": "Enter specific amounts, total must match",
-    "label_weight": "Weight",
-    "error_total_mismatch": "Mismatch"
+    "label":{
+      "total": "Total: {current}/{target}"
+    },
+    "mismatch": "Mismatch"
   },
   "B04_payment_merge": {
     "title": "Merge Member Payments",

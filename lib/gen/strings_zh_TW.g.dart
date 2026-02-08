@@ -88,6 +88,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonCategoryZhTw category = TranslationsCommonCategoryZhTw.internal(_root);
 	late final TranslationsCommonCurrencyZhTw currency = TranslationsCommonCurrencyZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
+	late final TranslationsCommonSplitMethodZhTw split_method = TranslationsCommonSplitMethodZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
 	late final TranslationsCommonShareZhTw share = TranslationsCommonShareZhTw.internal(_root);
 
@@ -920,33 +921,10 @@ class TranslationsB03SplitMethodEditZhTw {
 	String get title => '選擇分攤方式';
 
 	late final TranslationsB03SplitMethodEditButtonsZhTw buttons = TranslationsB03SplitMethodEditButtonsZhTw.internal(_root);
-
-	/// zh-TW: '總計: {current}/{target}'
-	String label_total({required Object current, required Object target}) => '總計: ${current}/${target}';
-
-	/// zh-TW: '平均分攤'
-	String get method_even => '平均分攤';
-
-	/// zh-TW: '比例分攤'
-	String get method_percent => '比例分攤';
-
-	/// zh-TW: '指定金額'
-	String get method_exact => '指定金額';
-
-	/// zh-TW: '選定成員平分'
-	String get desc_even => '選定成員平分';
-
-	/// zh-TW: '依設定比例分配'
-	String get desc_percent => '依設定比例分配';
-
-	/// zh-TW: '手動輸入金額，總額需吻合'
-	String get desc_exact => '手動輸入金額，總額需吻合';
-
-	/// zh-TW: '比例'
-	String get label_weight => '比例';
+	late final TranslationsB03SplitMethodEditLabelZhTw label = TranslationsB03SplitMethodEditLabelZhTw.internal(_root);
 
 	/// zh-TW: '金額不符'
-	String get error_total_mismatch => '金額不符';
+	String get mismatch => '金額不符';
 }
 
 // Path: B04_payment_merge
@@ -1254,6 +1232,24 @@ class TranslationsCommonRemainderRuleZhTw {
 
 	/// zh-TW: '指定成員'
 	String get rule_member => '指定成員';
+}
+
+// Path: common.split_method
+class TranslationsCommonSplitMethodZhTw {
+	TranslationsCommonSplitMethodZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '平均分攤'
+	String get even => '平均分攤';
+
+	/// zh-TW: '比例分攤'
+	String get percent => '比例分攤';
+
+	/// zh-TW: '指定金額'
+	String get exact => '指定金額';
 }
 
 // Path: common.payment_info
@@ -1919,6 +1915,18 @@ class TranslationsB03SplitMethodEditButtonsZhTw {
 	String get adjust_weight => '調整權重';
 }
 
+// Path: B03_SplitMethod_Edit.label
+class TranslationsB03SplitMethodEditLabelZhTw {
+	TranslationsB03SplitMethodEditLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '{current} / {target}'
+	String total({required Object current, required Object target}) => '${current} / ${target}';
+}
+
 // Path: B04_payment_merge.buttons
 class TranslationsB04PaymentMergeButtonsZhTw {
 	TranslationsB04PaymentMergeButtonsZhTw.internal(this._root);
@@ -2294,6 +2302,9 @@ extension on Translations {
 			'common.remainder_rule.rule_random' => '餘額輪盤',
 			'common.remainder_rule.rule_order' => '順序輪替',
 			'common.remainder_rule.rule_member' => '指定成員',
+			'common.split_method.even' => '平均分攤',
+			'common.split_method.percent' => '比例分攤',
+			'common.split_method.exact' => '指定金額',
 			'common.payment_info.method_label' => '收款方式',
 			'common.payment_info.mode_private' => '請直接私訊聯絡',
 			'common.payment_info.mode_private_desc' => '不顯示詳細資訊，請成員直接找你',
@@ -2573,15 +2584,8 @@ extension on Translations {
 			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：子項目',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
-			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => '總計: ${current}/${target}',
-			'B03_SplitMethod_Edit.method_even' => '平均分攤',
-			'B03_SplitMethod_Edit.method_percent' => '比例分攤',
-			'B03_SplitMethod_Edit.method_exact' => '指定金額',
-			'B03_SplitMethod_Edit.desc_even' => '選定成員平分',
-			'B03_SplitMethod_Edit.desc_percent' => '依設定比例分配',
-			'B03_SplitMethod_Edit.desc_exact' => '手動輸入金額，總額需吻合',
-			'B03_SplitMethod_Edit.label_weight' => '比例',
-			'B03_SplitMethod_Edit.error_total_mismatch' => '金額不符',
+			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
+			'B03_SplitMethod_Edit.mismatch' => '金額不符',
 			'B04_payment_merge.title' => '合併成員款項',
 			'B04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
 			'B04_payment_merge.section_head' => '代表成員',

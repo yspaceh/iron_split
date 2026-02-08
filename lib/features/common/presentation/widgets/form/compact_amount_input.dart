@@ -6,7 +6,6 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 class CompactAmountInput extends StatelessWidget {
   final TextEditingController? controller;
   final String hintText;
-  final int decimalDigits;
   final ValueChanged<String> onChanged;
   final CurrencyConstants currencyConstants;
   final Color? fillColor;
@@ -15,7 +14,6 @@ class CompactAmountInput extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
-    required this.decimalDigits,
     required this.onChanged,
     this.fillColor,
     required this.currencyConstants,
@@ -47,9 +45,10 @@ class CompactAmountInput extends StatelessWidget {
 
     return TextFormField(
       controller: controller,
-      keyboardType: TextInputType.numberWithOptions(decimal: decimalDigits > 0),
+      keyboardType: TextInputType.numberWithOptions(
+          decimal: currencyConstants.decimalDigits > 0),
       inputFormatters: [
-        decimalDigits > 0
+        currencyConstants.decimalDigits > 0
             ? FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))
             : FilteringTextInputFormatter.digitsOnly,
       ],

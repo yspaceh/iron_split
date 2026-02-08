@@ -88,6 +88,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
 	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
+	@override late final _TranslationsCommonSplitMethodEnUs split_method = _TranslationsCommonSplitMethodEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
 	@override String get please_login => 'Please Login';
@@ -557,15 +558,8 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	// Translations
 	@override String get title => 'Choose Split Method';
 	@override late final _TranslationsB03SplitMethodEditButtonsEnUs buttons = _TranslationsB03SplitMethodEditButtonsEnUs._(_root);
-	@override String label_total({required Object current, required Object target}) => 'Total: ${current}/${target}';
-	@override String get method_even => 'Even';
-	@override String get method_percent => 'By Percentage';
-	@override String get method_exact => 'Exact Amount';
-	@override String get desc_even => 'Selected members split equally, leftover goes to pot';
-	@override String get desc_percent => 'Distribute by percentage';
-	@override String get desc_exact => 'Enter specific amounts, total must match';
-	@override String get label_weight => 'Weight';
-	@override String get error_total_mismatch => 'Mismatch';
+	@override late final _TranslationsB03SplitMethodEditLabelEnUs label = _TranslationsB03SplitMethodEditLabelEnUs._(_root);
+	@override String get mismatch => 'Mismatch';
 }
 
 // Path: B04_payment_merge
@@ -746,6 +740,18 @@ class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRu
 	@override String get rule_random => 'Random';
 	@override String get rule_order => 'Order';
 	@override String get rule_member => 'Member';
+}
+
+// Path: common.split_method
+class _TranslationsCommonSplitMethodEnUs extends TranslationsCommonSplitMethodZhTw {
+	_TranslationsCommonSplitMethodEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get even => 'Even';
+	@override String get percent => 'By Percentage';
+	@override String get exact => 'Exact Amount';
 }
 
 // Path: common.share
@@ -1190,6 +1196,16 @@ class _TranslationsB03SplitMethodEditButtonsEnUs extends TranslationsB03SplitMet
 	@override String get adjust_weight => 'Adjust Weight';
 }
 
+// Path: B03_SplitMethod_Edit.label
+class _TranslationsB03SplitMethodEditLabelEnUs extends TranslationsB03SplitMethodEditLabelZhTw {
+	_TranslationsB03SplitMethodEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String total({required Object current, required Object target}) => 'Total: ${current}/${target}';
+}
+
 // Path: B04_payment_merge.buttons
 class _TranslationsB04PaymentMergeButtonsEnUs extends TranslationsB04PaymentMergeButtonsZhTw {
 	_TranslationsB04PaymentMergeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1474,6 +1490,9 @@ extension on TranslationsEnUs {
 			'common.remainder_rule.rule_random' => 'Random',
 			'common.remainder_rule.rule_order' => 'Order',
 			'common.remainder_rule.rule_member' => 'Member',
+			'common.split_method.even' => 'Even',
+			'common.split_method.percent' => 'By Percentage',
+			'common.split_method.exact' => 'Exact Amount',
 			'common.share.invite.subject' => 'Join Iron Split Task',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
 			'common.share.settlement.subject' => 'Check Iron Split Task Settlement',
@@ -1741,15 +1760,8 @@ extension on TranslationsEnUs {
 			'B02_SplitExpense_Edit.placeholder.sub_item' => 'e.g. Sub-item',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => 'Adjust Weight',
-			'B03_SplitMethod_Edit.label_total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
-			'B03_SplitMethod_Edit.method_even' => 'Even',
-			'B03_SplitMethod_Edit.method_percent' => 'By Percentage',
-			'B03_SplitMethod_Edit.method_exact' => 'Exact Amount',
-			'B03_SplitMethod_Edit.desc_even' => 'Selected members split equally, leftover goes to pot',
-			'B03_SplitMethod_Edit.desc_percent' => 'Distribute by percentage',
-			'B03_SplitMethod_Edit.desc_exact' => 'Enter specific amounts, total must match',
-			'B03_SplitMethod_Edit.label_weight' => 'Weight',
-			'B03_SplitMethod_Edit.error_total_mismatch' => 'Mismatch',
+			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
+			'B03_SplitMethod_Edit.mismatch' => 'Mismatch',
 			'B04_payment_merge.title' => 'Merge Member Payments',
 			'B04_payment_merge.description' => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.',
 			'B04_payment_merge.section_head' => 'Representative',

@@ -3,7 +3,9 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_selection_tile.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
@@ -132,17 +134,6 @@ class _B03SplitMethodEditBottomSheetState
     );
   }
 
-  void _switchToExactMode() {
-    setState(() {
-      _splitMethod = SplitMethodConstant.exact;
-      // 關鍵：清空選取與細節，讓使用者從零開始輸入
-      _selectedMemberIds.clear();
-      _details.clear();
-      // 清空所有 Controller，確保介面乾淨
-      _amountControllers.values.forEach((c) => c.clear());
-    });
-  }
-
   void _switchMethod(String newMethod) {
     setState(() {
       _splitMethod = newMethod;
@@ -154,11 +145,9 @@ class _B03SplitMethodEditBottomSheetState
           _details[id] = widget.defaultMemberWeights[id] ?? 1.0;
         }
       } else if (newMethod == SplitMethodConstant.exact) {
-        // 切換到金額：清空，讓使用者自己打
         _details.clear();
-        _switchToExactMode();
         for (var c in _amountControllers.values) {
-          c.text = '';
+          c.clear();
         }
       }
     });
@@ -250,8 +239,8 @@ class _B03SplitMethodEditBottomSheetState
                     child: Text(
                       "≈ ${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, widget.baseCurrency.code)}",
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -315,7 +304,7 @@ class _B03SplitMethodEditBottomSheetState
           final amount = memberAmounts[id]?.original ?? 0.0;
           final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
-          return CommonSelectionTile(
+          return SelectionTile(
             isSelected: isSelected,
             onTap: () {
               setState(() {
@@ -338,7 +327,7 @@ class _B03SplitMethodEditBottomSheetState
                 children: [
                   Text(
                     "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, widget.selectedCurrency.code)}",
-                    style: theme.textTheme.bodyMedium
+                    style: theme.textTheme.bodyLarge
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   if (widget.exchangeRate != 1.0)
@@ -348,8 +337,8 @@ class _B03SplitMethodEditBottomSheetState
                               widget.baseCurrency.code);
                       return Text(
                         "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: Colors.grey, fontSize: 10),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant),
                       );
                     }),
                 ],
@@ -379,7 +368,7 @@ class _B03SplitMethodEditBottomSheetState
           final amount = memberAmounts[id]?.original ?? 0.0;
           final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
-          return CommonSelectionTile(
+          return SelectionTile(
             isSelected: isSelected,
             onTap: () {
               setState(() {
@@ -399,100 +388,57 @@ class _B03SplitMethodEditBottomSheetState
                 name: m['displayName'],
                 isLinked: m['isLinked'] ?? false),
             title: m['displayName'],
-            trailing: Row(
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (isSelected) ...[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "${weight.toStringAsFixed(1)}x",
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                Row(
+                  children: [
+                    if (isSelected) ...[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, widget.selectedCurrency.code)}",
+                            style: theme.textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          if (widget.exchangeRate != 1.0)
+                            Builder(builder: (context) {
+                              final baseCurrency =
+                                  CurrencyConstants.getCurrencyConstants(
+                                      widget.baseCurrency.code);
+                              return Text(
+                                "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant),
+                              );
+                            }),
+                        ],
                       ),
-                      Text(
-                        "${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, widget.selectedCurrency.code)}",
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      if (widget.exchangeRate != 1.0)
-                        Builder(builder: (context) {
-                          final baseCurrency =
-                              CurrencyConstants.getCurrencyConstants(
-                                  widget.baseCurrency.code);
-                          return Text(
-                            "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey, fontSize: 10),
-                          );
-                        }),
-                    ],
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                              color: theme.colorScheme.outlineVariant),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  double newW = (weight - 0.5).clamp(0.0, 2.0);
-                                  if (newW == 0.0) {
-                                    _details[id] = 0.0;
-                                    _selectedMemberIds.remove(id);
-                                  } else {
-                                    _details[id] = newW;
-                                  }
-                                });
-                              },
-                              borderRadius: const BorderRadius.horizontal(
-                                  left: Radius.circular(8)),
-                              child: const Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: Icon(Icons.remove, size: 18),
-                              ),
-                            ),
-                            Container(
-                              width: 1,
-                              height: 16,
-                              color: theme.colorScheme.outlineVariant,
-                            ),
-                            Container(
-                              width: 1,
-                              height: 16,
-                              color: theme.colorScheme.outlineVariant,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  double newW = (weight + 0.5).clamp(0.0, 2.0);
-                                  _details[id] = newW;
-                                });
-                              },
-                              borderRadius: const BorderRadius.horizontal(
-                                  right: Radius.circular(8)),
-                              child: const Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: Icon(Icons.add, size: 18),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ]
+                    ]
+                  ],
+                ),
+                const SizedBox(height: 8),
+                AppStepper(
+                  text: "${weight.toStringAsFixed(1)}x",
+                  onDecrease: () {
+                    setState(() {
+                      double newW = (weight - 0.5).clamp(0.0, 2.0);
+                      if (newW == 0.0) {
+                        _details[id] = 0.0;
+                        _selectedMemberIds.remove(id);
+                      } else {
+                        _details[id] = newW;
+                      }
+                    });
+                  },
+                  onIncrease: () {
+                    setState(() {
+                      double newW = (weight + 0.5).clamp(0.0, 2.0);
+                      _details[id] = newW;
+                    });
+                  },
+                ),
               ],
             ),
           );
@@ -508,47 +454,32 @@ class _B03SplitMethodEditBottomSheetState
     final currentSum = _details.values.fold(0.0, (sum, v) => sum + v);
     final remaining = widget.totalAmount - currentSum;
     final isMatched = remaining.abs() < 0.1;
+    final result = _getSplitResult();
+    final memberAmounts = result.memberAmounts;
 
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: isMatched
-                ? Colors.green.withValues(alpha: 0.1)
-                : Colors.red.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(t.B03_SplitMethod_Edit.label_total(
-                  current: CurrencyConstants.formatAmount(
-                      currentSum, widget.selectedCurrency.code),
-                  target: CurrencyConstants.formatAmount(
-                      widget.totalAmount, widget.selectedCurrency.code))),
-              Visibility(
-                visible: isMatched,
-                replacement: Text(
-                  t.B03_SplitMethod_Edit.error_total_mismatch,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                ),
-                child: Icon(Icons.check_circle_outline_outlined,
-                    size: 20, color: Colors.green),
-              ),
-            ],
-          ),
+        const SizedBox(height: 12),
+        SummaryRow(
+          label: t.B03_SplitMethod_Edit.label.total(
+              current: CurrencyConstants.formatAmount(
+                  currentSum, widget.selectedCurrency.code),
+              target: CurrencyConstants.formatAmount(
+                  widget.totalAmount, widget.selectedCurrency.code)),
+          amount: 0,
+          currencyConstants: widget.selectedCurrency,
+          customValueText: isMatched ? "OK" : t.B03_SplitMethod_Edit.mismatch,
+          valueColor:
+              isMatched ? theme.colorScheme.tertiary : theme.colorScheme.error,
         ),
+        const SizedBox(height: 8),
         ...widget.allMembers.map((m) {
           final id = m['id'];
           final isSelected = _selectedMemberIds.contains(id);
           final node = _focusNodes.putIfAbsent(id, () => FocusNode());
+          final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
-          return CommonSelectionTile(
+          return SelectionTile(
             isSelected: isSelected,
             onTap: () {
               setState(() {
@@ -574,52 +505,12 @@ class _B03SplitMethodEditBottomSheetState
                 isLinked: m['isLinked'] ?? false),
             title: m['displayName'],
             trailing: SizedBox(
-              width: 100,
+              width: 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  TextFormField(
+                  CompactAmountInput(
                     controller: _amountControllers[id],
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    textAlign: TextAlign.end,
-                    decoration: InputDecoration(
-                      hintText: '0',
-                      prefixText: widget.selectedCurrency.symbol,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8),
-                      border: const OutlineInputBorder(),
-                      // 1. 平常沒點擊時的邊框顏色 (建議用淡淡的灰色)
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color:
-                              Colors.grey.withValues(alpha: 0.3), // 淡淡的邊框，不會太搶眼
-                          width: 1.0,
-                        ),
-                      ),
-
-                      // 2. 正在點擊輸入時的邊框顏色 (通常用主題色)
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary, // 主題色
-                          width: 1.5, // 稍微加粗，增加焦點感
-                        ),
-                      ),
-
-                      // 3. 欄位被停用時的邊框 (如果 isSelected 為 false)
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.transparent, // 隱藏邊框，讓它看起來像背景的一部分
-                        ),
-                      ),
-                      enabled: isSelected,
-                      filled: true,
-                      fillColor: theme.colorScheme.surface,
-                    ),
                     onChanged: (val) {
                       setState(() {
                         final amount = double.tryParse(val) ?? 0.0;
@@ -633,23 +524,18 @@ class _B03SplitMethodEditBottomSheetState
                         }
                       });
                     },
+                    hintText: '0',
+                    currencyConstants: widget.selectedCurrency,
                   ),
                   if (isSelected && widget.exchangeRate != 1.0)
                     Builder(
                       builder: (context) {
-                        final val = double.tryParse(
-                                _amountControllers[id]?.text ?? '') ??
-                            0.0;
-                        final converted = val * widget.exchangeRate;
                         return Padding(
-                          padding: const EdgeInsets.only(top: 2),
+                          padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            "≈ ${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(converted, widget.baseCurrency.code)}",
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
+                            "≈ ${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, widget.baseCurrency.code)}",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant),
                           ),
                         );
                       },

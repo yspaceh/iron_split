@@ -23,11 +23,11 @@ class SplitMethodConstant {
     final t = Translations.of(context);
     switch (method) {
       case even:
-        return t.B03_SplitMethod_Edit.method_even;
+        return t.common.split_method.even;
       case exact:
-        return t.B03_SplitMethod_Edit.method_exact;
+        return t.common.split_method.exact;
       case percent:
-        return t.B03_SplitMethod_Edit.method_percent;
+        return t.common.split_method.percent;
       default:
         return method;
     }

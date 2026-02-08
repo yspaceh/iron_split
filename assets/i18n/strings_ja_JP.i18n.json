@@ -62,6 +62,11 @@
       "rule_order": "順番",
       "rule_member": "指定"
     },
+    "split_method": {
+      "even": "均等",
+      "percent": "割合",
+      "exact": "金額指定"
+    },
     "payment_info": {
       "method_label": "受取方法",
       "mode_private": "直接連絡してもらう",
@@ -484,15 +489,10 @@
     "buttons": {
       "adjust_weight": "比率を調整"
     },
-    "label_total": "合計: {current}/{target}",
-    "method_even": "均等分攤",
-    "method_percent": "割合分攤",
-    "method_exact": "金額指定",
-    "desc_even": "選択したメンバーで均等割",
-    "desc_percent": "パーセンテージで配分",
-    "desc_exact": "金額を手動で入力",
-    "label_weight": "比例",
-    "error_total_mismatch": "一致しません"
+    "label": {
+      "total": "{current} / {target}"
+    },
+    "mismatch": "一致しません"
   },
   "B04_payment_merge": {
     "title": "メンバー支払いの統合",
