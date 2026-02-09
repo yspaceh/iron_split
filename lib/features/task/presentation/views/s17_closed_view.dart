@@ -59,9 +59,10 @@ class S13ClosedView extends StatelessWidget {
                 children: [
                   Icon(Icons.info_outline, color: theme.colorScheme.primary),
                   const SizedBox(width: 12),
+                  // TODO: 要填日期
                   Expanded(
                     child: Text(
-                      t.S13_Task_Dashboard.retention_notice,
+                      t.S17_Task_Locked.retention_notice(days: 30),
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),

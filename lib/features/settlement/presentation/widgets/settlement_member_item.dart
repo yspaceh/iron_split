@@ -9,7 +9,7 @@ class SettlementMemberItem extends StatelessWidget {
   final SettlementMember member;
   final CurrencyConstants baseCurrency;
 
-  // --- Action 相關參數 (S30/S17 通用) ---
+  // --- Action 相關參數 ---
   final VoidCallback? onActionTap;
   final bool isActionEnabled;
   final IconData actionIcon;
@@ -19,7 +19,7 @@ class SettlementMemberItem extends StatelessWidget {
     required this.member,
     required this.baseCurrency,
     this.onActionTap,
-    this.isActionEnabled = true,
+    this.isActionEnabled = true, // 預設啟用
     this.actionIcon = Icons.link, // 預設為連結圖示
   });
 
@@ -29,9 +29,13 @@ class SettlementMemberItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final bool isGroup = member.subMembers.isNotEmpty;
 
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
+    // [修改] 移除 Card，改用 Container 且不設 Border
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface, // 純白背景
+        borderRadius: BorderRadius.circular(16), // 圓角
+        // 這裡不設 border，達到「無邊框」效果
+      ),
       clipBehavior: Clip.antiAlias,
       child: isGroup
           ? _buildGroupContent(context, colorScheme)
@@ -39,13 +43,12 @@ class SettlementMemberItem extends StatelessWidget {
     );
   }
 
-  // --- 1. 單人顯示模式 (只有一行) ---
+  // --- 1. 單人顯示模式 ---
   Widget _buildSingleRow(BuildContext context, ColorScheme colorScheme) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // 左側內容 (Avatar + Name + Status/Amount)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -55,7 +58,7 @@ class SettlementMemberItem extends StatelessWidget {
                   avatarId: member.avatar,
                   name: member.displayName,
                   isLinked: member.isLinked,
-                  radius: 16,
+                  radius: 20,
                 ),
                 name: member.displayName,
                 amount: member.finalAmount,
@@ -63,38 +66,33 @@ class SettlementMemberItem extends StatelessWidget {
               ),
             ),
           ),
-
-          // 分隔線
+          // 分隔線 (極淡)
           VerticalDivider(
             width: 1,
             thickness: 1,
-            color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
             indent: 8,
             endIndent: 8,
           ),
-
-          // 右側按鈕
           _buildActionButton(context, colorScheme),
         ],
       ),
     );
   }
 
-  // --- 2. 群組顯示模式 (直向排列：Header + Divider + Body) ---
+  // --- 2. 群組顯示模式 ---
   Widget _buildGroupContent(BuildContext context, ColorScheme colorScheme) {
-    // 1. 計算 Head 的個人金額
+    // 邏輯保持不變
     final double childrenSum =
         member.subMembers.fold(0.0, (sum, child) => sum + child.finalAmount);
     final double headIndividualAmount = member.finalAmount - childrenSum;
 
-    // 2. 建立「代表成員的個人視角」物件
     final individualHead = SettlementMember(
       id: member.id,
-      displayName: member.displayName, // 這裡可以考慮加註 (代表) 或不加
+      displayName: member.displayName,
       avatar: member.avatar,
       isLinked: member.isLinked,
-      finalAmount: headIndividualAmount, // <--- 顯示個人金額
-      // 以下欄位若是 UI 沒用到可填預設值，或從 member 複製
+      finalAmount: headIndividualAmount,
       baseAmount: 0,
       remainderAmount: 0,
       isRemainderAbsorber: member.isRemainderAbsorber,
@@ -102,10 +100,8 @@ class SettlementMemberItem extends StatelessWidget {
       subMembers: const [],
     );
 
-    // 3. 組合完整清單：[Head個人, ...子成員]
     final allSubMembers = [individualHead, ...member.subMembers];
 
-    // 4. 準備 Avatar Stack (維持原邏輯，顯示包含自己在內的所有人)
     final allMembersMap = allSubMembers
         .map((m) => {
               'id': m.id,
@@ -118,7 +114,7 @@ class SettlementMemberItem extends StatelessWidget {
 
     return Column(
       children: [
-        // A. Header (結構與單人類似，但 Avatar 變成 Stack)
+        // Header
         IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,13 +128,13 @@ class SettlementMemberItem extends StatelessWidget {
                     avatarWidget: CommonAvatarStack(
                       allMembers: allMembersMap,
                       targetMemberIds: allIds,
-                      overlapRatio: 0.3,
-                      radius: 16,
+                      overlapRatio: 0.5,
+                      radius: 20, // Header 頭像稍大
                       type: AvatarStackType.stack,
                       limit: 3,
                     ),
-                    name: member.displayName, // 代表人名字
-                    amount: member.finalAmount, // 總額
+                    name: member.displayName,
+                    amount: member.finalAmount,
                     colorScheme: colorScheme,
                   ),
                 ),
@@ -146,7 +142,7 @@ class SettlementMemberItem extends StatelessWidget {
               VerticalDivider(
                 width: 1,
                 thickness: 1,
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.2),
                 indent: 8,
                 endIndent: 8,
               ),
@@ -155,17 +151,18 @@ class SettlementMemberItem extends StatelessWidget {
           ),
         ),
 
-        // B. Divider
+        // Divider
         Divider(
           height: 1,
           thickness: 1,
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.2),
         ),
 
-        // C. Body (細項列表 - 永遠顯示)
+        // Body
         ...allSubMembers.map((sub) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            // 這裡可以考慮給一點縮排，增加層次感
+            padding: EdgeInsets.zero,
             child: _buildSubMemberRow(context, sub, colorScheme),
           );
         }),
@@ -173,7 +170,7 @@ class SettlementMemberItem extends StatelessWidget {
     );
   }
 
-  // --- 共用組件：資訊內容 (Avatar | Name ...... Status $Amount) ---
+  // --- 資訊內容 ---
   Widget _buildInfoContent(
     BuildContext context, {
     required Widget avatarWidget,
@@ -185,10 +182,8 @@ class SettlementMemberItem extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     final isReceiving = amount > 0;
-    // 金額顏色：綠色或深黑
     final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
 
-    // 狀態文字
     final statusText = isReceiving
         ? t.S30_settlement_confirm.label_refund
         : t.S30_settlement_confirm.label_payable;
@@ -198,96 +193,21 @@ class SettlementMemberItem extends StatelessWidget {
 
     return Row(
       children: [
-        // 1. Avatar (或 Stack)
         avatarWidget,
         const SizedBox(width: 12),
-
-        // 2. Name (垂直置中)
         Expanded(
           child: Text(
             name,
             style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface, // 深色
+              color: colorScheme.onSurface,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-
         const SizedBox(width: 8),
-
-        // 3. Status + Amount (單行顯示！)
-        // 例如: "應付 $1,200"
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              statusText,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant, // 深灰色
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${baseCurrency.symbol} $displayAmount',
-              style: textTheme.titleMedium?.copyWith(
-                color: amountColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSubMemberInfoContent(
-    BuildContext context, {
-    required Widget avatarWidget,
-    required String name,
-    required double amount,
-    required ColorScheme colorScheme,
-  }) {
-    final t = Translations.of(context);
-    final textTheme = Theme.of(context).textTheme;
-
-    final isReceiving = amount > 0;
-    // 金額顏色：綠色或深黑
-    final amountColor = isReceiving ? Colors.green[700] : colorScheme.onSurface;
-
-    // 狀態文字
-    final statusText = isReceiving
-        ? t.S30_settlement_confirm.label_refund
-        : t.S30_settlement_confirm.label_payable;
-
-    final displayAmount =
-        CurrencyConstants.formatAmount(amount.abs(), baseCurrency.code);
-
-    return Row(
-      children: [
-        // 1. Avatar (或 Stack)
-        avatarWidget,
-        const SizedBox(width: 8),
-
-        // 2. Name (垂直置中)
-        Expanded(
-          child: Text(
-            name,
-            style: textTheme.titleMedium?.copyWith(
-              fontSize: 14,
-              color: colorScheme.onSurface, // 深色
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-
-        const SizedBox(width: 8),
-
-        // 3. Status + Amount (單行顯示！)
-        // 例如: "應付 $1,200"
+        // 金額區塊
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -295,7 +215,7 @@ class SettlementMemberItem extends StatelessWidget {
               statusText,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
-                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(width: 4),
@@ -303,7 +223,8 @@ class SettlementMemberItem extends StatelessWidget {
               '${baseCurrency.symbol} $displayAmount',
               style: textTheme.titleMedium?.copyWith(
                 color: amountColor,
-                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'RobotoMono',
               ),
             ),
           ],
@@ -312,47 +233,74 @@ class SettlementMemberItem extends StatelessWidget {
     );
   }
 
-  // --- 子成員細項 Row ---
+  // --- 子成員細項 ---
   Widget _buildSubMemberRow(
       BuildContext context, SettlementMember sub, ColorScheme colorScheme) {
-    // 這裡我們直接用 _buildInfoContent 的邏輯，但不顯示按鈕，只顯示資訊
-    // 需要稍微調整 Padding 做出層次感
+    // 復用 _buildInfoContent 的邏輯，但稍微縮小一點
+    // 這裡我們直接使用 Container 包裹 _buildInfoContent 的變體
+    // 為了簡單，這裡手動重寫一個簡化版
+    final textTheme = Theme.of(context).textTheme;
+    final isReceiving = sub.finalAmount > 0;
+    final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
+    final displayAmount = CurrencyConstants.formatAmount(
+        sub.finalAmount.abs(), baseCurrency.code);
+
     return Container(
       decoration: BoxDecoration(
-        // 子項目之間可以加淡淡的分隔線，或是不加保持乾淨
+        // 子項目之間可以加極淡的分隔線
         border: Border(
           top: BorderSide(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.3)),
+              color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: _buildSubMemberInfoContent(
-        context,
-        avatarWidget: CommonAvatar(
-          avatarId: sub.avatar,
-          name: sub.displayName,
-          isLinked: sub.isLinked,
-          radius: 12, // 稍微小一點
-        ),
-        name: sub.displayName,
-        amount: sub.finalAmount,
-        colorScheme: colorScheme,
+      child: Row(
+        children: [
+          // 縮排效果，增加層次
+          const SizedBox(width: 8),
+          CommonAvatar(
+            avatarId: sub.avatar,
+            name: sub.displayName,
+            isLinked: sub.isLinked,
+            radius: 16,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              sub.displayName,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            '${baseCurrency.symbol} $displayAmount',
+            style: textTheme.bodyMedium?.copyWith(
+              color: amountColor,
+              fontFamily: 'RobotoMono',
+            ),
+          ),
+        ],
       ),
     );
   }
 
   // --- 動作按鈕 ---
   Widget _buildActionButton(BuildContext context, ColorScheme colorScheme) {
+    // [修改] 如果 disable，顏色變淡
     final iconColor = isActionEnabled
         ? colorScheme.primary
-        : colorScheme.onSurfaceVariant.withValues(alpha: 0.3);
+        : colorScheme.onSurfaceVariant.withValues(alpha: 0.2);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: isActionEnabled ? onActionTap : null,
+        borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
         child: Container(
-          width: 56, // 固定按鈕區寬度
+          width: 56,
           alignment: Alignment.center,
           child: Icon(
             actionIcon,

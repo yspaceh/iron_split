@@ -206,6 +206,31 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     }
   }
 
+  // 取得某位代表成員的「可合併候選名單」
+  // 邏輯：排除自己，排除被「別人」合併的人，保留自由身或被「我」合併的人
+  List<SettlementMember> getMergeCandidates(SettlementMember head) {
+    // 1. 取得所有成員 (利用 allMembers getter 取得完整攤平列表)
+    final all = allMembers;
+
+    // 2. 找出哪些人已經被「別人」合併了
+    final Set<String> mergedToOthers = {};
+    _mergeMap.forEach((headId, childrenIds) {
+      if (headId != head.id) {
+        mergedToOthers.addAll(childrenIds);
+      }
+    });
+
+    // 3. 過濾
+    return all.where((m) {
+      // 排除自己 (Head)
+      if (m.id == head.id) return false;
+      // 排除已被別人合併的 (但保留被自己合併的)
+      if (mergedToOthers.contains(m.id)) return false;
+
+      return true;
+    }).toList();
+  }
+
   @override
   void dispose() {
     // 取消訂閱，防止記憶體洩漏與殭屍回調

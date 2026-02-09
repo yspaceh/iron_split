@@ -90,6 +90,10 @@
       "app_name": "アプリ名（例：LinePay）",
       "app_link": "リンク / ID"
     },
+    "payment_status":{
+      "payable": "支払",
+      "receivable": "受取"
+    },
     "share":{
       "invite": {
         "subject": "Iron Split タスク招待",
@@ -186,36 +190,34 @@
     "content": "このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。"
   },
   "S13_Task_Dashboard": {
-    "title_active": "ダッシュボード",
+    "title": "ダッシュボード",
     "buttons": {
       "record": "記録を追加",
       "settlement": "精算",
       "download": "記録ダウンロード",
       "add":"追加"
     },
-    "tab_group": "グループ",
-    "tab_personal": "個人",
-    "label_prepay_balance": "プール残高",
-    "label_my_balance": "私の収支",
-    "label_remainder": "端数: {amount}",
-    "label_balance": "残高",
-    "label_total_expense": "総費用",
-    "label_total_prepay": "総預り金",
-    "label_total_expense_personal": "総費用",
-    "label_total_prepay_personal": "総預り金(",
-    "label_remainder_pot": "端数ポット",
-    "empty_records": "記録がありません",
-    "nav_to_record": "記録ページへ移動します...",
+    "tab": {
+      "group": "グループ",
+      "personal": "個人"
+    },
+    "label": {
+      "total_expense": "総費用",
+      "total_prepay": "総預り金",
+      "total_expense_personal": "総費用",
+      "total_prepay_personal": "総預り金(立替含)"
+    },
+    "empty": {
+      "records": "記録がありません",
+      "personal_records": "この日のあなたに関連する記録はありません"
+    },
     "daily_expense_label": "支出",
-    "dialog_balance_detail": "通貨別内訳",
-    "section_expense": "支払い通貨",
-    "section_income": "預り金通貨",
-    "daily_stats_title": "本日の支出",
-    "personal_daily_total": "本日の個人支出",
-    "personal_to_receive": "受取",
-    "personal_to_pay": "支払",
-    "personal_empty_desc": "この日のあなたに関連する記録はありません",
-    "total_amount_label": "合計金額"
+    "dialog_balance_detail": "收支幣別明細",
+    "section": {
+      "expense": "支払い通貨",
+      "income": "預り金通貨",
+      "prepay_balance": "預り金残高"
+    }
   },
   "S14_Task_Settings": {
     "title": "タスク設定",
@@ -511,11 +513,10 @@
   },
   "B04_payment_merge": {
     "title": "メンバー支払いの統合",
-    "description": "メンバーを代表者の下に統合します。支払いと返金が合算され、代表者とのやり取りだけで済みます。",
-    "section_head": "代表メンバー",
-    "section_candidates": "統合するメンバーを選択",
-    "status_payable": "支払",
-    "status_receivable": "受取",
+    "label": {
+      "head_member": "代表メンバー",
+      "merge_amount": "統合金額"
+    },
     "buttons": {
       "cancel": "キャンセル",
       "confirm": "統合"

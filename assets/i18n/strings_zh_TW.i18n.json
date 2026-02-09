@@ -90,6 +90,10 @@
       "app_name": "App 名稱 (如: LinePay)",
       "app_link": "連結 / ID"
     },
+    "payment_status":{
+      "payable": "應付",
+      "receivable": "可退"
+    },
     "share":{
       "invite": {
         "subject": "邀請加入 Iron Split 任務",
@@ -162,37 +166,34 @@
     }
   },
   "S13_Task_Dashboard": {
-    "title_active": "任務主頁",
+    "title": "任務主頁",
     "buttons": {
       "record": "新增紀錄",
       "settlement": "結算",
       "download": "下載記錄",
       "add":"新增"
     },
-    "tab_group": "大家",
-    "tab_personal": "個人",
-    "label_prepay_balance": "預收款餘額",
-    "label_my_balance": "我的收支",
-    "label_remainder": "暫存零頭: {amount}",
-    "label_balance": "結餘",
-    "label_total_expense": "總費用",
-    "label_total_prepay": "總預收",
-    "label_total_expense_personal": "總費用",
-    "label_total_prepay_personal": "總預收（含代墊）",
-    "label_remainder_pot": "零頭罐",
-    "empty_records": "尚無收支紀錄",
-    "nav_to_record": "準備前往記帳頁面...",
+    "tab": {
+      "group": "群組",
+      "personal": "個人"
+    },
+    "label": {
+      "total_expense": "總費用",
+      "total_prepay": "總預收",
+      "total_expense_personal": "總費用",
+      "total_prepay_personal": "總預收（含代墊）"
+    },
+    "empty": {
+      "records": "尚無收支紀錄",
+      "personal_records": "無有關紀錄"
+    },
     "daily_expense_label": "支出",
     "dialog_balance_detail": "收支幣別明細",
-    "section_expense": "支出明細",
-    "section_income": "預收明細",
-    "daily_stats_title": "本日支出",
-    "personal_daily_total": "個人本日支出",
-    "personal_to_receive": "應收",
-    "personal_to_pay": "應付",
-    "personal_empty_desc": "無有關紀錄",
-    "total_amount_label": "總金額",
-    "retention_notice": "此任務已關閉。資料將保留 30 天，請下載您的紀錄。"
+    "section": {
+      "expense": "支出明細",
+      "income": "預收明細",
+      "prepay_balance": "預收餘額"
+    }
   },
   "S14_Task_Settings": {
     "title": "任務設定",
@@ -512,11 +513,10 @@
   },
   "B04_payment_merge": {
     "title": "合併成員款項",
-    "description": "將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。",
-    "section_head": "代表成員",
-    "section_candidates": "選擇合併成員",
-    "status_payable": "應付",
-    "status_receivable": "可退",
+    "label": {
+      "head_member": "代表",
+      "merge_amount": "合併總額"
+    },
     "buttons": {
       "cancel": "取消",
       "confirm": "合併"

@@ -87,6 +87,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCategoryEnUs category = _TranslationsCommonCategoryEnUs._(_root);
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
 	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
+	@override late final _TranslationsCommonPaymentStatusEnUs payment_status = _TranslationsCommonPaymentStatusEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
 	@override late final _TranslationsCommonSplitMethodEnUs split_method = _TranslationsCommonSplitMethodEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
@@ -181,32 +182,14 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_active => 'Dashboard';
+	@override String get title => 'Dashboard';
 	@override late final _TranslationsS13TaskDashboardButtonsEnUs buttons = _TranslationsS13TaskDashboardButtonsEnUs._(_root);
-	@override String get tab_group => 'Group';
-	@override String get tab_personal => 'Personal';
-	@override String get label_prepay_balance => 'Pool Balance';
-	@override String get label_my_balance => 'My Balance';
-	@override String label_remainder({required Object amount}) => 'Buffer: ${amount}';
-	@override String get label_balance => 'Balance';
-	@override String get label_total_expense => 'Total Expense';
-	@override String get label_total_prepay => 'Total Advance';
-	@override String get label_total_expense_personal => 'Total Expense';
-	@override String get label_total_prepay_personal => 'Total Advance (incl. Reimbursed)';
-	@override String get label_remainder_pot => 'Remainder Pot';
-	@override String get empty_records => 'No records';
-	@override String get nav_to_record => 'Navigating to record page...';
+	@override late final _TranslationsS13TaskDashboardTabEnUs tab = _TranslationsS13TaskDashboardTabEnUs._(_root);
+	@override late final _TranslationsS13TaskDashboardLabelEnUs label = _TranslationsS13TaskDashboardLabelEnUs._(_root);
+	@override late final _TranslationsS13TaskDashboardEmptyEnUs empty = _TranslationsS13TaskDashboardEmptyEnUs._(_root);
 	@override String get daily_expense_label => 'Exp';
 	@override String get dialog_balance_detail => 'Balance Details';
-	@override String get section_expense => 'Expense Details';
-	@override String get section_income => 'Income Details';
-	@override String get daily_stats_title => 'Daily Total Expense';
-	@override String get personal_daily_total => 'Personal Daily Total Expense';
-	@override String get personal_to_receive => 'To Receive';
-	@override String get personal_to_pay => 'To Pay';
-	@override String get personal_empty_desc => 'No records related to you on this day';
-	@override String get total_amount_label => 'Total Bill';
-	@override String get retention_notice => 'This task is closed. Data retained for 30 days.';
+	@override late final _TranslationsS13TaskDashboardSectionEnUs section = _TranslationsS13TaskDashboardSectionEnUs._(_root);
 }
 
 // Path: S14_Task_Settings
@@ -567,11 +550,7 @@ class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 
 	// Translations
 	@override String get title => 'Merge Member Payments';
-	@override String get description => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.';
-	@override String get section_head => 'Representative';
-	@override String get section_candidates => 'Select Members';
-	@override String get status_payable => 'Payable';
-	@override String get status_receivable => 'Receivable';
+	@override late final _TranslationsB04PaymentMergeLabelEnUs label = _TranslationsB04PaymentMergeLabelEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeButtonsEnUs buttons = _TranslationsB04PaymentMergeButtonsEnUs._(_root);
 }
 
@@ -726,6 +705,17 @@ class _TranslationsCommonPaymentInfoEnUs extends TranslationsCommonPaymentInfoZh
 	@override String get app_link => 'Link / ID';
 }
 
+// Path: common.payment_status
+class _TranslationsCommonPaymentStatusEnUs extends TranslationsCommonPaymentStatusZhTw {
+	_TranslationsCommonPaymentStatusEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get payable => 'Payable';
+	@override String get receivable => 'Receivable';
+}
+
 // Path: common.remainder_rule
 class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRuleZhTw {
 	_TranslationsCommonRemainderRuleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -795,6 +785,53 @@ class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashbo
 	@override String get settlement => 'Settlement';
 	@override String get download => 'Download Records';
 	@override String get add => 'Add';
+}
+
+// Path: S13_Task_Dashboard.tab
+class _TranslationsS13TaskDashboardTabEnUs extends TranslationsS13TaskDashboardTabZhTw {
+	_TranslationsS13TaskDashboardTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get group => 'Group';
+	@override String get personal => 'Personal';
+}
+
+// Path: S13_Task_Dashboard.label
+class _TranslationsS13TaskDashboardLabelEnUs extends TranslationsS13TaskDashboardLabelZhTw {
+	_TranslationsS13TaskDashboardLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get total_expense => 'Total Expense';
+	@override String get total_prepay => 'Total Advance';
+	@override String get total_expense_personal => 'Total Expense';
+	@override String get total_prepay_personal => 'Total Advance (incl. Reimbursed)';
+}
+
+// Path: S13_Task_Dashboard.empty
+class _TranslationsS13TaskDashboardEmptyEnUs extends TranslationsS13TaskDashboardEmptyZhTw {
+	_TranslationsS13TaskDashboardEmptyEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get records => 'No records';
+	@override String get personal_records => 'No records related to you on this day';
+}
+
+// Path: S13_Task_Dashboard.section
+class _TranslationsS13TaskDashboardSectionEnUs extends TranslationsS13TaskDashboardSectionZhTw {
+	_TranslationsS13TaskDashboardSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get expense => 'Expense Details';
+	@override String get income => 'Income Details';
+	@override String get prepay_balance => 'Advance Balance';
 }
 
 // Path: S14_Task_Settings.section
@@ -1228,6 +1265,17 @@ class _TranslationsB03SplitMethodEditLabelEnUs extends TranslationsB03SplitMetho
 	@override String total({required Object current, required Object target}) => 'Total: ${current}/${target}';
 }
 
+// Path: B04_payment_merge.label
+class _TranslationsB04PaymentMergeLabelEnUs extends TranslationsB04PaymentMergeLabelZhTw {
+	_TranslationsB04PaymentMergeLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get head_member => 'Representative';
+	@override String get merge_amount => 'Total Amount';
+}
+
 // Path: B04_payment_merge.buttons
 class _TranslationsB04PaymentMergeButtonsEnUs extends TranslationsB04PaymentMergeButtonsZhTw {
 	_TranslationsB04PaymentMergeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1533,6 +1581,8 @@ extension on TranslationsEnUs {
 			'common.payment_info.bank_account_hint' => 'Account number',
 			'common.payment_info.app_name' => 'App name (e.g. LinePay)',
 			'common.payment_info.app_link' => 'Link / ID',
+			'common.payment_status.payable' => 'Payable',
+			'common.payment_status.receivable' => 'Receivable',
 			'common.remainder_rule.title' => 'Remainder Rule',
 			'common.remainder_rule.rule.random' => 'Random',
 			'common.remainder_rule.rule.order' => 'Order',
@@ -1597,35 +1647,24 @@ extension on TranslationsEnUs {
 			'S12_TaskClose_Notice.title' => 'Close Task',
 			'S12_TaskClose_Notice.buttons.close' => 'Close Task',
 			'S12_TaskClose_Notice.content' => 'Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data.',
-			'S13_Task_Dashboard.title_active' => 'Dashboard',
+			'S13_Task_Dashboard.title' => 'Dashboard',
 			'S13_Task_Dashboard.buttons.record' => 'Add record',
 			'S13_Task_Dashboard.buttons.settlement' => 'Settlement',
 			'S13_Task_Dashboard.buttons.download' => 'Download Records',
 			'S13_Task_Dashboard.buttons.add' => 'Add',
-			'S13_Task_Dashboard.tab_group' => 'Group',
-			'S13_Task_Dashboard.tab_personal' => 'Personal',
-			'S13_Task_Dashboard.label_prepay_balance' => 'Pool Balance',
-			'S13_Task_Dashboard.label_my_balance' => 'My Balance',
-			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => 'Buffer: ${amount}',
-			'S13_Task_Dashboard.label_balance' => 'Balance',
-			'S13_Task_Dashboard.label_total_expense' => 'Total Expense',
-			'S13_Task_Dashboard.label_total_prepay' => 'Total Advance',
-			'S13_Task_Dashboard.label_total_expense_personal' => 'Total Expense',
-			'S13_Task_Dashboard.label_total_prepay_personal' => 'Total Advance (incl. Reimbursed)',
-			'S13_Task_Dashboard.label_remainder_pot' => 'Remainder Pot',
-			'S13_Task_Dashboard.empty_records' => 'No records',
-			'S13_Task_Dashboard.nav_to_record' => 'Navigating to record page...',
+			'S13_Task_Dashboard.tab.group' => 'Group',
+			'S13_Task_Dashboard.tab.personal' => 'Personal',
+			'S13_Task_Dashboard.label.total_expense' => 'Total Expense',
+			'S13_Task_Dashboard.label.total_prepay' => 'Total Advance',
+			'S13_Task_Dashboard.label.total_expense_personal' => 'Total Expense',
+			'S13_Task_Dashboard.label.total_prepay_personal' => 'Total Advance (incl. Reimbursed)',
+			'S13_Task_Dashboard.empty.records' => 'No records',
+			'S13_Task_Dashboard.empty.personal_records' => 'No records related to you on this day',
 			'S13_Task_Dashboard.daily_expense_label' => 'Exp',
 			'S13_Task_Dashboard.dialog_balance_detail' => 'Balance Details',
-			'S13_Task_Dashboard.section_expense' => 'Expense Details',
-			'S13_Task_Dashboard.section_income' => 'Income Details',
-			'S13_Task_Dashboard.daily_stats_title' => 'Daily Total Expense',
-			'S13_Task_Dashboard.personal_daily_total' => 'Personal Daily Total Expense',
-			'S13_Task_Dashboard.personal_to_receive' => 'To Receive',
-			'S13_Task_Dashboard.personal_to_pay' => 'To Pay',
-			'S13_Task_Dashboard.personal_empty_desc' => 'No records related to you on this day',
-			'S13_Task_Dashboard.total_amount_label' => 'Total Bill',
-			'S13_Task_Dashboard.retention_notice' => 'This task is closed. Data retained for 30 days.',
+			'S13_Task_Dashboard.section.expense' => 'Expense Details',
+			'S13_Task_Dashboard.section.income' => 'Income Details',
+			'S13_Task_Dashboard.section.prepay_balance' => 'Advance Balance',
 			'S14_Task_Settings.title' => 'Task Settings',
 			'S14_Task_Settings.section.task_name' => 'Task Name',
 			'S14_Task_Settings.section.task_period' => 'Task Period',
@@ -1817,11 +1856,8 @@ extension on TranslationsEnUs {
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
 			'B03_SplitMethod_Edit.mismatch' => 'Mismatch',
 			'B04_payment_merge.title' => 'Merge Member Payments',
-			'B04_payment_merge.description' => 'Merge members under a representative. Payments and refunds will be consolidated for easier collection.',
-			'B04_payment_merge.section_head' => 'Representative',
-			'B04_payment_merge.section_candidates' => 'Select Members',
-			'B04_payment_merge.status_payable' => 'Payable',
-			'B04_payment_merge.status_receivable' => 'Receivable',
+			'B04_payment_merge.label.head_member' => 'Representative',
+			'B04_payment_merge.label.merge_amount' => 'Total Amount',
 			'B04_payment_merge.buttons.cancel' => 'Cancel',
 			'B04_payment_merge.buttons.confirm' => 'Merge',
 			'B06_payment_info_detail.label_copied' => 'Copied to clipboard',

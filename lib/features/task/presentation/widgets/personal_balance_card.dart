@@ -115,8 +115,8 @@ class PersonalBalanceCard extends StatelessWidget {
                       children: [
                         Text(
                           isPositive
-                              ? t.S13_Task_Dashboard.personal_to_receive
-                              : t.S13_Task_Dashboard.personal_to_pay,
+                              ? t.common.payment_status.receivable
+                              : t.common.payment_status.payable,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -161,7 +161,7 @@ class PersonalBalanceCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "${t.S13_Task_Dashboard.label_total_expense} ",
+                              "${t.S13_Task_Dashboard.label.total_expense} ",
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -181,7 +181,7 @@ class PersonalBalanceCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              "${t.S13_Task_Dashboard.label_total_prepay} ",
+                              "${t.S13_Task_Dashboard.label.total_prepay} ",
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),

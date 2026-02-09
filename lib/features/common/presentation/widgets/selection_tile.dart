@@ -5,7 +5,7 @@ import 'package:iron_split/features/common/presentation/widgets/selection_indica
 
 class SelectionTile extends StatelessWidget {
   final bool isSelected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Widget leading;
   final String title;
   final Widget? trailing;
@@ -29,6 +29,11 @@ class SelectionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final bool isDisabled = onTap == null;
+    final Color effectiveBackgroundColor = isSelected && !isDisabled
+        ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
+        : backgroundColor ?? colorScheme.surface;
+    final double opacity = isDisabled ? 0.8 : 1.0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -40,37 +45,35 @@ class SelectionTile extends StatelessWidget {
           // [修改] 內距加大，符合卡片風格
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            // [修改] 跟隨 SelectionCard 的配色邏輯
-            // 未選中是 Surface (實心)，選中是 SurfaceContainerLow (或依需求微調)
-            // 如果原本想要選中時有顏色，可以改回 primaryContainer.withOpacity
-            color: isSelected
-                ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
-                : backgroundColor ?? colorScheme.surface,
-            borderRadius: BorderRadius.circular(16), // [修改] 統一為 16
+            color: effectiveBackgroundColor,
+            borderRadius: BorderRadius.circular(16),
           ),
-          child: Row(
-            children: [
-              SelectionIndicator(
-                isSelected: isSelected,
-                isRadio: isRadio, // 傳遞樣式
-              ),
-              const SizedBox(width: 8),
-              leading,
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    // [修改] 使用 titleMedium 讓文字更有份量
-                    // [修改] 選中時變色 (Primary Color)，與 SelectionCard 一致
-                    color: colorScheme.onSurface,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+          child: Opacity(
+            opacity: opacity,
+            child: Row(
+              children: [
+                SelectionIndicator(
+                  isSelected: isSelected,
+                  isRadio: isRadio, // 傳遞樣式
+                ),
+                const SizedBox(width: 8),
+                leading,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      // [修改] 使用 titleMedium 讓文字更有份量
+                      // [修改] 選中時變色 (Primary Color)，與 SelectionCard 一致
+                      color: colorScheme.onSurface,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
                   ),
                 ),
-              ),
-              if (trailing != null) trailing!,
-            ],
+                if (trailing != null) trailing!,
+              ],
+            ),
           ),
         ),
       ),

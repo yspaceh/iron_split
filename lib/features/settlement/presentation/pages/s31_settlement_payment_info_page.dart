@@ -151,7 +151,6 @@ class _S31Content extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(t.S31_settlement_payment_info.title), // 需新增 i18n
         centerTitle: true,

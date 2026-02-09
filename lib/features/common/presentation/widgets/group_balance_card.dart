@@ -69,7 +69,7 @@ class GroupBalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 支出區塊
-              Text(t.S13_Task_Dashboard.section_expense,
+              Text(t.S13_Task_Dashboard.section.expense,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: theme.colorScheme.error)),
               ...state.expenseDetail.entries.map(
@@ -82,7 +82,7 @@ class GroupBalanceCard extends StatelessWidget {
               const Divider(),
 
               // 收入區塊
-              Text(t.S13_Task_Dashboard.section_income,
+              Text(t.S13_Task_Dashboard.section.income,
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: Colors.green)),
               ...state.incomeDetail.entries.map(
@@ -95,7 +95,8 @@ class GroupBalanceCard extends StatelessWidget {
               const Divider(),
 
               // 預收款餘額 (庫存)
-              Text(t.S13_Task_Dashboard.label_prepay_balance, // 使用 "餘額" 或類似的標題
+              Text(
+                  t.S13_Task_Dashboard.section.prepay_balance, // 使用 "餘額" 或類似的標題
                   style: theme.textTheme.titleSmall),
               ...state.poolDetail.entries.map(
                 (e) => Text(
@@ -209,7 +210,7 @@ class GroupBalanceCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_expense} ",
+                          "${t.S13_Task_Dashboard.label.total_expense} ",
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -229,7 +230,7 @@ class GroupBalanceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "${t.S13_Task_Dashboard.label_total_prepay} ",
+                          "${t.S13_Task_Dashboard.label.total_prepay} ",
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),

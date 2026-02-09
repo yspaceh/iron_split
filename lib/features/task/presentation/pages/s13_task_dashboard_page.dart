@@ -99,8 +99,8 @@ class _S13ContentState extends State<_S13Content> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title_active),
+        title:
+            Text(taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title),
         // 新增：智慧導航按鈕
         leading: Navigator.of(context).canPop()
             ? null // null 代表使用預設的「返回箭頭」 (因為有上一頁)
@@ -166,8 +166,8 @@ class _S13ContentState extends State<_S13Content> {
               selectedValue: vm.currentTabIndex,
               onValueChanged: (val) => vm.setTabIndex(val),
               segments: {
-                0: t.S13_Task_Dashboard.tab_group,
-                1: t.S13_Task_Dashboard.tab_personal,
+                0: t.S13_Task_Dashboard.tab.group,
+                1: t.S13_Task_Dashboard.tab.personal,
               },
             ),
           ),

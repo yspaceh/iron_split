@@ -70,6 +70,10 @@
       "app_name": "App name (e.g. LinePay)",
       "app_link": "Link / ID"
     },
+    "payment_status":{
+      "payable": "Payable",
+      "receivable": "Receivable"
+    },
     "remainder_rule": {
       "title": "Remainder Rule",
       "rule": {
@@ -162,37 +166,34 @@
     "content": "Closing this task will lock all records and settings. You will enter Read-Only mode and cannot add or edit any data."
   },
   "S13_Task_Dashboard": {
-    "title_active": "Dashboard",
+    "title": "Dashboard",
     "buttons": {
       "record": "Add record",
       "settlement": "Settlement",
       "download": "Download Records",
       "add":"Add"
     },
-    "tab_group": "Group",
-    "tab_personal": "Personal",
-    "label_prepay_balance": "Pool Balance",
-    "label_my_balance": "My Balance",
-    "label_remainder": "Buffer: {amount}",
-    "label_balance": "Balance",
-    "label_total_expense": "Total Expense",
-    "label_total_prepay": "Total Advance",
-    "label_total_expense_personal": "Total Expense",
-    "label_total_prepay_personal": "Total Advance (incl. Reimbursed)",
-    "label_remainder_pot": "Remainder Pot",
-    "empty_records": "No records",
-    "nav_to_record": "Navigating to record page...",
+    "tab": {
+      "group": "Group",
+      "personal": "Personal"
+    },
+    "label": {
+      "total_expense": "Total Expense",
+      "total_prepay": "Total Advance",
+      "total_expense_personal": "Total Expense",
+      "total_prepay_personal": "Total Advance (incl. Reimbursed)"
+    },
+    "empty": {
+      "records": "No records",
+      "personal_records": "No records related to you on this day"
+    },
     "daily_expense_label": "Exp",
     "dialog_balance_detail": "Balance Details",
-    "section_expense": "Expense Details",
-    "section_income": "Income Details",
-    "daily_stats_title": "Daily Total Expense",
-    "personal_daily_total": "Personal Daily Total Expense",
-    "personal_to_receive": "To Receive",
-    "personal_to_pay": "To Pay",
-    "personal_empty_desc": "No records related to you on this day",
-    "total_amount_label": "Total Bill",
-    "retention_notice": "This task is closed. Data retained for 30 days."
+    "section": {
+      "expense": "Expense Details",
+      "income": "Income Details",
+      "prepay_balance": "Advance Balance"
+    }
   },
   "S14_Task_Settings": {
     "title": "Task Settings",
@@ -512,11 +513,10 @@
   },
   "B04_payment_merge": {
     "title": "Merge Member Payments",
-    "description": "Merge members under a representative. Payments and refunds will be consolidated for easier collection.",
-    "section_head": "Representative",
-    "section_candidates": "Select Members",
-    "status_payable": "Payable",
-    "status_receivable": "Receivable",
+    "label": {
+      "head_member": "Representative",
+      "merge_amount": "Total Amount"
+    },
     "buttons": {
       "cancel": "Cancel",
       "confirm": "Merge"

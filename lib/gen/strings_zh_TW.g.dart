@@ -90,6 +90,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 	late final TranslationsCommonSplitMethodZhTw split_method = TranslationsCommonSplitMethodZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
+	late final TranslationsCommonPaymentStatusZhTw payment_status = TranslationsCommonPaymentStatusZhTw.internal(_root);
 	late final TranslationsCommonShareZhTw share = TranslationsCommonShareZhTw.internal(_root);
 
 	/// zh-TW: '錯誤: {message}'
@@ -274,48 +275,12 @@ class TranslationsS13TaskDashboardZhTw {
 	// Translations
 
 	/// zh-TW: '任務主頁'
-	String get title_active => '任務主頁';
+	String get title => '任務主頁';
 
 	late final TranslationsS13TaskDashboardButtonsZhTw buttons = TranslationsS13TaskDashboardButtonsZhTw.internal(_root);
-
-	/// zh-TW: '大家'
-	String get tab_group => '大家';
-
-	/// zh-TW: '個人'
-	String get tab_personal => '個人';
-
-	/// zh-TW: '預收款餘額'
-	String get label_prepay_balance => '預收款餘額';
-
-	/// zh-TW: '我的收支'
-	String get label_my_balance => '我的收支';
-
-	/// zh-TW: '暫存零頭: {amount}'
-	String label_remainder({required Object amount}) => '暫存零頭: ${amount}';
-
-	/// zh-TW: '結餘'
-	String get label_balance => '結餘';
-
-	/// zh-TW: '總費用'
-	String get label_total_expense => '總費用';
-
-	/// zh-TW: '總預收'
-	String get label_total_prepay => '總預收';
-
-	/// zh-TW: '總費用'
-	String get label_total_expense_personal => '總費用';
-
-	/// zh-TW: '總預收（含代墊）'
-	String get label_total_prepay_personal => '總預收（含代墊）';
-
-	/// zh-TW: '零頭罐'
-	String get label_remainder_pot => '零頭罐';
-
-	/// zh-TW: '尚無收支紀錄'
-	String get empty_records => '尚無收支紀錄';
-
-	/// zh-TW: '準備前往記帳頁面...'
-	String get nav_to_record => '準備前往記帳頁面...';
+	late final TranslationsS13TaskDashboardTabZhTw tab = TranslationsS13TaskDashboardTabZhTw.internal(_root);
+	late final TranslationsS13TaskDashboardLabelZhTw label = TranslationsS13TaskDashboardLabelZhTw.internal(_root);
+	late final TranslationsS13TaskDashboardEmptyZhTw empty = TranslationsS13TaskDashboardEmptyZhTw.internal(_root);
 
 	/// zh-TW: '支出'
 	String get daily_expense_label => '支出';
@@ -323,32 +288,7 @@ class TranslationsS13TaskDashboardZhTw {
 	/// zh-TW: '收支幣別明細'
 	String get dialog_balance_detail => '收支幣別明細';
 
-	/// zh-TW: '支出明細'
-	String get section_expense => '支出明細';
-
-	/// zh-TW: '預收明細'
-	String get section_income => '預收明細';
-
-	/// zh-TW: '本日支出'
-	String get daily_stats_title => '本日支出';
-
-	/// zh-TW: '個人本日支出'
-	String get personal_daily_total => '個人本日支出';
-
-	/// zh-TW: '應收'
-	String get personal_to_receive => '應收';
-
-	/// zh-TW: '應付'
-	String get personal_to_pay => '應付';
-
-	/// zh-TW: '無有關紀錄'
-	String get personal_empty_desc => '無有關紀錄';
-
-	/// zh-TW: '總金額'
-	String get total_amount_label => '總金額';
-
-	/// zh-TW: '此任務已關閉。資料將保留 30 天，請下載您的紀錄。'
-	String get retention_notice => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。';
+	late final TranslationsS13TaskDashboardSectionZhTw section = TranslationsS13TaskDashboardSectionZhTw.internal(_root);
 }
 
 // Path: S14_Task_Settings
@@ -926,21 +866,7 @@ class TranslationsB04PaymentMergeZhTw {
 	/// zh-TW: '合併成員款項'
 	String get title => '合併成員款項';
 
-	/// zh-TW: '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。'
-	String get description => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。';
-
-	/// zh-TW: '代表成員'
-	String get section_head => '代表成員';
-
-	/// zh-TW: '選擇合併成員'
-	String get section_candidates => '選擇合併成員';
-
-	/// zh-TW: '應付'
-	String get status_payable => '應付';
-
-	/// zh-TW: '可退'
-	String get status_receivable => '可退';
-
+	late final TranslationsB04PaymentMergeLabelZhTw label = TranslationsB04PaymentMergeLabelZhTw.internal(_root);
 	late final TranslationsB04PaymentMergeButtonsZhTw buttons = TranslationsB04PaymentMergeButtonsZhTw.internal(_root);
 }
 
@@ -1282,6 +1208,21 @@ class TranslationsCommonPaymentInfoZhTw {
 	String get app_link => '連結 / ID';
 }
 
+// Path: common.payment_status
+class TranslationsCommonPaymentStatusZhTw {
+	TranslationsCommonPaymentStatusZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '應付'
+	String get payable => '應付';
+
+	/// zh-TW: '可退'
+	String get receivable => '可退';
+}
+
 // Path: common.share
 class TranslationsCommonShareZhTw {
 	TranslationsCommonShareZhTw.internal(this._root);
@@ -1342,6 +1283,75 @@ class TranslationsS13TaskDashboardButtonsZhTw {
 
 	/// zh-TW: '新增'
 	String get add => '新增';
+}
+
+// Path: S13_Task_Dashboard.tab
+class TranslationsS13TaskDashboardTabZhTw {
+	TranslationsS13TaskDashboardTabZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '群組'
+	String get group => '群組';
+
+	/// zh-TW: '個人'
+	String get personal => '個人';
+}
+
+// Path: S13_Task_Dashboard.label
+class TranslationsS13TaskDashboardLabelZhTw {
+	TranslationsS13TaskDashboardLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '總費用'
+	String get total_expense => '總費用';
+
+	/// zh-TW: '總預收'
+	String get total_prepay => '總預收';
+
+	/// zh-TW: '總費用'
+	String get total_expense_personal => '總費用';
+
+	/// zh-TW: '總預收（含代墊）'
+	String get total_prepay_personal => '總預收（含代墊）';
+}
+
+// Path: S13_Task_Dashboard.empty
+class TranslationsS13TaskDashboardEmptyZhTw {
+	TranslationsS13TaskDashboardEmptyZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '尚無收支紀錄'
+	String get records => '尚無收支紀錄';
+
+	/// zh-TW: '無有關紀錄'
+	String get personal_records => '無有關紀錄';
+}
+
+// Path: S13_Task_Dashboard.section
+class TranslationsS13TaskDashboardSectionZhTw {
+	TranslationsS13TaskDashboardSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '支出明細'
+	String get expense => '支出明細';
+
+	/// zh-TW: '預收明細'
+	String get income => '預收明細';
+
+	/// zh-TW: '預收餘額'
+	String get prepay_balance => '預收餘額';
 }
 
 // Path: S14_Task_Settings.section
@@ -1951,6 +1961,21 @@ class TranslationsB03SplitMethodEditLabelZhTw {
 	String total({required Object current, required Object target}) => '${current} / ${target}';
 }
 
+// Path: B04_payment_merge.label
+class TranslationsB04PaymentMergeLabelZhTw {
+	TranslationsB04PaymentMergeLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '代表'
+	String get head_member => '代表';
+
+	/// zh-TW: '合併總額'
+	String get merge_amount => '合併總額';
+}
+
 // Path: B04_payment_merge.buttons
 class TranslationsB04PaymentMergeButtonsZhTw {
 	TranslationsB04PaymentMergeButtonsZhTw.internal(this._root);
@@ -2385,6 +2410,8 @@ extension on Translations {
 			'common.payment_info.bank_account_hint' => '帳號',
 			'common.payment_info.app_name' => 'App 名稱 (如: LinePay)',
 			'common.payment_info.app_link' => '連結 / ID',
+			'common.payment_status.payable' => '應付',
+			'common.payment_status.receivable' => '可退',
 			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split 任務結算通知',
@@ -2437,35 +2464,24 @@ extension on Translations {
 			'S12_TaskClose_Notice.title' => '結束任務確認',
 			'S12_TaskClose_Notice.content' => '關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。',
 			'S12_TaskClose_Notice.buttons.close' => '結束任務',
-			'S13_Task_Dashboard.title_active' => '任務主頁',
+			'S13_Task_Dashboard.title' => '任務主頁',
 			'S13_Task_Dashboard.buttons.record' => '新增紀錄',
 			'S13_Task_Dashboard.buttons.settlement' => '結算',
 			'S13_Task_Dashboard.buttons.download' => '下載記錄',
 			'S13_Task_Dashboard.buttons.add' => '新增',
-			'S13_Task_Dashboard.tab_group' => '大家',
-			'S13_Task_Dashboard.tab_personal' => '個人',
-			'S13_Task_Dashboard.label_prepay_balance' => '預收款餘額',
-			'S13_Task_Dashboard.label_my_balance' => '我的收支',
-			'S13_Task_Dashboard.label_remainder' => ({required Object amount}) => '暫存零頭: ${amount}',
-			'S13_Task_Dashboard.label_balance' => '結餘',
-			'S13_Task_Dashboard.label_total_expense' => '總費用',
-			'S13_Task_Dashboard.label_total_prepay' => '總預收',
-			'S13_Task_Dashboard.label_total_expense_personal' => '總費用',
-			'S13_Task_Dashboard.label_total_prepay_personal' => '總預收（含代墊）',
-			'S13_Task_Dashboard.label_remainder_pot' => '零頭罐',
-			'S13_Task_Dashboard.empty_records' => '尚無收支紀錄',
-			'S13_Task_Dashboard.nav_to_record' => '準備前往記帳頁面...',
+			'S13_Task_Dashboard.tab.group' => '群組',
+			'S13_Task_Dashboard.tab.personal' => '個人',
+			'S13_Task_Dashboard.label.total_expense' => '總費用',
+			'S13_Task_Dashboard.label.total_prepay' => '總預收',
+			'S13_Task_Dashboard.label.total_expense_personal' => '總費用',
+			'S13_Task_Dashboard.label.total_prepay_personal' => '總預收（含代墊）',
+			'S13_Task_Dashboard.empty.records' => '尚無收支紀錄',
+			'S13_Task_Dashboard.empty.personal_records' => '無有關紀錄',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
-			'S13_Task_Dashboard.section_expense' => '支出明細',
-			'S13_Task_Dashboard.section_income' => '預收明細',
-			'S13_Task_Dashboard.daily_stats_title' => '本日支出',
-			'S13_Task_Dashboard.personal_daily_total' => '個人本日支出',
-			'S13_Task_Dashboard.personal_to_receive' => '應收',
-			'S13_Task_Dashboard.personal_to_pay' => '應付',
-			'S13_Task_Dashboard.personal_empty_desc' => '無有關紀錄',
-			'S13_Task_Dashboard.total_amount_label' => '總金額',
-			'S13_Task_Dashboard.retention_notice' => '此任務已關閉。資料將保留 30 天，請下載您的紀錄。',
+			'S13_Task_Dashboard.section.expense' => '支出明細',
+			'S13_Task_Dashboard.section.income' => '預收明細',
+			'S13_Task_Dashboard.section.prepay_balance' => '預收餘額',
 			'S14_Task_Settings.title' => '任務設定',
 			'S14_Task_Settings.section.task_name' => '任務名稱',
 			'S14_Task_Settings.section.task_period' => '任務期間',
@@ -2657,11 +2673,8 @@ extension on Translations {
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
 			'B03_SplitMethod_Edit.mismatch' => '金額不符',
 			'B04_payment_merge.title' => '合併成員款項',
-			'B04_payment_merge.description' => '將成員合併至代表成員之下，應收退款金額將合併，方便只向代表成員收款。',
-			'B04_payment_merge.section_head' => '代表成員',
-			'B04_payment_merge.section_candidates' => '選擇合併成員',
-			'B04_payment_merge.status_payable' => '應付',
-			'B04_payment_merge.status_receivable' => '可退',
+			'B04_payment_merge.label.head_member' => '代表',
+			'B04_payment_merge.label.merge_amount' => '合併總額',
 			'B04_payment_merge.buttons.cancel' => '取消',
 			'B04_payment_merge.buttons.confirm' => '合併',
 			'B06_payment_info_detail.label_copied' => '已複製到剪貼簿',

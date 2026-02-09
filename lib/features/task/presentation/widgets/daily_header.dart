@@ -63,7 +63,7 @@ class DailyHeader extends StatelessWidget {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  child: Text(t.S13_Task_Dashboard.personal_empty_desc,
+                  child: Text(t.S13_Task_Dashboard.empty.personal_records,
                       style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w200,
                           color: theme.colorScheme.onSurfaceVariant

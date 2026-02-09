@@ -64,9 +64,7 @@ class _S30Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    // M3 Theme Access
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     // 使用 watch 監聽變化
     final vm = context.watch<S30SettlementConfirmViewModel>();
@@ -128,11 +126,7 @@ class _S30Content extends StatelessWidget {
       SettlementMember head,
     ) async {
       // 1. 過濾候選名單
-      final candidates = vm.settlementMembers.where((m) {
-        if (m.id == head.id) return false;
-        if (m.isMergedHead) return false;
-        return true;
-      }).toList();
+      final candidates = vm.getMergeCandidates(head);
 
       // 2. 取得目前已經合併在該 Head 底下的 ID
       final initialMergedIds = vm.currentMergeMap[head.id] ?? [];
@@ -170,8 +164,6 @@ class _S30Content extends StatelessWidget {
         }
       },
       child: Scaffold(
-        // [M3]: 使用 surface (或 surfaceContainerLow) 取代 hardcoded grey
-        backgroundColor: colorScheme.surface,
         appBar: AppBar(
           title: Text(t.S30_settlement_confirm.title),
           centerTitle: true,
@@ -225,9 +217,14 @@ class _S30Content extends StatelessWidget {
                         separatorBuilder: (_, __) => const SizedBox(height: 8),
                         itemBuilder: (context, index) {
                           final member = vm.settlementMembers[index];
+
+                          // [新增] 檢查是否有候選人
+                          final candidates = vm.getMergeCandidates(member);
+                          final bool canMerge = candidates.isNotEmpty;
                           return SettlementMemberItem(
                             member: member,
                             baseCurrency: vm.baseCurrency,
+                            isActionEnabled: canMerge,
                             onActionTap: () =>
                                 _showMergeSettings(context, vm, member),
                           );

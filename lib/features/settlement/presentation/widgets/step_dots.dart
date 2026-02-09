@@ -33,8 +33,9 @@ class StepDots extends StatelessWidget {
               height: 8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    (isActive || isPassed) ? primaryColor : colorScheme.surface,
+                color: (isActive || isPassed)
+                    ? primaryColor
+                    : colorScheme.surfaceContainerLow,
                 border: Border.all(
                   color: (isActive || isPassed)
                       ? primaryColor

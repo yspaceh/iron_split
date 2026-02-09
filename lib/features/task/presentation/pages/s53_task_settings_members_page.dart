@@ -158,7 +158,7 @@ class _S53Content extends StatelessWidget {
           body: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             itemCount: membersList.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final entry = membersList[index];
               final memberId = entry.key;
