@@ -69,8 +69,7 @@ class TaskItemInput extends StatelessWidget {
             labelText: t.S15_Record_Edit.label.title,
             // 加一點提示文字，增加 UX
             hintText: t.S15_Record_Edit.hint.item(
-                category:
-                    CategoryConstant.getPlaceholder(t, selectedCategoryId)),
+                category: CategoryConstant.getHint(t, selectedCategoryId)),
             validator: (v) =>
                 v?.isEmpty == true ? t.error.message.required : null,
           ),

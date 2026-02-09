@@ -87,6 +87,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonErrorZhTw error = TranslationsCommonErrorZhTw.internal(_root);
 	late final TranslationsCommonCategoryZhTw category = TranslationsCommonCategoryZhTw.internal(_root);
 	late final TranslationsCommonCurrencyZhTw currency = TranslationsCommonCurrencyZhTw.internal(_root);
+	late final TranslationsCommonAvatarZhTw avatar = TranslationsCommonAvatarZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 	late final TranslationsCommonSplitMethodZhTw split_method = TranslationsCommonSplitMethodZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
@@ -626,15 +627,7 @@ class TranslationsD01MemberRoleIntroZhTw {
 	String get title => '你的角色是...';
 
 	late final TranslationsD01MemberRoleIntroButtonsZhTw buttons = TranslationsD01MemberRoleIntroButtonsZhTw.internal(_root);
-
-	/// zh-TW: '還有 1 次機會'
-	String get desc_reroll_left => '還有 1 次機會';
-
-	/// zh-TW: '機會已用完'
-	String get desc_reroll_empty => '機會已用完';
-
-	/// zh-TW: '這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！'
-	String get dialog_content => '這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！';
+	late final TranslationsD01MemberRoleIntroDescriptionZhTw description = TranslationsD01MemberRoleIntroDescriptionZhTw.internal(_root);
 }
 
 // Path: D02_Invite_Result
@@ -1125,6 +1118,75 @@ class TranslationsCommonCurrencyZhTw {
 
 	/// zh-TW: '印度盧比'
 	String get inr => '印度盧比';
+}
+
+// Path: common.avatar
+class TranslationsCommonAvatarZhTw {
+	TranslationsCommonAvatarZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '荷斯登乳牛'
+	String get cow => '荷斯登乳牛';
+
+	/// zh-TW: '小豬'
+	String get pig => '小豬';
+
+	/// zh-TW: '狍鹿'
+	String get deer => '狍鹿';
+
+	/// zh-TW: '馬'
+	String get horse => '馬';
+
+	/// zh-TW: '薩福克羊'
+	String get sheep => '薩福克羊';
+
+	/// zh-TW: '家山羊'
+	String get goat => '家山羊';
+
+	/// zh-TW: '綠頭鴨'
+	String get duck => '綠頭鴨';
+
+	/// zh-TW: '白鼬'
+	String get stoat => '白鼬';
+
+	/// zh-TW: '歐洲野兔'
+	String get rabbit => '歐洲野兔';
+
+	/// zh-TW: '老鼠'
+	String get mouse => '老鼠';
+
+	/// zh-TW: '虎斑家貓'
+	String get cat => '虎斑家貓';
+
+	/// zh-TW: '邊境牧羊犬'
+	String get dog => '邊境牧羊犬';
+
+	/// zh-TW: '歐亞水獺'
+	String get otter => '歐亞水獺';
+
+	/// zh-TW: '倉鴞'
+	String get owl => '倉鴞';
+
+	/// zh-TW: '赤狐'
+	String get fox => '赤狐';
+
+	/// zh-TW: '歐洲刺蝟'
+	String get hedgehog => '歐洲刺蝟';
+
+	/// zh-TW: '驢子'
+	String get donkey => '驢子';
+
+	/// zh-TW: '紅松鼠'
+	String get squirrel => '紅松鼠';
+
+	/// zh-TW: '歐洲獾'
+	String get badger => '歐洲獾';
+
+	/// zh-TW: '歐亞知更鳥'
+	String get robin => '歐亞知更鳥';
 }
 
 // Path: common.remainder_rule
@@ -1789,6 +1851,24 @@ class TranslationsD01MemberRoleIntroButtonsZhTw {
 	String get enter => '進入任務';
 }
 
+// Path: D01_MemberRole_Intro.description
+class TranslationsD01MemberRoleIntroDescriptionZhTw {
+	TranslationsD01MemberRoleIntroDescriptionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '這是你在本次任務中的專屬頭像{avatar}。 所有分帳紀錄都會使用{avatar}代表你喔！'
+	String content({required Object avatar}) => '這是你在本次任務中的專屬頭像${avatar}。\n所有分帳紀錄都會使用${avatar}代表你喔！';
+
+	/// zh-TW: '還有 1 次機會'
+	String get reroll_left => '還有 1 次機會';
+
+	/// zh-TW: '機會已用完'
+	String get reroll_empty => '機會已用完';
+}
+
 // Path: D02_Invite_Result.buttons
 class TranslationsD02InviteResultButtonsZhTw {
 	TranslationsD02InviteResultButtonsZhTw.internal(this._root);
@@ -2445,6 +2525,26 @@ extension on Translations {
 			'common.currency.sar' => '沙烏地里亞爾',
 			'common.currency.try_' => '土耳其里拉',
 			'common.currency.inr' => '印度盧比',
+			'common.avatar.cow' => '荷斯登乳牛',
+			'common.avatar.pig' => '小豬',
+			'common.avatar.deer' => '狍鹿',
+			'common.avatar.horse' => '馬',
+			'common.avatar.sheep' => '薩福克羊',
+			'common.avatar.goat' => '家山羊',
+			'common.avatar.duck' => '綠頭鴨',
+			'common.avatar.stoat' => '白鼬',
+			'common.avatar.rabbit' => '歐洲野兔',
+			'common.avatar.mouse' => '老鼠',
+			'common.avatar.cat' => '虎斑家貓',
+			'common.avatar.dog' => '邊境牧羊犬',
+			'common.avatar.otter' => '歐亞水獺',
+			'common.avatar.owl' => '倉鴞',
+			'common.avatar.fox' => '赤狐',
+			'common.avatar.hedgehog' => '歐洲刺蝟',
+			'common.avatar.donkey' => '驢子',
+			'common.avatar.squirrel' => '紅松鼠',
+			'common.avatar.badger' => '歐洲獾',
+			'common.avatar.robin' => '歐亞知更鳥',
 			'common.remainder_rule.title' => '零頭處理',
 			'common.remainder_rule.rule.random' => '隨機指定',
 			'common.remainder_rule.rule.order' => '順序輪替',
@@ -2684,9 +2784,9 @@ extension on Translations {
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.buttons.reroll' => '換個動物',
 			'D01_MemberRole_Intro.buttons.enter' => '進入任務',
-			'D01_MemberRole_Intro.desc_reroll_left' => '還有 1 次機會',
-			'D01_MemberRole_Intro.desc_reroll_empty' => '機會已用完',
-			'D01_MemberRole_Intro.dialog_content' => '這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！',
+			'D01_MemberRole_Intro.description.content' => ({required Object avatar}) => '這是你在本次任務中的專屬頭像${avatar}。\n所有分帳紀錄都會使用${avatar}代表你喔！',
+			'D01_MemberRole_Intro.description.reroll_left' => '還有 1 次機會',
+			'D01_MemberRole_Intro.description.reroll_empty' => '機會已用完',
 			'D02_Invite_Result.title' => '加入失敗',
 			'D02_Invite_Result.buttons.back' => '回首頁',
 			'D02_Invite_Result.error_INVALID_CODE' => '邀請碼無效，請確認連結是否正確。',

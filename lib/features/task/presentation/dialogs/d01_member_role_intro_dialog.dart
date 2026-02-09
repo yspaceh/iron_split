@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
@@ -79,67 +82,56 @@ class _D01DialogContentState extends State<_D01DialogContent>
 
     return PopScope(
       canPop: false,
-      child: Dialog(
-        backgroundColor: theme.colorScheme.surface,
-        surfaceTintColor: theme.colorScheme.surfaceTint,
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                t.D01_MemberRole_Intro.title,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+      child: CommonAlertDialog(
+        title: t.D01_MemberRole_Intro.title,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Avatar Animation
+            ScaleTransition(
+              scale: _animController,
+              child: CommonAvatar(
+                avatarId: vm.currentAvatar, // 從 VM 獲取
+                name: null,
+                radius: 55,
+                isLinked: true,
               ),
-              const SizedBox(height: 24),
+            ),
+            const SizedBox(height: 16),
 
-              // Avatar Animation
-              ScaleTransition(
-                scale: _animController,
-                child: CommonAvatar(
-                  avatarId: vm.currentAvatar, // 從 VM 獲取
-                  name: null,
-                  radius: 55,
-                  isLinked: true,
-                ),
+            Text(vm.currentAvatar),
+
+            Text(
+              t.D01_MemberRole_Intro.description.content(
+                avatar: AvatarConstants.getName(t, vm.currentAvatar),
               ),
-              const SizedBox(height: 16),
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 24),
 
-              Text(
-                t.D01_MemberRole_Intro.dialog_content,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-
-              // Reroll Button
-              TextButton.icon(
-                onPressed: vm.canReroll ? vm.handleReroll : null,
-                icon: vm.isUpdating
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.refresh),
-                label: Text(vm.canReroll
-                    ? t.D01_MemberRole_Intro.buttons.reroll
-                    : t.D01_MemberRole_Intro.desc_reroll_empty),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Enter Button
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => _onEnter(context, vm),
-                  child: Text(t.D01_MemberRole_Intro.buttons.enter),
-                ),
-              ),
-            ],
-          ),
+            // Reroll Button
+            TextButton.icon(
+              onPressed: vm.canReroll ? vm.handleReroll : null,
+              icon: vm.isUpdating
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.refresh),
+              label: Text(vm.canReroll
+                  ? t.D01_MemberRole_Intro.buttons.reroll
+                  : t.D01_MemberRole_Intro.description.reroll_empty),
+            ),
+          ],
         ),
+        actions: [
+          AppButton(
+            text: t.D01_MemberRole_Intro.buttons.enter,
+            type: AppButtonType.primary,
+            onPressed: () => _onEnter(context, vm),
+          ),
+        ],
       ),
     );
   }

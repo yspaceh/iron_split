@@ -86,6 +86,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonErrorJaJp error = _TranslationsCommonErrorJaJp._(_root);
 	@override late final _TranslationsCommonCategoryJaJp category = _TranslationsCommonCategoryJaJp._(_root);
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
+	@override late final _TranslationsCommonAvatarJaJp avatar = _TranslationsCommonAvatarJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
 	@override late final _TranslationsCommonSplitMethodJaJp split_method = _TranslationsCommonSplitMethodJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
@@ -394,9 +395,7 @@ class _TranslationsD01MemberRoleIntroJaJp extends TranslationsD01MemberRoleIntro
 	// Translations
 	@override String get title => 'あなたのキャラクター';
 	@override late final _TranslationsD01MemberRoleIntroButtonsJaJp buttons = _TranslationsD01MemberRoleIntroButtonsJaJp._(_root);
-	@override String get desc_reroll_left => 'あと1回変更可';
-	@override String get desc_reroll_empty => '変更不可';
-	@override String get dialog_content => 'これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！';
+	@override late final _TranslationsD01MemberRoleIntroDescriptionJaJp description = _TranslationsD01MemberRoleIntroDescriptionJaJp._(_root);
 }
 
 // Path: D02_Invite_Result
@@ -682,6 +681,35 @@ class _TranslationsCommonCurrencyJaJp extends TranslationsCommonCurrencyZhTw {
 	@override String get sar => 'サウジアラビアリヤル';
 	@override String get try_ => 'トルコリラ';
 	@override String get inr => 'インドルピー';
+}
+
+// Path: common.avatar
+class _TranslationsCommonAvatarJaJp extends TranslationsCommonAvatarZhTw {
+	_TranslationsCommonAvatarJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get cow => 'ホルスタイン牛';
+	@override String get pig => 'ブタ';
+	@override String get deer => 'ノロジカ';
+	@override String get horse => '馬';
+	@override String get sheep => 'サフォーク種のヒツジ';
+	@override String get goat => 'ヤギ';
+	@override String get duck => 'マガモ';
+	@override String get stoat => 'オコジョ';
+	@override String get rabbit => 'ヨーロッパノウサギ';
+	@override String get mouse => 'ハツカネズミ';
+	@override String get cat => 'キジトラのイエネコ';
+	@override String get dog => 'ボーダー・コリー';
+	@override String get otter => 'ユーラシアカワウソ';
+	@override String get owl => 'メンフクロウ';
+	@override String get fox => 'アカギツネ';
+	@override String get hedgehog => 'ヨーロッパハリネズミ';
+	@override String get donkey => 'ロバ';
+	@override String get squirrel => 'ユーラシアアカリス';
+	@override String get badger => 'ヨーロッパアナグマ';
+	@override String get robin => 'ヨーロッパコマドリ';
 }
 
 // Path: common.remainder_rule
@@ -1143,6 +1171,18 @@ class _TranslationsD01MemberRoleIntroButtonsJaJp extends TranslationsD01MemberRo
 	// Translations
 	@override String get reroll => '動物を変える';
 	@override String get enter => 'タスクへ進む';
+}
+
+// Path: D01_MemberRole_Intro.description
+class _TranslationsD01MemberRoleIntroDescriptionJaJp extends TranslationsD01MemberRoleIntroDescriptionZhTw {
+	_TranslationsD01MemberRoleIntroDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String content({required Object avatar}) => 'これが今回のタスクでのあなたのアイコン${avatar}です。\n割り勘の記録には${avatar}が表示されますよ！';
+	@override String get reroll_left => 'あと1回変更可';
+	@override String get reroll_empty => '変更不可';
 }
 
 // Path: D02_Invite_Result.buttons
@@ -1623,6 +1663,26 @@ extension on TranslationsJaJp {
 			'common.currency.sar' => 'サウジアラビアリヤル',
 			'common.currency.try_' => 'トルコリラ',
 			'common.currency.inr' => 'インドルピー',
+			'common.avatar.cow' => 'ホルスタイン牛',
+			'common.avatar.pig' => 'ブタ',
+			'common.avatar.deer' => 'ノロジカ',
+			'common.avatar.horse' => '馬',
+			'common.avatar.sheep' => 'サフォーク種のヒツジ',
+			'common.avatar.goat' => 'ヤギ',
+			'common.avatar.duck' => 'マガモ',
+			'common.avatar.stoat' => 'オコジョ',
+			'common.avatar.rabbit' => 'ヨーロッパノウサギ',
+			'common.avatar.mouse' => 'ハツカネズミ',
+			'common.avatar.cat' => 'キジトラのイエネコ',
+			'common.avatar.dog' => 'ボーダー・コリー',
+			'common.avatar.otter' => 'ユーラシアカワウソ',
+			'common.avatar.owl' => 'メンフクロウ',
+			'common.avatar.fox' => 'アカギツネ',
+			'common.avatar.hedgehog' => 'ヨーロッパハリネズミ',
+			'common.avatar.donkey' => 'ロバ',
+			'common.avatar.squirrel' => 'ユーラシアアカリス',
+			'common.avatar.badger' => 'ヨーロッパアナグマ',
+			'common.avatar.robin' => 'ヨーロッパコマドリ',
 			'common.remainder_rule.title' => '端数処理',
 			'common.remainder_rule.rule.random' => 'ランダム',
 			'common.remainder_rule.rule.order' => '順番',
@@ -1862,9 +1922,9 @@ extension on TranslationsJaJp {
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.buttons.reroll' => '動物を変える',
 			'D01_MemberRole_Intro.buttons.enter' => 'タスクへ進む',
-			'D01_MemberRole_Intro.desc_reroll_left' => 'あと1回変更可',
-			'D01_MemberRole_Intro.desc_reroll_empty' => '変更不可',
-			'D01_MemberRole_Intro.dialog_content' => 'これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！',
+			'D01_MemberRole_Intro.description.content' => ({required Object avatar}) => 'これが今回のタスクでのあなたのアイコン${avatar}です。\n割り勘の記録には${avatar}が表示されますよ！',
+			'D01_MemberRole_Intro.description.reroll_left' => 'あと1回変更可',
+			'D01_MemberRole_Intro.description.reroll_empty' => '変更不可',
 			'D02_Invite_Result.title' => '参加失敗',
 			'D02_Invite_Result.buttons.back' => 'ホームへ戻る',
 			'D02_Invite_Result.error_INVALID_CODE' => '招待コードが無効です。リンクが正しいか確認してください。',

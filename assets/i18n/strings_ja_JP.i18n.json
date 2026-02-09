@@ -56,6 +56,28 @@
       "try_": "トルコリラ",
       "inr": "インドルピー"
     },
+    "avatar": {
+      "cow": "ホルスタイン牛",
+      "pig": "ブタ",
+      "deer": "ノロジカ",
+      "horse": "馬",
+      "sheep": "サフォーク種のヒツジ",
+      "goat": "ヤギ",
+      "duck": "マガモ",
+      "stoat": "オコジョ",
+      "rabbit": "ヨーロッパノウサギ",
+      "mouse": "ハツカネズミ",
+      "cat": "キジトラのイエネコ",
+      "dog": "ボーダー・コリー",
+      "otter": "ユーラシアカワウソ",
+      "owl": "メンフクロウ",
+      "fox": "アカギツネ",
+      "hedgehog": "ヨーロッパハリネズミ",
+      "donkey": "ロバ",
+      "squirrel": "ユーラシアアカリス",
+      "badger": "ヨーロッパアナグマ",
+      "robin": "ヨーロッパコマドリ"
+    },
     "remainder_rule": {
       "title": "端数処理",
       "rule": {
@@ -429,9 +451,11 @@
       "reroll": "動物を変える",
       "enter": "タスクへ進む"
     },
-    "desc_reroll_left": "あと1回変更可",
-    "desc_reroll_empty": "変更不可",
-    "dialog_content": "これが今回のタスクでのあなたのアイコンです。割り勘の記録にはこの動物が表示されますよ！"
+    "description": {
+      "content": "これが今回のタスクでのあなたのアイコン{avatar}です。\n割り勘の記録には{avatar}が表示されますよ！",
+      "reroll_left": "あと1回変更可",
+      "reroll_empty": "変更不可"
+    }
   },
   "D02_Invite_Result": {
     "title": "参加失敗",

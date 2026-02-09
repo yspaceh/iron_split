@@ -39,7 +39,7 @@ class CategoryConstant {
     }
   }
 
-  static String getPlaceholder(Translations t, String? id) {
+  static String getHint(Translations t, String? id) {
     switch (id) {
       case 'fastfood':
         return t.S15_Record_Edit.hint.category.food;

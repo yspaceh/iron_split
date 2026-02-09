@@ -56,6 +56,28 @@
       "try_": "土耳其里拉",
       "inr": "印度盧比"
     },
+    "avatar": {
+      "cow": "荷斯登乳牛",
+      "pig": "小豬",
+      "deer": "狍鹿",
+      "horse": "馬",
+      "sheep": "薩福克羊",
+      "goat": "家山羊",
+      "duck": "綠頭鴨",
+      "stoat": "白鼬",
+      "rabbit": "歐洲野兔",
+      "mouse": "老鼠",
+      "cat": "虎斑家貓",
+      "dog": "邊境牧羊犬",
+      "otter": "歐亞水獺",
+      "owl": "倉鴞",
+      "fox": "赤狐",
+      "hedgehog": "歐洲刺蝟",
+      "donkey": "驢子",
+      "squirrel": "紅松鼠",
+      "badger": "歐洲獾",
+      "robin": "歐亞知更鳥"
+    },
     "remainder_rule": {
       "title": "零頭處理",
       "rule": {
@@ -429,9 +451,11 @@
       "reroll": "換個動物",
       "enter": "進入任務"
     },
-    "desc_reroll_left": "還有 1 次機會",
-    "desc_reroll_empty": "機會已用完",
-    "dialog_content": "這是你在本次任務中的專屬頭像。所有分帳紀錄都會使用這個動物代表你喔！"
+    "description": {
+      "content": "這是你在本次任務中的專屬頭像{avatar}。\n所有分帳紀錄都會使用{avatar}代表你喔！",
+      "reroll_left": "還有 1 次機會",
+      "reroll_empty": "機會已用完"
+    }
   },
   "D02_Invite_Result": {
     "title": "加入失敗",

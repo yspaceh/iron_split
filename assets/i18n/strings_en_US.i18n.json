@@ -87,6 +87,28 @@
       "payable": "Payable",
       "receivable": "Receivable"
     },
+    "avatar": {
+      "cow": "Holstein Friesian",
+      "pig": "Domestic pig",
+      "deer": "Roe deer",
+      "horse": "Chestnut horse",
+      "sheep": "Suffolk sheep",
+      "goat": "Domestic goat",
+      "duck": "Mallard",
+      "stoat": "Stoat",
+      "rabbit": "European hare",
+      "mouse": "House mouse",
+      "cat": "Domestic tabby cat",
+      "dog": "Border Collie",
+      "otter": "Eurasian otter",
+      "owl": "Barn owl",
+      "fox": "Red fox",
+      "hedgehog": "European hedgehog",
+      "donkey": "Donkey",
+      "squirrel": "Eurasian red squirrel",
+      "badger": "European badger",
+      "robin": "European robin"
+    },
     "remainder_rule": {
       "title": "Remainder Rule",
       "rule": {
@@ -429,9 +451,11 @@
       "reroll": "Change Animal",
       "enter": "Enter Task"
     },
-    "desc_reroll_left": "1 chance left",
-    "desc_reroll_empty": "No chances left",
-    "dialog_content": "This is your exclusive avatar for this task. It will represent you in all split records!"
+    "description": {
+      "content": "This is your exclusive avatar {avatar} for this task. \n{avatar} will represent you in all split records!",
+      "reroll_left": "1 chance left",
+      "reroll_empty": "No chances left"
+    }
   },
   "D02_Invite_Result": {
     "title": "Join Failed",

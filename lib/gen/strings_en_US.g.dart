@@ -88,6 +88,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonCurrencyEnUs currency = _TranslationsCommonCurrencyEnUs._(_root);
 	@override late final _TranslationsCommonPaymentInfoEnUs payment_info = _TranslationsCommonPaymentInfoEnUs._(_root);
 	@override late final _TranslationsCommonPaymentStatusEnUs payment_status = _TranslationsCommonPaymentStatusEnUs._(_root);
+	@override late final _TranslationsCommonAvatarEnUs avatar = _TranslationsCommonAvatarEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
 	@override late final _TranslationsCommonSplitMethodEnUs split_method = _TranslationsCommonSplitMethodEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
@@ -394,9 +395,7 @@ class _TranslationsD01MemberRoleIntroEnUs extends TranslationsD01MemberRoleIntro
 	// Translations
 	@override String get title => 'Your Character';
 	@override late final _TranslationsD01MemberRoleIntroButtonsEnUs buttons = _TranslationsD01MemberRoleIntroButtonsEnUs._(_root);
-	@override String get desc_reroll_left => '1 chance left';
-	@override String get desc_reroll_empty => 'No chances left';
-	@override String get dialog_content => 'This is your exclusive avatar for this task. It will represent you in all split records!';
+	@override late final _TranslationsD01MemberRoleIntroDescriptionEnUs description = _TranslationsD01MemberRoleIntroDescriptionEnUs._(_root);
 }
 
 // Path: D02_Invite_Result
@@ -707,6 +706,35 @@ class _TranslationsCommonPaymentStatusEnUs extends TranslationsCommonPaymentStat
 	// Translations
 	@override String get payable => 'Payable';
 	@override String get receivable => 'Receivable';
+}
+
+// Path: common.avatar
+class _TranslationsCommonAvatarEnUs extends TranslationsCommonAvatarZhTw {
+	_TranslationsCommonAvatarEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get cow => 'Holstein Friesian';
+	@override String get pig => 'Domestic pig';
+	@override String get deer => 'Roe deer';
+	@override String get horse => 'Chestnut horse';
+	@override String get sheep => 'Suffolk sheep';
+	@override String get goat => 'Domestic goat';
+	@override String get duck => 'Mallard';
+	@override String get stoat => 'Stoat';
+	@override String get rabbit => 'European hare';
+	@override String get mouse => 'House mouse';
+	@override String get cat => 'Domestic tabby cat';
+	@override String get dog => 'Border Collie';
+	@override String get otter => 'Eurasian otter';
+	@override String get owl => 'Barn owl';
+	@override String get fox => 'Red fox';
+	@override String get hedgehog => 'European hedgehog';
+	@override String get donkey => 'Donkey';
+	@override String get squirrel => 'Eurasian red squirrel';
+	@override String get badger => 'European badger';
+	@override String get robin => 'European robin';
 }
 
 // Path: common.remainder_rule
@@ -1143,6 +1171,18 @@ class _TranslationsD01MemberRoleIntroButtonsEnUs extends TranslationsD01MemberRo
 	// Translations
 	@override String get reroll => 'Change Animal';
 	@override String get enter => 'Enter Task';
+}
+
+// Path: D01_MemberRole_Intro.description
+class _TranslationsD01MemberRoleIntroDescriptionEnUs extends TranslationsD01MemberRoleIntroDescriptionZhTw {
+	_TranslationsD01MemberRoleIntroDescriptionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String content({required Object avatar}) => 'This is your exclusive avatar ${avatar} for this task. \n${avatar} will represent you in all split records!';
+	@override String get reroll_left => '1 chance left';
+	@override String get reroll_empty => 'No chances left';
 }
 
 // Path: D02_Invite_Result.buttons
@@ -1639,6 +1679,26 @@ extension on TranslationsEnUs {
 			'common.payment_info.hint.app_link' => 'e.g. venmo-username',
 			'common.payment_status.payable' => 'Payable',
 			'common.payment_status.receivable' => 'Receivable',
+			'common.avatar.cow' => 'Holstein Friesian',
+			'common.avatar.pig' => 'Domestic pig',
+			'common.avatar.deer' => 'Roe deer',
+			'common.avatar.horse' => 'Chestnut horse',
+			'common.avatar.sheep' => 'Suffolk sheep',
+			'common.avatar.goat' => 'Domestic goat',
+			'common.avatar.duck' => 'Mallard',
+			'common.avatar.stoat' => 'Stoat',
+			'common.avatar.rabbit' => 'European hare',
+			'common.avatar.mouse' => 'House mouse',
+			'common.avatar.cat' => 'Domestic tabby cat',
+			'common.avatar.dog' => 'Border Collie',
+			'common.avatar.otter' => 'Eurasian otter',
+			'common.avatar.owl' => 'Barn owl',
+			'common.avatar.fox' => 'Red fox',
+			'common.avatar.hedgehog' => 'European hedgehog',
+			'common.avatar.donkey' => 'Donkey',
+			'common.avatar.squirrel' => 'Eurasian red squirrel',
+			'common.avatar.badger' => 'European badger',
+			'common.avatar.robin' => 'European robin',
 			'common.remainder_rule.title' => 'Remainder Rule',
 			'common.remainder_rule.rule.random' => 'Random',
 			'common.remainder_rule.rule.order' => 'Order',
@@ -1861,9 +1921,9 @@ extension on TranslationsEnUs {
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.buttons.reroll' => 'Change Animal',
 			'D01_MemberRole_Intro.buttons.enter' => 'Enter Task',
-			'D01_MemberRole_Intro.desc_reroll_left' => '1 chance left',
-			'D01_MemberRole_Intro.desc_reroll_empty' => 'No chances left',
-			'D01_MemberRole_Intro.dialog_content' => 'This is your exclusive avatar for this task. It will represent you in all split records!',
+			'D01_MemberRole_Intro.description.content' => ({required Object avatar}) => 'This is your exclusive avatar ${avatar} for this task. \n${avatar} will represent you in all split records!',
+			'D01_MemberRole_Intro.description.reroll_left' => '1 chance left',
+			'D01_MemberRole_Intro.description.reroll_empty' => 'No chances left',
 			'D02_Invite_Result.title' => 'Join Failed',
 			'D02_Invite_Result.buttons.back' => 'Back to Home',
 			'D02_Invite_Result.error_INVALID_CODE' => 'Invalid invite code. Please check if the link is correct.',

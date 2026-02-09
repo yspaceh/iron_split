@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: D03_TaskCreate.Confirm
@@ -35,28 +36,28 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildRow(context, t.D03_TaskCreate_Confirm.label_name, taskName),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_period,
                 '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_currency,
                 baseCurrency.code),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_members,
                 '$memberCount'),
           ],
         ),
       ),
       actions: [
-        // Secondary: 返回
-        TextButton(
-          onPressed: () => Navigator.pop(context, false), // 回傳 false
-          child: Text(t.D03_TaskCreate_Confirm.buttons.back),
+        AppButton(
+          text: t.D03_TaskCreate_Confirm.buttons.back,
+          type: AppButtonType.secondary,
+          onPressed: () => Navigator.pop(context, false),
         ),
-        // Primary: 確認
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true), // 回傳 true
-          child: Text(t.D03_TaskCreate_Confirm.buttons.confirm),
+        AppButton(
+          text: t.D03_TaskCreate_Confirm.buttons.confirm,
+          type: AppButtonType.primary,
+          onPressed: () => Navigator.pop(context, true),
         ),
       ],
     );
@@ -64,22 +65,21 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
 
   Widget _buildRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 80,
-          child: Text(label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(
+          label,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
-        Expanded(
-          child: Text(value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface)),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
         ),
       ],
     );
