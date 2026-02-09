@@ -9,14 +9,14 @@ class TaskNameInput extends StatelessWidget {
     required this.controller,
     this.maxLength,
     required this.label,
-    required this.placeholder,
+    required this.hint,
     this.fillColor,
   });
 
   final TextEditingController controller;
   final int? maxLength;
   final String label;
-  final String placeholder;
+  final String hint;
   final Color? fillColor;
 
   @override
@@ -31,7 +31,7 @@ class TaskNameInput extends StatelessWidget {
           controller: controller,
           autofocus: true,
           labelText: label, // 或 field_name
-          hintText: placeholder,
+          hintText: hint,
           fillColor: fillColor,
           maxLength: inputMaxLength,
           inputFormatters: [

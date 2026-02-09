@@ -9,6 +9,7 @@ class AppSelectField extends StatelessWidget {
   final String? errorText;
   final Color? fillColor;
   final Widget? trailing;
+  final AutovalidateMode? autovalidateMode;
 
   const AppSelectField({
     super.key,
@@ -20,6 +21,7 @@ class AppSelectField extends StatelessWidget {
     this.errorText,
     this.fillColor,
     this.trailing,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
   @override
@@ -59,7 +61,7 @@ class AppSelectField extends StatelessWidget {
               key: ValueKey(text),
               initialValue: isEmpty ? null : text,
               readOnly: true,
-              // [關鍵] 對齊底部
+              autovalidateMode: autovalidateMode,
               textAlignVertical: TextAlignVertical.bottom,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,

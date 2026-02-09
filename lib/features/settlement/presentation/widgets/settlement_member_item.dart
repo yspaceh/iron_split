@@ -19,8 +19,8 @@ class SettlementMemberItem extends StatelessWidget {
     required this.member,
     required this.baseCurrency,
     this.onActionTap,
-    this.isActionEnabled = true, // 預設啟用
-    this.actionIcon = Icons.link, // 預設為連結圖示
+    this.isActionEnabled = true,
+    this.actionIcon = Icons.link,
   });
 
   @override
@@ -29,17 +29,26 @@ class SettlementMemberItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final bool isGroup = member.subMembers.isNotEmpty;
 
-    // [修改] 移除 Card，改用 Container 且不設 Border
     return Container(
+      // [關鍵] 1. 裝飾層：與 RecordItem 一致的白底、圓角 16、極淡陰影
       decoration: BoxDecoration(
-        color: colorScheme.surface, // 純白背景
-        borderRadius: BorderRadius.circular(16), // 圓角
-        // 這裡不設 border，達到「無邊框」效果
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16), // ✅ 圓角 16
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03), // ✅ 極淡陰影 (3%)
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
       ),
-      clipBehavior: Clip.antiAlias,
-      child: isGroup
-          ? _buildGroupContent(context, colorScheme)
-          : _buildSingleRow(context, colorScheme),
+      // [關鍵] 2. 裁切層：確保內容不會超出圓角
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16), // ✅ 圓角 16
+        child: isGroup
+            ? _buildGroupContent(context, colorScheme)
+            : _buildSingleRow(context, colorScheme),
+      ),
     );
   }
 
@@ -51,6 +60,7 @@ class SettlementMemberItem extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
+              // ✅ 垂直內距 12 + 頭像 40 = 高度 64px (與 RecordItem 一致)
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: _buildInfoContent(
                 context,
@@ -58,7 +68,7 @@ class SettlementMemberItem extends StatelessWidget {
                   avatarId: member.avatar,
                   name: member.displayName,
                   isLinked: member.isLinked,
-                  radius: 20,
+                  radius: 20, // ✅ 直徑 40px
                 ),
                 name: member.displayName,
                 amount: member.finalAmount,
@@ -66,7 +76,8 @@ class SettlementMemberItem extends StatelessWidget {
               ),
             ),
           ),
-          // 分隔線 (極淡)
+
+          // 分隔線
           VerticalDivider(
             width: 1,
             thickness: 1,
@@ -74,15 +85,16 @@ class SettlementMemberItem extends StatelessWidget {
             indent: 8,
             endIndent: 8,
           ),
+
+          // 右側按鈕
           _buildActionButton(context, colorScheme),
         ],
       ),
     );
   }
 
-  // --- 2. 群組顯示模式 ---
+  // --- 2. 群組顯示模式 (邏輯不變，僅樣式微調) ---
   Widget _buildGroupContent(BuildContext context, ColorScheme colorScheme) {
-    // 邏輯保持不變
     final double childrenSum =
         member.subMembers.fold(0.0, (sum, child) => sum + child.finalAmount);
     final double headIndividualAmount = member.finalAmount - childrenSum;
@@ -121,6 +133,7 @@ class SettlementMemberItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
+                  // ✅ Header 保持一致的高度設定
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: _buildInfoContent(
@@ -129,7 +142,7 @@ class SettlementMemberItem extends StatelessWidget {
                       allMembers: allMembersMap,
                       targetMemberIds: allIds,
                       overlapRatio: 0.5,
-                      radius: 20, // Header 頭像稍大
+                      radius: 20,
                       type: AvatarStackType.stack,
                       limit: 3,
                     ),
@@ -158,10 +171,9 @@ class SettlementMemberItem extends StatelessWidget {
           color: colorScheme.outlineVariant.withValues(alpha: 0.2),
         ),
 
-        // Body
+        // Body (子成員列表)
         ...allSubMembers.map((sub) {
           return Padding(
-            // 這裡可以考慮給一點縮排，增加層次感
             padding: EdgeInsets.zero,
             child: _buildSubMemberRow(context, sub, colorScheme),
           );
@@ -207,7 +219,6 @@ class SettlementMemberItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        // 金額區塊
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -236,9 +247,6 @@ class SettlementMemberItem extends StatelessWidget {
   // --- 子成員細項 ---
   Widget _buildSubMemberRow(
       BuildContext context, SettlementMember sub, ColorScheme colorScheme) {
-    // 復用 _buildInfoContent 的邏輯，但稍微縮小一點
-    // 這裡我們直接使用 Container 包裹 _buildInfoContent 的變體
-    // 為了簡單，這裡手動重寫一個簡化版
     final textTheme = Theme.of(context).textTheme;
     final isReceiving = sub.finalAmount > 0;
     final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
@@ -247,17 +255,17 @@ class SettlementMemberItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        // 子項目之間可以加極淡的分隔線
         border: Border(
           top: BorderSide(
               color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         ),
+        color: colorScheme.surfaceContainerLow.withValues(alpha: 0.3),
       ),
+      // 子項目高度：Vertical 12 + Avatar 32 (radius 16) + Vertical 12 = 56px (稍矮一點，符合層級感)
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          // 縮排效果，增加層次
-          const SizedBox(width: 8),
+          const SizedBox(width: 16), // 縮排
           CommonAvatar(
             avatarId: sub.avatar,
             name: sub.displayName,
@@ -278,7 +286,7 @@ class SettlementMemberItem extends StatelessWidget {
           Text(
             '${baseCurrency.symbol} $displayAmount',
             style: textTheme.bodyMedium?.copyWith(
-              color: amountColor,
+              color: amountColor.withValues(alpha: 0.8),
               fontFamily: 'RobotoMono',
             ),
           ),
@@ -289,7 +297,6 @@ class SettlementMemberItem extends StatelessWidget {
 
   // --- 動作按鈕 ---
   Widget _buildActionButton(BuildContext context, ColorScheme colorScheme) {
-    // [修改] 如果 disable，顏色變淡
     final iconColor = isActionEnabled
         ? colorScheme.primary
         : colorScheme.onSurfaceVariant.withValues(alpha: 0.2);
@@ -298,7 +305,6 @@ class SettlementMemberItem extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: isActionEnabled ? onActionTap : null,
-        borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
         child: Container(
           width: 56,
           alignment: Alignment.center,

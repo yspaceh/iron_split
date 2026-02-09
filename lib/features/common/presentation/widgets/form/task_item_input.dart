@@ -68,7 +68,7 @@ class TaskItemInput extends StatelessWidget {
             controller: titleController,
             labelText: t.S15_Record_Edit.label.title,
             // 加一點提示文字，增加 UX
-            hintText: t.S15_Record_Edit.placeholder.item(
+            hintText: t.S15_Record_Edit.hint.item(
                 category:
                     CategoryConstant.getPlaceholder(t, selectedCategoryId)),
             validator: (v) =>

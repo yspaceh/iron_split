@@ -18,7 +18,7 @@ class TaskMemoInput extends StatelessWidget {
       controller: memoController,
       fillColor: fillColor,
       labelText: t.S15_Record_Edit.label.memo, // 標題
-      hintText: t.S15_Record_Edit.placeholder.memo, // 增加一點提示 (Optional)
+      hintText: t.S15_Record_Edit.hint.memo, // 增加一點提示 (Optional)
 
       // 多行設定
       keyboardType: TextInputType.multiline,

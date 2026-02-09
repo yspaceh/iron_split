@@ -77,7 +77,7 @@ class B06PaymentInfoDetailBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (isPrivate)
-              Text(t.common.payment_info.mode_private)
+              Text(t.common.payment_info.mode.private)
             else
               Flexible(
                 child: SingleChildScrollView(
@@ -102,7 +102,7 @@ class B06PaymentInfoDetailBottomSheet extends StatelessWidget {
   Widget _buildCashTile(BuildContext context, Translations t) {
     return ListTile(
       leading: const Icon(Icons.money),
-      title: Text(t.common.payment_info.type_cash),
+      title: Text(t.common.payment_info.type.cash),
       contentPadding: EdgeInsets.zero,
     );
   }
@@ -124,7 +124,7 @@ class B06PaymentInfoDetailBottomSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(t.common.payment_info.type_bank,
+              Text(t.common.payment_info.type.bank,
                   style: theme.textTheme.labelLarge),
               IconButton(
                 icon: const Icon(Icons.copy, size: 20),

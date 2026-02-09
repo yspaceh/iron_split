@@ -95,7 +95,7 @@ class _S51ContentState extends State<_S51Content> {
                 controller: _controller,
                 maxLength: 10,
                 label: t.S51_Onboarding_Name.title,
-                placeholder: t.S51_Onboarding_Name.field_hint, // "例如：Iron Man"
+                hint: t.S51_Onboarding_Name.field_hint, // "例如：Iron Man"
               ),
             ],
           ),

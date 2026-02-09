@@ -136,7 +136,7 @@ class _S14ContentState extends State<_S14Content> {
                   child: TaskNameInput(
                     controller: vm.nameController,
                     label: t.S16_TaskCreate_Edit.label.name,
-                    placeholder: t.S16_TaskCreate_Edit.placeholder.name,
+                    hint: t.S16_TaskCreate_Edit.hint.name,
                     maxLength: 20,
                   ),
                 ),

@@ -57,18 +57,31 @@
       "inr": "Indian Rupee"
     },
     "payment_info": {
-      "method_label": "Payment Method",
-      "mode_private": "Contact me directly",
-      "mode_private_desc": "No detailed information will be shown. Members should contact you directly.",
-      "mode_public": "Provide payment information",
-      "mode_public_desc": "Display bank account details or a payment link",
-      "type_cash": "Cash",
-      "type_bank": "Bank Transfer",
-      "type_apps": "Other Payment Apps",
-      "bank_name_hint": "Bank code / name",
-      "bank_account_hint": "Account number",
-      "app_name": "App name (e.g. LinePay)",
-      "app_link": "Link / ID"
+      "mode": {
+        "private": "Contact me directly",
+        "public": "Share payment details"
+      },
+      "description": {
+        "private": "Details are hidden. Members should contact you directly",
+        "public": "Payment details will be shown to members"
+      },
+      "type": {
+        "cash": "Cash",
+        "bank": "Bank Transfer",
+        "apps": "Payment Apps"
+      },
+      "label": {
+        "bank_name": "Bank name / code",
+        "bank_account": "Account number",
+        "app_name": "App name",
+        "app_link": "Link / ID"
+      },
+      "hint": {
+        "bank_name": "e.g. Chase Bank",
+        "bank_account": "e.g. 123456789",
+        "app_name": "e.g. Venmo",
+        "app_link": "e.g. venmo-username"
+      }
     },
     "payment_status":{
       "payable": "Payable",
@@ -254,7 +267,7 @@
       "rate": "Exchange Rate",
       "memo": "Memo"
     },
-    "placeholder": {
+    "hint": {
       "category": {
         "food": "Dinner",
         "transport": "Transportation",
@@ -287,7 +300,7 @@
       "member_count": "Members",
       "date": "Date"
     },
-    "placeholder" : {
+    "hint" : {
       "name": "e.g. Tokyo Trip"
     }
   },
@@ -497,7 +510,7 @@
       "split_method": "Split Method"
     },
     "item_name_empty" : "Parent item name is empty",
-    "placeholder" : {
+    "hint" : {
       "sub_item": "e.g. Sub-item"
     }
   },

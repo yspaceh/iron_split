@@ -110,210 +110,226 @@ class GroupBalanceCard extends StatelessWidget {
           ));
     }
 
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
-      // Card 顏色與形狀已由 AppTheme 全局控制 (純白 + 微邊框)
-      child: InkWell(
-        onTap: showBalanceDetails,
+      decoration: BoxDecoration(
+        color: Colors.white, // [修改] 統一使用純白
+        borderRadius: BorderRadius.circular(20), // 大卡片維持 20 的圓角，比較大氣
+        // [修改] 加入與 MemberItem 一致的極淡陰影
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          height: fixedHeight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // --- Top Content ---
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                child: Column(
-                  children: [
-                    // (A) Header: Currency Chip
-                    Row(
-                      children: [
-                        const Spacer(),
-                        InkWell(
-                          onTap: isCurrencyTapLocked ? null : onCurrencyTap,
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: footerBgColor, // 使用變數
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: borderColor, // 使用變數
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  state.currencyCode,
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                ),
-                                if (!isCurrencyTapLocked) ...[
-                                  const SizedBox(width: 4),
-                                  Icon(Icons.keyboard_arrow_down,
-                                      size: 14,
-                                      color: theme.colorScheme.onSurface),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // (B) Core: Big Number (Net Balance)
-                    Center(
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: state.currencySymbol,
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                // 使用變數判斷顏色
-                                color: netBalance < 0
-                                    ? expenseColor
-                                    : (netBalance > 0
-                                        ? incomeColor
-                                        : neutralColor),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const TextSpan(text: " "),
-                            TextSpan(
-                              text: CurrencyConstants.formatAmount(
-                                  netBalance.abs(), state.currencyCode),
-                              style: TextStyle(
-                                fontSize: 36,
-                                fontFamily: 'RobotoMono',
-                                fontWeight: FontWeight.w700,
-                                // 使用變數判斷顏色
-                                color: netBalance < 0
-                                    ? expenseColor
-                                    : (netBalance > 0
-                                        ? incomeColor
-                                        : neutralColor),
-                                letterSpacing: -1.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${t.S13_Task_Dashboard.label.total_expense} ",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          "|",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          "${t.S13_Task_Dashboard.label.total_prepay} ",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              if (fixedHeight != null)
-                const Spacer()
-              else
-                const SizedBox(height: 16),
-
-              // --- Bottom Footer ---
-              InkWell(
-                onTap: onRuleTap,
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(20)),
-                child: Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface, // 使用變數
-                    border: Border(
-                      top: BorderSide(
-                        color: borderColor, // 使用變數
-                        width: 1,
-                      ),
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(20)),
-                  ),
-                  child: Row(
+        child: InkWell(
+          onTap: showBalanceDetails,
+          borderRadius: BorderRadius.circular(20),
+          child: SizedBox(
+            height: fixedHeight,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // --- Top Content ---
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                  child: Column(
                     children: [
-                      Icon(Icons.savings_outlined,
-                          size: 18, color: theme.colorScheme.onSurfaceVariant),
-                      const SizedBox(width: 8),
-                      Text(
-                        "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontFamily: 'RobotoMono',
-                          color: theme.colorScheme.onSurface,
+                      // (A) Header: Currency Chip
+                      Row(
+                        children: [
+                          const Spacer(),
+                          InkWell(
+                            onTap: isCurrencyTapLocked ? null : onCurrencyTap,
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: footerBgColor, // 使用變數
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: borderColor, // 使用變數
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    state.currencyCode,
+                                    style:
+                                        theme.textTheme.labelMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  if (!isCurrencyTapLocked) ...[
+                                    const SizedBox(width: 4),
+                                    Icon(Icons.keyboard_arrow_down,
+                                        size: 14,
+                                        color: theme.colorScheme.onSurface),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // (B) Core: Big Number (Net Balance)
+                      Center(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: state.currencySymbol,
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  // 使用變數判斷顏色
+                                  color: netBalance < 0
+                                      ? expenseColor
+                                      : (netBalance > 0
+                                          ? incomeColor
+                                          : neutralColor),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(text: " "),
+                              TextSpan(
+                                text: CurrencyConstants.formatAmount(
+                                    netBalance.abs(), state.currencyCode),
+                                style: TextStyle(
+                                  fontSize: 36,
+                                  fontFamily: 'RobotoMono',
+                                  fontWeight: FontWeight.w700,
+                                  // 使用變數判斷顏色
+                                  color: netBalance < 0
+                                      ? expenseColor
+                                      : (netBalance > 0
+                                          ? incomeColor
+                                          : neutralColor),
+                                  letterSpacing: -1.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const Spacer(),
-                      if (state.isLocked && state.absorbedBy != null)
-                        Text(
-                          t.S17_Task_Locked.label_remainder_absorbed_by(
-                              name: state.absorbedBy ?? ""),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${t.S13_Task_Dashboard.label.total_expense} ",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                        )
-                      else
-                        Text(
-                          RemainderRuleConstants.getLabel(
-                              context, state.ruleKey),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
+                          Text(
+                            "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      if (!isRuleTapLocked) ...[
-                        const SizedBox(width: 4),
-                        Icon(Icons.chevron_right,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant),
-                      ],
+                          const SizedBox(width: 4),
+                          Text(
+                            "|",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            "${t.S13_Task_Dashboard.label.total_prepay} ",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(
+                            "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                if (fixedHeight != null)
+                  const Spacer()
+                else
+                  const SizedBox(height: 16),
+
+                // --- Bottom Footer ---
+                InkWell(
+                  onTap: onRuleTap,
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface, // 使用變數
+                      border: Border(
+                        top: BorderSide(
+                          color: borderColor, // 使用變數
+                          width: 1,
+                        ),
+                      ),
+                      borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(20)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.savings_outlined,
+                            size: 18,
+                            color: theme.colorScheme.onSurfaceVariant),
+                        const SizedBox(width: 8),
+                        Text(
+                          "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontFamily: 'RobotoMono',
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (state.isLocked && state.absorbedBy != null)
+                          Text(
+                            t.S17_Task_Locked.label_remainder_absorbed_by(
+                                name: state.absorbedBy ?? ""),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        else
+                          Text(
+                            RemainderRuleConstants.getLabel(
+                                context, state.ruleKey),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        if (!isRuleTapLocked) ...[
+                          const SizedBox(width: 4),
+                          Icon(Icons.chevron_right,
+                              size: 16,
+                              color: theme.colorScheme.onSurfaceVariant),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

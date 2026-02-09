@@ -46,180 +46,195 @@ class PersonalBalanceCard extends StatelessWidget {
     final displayName = memberData?['displayName'] ??
         t.S53_TaskSettings_Members.member_default_name;
 
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
-      child: Container(
-        height: fixedHeight,
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CommonAvatar(
-                      avatarId: memberData?['avatar'],
-                      name: displayName,
-                      radius: 48,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      displayName,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: theme.colorScheme.onSurface),
-                    ),
-                  ],
+      decoration: BoxDecoration(
+        color: Colors.white, // [修改] 純白
+        borderRadius: BorderRadius.circular(20), // [修改] 圓角 20
+        // [修改] 統一陰影
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          height: fixedHeight,
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CommonAvatar(
+                        avatarId: memberData?['avatar'],
+                        name: displayName,
+                        radius: 48,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        displayName,
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(color: theme.colorScheme.onSurface),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Divider(
-              height: double.infinity,
-              thickness: 1, // 線條厚度
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: footerBgColor, // 使用變數
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: borderColor, // 使用變數
-                        width: 1,
+              Divider(
+                height: double.infinity,
+                thickness: 1, // 線條厚度
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: footerBgColor, // 使用變數
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: borderColor, // 使用變數
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            baseCurrency.code,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          baseCurrency.code,
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            isPositive
+                                ? t.common.payment_status.receivable
+                                : t.common.payment_status.payable,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          isPositive
-                              ? t.common.payment_status.receivable
-                              : t.common.payment_status.payable,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: baseCurrency.symbol,
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    // 使用變數判斷顏色
+                                    color: netBalance.base < 0
+                                        ? expenseColor
+                                        : (netBalance.base > 0
+                                            ? incomeColor
+                                            : neutralColor),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const TextSpan(text: " "),
+                                TextSpan(
+                                  text: CurrencyConstants.formatAmount(
+                                      netBalance.base.abs(), baseCurrency.code),
+                                  style: TextStyle(
+                                    fontSize: 36,
+                                    fontFamily: 'RobotoMono',
+                                    fontWeight: FontWeight.w700,
+                                    // 使用變數判斷顏色
+                                    color: netBalance.base < 0
+                                        ? expenseColor
+                                        : (netBalance.base > 0
+                                            ? incomeColor
+                                            : neutralColor),
+                                    letterSpacing: -1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Text.rich(
-                          TextSpan(
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              TextSpan(
-                                text: baseCurrency.symbol,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  // 使用變數判斷顏色
-                                  color: netBalance.base < 0
-                                      ? expenseColor
-                                      : (netBalance.base > 0
-                                          ? incomeColor
-                                          : neutralColor),
-                                  fontWeight: FontWeight.bold,
+                              Text(
+                                "${t.S13_Task_Dashboard.label.total_expense} ",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                              const TextSpan(text: " "),
-                              TextSpan(
-                                text: CurrencyConstants.formatAmount(
-                                    netBalance.base.abs(), baseCurrency.code),
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  fontFamily: 'RobotoMono',
-                                  fontWeight: FontWeight.w700,
-                                  // 使用變數判斷顏色
-                                  color: netBalance.base < 0
-                                      ? expenseColor
-                                      : (netBalance.base > 0
-                                          ? incomeColor
-                                          : neutralColor),
-                                  letterSpacing: -1.0,
+                              Text(
+                                "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalExpense.base.abs(), baseCurrency.code)}",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "|",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "${t.S13_Task_Dashboard.label.total_prepay} ",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              Text(
+                                "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalIncome.base.abs(), baseCurrency.code)}",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "${t.S13_Task_Dashboard.label.total_expense} ",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Text(
-                              "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalExpense.base.abs(), baseCurrency.code)}",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "|",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "${t.S13_Task_Dashboard.label.total_prepay} ",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Text(
-                              "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalIncome.base.abs(), baseCurrency.code)}",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Row(
-                  //   children: [
-                  //     const SizedBox(width: 16),
-                  //     Expanded(
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(
-                  //             displayName,
-                  //             style: theme.textTheme.titleMedium
-                  //                 ?.copyWith(fontWeight: FontWeight.bold),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                ],
+                    // Row(
+                    //   children: [
+                    //     const SizedBox(width: 16),
+                    //     Expanded(
+                    //       child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         mainAxisSize: MainAxisSize.min,
+                    //         children: [
+                    //           Text(
+                    //             displayName,
+                    //             style: theme.textTheme.titleMedium
+                    //                 ?.copyWith(fontWeight: FontWeight.bold),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

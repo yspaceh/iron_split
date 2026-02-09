@@ -6,7 +6,7 @@ import 'package:iron_split/features/common/presentation/widgets/selection_indica
 class SelectionTile extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onTap;
-  final Widget leading;
+  final Widget? leading;
   final String title;
   final Widget? trailing;
   final Color? backgroundColor;
@@ -17,7 +17,7 @@ class SelectionTile extends StatelessWidget {
     super.key,
     required this.isSelected,
     required this.onTap,
-    required this.leading,
+    this.leading,
     required this.title,
     this.trailing,
     this.backgroundColor,
@@ -57,8 +57,10 @@ class SelectionTile extends StatelessWidget {
                   isRadio: isRadio, // 傳遞樣式
                 ),
                 const SizedBox(width: 8),
-                leading,
-                const SizedBox(width: 8),
+                if (leading != null) ...[
+                  leading ?? Container(),
+                  const SizedBox(width: 8),
+                ],
                 Expanded(
                   child: Text(
                     title,

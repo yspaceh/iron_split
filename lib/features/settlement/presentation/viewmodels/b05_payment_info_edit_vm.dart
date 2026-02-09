@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
-import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
+import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 

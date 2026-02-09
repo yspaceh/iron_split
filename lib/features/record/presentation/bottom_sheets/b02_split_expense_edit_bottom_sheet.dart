@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
@@ -83,8 +84,6 @@ class _B02SplitExpenseEditBottomSheetState
   late List<String> _splitMemberIds;
   late Map<String, double>? _splitDetails;
 
-  String? _splitMethodError;
-
   @override
   void initState() {
     super.initState();
@@ -115,17 +114,12 @@ class _B02SplitExpenseEditBottomSheetState
 
     // 2. 檢查金額是否為 0
     if (amount <= 0) {
-      setState(() {
-        _splitMethodError =
-            t.error.message.empty(key: t.S15_Record_Edit.label.amount);
-      });
+      AppToast.showError(
+        context,
+        t.error.message.empty(key: t.S15_Record_Edit.label.amount),
+      );
       return;
     }
-
-    // 3. 如果金額正常，清空之前的錯誤訊息
-    setState(() {
-      _splitMethodError = null;
-    });
 
     final result = await B03SplitMethodEditBottomSheet.show(
       context,
@@ -232,7 +226,7 @@ class _B02SplitExpenseEditBottomSheetState
                 controller: _nameController,
                 fillColor: colorScheme.surfaceContainerLow,
                 labelText: t.B02_SplitExpense_Edit.label.sub_item,
-                hintText: t.B02_SplitExpense_Edit.placeholder.sub_item,
+                hintText: t.B02_SplitExpense_Edit.hint.sub_item,
                 validator: (v) =>
                     v?.isEmpty == true ? t.error.message.required : null,
               ),
@@ -266,7 +260,6 @@ class _B02SplitExpenseEditBottomSheetState
                   radius: 12,
                   fontSize: 10,
                 ),
-                errorText: _splitMethodError,
               ),
               const SizedBox(height: 8),
 

@@ -24,6 +24,7 @@ class AppTextField extends StatelessWidget {
   final bool isRequired;
   final Color? fillColor;
   final FocusNode? focusNode;
+  final AutovalidateMode? autovalidateMode;
 
   const AppTextField({
     super.key,
@@ -46,6 +47,7 @@ class AppTextField extends StatelessWidget {
     this.fillColor,
     this.focusNode,
     this.prefixText,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
   @override
@@ -103,6 +105,7 @@ class AppTextField extends StatelessWidget {
           keyboardType: keyboardType,
           onChanged: onChanged,
           validator: effectiveValidator,
+          autovalidateMode: autovalidateMode,
           maxLines: maxLines,
           maxLength: maxLength,
           inputFormatters: inputFormatters,

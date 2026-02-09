@@ -8,6 +8,8 @@ class SelectionCard extends StatelessWidget {
   final VoidCallback onToggle;
   final Widget child;
   final bool isRadio;
+  final Color? backgroundColor;
+  final Color? isSelectedBackgroundColor;
 
   const SelectionCard({
     super.key,
@@ -16,6 +18,8 @@ class SelectionCard extends StatelessWidget {
     required this.onToggle,
     required this.child,
     required this.isRadio,
+    this.backgroundColor,
+    this.isSelectedBackgroundColor,
   });
 
   @override
@@ -26,13 +30,10 @@ class SelectionCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
-        color:
-            isSelected ? colorScheme.surfaceContainerLow : colorScheme.surface,
+        color: isSelected
+            ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
+            : backgroundColor ?? colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        // border: Border.all(
-        //   color: isSelected ? colorScheme.primary : colorScheme.outlineVariant,
-        //   width: 1.5,
-        // ),
       ),
       child: Column(
         children: [
@@ -66,6 +67,7 @@ class SelectionCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(
                     height: 1,

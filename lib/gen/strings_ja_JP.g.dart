@@ -257,7 +257,7 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override String get payer_multiple => '複数人';
 	@override late final _TranslationsS15RecordEditRateDialogJaJp rate_dialog = _TranslationsS15RecordEditRateDialogJaJp._(_root);
 	@override late final _TranslationsS15RecordEditLabelJaJp label = _TranslationsS15RecordEditLabelJaJp._(_root);
-	@override late final _TranslationsS15RecordEditPlaceholderJaJp placeholder = _TranslationsS15RecordEditPlaceholderJaJp._(_root);
+	@override late final _TranslationsS15RecordEditHintJaJp hint = _TranslationsS15RecordEditHintJaJp._(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -271,7 +271,7 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override late final _TranslationsS16TaskCreateEditButtonsJaJp buttons = _TranslationsS16TaskCreateEditButtonsJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditSectionJaJp section = _TranslationsS16TaskCreateEditSectionJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditLabelJaJp label = _TranslationsS16TaskCreateEditLabelJaJp._(_root);
-	@override late final _TranslationsS16TaskCreateEditPlaceholderJaJp placeholder = _TranslationsS16TaskCreateEditPlaceholderJaJp._(_root);
+	@override late final _TranslationsS16TaskCreateEditHintJaJp hint = _TranslationsS16TaskCreateEditHintJaJp._(_root);
 }
 
 // Path: S17_Task_Locked
@@ -526,7 +526,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	@override late final _TranslationsB02SplitExpenseEditButtonsJaJp buttons = _TranslationsB02SplitExpenseEditButtonsJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditLabelJaJp label = _TranslationsB02SplitExpenseEditLabelJaJp._(_root);
 	@override String get item_name_empty => '親項目名を入力してない';
-	@override late final _TranslationsB02SplitExpenseEditPlaceholderJaJp placeholder = _TranslationsB02SplitExpenseEditPlaceholderJaJp._(_root);
+	@override late final _TranslationsB02SplitExpenseEditHintJaJp hint = _TranslationsB02SplitExpenseEditHintJaJp._(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -716,18 +716,11 @@ class _TranslationsCommonPaymentInfoJaJp extends TranslationsCommonPaymentInfoZh
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get method_label => '受取方法';
-	@override String get mode_private => '直接連絡してもらう';
-	@override String get mode_private_desc => '詳細情報は表示せず、メンバーが直接あなたに連絡します';
-	@override String get mode_public => '受取情報を提供する';
-	@override String get mode_public_desc => '銀行口座情報または支払いリンクを表示します';
-	@override String get type_cash => '現金';
-	@override String get type_bank => '銀行振込';
-	@override String get type_apps => 'その他の支払いアプリ';
-	@override String get bank_name_hint => '銀行コード / 銀行名';
-	@override String get bank_account_hint => '口座番号';
-	@override String get app_name => 'アプリ名（例：LinePay）';
-	@override String get app_link => 'リンク / ID';
+	@override late final _TranslationsCommonPaymentInfoModeJaJp mode = _TranslationsCommonPaymentInfoModeJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoDescriptionJaJp description = _TranslationsCommonPaymentInfoDescriptionJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoTypeJaJp type = _TranslationsCommonPaymentInfoTypeJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoLabelJaJp label = _TranslationsCommonPaymentInfoLabelJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoHintJaJp hint = _TranslationsCommonPaymentInfoHintJaJp._(_root);
 }
 
 // Path: common.payment_status
@@ -967,14 +960,14 @@ class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabel
 	@override String get memo => 'メモ';
 }
 
-// Path: S15_Record_Edit.placeholder
-class _TranslationsS15RecordEditPlaceholderJaJp extends TranslationsS15RecordEditPlaceholderZhTw {
-	_TranslationsS15RecordEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: S15_Record_Edit.hint
+class _TranslationsS15RecordEditHintJaJp extends TranslationsS15RecordEditHintZhTw {
+	_TranslationsS15RecordEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsS15RecordEditPlaceholderCategoryJaJp category = _TranslationsS15RecordEditPlaceholderCategoryJaJp._(_root);
+	@override late final _TranslationsS15RecordEditHintCategoryJaJp category = _TranslationsS15RecordEditHintCategoryJaJp._(_root);
 	@override String item({required Object category}) => '例：${category}';
 	@override String get memo => '例：補足事項';
 }
@@ -1018,9 +1011,9 @@ class _TranslationsS16TaskCreateEditLabelJaJp extends TranslationsS16TaskCreateE
 	@override String get date => '日付';
 }
 
-// Path: S16_TaskCreate_Edit.placeholder
-class _TranslationsS16TaskCreateEditPlaceholderJaJp extends TranslationsS16TaskCreateEditPlaceholderZhTw {
-	_TranslationsS16TaskCreateEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: S16_TaskCreate_Edit.hint
+class _TranslationsS16TaskCreateEditHintJaJp extends TranslationsS16TaskCreateEditHintZhTw {
+	_TranslationsS16TaskCreateEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
@@ -1235,9 +1228,9 @@ class _TranslationsB02SplitExpenseEditLabelJaJp extends TranslationsB02SplitExpe
 	@override String get split_method => '負担設定';
 }
 
-// Path: B02_SplitExpense_Edit.placeholder
-class _TranslationsB02SplitExpenseEditPlaceholderJaJp extends TranslationsB02SplitExpenseEditPlaceholderZhTw {
-	_TranslationsB02SplitExpenseEditPlaceholderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: B02_SplitExpense_Edit.hint
+class _TranslationsB02SplitExpenseEditHintJaJp extends TranslationsB02SplitExpenseEditHintZhTw {
+	_TranslationsB02SplitExpenseEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
@@ -1378,6 +1371,66 @@ class _TranslationsCommonRemainderRuleDescriptionJaJp extends TranslationsCommon
 	@override String get member => '特定のメンバーを指定し、常にその人が端数を負担するようにします。';
 }
 
+// Path: common.payment_info.mode
+class _TranslationsCommonPaymentInfoModeJaJp extends TranslationsCommonPaymentInfoModeZhTw {
+	_TranslationsCommonPaymentInfoModeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get private => '直接連絡してください';
+	@override String get public => '支払い情報を共有';
+}
+
+// Path: common.payment_info.description
+class _TranslationsCommonPaymentInfoDescriptionJaJp extends TranslationsCommonPaymentInfoDescriptionZhTw {
+	_TranslationsCommonPaymentInfoDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get private => '詳細は表示されません。メンバーから直接連絡してもらいます';
+	@override String get public => '支払い情報をメンバーに表示します';
+}
+
+// Path: common.payment_info.type
+class _TranslationsCommonPaymentInfoTypeJaJp extends TranslationsCommonPaymentInfoTypeZhTw {
+	_TranslationsCommonPaymentInfoTypeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get cash => '現金';
+	@override String get bank => '銀行振込';
+	@override String get apps => '決済アプリ';
+}
+
+// Path: common.payment_info.label
+class _TranslationsCommonPaymentInfoLabelJaJp extends TranslationsCommonPaymentInfoLabelZhTw {
+	_TranslationsCommonPaymentInfoLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get bank_name => '銀行コード / 銀行名';
+	@override String get bank_account => '口座番号';
+	@override String get app_name => 'アプリ名';
+	@override String get app_link => 'リンク / ID';
+}
+
+// Path: common.payment_info.hint
+class _TranslationsCommonPaymentInfoHintJaJp extends TranslationsCommonPaymentInfoHintZhTw {
+	_TranslationsCommonPaymentInfoHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get bank_name => '例：0001-みずほ銀行';
+	@override String get bank_account => '例：1234567';
+	@override String get app_name => '例：PayPay';
+	@override String get app_link => '例：paypay-id-123';
+}
+
 // Path: common.share.invite
 class _TranslationsCommonShareInviteJaJp extends TranslationsCommonShareInviteZhTw {
 	_TranslationsCommonShareInviteJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1400,9 +1453,9 @@ class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSett
 	@override String message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
 }
 
-// Path: S15_Record_Edit.placeholder.category
-class _TranslationsS15RecordEditPlaceholderCategoryJaJp extends TranslationsS15RecordEditPlaceholderCategoryZhTw {
-	_TranslationsS15RecordEditPlaceholderCategoryJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: S15_Record_Edit.hint.category
+class _TranslationsS15RecordEditHintCategoryJaJp extends TranslationsS15RecordEditHintCategoryZhTw {
+	_TranslationsS15RecordEditHintCategoryJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
@@ -1582,18 +1635,21 @@ extension on TranslationsJaJp {
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '割合',
 			'common.split_method.exact' => '金額指定',
-			'common.payment_info.method_label' => '受取方法',
-			'common.payment_info.mode_private' => '直接連絡してもらう',
-			'common.payment_info.mode_private_desc' => '詳細情報は表示せず、メンバーが直接あなたに連絡します',
-			'common.payment_info.mode_public' => '受取情報を提供する',
-			'common.payment_info.mode_public_desc' => '銀行口座情報または支払いリンクを表示します',
-			'common.payment_info.type_cash' => '現金',
-			'common.payment_info.type_bank' => '銀行振込',
-			'common.payment_info.type_apps' => 'その他の支払いアプリ',
-			'common.payment_info.bank_name_hint' => '銀行コード / 銀行名',
-			'common.payment_info.bank_account_hint' => '口座番号',
-			'common.payment_info.app_name' => 'アプリ名（例：LinePay）',
-			'common.payment_info.app_link' => 'リンク / ID',
+			'common.payment_info.mode.private' => '直接連絡してください',
+			'common.payment_info.mode.public' => '支払い情報を共有',
+			'common.payment_info.description.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
+			'common.payment_info.description.public' => '支払い情報をメンバーに表示します',
+			'common.payment_info.type.cash' => '現金',
+			'common.payment_info.type.bank' => '銀行振込',
+			'common.payment_info.type.apps' => '決済アプリ',
+			'common.payment_info.label.bank_name' => '銀行コード / 銀行名',
+			'common.payment_info.label.bank_account' => '口座番号',
+			'common.payment_info.label.app_name' => 'アプリ名',
+			'common.payment_info.label.app_link' => 'リンク / ID',
+			'common.payment_info.hint.bank_name' => '例：0001-みずほ銀行',
+			'common.payment_info.hint.bank_account' => '例：1234567',
+			'common.payment_info.hint.app_name' => '例：PayPay',
+			'common.payment_info.hint.app_link' => '例：paypay-id-123',
 			'common.payment_status.payable' => '支払',
 			'common.payment_status.receivable' => '受取',
 			'common.share.invite.subject' => 'Iron Split タスク招待',
@@ -1720,14 +1776,14 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
 			'S15_Record_Edit.label.rate' => '為替レート',
 			'S15_Record_Edit.label.memo' => 'メモ',
-			'S15_Record_Edit.placeholder.category.food' => '夕食',
-			'S15_Record_Edit.placeholder.category.transport' => '交通費',
-			'S15_Record_Edit.placeholder.category.shopping' => 'お土産',
-			'S15_Record_Edit.placeholder.category.entertainment' => '映画チケット',
-			'S15_Record_Edit.placeholder.category.accommodation' => '宿泊費',
-			'S15_Record_Edit.placeholder.category.others' => 'その他費用',
-			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '例：${category}',
-			'S15_Record_Edit.placeholder.memo' => '例：補足事項',
+			'S15_Record_Edit.hint.category.food' => '夕食',
+			'S15_Record_Edit.hint.category.transport' => '交通費',
+			'S15_Record_Edit.hint.category.shopping' => 'お土産',
+			'S15_Record_Edit.hint.category.entertainment' => '映画チケット',
+			'S15_Record_Edit.hint.category.accommodation' => '宿泊費',
+			'S15_Record_Edit.hint.category.others' => 'その他費用',
+			'S15_Record_Edit.hint.item' => ({required Object category}) => '例：${category}',
+			'S15_Record_Edit.hint.memo' => '例：補足事項',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '完了',
@@ -1741,7 +1797,7 @@ extension on TranslationsJaJp {
 			'S16_TaskCreate_Edit.label.currency' => '通貨',
 			'S16_TaskCreate_Edit.label.member_count' => '参加人数',
 			'S16_TaskCreate_Edit.label.date' => '日付',
-			'S16_TaskCreate_Edit.placeholder.name' => '例：東京5日間の旅',
+			'S16_TaskCreate_Edit.hint.name' => '例：東京5日間の旅',
 			'S17_Task_Locked.buttons.download' => '記録をダウンロード',
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
 			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
@@ -1851,7 +1907,7 @@ extension on TranslationsJaJp {
 			'B02_SplitExpense_Edit.label.sub_item' => '子項目名',
 			'B02_SplitExpense_Edit.label.split_method' => '負担設定',
 			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してない',
-			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：内訳',
+			'B02_SplitExpense_Edit.hint.sub_item' => '例：内訳',
 			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率を調整',
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',

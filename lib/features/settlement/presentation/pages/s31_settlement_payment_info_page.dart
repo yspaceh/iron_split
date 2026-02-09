@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/error/exceptions.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
@@ -162,7 +163,11 @@ class _S31Content extends StatelessWidget {
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: PaymentInfoForm(controller: vm.formController),
+              child: PaymentInfoForm(
+                controller: vm.formController,
+                isSelectedBackgroundColor: colorScheme.surface,
+                backgroundColor: colorScheme.surfaceContainerLow,
+              ),
             ),
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
@@ -170,25 +175,15 @@ class _S31Content extends StatelessWidget {
           // Sync Checkbox (Smart Display)
           if (vm.showSyncOption &&
               vm.formController.mode == PaymentMode.specific)
-            Container(
-              color: colorScheme.surfaceContainerLow,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: CheckboxListTile(
-                value: vm.isSyncChecked,
-                onChanged: vm.toggleSync,
-                title: Text(
-                  vm.isUpdate
-                      ? t.S31_settlement_payment_info
-                          .sync_update // "更新我的預設收款資訊"
-                      : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
-                  style: textTheme.bodySmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                controlAffinity: ListTileControlAffinity.leading,
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                activeColor: colorScheme.primary,
-              ),
+            SelectionTile(
+              isSelected: vm.isSyncChecked,
+              isRadio: false, // Checkbox 模式
+              onTap: () => vm.toggleSync(!vm.isSyncChecked),
+              title: vm.isUpdate
+                  ? t.S31_settlement_payment_info.sync_update // "更新我的預設收款資訊"
+                  : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
+              backgroundColor: Colors.transparent,
+              isSelectedBackgroundColor: Colors.transparent,
             ),
 
           StickyBottomActionBar(

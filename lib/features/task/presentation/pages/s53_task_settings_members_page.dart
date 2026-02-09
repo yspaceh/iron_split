@@ -366,7 +366,7 @@ class _RenameMemberDialogState extends State<_RenameMemberDialog> {
           maxLength: 10,
           fillColor: theme.colorScheme.surfaceContainerLow,
           label: t.S53_TaskSettings_Members.member_name,
-          placeholder: t.S53_TaskSettings_Members.member_name,
+          hint: t.S53_TaskSettings_Members.member_name,
         ),
       ),
       actions: [

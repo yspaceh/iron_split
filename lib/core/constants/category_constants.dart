@@ -42,18 +42,18 @@ class CategoryConstant {
   static String getPlaceholder(Translations t, String? id) {
     switch (id) {
       case 'fastfood':
-        return t.S15_Record_Edit.placeholder.category.food;
+        return t.S15_Record_Edit.hint.category.food;
       case 'directions_bus':
-        return t.S15_Record_Edit.placeholder.category.transport;
+        return t.S15_Record_Edit.hint.category.transport;
       case 'shopping_bag':
-        return t.S15_Record_Edit.placeholder.category.shopping;
+        return t.S15_Record_Edit.hint.category.shopping;
       case 'movie':
-        return t.S15_Record_Edit.placeholder.category.entertainment;
+        return t.S15_Record_Edit.hint.category.entertainment;
       case 'hotel':
-        return t.S15_Record_Edit.placeholder.category.accommodation;
+        return t.S15_Record_Edit.hint.category.accommodation;
       case 'more_horiz':
       default:
-        return t.S15_Record_Edit.placeholder.category.others;
+        return t.S15_Record_Edit.hint.category.others;
     }
   }
 }

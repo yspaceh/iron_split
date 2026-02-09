@@ -77,18 +77,31 @@
       "exact": "金額指定"
     },
     "payment_info": {
-      "method_label": "受取方法",
-      "mode_private": "直接連絡してもらう",
-      "mode_private_desc": "詳細情報は表示せず、メンバーが直接あなたに連絡します",
-      "mode_public": "受取情報を提供する",
-      "mode_public_desc": "銀行口座情報または支払いリンクを表示します",
-      "type_cash": "現金",
-      "type_bank": "銀行振込",
-      "type_apps": "その他の支払いアプリ",
-      "bank_name_hint": "銀行コード / 銀行名",
-      "bank_account_hint": "口座番号",
-      "app_name": "アプリ名（例：LinePay）",
-      "app_link": "リンク / ID"
+      "mode": {
+        "private": "直接連絡してください",
+        "public": "支払い情報を共有"
+      },
+      "description": {
+        "private": "詳細は表示されません。メンバーから直接連絡してもらいます",
+        "public": "支払い情報をメンバーに表示します"
+      },
+      "type": {
+        "cash": "現金",
+        "bank": "銀行振込",
+        "apps": "決済アプリ"
+      },
+      "label": {
+        "bank_name": "銀行コード / 銀行名",
+        "bank_account": "口座番号",
+        "app_name": "アプリ名",
+        "app_link": "リンク / ID"
+      },
+      "hint": {
+        "bank_name": "例：0001-みずほ銀行",
+        "bank_account": "例：1234567",
+        "app_name": "例：PayPay",
+        "app_link": "例：paypay-id-123"
+      }
     },
     "payment_status":{
       "payable": "支払",
@@ -278,7 +291,7 @@
       "rate": "為替レート",
       "memo": "メモ"
     },
-    "placeholder": {
+    "hint": {
       "category": {
         "food": "夕食",
         "transport": "交通費",
@@ -311,7 +324,7 @@
       "member_count": "参加人数",
       "date": "日付"
     },
-    "placeholder" : {
+    "hint" : {
       "name": "例：東京5日間の旅"
     }
   },
@@ -497,7 +510,7 @@
       "split_method": "負担設定"
     },
     "item_name_empty" : "親項目名を入力してない",
-    "placeholder" : {
+    "hint" : {
       "sub_item": "例：内訳"
     }
   },

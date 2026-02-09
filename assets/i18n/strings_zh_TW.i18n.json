@@ -77,18 +77,31 @@
       "exact": "指定金額"
     },
     "payment_info": {
-      "method_label": "收款方式",
-      "mode_private": "請直接私訊聯絡",
-      "mode_private_desc": "不顯示詳細資訊，請成員直接找你",
-      "mode_public": "提供收款資訊",
-      "mode_public_desc": "顯示銀行帳號或支付連結",
-      "type_cash": "現金",
-      "type_bank": "銀行轉帳",
-      "type_apps": "其他支付 App",
-      "bank_name_hint": "銀行代碼 / 名稱",
-      "bank_account_hint": "帳號",
-      "app_name": "App 名稱 (如: LinePay)",
-      "app_link": "連結 / ID"
+      "mode": {
+        "private": "請直接私訊聯絡",
+        "public": "提供收款資訊"
+      },
+      "description": {
+        "private": "不顯示詳細資訊，請成員直接找你",
+        "public": "顯示收款資訊給成員"
+      },
+      "type": {
+        "cash": "現金",
+        "bank": "銀行轉帳",
+        "apps": "其他支付 App"
+      },
+      "label": {
+        "bank_name": "銀行代碼 / 名稱",
+        "bank_account": "帳號",
+        "app_name": "App 名稱",
+        "app_link": "連結 / ID"
+      },
+      "hint": {
+        "bank_name": "例：004-台灣銀行",
+        "bank_account": "例：123-456-789012",
+        "app_name": "例：LinePay",
+        "app_link": "例：lineid12345"
+      }
     },
     "payment_status":{
       "payable": "應付",
@@ -254,7 +267,7 @@
       "rate": "匯率",
       "memo": "備註"
     },
-    "placeholder" : {
+    "hint" : {
       "category" : {
         "food": "晚餐",
         "transport": "車費",
@@ -287,7 +300,7 @@
       "member_count": "參加人數",
       "date": "日期"
     },
-    "placeholder" : {
+    "hint" : {
       "name": "例：東京五日遊"
     }
   },
@@ -497,7 +510,7 @@
       "split_method": "分攤設定"
     },
     "item_name_empty" : "項目名稱尚未輸入",
-    "placeholder" : {
+    "hint" : {
       "sub_item": "例：子項目"
     }
   },

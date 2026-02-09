@@ -223,7 +223,7 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override String get payer_multiple => 'Multiple';
 	@override late final _TranslationsS15RecordEditRateDialogEnUs rate_dialog = _TranslationsS15RecordEditRateDialogEnUs._(_root);
 	@override late final _TranslationsS15RecordEditLabelEnUs label = _TranslationsS15RecordEditLabelEnUs._(_root);
-	@override late final _TranslationsS15RecordEditPlaceholderEnUs placeholder = _TranslationsS15RecordEditPlaceholderEnUs._(_root);
+	@override late final _TranslationsS15RecordEditHintEnUs hint = _TranslationsS15RecordEditHintEnUs._(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -237,7 +237,7 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override late final _TranslationsS16TaskCreateEditButtonsEnUs buttons = _TranslationsS16TaskCreateEditButtonsEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditSectionEnUs section = _TranslationsS16TaskCreateEditSectionEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditLabelEnUs label = _TranslationsS16TaskCreateEditLabelEnUs._(_root);
-	@override late final _TranslationsS16TaskCreateEditPlaceholderEnUs placeholder = _TranslationsS16TaskCreateEditPlaceholderEnUs._(_root);
+	@override late final _TranslationsS16TaskCreateEditHintEnUs hint = _TranslationsS16TaskCreateEditHintEnUs._(_root);
 }
 
 // Path: S17_Task_Locked
@@ -526,7 +526,7 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	@override late final _TranslationsB02SplitExpenseEditButtonsEnUs buttons = _TranslationsB02SplitExpenseEditButtonsEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditLabelEnUs label = _TranslationsB02SplitExpenseEditLabelEnUs._(_root);
 	@override String get item_name_empty => 'Parent item name is empty';
-	@override late final _TranslationsB02SplitExpenseEditPlaceholderEnUs placeholder = _TranslationsB02SplitExpenseEditPlaceholderEnUs._(_root);
+	@override late final _TranslationsB02SplitExpenseEditHintEnUs hint = _TranslationsB02SplitExpenseEditHintEnUs._(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -691,18 +691,11 @@ class _TranslationsCommonPaymentInfoEnUs extends TranslationsCommonPaymentInfoZh
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get method_label => 'Payment Method';
-	@override String get mode_private => 'Contact me directly';
-	@override String get mode_private_desc => 'No detailed information will be shown. Members should contact you directly.';
-	@override String get mode_public => 'Provide payment information';
-	@override String get mode_public_desc => 'Display bank account details or a payment link';
-	@override String get type_cash => 'Cash';
-	@override String get type_bank => 'Bank Transfer';
-	@override String get type_apps => 'Other Payment Apps';
-	@override String get bank_name_hint => 'Bank code / name';
-	@override String get bank_account_hint => 'Account number';
-	@override String get app_name => 'App name (e.g. LinePay)';
-	@override String get app_link => 'Link / ID';
+	@override late final _TranslationsCommonPaymentInfoModeEnUs mode = _TranslationsCommonPaymentInfoModeEnUs._(_root);
+	@override late final _TranslationsCommonPaymentInfoDescriptionEnUs description = _TranslationsCommonPaymentInfoDescriptionEnUs._(_root);
+	@override late final _TranslationsCommonPaymentInfoTypeEnUs type = _TranslationsCommonPaymentInfoTypeEnUs._(_root);
+	@override late final _TranslationsCommonPaymentInfoLabelEnUs label = _TranslationsCommonPaymentInfoLabelEnUs._(_root);
+	@override late final _TranslationsCommonPaymentInfoHintEnUs hint = _TranslationsCommonPaymentInfoHintEnUs._(_root);
 }
 
 // Path: common.payment_status
@@ -947,14 +940,14 @@ class _TranslationsS15RecordEditLabelEnUs extends TranslationsS15RecordEditLabel
 	@override String get memo => 'Memo';
 }
 
-// Path: S15_Record_Edit.placeholder
-class _TranslationsS15RecordEditPlaceholderEnUs extends TranslationsS15RecordEditPlaceholderZhTw {
-	_TranslationsS15RecordEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: S15_Record_Edit.hint
+class _TranslationsS15RecordEditHintEnUs extends TranslationsS15RecordEditHintZhTw {
+	_TranslationsS15RecordEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override late final _TranslationsS15RecordEditPlaceholderCategoryEnUs category = _TranslationsS15RecordEditPlaceholderCategoryEnUs._(_root);
+	@override late final _TranslationsS15RecordEditHintCategoryEnUs category = _TranslationsS15RecordEditHintCategoryEnUs._(_root);
 	@override String item({required Object category}) => 'e.g. ${category}';
 	@override String get memo => 'e.g. Notes';
 }
@@ -998,9 +991,9 @@ class _TranslationsS16TaskCreateEditLabelEnUs extends TranslationsS16TaskCreateE
 	@override String get date => 'Date';
 }
 
-// Path: S16_TaskCreate_Edit.placeholder
-class _TranslationsS16TaskCreateEditPlaceholderEnUs extends TranslationsS16TaskCreateEditPlaceholderZhTw {
-	_TranslationsS16TaskCreateEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: S16_TaskCreate_Edit.hint
+class _TranslationsS16TaskCreateEditHintEnUs extends TranslationsS16TaskCreateEditHintZhTw {
+	_TranslationsS16TaskCreateEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
@@ -1235,9 +1228,9 @@ class _TranslationsB02SplitExpenseEditLabelEnUs extends TranslationsB02SplitExpe
 	@override String get split_method => 'Split Method';
 }
 
-// Path: B02_SplitExpense_Edit.placeholder
-class _TranslationsB02SplitExpenseEditPlaceholderEnUs extends TranslationsB02SplitExpenseEditPlaceholderZhTw {
-	_TranslationsB02SplitExpenseEditPlaceholderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: B02_SplitExpense_Edit.hint
+class _TranslationsB02SplitExpenseEditHintEnUs extends TranslationsB02SplitExpenseEditHintZhTw {
+	_TranslationsB02SplitExpenseEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
@@ -1352,6 +1345,66 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get delete_failed => 'Exchange rate update failed';
 }
 
+// Path: common.payment_info.mode
+class _TranslationsCommonPaymentInfoModeEnUs extends TranslationsCommonPaymentInfoModeZhTw {
+	_TranslationsCommonPaymentInfoModeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get private => 'Contact me directly';
+	@override String get public => 'Share payment details';
+}
+
+// Path: common.payment_info.description
+class _TranslationsCommonPaymentInfoDescriptionEnUs extends TranslationsCommonPaymentInfoDescriptionZhTw {
+	_TranslationsCommonPaymentInfoDescriptionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get private => 'Details are hidden. Members should contact you directly';
+	@override String get public => 'Payment details will be shown to members';
+}
+
+// Path: common.payment_info.type
+class _TranslationsCommonPaymentInfoTypeEnUs extends TranslationsCommonPaymentInfoTypeZhTw {
+	_TranslationsCommonPaymentInfoTypeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get cash => 'Cash';
+	@override String get bank => 'Bank Transfer';
+	@override String get apps => 'Payment Apps';
+}
+
+// Path: common.payment_info.label
+class _TranslationsCommonPaymentInfoLabelEnUs extends TranslationsCommonPaymentInfoLabelZhTw {
+	_TranslationsCommonPaymentInfoLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get bank_name => 'Bank name / code';
+	@override String get bank_account => 'Account number';
+	@override String get app_name => 'App name';
+	@override String get app_link => 'Link / ID';
+}
+
+// Path: common.payment_info.hint
+class _TranslationsCommonPaymentInfoHintEnUs extends TranslationsCommonPaymentInfoHintZhTw {
+	_TranslationsCommonPaymentInfoHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get bank_name => 'e.g. Chase Bank';
+	@override String get bank_account => 'e.g. 123456789';
+	@override String get app_name => 'e.g. Venmo';
+	@override String get app_link => 'e.g. venmo-username';
+}
+
 // Path: common.remainder_rule.rule
 class _TranslationsCommonRemainderRuleRuleEnUs extends TranslationsCommonRemainderRuleRuleZhTw {
 	_TranslationsCommonRemainderRuleRuleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1399,9 +1452,9 @@ class _TranslationsCommonShareSettlementEnUs extends TranslationsCommonShareSett
 	@override String message({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}';
 }
 
-// Path: S15_Record_Edit.placeholder.category
-class _TranslationsS15RecordEditPlaceholderCategoryEnUs extends TranslationsS15RecordEditPlaceholderCategoryZhTw {
-	_TranslationsS15RecordEditPlaceholderCategoryEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: S15_Record_Edit.hint.category
+class _TranslationsS15RecordEditHintCategoryEnUs extends TranslationsS15RecordEditHintCategoryZhTw {
+	_TranslationsS15RecordEditHintCategoryEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
@@ -1569,18 +1622,21 @@ extension on TranslationsEnUs {
 			'common.currency.sar' => 'Saudi Riyal',
 			'common.currency.try_' => 'Turkish Lira',
 			'common.currency.inr' => 'Indian Rupee',
-			'common.payment_info.method_label' => 'Payment Method',
-			'common.payment_info.mode_private' => 'Contact me directly',
-			'common.payment_info.mode_private_desc' => 'No detailed information will be shown. Members should contact you directly.',
-			'common.payment_info.mode_public' => 'Provide payment information',
-			'common.payment_info.mode_public_desc' => 'Display bank account details or a payment link',
-			'common.payment_info.type_cash' => 'Cash',
-			'common.payment_info.type_bank' => 'Bank Transfer',
-			'common.payment_info.type_apps' => 'Other Payment Apps',
-			'common.payment_info.bank_name_hint' => 'Bank code / name',
-			'common.payment_info.bank_account_hint' => 'Account number',
-			'common.payment_info.app_name' => 'App name (e.g. LinePay)',
-			'common.payment_info.app_link' => 'Link / ID',
+			'common.payment_info.mode.private' => 'Contact me directly',
+			'common.payment_info.mode.public' => 'Share payment details',
+			'common.payment_info.description.private' => 'Details are hidden. Members should contact you directly',
+			'common.payment_info.description.public' => 'Payment details will be shown to members',
+			'common.payment_info.type.cash' => 'Cash',
+			'common.payment_info.type.bank' => 'Bank Transfer',
+			'common.payment_info.type.apps' => 'Payment Apps',
+			'common.payment_info.label.bank_name' => 'Bank name / code',
+			'common.payment_info.label.bank_account' => 'Account number',
+			'common.payment_info.label.app_name' => 'App name',
+			'common.payment_info.label.app_link' => 'Link / ID',
+			'common.payment_info.hint.bank_name' => 'e.g. Chase Bank',
+			'common.payment_info.hint.bank_account' => 'e.g. 123456789',
+			'common.payment_info.hint.app_name' => 'e.g. Venmo',
+			'common.payment_info.hint.app_link' => 'e.g. venmo-username',
 			'common.payment_status.payable' => 'Payable',
 			'common.payment_status.receivable' => 'Receivable',
 			'common.remainder_rule.title' => 'Remainder Rule',
@@ -1703,14 +1759,14 @@ extension on TranslationsEnUs {
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
 			'S15_Record_Edit.label.rate' => 'Exchange Rate',
 			'S15_Record_Edit.label.memo' => 'Memo',
-			'S15_Record_Edit.placeholder.category.food' => 'Dinner',
-			'S15_Record_Edit.placeholder.category.transport' => 'Transportation',
-			'S15_Record_Edit.placeholder.category.shopping' => 'Souvenirs',
-			'S15_Record_Edit.placeholder.category.entertainment' => 'Movie tickets',
-			'S15_Record_Edit.placeholder.category.accommodation' => 'Accommodation',
-			'S15_Record_Edit.placeholder.category.others' => 'Other expenses',
-			'S15_Record_Edit.placeholder.item' => ({required Object category}) => 'e.g. ${category}',
-			'S15_Record_Edit.placeholder.memo' => 'e.g. Notes',
+			'S15_Record_Edit.hint.category.food' => 'Dinner',
+			'S15_Record_Edit.hint.category.transport' => 'Transportation',
+			'S15_Record_Edit.hint.category.shopping' => 'Souvenirs',
+			'S15_Record_Edit.hint.category.entertainment' => 'Movie tickets',
+			'S15_Record_Edit.hint.category.accommodation' => 'Accommodation',
+			'S15_Record_Edit.hint.category.others' => 'Other expenses',
+			'S15_Record_Edit.hint.item' => ({required Object category}) => 'e.g. ${category}',
+			'S15_Record_Edit.hint.memo' => 'e.g. Notes',
 			'S16_TaskCreate_Edit.title' => 'New Task',
 			'S16_TaskCreate_Edit.buttons.save' => 'Save',
 			'S16_TaskCreate_Edit.buttons.done' => 'Done',
@@ -1724,7 +1780,7 @@ extension on TranslationsEnUs {
 			'S16_TaskCreate_Edit.label.currency' => 'Currency',
 			'S16_TaskCreate_Edit.label.member_count' => 'Members',
 			'S16_TaskCreate_Edit.label.date' => 'Date',
-			'S16_TaskCreate_Edit.placeholder.name' => 'e.g. Tokyo Trip',
+			'S16_TaskCreate_Edit.hint.name' => 'e.g. Tokyo Trip',
 			'S17_Task_Locked.buttons.download' => 'Download Records',
 			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
 			'S17_Task_Locked.buttons.view_payment_details' => 'View Payment Details',
@@ -1850,7 +1906,7 @@ extension on TranslationsEnUs {
 			'B02_SplitExpense_Edit.label.sub_item' => 'Sub Item Name',
 			'B02_SplitExpense_Edit.label.split_method' => 'Split Method',
 			'B02_SplitExpense_Edit.item_name_empty' => 'Parent item name is empty',
-			'B02_SplitExpense_Edit.placeholder.sub_item' => 'e.g. Sub-item',
+			'B02_SplitExpense_Edit.hint.sub_item' => 'e.g. Sub-item',
 			'B03_SplitMethod_Edit.title' => 'Choose Split Method',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => 'Adjust Weight',
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',

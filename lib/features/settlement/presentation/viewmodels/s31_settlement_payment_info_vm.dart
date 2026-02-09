@@ -8,7 +8,7 @@ import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
-import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
+import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
@@ -22,6 +22,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   final SettlementService _settlementService;
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final PaymentInfoFormController formController = PaymentInfoFormController();
 
   TaskModel? _task;
   List<RecordModel> _records = [];
@@ -31,9 +32,6 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // UI States
   bool _isLoading = true;
-
-  // 這裡使用 late，在 init() 讀取完 Storage 後再初始化
-  late PaymentInfoFormController formController;
 
   // Sync Checkbox State
   bool _isSyncChecked = true;
@@ -66,7 +64,9 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
     required RecordRepository recordRepo,
   })  : _settlementService = settlementService,
         _taskRepo = taskRepo,
-        _recordRepo = recordRepo;
+        _recordRepo = recordRepo {
+    formController.addListener(notifyListeners);
+  }
 
   Future<void> init() async {
     _isLoading = true;
@@ -80,9 +80,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         _loadedDefault = data;
       }
       // 初始化 Controller 並注入預設值
-      formController = PaymentInfoFormController(initialData: _loadedDefault);
-
-      // [關鍵] 監聽 Controller 變化 -> 通知 View 更新 (影響 showSyncOption 的顯示)
+      formController.loadData(_loadedDefault);
       formController.addListener(notifyListeners);
 
       _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
@@ -159,8 +157,10 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   void dispose() {
     _taskSubscription?.cancel();
     _recordSubscription?.cancel();
-    formController.removeListener(notifyListeners);
-    formController.dispose();
+    try {
+      formController.removeListener(notifyListeners);
+      formController.dispose();
+    } catch (_) {}
     super.dispose();
   }
 }

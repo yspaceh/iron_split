@@ -336,7 +336,7 @@ class TranslationsS15RecordEditZhTw {
 
 	late final TranslationsS15RecordEditRateDialogZhTw rate_dialog = TranslationsS15RecordEditRateDialogZhTw.internal(_root);
 	late final TranslationsS15RecordEditLabelZhTw label = TranslationsS15RecordEditLabelZhTw.internal(_root);
-	late final TranslationsS15RecordEditPlaceholderZhTw placeholder = TranslationsS15RecordEditPlaceholderZhTw.internal(_root);
+	late final TranslationsS15RecordEditHintZhTw hint = TranslationsS15RecordEditHintZhTw.internal(_root);
 }
 
 // Path: S16_TaskCreate_Edit
@@ -353,7 +353,7 @@ class TranslationsS16TaskCreateEditZhTw {
 	late final TranslationsS16TaskCreateEditButtonsZhTw buttons = TranslationsS16TaskCreateEditButtonsZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditSectionZhTw section = TranslationsS16TaskCreateEditSectionZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditLabelZhTw label = TranslationsS16TaskCreateEditLabelZhTw.internal(_root);
-	late final TranslationsS16TaskCreateEditPlaceholderZhTw placeholder = TranslationsS16TaskCreateEditPlaceholderZhTw.internal(_root);
+	late final TranslationsS16TaskCreateEditHintZhTw hint = TranslationsS16TaskCreateEditHintZhTw.internal(_root);
 }
 
 // Path: S17_Task_Locked
@@ -834,7 +834,7 @@ class TranslationsB02SplitExpenseEditZhTw {
 	/// zh-TW: '項目名稱尚未輸入'
 	String get item_name_empty => '項目名稱尚未輸入';
 
-	late final TranslationsB02SplitExpenseEditPlaceholderZhTw placeholder = TranslationsB02SplitExpenseEditPlaceholderZhTw.internal(_root);
+	late final TranslationsB02SplitExpenseEditHintZhTw hint = TranslationsB02SplitExpenseEditHintZhTw.internal(_root);
 }
 
 // Path: B03_SplitMethod_Edit
@@ -1170,42 +1170,11 @@ class TranslationsCommonPaymentInfoZhTw {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// zh-TW: '收款方式'
-	String get method_label => '收款方式';
-
-	/// zh-TW: '請直接私訊聯絡'
-	String get mode_private => '請直接私訊聯絡';
-
-	/// zh-TW: '不顯示詳細資訊，請成員直接找你'
-	String get mode_private_desc => '不顯示詳細資訊，請成員直接找你';
-
-	/// zh-TW: '提供收款資訊'
-	String get mode_public => '提供收款資訊';
-
-	/// zh-TW: '顯示銀行帳號或支付連結'
-	String get mode_public_desc => '顯示銀行帳號或支付連結';
-
-	/// zh-TW: '現金'
-	String get type_cash => '現金';
-
-	/// zh-TW: '銀行轉帳'
-	String get type_bank => '銀行轉帳';
-
-	/// zh-TW: '其他支付 App'
-	String get type_apps => '其他支付 App';
-
-	/// zh-TW: '銀行代碼 / 名稱'
-	String get bank_name_hint => '銀行代碼 / 名稱';
-
-	/// zh-TW: '帳號'
-	String get bank_account_hint => '帳號';
-
-	/// zh-TW: 'App 名稱 (如: LinePay)'
-	String get app_name => 'App 名稱 (如: LinePay)';
-
-	/// zh-TW: '連結 / ID'
-	String get app_link => '連結 / ID';
+	late final TranslationsCommonPaymentInfoModeZhTw mode = TranslationsCommonPaymentInfoModeZhTw.internal(_root);
+	late final TranslationsCommonPaymentInfoDescriptionZhTw description = TranslationsCommonPaymentInfoDescriptionZhTw.internal(_root);
+	late final TranslationsCommonPaymentInfoTypeZhTw type = TranslationsCommonPaymentInfoTypeZhTw.internal(_root);
+	late final TranslationsCommonPaymentInfoLabelZhTw label = TranslationsCommonPaymentInfoLabelZhTw.internal(_root);
+	late final TranslationsCommonPaymentInfoHintZhTw hint = TranslationsCommonPaymentInfoHintZhTw.internal(_root);
 }
 
 // Path: common.payment_status
@@ -1531,14 +1500,14 @@ class TranslationsS15RecordEditLabelZhTw {
 	String get memo => '備註';
 }
 
-// Path: S15_Record_Edit.placeholder
-class TranslationsS15RecordEditPlaceholderZhTw {
-	TranslationsS15RecordEditPlaceholderZhTw.internal(this._root);
+// Path: S15_Record_Edit.hint
+class TranslationsS15RecordEditHintZhTw {
+	TranslationsS15RecordEditHintZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final TranslationsS15RecordEditPlaceholderCategoryZhTw category = TranslationsS15RecordEditPlaceholderCategoryZhTw.internal(_root);
+	late final TranslationsS15RecordEditHintCategoryZhTw category = TranslationsS15RecordEditHintCategoryZhTw.internal(_root);
 
 	/// zh-TW: '例：{category}'
 	String item({required Object category}) => '例：${category}';
@@ -1610,9 +1579,9 @@ class TranslationsS16TaskCreateEditLabelZhTw {
 	String get date => '日期';
 }
 
-// Path: S16_TaskCreate_Edit.placeholder
-class TranslationsS16TaskCreateEditPlaceholderZhTw {
-	TranslationsS16TaskCreateEditPlaceholderZhTw.internal(this._root);
+// Path: S16_TaskCreate_Edit.hint
+class TranslationsS16TaskCreateEditHintZhTw {
+	TranslationsS16TaskCreateEditHintZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -1925,9 +1894,9 @@ class TranslationsB02SplitExpenseEditLabelZhTw {
 	String get split_method => '分攤設定';
 }
 
-// Path: B02_SplitExpense_Edit.placeholder
-class TranslationsB02SplitExpenseEditPlaceholderZhTw {
-	TranslationsB02SplitExpenseEditPlaceholderZhTw.internal(this._root);
+// Path: B02_SplitExpense_Edit.hint
+class TranslationsB02SplitExpenseEditHintZhTw {
+	TranslationsB02SplitExpenseEditHintZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -2138,6 +2107,96 @@ class TranslationsCommonRemainderRuleDescriptionZhTw {
 	String get member => '指定一位特定的成員，固定由他/她來吸收所有的零頭。';
 }
 
+// Path: common.payment_info.mode
+class TranslationsCommonPaymentInfoModeZhTw {
+	TranslationsCommonPaymentInfoModeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '請直接私訊聯絡'
+	String get private => '請直接私訊聯絡';
+
+	/// zh-TW: '提供收款資訊'
+	String get public => '提供收款資訊';
+}
+
+// Path: common.payment_info.description
+class TranslationsCommonPaymentInfoDescriptionZhTw {
+	TranslationsCommonPaymentInfoDescriptionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '不顯示詳細資訊，請成員直接找你'
+	String get private => '不顯示詳細資訊，請成員直接找你';
+
+	/// zh-TW: '顯示收款資訊給成員'
+	String get public => '顯示收款資訊給成員';
+}
+
+// Path: common.payment_info.type
+class TranslationsCommonPaymentInfoTypeZhTw {
+	TranslationsCommonPaymentInfoTypeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '現金'
+	String get cash => '現金';
+
+	/// zh-TW: '銀行轉帳'
+	String get bank => '銀行轉帳';
+
+	/// zh-TW: '其他支付 App'
+	String get apps => '其他支付 App';
+}
+
+// Path: common.payment_info.label
+class TranslationsCommonPaymentInfoLabelZhTw {
+	TranslationsCommonPaymentInfoLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '銀行代碼 / 名稱'
+	String get bank_name => '銀行代碼 / 名稱';
+
+	/// zh-TW: '帳號'
+	String get bank_account => '帳號';
+
+	/// zh-TW: 'App 名稱'
+	String get app_name => 'App 名稱';
+
+	/// zh-TW: '連結 / ID'
+	String get app_link => '連結 / ID';
+}
+
+// Path: common.payment_info.hint
+class TranslationsCommonPaymentInfoHintZhTw {
+	TranslationsCommonPaymentInfoHintZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '例：004-台灣銀行'
+	String get bank_name => '例：004-台灣銀行';
+
+	/// zh-TW: '例：123-456-789012'
+	String get bank_account => '例：123-456-789012';
+
+	/// zh-TW: '例：LinePay'
+	String get app_name => '例：LinePay';
+
+	/// zh-TW: '例：lineid12345'
+	String get app_link => '例：lineid12345';
+}
+
 // Path: common.share.invite
 class TranslationsCommonShareInviteZhTw {
 	TranslationsCommonShareInviteZhTw.internal(this._root);
@@ -2168,9 +2227,9 @@ class TranslationsCommonShareSettlementZhTw {
 	String message({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}';
 }
 
-// Path: S15_Record_Edit.placeholder.category
-class TranslationsS15RecordEditPlaceholderCategoryZhTw {
-	TranslationsS15RecordEditPlaceholderCategoryZhTw.internal(this._root);
+// Path: S15_Record_Edit.hint.category
+class TranslationsS15RecordEditHintCategoryZhTw {
+	TranslationsS15RecordEditHintCategoryZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -2398,18 +2457,21 @@ extension on Translations {
 			'common.split_method.even' => '平均分攤',
 			'common.split_method.percent' => '比例分攤',
 			'common.split_method.exact' => '指定金額',
-			'common.payment_info.method_label' => '收款方式',
-			'common.payment_info.mode_private' => '請直接私訊聯絡',
-			'common.payment_info.mode_private_desc' => '不顯示詳細資訊，請成員直接找你',
-			'common.payment_info.mode_public' => '提供收款資訊',
-			'common.payment_info.mode_public_desc' => '顯示銀行帳號或支付連結',
-			'common.payment_info.type_cash' => '現金',
-			'common.payment_info.type_bank' => '銀行轉帳',
-			'common.payment_info.type_apps' => '其他支付 App',
-			'common.payment_info.bank_name_hint' => '銀行代碼 / 名稱',
-			'common.payment_info.bank_account_hint' => '帳號',
-			'common.payment_info.app_name' => 'App 名稱 (如: LinePay)',
-			'common.payment_info.app_link' => '連結 / ID',
+			'common.payment_info.mode.private' => '請直接私訊聯絡',
+			'common.payment_info.mode.public' => '提供收款資訊',
+			'common.payment_info.description.private' => '不顯示詳細資訊，請成員直接找你',
+			'common.payment_info.description.public' => '顯示收款資訊給成員',
+			'common.payment_info.type.cash' => '現金',
+			'common.payment_info.type.bank' => '銀行轉帳',
+			'common.payment_info.type.apps' => '其他支付 App',
+			'common.payment_info.label.bank_name' => '銀行代碼 / 名稱',
+			'common.payment_info.label.bank_account' => '帳號',
+			'common.payment_info.label.app_name' => 'App 名稱',
+			'common.payment_info.label.app_link' => '連結 / ID',
+			'common.payment_info.hint.bank_name' => '例：004-台灣銀行',
+			'common.payment_info.hint.bank_account' => '例：123-456-789012',
+			'common.payment_info.hint.app_name' => '例：LinePay',
+			'common.payment_info.hint.app_link' => '例：lineid12345',
 			'common.payment_status.payable' => '應付',
 			'common.payment_status.receivable' => '可退',
 			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
@@ -2520,14 +2582,14 @@ extension on Translations {
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '匯率 (1 ${base} = ? ${target})',
 			'S15_Record_Edit.label.rate' => '匯率',
 			'S15_Record_Edit.label.memo' => '備註',
-			'S15_Record_Edit.placeholder.category.food' => '晚餐',
-			'S15_Record_Edit.placeholder.category.transport' => '車費',
-			'S15_Record_Edit.placeholder.category.shopping' => '紀念品',
-			'S15_Record_Edit.placeholder.category.entertainment' => '電影票',
-			'S15_Record_Edit.placeholder.category.accommodation' => '住宿費',
-			'S15_Record_Edit.placeholder.category.others' => '其他費用',
-			'S15_Record_Edit.placeholder.item' => ({required Object category}) => '例：${category}',
-			'S15_Record_Edit.placeholder.memo' => '例：備註事項',
+			'S15_Record_Edit.hint.category.food' => '晚餐',
+			'S15_Record_Edit.hint.category.transport' => '車費',
+			'S15_Record_Edit.hint.category.shopping' => '紀念品',
+			'S15_Record_Edit.hint.category.entertainment' => '電影票',
+			'S15_Record_Edit.hint.category.accommodation' => '住宿費',
+			'S15_Record_Edit.hint.category.others' => '其他費用',
+			'S15_Record_Edit.hint.item' => ({required Object category}) => '例：${category}',
+			'S15_Record_Edit.hint.memo' => '例：備註事項',
 			'S16_TaskCreate_Edit.title' => '新增任務',
 			'S16_TaskCreate_Edit.buttons.save' => '保存',
 			'S16_TaskCreate_Edit.buttons.done' => '確定',
@@ -2541,7 +2603,7 @@ extension on Translations {
 			'S16_TaskCreate_Edit.label.currency' => '結算幣別',
 			'S16_TaskCreate_Edit.label.member_count' => '參加人數',
 			'S16_TaskCreate_Edit.label.date' => '日期',
-			'S16_TaskCreate_Edit.placeholder.name' => '例：東京五日遊',
+			'S16_TaskCreate_Edit.hint.name' => '例：東京五日遊',
 			'S17_Task_Locked.buttons.download' => '下載紀錄',
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
 			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
@@ -2667,7 +2729,7 @@ extension on Translations {
 			'B02_SplitExpense_Edit.label.sub_item' => '細項名稱',
 			'B02_SplitExpense_Edit.label.split_method' => '分攤設定',
 			'B02_SplitExpense_Edit.item_name_empty' => '項目名稱尚未輸入',
-			'B02_SplitExpense_Edit.placeholder.sub_item' => '例：子項目',
+			'B02_SplitExpense_Edit.hint.sub_item' => '例：子項目',
 			'B03_SplitMethod_Edit.title' => '選擇分攤方式',
 			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
