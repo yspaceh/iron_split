@@ -98,8 +98,9 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
         final date = dates[index];
         final isToday = DateUtils.isSameDay(date, DateTime.now());
         final isSelected = DateUtils.isSameDay(date, widget.selectedDate);
+        final String locale = Localizations.localeOf(context).toString();
         // 格式化：星期 (WED) 全大寫
-        final weekStr = DateFormat('E').format(date).toUpperCase();
+        final weekStr = DateFormat('E', locale).format(date).toUpperCase();
         // 格式化：日期 (05)
         final dayStr = DateFormat('dd').format(date);
 

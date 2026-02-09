@@ -73,7 +73,6 @@ class RecordItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white, // 純白背景
           borderRadius: BorderRadius.circular(16), // 精緻圓角
-          // 可選：極淡的陰影，增加立體感 (如果不喜歡可以拿掉 boxshadow)
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.03),
@@ -87,7 +86,8 @@ class RecordItem extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(16),
-            child: Padding(
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 48),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [

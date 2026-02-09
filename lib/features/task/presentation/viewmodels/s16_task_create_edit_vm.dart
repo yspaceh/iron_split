@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -98,12 +97,15 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       // 定義基準時間，確保所有人的時間都是相對於這個時間點
       final baseTime = DateTime.now();
 
+      // [修正] 使用統一邏輯一次產生所需數量的頭像 (保證不重複)
+      final avatars = AvatarConstants.generateInitialAvatars(_memberCount);
+
       // A. Add Captain
       membersMap[user.uid] = {
         'role': 'captain',
         'displayName': user.displayName ?? 'Captain',
         'joinedAt': baseTime,
-        'avatar': _getRandomAvatar(),
+        'avatar': avatars[0],
         'isLinked': true,
         'hasSeenRoleIntro': false,
       };
@@ -117,7 +119,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
           'role': 'member',
           'displayName': '$prefix ${i + 1}',
           'joinedAt': baseTime.add(Duration(milliseconds: i)),
-          'avatar': _getRandomAvatar(),
+          'avatar': avatars[i],
           'isLinked': false,
           'hasSeenRoleIntro': false,
         };
@@ -175,31 +177,5 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       notifyListeners();
       rethrow; // 拋出異常讓 Page 處理 (顯示 SnackBar)
     }
-  }
-
-  String _getRandomAvatar() {
-    const avatars = [
-      "cow",
-      "pig",
-      "deer",
-      "horse",
-      "sheep",
-      "goat",
-      "duck",
-      "stoat",
-      "rabbit",
-      "mouse",
-      "cat",
-      "dog",
-      "otter",
-      "owl",
-      "fox",
-      "hedgehog",
-      "donkey",
-      "squirrel",
-      "badger",
-      "robin"
-    ];
-    return avatars[Random().nextInt(avatars.length)];
   }
 }

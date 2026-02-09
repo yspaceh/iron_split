@@ -26,6 +26,28 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     return CurrencyConstants.getCurrencyConstants(_task!.baseCurrency);
   }
 
+  //  讀取結算時的零頭總額
+  double get totalRemainder {
+    if (_task == null || _task!.settlement == null) return 0.0;
+    // 嘗試從 settlement map 讀取 'totalRemainder'
+    return (_task!.settlement!['totalRemainder'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  //  綜合判斷是否顯示輪盤
+  bool get shouldShowRoulette {
+    // 1. 基本門檻
+    if (!isRandomMode) return false;
+    if (remainderWinnerId == null) return false;
+
+    // 2. 防呆：如果根本沒有成員 (分配表為空)，絕對不能開輪盤
+    if (allMembers.isEmpty) return false;
+
+    // 3. 邏輯：如果零頭金額為 0，就不需要抽
+    if (totalRemainder.abs() < 0.001) return false;
+
+    return true;
+  }
+
   // 判斷是否為 Random 模式 (決定是否顯示輪盤)
   // 注意：我們依賴的是 Task 設定的規則，而不是是否有 winnerId (因為 S31 寫入後大家都有 winnerId)
   bool get isRandomMode =>

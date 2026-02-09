@@ -14,6 +14,7 @@ class GroupBalanceCard extends StatelessWidget {
   final VoidCallback? onCurrencyTap;
   final VoidCallback? onRuleTap;
   final double? fixedHeight;
+  final bool? isSettlement;
 
   const GroupBalanceCard({
     super.key,
@@ -21,6 +22,7 @@ class GroupBalanceCard extends StatelessWidget {
     this.onCurrencyTap,
     this.onRuleTap,
     this.fixedHeight,
+    this.isSettlement = false,
   });
 
   @override
@@ -300,29 +302,31 @@ class GroupBalanceCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        if (state.isLocked && state.absorbedBy != null)
-                          Text(
-                            t.S17_Task_Locked.label_remainder_absorbed_by(
-                                name: state.absorbedBy ?? ""),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w500,
+                        if (isSettlement == false) ...[
+                          if (state.isLocked && state.absorbedBy != null)
+                            Text(
+                              t.S17_Task_Locked.label_remainder_absorbed_by(
+                                  name: state.absorbedBy ?? ""),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          else
+                            Text(
+                              RemainderRuleConstants.getLabel(
+                                  context, state.ruleKey),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          )
-                        else
-                          Text(
-                            RemainderRuleConstants.getLabel(
-                                context, state.ruleKey),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        if (!isRuleTapLocked) ...[
-                          const SizedBox(width: 4),
-                          Icon(Icons.chevron_right,
-                              size: 16,
-                              color: theme.colorScheme.onSurfaceVariant),
+                          if (!isRuleTapLocked) ...[
+                            const SizedBox(width: 4),
+                            Icon(Icons.chevron_right,
+                                size: 16,
+                                color: theme.colorScheme.onSurfaceVariant),
+                          ],
                         ],
                       ],
                     ),

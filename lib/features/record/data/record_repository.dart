@@ -28,7 +28,7 @@ class RecordRepository {
 
   // =========== Service 運算用 (讀取 - Future) ===========
 
-  /// [新增] 一次性讀取該任務所有紀錄
+  ///  一次性讀取該任務所有紀錄
   /// 用途：提供給 RecordService 進行整批匯率更新或重算零頭
   Future<List<RecordModel>> getRecordsOnce(String taskId) async {
     final snapshot = await _firestore
@@ -101,7 +101,7 @@ class RecordRepository {
 
   // =========== 批次處理 (Batch Operations) ===========
 
-  /// [新增] 批次更新多筆紀錄
+  ///  批次更新多筆紀錄
   /// 用途：RecordService 算好新的匯率與零頭後，呼叫此方法一次寫入
   Future<void> batchUpdateRecords(
       String taskId, List<RecordModel> records) async {

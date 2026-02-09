@@ -2,7 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For Haptics
 import 'package:iron_split/core/models/settlement_model.dart';
-import 'package:iron_split/core/theme/app_theme.dart'; // [新增] 用於存取自定義顏色
+import 'package:iron_split/core/theme/app_theme.dart'; //  用於存取自定義顏色
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
@@ -53,6 +53,14 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
 
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
+
+    // 1. [防呆] 如果沒有成員，直接關閉，避免崩潰
+    if (widget.members.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+      });
+      return;
+    }
 
     // 1. 準備顯示清單 (重複名單)
     _displayList = [];

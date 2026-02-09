@@ -4,7 +4,7 @@ class InfoBar extends StatelessWidget {
   final IconData icon;
   final Text text;
 
-  // [新增] 允許外部覆寫顏色，增加彈性
+  //  允許外部覆寫顏色，增加彈性
   // 預設使用淡灰色風格 (SurfaceContainerLow)
   final Color? backgroundColor;
   final Color? contentColor;

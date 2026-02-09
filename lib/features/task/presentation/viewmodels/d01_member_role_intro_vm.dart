@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
@@ -37,10 +36,22 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
 
-      // 隨機選一個新的 (排除當前這個)
-      final available =
-          AvatarConstants.allAvatars.where((a) => a != _currentAvatar).toList();
-      final newAvatar = available[Random().nextInt(available.length)];
+      // 1. 讀取 Task 取得已用頭像
+      final task = await _taskRepo.streamTask(taskId).first;
+      if (task == null) {
+        // TODO: handle error
+        throw Exception("Task not found");
+      }
+
+      final usedAvatars = task.members.values
+          .map((m) => m['avatar'] as String?)
+          .where((a) => a != null)
+          .cast<String>()
+          .toSet();
+
+      usedAvatars.add(_currentAvatar);
+
+      final newAvatar = AvatarConstants.pickUniqueAvatar(exclude: usedAvatars);
 
       await _taskRepo.updateMemberFields(taskId, uid, {
         'avatar': newAvatar,

@@ -105,6 +105,11 @@ class _B07PaymentMethodEditBottomSheetState
       _prepayAmount = widget.initialPrepayAmount;
     }
 
+    // 公款為 0，則預設不選取公款支付
+    if (_currentCurrencyPoolBalance == 0) {
+      _usePrepay = false;
+    }
+
     // 初始化預收 Controller
     _prepayController = TextEditingController(
         text: _prepayAmount == 0

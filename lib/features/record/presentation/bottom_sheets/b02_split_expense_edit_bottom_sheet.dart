@@ -89,8 +89,10 @@ class _B02SplitExpenseEditBottomSheetState
     super.initState();
     _nameController = TextEditingController(text: widget.detail?.name ?? '');
     _amountController = TextEditingController(
-        text: CurrencyConstants.formatAmount(
-            widget.detail?.amount ?? 0, widget.selectedCurrency.code));
+        text: widget.detail?.amount != null
+            ? CurrencyConstants.formatAmount(
+                widget.detail?.amount ?? 0, widget.selectedCurrency.code)
+            : '');
     _memoController = TextEditingController(text: widget.detail?.memo ?? '');
 
     _splitMethod =

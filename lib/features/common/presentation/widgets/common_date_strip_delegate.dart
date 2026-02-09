@@ -25,10 +25,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
-    // 格式化月份： 02
     final monthNum = DateFormat('MM').format(selectedDate);
-    // 格式化月份縮寫：FEB (全大寫)
-    final monthStr = DateFormat('MMM').format(selectedDate).toUpperCase();
 
     return Container(
       height: height,
@@ -43,7 +40,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () async {
-                // 點擊月份開啟日曆 (保留原本邏輯)
+                // 點擊月份開啟日曆選擇器（要顯示繁體中文）
                 Locale activeLocale =
                     TranslationProvider.of(context).flutterLocale;
                 if (activeLocale.languageCode == 'zh') {
@@ -79,16 +76,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
                         fontWeight: FontWeight.w900, // 特粗
                         color: theme.colorScheme.primary, // 酒紅色
                         height: 1.0,
-                      ),
-                    ),
-                    // 月份縮寫 (FEB)
-                    Text(
-                      monthStr,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary, // 酒紅色
-                        fontSize: 10,
-                        letterSpacing: 0.5,
+                        letterSpacing: -0.5,
                       ),
                     ),
                   ],

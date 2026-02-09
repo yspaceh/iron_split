@@ -74,7 +74,7 @@ class DeepLinkService {
         }
       }
 
-      // Case 2: [新增] Settlement / Task Detail
+      // Case 2:  Settlement / Task Detail
       // iron-split://task?id=TASK_ID_HERE
       if (uri.host == 'task') {
         final taskId = query['id'];
@@ -90,7 +90,7 @@ class DeepLinkService {
     return UnknownIntent();
   }
 
-  // [新增] 產生連結的方法 (供 ViewModel 呼叫)
+  //  產生連結的方法 (供 ViewModel 呼叫)
   // 因為目前沒有 Domain，我們產生 Custom Scheme 格式
   String generateTaskLink(String taskId) {
     return "iron-split://task?id=$taskId";

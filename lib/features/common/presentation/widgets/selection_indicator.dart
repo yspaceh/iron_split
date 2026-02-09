@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SelectionIndicator extends StatelessWidget {
   final bool isSelected;
-  final bool isRadio; // [新增] 控制顯示打勾還是圓點
+  final bool isRadio; //  控制顯示打勾還是圓點
 
   const SelectionIndicator({
     super.key,

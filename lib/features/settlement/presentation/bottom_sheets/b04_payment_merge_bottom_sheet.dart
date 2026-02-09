@@ -5,7 +5,7 @@ import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
-import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart'; // [新增]
+import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/summary_row.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -126,7 +126,7 @@ class _B04PaymentMergeBottomSheetState
             ),
           ),
 
-          // [新增] 1. 代表成員 (Head Member) - 放在列表最上面，鎖定
+          //  1. 代表成員 (Head Member) - 放在列表最上面，鎖定
           SelectionTile(
             isSelected: true, // 永遠選中
             isRadio: false,

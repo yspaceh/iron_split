@@ -61,24 +61,18 @@ class _S32ContentState extends State<_S32Content> {
 
   // 監聽 VM 變化來觸發 Dialog
   void _checkAndTriggerDialog(S32SettlementResultViewModel vm) {
-    debugPrint('_dialogTriggered: $_dialogTriggered');
     if (_dialogTriggered) return;
-    debugPrint('vm.isLoading: ${vm.isLoading}');
-    debugPrint('vm.task: ${vm.task}');
     if (vm.isLoading || vm.task == null) return; // 資料還沒好
 
     _dialogTriggered = true; // 標記已觸發
 
-    debugPrint('vm.isRandomMode: ${vm.isRandomMode}');
-    debugPrint('vm.remainderWinnerId: ${vm.remainderWinnerId}');
-
-    if (vm.isRandomMode && vm.remainderWinnerId != null) {
-      // 是 Random 模式 -> 啟動輪盤流程
+    if (vm.shouldShowRoulette) {
+      // 是 Random 模式 且 有零頭 且 有名單 -> 啟動輪盤流程
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showRouletteDialog(vm);
       });
     } else {
-      // 一般模式 -> 直接視為已揭曉
+      // 一般模式 或 零頭為0 -> 直接視為已揭曉
       setState(() {
         _hasRevealed = true;
       });
@@ -170,7 +164,6 @@ class _S32ContentState extends State<_S32Content> {
     }
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -181,62 +174,58 @@ class _S32ContentState extends State<_S32Content> {
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
-              child: Column(
-                children: [
-                  // 1. 成功圖片 (StateVisual)
-                  // 如果是 Random 模式且未揭曉，StateVisual 內部會顯示問號嗎？
-                  // 假設 StateVisual 有自己的邏輯，或者這裡我們保持原樣
-                  const StateVisual(),
-
-                  const SizedBox(height: 32),
-                  Text(t.S32_settlement_result.content),
-                  const SizedBox(height: 32),
-
-                  // 2. InfoCard - 顯示贏家 (Random 模式專用)
-                  if (vm.isRandomMode)
-                    Visibility(
-                      visible: showWinnerCard,
-                      replacement: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(t.S32_settlement_result.waiting_reveal),
-                      ),
-                      child: InfoCard(
-                        icon: Icons.info_outline,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(t.S32_settlement_result
-                                    .remainder_winner_prefix),
-                                const SizedBox(width: 8),
-                                if (winner != null)
-                                  CommonAvatar(
-                                    avatarId: winner.avatar,
-                                    name: winner.displayName,
-                                    isLinked: winner.isLinked,
-                                    radius: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    //TODO: 要準備放在這的圖片
+                    const StateVisual(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Text(t.S32_settlement_result.content),
+                    ),
+                    if (vm.shouldShowRoulette)
+                      Visibility(
+                        visible: showWinnerCard,
+                        replacement: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(t.S32_settlement_result.waiting_reveal),
+                        ),
+                        child: InfoCard(
+                          icon: Icons.info_outline,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(t.S32_settlement_result
+                                      .remainder_winner_prefix),
+                                  const SizedBox(width: 8),
+                                  if (winner != null)
+                                    CommonAvatar(
+                                      avatarId: winner.avatar,
+                                      name: winner.displayName,
+                                      isLinked: winner.isLinked,
+                                      radius: 12,
+                                    ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    winner?.displayName ?? '',
+                                    style:
+                                        theme.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  winner?.displayName ?? '',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(winnerTotalText),
-                          ],
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(winnerTotalText),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-
-                  // Spacer
-                  if (vm.isRandomMode && _hasRevealed)
-                    const SizedBox(height: 24),
-                ],
+                  ],
+                ),
               ),
             ),
       bottomNavigationBar: StickyBottomActionBar(

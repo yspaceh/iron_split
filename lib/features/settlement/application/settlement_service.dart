@@ -296,7 +296,7 @@ class SettlementService {
         memberStatus[m.id] = false;
       }
 
-      // 7. [新增] 產生 Dashboard 快照
+      // 7.  產生 Dashboard 快照
       // 使用與 DashboardService 完全相同的邏輯計算
       final snapshotState = _generateDashboardSnapshot(
         task: task,
@@ -327,7 +327,7 @@ class SettlementService {
   }
 
   // ==========================================
-  // [新增] 內部產生快照邏輯
+  //  內部產生快照邏輯
   // 保持與 DashboardService 計算邏輯一致
   // ==========================================
   BalanceSummaryState _generateDashboardSnapshot({

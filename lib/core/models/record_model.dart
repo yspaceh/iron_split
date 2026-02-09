@@ -95,7 +95,7 @@ class RecordModel {
     this.createdBy,
   });
 
-  // --- [新增] 語意化 Getters (核心邏輯) ---
+  // ---  語意化 Getters (核心邏輯) ---
 
   /// [原始金額]
   /// 對應單據/發票上的金額 (Transaction Amount)。

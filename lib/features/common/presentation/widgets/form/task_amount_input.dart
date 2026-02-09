@@ -14,7 +14,7 @@ class TaskAmountInput extends StatelessWidget {
     this.isIncome = false,
     this.showCurrencyPicker = true,
     this.fillColor,
-    // [新增] 外部驗證器
+    //  外部驗證器
     this.externalValidator,
   });
 
@@ -117,7 +117,7 @@ class TaskAmountInput extends StatelessWidget {
                 return t.error.message.invalid_amount;
               }
 
-              // [新增] 執行外部驗證 (例如檢查餘額)
+              //  執行外部驗證 (例如檢查餘額)
               if (externalValidator != null) {
                 return externalValidator!(value);
               }

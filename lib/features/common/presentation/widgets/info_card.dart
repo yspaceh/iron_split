@@ -19,7 +19,7 @@ class InfoCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // 預設樣式邏輯
-    final bgColor = backgroundColor ?? colorScheme.surfaceContainer;
+    final bgColor = backgroundColor ?? colorScheme.surface;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -34,9 +34,9 @@ class InfoCard extends StatelessWidget {
           Icon(
             icon, // 或 verified_user_outlined
             size: 24,
-            color: colorScheme.primary, // 使用主色調來傳遞「系統保證」的信任感
+            color: colorScheme.primary,
           ),
-          const SizedBox(width: 16), // M3 標準間距
+          const SizedBox(width: 8), // M3 標準間距
 
           // 2. 右側說明文字
           Expanded(

@@ -14,7 +14,7 @@ class AppStepper extends StatelessWidget {
     super.key,
     required this.onDecrease,
     required this.onIncrease,
-    this.text, // [新增]
+    this.text, //
     this.iconSize = 18,
     this.height = 40,
     this.enabled = true,

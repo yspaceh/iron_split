@@ -181,16 +181,17 @@ class S15RecordEditViewModel extends ChangeNotifier {
   }
 
   void _init(DateTime? initialDate) {
-    amountController.addListener(_onAmountChanged);
-
+    // 1. 同步設定區 (Safe Zone) - 絕對不加 listener
     if (_originalRecord != null) {
-      // Edit Mode
       final r = _originalRecord!;
       _recordTypeIndex = r.type == 'income' ? 1 : 0;
+
+      // 直接賦值，不觸發 listener
       amountController.text =
           r.originalAmount.truncateToDouble() == r.originalAmount
               ? r.originalAmount.toInt().toString()
               : r.originalAmount.toString();
+
       _selectedDate = r.date;
       _selectedCurrencyConstants =
           CurrencyConstants.getCurrencyConstants(r.originalCurrencyCode);
@@ -209,14 +210,23 @@ class S15RecordEditViewModel extends ChangeNotifier {
       _baseRawDetails = Map.from(r.splitDetails ?? {});
       _details.addAll(r.details);
     } else {
-      // Create Mode
       _selectedDate = initialDate ?? DateTime.now();
       _selectedCurrencyConstants = baseCurrency;
-      _loadCurrencyPreference();
     }
 
     _lastKnownAmount = totalAmount;
-    fetchTaskData();
+
+    // 2. 強制異步執行區 (Unsafe Zone)
+    // 使用 Future.delayed(Duration.zero) 強制排程到下一個 Event Loop
+    Future.delayed(Duration.zero, () {
+      // A. 現在才加 Listener
+      amountController.addListener(_onAmountChanged);
+      // B. 執行資料載入
+      if (_originalRecord == null) {
+        _loadCurrencyPreference();
+      }
+      fetchTaskData();
+    });
   }
 
   // Logic Methods
@@ -247,11 +257,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   Future<void> fetchTaskData() async {
     try {
-      _initStatus = LoadStatus.loading;
-      _initErrorCode = null;
-      notifyListeners();
+      if (_initStatus != LoadStatus.loading) {
+        _initStatus = LoadStatus.loading;
+        _initErrorCode = null;
+        notifyListeners();
+      }
 
-      // 1. 改用 Repo 拿資料 (會拿到 TaskModel?)
       final task = await _taskRepo.streamTask(taskId).first;
 
       // 2. 判斷 task 是否存在 (取代 docSnapshot.exists)
@@ -363,6 +374,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         exchangeRateController.text = rate.toString();
       }
     } catch (e) {
+      // TODO: Record log?
       debugPrint("Rate fetch failed: $e");
       throw AppErrorCodes.rateFetchFailed;
     } finally {

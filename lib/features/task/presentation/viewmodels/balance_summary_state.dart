@@ -106,7 +106,7 @@ class BalanceSummaryState extends Equatable {
     );
   }
 
-  // [新增] 2. toMap: 轉成 JSON 存入 Firestore
+  //  2. toMap: 轉成 JSON 存入 Firestore
   Map<String, dynamic> toMap() {
     return {
       'currencyCode': currencyCode,
@@ -127,7 +127,7 @@ class BalanceSummaryState extends Equatable {
     };
   }
 
-  // [新增] 3. fromMap: 從 Firestore 讀回物件
+  //  3. fromMap: 從 Firestore 讀回物件
   factory BalanceSummaryState.fromMap(Map<String, dynamic> map) {
     // Helper to safely parse double from Firestore (can be int or double)
     double toDouble(dynamic val) => (val as num?)?.toDouble() ?? 0.0;

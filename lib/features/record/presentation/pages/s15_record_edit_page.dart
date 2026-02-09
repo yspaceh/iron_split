@@ -70,12 +70,6 @@ class _S15Content extends StatefulWidget {
 class _S15ContentState extends State<_S15Content> {
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    context.read<S15RecordEditViewModel>().initCurrency();
-  }
-
   Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {
     try {
       await vm.updateCurrency(code);

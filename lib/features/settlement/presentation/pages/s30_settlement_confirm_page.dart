@@ -184,6 +184,7 @@ class _S30Content extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: GroupBalanceCard(
+                        isSettlement: true,
                         state: vm.balanceState,
                         onCurrencyTap: () => showCurrencyPicker(context, vm),
                         onRuleTap: vm.balanceState.remainder > 0
@@ -218,7 +219,7 @@ class _S30Content extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final member = vm.settlementMembers[index];
 
-                          // [新增] 檢查是否有候選人
+                          //  檢查是否有候選人
                           final candidates = vm.getMergeCandidates(member);
                           final bool canMerge = candidates.isNotEmpty;
                           return SettlementMemberItem(

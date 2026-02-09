@@ -8,7 +8,7 @@ class ErrorMapper {
     final t = Translations.of(context);
     String eStr = error.toString();
 
-    // [新增] 優先處理 FirebaseException，取出 code
+    //  優先處理 FirebaseException，取出 code
     if (error is FirebaseException) {
       eStr = error.code;
     }

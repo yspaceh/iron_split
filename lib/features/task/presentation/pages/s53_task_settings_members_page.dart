@@ -8,8 +8,8 @@ import 'package:iron_split/features/common/presentation/dialogs/common_alert_dia
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; // [新增]
-import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // [新增]
+import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; //
+import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';

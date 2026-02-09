@@ -99,8 +99,6 @@ class _D01DialogContentState extends State<_D01DialogContent>
             ),
             const SizedBox(height: 16),
 
-            Text(vm.currentAvatar),
-
             Text(
               t.D01_MemberRole_Intro.description.content(
                 avatar: AvatarConstants.getName(t, vm.currentAvatar),
