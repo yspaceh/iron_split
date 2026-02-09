@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 /// Page Key: D03_TaskCreate.Confirm
@@ -23,32 +24,16 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = Translations.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd');
 
-    return AlertDialog(
-      title: Text(t.D03_TaskCreate_Confirm.title),
+    return CommonAlertDialog(
+      title: t.D03_TaskCreate_Confirm.title,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.secondaryContainer,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.check_circle_outline,
-                    size: 32, color: theme.colorScheme.onSecondaryContainer),
-              ),
-            ),
-
             _buildRow(context, t.D03_TaskCreate_Confirm.label_name, taskName),
             const SizedBox(height: 8),
             _buildRow(context, t.D03_TaskCreate_Confirm.label_period,
@@ -78,6 +63,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
   }
 
   Widget _buildRow(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,14 +73,13 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: Colors.grey)),
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ),
         Expanded(
           child: Text(value,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface)),
         ),
       ],
     );

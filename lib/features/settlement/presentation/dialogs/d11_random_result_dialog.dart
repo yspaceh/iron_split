@@ -2,6 +2,8 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For Haptics
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/theme/app_theme.dart'; // [新增] 用於存取自定義顏色
+import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -41,8 +43,8 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   bool _isSpinning = true;
 
   // 為了模擬無限滾動，我們將原始名單重複多次
-  // 30次重複足夠支撐約 3-4 秒的高速旋轉
-  static const int _loopCount = 40;
+  // 增加次數以配合更長的動畫時間 (4.5s)
+  static const int _loopCount = 50;
   late List<SettlementMember> _displayList;
 
   @override
@@ -59,7 +61,6 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     }
 
     // 2. 計算目標索引 (Target Index)
-    // 我們希望停在列表後段的某個 winner 位置，確保有足夠的滾動空間
     final int winnerBaseIndex =
         widget.members.indexWhere((m) => m.id == widget.winnerId);
     // 讓它停在倒數第 5 輪的位置
@@ -82,9 +83,9 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     _scrollController
         .animateToItem(
       targetIndex,
-      // [關鍵]: 時間越長 + easeOutQuint = 快速旋轉後慢慢煞車的效果
-      duration: const Duration(milliseconds: 3500),
-      curve: Curves.easeOutQuint,
+      // [修改] 時間延長至 4500ms，曲線改為 easeOutQuart (比 Quint 平緩一點)
+      duration: const Duration(milliseconds: 4500),
+      curve: Curves.easeOutQuart,
     )
         .then((_) {
       _onSpinEnd();
@@ -96,18 +97,16 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     HapticFeedback.heavyImpact(); // 停止時重震動
     setState(() {
       _isSpinning = false;
-      _confettiController.play();
+    });
+    // 稍微延遲一點點再噴紙花，更有驚喜感
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _confettiController.play();
     });
   }
 
   void _onSkip() {
     // 立即停止動畫，跳到結果
-    _scrollController
-        .jumpToItem(_scrollController.selectedItem); // 停止目前位置 (非準確)
-    // 重新定位到最近的一個 winner
-    // 這裡簡單處理：直接呼叫結束邏輯，外部 S32 會顯示正確結果
-    // 為了視覺連貫，我們可以瞬間 jump 到最後一個 winner 的位置
-    // 但因為 Skip 就是不想看，直接 close 也可以
+    _scrollController.jumpToItem(_scrollController.selectedItem);
     Navigator.of(context).pop();
   }
 
@@ -125,154 +124,152 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final colorScheme = theme.colorScheme;
 
     // 單一 Item 高度
-    const double itemHeight = 200.0;
-    const double viewportHeight = 300.0;
+    const double itemHeight = 120.0; // 稍微調小一點，讓畫面更緊湊
+    const double viewportHeight = 240.0; // 可視區域高度
 
-    return AlertDialog(
-      backgroundColor: colorScheme.surface,
-      surfaceTintColor: colorScheme.surfaceTint,
-      contentPadding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      title: Text(
-        _isSpinning
-            ? t.D11_random_result.title
-            : t.D11_random_result.winner_reveal,
-        textAlign: TextAlign.center,
-        style: theme.textTheme.headlineSmall
-            ?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      content: SizedBox(
-        height: viewportHeight, // 滾輪可視高度
-        width: 300,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // 1. 高亮選取框 (Selection Highlight) - 位於中間
-            Container(
-              height: itemHeight + 12, // 比 item 稍高
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 36),
-              decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer
-                    .withValues(alpha: 0.4), // 半透明強調色
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: colorScheme.tertiary.withValues(alpha: 0.5),
-                  width: 2,
-                ),
-              ),
+    return CommonAlertDialog(
+      title: _isSpinning
+          ? t.D11_random_result.title
+          : t.D11_random_result.winner_reveal,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // [修改] 滾輪區域容器
+          Container(
+            height: viewportHeight,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLow, // [修改] 淺灰跑道背景
+              borderRadius: BorderRadius.circular(20),
             ),
-
-            // 3. 垂直滾輪 (The Reel)
-            Positioned.fill(
-              // 確保滾輪填滿空間
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.transparent,
-                      Colors.black,
-                      Colors.black,
-                      Colors.transparent,
-                      Colors.transparent,
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // 1. 高亮選取框 (Selection Highlight) - 位於中間
+                // [修改] 改為純白卡片 + 陰影
+                Container(
+                  height: itemHeight - 10, // 比 item 稍小，製造內縮感
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // [修改] 純白背景
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Colors.black.withValues(alpha: 0.05), // [修改] 極淡陰影
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
-                    // [修正 3] 重新計算 stops
-                    // 因為視窗變高了(300)，我們要確保遮罩是遮住「非 itemHeight 區域」
-                    // 中間顯示區域比例 = 200 / 300 ≈ 0.66 (佔中間 66%)
-                    // 上方保留空間 = (1 - 0.66) / 2 ≈ 0.17
-                    stops: [
-                      0.0,
-                      0.15, // 從 15% 處開始顯示 (淡入)
-                      0.20, // 20% 處完全清楚 (對應選取框上緣)
-                      0.80, // 80% 處開始變淡 (對應選取框下緣)
-                      0.85, // 85% 處完全消失
-                      1.0,
-                    ],
-                  ).createShader(bounds);
-                },
-                blendMode: BlendMode.dstIn, // 關鍵：只顯示與 Shader 重疊的部分
-                child: ListWheelScrollView.useDelegate(
-                  controller: _scrollController,
-                  itemExtent: itemHeight,
-                  perspective: 0.005, // 3D 透視感 (越小越平)
-                  diameterRatio: 2.0, // 圓筒直徑比例
-                  physics:
-                      const NeverScrollableScrollPhysics(), // 禁止手動滑動，只能程式控制
-                  clipBehavior: Clip.hardEdge,
-                  childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: _displayList.length,
-                    builder: (context, index) {
-                      final member = _displayList[index];
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CommonAvatar(
-                              avatarId: member.avatar,
-                              name: member.displayName,
-                              isLinked: member.isLinked,
-                              radius: 56,
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Flexible(
-                              child: Text(
-                                member.displayName,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis, // 防止長名溢出
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
                   ),
                 ),
+
+                // 2. 垂直滾輪 (The Reel)
+                Positioned.fill(
+                  child: ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: const [
+                          Colors.transparent, // 上方透明 (被遮住)
+                          Colors.black, // 中間顯示
+                          Colors.black,
+                          Colors.transparent, // 下方透明
+                        ],
+                        stops: const [
+                          0.0,
+                          0.25, // 從 25% 開始顯示 (上下各留白 1/4)
+                          0.75, // 到 75% 結束
+                          1.0,
+                        ],
+                      ).createShader(bounds);
+                    },
+                    blendMode: BlendMode.dstIn,
+                    child: ListWheelScrollView.useDelegate(
+                      controller: _scrollController,
+                      itemExtent: itemHeight,
+                      perspective: 0.002, // [修改] 更扁平的透視感
+                      diameterRatio: 1.5,
+                      physics: const NeverScrollableScrollPhysics(),
+                      childDelegate: ListWheelChildBuilderDelegate(
+                        childCount: _displayList.length,
+                        builder: (context, index) {
+                          if (index < 0 || index >= _displayList.length) {
+                            return null;
+                          }
+                          final member = _displayList[index];
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CommonAvatar(
+                                  avatarId: member.avatar,
+                                  name: member.displayName,
+                                  isLinked: member.isLinked,
+                                  radius: 40, // [修改] 適中大小
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  member.displayName,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 3. 紙花 (Confetti) - 疊在最上層
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: ConfettiWidget(
+                    confettiController: _confettiController,
+                    blastDirectionality: BlastDirectionality.explosive,
+                    shouldLoop: false,
+                    // [修改] 使用 App 品牌色
+                    colors: [
+                      colorScheme.primary, // 酒紅
+                      colorScheme.tertiary, // 森綠
+                      AppTheme.starGold, // 金色
+                      colorScheme.outline, // 淺灰 (增加層次)
+                    ],
+                    emissionFrequency: 0.02,
+                    numberOfParticles: 25,
+                    gravity: 0.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // [修改] Skip 按鈕移到下方
+          if (_isSpinning)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: TextButton(
+                onPressed: _onSkip,
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.onSurfaceVariant, // 灰色文字
+                ),
+                child: Text(t.D11_random_result.skip),
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter, // 從正上方噴下來
-              child: ConfettiWidget(
-                confettiController: _confettiController,
-                blastDirectionality: BlastDirectionality.explosive, // 爆炸式噴發
-                // 如果想要像下雨一樣從天而降，可以用：
-                // blastDirection: pi / 2,
-                // blastDirectionality: BlastDirectionality.directional,
-                shouldLoop: false, // 是否循環播放 (否，噴一次就好)
-                // --- 視覺調整 ---
-                colors: const [
-                  Colors.green,
-                  Colors.blue,
-                  Colors.pink,
-                  Colors.orange,
-                  Colors.purple
-                ], // 紙花顏色
-                // --- 物理調整 ---
-                emissionFrequency: 0.05, // 噴發頻率 (越大越密)
-                numberOfParticles: 20, // 一次噴多少顆
-                gravity: 0.2, // 重力 (掉落速度)
-                maxBlastForce: 20, // 噴發力度 (噴多遠)
-                minBlastForce: 5,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
-      actionsAlignment: MainAxisAlignment.center,
+      // Actions 只保留關閉按鈕 (動畫結束後顯示)
       actions: [
-        if (_isSpinning)
-          TextButton(
-            onPressed: _onSkip,
-            child: Text(t.D11_random_result.skip),
-          )
-        else
+        if (!_isSpinning)
           AppButton(
             text: t.D11_random_result.buttons.close,
             type: AppButtonType.primary,

@@ -42,20 +42,93 @@ class CurrencyConstants {
     ).format(amount);
   }
 
+  // 在 currency_constants.dart 中
+
   static CurrencyConstants detectSystemCurrency() {
-    String systemLocale = Platform.localeName;
-    if (kDebugMode) {
-      print('System Locale: $systemLocale');
+    String systemLocale =
+        Platform.localeName; // e.g., 'zh_TW', 'en_US', 'ja_JP'
+
+    // 1. 取得國家代碼 (Country Code)
+    // 通常 locale 格式為 'lang_COUNTRY'，例如 'zh_TW' -> 'TW'
+    String countryCode = '';
+    if (systemLocale.contains('_')) {
+      countryCode = systemLocale.split('_').last.toUpperCase();
+    } else {
+      // 如果只有語言代碼 (例如 'ja')，嘗試推斷預設國家
+      // 這裡可以做一些簡單的 fallback，或者直接讓它失敗回傳預設值
+      countryCode = systemLocale.toUpperCase();
     }
-    // Extract the currency code from the locale
-    String currencyCode = systemLocale.split('_').last;
+
     if (kDebugMode) {
-      print('Detected Currency Code: $currencyCode');
+      print('System Locale: $systemLocale, Country Code: $countryCode');
     }
-    final baseOption = kSupportedCurrencies.firstWhere(
-        (e) => e.code == currencyCode,
-        orElse: () => kSupportedCurrencies.first);
-    return baseOption;
+
+    // 2. 定義國家 -> 幣別對照表 (Country -> Currency)
+    // 這是一個手動維護的 Map，涵蓋常見國家
+    const Map<String, String> countryToCurrency = {
+      // East Asia
+      'TW': 'TWD', // 台灣 -> 新台幣
+      'JP': 'JPY', // 日本 -> 日圓
+      'KR': 'KRW', // 韓國 -> 韓元
+      'CN': 'CNY', // 中國 -> 人民幣
+      'HK': 'HKD', // 香港 -> 港幣
+      'MO': 'MOP', // 澳門 -> 澳門幣
+
+      // Southeast Asia
+      'SG': 'SGD', // 新加坡 -> 新幣
+      'TH': 'THB', // 泰國 -> 泰銖
+      'VN': 'VND', // 越南 -> 越南盾
+      'MY': 'MYR', // 馬來西亞 -> 馬幣
+      'ID': 'IDR', // 印尼 -> 印尼盾
+      'PH': 'PHP', // 菲律賓 -> 披索
+
+      // South Asia
+      'IN': 'INR', // 印度 -> 盧比
+
+      // Europe
+      'GB': 'GBP', // 英國 -> 英鎊
+      'FR': 'EUR', // 法國 -> 歐元
+      'DE': 'EUR', // 德國 -> 歐元
+      'IT': 'EUR', // 義大利 -> 歐元
+      'ES': 'EUR', // 西班牙 -> 歐元
+      'CH': 'CHF', // 瑞士 -> 瑞士法郎
+      'DK': 'DKK', // 丹麥 -> 丹麥克朗
+      'NO': 'NOK', // 挪威 -> 挪威克朗
+      'SE': 'SEK', // 瑞典 -> 瑞典克朗
+      'RU': 'RUB', // 俄羅斯 -> 盧布
+      'TR': 'TRY', // 土耳其 -> 里拉
+
+      // North America
+      'US': 'USD', // 美國 -> 美金
+      'CA': 'CAD', // 加拿大 -> 加幣
+
+      // Oceania
+      'AU': 'AUD', // 澳洲 -> 澳幣
+      'NZ': 'NZD', // 紐西蘭 -> 紐幣
+
+      // Middle East
+      'AE': 'AED', // 阿聯酋 -> 迪拉姆
+      'SA': 'SAR', // 沙烏地阿拉伯 -> 里亞爾
+
+      // Africa
+      'ZA': 'ZAR', // 南非 -> 蘭特
+    };
+
+    // 3. 查找對應的幣別代碼
+    String targetCurrencyCode = countryToCurrency[countryCode] ?? 'USD';
+
+    // 4. 從支援列表中找出該幣別物件
+    final currency = kSupportedCurrencies.firstWhere(
+      (e) => e.code == targetCurrencyCode,
+      // 如果找不到 (例如對照表漏了)，回退到預設值 (USD)
+      orElse: () => kSupportedCurrencies.first,
+    );
+
+    if (kDebugMode) {
+      print('Detected Currency: ${currency.code}');
+    }
+
+    return currency;
   }
 }
 

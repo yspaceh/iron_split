@@ -41,8 +41,8 @@ class TaskDateInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 這裡建議加上 (E) 顯示星期，體驗更好
-    final dateFormat = DateFormat('yyyy/MM/dd (E)');
+    final String locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('yyyy/MM/dd (E)', locale);
 
     return AppSelectField(
       labelText: label,

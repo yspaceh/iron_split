@@ -15,8 +15,9 @@ class DailyHeader extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final isToday = DateUtils.isSameDay(date, DateTime.now());
+    final String locale = Localizations.localeOf(context).toString();
     final dateStr = DateFormat('MM/dd').format(date);
-    final weekStr = DateFormat('E').format(date).toUpperCase();
+    final weekStr = DateFormat('E', locale).format(date).toUpperCase();
 
     return Column(
       children: [
