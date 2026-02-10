@@ -83,21 +83,10 @@ class _S10Content extends StatelessWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : vm.displayTasks.isEmpty
                     ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.assignment_outlined,
-                                size: 48, color: colorScheme.outlineVariant),
-                            const SizedBox(height: 16),
-                            Text(
-                              vm.filterIndex == 0
-                                  ? t.S10_Home_TaskList.empty_in_progress
-                                  : t.S10_Home_TaskList.empty_completed,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          vm.filterIndex == 0
+                              ? t.S10_Home_TaskList.empty_in_progress
+                              : t.S10_Home_TaskList.empty_completed,
                         ),
                       )
                     : ListView.separated(

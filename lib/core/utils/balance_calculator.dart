@@ -140,6 +140,7 @@ class BalanceCalculator {
         // [關鍵] 手動建構 DualAmount
         // baseAmount 必須經過與 calculateSplit 相同的 floorToPrecision 處理
         // 確保 "代墊總額" 與 "消費分攤總額" 的精度一致
+
         final baseAmount =
             floorToPrecision(rawAmount * record.exchangeRate, baseCurrency);
         return DualAmount(original: rawAmount, base: baseAmount);
@@ -302,6 +303,14 @@ class BalanceCalculator {
     return (amount * multiplier).floorToDouble() / multiplier;
   }
 
+  /// 用於計算 "總金額" 的換算，確保最接近真實價值
+  static double roundToPrecision(
+      double amount, CurrencyConstants currencyConstants) {
+    final int precision = currencyConstants.decimalDigits;
+    final double multiplier = pow(10, precision).toDouble();
+    return (amount * multiplier).roundToDouble() / multiplier;
+  }
+
   /// [核心修正] 全站統一的分帳計算機
   /// 輸入：總金額、匯率、分帳設定
   /// 輸出：完整的分配結果 (包含 UI 要顯示的金額 + 存檔要用的零頭)
@@ -315,7 +324,7 @@ class BalanceCalculator {
   }) {
     // 1. 計算基準總額 (Total Base) - 無條件捨去
     final double baseTotal =
-        floorToPrecision(totalAmount * exchangeRate, baseCurrency);
+        roundToPrecision(totalAmount * exchangeRate, baseCurrency);
 
     final Map<String, DualAmount> memberAmounts = {};
 

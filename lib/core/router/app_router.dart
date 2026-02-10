@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/system/presentation/pages/s72_terms_update_page.dart';
+import 'package:iron_split/features/system/presentation/pages/s73_system_settings_payment_info_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s14_task_settings_page.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
@@ -232,7 +233,7 @@ class AppRouter {
         name: 'S70',
         builder: (context, state) => const S70SystemSettingsPage(),
         routes: [
-          // S71_SystemSettings.Tos`
+          // S71_SystemSettings.Terms`
           GoRoute(
             path: 'terms', // Full: /settings/terms
             name: 'S71',
@@ -240,6 +241,14 @@ class AppRouter {
               final extra = state.extra as Map<String, dynamic>? ?? {};
               final isTerms = extra['isTerms'] as bool?;
               return S71SettingsTermsPage(isTerms: isTerms ?? true);
+            },
+          ),
+          // S73_System.PaymentInfo`
+          GoRoute(
+            path: 'payment-info', // Full: /settings/payment-info
+            name: 'S73',
+            builder: (context, state) {
+              return S73SystemSettingsPaymentInfoPage();
             },
           ),
         ],

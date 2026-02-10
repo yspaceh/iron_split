@@ -75,9 +75,8 @@ class AppButton extends StatelessWidget {
           Icon(icon, size: 18), // M3 Icon 建議 18dp
           const SizedBox(width: 8), // M3 間距 8dp
         ],
-        Visibility(
-          visible: text != null,
-          child: Text(
+        if (text != null && isLoading == false) ...[
+          Text(
             text ?? '',
             style: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w500, // M3 Label Large
@@ -87,7 +86,7 @@ class AppButton extends StatelessWidget {
                   : colorScheme.primary,
             ),
           ),
-        )
+        ]
       ],
     );
 

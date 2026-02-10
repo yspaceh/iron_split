@@ -141,7 +141,7 @@
         "privacy": "プライバシーポリシー",
         "both": "法的条項"
       },
-      "and": " と "
+      "and": "と"
     },
     "share":{
       "invite": {
@@ -241,7 +241,8 @@
     "section": {
       "expense": "支払い通貨",
       "income": "預り金通貨",
-      "prepay_balance": "預り金残高"
+      "prepay_balance": "預り金残高",
+      "no_data": "データなし"
     }
   },
   "S14_Task_Settings": {
@@ -612,6 +613,9 @@
     "status_balanced": "一致",
     "status_remaining": "残り: {amount}",
     "msg_auto_fill_prepay": "公費残高を自動入力しました"
+  },
+  "success": {
+    "saved": "保存しました"
   },
   "error": {
     "dialog": {

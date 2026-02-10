@@ -241,7 +241,8 @@
     "section": {
       "expense": "Expense Details",
       "income": "Income Details",
-      "prepay_balance": "Advance Balance"
+      "prepay_balance": "Advance Balance",
+      "no_data": "No data"
     }
   },
   "S14_Task_Settings": {
@@ -612,6 +613,9 @@
     "status_balanced": "Balanced",
     "status_remaining": "Remaining: {amount}",
     "msg_auto_fill_prepay": "Public fund balance auto-filled"
+  },
+  "success": {
+    "saved": "Saved successfully"
   },
   "error": {
     "dialog" : {

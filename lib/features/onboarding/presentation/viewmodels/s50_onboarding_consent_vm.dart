@@ -28,6 +28,7 @@ class S50OnboardingConsentViewModel extends ChangeNotifier {
       // 3. 成功，通知 UI 跳轉
       onSuccess();
     } catch (e) {
+      print(e.toString());
       onError(e.toString());
     } finally {
       _isLoading = false;

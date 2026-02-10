@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,8 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final String taskId;
   final String currentUserId;
+
+  StreamSubscription? _taskSubscription;
 
   // UI State
   LockedPageStatus _status = LockedPageStatus.loading;
@@ -49,7 +53,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   }
 
   void _init() {
-    _taskRepo.streamTask(taskId).listen((task) {
+    _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
       if (task == null) {
         _status = LockedPageStatus.error;
         notifyListeners();
@@ -171,5 +175,12 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         .sort((a, b) => b.finalAmount.abs().compareTo(a.finalAmount.abs()));
     _clearedMembers
         .sort((a, b) => b.finalAmount.abs().compareTo(a.finalAmount.abs()));
+  }
+
+  @override
+  void dispose() {
+    // [修正] 頁面銷毀時，務必取消訂閱！
+    _taskSubscription?.cancel();
+    super.dispose();
   }
 }

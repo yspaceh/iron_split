@@ -99,8 +99,6 @@ class _S72Content extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      // 移除返回鍵，強制決策
       appBar: AppBar(
         title: Text(title),
         automaticallyImplyLeading: false,
@@ -131,38 +129,35 @@ class _S72Content extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text(
-              description,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          if (vm.type == UpdateType.both)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: CustomSlidingSegment<LegalTab>(
-                selectedValue: vm.currentTab,
-                segments: {
-                  LegalTab.terms: t.common.terms.label.terms,
-                  LegalTab.privacy: t.common.terms.label.privacy,
-                },
-                onValueChanged: (tab) {
-                  vm.setTab(tab);
-                },
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              Text(description),
+              if (vm.type == UpdateType.both) ...[
+                const SizedBox(height: 8),
+                CustomSlidingSegment<LegalTab>(
+                  selectedValue: vm.currentTab,
+                  segments: {
+                    LegalTab.terms: t.common.terms.label.terms,
+                    LegalTab.privacy: t.common.terms.label.privacy,
+                  },
+                  onValueChanged: (tab) {
+                    vm.setTab(tab);
+                  },
+                ),
+              ],
+              const SizedBox(height: 8),
+              Expanded(
+                child: S71SettingsTermsPage(
+                  isTerms: _isTermsVisible(vm),
+                  isEmbedded: true,
+                ),
               ),
-            ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: S71SettingsTermsPage(
-              isTerms: _isTermsVisible(vm),
-              isEmbedded: true,
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

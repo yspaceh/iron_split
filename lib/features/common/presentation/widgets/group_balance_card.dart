@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
@@ -33,7 +34,13 @@ class GroupBalanceCard extends StatelessWidget {
     // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
     final bool isCurrencyTapLocked = onCurrencyTap == null;
     final bool isRuleTapLocked = onRuleTap == null;
-    final double netBalance = state.totalIncome - state.totalExpense;
+    final CurrencyConstants currencyConstants =
+        CurrencyConstants.getCurrencyConstants(state.currencyCode);
+    final totalIncome = BalanceCalculator.roundToPrecision(
+        state.totalIncome, currencyConstants);
+    final totalExpense = BalanceCalculator.roundToPrecision(
+        state.totalExpense, currencyConstants);
+    final double netBalance = totalIncome - totalExpense;
     // --- 1. 統一管理顏色變數 (從 Theme 取得) ---
     // 支出使用主色 (Iron Wine)
     final Color expenseColor = theme.colorScheme.primary;
@@ -73,41 +80,58 @@ class GroupBalanceCard extends StatelessWidget {
               // 支出區塊
               Text(t.S13_Task_Dashboard.section.expense,
                   style: theme.textTheme.titleSmall
-                      ?.copyWith(color: theme.colorScheme.error)),
-              ...state.expenseDetail.entries.map(
-                (e) => Text(
-                  "${e.key} ${_getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                  style: TextStyle(fontFamily: 'RobotoMono'),
+                      ?.copyWith(color: expenseColor)),
+              if (state.expenseDetail.entries.isEmpty) ...[
+                Text(
+                  t.S13_Task_Dashboard.section.no_data,
                 ),
-              ),
+              ] else ...[
+                ...state.expenseDetail.entries.map(
+                  (e) => Text(
+                    "${e.key} ${_getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    style: TextStyle(fontFamily: 'RobotoMono'),
+                  ),
+                ),
+              ],
 
               const Divider(),
 
               // 收入區塊
               Text(t.S13_Task_Dashboard.section.income,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: Colors.green)),
-              ...state.incomeDetail.entries.map(
-                (e) => Text(
-                  "${e.key} ${_getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                  style: TextStyle(fontFamily: 'RobotoMono'),
+                  style:
+                      theme.textTheme.titleSmall?.copyWith(color: incomeColor)),
+              if (state.incomeDetail.entries.isEmpty) ...[
+                Text(
+                  t.S13_Task_Dashboard.section.no_data,
                 ),
-              ),
-
+              ] else ...[
+                ...state.incomeDetail.entries.map(
+                  (e) => Text(
+                    "${e.key} ${_getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    style: TextStyle(fontFamily: 'RobotoMono'),
+                  ),
+                ),
+              ],
               const Divider(),
 
               // 預收款餘額 (庫存)
               Text(
                   t.S13_Task_Dashboard.section.prepay_balance, // 使用 "餘額" 或類似的標題
                   style: theme.textTheme.titleSmall),
-              ...state.poolDetail.entries.map(
-                (e) => Text(
-                  "${e.key} ${_getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                  style: TextStyle(
-                    fontFamily: 'RobotoMono',
+              if (state.poolDetail.entries.isEmpty) ...[
+                Text(
+                  t.S13_Task_Dashboard.section.no_data,
+                ),
+              ] else ...[
+                ...state.poolDetail.entries.map(
+                  (e) => Text(
+                    "${e.key} ${_getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ));
     }
@@ -232,7 +256,7 @@ class GroupBalanceCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalExpense.abs(), state.currencyCode)}",
+                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalExpense.abs(), state.currencyCode)}",
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -252,7 +276,7 @@ class GroupBalanceCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "${state.currencySymbol}${CurrencyConstants.formatAmount(state.totalIncome.abs(), state.currencyCode)}",
+                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalIncome.abs(), state.currencyCode)}",
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -302,7 +326,7 @@ class GroupBalanceCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        if (isSettlement == false && state.remainder != 0) ...[
+                        if (state.remainder.abs() > 0.001) ...[
                           if (state.isLocked && state.absorbedBy != null)
                             Text(
                               t.S17_Task_Locked.label_remainder_absorbed_by(

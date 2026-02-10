@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -19,6 +21,7 @@ import 'package:iron_split/firebase_options.dart';
 
 // 狀態管理
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,16 +31,33 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // 讀取儲存的語言設定
+  final prefs = await SharedPreferences.getInstance();
+  final savedLocaleCode = prefs.getString('app_locale');
+
+  if (savedLocaleCode != null) {
+    final locale = AppLocaleUtils.parse(savedLocaleCode);
+    LocaleSettings.setLocale(locale);
+  } else {
+    // 跟隨系統
+    LocaleSettings.useDeviceLocale();
+  }
+
   runApp(
     MultiProvider(
       providers: [
-        // 1. 注入 TaskRepository
         Provider<TaskRepository>(
           create: (_) => TaskRepository(),
         ),
-        // 2. 注入 RecordRepository
         Provider<RecordRepository>(
           create: (_) => RecordRepository(),
+        ),
+        Provider<AuthRepository>(
+          create: (_) => AuthRepository(),
+        ),
+        Provider<OnboardingService>(
+          create: (context) =>
+              OnboardingService(authRepo: context.read<AuthRepository>()),
         ),
         Provider<DashboardService>(
           create: (_) => DashboardService(),

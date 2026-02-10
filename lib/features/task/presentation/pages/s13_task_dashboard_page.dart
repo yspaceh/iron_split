@@ -102,14 +102,12 @@ class _S13ContentState extends State<_S13Content> {
         title:
             Text(taskName.isNotEmpty ? taskName : t.S13_Task_Dashboard.title),
         // 新增：智慧導航按鈕
-        leading: Navigator.of(context).canPop()
-            ? null // null 代表使用預設的「返回箭頭」 (因為有上一頁)
-            : IconButton(
-                icon: Icon(Icons.adaptive.arrow_back), // 沒有上一頁時，顯示「回首頁」
-                onPressed: () {
-                  context.goNamed('S10');
-                },
-              ),
+        leading: IconButton(
+          icon: Icon(Icons.adaptive.arrow_back), // 沒有上一頁時，顯示「回首頁」
+          onPressed: () {
+            context.goNamed('S10');
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -123,9 +121,8 @@ class _S13ContentState extends State<_S13Content> {
       bottomNavigationBar: StickyBottomActionBar(
         isSheetMode: false,
         children: [
-          Visibility(
-            visible: isCaptain,
-            child: AppButton(
+          if (isCaptain) ...[
+            AppButton(
                 text: t.S13_Task_Dashboard.buttons.settlement,
                 type: AppButtonType.secondary,
                 onPressed: () async {
@@ -140,7 +137,7 @@ class _S13ContentState extends State<_S13Content> {
                     );
                   }
                 }),
-          ),
+          ],
           AppButton(
             text: t.S13_Task_Dashboard.buttons.record,
             type: AppButtonType.primary,

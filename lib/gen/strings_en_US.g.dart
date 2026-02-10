@@ -74,6 +74,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
 	@override late final _TranslationsB06PaymentInfoDetailEnUs B06_payment_info_detail = _TranslationsB06PaymentInfoDetailEnUs._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
+	@override late final _TranslationsSuccessEnUs success = _TranslationsSuccessEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
 }
 
@@ -609,6 +610,16 @@ class _TranslationsB07PaymentMethodEditEnUs extends TranslationsB07PaymentMethod
 	@override String get msg_auto_fill_prepay => 'Public fund balance auto-filled';
 }
 
+// Path: success
+class _TranslationsSuccessEnUs extends TranslationsSuccessZhTw {
+	_TranslationsSuccessEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get saved => 'Saved successfully';
+}
+
 // Path: error
 class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 	_TranslationsErrorEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -899,6 +910,7 @@ class _TranslationsS13TaskDashboardSectionEnUs extends TranslationsS13TaskDashbo
 	@override String get expense => 'Expense Details';
 	@override String get income => 'Income Details';
 	@override String get prepay_balance => 'Advance Balance';
+	@override String get no_data => 'No data';
 }
 
 // Path: S14_Task_Settings.section
@@ -1896,6 +1908,7 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.section.expense' => 'Expense Details',
 			'S13_Task_Dashboard.section.income' => 'Income Details',
 			'S13_Task_Dashboard.section.prepay_balance' => 'Advance Balance',
+			'S13_Task_Dashboard.section.no_data' => 'No data',
 			'S14_Task_Settings.title' => 'Task Settings',
 			'S14_Task_Settings.section.task_name' => 'Task Name',
 			'S14_Task_Settings.section.task_period' => 'Task Period',
@@ -2113,6 +2126,7 @@ extension on TranslationsEnUs {
 			'B07_PaymentMethod_Edit.status_balanced' => 'Balanced',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => 'Remaining: ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => 'Public fund balance auto-filled',
+			'success.saved' => 'Saved successfully',
 			'error.dialog.task_full.title' => 'Task Full',
 			'error.dialog.task_full.message' => ({required Object limit}) => 'Task member limit (${limit}) reached. Please contact captain.',
 			'error.dialog.expired_code.title' => 'Invite Expired',

@@ -74,6 +74,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
 	@override late final _TranslationsB06PaymentInfoDetailJaJp B06_payment_info_detail = _TranslationsB06PaymentInfoDetailJaJp._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
+	@override late final _TranslationsSuccessJaJp success = _TranslationsSuccessJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
 }
 
@@ -609,6 +610,16 @@ class _TranslationsB07PaymentMethodEditJaJp extends TranslationsB07PaymentMethod
 	@override String get msg_auto_fill_prepay => '公費残高を自動入力しました';
 }
 
+// Path: success
+class _TranslationsSuccessJaJp extends TranslationsSuccessZhTw {
+	_TranslationsSuccessJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get saved => '保存しました';
+}
+
 // Path: error
 class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	_TranslationsErrorJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -805,7 +816,7 @@ class _TranslationsCommonTermsJaJp extends TranslationsCommonTermsZhTw {
 
 	// Translations
 	@override late final _TranslationsCommonTermsLabelJaJp label = _TranslationsCommonTermsLabelJaJp._(_root);
-	@override String get and => ' と ';
+	@override String get and => 'と';
 }
 
 // Path: common.share
@@ -899,6 +910,7 @@ class _TranslationsS13TaskDashboardSectionJaJp extends TranslationsS13TaskDashbo
 	@override String get expense => '支払い通貨';
 	@override String get income => '預り金通貨';
 	@override String get prepay_balance => '預り金残高';
+	@override String get no_data => 'データなし';
 }
 
 // Path: S14_Task_Settings.section
@@ -1825,7 +1837,7 @@ extension on TranslationsJaJp {
 			'common.terms.label.terms' => '利用規約',
 			'common.terms.label.privacy' => 'プライバシーポリシー',
 			'common.terms.label.both' => '法的条項',
-			'common.terms.and' => ' と ',
+			'common.terms.and' => 'と',
 			'common.share.invite.subject' => 'Iron Split タスク招待',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split タスク精算通知',
@@ -1896,6 +1908,7 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.section.expense' => '支払い通貨',
 			'S13_Task_Dashboard.section.income' => '預り金通貨',
 			'S13_Task_Dashboard.section.prepay_balance' => '預り金残高',
+			'S13_Task_Dashboard.section.no_data' => 'データなし',
 			'S14_Task_Settings.title' => 'タスク設定',
 			'S14_Task_Settings.section.task_name' => 'タスク名',
 			'S14_Task_Settings.section.task_period' => 'タスク期間',
@@ -2113,6 +2126,7 @@ extension on TranslationsJaJp {
 			'B07_PaymentMethod_Edit.status_balanced' => '一致',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '残り: ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '公費残高を自動入力しました',
+			'success.saved' => '保存しました',
 			'error.dialog.task_full.title' => 'タスク満員',
 			'error.dialog.task_full.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
 			'error.dialog.expired_code.title' => '招待コード期限切れ',

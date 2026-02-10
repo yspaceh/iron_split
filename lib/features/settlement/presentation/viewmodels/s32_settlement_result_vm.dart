@@ -1,5 +1,7 @@
 // lib/features/settlement/presentation/viewmodels/s32_settlement_result_vm.dart
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
@@ -16,6 +18,8 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   TaskModel? _task;
   bool _isLoading = true;
 
+  StreamSubscription? _taskSubscription;
+
   // Getters
   bool get isLoading => _isLoading;
   TaskModel? get task => _task;
@@ -26,24 +30,35 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     return CurrencyConstants.getCurrencyConstants(_task!.baseCurrency);
   }
 
-  //  讀取結算時的零頭總額
-  double get totalRemainder {
+  double get snapshotRemainder {
     if (_task == null || _task!.settlement == null) return 0.0;
-    // 嘗試從 settlement map 讀取 'totalRemainder'
-    return (_task!.settlement!['totalRemainder'] as num?)?.toDouble() ?? 0.0;
+
+    // 取得快照 Map
+    final snapshot =
+        _task!.settlement!['dashboardSnapshot'] as Map<String, dynamic>?;
+
+    // 如果是舊資料沒有快照，就回傳 0
+    if (snapshot == null) return 0.0;
+
+    // 讀取 'remainder' 欄位
+    return (snapshot['remainder'] as num?)?.toDouble() ?? 0.0;
   }
 
-  //  綜合判斷是否顯示輪盤
+  // 判斷是否顯示輪盤
   bool get shouldShowRoulette {
-    // 1. 基本門檻
-    if (!isRandomMode) return false;
-    if (remainderWinnerId == null) return false;
+    // 1. 基本門檻：必須是隨機模式
+    if (_task?.remainderRule != RemainderRuleConstants.random) return false;
 
-    // 2. 防呆：如果根本沒有成員 (分配表為空)，絕對不能開輪盤
-    if (allMembers.isEmpty) return false;
+    // 2. [邏輯修正] 檢查零頭金額是否不為 0
+    // 直接使用從快照讀出來的金額
+    if (snapshotRemainder.abs() < 0.001) {
+      return false; // 金額為 0，不顯示動畫
+    }
 
-    // 3. 邏輯：如果零頭金額為 0，就不需要抽
-    if (totalRemainder.abs() < 0.001) return false;
+    // 3. (可選) 檢查是否有贏家 ID (雙重確認)
+    // 理論上金額不為 0 就應該要有贏家，這行是防呆
+    final winnerId = _task!.settlement!['remainderWinnerId'] as String?;
+    if (winnerId == null || winnerId.isEmpty) return false;
 
     return true;
   }
@@ -91,7 +106,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     notifyListeners();
 
     // 監聽 Task 變化 (通常 S32 進來時資料已經是 settled/pending)
-    _taskRepo.streamTask(taskId).listen((taskData) {
+    _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
       _task = taskData;
       _isLoading = false;
       notifyListeners();
@@ -121,5 +136,12 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   Future<String> generateShareLink() async {
     // 直接呼叫 Service 產生，確保格式跟 _parseUri 對得上
     return _deepLinkService.generateTaskLink(taskId);
+  }
+
+  @override
+  void dispose() {
+    // [修正] 頁面銷毀時，務必取消訂閱！
+    _taskSubscription?.cancel();
+    super.dispose();
   }
 }

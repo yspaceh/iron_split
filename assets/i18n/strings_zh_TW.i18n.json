@@ -141,7 +141,7 @@
         "privacy": "隱私政策",
         "both": "法律條款"
       },
-      "and": " 和 "
+      "and": "和"
     },
     "share":{
       "invite": {
@@ -241,7 +241,8 @@
     "section": {
       "expense": "支出明細",
       "income": "預收明細",
-      "prepay_balance": "預收餘額"
+      "prepay_balance": "預收餘額",
+      "no_data": "無資料"
     }
   },
   "S14_Task_Settings": {
@@ -613,6 +614,9 @@
     "status_balanced": "金額吻合",
     "status_remaining": "尚差 {amount}",
     "msg_auto_fill_prepay": "已自動填入公款餘額"
+  },
+  "success": {
+    "saved": "已成功儲存"
   },
   "error": {
     "dialog" : {

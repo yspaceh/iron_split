@@ -75,6 +75,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
 	late final TranslationsB06PaymentInfoDetailZhTw B06_payment_info_detail = TranslationsB06PaymentInfoDetailZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
+	late final TranslationsSuccessZhTw success = TranslationsSuccessZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
 }
 
@@ -948,6 +949,18 @@ class TranslationsB07PaymentMethodEditZhTw {
 	String get msg_auto_fill_prepay => '已自動填入公款餘額';
 }
 
+// Path: success
+class TranslationsSuccessZhTw {
+	TranslationsSuccessZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '已成功儲存'
+	String get saved => '已成功儲存';
+}
+
 // Path: error
 class TranslationsErrorZhTw {
 	TranslationsErrorZhTw.internal(this._root);
@@ -1304,8 +1317,8 @@ class TranslationsCommonTermsZhTw {
 	// Translations
 	late final TranslationsCommonTermsLabelZhTw label = TranslationsCommonTermsLabelZhTw.internal(_root);
 
-	/// zh-TW: ' 和 '
-	String get and => ' 和 ';
+	/// zh-TW: '和'
+	String get and => '和';
 }
 
 // Path: common.share
@@ -1437,6 +1450,9 @@ class TranslationsS13TaskDashboardSectionZhTw {
 
 	/// zh-TW: '預收餘額'
 	String get prepay_balance => '預收餘額';
+
+	/// zh-TW: '無資料'
+	String get no_data => '無資料';
 }
 
 // Path: S14_Task_Settings.section
@@ -2725,7 +2741,7 @@ extension on Translations {
 			'common.terms.label.terms' => '服務條款',
 			'common.terms.label.privacy' => '隱私政策',
 			'common.terms.label.both' => '法律條款',
-			'common.terms.and' => ' 和 ',
+			'common.terms.and' => '和',
 			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split 任務結算通知',
@@ -2796,6 +2812,7 @@ extension on Translations {
 			'S13_Task_Dashboard.section.expense' => '支出明細',
 			'S13_Task_Dashboard.section.income' => '預收明細',
 			'S13_Task_Dashboard.section.prepay_balance' => '預收餘額',
+			'S13_Task_Dashboard.section.no_data' => '無資料',
 			'S14_Task_Settings.title' => '任務設定',
 			'S14_Task_Settings.section.task_name' => '任務名稱',
 			'S14_Task_Settings.section.task_period' => '任務期間',
@@ -3014,6 +3031,7 @@ extension on Translations {
 			'B07_PaymentMethod_Edit.status_balanced' => '金額吻合',
 			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '尚差 ${amount}',
 			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '已自動填入公款餘額',
+			'success.saved' => '已成功儲存',
 			'error.dialog.task_full.title' => '任務已滿',
 			'error.dialog.task_full.message' => ({required Object limit}) => '此任務成員數已達上限 ${limit} 人，請聯繫隊長。',
 			'error.dialog.expired_code.title' => '邀請碼已過期',

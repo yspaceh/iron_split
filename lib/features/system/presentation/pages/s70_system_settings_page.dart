@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_language_input.dart';
@@ -19,8 +20,7 @@ class S70SystemSettingsPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => S70SystemSettingsViewModel(
         onboardingService: context.read<OnboardingService>(),
-        // 假設我們可以從 UserRepo 或 OnboardingService 拿到初始名稱，
-        // 如果 VM 內部會自己 init loading，這裡傳空字串也可以
+        authRepo: context.read<AuthRepository>(),
         initialName: '',
       ), // VM 內部建構子已包含 _init() 呼叫
       child: const _S70Content(),
@@ -92,12 +92,12 @@ class _S70ContentState extends State<_S70Content> {
                     maxLength: 20,
                   ),
                 ),
-                if (vm.isLoading)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: LinearProgressIndicator(minHeight: 2),
-                  ),
-                const SizedBox(height: 16),
+                // if (vm.isLoading)
+                //   const Padding(
+                //     padding: EdgeInsets.only(top: 8.0),
+                //     child: LinearProgressIndicator(minHeight: 2),
+                //   ),
+                const SizedBox(height: 8),
 
                 // 5. 語言設定
                 TaskLanguageInput(
@@ -105,17 +105,14 @@ class _S70ContentState extends State<_S70Content> {
                   onLanguageChanged: (newLocale) =>
                       vm.updateLanguage(newLocale),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // 6. 收款資料
                 NavTile(
                   title: t.S70_System_Settings.menu.payment_info,
-                  onTap: () async {
-                    await context.pushNamed('payment_settings_page');
-                    vm.refreshPaymentInfo();
-                  },
+                  onTap: () => context.pushNamed('S73'),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // 7. 法律條款
                 NavTile(

@@ -132,6 +132,48 @@ class AppTheme {
           side: const BorderSide(color: _neutralGrey, width: 1),
         ),
       ),
+
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: _pureWhite, // 背景純白
+        surfaceTintColor: Colors.transparent, // 移除 M3 預設染色
+
+        // 標頭區域 (上方顯示年份日期的區塊)
+        // 設為白色背景 + 深色文字，符合 "Cool & Crisp" 風格
+        headerBackgroundColor: _pureWhite,
+        headerForegroundColor: _obsidian,
+
+        // 形狀：對齊 DialogTheme (24px 圓角 + 邊框)
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: _neutralGrey, width: 1),
+        ),
+
+        // 日曆中選中日期的樣式
+        dayStyle: const TextStyle(fontFamily: 'Roboto', color: _obsidian),
+        todayBorder: const BorderSide(color: _ironWine), // 今天的日期加框
+        todayForegroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return Colors.white;
+          return _ironWine;
+        }),
+
+        // 按鈕顏色 (Cancel/OK)
+        cancelButtonStyle: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          minimumSize: const Size(120, 44), // 高度 40
+          side: BorderSide(color: _neutralGrey),
+          foregroundColor: _ironWine,
+          shape: const StadiumBorder(),
+        ),
+        confirmButtonStyle: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          minimumSize: const Size(120, 44), // 高度 40
+          backgroundColor: _ironWine,
+          foregroundColor: Colors.white,
+          shape: const StadiumBorder(),
+          elevation: 0, // M3 FilledButton 預設無陰影
+        ),
+      ),
+
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: _pureWhite,
         surfaceTintColor: Colors.transparent,
@@ -179,6 +221,36 @@ class AppTheme {
 
         // 5. 陰影：稍微加一點點，增加層次感
         elevation: 4,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: _ironWine,
+        foregroundColor: Colors.white,
+
+        // 關鍵：將所有狀態的陰影都設為 0
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+
+        // 形狀：保持圓潤的膠囊狀 (Stadium)
+        shape: const StadiumBorder(),
+
+        // 如果您希望它跟背景有點區隔，可以加一點點幾乎看不見的邊框，
+        // 但因為酒紅色很深，其實不加邊框對比也夠了。
+        // shape: StadiumBorder(
+        //   side: BorderSide(color: _ironWine.withOpacity(0.1), width: 1),
+        // ),
+
+        // 文字樣式 (對齊 ElevatedButton)
+        extendedTextStyle: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
+          letterSpacing: 0.5, // 稍微加一點字距讓它更好看
+        ),
+
+        // 調整大小與間距 (Extended FAB 預設有點大，我們可以微調)
+        extendedPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

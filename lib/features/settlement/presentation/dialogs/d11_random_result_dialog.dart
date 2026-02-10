@@ -50,39 +50,79 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   @override
   void initState() {
     super.initState();
+    debugPrint("[D11] initState called"); // [LOG]
 
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
 
-    // 1. [防呆] 如果沒有成員，直接關閉，避免崩潰
     if (widget.members.isEmpty) {
+      debugPrint("[D11] Member list empty, closing."); // [LOG]
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return;
     }
 
-    // 1. 準備顯示清單 (重複名單)
     _displayList = [];
     for (int i = 0; i < _loopCount; i++) {
       _displayList.addAll(widget.members);
     }
 
-    // 2. 計算目標索引 (Target Index)
     final int winnerBaseIndex =
         widget.members.indexWhere((m) => m.id == widget.winnerId);
-    // 讓它停在倒數第 5 輪的位置
+    final int safeWinnerIndex = winnerBaseIndex == -1 ? 0 : winnerBaseIndex;
     final int targetRound = _loopCount - 5;
     final int targetIndex =
-        (targetRound * widget.members.length) + winnerBaseIndex;
+        (targetRound * widget.members.length) + safeWinnerIndex;
+
+    debugPrint(
+        "[D11] Winner: ${widget.winnerId}, TargetIndex: $targetIndex"); // [LOG]
 
     _scrollController = FixedExtentScrollController(initialItem: 0);
 
-    // 3. 啟動動畫 (延遲一點點讓 UI 先 render)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startSpinning(targetIndex);
-    });
+    // [修改] 改用 _tryStartSpinning 安全啟動
+    debugPrint("[D11] Scheduling initial check..."); // [LOG]
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _tryStartSpinning(targetIndex));
   }
+
+  // [新增] 安全啟動檢查
+  void _tryStartSpinning(int targetIndex, [int attempt = 1]) {
+    if (!mounted) {
+      debugPrint("[D11] Unmounted during check."); // [LOG]
+      return;
+    }
+
+    bool isReady = false;
+    bool hasClients = _scrollController.hasClients;
+
+    if (hasClients) {
+      try {
+        isReady = _scrollController.position.haveDimensions;
+      } catch (e) {
+        debugPrint("[D11] position error: $e"); // [LOG]
+        isReady = false;
+      }
+    }
+
+    debugPrint(
+        "[D11] Check #$attempt - hasClients: $hasClients, isReady: $isReady"); // [LOG]
+
+    if (isReady) {
+      debugPrint("[D11] Ready! Starting animation."); // [LOG]
+      _startSpinning(targetIndex);
+    } else {
+      // 防無窮迴圈 (試超過 100 次就放棄)
+      if (attempt > 100) {
+        debugPrint("[D11] Timeout waiting for dimensions."); // [LOG]
+        return;
+      }
+      // 下一幀再試
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _tryStartSpinning(targetIndex, attempt + 1));
+    }
+  }
+  // ------------------
 
   void _startSpinning(int targetIndex) {
     // 播放震動
@@ -132,8 +172,8 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final colorScheme = theme.colorScheme;
 
     // 單一 Item 高度
-    const double itemHeight = 120.0; // 稍微調小一點，讓畫面更緊湊
-    const double viewportHeight = 240.0; // 可視區域高度
+    const double itemHeight = 150.0;
+    const double viewportHeight = 200.0; // 可視區域高度
 
     return CommonAlertDialog(
       title: _isSpinning
@@ -145,9 +185,9 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
           // [修改] 滾輪區域容器
           Container(
             height: viewportHeight,
-            width: double.infinity,
+            width: double.maxFinite,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLow, // [修改] 淺灰跑道背景
+              color: colorScheme.surface, // [修改] 淺灰跑道背景
               borderRadius: BorderRadius.circular(20),
             ),
             clipBehavior: Clip.antiAlias,
@@ -157,11 +197,11 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                 // 1. 高亮選取框 (Selection Highlight) - 位於中間
                 // [修改] 改為純白卡片 + 陰影
                 Container(
-                  height: itemHeight - 10, // 比 item 稍小，製造內縮感
+                  height: itemHeight, // 比 item 稍小，製造內縮感
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white, // [修改] 純白背景
+                    color: colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.2), // [修改] 純白背景
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -189,8 +229,8 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                         ],
                         stops: const [
                           0.0,
-                          0.25, // 從 25% 開始顯示 (上下各留白 1/4)
-                          0.75, // 到 75% 結束
+                          0.2, // 從 25% 開始顯示 (上下各留白 1/4)
+                          0.8, // 到 75% 結束
                           1.0,
                         ],
                       ).createShader(bounds);
@@ -217,9 +257,9 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                                   avatarId: member.avatar,
                                   name: member.displayName,
                                   isLinked: member.isLinked,
-                                  radius: 40, // [修改] 適中大小
+                                  radius: 36, // [修改] 適中大小
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 4),
                                 Text(
                                   member.displayName,
                                   style: theme.textTheme.titleMedium?.copyWith(

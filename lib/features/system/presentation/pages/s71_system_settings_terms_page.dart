@@ -96,8 +96,8 @@ class _S71SettingsTermsPageState extends State<S71SettingsTermsPage> {
 
     // 獨立頁面模式 (保留原本邏輯)
     final title = widget.isTerms
-        ? t.S71_SystemSettings_Tos.terms
-        : t.S71_SystemSettings_Tos.privacy;
+        ? t.common.terms.label.terms
+        : t.common.terms.label.privacy;
 
     return Scaffold(
       appBar: AppBar(

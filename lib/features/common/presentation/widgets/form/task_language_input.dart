@@ -38,7 +38,6 @@ class TaskLanguageInput extends StatelessWidget {
 
     return AppSelectField(
       labelText: t.common.language.title,
-      // [修改] 這裡需要轉換成顯示文字
       text: LanguageConstants.getLabel(context, language),
       onTap: enabled ? () => _showLanguagePicker(context) : null,
       fillColor: fillColor,
