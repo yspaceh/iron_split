@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:provider/provider.dart';
@@ -48,8 +49,7 @@ class _S51ContentState extends State<_S51Content> {
   void _submit(BuildContext context, S51OnboardingNameViewModel vm) {
     vm.saveName(
       onSuccess: () => context.pushNamed('S10'), // 假設下個頁面是任務列表
-      onError: (msg) => ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(msg))),
+      onError: (msg) => AppToast.showError(context, msg),
     );
   }
 
@@ -86,8 +86,10 @@ class _S51ContentState extends State<_S51Content> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(t.S51_Onboarding_Name.description),
               const SizedBox(height: 24),
@@ -95,7 +97,7 @@ class _S51ContentState extends State<_S51Content> {
                 controller: _controller,
                 maxLength: 10,
                 label: t.S51_Onboarding_Name.title,
-                hint: t.S51_Onboarding_Name.field_hint, // "例如：Iron Man"
+                hint: t.S51_Onboarding_Name.hint, // "例如：Iron Man"
               ),
             ],
           ),

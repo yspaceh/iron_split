@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Split - 服務條款</title>
+  <style>
+    /* 基於 AppTheme 定義的色票 
+      Primary: #9C393F (連結)
+      Obsidian: #212121 (標題)
+      MediumGrey: #616161 (內文)
+      Background: #FFFFFF
+    */
+    :root { 
+      --bg: #F4F6F8;
+      --heading: #212121; 
+      --body: #616161;
+      --accent: #9C393F; 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 20px 40px; /* 增加四周留白，讓閱讀更舒適 */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      line-height: 1.6;
+      font-size: 15px; /* 適合手機閱讀的大小 */
+    }
+
+    /* 移除所有 H1 (因為 App Bar 已經有了) */
+    
+    h2 {
+      color: var(--heading);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 32px 0 12px; /* 區塊間距拉大，增加呼吸感 */
+    }
+
+    p {
+      margin: 0 0 16px;
+      text-align: justify; /* 讓文字左右對齊，看起來更整齊 */
+    }
+
+    /* 最後更新日期的樣式 */
+    .meta {
+      font-size: 13px;
+      color: #9E9E9E; /* 比內文更淡一點 */
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    /* 連結樣式 */
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Email 專用樣式 (一般顏色，不強調) */
+    .email-link {
+      color: var(--body) !important; /* 強制使用一般文字顏色 */
+      text-decoration: underline;    /* 加底線表示可點擊 */
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="meta">最後更新：2026/02/10</span>
+
+  <p>歡迎使用 <strong>Iron Split</strong>（以下稱「本 App」）。本 App 由個人開發者營運，提供使用者進行記帳與費用分攤之工具服務。使用本 App 即表示您已閱讀、理解並同意本服務條款。</p>
+
+  <h2>1. 服務內容</h2>
+  <p>本 App 為工具型應用程式，提供記帳、費用分攤、資料整理等功能。本 App <strong>不提供任何實際支付、收款或金流服務</strong>。</p>
+
+  <h2>2. 使用者帳號</h2>
+  <p>本 App 使用匿名帳號機制（裝置 ID / UUID）。使用者需自行妥善保管其裝置與資料，本 App 不保證跨裝置或重新安裝後資料可被恢復。</p>
+
+  <h2>3. 使用者責任</h2>
+  <p>使用者應自行確認所輸入之金額、資料與分攤結果的正確性。本 App 僅提供計算與整理工具，<strong>不介入任何實際金錢往來或糾紛</strong>。</p>
+
+  <h2>4. 資料保存與刪除</h2>
+  <p>當任務被關閉或刪除後，相關資料將保留 <strong>30 天</strong>，以利使用者下載或備份。超過保存期間後，資料將被永久刪除且<strong>無法復原</strong>。本 App 不保證資料的永久保存。</p>
+
+  <h2>5. 服務中斷與變更</h2>
+  <p>本 App 可能因系統維護、功能更新或不可抗力因素而暫停或中斷服務。開發者保留隨時修改或終止本服務之權利。</p>
+
+  <h2>6. 免責聲明</h2>
+  <p>本 App 以「現況提供」為原則，對於資料遺失、計算錯誤或任何間接損失不負任何責任。</p>
+
+  <h2>7. 聯絡方式</h2>
+  <p>如有任何問題，請聯絡：<br/>
+    <span id="contact-placeholder">Loading contact info...</span>
+  </p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // 將 Email 拆解，避免被原始碼爬蟲抓取
+      var user = "ironsplit.app";
+      var domain = "gmail.com";
+      var email = user + "@" + domain;
+
+      // 找到佔位元素
+      var placeholder = document.getElementById("contact-placeholder");
+      
+      // 建立真正的連結
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.innerText = "📧 " + email;
+      link.className = "email-link"; // 套用我們設定的「一般顏色」樣式
+
+      // 替換掉文字
+      placeholder.innerHTML = "";
+      placeholder.appendChild(link);
+    });
+  </script>
+
+</body>
+</html>

@@ -14,8 +14,8 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s17_task_locked_vm.dart';
 
 // Views
-import 'package:iron_split/features/task/presentation/views/s17_settled_pending_view.dart';
-import 'package:iron_split/features/task/presentation/views/s17_status_view.dart';
+import 'package:iron_split/features/task/presentation/views/s17_settled_view.dart';
+import 'package:iron_split/features/task/presentation/views/s17_closed_view.dart';
 
 /// Page Key: S17_Task.Locked
 /// 負責：MVVM 綁定, 路由出口
@@ -81,15 +81,12 @@ class _S17Content extends StatelessWidget {
         content = const Center(child: CircularProgressIndicator());
         break;
       case LockedPageStatus.closed:
-        content = const S17StatusView(pageStatus: LockedPageStatus.closed);
+        content = const S17ClosedView();
         break;
-      case LockedPageStatus.cleared:
-        content = const S17StatusView(pageStatus: LockedPageStatus.cleared);
-        break;
-      case LockedPageStatus.pending:
+      case LockedPageStatus.settled:
         // 將 VM 處理好的資料傳給 View
         // 注意：這裡我們確保 View 是 Dumb 的，它不需要知道 VM 的存在，只需要資料
-        content = S17SettledPendingView(
+        content = S17SettledView(
           taskId: vm.taskId,
           task: vm.task,
           isCaptain: vm.isCaptain,

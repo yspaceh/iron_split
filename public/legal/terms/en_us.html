@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Split - Terms of Service</title>
+  <style>
+    /* AppTheme Colors */
+    :root { 
+      --bg: #F4F6F8; /* 跟 App 背景色一致 */
+      --heading: #212121; 
+      --body: #616161;
+      --accent: #9C393F; 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 20px 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    h2 {
+      color: var(--heading);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+
+    p {
+      margin: 0 0 16px;
+      /* English usually looks better left-aligned on mobile, but justify is okay too */
+      text-align: left; 
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #9E9E9E;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .email-link {
+      color: var(--body) !important;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="meta">Last Updated: 2026/02/10</span>
+
+  <p>Welcome to <strong>Iron Split</strong> (the “App”). This App is operated by an individual developer and provides tools for expense tracking and splitting. By using the App, you agree to these Terms of Service.</p>
+
+  <h2>1. Service Description</h2>
+  <p>The App is a utility tool for expense tracking and splitting. <strong>It does not provide any payment, collection, or financial transaction services.</strong></p>
+
+  <h2>2. User Accounts</h2>
+  <p>The App uses anonymous accounts (device ID / UUID). Data may not be recoverable after reinstalling the App or changing devices.</p>
+
+  <h2>3. User Responsibility</h2>
+  <p>Users are responsible for verifying the accuracy of all entered amounts and results. The App is a calculation tool only and <strong>does not participate in any financial disputes.</strong></p>
+
+  <h2>4. Data Retention and Deletion</h2>
+  <p>After a task is closed or deleted, data will be retained for <strong>30 days</strong> for backup purposes. After this period, data will be permanently deleted and <strong>cannot be recovered</strong>. The App does not guarantee permanent data storage.</p>
+
+  <h2>5. Service Changes and Interruptions</h2>
+  <p>The service may be modified, suspended, or terminated due to maintenance, updates, or other reasons. The developer reserves the right to change or discontinue the service at any time.</p>
+
+  <h2>6. Disclaimer</h2>
+  <p>The App is provided “as is.” The developer is not responsible for any loss or damages arising from its use.</p>
+
+  <h2>7. Contact</h2>
+  <p>If you have any questions, please contact us at:<br/>
+    <span id="contact-placeholder">Loading contact info...</span>
+  </p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var user = "ironsplit.app";
+      var domain = "gmail.com";
+      var email = user + "@" + domain;
+
+      var placeholder = document.getElementById("contact-placeholder");
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.innerText = "📧 " + email;
+      link.className = "email-link";
+
+      placeholder.innerHTML = "";
+      placeholder.appendChild(link);
+    });
+  </script>
+
+</body>
+</html>

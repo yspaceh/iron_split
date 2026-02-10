@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Split - プライバシーポリシー</title>
+  <style>
+    /* AppTheme Colors */
+    :root { 
+      --bg: #F4F6F8;
+      --heading: #212121; 
+      --body: #616161;
+      --accent: #9C393F; 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 20px 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    h2 {
+      color: var(--heading);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+
+    p, li {
+      margin: 0 0 12px;
+      text-align: justify;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #9E9E9E;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .email-link {
+      color: var(--body) !important;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="meta">最終更新日：2026/02/10</span>
+
+  <h2>0. 運営者・お問い合わせ</h2>
+  <p>本アプリは <strong>Iron Split 開発者（個人開発者）</strong> が運営します。本ポリシーに関するお問い合わせ、またはデータに関する請求は下記へご連絡ください。<br/>
+    <span id="contact-placeholder">読み込み中...</span>
+  </p>
+
+  <h2>1. 取得する情報</h2>
+  <p>本アプリは、以下の情報を取得する場合があります。</p>
+  <ul>
+    <li>表示名（ユーザー名）</li>
+    <li>端末情報（OS、アプリのバージョン等）</li>
+    <li>利用状況・エラーログ（安定性改善のため）</li>
+    <li>記帳・金額データ（実際の決済情報は含みません）</li>
+  </ul>
+
+  <h2>2. 利用目的</h2>
+  <ul>
+    <li>機能提供および維持</li>
+    <li>ユーザー体験・安定性の改善</li>
+    <li>不具合解析・保守運用</li>
+  </ul>
+
+  <h2>3. 第三者サービス・委託</h2>
+  <p>本アプリは Firebase（例：Firestore、Analytics）等のサービスを利用します。サービス提供に必要な範囲で、クラウド保管・分析・不具合解析等の業務を外部事業者に<strong>委託</strong>する場合があります。</p>
+
+  <h2>4. 国外での取扱いの可能性</h2>
+  <p>クラウドサービスの利用に伴い、データが日本国外で保管または処理される可能性があります。運営者は合理的な範囲で、適切な保護措置を備えた事業者を選定し、必要な安全管理措置を講じます。</p>
+
+  <h2>5. 保存期間と削除</h2>
+  <p>タスクの終了または削除後、データは <strong>30 日間</strong>保持されます。期間終了後は完全に削除され、<strong>復元できません</strong>。</p>
+
+  <h2>6. 第三者提供</h2>
+  <p>本アプリは、ユーザー情報を販売または商業目的で第三者に提供しません。ただし、法令に基づく場合や、サービス提供に必要な範囲（Firebase 等）を除きます。</p>
+
+  <h2>7. ご本人からの請求</h2>
+  <p>ユーザーは、当アプリにおけるデータの確認、訂正、削除、利用停止等の請求を行うことができます。上記メールアドレスまでご連絡ください。</p>
+  <p>不正な請求を防止するため、合理的な範囲で確認情報の提示をお願いする場合があります。法令または技術的制約の範囲内で、合理的な期間内に対応します。</p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var user = "ironsplit.app";
+      var domain = "gmail.com";
+      var email = user + "@" + domain;
+
+      var placeholder = document.getElementById("contact-placeholder");
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.innerText = "📧 " + email;
+      link.className = "email-link";
+
+      placeholder.innerHTML = "";
+      placeholder.appendChild(link);
+    });
+  </script>
+
+</body>
+</html>

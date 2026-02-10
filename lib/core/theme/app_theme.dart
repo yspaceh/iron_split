@@ -24,7 +24,7 @@ class AppTheme {
   // Level 2: 中 (次要文字/未選中) - 純中性灰，不帶藍也不帶紅
   // 這是搭配 #212121 最平衡的顏色
   static const _mediumGrey = Color(0xFF616161);
-  static const _darkGrey = const Color(0xFF333333);
+  static const _darkGrey = Color(0xFF333333);
 
   // 收入色
   static const _incomeGreen = Color(0xFF2E7D32);

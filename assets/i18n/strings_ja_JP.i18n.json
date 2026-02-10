@@ -98,6 +98,12 @@
       "percent": "割合",
       "exact": "金額指定"
     },
+    "language": {
+      "title": "言語設定",
+      "zh_TW": "繁体字中国語",
+      "en_US": "英語",
+      "jp_JP": "日本語"
+    },
     "payment_info": {
       "mode": {
         "private": "直接連絡してください",
@@ -128,6 +134,14 @@
     "payment_status":{
       "payable": "支払",
       "receivable": "受取"
+    },
+    "terms": {
+      "label": {
+        "terms": "利用規約",
+        "privacy": "プライバシーポリシー",
+        "both": "法的条項"
+      },
+      "and": " と "
     },
     "share":{
       "invite": {
@@ -160,30 +174,6 @@
     "settle_up": "精算実行",
     "unknown": "不明な操作",
     "close_task": "タスク終了"
-  },
-  "S50_Onboarding_Consent": {
-    "title": "Iron Split へようこそ",
-    "buttons": {
-      "agree": "はじめる"
-    },
-    "content_prefix": "開始することで、",
-    "terms_link": "利用規約",
-    "and": " と ",
-    "privacy_link": "プライバシーポリシー",
-    "content_suffix": " に同意したものとみなされます。",
-    "login_failed": "ログイン失敗: {message}"
-  },
-  "S51_Onboarding_Name": {
-    "title": "名前設定",
-    "buttons": {
-      "next": "設定"
-    },
-    "description": "アプリ内で表示する名前を入力してください（1-10文字）。",
-    "field_hint": "ニックネームを入力",
-    "field_counter": "{current}/10",
-    "error_empty": "名前を入力してください",
-    "error_too_long": "10文字以内で入力してください",
-    "error_invalid_char": "無効な文字が含まれています"
   },
   "S10_Home_TaskList": {
     "title": "マイタスク",
@@ -409,6 +399,26 @@
       "back": "タスクに戻る"
     }
   },
+  "S50_Onboarding_Consent": {
+    "title": "Iron Split へようこそ",
+    "buttons": {
+      "agree": "はじめる"
+    },
+    "content": {
+      "prefix": "開始することで、",
+      "suffix": " に同意したものとみなされます。"
+    },
+    "login_failed": "ログイン失敗: {message}"
+  },
+  "S51_Onboarding_Name": {
+    "title": "名前設定",
+    "buttons": {
+      "next": "設定"
+    },
+    "description": "アプリ内で表示する名前を入力してください（1-10文字）。",
+    "hint": "ニックネームを入力",
+    "counter": "{current}/{max}"
+  },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
     "buttons": {
@@ -442,8 +452,23 @@
     "member_default_name": "メンバー",
     "member_name": "メンバー名"
   },
-  "S71_SystemSettings_Tos": {
-    "title": "利用規約"
+  "S70_System_Settings": {
+    "title": "システム設定",
+    "menu" : {
+      "user_name": "表示名前",
+      "language": "表示言語",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー",
+      "payment_info": "支払/受取口座設定"
+    }
+  },
+  "S72_TermsUpdate": {
+    "title": "{type}更新",
+    "description": "{type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。",
+    "buttons": {
+      "agree": "同意する",
+      "decline": "同意しない"
+    }
   },
   "D01_MemberRole_Intro": {
     "title": "あなたのキャラクター",
@@ -522,6 +547,13 @@
     "winner_reveal": "あなたです！",
     "buttons": {
       "close": "OK"
+    }
+  },
+  "D12_logout_confirm": {
+    "title": "ログアウトの確認",
+    "description": "更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。",
+    "buttons": {
+      "logout": "ログアウトする"
     }
   },
   "B02_SplitExpense_Edit": {
@@ -642,7 +674,9 @@
       "enter_first": "{key}を先に入力してください",
       "save_failed": "保存に失敗しました。しばらくしてから再試行してください",
       "delete_failed": "削除に失敗しました。しばらくしてから再試行してください",
-      "rate_fetch_failed": "為替レートを"
+      "rate_fetch_failed": "為替レートを",
+      "length_exceeded": "{max}文字以内で入力してください",
+      "invalid_char": "無効な文字が含まれています"
     }
   }
 }

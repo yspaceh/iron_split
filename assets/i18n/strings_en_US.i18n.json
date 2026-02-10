@@ -129,6 +129,20 @@
       "percent": "By Percentage",
       "exact": "Exact Amount"
     },
+    "language": {
+      "title": "Language Settings",
+      "zh_TW": "Traditional Chinese",
+      "en_US": "English",
+      "jp_JP": "Japanese"
+    },
+    "terms": {
+      "label": {
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "both": "Legal Terms"
+      },
+      "and": " and "
+    },
     "share":{
       "invite": {
         "subject": "Join Iron Split Task",
@@ -390,11 +404,10 @@
     "buttons": {
       "agree": "Start"
     },
-    "content_prefix": "By clicking Start, you agree to our ",
-    "terms_link": "Terms of Service",
-    "and": " and ",
-    "privacy_link": "Privacy Policy",
-    "content_suffix": ". We use anonymous login to protect your privacy.",
+    "content": {
+      "prefix": "By clicking Start, you agree to our ",
+      "suffix": ". We use anonymous login to protect your privacy."
+    },
     "login_failed": "Login Failed: {message}"
   },
   "S51_Onboarding_Name": {
@@ -402,12 +415,9 @@
     "buttons": {
       "next": "Set"
     },
-    "description": "Please enter your display name (1-10 chars).",
-    "field_hint": "Enter nickname",
-    "field_counter": "{current}/10",
-    "error_empty": "Name cannot be empty",
-    "error_too_long": "Max 10 characters",
-    "error_invalid_char": "Invalid characters"
+    "description": "Please enter your display name.",
+    "hint": "Enter nickname",
+    "counter": "{current}/{max}"
   },
   "S52_TaskSettings_Log": {
     "title": "Activity Log",
@@ -442,8 +452,23 @@
     "member_default_name": "Member",
     "member_name": "Member Name"
   },
-  "S71_SystemSettings_Tos": {
-    "title": "Terms of Service"
+  "S70_System_Settings": {
+    "title": "System Settings",
+    "menu" : {
+      "user_name": "Display Name",
+      "language": "Display Language",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "payment_info": "Payment Information Settings"
+    }
+  },
+  "S72_TermsUpdate": {
+    "title": "{type} Updated",
+    "description": "We have updated the {type}. Please review and accept it to continue using the app.",
+    "buttons": {
+      "agree": "Accept",
+      "decline": "Decline"
+    }
   },
   "D01_MemberRole_Intro": {
     "title": "Your Character",
@@ -522,6 +547,13 @@
     "winner_reveal": "It's you!",
     "buttons": {
       "close": "OK"
+    }
+  },
+  "D12_logout_confirm": {
+    "title": "Confirm Logout",
+    "description": "If you do not agree to the updated terms, you will not be able to continue using this service.\nYou will be logged out. If you are using an anonymous account, your data may not be recoverable after logging out.",
+    "buttons": {
+      "logout": "Log out"
     }
   },
   "B02_SplitExpense_Edit": {
@@ -641,8 +673,10 @@
       "load_failed": "Load failed. Please try again later",
       "enter_first": "Please enter {key} first",
       "save_failed": "Save failed. Please try again later",
-      "delete_failed": "Exchange rate update failed"
-
+      "delete_failed": "Exchange rate update failed",
+      "rate_fetch_failed": "Failed to fetch exchange rate",
+      "length_exceeded": "Max {max} characters",
+      "invalid_char": "Invalid characters"
     }
   }
 }

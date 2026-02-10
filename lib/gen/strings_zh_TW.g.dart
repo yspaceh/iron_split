@@ -57,7 +57,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
 	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
-	late final TranslationsS71SystemSettingsTosZhTw S71_SystemSettings_Tos = TranslationsS71SystemSettingsTosZhTw.internal(_root);
+	late final TranslationsS70SystemSettingsZhTw S70_System_Settings = TranslationsS70SystemSettingsZhTw.internal(_root);
+	late final TranslationsS72TermsUpdateZhTw S72_TermsUpdate = TranslationsS72TermsUpdateZhTw.internal(_root);
 	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
 	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
@@ -68,6 +69,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD09TaskSettingsCurrencyConfirmZhTw D09_TaskSettings_CurrencyConfirm = TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(_root);
 	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
 	late final TranslationsD11RandomResultZhTw D11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
+	late final TranslationsD12LogoutConfirmZhTw D12_logout_confirm = TranslationsD12LogoutConfirmZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
@@ -90,8 +92,10 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonAvatarZhTw avatar = TranslationsCommonAvatarZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 	late final TranslationsCommonSplitMethodZhTw split_method = TranslationsCommonSplitMethodZhTw.internal(_root);
+	late final TranslationsCommonLanguageZhTw language = TranslationsCommonLanguageZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
 	late final TranslationsCommonPaymentStatusZhTw payment_status = TranslationsCommonPaymentStatusZhTw.internal(_root);
+	late final TranslationsCommonTermsZhTw terms = TranslationsCommonTermsZhTw.internal(_root);
 	late final TranslationsCommonShareZhTw share = TranslationsCommonShareZhTw.internal(_root);
 
 	/// zh-TW: '錯誤: {message}'
@@ -479,21 +483,7 @@ class TranslationsS50OnboardingConsentZhTw {
 	String get title => '歡迎使用 Iron Split';
 
 	late final TranslationsS50OnboardingConsentButtonsZhTw buttons = TranslationsS50OnboardingConsentButtonsZhTw.internal(_root);
-
-	/// zh-TW: '歡迎使用 Iron Split。點擊開始即代表您同意我們的 '
-	String get content_prefix => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ';
-
-	/// zh-TW: '服務條款'
-	String get terms_link => '服務條款';
-
-	/// zh-TW: ' 與 '
-	String get and => ' 與 ';
-
-	/// zh-TW: '隱私政策'
-	String get privacy_link => '隱私政策';
-
-	/// zh-TW: '。我們採用匿名登入，保障您的隱私。'
-	String get content_suffix => '。我們採用匿名登入，保障您的隱私。';
+	late final TranslationsS50OnboardingConsentContentZhTw content = TranslationsS50OnboardingConsentContentZhTw.internal(_root);
 
 	/// zh-TW: '登入失敗: {message}'
 	String login_failed({required Object message}) => '登入失敗: ${message}';
@@ -512,23 +502,17 @@ class TranslationsS51OnboardingNameZhTw {
 
 	late final TranslationsS51OnboardingNameButtonsZhTw buttons = TranslationsS51OnboardingNameButtonsZhTw.internal(_root);
 
-	/// zh-TW: '請輸入您在 App 內的顯示名稱（1-10 個字）。'
-	String get description => '請輸入您在 App 內的顯示名稱（1-10 個字）。';
+	/// zh-TW: '請輸入您在 Iron Split 內的顯示名稱。'
+	String get description => '請輸入您在 Iron Split 內的顯示名稱。';
+
+	/// zh-TW: '顯示名稱'
+	String get label => '顯示名稱';
 
 	/// zh-TW: '輸入暱稱'
-	String get field_hint => '輸入暱稱';
+	String get hint => '輸入暱稱';
 
-	/// zh-TW: '{current}/10'
-	String field_counter({required Object current}) => '${current}/10';
-
-	/// zh-TW: '名稱不能為空'
-	String get error_empty => '名稱不能為空';
-
-	/// zh-TW: '最多 10 個字'
-	String get error_too_long => '最多 10 個字';
-
-	/// zh-TW: '包含無效字元'
-	String get error_invalid_char => '包含無效字元';
+	/// zh-TW: '{current}/{max}'
+	String counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
 // Path: S52_TaskSettings_Log
@@ -603,16 +587,35 @@ class TranslationsS53TaskSettingsMembersZhTw {
 	String get member_name => '成員名稱';
 }
 
-// Path: S71_SystemSettings_Tos
-class TranslationsS71SystemSettingsTosZhTw {
-	TranslationsS71SystemSettingsTosZhTw.internal(this._root);
+// Path: S70_System_Settings
+class TranslationsS70SystemSettingsZhTw {
+	TranslationsS70SystemSettingsZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// zh-TW: '服務條款'
-	String get title => '服務條款';
+	/// zh-TW: '系統設定'
+	String get title => '系統設定';
+
+	late final TranslationsS70SystemSettingsMenuZhTw menu = TranslationsS70SystemSettingsMenuZhTw.internal(_root);
+}
+
+// Path: S72_TermsUpdate
+class TranslationsS72TermsUpdateZhTw {
+	TranslationsS72TermsUpdateZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '{type}更新'
+	String title({required Object type}) => '${type}更新';
+
+	/// zh-TW: '我們更新了{type}，請閱讀並同意以繼續使用。'
+	String description({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。';
+
+	late final TranslationsS72TermsUpdateButtonsZhTw buttons = TranslationsS72TermsUpdateButtonsZhTw.internal(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -808,6 +811,23 @@ class TranslationsD11RandomResultZhTw {
 	String get winner_reveal => '就是你了！';
 
 	late final TranslationsD11RandomResultButtonsZhTw buttons = TranslationsD11RandomResultButtonsZhTw.internal(_root);
+}
+
+// Path: D12_logout_confirm
+class TranslationsD12LogoutConfirmZhTw {
+	TranslationsD12LogoutConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '登出確認'
+	String get title => '登出確認';
+
+	/// zh-TW: '若您不同意更新後的條款，將無法繼續使用本服務。 您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。'
+	String get description => '若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。';
+
+	late final TranslationsD12LogoutConfirmButtonsZhTw buttons = TranslationsD12LogoutConfirmButtonsZhTw.internal(_root);
 }
 
 // Path: B02_SplitExpense_Edit
@@ -1225,6 +1245,27 @@ class TranslationsCommonSplitMethodZhTw {
 	String get exact => '指定金額';
 }
 
+// Path: common.language
+class TranslationsCommonLanguageZhTw {
+	TranslationsCommonLanguageZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '語言設定'
+	String get title => '語言設定';
+
+	/// zh-TW: '繁體中文'
+	String get zh_TW => '繁體中文';
+
+	/// zh-TW: '英文'
+	String get en_US => '英文';
+
+	/// zh-TW: '日文'
+	String get jp_JP => '日文';
+}
+
 // Path: common.payment_info
 class TranslationsCommonPaymentInfoZhTw {
 	TranslationsCommonPaymentInfoZhTw.internal(this._root);
@@ -1252,6 +1293,19 @@ class TranslationsCommonPaymentStatusZhTw {
 
 	/// zh-TW: '可退'
 	String get receivable => '可退';
+}
+
+// Path: common.terms
+class TranslationsCommonTermsZhTw {
+	TranslationsCommonTermsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsCommonTermsLabelZhTw label = TranslationsCommonTermsLabelZhTw.internal(_root);
+
+	/// zh-TW: ' 和 '
+	String get and => ' 和 ';
 }
 
 // Path: common.share
@@ -1667,8 +1721,8 @@ class TranslationsS17TaskLockedButtonsZhTw {
 	/// zh-TW: '通知成員'
 	String get notify_members => '通知成員';
 
-	/// zh-TW: '查看收退款帳戶'
-	String get view_payment_details => '查看收退款帳戶';
+	/// zh-TW: '隊長收退款帳戶'
+	String get view_payment_details => '隊長收退款帳戶';
 }
 
 // Path: S30_settlement_confirm.buttons
@@ -1776,6 +1830,21 @@ class TranslationsS50OnboardingConsentButtonsZhTw {
 	String get agree => '開始使用';
 }
 
+// Path: S50_Onboarding_Consent.content
+class TranslationsS50OnboardingConsentContentZhTw {
+	TranslationsS50OnboardingConsentContentZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '歡迎使用 Iron Split。 點擊開始即代表您同意我們的 '
+	String get prefix => '歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ';
+
+	/// zh-TW: '。'
+	String get suffix => '。';
+}
+
 // Path: S51_Onboarding_Name.buttons
 class TranslationsS51OnboardingNameButtonsZhTw {
 	TranslationsS51OnboardingNameButtonsZhTw.internal(this._root);
@@ -1834,6 +1903,45 @@ class TranslationsS53TaskSettingsMembersButtonsZhTw {
 
 	/// zh-TW: '發送邀請'
 	String get invite => '發送邀請';
+}
+
+// Path: S70_System_Settings.menu
+class TranslationsS70SystemSettingsMenuZhTw {
+	TranslationsS70SystemSettingsMenuZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '顯示名稱'
+	String get user_name => '顯示名稱';
+
+	/// zh-TW: '顯示語言'
+	String get language => '顯示語言';
+
+	/// zh-TW: '服務條款'
+	String get terms => '服務條款';
+
+	/// zh-TW: '隱私政策'
+	String get privacy => '隱私政策';
+
+	/// zh-TW: '收款帳戶設定'
+	String get payment_info => '收款帳戶設定';
+}
+
+// Path: S72_TermsUpdate.buttons
+class TranslationsS72TermsUpdateButtonsZhTw {
+	TranslationsS72TermsUpdateButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '同意'
+	String get agree => '同意';
+
+	/// zh-TW: '不同意'
+	String get decline => '不同意';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1945,6 +2053,18 @@ class TranslationsD11RandomResultButtonsZhTw {
 
 	/// zh-TW: '確定'
 	String get close => '確定';
+}
+
+// Path: D12_logout_confirm.buttons
+class TranslationsD12LogoutConfirmButtonsZhTw {
+	TranslationsD12LogoutConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認登出'
+	String get logout => '確認登出';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -2146,6 +2266,12 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '為替レートの更新失敗'
 	String get rate_fetch_failed => '為替レートの更新失敗';
+
+	/// zh-TW: '最多 {max} 個字'
+	String length_exceeded({required Object max}) => '最多 ${max} 個字';
+
+	/// zh-TW: '包含無效字元'
+	String get invalid_char => '包含無效字元';
 }
 
 // Path: common.remainder_rule.rule
@@ -2275,6 +2401,24 @@ class TranslationsCommonPaymentInfoHintZhTw {
 
 	/// zh-TW: '例：lineid12345'
 	String get app_link => '例：lineid12345';
+}
+
+// Path: common.terms.label
+class TranslationsCommonTermsLabelZhTw {
+	TranslationsCommonTermsLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '服務條款'
+	String get terms => '服務條款';
+
+	/// zh-TW: '隱私政策'
+	String get privacy => '隱私政策';
+
+	/// zh-TW: '法律條款'
+	String get both => '法律條款';
 }
 
 // Path: common.share.invite
@@ -2557,6 +2701,10 @@ extension on Translations {
 			'common.split_method.even' => '平均分攤',
 			'common.split_method.percent' => '比例分攤',
 			'common.split_method.exact' => '指定金額',
+			'common.language.title' => '語言設定',
+			'common.language.zh_TW' => '繁體中文',
+			'common.language.en_US' => '英文',
+			'common.language.jp_JP' => '日文',
 			'common.payment_info.mode.private' => '請直接私訊聯絡',
 			'common.payment_info.mode.public' => '提供收款資訊',
 			'common.payment_info.description.private' => '不顯示詳細資訊，請成員直接找你',
@@ -2574,6 +2722,10 @@ extension on Translations {
 			'common.payment_info.hint.app_link' => '例：lineid12345',
 			'common.payment_status.payable' => '應付',
 			'common.payment_status.receivable' => '可退',
+			'common.terms.label.terms' => '服務條款',
+			'common.terms.label.privacy' => '隱私政策',
+			'common.terms.label.both' => '法律條款',
+			'common.terms.and' => ' 和 ',
 			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => '快來加入我的 Iron Split 任務「${taskName}」！\n邀請碼：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split 任務結算通知',
@@ -2706,7 +2858,7 @@ extension on Translations {
 			'S16_TaskCreate_Edit.hint.name' => '例：東京五日遊',
 			'S17_Task_Locked.buttons.download' => '下載紀錄',
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
-			'S17_Task_Locked.buttons.view_payment_details' => '查看收退款帳戶',
+			'S17_Task_Locked.buttons.view_payment_details' => '隊長收退款帳戶',
 			'S17_Task_Locked.retention_notice' => ({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載您的紀錄',
 			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => '由 ${name} 吸收',
 			'S17_Task_Locked.section_pending' => '待處理',
@@ -2743,20 +2895,15 @@ extension on Translations {
 			'S32_settlement_result.buttons.back' => '返回任務首頁',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => '開始使用',
-			'S50_Onboarding_Consent.content_prefix' => '歡迎使用 Iron Split。點擊開始即代表您同意我們的 ',
-			'S50_Onboarding_Consent.terms_link' => '服務條款',
-			'S50_Onboarding_Consent.and' => ' 與 ',
-			'S50_Onboarding_Consent.privacy_link' => '隱私政策',
-			'S50_Onboarding_Consent.content_suffix' => '。我們採用匿名登入，保障您的隱私。',
+			'S50_Onboarding_Consent.content.prefix' => '歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ',
+			'S50_Onboarding_Consent.content.suffix' => '。',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名稱設定',
 			'S51_Onboarding_Name.buttons.next' => '設定完成',
-			'S51_Onboarding_Name.description' => '請輸入您在 App 內的顯示名稱（1-10 個字）。',
-			'S51_Onboarding_Name.field_hint' => '輸入暱稱',
-			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
-			'S51_Onboarding_Name.error_empty' => '名稱不能為空',
-			'S51_Onboarding_Name.error_too_long' => '最多 10 個字',
-			'S51_Onboarding_Name.error_invalid_char' => '包含無效字元',
+			'S51_Onboarding_Name.description' => '請輸入您在 Iron Split 內的顯示名稱。',
+			'S51_Onboarding_Name.label' => '顯示名稱',
+			'S51_Onboarding_Name.hint' => '輸入暱稱',
+			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S52_TaskSettings_Log.title' => '活動紀錄',
 			'S52_TaskSettings_Log.buttons.export_csv' => '匯出 CSV',
 			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
@@ -2780,7 +2927,16 @@ extension on Translations {
 			'S53_TaskSettings_Members.label_default_ratio' => '預設比例',
 			'S53_TaskSettings_Members.member_default_name' => '成員',
 			'S53_TaskSettings_Members.member_name' => '成員名稱',
-			'S71_SystemSettings_Tos.title' => '服務條款',
+			'S70_System_Settings.title' => '系統設定',
+			'S70_System_Settings.menu.user_name' => '顯示名稱',
+			'S70_System_Settings.menu.language' => '顯示語言',
+			'S70_System_Settings.menu.terms' => '服務條款',
+			'S70_System_Settings.menu.privacy' => '隱私政策',
+			'S70_System_Settings.menu.payment_info' => '收款帳戶設定',
+			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
+			'S72_TermsUpdate.description' => ({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。',
+			'S72_TermsUpdate.buttons.agree' => '同意',
+			'S72_TermsUpdate.buttons.decline' => '不同意',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.buttons.reroll' => '換個動物',
 			'D01_MemberRole_Intro.buttons.enter' => '進入任務',
@@ -2824,6 +2980,9 @@ extension on Translations {
 			'D11_random_result.skip' => '略過',
 			'D11_random_result.winner_reveal' => '就是你了！',
 			'D11_random_result.buttons.close' => '確定',
+			'D12_logout_confirm.title' => '登出確認',
+			'D12_logout_confirm.description' => '若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。',
+			'D12_logout_confirm.buttons.logout' => '確認登出',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.buttons.save' => '確認分拆',
 			'B02_SplitExpense_Edit.label.sub_item' => '細項名稱',
@@ -2893,6 +3052,8 @@ extension on Translations {
 			'error.message.save_failed' => '儲存失敗，請稍後再試',
 			'error.message.delete_failed' => '刪除失敗，請稍後再試',
 			'error.message.rate_fetch_failed' => '為替レートの更新失敗',
+			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字',
+			'error.message.invalid_char' => '包含無效字元',
 			_ => null,
 		};
 	}

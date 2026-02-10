@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Split - 隱私權政策</title>
+  <style>
+    /* AppTheme Colors */
+    :root { 
+      --bg: #F4F6F8;
+      --heading: #212121; 
+      --body: #616161;
+      --accent: #9C393F; 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 20px 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    h2 {
+      color: var(--heading);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+
+    p, li {
+      margin: 0 0 12px;
+      text-align: justify;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #9E9E9E;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .email-link {
+      color: var(--body) !important;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="meta">最後更新：2026/02/10</span>
+
+  <h2>0. 營運者與聯絡方式</h2>
+  <p>本 App 由 <strong>Iron Split 開發者（個人開發者）</strong>營運。如對本政策有任何疑問或希望提出資料相關請求，請聯絡：<br/>
+    <span id="contact-placeholder">讀取聯絡資訊中...</span>
+  </p>
+
+  <h2>1. 蒐集的資訊</h2>
+  <p>本 App 可能蒐集以下資訊：</p>
+  <ul>
+    <li>使用者顯示名稱</li>
+    <li>裝置資訊（作業系統、App 版本）</li>
+    <li>使用行為與錯誤紀錄（例如：為改善穩定性而收集）</li>
+    <li>記帳與金額資料（不包含任何實際支付資訊）</li>
+  </ul>
+
+  <h2>2. 使用目的</h2>
+  <p>蒐集之資訊僅用於：</p>
+  <ul>
+    <li>提供與維持 App 功能</li>
+    <li>改善使用體驗與穩定性</li>
+    <li>錯誤分析與系統維護</li>
+  </ul>
+
+  <h2>3. 第三方服務與委託處理</h2>
+  <p>本 App 使用 Firebase（例如 Firestore、Analytics）等第三方服務，以提供功能與改善品質。為提供本 App 服務所必要之範圍內，本 App 可能將資料處理<strong>委託</strong>給服務供應商（例如雲端儲存、分析、錯誤回報等）。</p>
+
+  <h2>4. 海外處理的可能性</h2>
+  <p>由於使用雲端服務，本 App 的資料可能於日本以外的地區儲存或處理。開發者會在合理範圍內，選擇具備適當保護措施的服務供應商，並採取必要的安全管理措施。</p>
+
+  <h2>5. 資料保存與刪除</h2>
+  <p>資料於任務關閉或刪除後保留 <strong>30 天</strong>，期滿後永久刪除且<strong>不可復原</strong>。</p>
+
+  <h2>6. 資料分享</h2>
+  <p>本 App 不會將使用者資料出售或提供給第三方作為商業用途。惟依法令要求或為提供服務所必要之範圍（例如使用 Firebase 基礎服務）除外。</p>
+
+  <h2>7. 使用者的請求</h2>
+  <p>使用者可就本 App 所處理之資料提出下列請求：資料內容確認、訂正、刪除、利用停止等。請透過上述 Email 聯絡我們。</p>
+  <p>為避免不當請求，開發者可能要求提供合理的驗證資訊（例如裝置或任務相關資訊）。在可行且符合法令或技術限制的範圍內，我們將於合理期間內回覆與處理。</p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var user = "ironsplit.app";
+      var domain = "gmail.com";
+      var email = user + "@" + domain;
+
+      var placeholder = document.getElementById("contact-placeholder");
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.innerText = "📧 " + email;
+      link.className = "email-link";
+
+      placeholder.innerHTML = "";
+      placeholder.appendChild(link);
+    });
+  </script>
+
+</body>
+</html>

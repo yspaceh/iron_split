@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/system/presentation/viewmodels/s00_system_bootstrap_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 
-/// Page Key: S00_System.Bootstrap
 class S00SystemBootstrapPage extends StatefulWidget {
   const S00SystemBootstrapPage({super.key});
   @override
@@ -12,42 +11,54 @@ class S00SystemBootstrapPage extends StatefulWidget {
 }
 
 class _S00SystemBootstrapPageState extends State<S00SystemBootstrapPage> {
+  // 我們不需要 ChangeNotifierProvider 包覆整個 Scaffold，
+  // 因為這頁只有一個動作，直接在 State 裡用即可。
+  // 但為了統一風格，用 Provider 也可以。
+  late final S00SystemBootstrapViewModel _vm;
+
   @override
   void initState() {
     super.initState();
-    _executeBootstrap();
+    _vm = S00SystemBootstrapViewModel();
+    _startBootstrap();
   }
 
-  Future<void> _executeBootstrap() async {
-    await Future.delayed(const Duration(milliseconds: 800)); // 平滑過渡
-    if (!mounted) return;
-
-    final user = FirebaseAuth.instance.currentUser;
+  Future<void> _startBootstrap() async {
+    // 從 Provider 拿邀請碼 (UI 層的狀態)
     final pendingInvite = context.read<PendingInviteProvider>().pendingCode;
 
-    if (user == null) {
-      context.go('/tos-consent');
-      return;
-    }
+    // 呼叫 VM 判斷去向
+    final destination = await _vm.initApp(pendingInviteCode: pendingInvite);
 
-    if (user.displayName == null || user.displayName!.isEmpty) {
-      context.go('/onboarding/name');
-      return;
-    }
+    if (!mounted) return;
 
-    if (pendingInvite != null) {
-      context.go('/invite/confirm?code=$pendingInvite');
-      return;
+    // 根據結果導航
+    switch (destination) {
+      case BootstrapDestination.onboarding:
+        context.goNamed('S50');
+        break;
+      case BootstrapDestination.setupName:
+        context.goNamed('S51');
+        break;
+      case BootstrapDestination.confirmInvite:
+        context.goNamed('S11', queryParameters: {'code': pendingInvite});
+        break;
+      case BootstrapDestination.home:
+        context.goNamed('S10');
+        break;
+      case BootstrapDestination.updateTerms:
+        context.goNamed('S72');
     }
-
-    context.go('/tasks');
   }
 
   @override
   Widget build(BuildContext context) {
+    // 這裡只需要顯示 Loading 與背景
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      body: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      body: const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      ),
     );
   }
 }

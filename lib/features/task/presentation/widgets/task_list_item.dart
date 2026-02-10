@@ -71,18 +71,11 @@ class TaskListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         // 日期顯示
-                        Row(
-                          children: [
-                            Icon(Icons.date_range,
-                                size: 16, color: colorScheme.primary),
-                            const SizedBox(width: 4),
-                            Text(
-                              periodText,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          periodText,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),

@@ -41,8 +41,6 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
-	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
-	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS10HomeTaskListJaJp S10_Home_TaskList = _TranslationsS10HomeTaskListJaJp._(_root);
 	@override late final _TranslationsS11InviteConfirmJaJp S11_Invite_Confirm = _TranslationsS11InviteConfirmJaJp._(_root);
 	@override late final _TranslationsS12TaskCloseNoticeJaJp S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeJaJp._(_root);
@@ -54,9 +52,12 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS30SettlementConfirmJaJp S30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsS31SettlementPaymentInfoJaJp S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
 	@override late final _TranslationsS32SettlementResultJaJp S32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
+	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
+	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
-	@override late final _TranslationsS71SystemSettingsTosJaJp S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosJaJp._(_root);
+	@override late final _TranslationsS70SystemSettingsJaJp S70_System_Settings = _TranslationsS70SystemSettingsJaJp._(_root);
+	@override late final _TranslationsS72TermsUpdateJaJp S72_TermsUpdate = _TranslationsS72TermsUpdateJaJp._(_root);
 	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
@@ -67,6 +68,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
 	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
+	@override late final _TranslationsD12LogoutConfirmJaJp D12_logout_confirm = _TranslationsD12LogoutConfirmJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
@@ -89,8 +91,10 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonAvatarJaJp avatar = _TranslationsCommonAvatarJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
 	@override late final _TranslationsCommonSplitMethodJaJp split_method = _TranslationsCommonSplitMethodJaJp._(_root);
+	@override late final _TranslationsCommonLanguageJaJp language = _TranslationsCommonLanguageJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override late final _TranslationsCommonPaymentStatusJaJp payment_status = _TranslationsCommonPaymentStatusJaJp._(_root);
+	@override late final _TranslationsCommonTermsJaJp terms = _TranslationsCommonTermsJaJp._(_root);
 	@override late final _TranslationsCommonShareJaJp share = _TranslationsCommonShareJaJp._(_root);
 	@override String error_prefix({required Object message}) => 'エラー: ${message}';
 	@override String get please_login => 'ログインしてください';
@@ -120,40 +124,6 @@ class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
 	@override String get settle_up => '精算実行';
 	@override String get unknown => '不明な操作';
 	@override String get close_task => 'タスク終了';
-}
-
-// Path: S50_Onboarding_Consent
-class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingConsentZhTw {
-	_TranslationsS50OnboardingConsentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Iron Split へようこそ';
-	@override late final _TranslationsS50OnboardingConsentButtonsJaJp buttons = _TranslationsS50OnboardingConsentButtonsJaJp._(_root);
-	@override String get content_prefix => '開始することで、';
-	@override String get terms_link => '利用規約';
-	@override String get and => ' と ';
-	@override String get privacy_link => 'プライバシーポリシー';
-	@override String get content_suffix => ' に同意したものとみなされます。';
-	@override String login_failed({required Object message}) => 'ログイン失敗: ${message}';
-}
-
-// Path: S51_Onboarding_Name
-class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZhTw {
-	_TranslationsS51OnboardingNameJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '名前設定';
-	@override late final _TranslationsS51OnboardingNameButtonsJaJp buttons = _TranslationsS51OnboardingNameButtonsJaJp._(_root);
-	@override String get description => 'アプリ内で表示する名前を入力してください（1-10文字）。';
-	@override String get field_hint => 'ニックネームを入力';
-	@override String field_counter({required Object current}) => '${current}/10';
-	@override String get error_empty => '名前を入力してください';
-	@override String get error_too_long => '10文字以内で入力してください';
-	@override String get error_invalid_char => '無効な文字が含まれています';
 }
 
 // Path: S10_Home_TaskList
@@ -339,6 +309,33 @@ class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResu
 	@override late final _TranslationsS32SettlementResultButtonsJaJp buttons = _TranslationsS32SettlementResultButtonsJaJp._(_root);
 }
 
+// Path: S50_Onboarding_Consent
+class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingConsentZhTw {
+	_TranslationsS50OnboardingConsentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Iron Split へようこそ';
+	@override late final _TranslationsS50OnboardingConsentButtonsJaJp buttons = _TranslationsS50OnboardingConsentButtonsJaJp._(_root);
+	@override late final _TranslationsS50OnboardingConsentContentJaJp content = _TranslationsS50OnboardingConsentContentJaJp._(_root);
+	@override String login_failed({required Object message}) => 'ログイン失敗: ${message}';
+}
+
+// Path: S51_Onboarding_Name
+class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZhTw {
+	_TranslationsS51OnboardingNameJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '名前設定';
+	@override late final _TranslationsS51OnboardingNameButtonsJaJp buttons = _TranslationsS51OnboardingNameButtonsJaJp._(_root);
+	@override String get description => 'アプリ内で表示する名前を入力してください（1-10文字）。';
+	@override String get hint => 'ニックネームを入力';
+	@override String counter({required Object current, required Object max}) => '${current}/${max}';
+}
+
 // Path: S52_TaskSettings_Log
 class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -376,14 +373,27 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	@override String get member_name => 'メンバー名';
 }
 
-// Path: S71_SystemSettings_Tos
-class _TranslationsS71SystemSettingsTosJaJp extends TranslationsS71SystemSettingsTosZhTw {
-	_TranslationsS71SystemSettingsTosJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: S70_System_Settings
+class _TranslationsS70SystemSettingsJaJp extends TranslationsS70SystemSettingsZhTw {
+	_TranslationsS70SystemSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '利用規約';
+	@override String get title => 'システム設定';
+	@override late final _TranslationsS70SystemSettingsMenuJaJp menu = _TranslationsS70SystemSettingsMenuJaJp._(_root);
+}
+
+// Path: S72_TermsUpdate
+class _TranslationsS72TermsUpdateJaJp extends TranslationsS72TermsUpdateZhTw {
+	_TranslationsS72TermsUpdateJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object type}) => '${type}更新';
+	@override String description({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。';
+	@override late final _TranslationsS72TermsUpdateButtonsJaJp buttons = _TranslationsS72TermsUpdateButtonsJaJp._(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -512,6 +522,18 @@ class _TranslationsD11RandomResultJaJp extends TranslationsD11RandomResultZhTw {
 	@override String get skip => 'スキップ';
 	@override String get winner_reveal => 'あなたです！';
 	@override late final _TranslationsD11RandomResultButtonsJaJp buttons = _TranslationsD11RandomResultButtonsJaJp._(_root);
+}
+
+// Path: D12_logout_confirm
+class _TranslationsD12LogoutConfirmJaJp extends TranslationsD12LogoutConfirmZhTw {
+	_TranslationsD12LogoutConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'ログアウトの確認';
+	@override String get description => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。';
+	@override late final _TranslationsD12LogoutConfirmButtonsJaJp buttons = _TranslationsD12LogoutConfirmButtonsJaJp._(_root);
 }
 
 // Path: B02_SplitExpense_Edit
@@ -737,6 +759,19 @@ class _TranslationsCommonSplitMethodJaJp extends TranslationsCommonSplitMethodZh
 	@override String get exact => '金額指定';
 }
 
+// Path: common.language
+class _TranslationsCommonLanguageJaJp extends TranslationsCommonLanguageZhTw {
+	_TranslationsCommonLanguageJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '言語設定';
+	@override String get zh_TW => '繁体字中国語';
+	@override String get en_US => '英語';
+	@override String get jp_JP => '日本語';
+}
+
 // Path: common.payment_info
 class _TranslationsCommonPaymentInfoJaJp extends TranslationsCommonPaymentInfoZhTw {
 	_TranslationsCommonPaymentInfoJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -762,6 +797,17 @@ class _TranslationsCommonPaymentStatusJaJp extends TranslationsCommonPaymentStat
 	@override String get receivable => '受取';
 }
 
+// Path: common.terms
+class _TranslationsCommonTermsJaJp extends TranslationsCommonTermsZhTw {
+	_TranslationsCommonTermsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsCommonTermsLabelJaJp label = _TranslationsCommonTermsLabelJaJp._(_root);
+	@override String get and => ' と ';
+}
+
 // Path: common.share
 class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
 	_TranslationsCommonShareJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -771,26 +817,6 @@ class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
 	// Translations
 	@override late final _TranslationsCommonShareInviteJaJp invite = _TranslationsCommonShareInviteJaJp._(_root);
 	@override late final _TranslationsCommonShareSettlementJaJp settlement = _TranslationsCommonShareSettlementJaJp._(_root);
-}
-
-// Path: S50_Onboarding_Consent.buttons
-class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50OnboardingConsentButtonsZhTw {
-	_TranslationsS50OnboardingConsentButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get agree => 'はじめる';
-}
-
-// Path: S51_Onboarding_Name.buttons
-class _TranslationsS51OnboardingNameButtonsJaJp extends TranslationsS51OnboardingNameButtonsZhTw {
-	_TranslationsS51OnboardingNameButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get next => '設定';
 }
 
 // Path: S11_Invite_Confirm.buttons
@@ -1128,6 +1154,37 @@ class _TranslationsS32SettlementResultButtonsJaJp extends TranslationsS32Settlem
 	@override String get back => 'タスクに戻る';
 }
 
+// Path: S50_Onboarding_Consent.buttons
+class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50OnboardingConsentButtonsZhTw {
+	_TranslationsS50OnboardingConsentButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get agree => 'はじめる';
+}
+
+// Path: S50_Onboarding_Consent.content
+class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50OnboardingConsentContentZhTw {
+	_TranslationsS50OnboardingConsentContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get prefix => '開始することで、';
+	@override String get suffix => ' に同意したものとみなされます。';
+}
+
+// Path: S51_Onboarding_Name.buttons
+class _TranslationsS51OnboardingNameButtonsJaJp extends TranslationsS51OnboardingNameButtonsZhTw {
+	_TranslationsS51OnboardingNameButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get next => '設定';
+}
+
 // Path: S52_TaskSettings_Log.buttons
 class _TranslationsS52TaskSettingsLogButtonsJaJp extends TranslationsS52TaskSettingsLogButtonsZhTw {
 	_TranslationsS52TaskSettingsLogButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1160,6 +1217,31 @@ class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53Task
 	// Translations
 	@override String get add => 'メンバー追加';
 	@override String get invite => '招待送信';
+}
+
+// Path: S70_System_Settings.menu
+class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettingsMenuZhTw {
+	_TranslationsS70SystemSettingsMenuJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get user_name => '表示名前';
+	@override String get language => '表示言語';
+	@override String get terms => '利用規約';
+	@override String get privacy => 'プライバシーポリシー';
+	@override String get payment_info => '支払/受取口座設定';
+}
+
+// Path: S72_TermsUpdate.buttons
+class _TranslationsS72TermsUpdateButtonsJaJp extends TranslationsS72TermsUpdateButtonsZhTw {
+	_TranslationsS72TermsUpdateButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get agree => '同意する';
+	@override String get decline => '同意しない';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1245,6 +1327,16 @@ class _TranslationsD11RandomResultButtonsJaJp extends TranslationsD11RandomResul
 
 	// Translations
 	@override String get close => 'OK';
+}
+
+// Path: D12_logout_confirm.buttons
+class _TranslationsD12LogoutConfirmButtonsJaJp extends TranslationsD12LogoutConfirmButtonsZhTw {
+	_TranslationsD12LogoutConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get logout => 'ログアウトする';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1384,6 +1476,8 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get save_failed => '保存に失敗しました。しばらくしてから再試行してください';
 	@override String get delete_failed => '削除に失敗しました。しばらくしてから再試行してください';
 	@override String get rate_fetch_failed => '為替レートを';
+	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください';
+	@override String get invalid_char => '無効な文字が含まれています';
 }
 
 // Path: common.remainder_rule.rule
@@ -1469,6 +1563,18 @@ class _TranslationsCommonPaymentInfoHintJaJp extends TranslationsCommonPaymentIn
 	@override String get bank_account => '例：1234567';
 	@override String get app_name => '例：PayPay';
 	@override String get app_link => '例：paypay-id-123';
+}
+
+// Path: common.terms.label
+class _TranslationsCommonTermsLabelJaJp extends TranslationsCommonTermsLabelZhTw {
+	_TranslationsCommonTermsLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get terms => '利用規約';
+	@override String get privacy => 'プライバシーポリシー';
+	@override String get both => '法的条項';
 }
 
 // Path: common.share.invite
@@ -1695,6 +1801,10 @@ extension on TranslationsJaJp {
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '割合',
 			'common.split_method.exact' => '金額指定',
+			'common.language.title' => '言語設定',
+			'common.language.zh_TW' => '繁体字中国語',
+			'common.language.en_US' => '英語',
+			'common.language.jp_JP' => '日本語',
 			'common.payment_info.mode.private' => '直接連絡してください',
 			'common.payment_info.mode.public' => '支払い情報を共有',
 			'common.payment_info.description.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
@@ -1712,6 +1822,10 @@ extension on TranslationsJaJp {
 			'common.payment_info.hint.app_link' => '例：paypay-id-123',
 			'common.payment_status.payable' => '支払',
 			'common.payment_status.receivable' => '受取',
+			'common.terms.label.terms' => '利用規約',
+			'common.terms.label.privacy' => 'プライバシーポリシー',
+			'common.terms.label.both' => '法的条項',
+			'common.terms.and' => ' と ',
 			'common.share.invite.subject' => 'Iron Split タスク招待',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split タスク精算通知',
@@ -1735,22 +1849,6 @@ extension on TranslationsJaJp {
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
-			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
-			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
-			'S50_Onboarding_Consent.content_prefix' => '開始することで、',
-			'S50_Onboarding_Consent.terms_link' => '利用規約',
-			'S50_Onboarding_Consent.and' => ' と ',
-			'S50_Onboarding_Consent.privacy_link' => 'プライバシーポリシー',
-			'S50_Onboarding_Consent.content_suffix' => ' に同意したものとみなされます。',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: ${message}',
-			'S51_Onboarding_Name.title' => '名前設定',
-			'S51_Onboarding_Name.buttons.next' => '設定',
-			'S51_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
-			'S51_Onboarding_Name.field_hint' => 'ニックネームを入力',
-			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
-			'S51_Onboarding_Name.error_empty' => '名前を入力してください',
-			'S51_Onboarding_Name.error_too_long' => '10文字以内で入力してください',
-			'S51_Onboarding_Name.error_invalid_char' => '無効な文字が含まれています',
 			'S10_Home_TaskList.title' => 'マイタスク',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '完了済',
@@ -1895,6 +1993,16 @@ extension on TranslationsJaJp {
 			'S32_settlement_result.total_label' => '今回の精算合計額',
 			'S32_settlement_result.buttons.share' => '精算通知を送信',
 			'S32_settlement_result.buttons.back' => 'タスクに戻る',
+			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
+			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
+			'S50_Onboarding_Consent.content.prefix' => '開始することで、',
+			'S50_Onboarding_Consent.content.suffix' => ' に同意したものとみなされます。',
+			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: ${message}',
+			'S51_Onboarding_Name.title' => '名前設定',
+			'S51_Onboarding_Name.buttons.next' => '設定',
+			'S51_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
+			'S51_Onboarding_Name.hint' => 'ニックネームを入力',
+			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S52_TaskSettings_Log.title' => '活動履歴',
 			'S52_TaskSettings_Log.buttons.export_csv' => 'CSVエクスポート',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
@@ -1918,7 +2026,16 @@ extension on TranslationsJaJp {
 			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',
-			'S71_SystemSettings_Tos.title' => '利用規約',
+			'S70_System_Settings.title' => 'システム設定',
+			'S70_System_Settings.menu.user_name' => '表示名前',
+			'S70_System_Settings.menu.language' => '表示言語',
+			'S70_System_Settings.menu.terms' => '利用規約',
+			'S70_System_Settings.menu.privacy' => 'プライバシーポリシー',
+			'S70_System_Settings.menu.payment_info' => '支払/受取口座設定',
+			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
+			'S72_TermsUpdate.description' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
+			'S72_TermsUpdate.buttons.agree' => '同意する',
+			'S72_TermsUpdate.buttons.decline' => '同意しない',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.buttons.reroll' => '動物を変える',
 			'D01_MemberRole_Intro.buttons.enter' => 'タスクへ進む',
@@ -1962,6 +2079,9 @@ extension on TranslationsJaJp {
 			'D11_random_result.skip' => 'スキップ',
 			'D11_random_result.winner_reveal' => 'あなたです！',
 			'D11_random_result.buttons.close' => 'OK',
+			'D12_logout_confirm.title' => 'ログアウトの確認',
+			'D12_logout_confirm.description' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。',
+			'D12_logout_confirm.buttons.logout' => 'ログアウトする',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.save' => '決定',
 			'B02_SplitExpense_Edit.label.sub_item' => '子項目名',
@@ -2031,6 +2151,8 @@ extension on TranslationsJaJp {
 			'error.message.save_failed' => '保存に失敗しました。しばらくしてから再試行してください',
 			'error.message.delete_failed' => '削除に失敗しました。しばらくしてから再試行してください',
 			'error.message.rate_fetch_failed' => '為替レートを',
+			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください',
+			'error.message.invalid_char' => '無効な文字が含まれています',
 			_ => null,
 		};
 	}

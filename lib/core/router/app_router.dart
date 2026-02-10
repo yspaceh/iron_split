@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/features/system/presentation/pages/s72_terms_update_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s14_task_settings_page.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
@@ -8,7 +9,7 @@ import 'package:iron_split/core/models/record_model.dart';
 // System
 import 'package:iron_split/features/system/presentation/pages/s00_system_bootstrap_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s70_system_settings_page.dart';
-import 'package:iron_split/features/system/presentation/pages/s71_system_settings_tos_page.dart';
+import 'package:iron_split/features/system/presentation/pages/s71_system_settings_terms_page.dart';
 
 // Auth
 import 'package:iron_split/features/onboarding/presentation/pages/s50_onboarding_consent_page.dart';
@@ -231,13 +232,24 @@ class AppRouter {
         name: 'S70',
         builder: (context, state) => const S70SystemSettingsPage(),
         routes: [
-          // S71_SystemSettings.Tos
+          // S71_SystemSettings.Tos`
           GoRoute(
-            path: 'tos', // Full: /settings/tos
+            path: 'terms', // Full: /settings/terms
             name: 'S71',
-            builder: (context, state) => const S71SettingsTosPage(),
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>? ?? {};
+              final isTerms = extra['isTerms'] as bool?;
+              return S71SettingsTermsPage(isTerms: isTerms ?? true);
+            },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/terms-update',
+        name: 'S72',
+        builder: (context, state) {
+          return S72TermsUpdatePage();
+        },
       ),
     ],
   );

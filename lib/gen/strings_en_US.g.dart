@@ -56,7 +56,8 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
-	@override late final _TranslationsS71SystemSettingsTosEnUs S71_SystemSettings_Tos = _TranslationsS71SystemSettingsTosEnUs._(_root);
+	@override late final _TranslationsS70SystemSettingsEnUs S70_System_Settings = _TranslationsS70SystemSettingsEnUs._(_root);
+	@override late final _TranslationsS72TermsUpdateEnUs S72_TermsUpdate = _TranslationsS72TermsUpdateEnUs._(_root);
 	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
@@ -67,6 +68,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
 	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
 	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
+	@override late final _TranslationsD12LogoutConfirmEnUs D12_logout_confirm = _TranslationsD12LogoutConfirmEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
@@ -91,6 +93,8 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonAvatarEnUs avatar = _TranslationsCommonAvatarEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
 	@override late final _TranslationsCommonSplitMethodEnUs split_method = _TranslationsCommonSplitMethodEnUs._(_root);
+	@override late final _TranslationsCommonLanguageEnUs language = _TranslationsCommonLanguageEnUs._(_root);
+	@override late final _TranslationsCommonTermsEnUs terms = _TranslationsCommonTermsEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
 	@override String get please_login => 'Please Login';
@@ -314,11 +318,7 @@ class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingCon
 	// Translations
 	@override String get title => 'Welcome to Iron Split';
 	@override late final _TranslationsS50OnboardingConsentButtonsEnUs buttons = _TranslationsS50OnboardingConsentButtonsEnUs._(_root);
-	@override String get content_prefix => 'By clicking Start, you agree to our ';
-	@override String get terms_link => 'Terms of Service';
-	@override String get and => ' and ';
-	@override String get privacy_link => 'Privacy Policy';
-	@override String get content_suffix => '. We use anonymous login to protect your privacy.';
+	@override late final _TranslationsS50OnboardingConsentContentEnUs content = _TranslationsS50OnboardingConsentContentEnUs._(_root);
 	@override String login_failed({required Object message}) => 'Login Failed: ${message}';
 }
 
@@ -331,12 +331,9 @@ class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZh
 	// Translations
 	@override String get title => 'Set Display Name';
 	@override late final _TranslationsS51OnboardingNameButtonsEnUs buttons = _TranslationsS51OnboardingNameButtonsEnUs._(_root);
-	@override String get description => 'Please enter your display name (1-10 chars).';
-	@override String get field_hint => 'Enter nickname';
-	@override String field_counter({required Object current}) => '${current}/10';
-	@override String get error_empty => 'Name cannot be empty';
-	@override String get error_too_long => 'Max 10 characters';
-	@override String get error_invalid_char => 'Invalid characters';
+	@override String get description => 'Please enter your display name.';
+	@override String get hint => 'Enter nickname';
+	@override String counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
 // Path: S52_TaskSettings_Log
@@ -376,14 +373,27 @@ class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSetting
 	@override String get member_name => 'Member Name';
 }
 
-// Path: S71_SystemSettings_Tos
-class _TranslationsS71SystemSettingsTosEnUs extends TranslationsS71SystemSettingsTosZhTw {
-	_TranslationsS71SystemSettingsTosEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: S70_System_Settings
+class _TranslationsS70SystemSettingsEnUs extends TranslationsS70SystemSettingsZhTw {
+	_TranslationsS70SystemSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Terms of Service';
+	@override String get title => 'System Settings';
+	@override late final _TranslationsS70SystemSettingsMenuEnUs menu = _TranslationsS70SystemSettingsMenuEnUs._(_root);
+}
+
+// Path: S72_TermsUpdate
+class _TranslationsS72TermsUpdateEnUs extends TranslationsS72TermsUpdateZhTw {
+	_TranslationsS72TermsUpdateEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object type}) => '${type} Updated';
+	@override String description({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.';
+	@override late final _TranslationsS72TermsUpdateButtonsEnUs buttons = _TranslationsS72TermsUpdateButtonsEnUs._(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -512,6 +522,18 @@ class _TranslationsD11RandomResultEnUs extends TranslationsD11RandomResultZhTw {
 	@override String get skip => 'Skip';
 	@override String get winner_reveal => 'It\'s you!';
 	@override late final _TranslationsD11RandomResultButtonsEnUs buttons = _TranslationsD11RandomResultButtonsEnUs._(_root);
+}
+
+// Path: D12_logout_confirm
+class _TranslationsD12LogoutConfirmEnUs extends TranslationsD12LogoutConfirmZhTw {
+	_TranslationsD12LogoutConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Logout';
+	@override String get description => 'If you do not agree to the updated terms, you will not be able to continue using this service.\nYou will be logged out. If you are using an anonymous account, your data may not be recoverable after logging out.';
+	@override late final _TranslationsD12LogoutConfirmButtonsEnUs buttons = _TranslationsD12LogoutConfirmButtonsEnUs._(_root);
 }
 
 // Path: B02_SplitExpense_Edit
@@ -760,6 +782,30 @@ class _TranslationsCommonSplitMethodEnUs extends TranslationsCommonSplitMethodZh
 	@override String get even => 'Even';
 	@override String get percent => 'By Percentage';
 	@override String get exact => 'Exact Amount';
+}
+
+// Path: common.language
+class _TranslationsCommonLanguageEnUs extends TranslationsCommonLanguageZhTw {
+	_TranslationsCommonLanguageEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Language Settings';
+	@override String get zh_TW => 'Traditional Chinese';
+	@override String get en_US => 'English';
+	@override String get jp_JP => 'Japanese';
+}
+
+// Path: common.terms
+class _TranslationsCommonTermsEnUs extends TranslationsCommonTermsZhTw {
+	_TranslationsCommonTermsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsCommonTermsLabelEnUs label = _TranslationsCommonTermsLabelEnUs._(_root);
+	@override String get and => ' and ';
 }
 
 // Path: common.share
@@ -1118,6 +1164,17 @@ class _TranslationsS50OnboardingConsentButtonsEnUs extends TranslationsS50Onboar
 	@override String get agree => 'Start';
 }
 
+// Path: S50_Onboarding_Consent.content
+class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50OnboardingConsentContentZhTw {
+	_TranslationsS50OnboardingConsentContentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get prefix => 'By clicking Start, you agree to our ';
+	@override String get suffix => '. We use anonymous login to protect your privacy.';
+}
+
 // Path: S51_Onboarding_Name.buttons
 class _TranslationsS51OnboardingNameButtonsEnUs extends TranslationsS51OnboardingNameButtonsZhTw {
 	_TranslationsS51OnboardingNameButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1160,6 +1217,31 @@ class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53Task
 	// Translations
 	@override String get add => 'Add Member';
 	@override String get invite => 'Invite';
+}
+
+// Path: S70_System_Settings.menu
+class _TranslationsS70SystemSettingsMenuEnUs extends TranslationsS70SystemSettingsMenuZhTw {
+	_TranslationsS70SystemSettingsMenuEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get user_name => 'Display Name';
+	@override String get language => 'Display Language';
+	@override String get terms => 'Terms of Service';
+	@override String get privacy => 'Privacy Policy';
+	@override String get payment_info => 'Payment Information Settings';
+}
+
+// Path: S72_TermsUpdate.buttons
+class _TranslationsS72TermsUpdateButtonsEnUs extends TranslationsS72TermsUpdateButtonsZhTw {
+	_TranslationsS72TermsUpdateButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get agree => 'Accept';
+	@override String get decline => 'Decline';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1245,6 +1327,16 @@ class _TranslationsD11RandomResultButtonsEnUs extends TranslationsD11RandomResul
 
 	// Translations
 	@override String get close => 'OK';
+}
+
+// Path: D12_logout_confirm.buttons
+class _TranslationsD12LogoutConfirmButtonsEnUs extends TranslationsD12LogoutConfirmButtonsZhTw {
+	_TranslationsD12LogoutConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get logout => 'Log out';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1383,6 +1475,9 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String enter_first({required Object key}) => 'Please enter ${key} first';
 	@override String get save_failed => 'Save failed. Please try again later';
 	@override String get delete_failed => 'Exchange rate update failed';
+	@override String get rate_fetch_failed => 'Failed to fetch exchange rate';
+	@override String length_exceeded({required Object max}) => 'Max ${max} characters';
+	@override String get invalid_char => 'Invalid characters';
 }
 
 // Path: common.payment_info.mode
@@ -1468,6 +1563,18 @@ class _TranslationsCommonRemainderRuleDescriptionEnUs extends TranslationsCommon
 	@override String get random => 'The system will randomly select one lucky person to absorb the remainder.';
 	@override String get order => 'Distributes the remainder sequentially based on the order members joined.';
 	@override String get member => 'Select a specific member to always absorb the remainder.';
+}
+
+// Path: common.terms.label
+class _TranslationsCommonTermsLabelEnUs extends TranslationsCommonTermsLabelZhTw {
+	_TranslationsCommonTermsLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get terms => 'Terms of Service';
+	@override String get privacy => 'Privacy Policy';
+	@override String get both => 'Legal Terms';
 }
 
 // Path: common.share.invite
@@ -1711,6 +1818,14 @@ extension on TranslationsEnUs {
 			'common.split_method.even' => 'Even',
 			'common.split_method.percent' => 'By Percentage',
 			'common.split_method.exact' => 'Exact Amount',
+			'common.language.title' => 'Language Settings',
+			'common.language.zh_TW' => 'Traditional Chinese',
+			'common.language.en_US' => 'English',
+			'common.language.jp_JP' => 'Japanese',
+			'common.terms.label.terms' => 'Terms of Service',
+			'common.terms.label.privacy' => 'Privacy Policy',
+			'common.terms.label.both' => 'Legal Terms',
+			'common.terms.and' => ' and ',
 			'common.share.invite.subject' => 'Join Iron Split Task',
 			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Join my Iron Split task "${taskName}"!\nCode: ${code}\nLink: ${link}',
 			'common.share.settlement.subject' => 'Check Iron Split Task Settlement',
@@ -1880,20 +1995,14 @@ extension on TranslationsEnUs {
 			'S32_settlement_result.buttons.back' => 'Back to Task',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => 'Start',
-			'S50_Onboarding_Consent.content_prefix' => 'By clicking Start, you agree to our ',
-			'S50_Onboarding_Consent.terms_link' => 'Terms of Service',
-			'S50_Onboarding_Consent.and' => ' and ',
-			'S50_Onboarding_Consent.privacy_link' => 'Privacy Policy',
-			'S50_Onboarding_Consent.content_suffix' => '. We use anonymous login to protect your privacy.',
+			'S50_Onboarding_Consent.content.prefix' => 'By clicking Start, you agree to our ',
+			'S50_Onboarding_Consent.content.suffix' => '. We use anonymous login to protect your privacy.',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: ${message}',
 			'S51_Onboarding_Name.title' => 'Set Display Name',
 			'S51_Onboarding_Name.buttons.next' => 'Set',
-			'S51_Onboarding_Name.description' => 'Please enter your display name (1-10 chars).',
-			'S51_Onboarding_Name.field_hint' => 'Enter nickname',
-			'S51_Onboarding_Name.field_counter' => ({required Object current}) => '${current}/10',
-			'S51_Onboarding_Name.error_empty' => 'Name cannot be empty',
-			'S51_Onboarding_Name.error_too_long' => 'Max 10 characters',
-			'S51_Onboarding_Name.error_invalid_char' => 'Invalid characters',
+			'S51_Onboarding_Name.description' => 'Please enter your display name.',
+			'S51_Onboarding_Name.hint' => 'Enter nickname',
+			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S52_TaskSettings_Log.title' => 'Activity Log',
 			'S52_TaskSettings_Log.buttons.export_csv' => 'Export CSV',
 			'S52_TaskSettings_Log.empty_log' => 'No activity logs found',
@@ -1917,7 +2026,16 @@ extension on TranslationsEnUs {
 			'S53_TaskSettings_Members.label_default_ratio' => 'Default Ratio',
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S53_TaskSettings_Members.member_name' => 'Member Name',
-			'S71_SystemSettings_Tos.title' => 'Terms of Service',
+			'S70_System_Settings.title' => 'System Settings',
+			'S70_System_Settings.menu.user_name' => 'Display Name',
+			'S70_System_Settings.menu.language' => 'Display Language',
+			'S70_System_Settings.menu.terms' => 'Terms of Service',
+			'S70_System_Settings.menu.privacy' => 'Privacy Policy',
+			'S70_System_Settings.menu.payment_info' => 'Payment Information Settings',
+			'S72_TermsUpdate.title' => ({required Object type}) => '${type} Updated',
+			'S72_TermsUpdate.description' => ({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.',
+			'S72_TermsUpdate.buttons.agree' => 'Accept',
+			'S72_TermsUpdate.buttons.decline' => 'Decline',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.buttons.reroll' => 'Change Animal',
 			'D01_MemberRole_Intro.buttons.enter' => 'Enter Task',
@@ -1961,6 +2079,9 @@ extension on TranslationsEnUs {
 			'D11_random_result.skip' => 'Skip',
 			'D11_random_result.winner_reveal' => 'It\'s you!',
 			'D11_random_result.buttons.close' => 'OK',
+			'D12_logout_confirm.title' => 'Confirm Logout',
+			'D12_logout_confirm.description' => 'If you do not agree to the updated terms, you will not be able to continue using this service.\nYou will be logged out. If you are using an anonymous account, your data may not be recoverable after logging out.',
+			'D12_logout_confirm.buttons.logout' => 'Log out',
 			'B02_SplitExpense_Edit.title' => 'Edit Sub Item',
 			'B02_SplitExpense_Edit.buttons.save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.label.sub_item' => 'Sub Item Name',
@@ -2029,6 +2150,9 @@ extension on TranslationsEnUs {
 			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first',
 			'error.message.save_failed' => 'Save failed. Please try again later',
 			'error.message.delete_failed' => 'Exchange rate update failed',
+			'error.message.rate_fetch_failed' => 'Failed to fetch exchange rate',
+			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters',
+			'error.message.invalid_char' => 'Invalid characters',
 			_ => null,
 		};
 	}

@@ -288,16 +288,12 @@
 
 ````json
 "settlement": {
-  // 1. 結算流程子狀態 (Sub-status)
-  // 用於 S10 判斷任務應顯示於「進行中」還是「已結束」
-  "status": "pending", // "pending" (等待付款) | "cleared" (結清完成)
-
-  // 2. 結算當下資訊
+  // 結算當下資訊
   "finalizedAt": Timestamp, // S30 按下確認的時間
   "baseCurrency": "TWD",    // 結算鎖定的幣別 (Snapshot)
   "remainderWinnerId": "uid_xxx",
 
-  // [移入] 收款資訊
+  // 收款資訊
   "receiverInfos": {
       "mode": "specific",
       "acceptCash": true,
@@ -305,7 +301,7 @@
       "bankAccount": "12345...",
       "paymentApps": [...]
   },
-  // 3. 統計數據快照 (供 S17 BalanceCard 直接顯示)
+  // 統計數據快照 (供 S17 BalanceCard 直接顯示)
   "dashboardSnapshot": {
       "poolBalance": 100.0,
       "totalIncome": 500.0,

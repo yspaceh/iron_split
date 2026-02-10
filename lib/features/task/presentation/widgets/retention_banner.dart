@@ -12,28 +12,22 @@ class RetentionBanner extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isUrgent = days <= 7;
-    final backgroundColor = isUrgent
-        ? colorScheme.errorContainer
-        : colorScheme.surfaceContainerHigh;
-    final textColor =
-        isUrgent ? colorScheme.onErrorContainer : colorScheme.onSurfaceVariant;
-    final iconColor =
-        isUrgent ? colorScheme.error : colorScheme.onSurfaceVariant;
+    final color = isUrgent ? colorScheme.error : colorScheme.onSurfaceVariant;
 
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      color: backgroundColor,
+      color: colorScheme.surfaceContainerLow,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.timer_outlined, size: 16, color: iconColor),
-          const SizedBox(width: 8),
+          Icon(Icons.timer_outlined, size: 16, color: color),
+          const SizedBox(width: 4),
           Text(
             t.S17_Task_Locked.retention_notice(days: days),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: textColor,
-              fontWeight: FontWeight.bold,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: color,
+              fontWeight: isUrgent ? FontWeight.bold : null,
             ),
           ),
         ],

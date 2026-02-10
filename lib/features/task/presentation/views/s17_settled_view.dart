@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
-import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/group_balance_card.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -12,7 +11,7 @@ import 'package:iron_split/features/task/presentation/viewmodels/balance_summary
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 
-class S17SettledPendingView extends StatefulWidget {
+class S17SettledView extends StatefulWidget {
   final String taskId;
   final TaskModel? task;
   final bool isCaptain;
@@ -22,7 +21,7 @@ class S17SettledPendingView extends StatefulWidget {
   final List<SettlementMember> pendingMembers;
   final List<SettlementMember> clearedMembers;
 
-  const S17SettledPendingView({
+  const S17SettledView({
     super.key,
     required this.isCaptain,
     required this.balanceState,
@@ -33,10 +32,10 @@ class S17SettledPendingView extends StatefulWidget {
   });
 
   @override
-  State<S17SettledPendingView> createState() => _S17SettledPendingViewState();
+  State<S17SettledView> createState() => _S17SettledViewState();
 }
 
-class _S17SettledPendingViewState extends State<S17SettledPendingView> {
+class _S17SettledViewState extends State<S17SettledView> {
   // 0: 待處理 (Pending), 1: 已處理 (Cleared)
   int _selectedIndex = 0;
 
@@ -59,7 +58,10 @@ class _S17SettledPendingViewState extends State<S17SettledPendingView> {
         // 1. 頂部資訊卡 (Locked Mode)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: GroupBalanceCard(state: widget.balanceState),
+          child: GroupBalanceCard(
+            state: widget.balanceState,
+            isSettlement: true,
+          ),
         ),
 
         const SizedBox(height: 16),
@@ -82,72 +84,69 @@ class _S17SettledPendingViewState extends State<S17SettledPendingView> {
             ),
           ),
         ),
-        const SizedBox(height: 8),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             children: [
-              if (_selectedIndex == 0)
-                // 2. 收款資訊區
-                AppButton(
-                  text: t.S17_Task_Locked.buttons.view_payment_details,
-                  type: AppButtonType.secondary,
-                  onPressed: () {
+              if (_selectedIndex == 0 && displayList.isNotEmpty) ...[
+                InkWell(
+                  onTap: () {
                     final currentTask = widget.task;
                     if (currentTask == null) return;
 
                     B06PaymentInfoDetailBottomSheet.show(context,
                         task: currentTask, isCaptain: widget.isCaptain);
                   },
-                ),
-              const SizedBox(height: 8),
-
-              // 4. 動態列表區
-              if (displayList.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Center(
-                    child: Column(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3), // 使用變數
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: theme.colorScheme.outlineVariant
+                            .withValues(alpha: 0.5), // 使用變數
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          isShowingPending
-                              ? Icons.done_all
-                              : Icons.hourglass_empty,
-                          size: 48,
-                          color: theme.colorScheme.surfaceContainerHighest,
-                        ),
-                        const SizedBox(height: 8),
                         Text(
-                          isShowingPending
-                              ? t.S17_Task_Locked.section_pending
-                              : t.S17_Task_Locked.section_cleared,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.outline,
-                          ),
+                          t.S17_Task_Locked.buttons.view_payment_details,
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: theme.colorScheme.onSurface),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right_outlined,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ],
                     ),
                   ),
-                )
-              else
-                for (var member in displayList) ...[
-                  SettlementMemberItem(
-                    member: member,
-                    baseCurrency: baseCurrency,
-                    isActionEnabled: widget.isCaptain,
-                    actionIcon: isShowingPending
-                        ? Icons.check_circle_outline
-                        : Icons.undo,
-                    onActionTap: () {
-                      settlementService.updateMemberStatus(
-                        taskId: widget.taskId,
-                        memberId: member.id,
-                        isCleared: isShowingPending,
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12), // 這裡控制間隔高度
-                ],
+                ),
+                const SizedBox(height: 8),
+              ],
+
+              for (var member in displayList) ...[
+                SettlementMemberItem(
+                  member: member,
+                  baseCurrency: baseCurrency,
+                  isActionEnabled: widget.isCaptain,
+                  actionIcon: isShowingPending
+                      ? Icons.check_rounded
+                      : Icons.undo_rounded,
+                  onActionTap: () {
+                    settlementService.updateMemberStatus(
+                      taskId: widget.taskId,
+                      memberId: member.id,
+                      isCleared: isShowingPending,
+                    );
+                  },
+                ),
+                const SizedBox(height: 12), // 這裡控制間隔高度
+              ],
 
               const SizedBox(height: 100), // Bottom padding
             ],

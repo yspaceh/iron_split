@@ -48,7 +48,7 @@ class _S10Content extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push('/settings/tos'),
+            onPressed: () => context.pushNamed('S70'),
           ),
         ],
       ),

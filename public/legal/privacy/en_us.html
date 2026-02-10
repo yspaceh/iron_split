@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Split - Privacy Policy</title>
+  <style>
+    /* AppTheme Colors */
+    :root { 
+      --bg: #F4F6F8;
+      --heading: #212121; 
+      --body: #616161;
+      --accent: #9C393F; 
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 20px 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    h2 {
+      color: var(--heading);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+
+    p, li {
+      margin: 0 0 12px;
+      text-align: left;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #9E9E9E;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Email Link: Neutral color, underlined */
+    .email-link {
+      color: var(--body) !important;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="meta">Last Updated: 2026/02/10</span>
+
+  <h2>0. Operator and Contact</h2>
+  <p>This App is operated by <strong>Iron Split Developer (Individual Developer)</strong>. For questions or data-related requests, please contact us at:<br/>
+    <span id="contact-placeholder">Loading contact info...</span>
+  </p>
+
+  <h2>1. Information We Collect</h2>
+  <p>The App may collect:</p>
+  <ul>
+    <li>Display name</li>
+    <li>Device information (OS, app version)</li>
+    <li>Usage data and error logs (to improve stability)</li>
+    <li>Expense records and amounts (no actual payment data)</li>
+  </ul>
+
+  <h2>2. How We Use Information</h2>
+  <ul>
+    <li>Provide and maintain core features</li>
+    <li>Improve user experience and stability</li>
+    <li>Debugging and maintenance</li>
+  </ul>
+
+  <h2>3. Third-Party Services and Processing</h2>
+  <p>The App uses third-party services such as Firebase (e.g., Firestore and Analytics) to provide features and improve quality. We may share data with service providers strictly as needed for service delivery (e.g., cloud storage, analytics, error reporting) and treat them as processors/contractors.</p>
+
+  <h2>4. Possible Overseas Processing</h2>
+  <p>Because we use cloud services, data may be stored or processed outside Japan. We will take reasonable steps to select service providers with appropriate safeguards and to apply necessary security measures.</p>
+
+  <h2>5. Data Retention</h2>
+  <p>After a task is closed or deleted, data is retained for <strong>30 days</strong>, then permanently deleted and <strong>cannot be recovered</strong>.</p>
+
+  <h2>6. Sharing</h2>
+  <p>We do not sell user data or share it with third parties for commercial purposes, except as required by law or as necessary to provide the service (e.g., Firebase infrastructure).</p>
+
+  <h2>7. Your Requests</h2>
+  <p>You may request access to, correction of, deletion of, or restriction of the data handled by the App. Please contact us via the email above.</p>
+  <p>To prevent improper requests, we may ask for reasonable verification information. We will respond within a reasonable timeframe where feasible and subject to legal or technical limitations.</p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var user = "ironsplit.app";
+      var domain = "gmail.com";
+      var email = user + "@" + domain;
+
+      var placeholder = document.getElementById("contact-placeholder");
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.innerText = "📧 " + email;
+      link.className = "email-link";
+
+      placeholder.innerHTML = "";
+      placeholder.appendChild(link);
+    });
+  </script>
+
+</body>
+</html>

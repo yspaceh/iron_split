@@ -71,7 +71,7 @@ class RecordItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8), // 上下留白，讓背景透出來
         decoration: BoxDecoration(
-          color: Colors.white, // 純白背景
+          color: theme.colorScheme.surface, // 純白背景
           borderRadius: BorderRadius.circular(16), // 精緻圓角
           boxShadow: [
             BoxShadow(

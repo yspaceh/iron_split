@@ -8,7 +8,7 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 // 定義頁面狀態，讓 Page 只要 switch 這個就好
-enum LockedPageStatus { loading, closed, cleared, pending, error }
+enum LockedPageStatus { loading, closed, settled, error }
 
 class S17TaskLockedViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
@@ -75,7 +75,6 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     }
 
     final settlement = task.settlement ?? {};
-    final settlementStatus = settlement['status'] as String? ?? 'pending';
     final finalizedAtRaw = settlement['finalizedAt'];
 
     if (finalizedAtRaw != null && finalizedAtRaw is Timestamp) {
@@ -93,13 +92,8 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       _remainingDays = null;
     }
 
-    if (task.status == 'settled' && settlementStatus == 'cleared') {
-      _status = LockedPageStatus.cleared;
-      return;
-    }
-
     // 2. 如果是 Pending，進行資料解析 (原本在 Page 裡的邏輯)
-    _status = LockedPageStatus.pending;
+    _status = LockedPageStatus.settled;
     _parsePendingData(task, settlement);
   }
 

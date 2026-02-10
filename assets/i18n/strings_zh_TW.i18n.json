@@ -98,6 +98,12 @@
       "percent": "比例分攤",
       "exact": "指定金額"
     },
+    "language": {
+      "title": "語言設定",
+      "zh_TW": "繁體中文",
+      "en_US": "英文",
+      "jp_JP": "日文"
+    },
     "payment_info": {
       "mode": {
         "private": "請直接私訊聯絡",
@@ -128,6 +134,14 @@
     "payment_status":{
       "payable": "應付",
       "receivable": "可退"
+    },
+    "terms": {
+      "label": {
+        "terms": "服務條款",
+        "privacy": "隱私政策",
+        "both": "法律條款"
+      },
+      "and": " 和 "
     },
     "share":{
       "invite": {
@@ -330,7 +344,7 @@
     "buttons": {
       "download": "下載紀錄",
       "notify_members": "通知成員",
-      "view_payment_details": "查看收退款帳戶"
+      "view_payment_details": "隊長收退款帳戶"
     },
     "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄",
     "label_remainder_absorbed_by": "由 {name} 吸收",
@@ -390,11 +404,10 @@
     "buttons": {
       "agree": "開始使用"
     },
-    "content_prefix": "歡迎使用 Iron Split。點擊開始即代表您同意我們的 ",
-    "terms_link": "服務條款",
-    "and": " 與 ",
-    "privacy_link": "隱私政策",
-    "content_suffix": "。我們採用匿名登入，保障您的隱私。",
+    "content": {
+      "prefix": "歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ",
+      "suffix": "。"
+    },
     "login_failed": "登入失敗: {message}"
   },
   "S51_Onboarding_Name": {
@@ -402,12 +415,10 @@
     "buttons": {
       "next": "設定完成"
     },
-    "description": "請輸入您在 App 內的顯示名稱（1-10 個字）。",
-    "field_hint": "輸入暱稱",
-    "field_counter": "{current}/10",
-    "error_empty": "名稱不能為空",
-    "error_too_long": "最多 10 個字",
-    "error_invalid_char": "包含無效字元"
+    "description": "請輸入您在 Iron Split 內的顯示名稱。",
+    "label": "顯示名稱",
+    "hint": "輸入暱稱",
+    "counter": "{current}/{max}"
   },
   "S52_TaskSettings_Log": {
     "title": "活動紀錄",
@@ -442,8 +453,23 @@
     "member_default_name": "成員",
     "member_name": "成員名稱"
   },
-  "S71_SystemSettings_Tos": {
-    "title": "服務條款"
+  "S70_System_Settings": {
+    "title": "系統設定",
+    "menu" : {
+      "user_name": "顯示名稱",
+      "language": "顯示語言",
+      "terms": "服務條款",
+      "privacy": "隱私政策",
+      "payment_info": "收款帳戶設定"
+    }
+  },
+  "S72_TermsUpdate": {
+    "title": "{type}更新",
+    "description": "我們更新了{type}，請閱讀並同意以繼續使用。",
+    "buttons": {
+      "agree": "同意",
+      "decline": "不同意"
+    }
   },
   "D01_MemberRole_Intro": {
     "title": "你的角色是...",
@@ -522,6 +548,13 @@
     "winner_reveal": "就是你了！",
     "buttons": {
       "close": "確定"
+    }
+  },
+  "D12_logout_confirm": {
+    "title": "登出確認",
+    "description": "若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。",
+    "buttons": {
+      "logout": "確認登出"
     }
   },
   "B02_SplitExpense_Edit": {
@@ -642,7 +675,9 @@
       "enter_first": "請先輸入{key}",
       "save_failed": "儲存失敗，請稍後再試",
       "delete_failed": "刪除失敗，請稍後再試",
-      "rate_fetch_failed": "為替レートの更新失敗"
+      "rate_fetch_failed": "為替レートの更新失敗",
+      "length_exceeded": "最多 {max} 個字",
+      "invalid_char": "包含無效字元"
     }
   }
 }

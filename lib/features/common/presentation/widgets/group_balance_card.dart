@@ -302,7 +302,7 @@ class GroupBalanceCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        if (isSettlement == false) ...[
+                        if (isSettlement == false && state.remainder != 0) ...[
                           if (state.isLocked && state.absorbedBy != null)
                             Text(
                               t.S17_Task_Locked.label_remainder_absorbed_by(
