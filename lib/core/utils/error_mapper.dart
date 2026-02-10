@@ -13,6 +13,28 @@ class ErrorMapper {
       eStr = error.code;
     }
 
+    // --- [新增] 邀請流程錯誤處理 ---
+    if (eStr.contains(AppErrorCodes.inviteTaskFull) ||
+        eStr.contains('failed-precondition')) {
+      return t.error.dialog.task_full.message(limit: '15'); // 假設有此翻譯 key
+    }
+    if (eStr.contains(AppErrorCodes.inviteExpired) ||
+        eStr.contains('deadline-exceeded')) {
+      return t.error.dialog.expired_code.message(minutes: '30');
+    }
+    if (eStr.contains(AppErrorCodes.inviteInvalid) ||
+        eStr.contains('not-found')) {
+      return t.error.dialog.invalid_code.message;
+    }
+    if (eStr.contains(AppErrorCodes.inviteAlreadyJoined) ||
+        eStr.contains('already-exists')) {
+      return t.error.dialog.already_in_task.message;
+    }
+    if (eStr.contains(AppErrorCodes.inviteAuthRequired) ||
+        eStr.contains('unauthenticated')) {
+      return t.error.dialog.auth_required.message;
+    }
+
     // 1. 邏輯阻擋類
     if (eStr.contains(AppErrorCodes.incomeIsUsed)) {
       return t.error.message.income_is_used;

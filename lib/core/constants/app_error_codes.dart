@@ -19,4 +19,14 @@ class AppErrorCodes {
 
   // 匯率類
   static const String rateFetchFailed = "RATE_FETCH_FAILED";
+
+  // 邀請流程 (Invite Flow)
+  static const String inviteTaskFull = "TASK_FULL"; // 群組已滿
+  static const String inviteExpired = "EXPIRED_CODE"; // 邀請碼過期
+  static const String inviteInvalid = "INVALID_CODE"; // 無效邀請碼
+  static const String inviteAlreadyJoined =
+      "ALREADY_JOINED"; // 已經在群組內 (對應 already-exists)
+  static const String inviteAuthRequired = "AUTH_REQUIRED"; // 需要登入
+
+  static const String unknown = "UNKNOWN_ERROR";
 }

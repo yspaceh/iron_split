@@ -781,6 +781,7 @@ class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRu
 	@override late final _TranslationsCommonRemainderRuleRuleEnUs rule = _TranslationsCommonRemainderRuleRuleEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleDescriptionEnUs description = _TranslationsCommonRemainderRuleDescriptionEnUs._(_root);
 	@override String message_remainder({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot, distributed at settlement.';
+	@override String message_zero_balance({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.';
 }
 
 // Path: common.split_method
@@ -1827,6 +1828,7 @@ extension on TranslationsEnUs {
 			'common.remainder_rule.description.order' => 'Distributes the remainder sequentially based on the order members joined.',
 			'common.remainder_rule.description.member' => 'Select a specific member to always absorb the remainder.',
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => 'Remaining amount ${amount} will be stored in the leftover pot, distributed at settlement.',
+			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.',
 			'common.split_method.even' => 'Even',
 			'common.split_method.percent' => 'By Percentage',
 			'common.split_method.exact' => 'Exact Amount',

@@ -1,19 +1,26 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 // 定義頁面狀態，讓 Page 只要 switch 這個就好
 enum LockedPageStatus { loading, closed, settled, error }
 
 class S17TaskLockedViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
+  final RecordRepository _recordRepo;
   final String taskId;
   final String currentUserId;
 
@@ -46,8 +53,10 @@ class S17TaskLockedViewModel extends ChangeNotifier {
 
   S17TaskLockedViewModel({
     required TaskRepository taskRepo,
+    required RecordRepository recordRepo,
     required this.taskId,
   })  : _taskRepo = taskRepo,
+        _recordRepo = recordRepo,
         currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '' {
     _init();
   }
@@ -175,6 +184,172 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         .sort((a, b) => b.finalAmount.abs().compareTo(a.finalAmount.abs()));
     _clearedMembers
         .sort((a, b) => b.finalAmount.abs().compareTo(a.finalAmount.abs()));
+  }
+
+// [在 S17TaskLockedViewModel class 內]
+
+  /// [重構] 下載專業版結算報表 (包含細項)
+  Future<void> exportSettlementRecord() async {
+    if (_task == null || _balanceState == null) return;
+
+    try {
+      // 1. 為了產生細項，必須先抓取所有 Records
+      // (原本的 exportSettlementRecord 只有摘要，現在我們需要細節)
+      final List<RecordModel> records =
+          await _recordRepo.getRecordsOnce(taskId);
+      // 按日期排序 (最新的在上面)
+      records.sort((a, b) => b.date.compareTo(a.date));
+
+      // 2. 產生專業格式 CSV 內容
+      final String csvContent = _generateProfessionalCsv(records);
+
+      // 3. 取得暫存路徑 & 存檔
+      final directory = await getTemporaryDirectory();
+      final dateStr = DateTime.now().toIso8601String().split('T').first;
+      // 檔名: JapanTrip_Settlement_Report_20260211.csv
+      final fileName = "${_taskName}_Settlement_Report_$dateStr.csv";
+      final file = File('${directory.path}/$fileName');
+
+      // 加入 BOM (\uFEFF) 解決 Excel 中文亂碼問題
+      await file.writeAsString('\uFEFF$csvContent', flush: true);
+
+      // 4. 分享檔案
+      final result = await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: '$_taskName Settlement Report',
+      );
+
+      if (result.status == ShareResultStatus.dismissed) {
+        debugPrint('User dismissed export');
+      }
+    } catch (e) {
+      debugPrint("Export failed: $e");
+      rethrow;
+    }
+  }
+
+  /// 生成專業版 CSV 內容
+  String _generateProfessionalCsv(List<RecordModel> records) {
+    final buffer = StringBuffer();
+    final baseSymbol = _baseCurrency.code;
+    final allMembers = [..._pendingMembers, ..._clearedMembers];
+
+    // ==========================================
+    // Section 1: 報表概況 (Report Info)
+    // ==========================================
+    buffer.writeln('[Report Info]');
+    buffer.writeln('Task Name,$_taskName');
+    buffer.writeln('Export Time,${DateTime.now().toString().split('.')[0]}');
+    buffer.writeln('Base Currency,$baseSymbol');
+    buffer.writeln(''); // 空行分隔
+
+    // ==========================================
+    // Section 2: 結算總表 (Settlement Summary)
+    // ==========================================
+    buffer.writeln('[Settlement Summary]');
+    buffer.writeln('Member,Role,Net Amount ($baseSymbol),Status');
+
+    for (var m in allMembers) {
+      final role =
+          m.finalAmount > 0 ? 'Receiver' : (m.finalAmount < 0 ? 'Payer' : '-');
+      final status = _clearedMembers.contains(m) ? 'Cleared' : 'Pending';
+      final amount =
+          BalanceCalculator.roundToPrecision(m.finalAmount, _baseCurrency);
+      buffer.writeln('${m.displayName},$role,$amount,$status');
+    }
+    buffer.writeln('');
+
+    // ==========================================
+    // Section 3: 資金與零頭 (Fund Analysis)
+    // ==========================================
+    buffer.writeln('[Fund Analysis]');
+
+    // 計算總數值
+    final totalExp = BalanceCalculator.roundToPrecision(
+        _balanceState!.totalExpense, _baseCurrency);
+    final totalInc = BalanceCalculator.roundToPrecision(
+        _balanceState!.totalIncome, _baseCurrency);
+    // 零頭 (使用新版動態計算)
+    final remainderBuffer = BalanceCalculator.calculateRemainderBuffer(records);
+
+    buffer.writeln('Total Expense ($baseSymbol),$totalExp');
+    buffer.writeln('Total Pool Income ($baseSymbol),$totalInc');
+    buffer.writeln('Remainder Buffer ($baseSymbol),$remainderBuffer');
+    if (_balanceState!.absorbedBy != null) {
+      buffer.writeln('Remainder Absorbed By,${_balanceState!.absorbedBy}');
+    }
+    buffer.writeln('');
+
+    // ==========================================
+    // Section 4: 交易流水帳 (Transaction Details)
+    // ==========================================
+    buffer.writeln('[Transaction Details]');
+
+    // Header Row
+    // Header Row
+    buffer.write(
+        'Date,Title,Type,Payer,Original Amt,Currency,Rate,Base Amt ($baseSymbol),Net Remainder (Adj.)');
+    // 動態加入成員欄位
+    for (var m in allMembers) {
+      buffer.write(',${m.displayName} (Net)');
+    }
+    buffer.writeln();
+
+    // Data Rows
+    for (var record in records) {
+      // A. 基本欄位
+      final date = record.date.toString().split(' ')[0];
+      final title = record.title.replaceAll(',', ' '); // 避免 CSV 格式跑掉
+      final type = record.type; // expense / income
+
+      // 支付者名稱處理
+      String payerName = '-';
+      if (record.payerType == 'prepay') {
+        payerName = 'Pool';
+      } else if (record.payerType == 'mixed')
+        // ignore: curly_braces_in_flow_control_structures
+        payerName = 'Mixed';
+      else if (record.payerType == 'member') {
+        payerName = _task?.members[record.payerId]?['displayName'] ?? 'Unknown';
+      }
+
+      final originalAmt = record.originalAmount;
+      final currency = record.currencyCode;
+      final rate = record.exchangeRate;
+
+      // Base Amount (四捨五入後的本幣金額)
+      final baseAmt =
+          BalanceCalculator.roundToPrecision(originalAmt * rate, _baseCurrency);
+
+      // 使用 calculateDetailedRemainder 取得物件
+      final remainderDetail =
+          BalanceCalculator.calculateDetailedRemainder(record);
+
+      // 取出淨零頭 (這是最終影響系統餘額的數字)
+      // 如果 Consumer=1, Payer=1, Net=0 -> 這裡會顯示 0
+      final netRemainder = remainderDetail.net;
+
+      buffer.write(
+          '$date,$title,$type,$payerName,$originalAmt,$currency,$rate,$baseAmt,$netRemainder');
+
+      // B. 成員淨額 (Net Impact)
+      for (var m in allMembers) {
+        // 使用 BalanceCalculator 計算 Credit - Debit
+        final credit = BalanceCalculator.calculatePersonalCredit(
+                record, m.id, _baseCurrency)
+            .base;
+        final debit = BalanceCalculator.calculatePersonalDebit(
+                record, m.id, _baseCurrency)
+            .base;
+        final net = credit - debit;
+
+        final netStr = BalanceCalculator.floorToPrecision(net, _baseCurrency);
+        buffer.write(',$netStr');
+      }
+      buffer.writeln();
+    }
+
+    return buffer.toString();
   }
 
   @override

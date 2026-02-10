@@ -17,6 +17,18 @@ class SplitResult {
   });
 }
 
+class RemainderDetail {
+  final double consumer; // 消費端/分攤產生的零頭
+  final double payer; // 支付端/匯率產生的零頭
+  final double net; // 最終淨零頭 (存入資料庫的值)
+
+  const RemainderDetail({
+    this.consumer = 0.0,
+    this.payer = 0.0,
+    this.net = 0.0,
+  });
+}
+
 class BalanceCalculator {
   /// 計算特定使用者的淨餘額 (Net Balance)
   /// 公式：(總支付 Credit) - (總消費 Debit)
@@ -141,8 +153,13 @@ class BalanceCalculator {
         // baseAmount 必須經過與 calculateSplit 相同的 floorToPrecision 處理
         // 確保 "代墊總額" 與 "消費分攤總額" 的精度一致
 
-        final baseAmount =
-            floorToPrecision(rawAmount * record.exchangeRate, baseCurrency);
+        final double baseTotal = roundToPrecision(
+            record.originalAmount * record.exchangeRate, baseCurrency);
+        final double ratio = rawAmount / record.originalAmount;
+
+        // 使用 floor 確保不超支 (與分攤邏輯一致)
+        final double baseAmount =
+            floorToPrecision(baseTotal * ratio, baseCurrency);
         return DualAmount(original: rawAmount, base: baseAmount);
       }
       return DualAmount.zero;
@@ -191,10 +208,13 @@ class BalanceCalculator {
     double totalPoolExpenseBase = 0.0;
 
     for (var r in allRecords) {
+      final CurrencyConstants currency =
+          CurrencyConstants.getCurrencyConstants(r.currencyCode);
       // 1. 收入：全部視為公款增加
       if (r.type == 'income') {
         // originalAmount * exchangeRate
-        totalPoolIncomeBase += r.baseAmount;
+        totalPoolIncomeBase +=
+            roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
       // 2. 支出：檢查是否有用到公款
       else if (r.type == 'expense') {
@@ -211,7 +231,14 @@ class BalanceCalculator {
 
         // 如果有扣除額，將其換算為 Base Currency 後累加到總支出
         if (deductionInOriginal > 0) {
-          totalPoolExpenseBase += deductionInOriginal * r.exchangeRate;
+          // [修正] 這裡改用與 calculatePersonalCredit 相同的比例算法
+          // 這樣 "公款扣除額" + "個人代墊額" 才會剛好等於 "總費用"
+          final double baseTotal =
+              roundToPrecision(r.originalAmount * r.exchangeRate, currency);
+          final double ratio = deductionInOriginal / r.originalAmount;
+
+          // 使用 floor
+          totalPoolExpenseBase += floorToPrecision(baseTotal * ratio, currency);
         }
       }
     }
@@ -237,9 +264,9 @@ class BalanceCalculator {
   static double calculateExpenseTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      final double baseAmount = r.originalAmount * r.exchangeRate;
       if (r.type == 'expense') {
-        total += baseAmount;
+        final currency = CurrencyConstants.getCurrencyConstants(r.currencyCode);
+        total += roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
     }
     return total;
@@ -248,9 +275,9 @@ class BalanceCalculator {
   static double calculateIncomeTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      final double baseAmount = r.originalAmount * r.exchangeRate;
       if (r.type == 'income') {
-        total += baseAmount;
+        final currency = CurrencyConstants.getCurrencyConstants(r.currencyCode);
+        total += roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
     }
     return total;
@@ -388,5 +415,73 @@ class BalanceCalculator {
       remainder: baseRemainder,
       totalAmount: DualAmount(original: totalAmount, base: baseTotal), // 回傳總額
     );
+  }
+
+  // 在 BalanceCalculator class 內新增
+
+  /// 計算詳細的零頭結構 (用於 S15 編輯頁面顯示)
+  /// 回傳: (consumer: 消費端餘數, payer: 支付端餘數, net: 淨結果)
+  static RemainderDetail calculateDetailedRemainder(RecordModel record) {
+    final currency =
+        CurrencyConstants.getCurrencyConstants(record.currencyCode);
+
+    // 1. Income (通常只有分攤餘數)
+    if (record.type == 'income') {
+      final splitRes = calculateSplit(
+          totalAmount: record.originalAmount,
+          exchangeRate: record.exchangeRate,
+          splitMethod: record.splitMethod,
+          memberIds: record.splitMemberIds,
+          details: record.splitDetails ?? {},
+          baseCurrency: currency);
+      return RemainderDetail(
+          consumer: splitRes.remainder, payer: 0.0, net: splitRes.remainder);
+    }
+
+    // 2. Expense
+    if (record.type == 'expense') {
+      final double baseTotal = roundToPrecision(
+          record.originalAmount * record.exchangeRate, currency);
+
+      // A. 消費端
+      final splitRes = calculateSplit(
+          totalAmount: record.originalAmount,
+          exchangeRate: record.exchangeRate,
+          splitMethod: record.splitMethod,
+          memberIds: record.splitMemberIds,
+          details: record.splitDetails ?? {},
+          baseCurrency: currency);
+      final double consumerRemainder = splitRes.remainder;
+
+      // B. 支付端 (Mixed/Multiple)
+      double allocatedPayerSum = 0.0;
+      if (record.payerType == 'member' || record.payerType == 'prepay') {
+        allocatedPayerSum = baseTotal;
+      } else if (record.payerType == 'mixed' && record.paymentDetails != null) {
+        final prepay =
+            (record.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
+        final advances = record.paymentDetails!['memberAdvance'] as Map? ?? {};
+
+        if (prepay > 0) {
+          final ratio = prepay / record.originalAmount;
+          allocatedPayerSum += floorToPrecision(baseTotal * ratio, currency);
+        }
+        advances.forEach((key, val) {
+          final amount = (val as num).toDouble();
+          final ratio = amount / record.originalAmount;
+          allocatedPayerSum += floorToPrecision(baseTotal * ratio, currency);
+        });
+      }
+      final double payerRemainder = baseTotal - allocatedPayerSum;
+
+      // C. 回傳物件
+      return RemainderDetail(
+        consumer: consumerRemainder,
+        payer: payerRemainder,
+        net: consumerRemainder - payerRemainder, // 淨結果
+      );
+    }
+
+    return const RemainderDetail();
   }
 }

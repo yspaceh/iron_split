@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_exchange_rate_input.dart';
@@ -34,7 +35,7 @@ class S15ExpenseForm extends StatelessWidget {
   final String baseSplitMethod;
   final List<String> baseMemberIds;
   final Map<String, double> baseRawDetails;
-  final double totalRemainder;
+  final RemainderDetail remainderDetail;
 
   // 4. 接收支付狀態
   final String payerType;
@@ -80,7 +81,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.onDetailEditTap,
     required this.poolBalancesByCurrency,
     required this.baseRawDetails,
-    required this.totalRemainder,
+    required this.remainderDetail,
     required this.onCategoryChanged,
     required this.onCurrencyChanged,
   });
@@ -110,6 +111,38 @@ class S15ExpenseForm extends StatelessWidget {
       orElse: () => {'displayName': '?'},
     );
     return t.S15_Record_Edit.val.member_paid(name: member['displayName']);
+  }
+
+  Widget buildRemainderInfo() {
+    final symbol = "${baseCurrency.code}${baseCurrency.symbol}";
+
+    // 情況 A: 發生抵銷 (Consumer 有值，但 Net 為 0)
+    if (remainderDetail.consumer != 0 && remainderDetail.net == 0) {
+      return InfoBar(
+        icon: Icons.info_outline_rounded,
+        text: Text(
+          t.common.remainder_rule.message_zero_balance(
+              amount:
+                  "$symbol ${CurrencyConstants.formatAmount(remainderDetail.consumer, baseCurrency.code)}"),
+          style: TextStyle(fontSize: 12),
+        ),
+      );
+    }
+
+    // 情況 B: 一般零頭 (Net != 0)
+    if (remainderDetail.net != 0) {
+      return InfoBar(
+        icon: Icons.savings_outlined,
+        text: Text(
+          t.common.remainder_rule.message_remainder(
+              amount:
+                  "$symbol ${CurrencyConstants.formatAmount(remainderDetail.net, baseCurrency.code)}"),
+          style: TextStyle(fontSize: 12),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   @override
@@ -201,16 +234,7 @@ class S15ExpenseForm extends StatelessWidget {
             isIncome: false,
           ),
         ],
-        if (totalRemainder > 0)
-          InfoBar(
-            icon: Icons.savings_outlined,
-            text: Text(
-              t.common.remainder_rule.message_remainder(
-                  amount:
-                      "${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(totalRemainder, baseCurrency.code)}"),
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
+        buildRemainderInfo(),
         const SizedBox(height: 8),
         TaskMemoInput(
           memoController: memoController,

@@ -460,8 +460,8 @@ class TranslationsS32SettlementResultZhTw {
 	/// zh-TW: '等待揭曉...'
 	String get waiting_reveal => '等待揭曉...';
 
-	/// zh-TW: '餘額歸屬：'
-	String get remainder_winner_prefix => '餘額歸屬：';
+	/// zh-TW: '零頭歸屬：'
+	String get remainder_winner_prefix => '零頭歸屬：';
 
 	/// zh-TW: '{winnerName}總金額變更至{prefix} {total}'
 	String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額變更至${prefix} ${total}';
@@ -802,8 +802,8 @@ class TranslationsD11RandomResultZhTw {
 
 	// Translations
 
-	/// zh-TW: '餘額輪盤得主'
-	String get title => '餘額輪盤得主';
+	/// zh-TW: '零頭得主'
+	String get title => '零頭得主';
 
 	/// zh-TW: '略過'
 	String get skip => '略過';
@@ -1238,6 +1238,9 @@ class TranslationsCommonRemainderRuleZhTw {
 
 	/// zh-TW: '零頭 {amount} 將存入零頭罐,結算時分配'
 	String message_remainder({required Object amount}) => '零頭 ${amount} 將存入零頭罐,結算時分配';
+
+	/// zh-TW: '零頭 {amount} 已與支付匯差自動抵銷'
+	String message_zero_balance({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷';
 }
 
 // Path: common.split_method
@@ -1776,8 +1779,8 @@ class TranslationsS30SettlementConfirmWarningZhTw {
 
 	// Translations
 
-	/// zh-TW: '餘額將於下一步結算完成後揭曉！'
-	String get random_reveal => '餘額將於下一步結算完成後揭曉！';
+	/// zh-TW: '零頭歸屬將於下一步結算完成後揭曉！'
+	String get random_reveal => '零頭歸屬將於下一步結算完成後揭曉！';
 }
 
 // Path: S30_settlement_confirm.list_item
@@ -1797,11 +1800,11 @@ class TranslationsS30SettlementConfirmListItemZhTw {
 	/// zh-TW: '本金'
 	String get principal => '本金';
 
-	/// zh-TW: '隨機餘額'
-	String get random_remainder => '隨機餘額';
+	/// zh-TW: '隨機零頭'
+	String get random_remainder => '隨機零頭';
 
-	/// zh-TW: '餘額'
-	String get remainder => '餘額';
+	/// zh-TW: '零頭'
+	String get remainder => '零頭';
 }
 
 // Path: S31_settlement_payment_info.buttons
@@ -2714,6 +2717,7 @@ extension on Translations {
 			'common.remainder_rule.description.order' => '依照成員加入的順序，將零頭依序分配，直到分完為止。',
 			'common.remainder_rule.description.member' => '指定一位特定的成員，固定由他/她來吸收所有的零頭。',
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => '零頭 ${amount} 將存入零頭罐,結算時分配',
+			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷',
 			'common.split_method.even' => '平均分攤',
 			'common.split_method.percent' => '比例分攤',
 			'common.split_method.exact' => '指定金額',
@@ -2888,14 +2892,14 @@ extension on Translations {
 			'S30_settlement_confirm.buttons.next' => '收款設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '確認金額',
 			'S30_settlement_confirm.steps.payment_info' => '收款設定',
-			'S30_settlement_confirm.warning.random_reveal' => '餘額將於下一步結算完成後揭曉！',
+			'S30_settlement_confirm.warning.random_reveal' => '零頭歸屬將於下一步結算完成後揭曉！',
 			'S30_settlement_confirm.label_payable' => '應付',
 			'S30_settlement_confirm.label_refund' => '可退',
 			'S30_settlement_confirm.list_item.merged_label' => '合併',
 			'S30_settlement_confirm.list_item.includes' => '包含：',
 			'S30_settlement_confirm.list_item.principal' => '本金',
-			'S30_settlement_confirm.list_item.random_remainder' => '隨機餘額',
-			'S30_settlement_confirm.list_item.remainder' => '餘額',
+			'S30_settlement_confirm.list_item.random_remainder' => '隨機零頭',
+			'S30_settlement_confirm.list_item.remainder' => '零頭',
 			'S31_settlement_payment_info.title' => '收款資訊',
 			'S31_settlement_payment_info.setup_instruction' => '收款資訊僅供本次結算使用。預設資料加密儲存於本機。',
 			'S31_settlement_payment_info.sync_save' => '儲存為預設收款資訊 (存在手機)',
@@ -2905,7 +2909,7 @@ extension on Translations {
 			'S32_settlement_result.title' => '結算成功',
 			'S32_settlement_result.content' => '所有帳目已核對無誤。請將結果分享給成員以進行付款。',
 			'S32_settlement_result.waiting_reveal' => '等待揭曉...',
-			'S32_settlement_result.remainder_winner_prefix' => '餘額歸屬：',
+			'S32_settlement_result.remainder_winner_prefix' => '零頭歸屬：',
 			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額變更至${prefix} ${total}',
 			'S32_settlement_result.total_label' => '本次結算總額',
 			'S32_settlement_result.buttons.share' => '發送結算通知',
@@ -2993,7 +2997,7 @@ extension on Translations {
 			'D10_RecordDelete_Confirm.delete_record_title' => '刪除紀錄？',
 			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '確定要刪除 ${title} (${amount}) 嗎？',
 			'D10_RecordDelete_Confirm.deleted_success' => '紀錄已刪除',
-			'D11_random_result.title' => '餘額輪盤得主',
+			'D11_random_result.title' => '零頭得主',
 			'D11_random_result.skip' => '略過',
 			'D11_random_result.winner_reveal' => '就是你了！',
 			'D11_random_result.buttons.close' => '確定',

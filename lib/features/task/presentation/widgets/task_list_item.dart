@@ -37,80 +37,86 @@ class TaskListItem extends StatelessWidget {
           '${dateFormat.format(task.startDate!)} - ${dateFormat.format(task.endDate!)}';
     }
 
-    final bool isSettled = task.status == 'settled';
+    // final bool isSettled = task.status == 'settled';
 
     // 3. 卡片本體
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  CommonAvatar(
-                      avatarId: myMemberData['avatar'],
-                      name: myMemberData['displayName'],
-                      isLinked: myMemberData['isLinked'] ?? false),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          task.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        // 日期顯示
-                        Text(
-                          periodText,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.chevron_right,
-                      color: colorScheme.onSurfaceVariant),
-                ],
-              ),
-            ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      constraints: const BoxConstraints(minHeight: 64), // 上下留白，讓背景透出來
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface, // 純白背景
+        borderRadius: BorderRadius.circular(16), // 精緻圓角
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            offset: const Offset(0, 2),
+            blurRadius: 4,
           ),
-          if (isSettled)
-            Positioned(
-              top: 0,
-              right: 0,
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(16),
               child: Container(
+                constraints: const BoxConstraints(minHeight: 48),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: colorScheme.primary, // 藍底
-                  borderRadius: const BorderRadius.only(
-                    // 左下角做圓角設計，右上角不需要設定(因為被 Card 裁切了)
-                    bottomLeft: Radius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  t.S10_Home_TaskList.label_settlement,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onPrimary, // 白字
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    CommonAvatar(
+                        avatarId: myMemberData['avatar'],
+                        name: myMemberData['displayName'],
+                        isLinked: myMemberData['isLinked'] ?? false),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            task.name,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          // 日期顯示
+                          Text(
+                            periodText,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right,
+                        color: colorScheme.onSurfaceVariant),
+                  ],
                 ),
               ),
             ),
-        ],
+            // if (isSettled)
+            //   Positioned(
+            //     top: 4,
+            //     right: 16,
+            //     child: Text(
+            //       t.S10_Home_TaskList.label_settlement,
+            //       style: theme.textTheme.labelSmall?.copyWith(
+            //         color: colorScheme.onSurfaceVariant, // 白字
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 10,
+            //       ),
+            //     ),
+            //   ),
+          ],
+        ),
       ),
     );
   }

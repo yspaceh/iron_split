@@ -91,7 +91,8 @@
         "order": "メンバーの参加順に、端数がなくなるまで順番に配分します。",
         "member": "特定のメンバーを指定し、常にその人が端数を負担するようにします。"
       },
-      "message_remainder": "残額 {amount} は残高ポットに保存され、精算時に分配されます"
+      "message_remainder": "残額 {amount} は残高ポットに保存され、精算時に分配されます",
+      "message_zero_balance": "残額 {amount} は支払い差額と自動的に相殺されました"
     },
     "split_method": {
       "even": "均等",

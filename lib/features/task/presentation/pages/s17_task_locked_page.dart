@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/widgets/retention_banner.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -30,6 +32,7 @@ class S17TaskLockedPage extends StatelessWidget {
       create: (context) => S17TaskLockedViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
       ),
       child: const _S17Content(),
     );
@@ -45,11 +48,17 @@ class _S17Content extends StatelessWidget {
     final vm = context.watch<S17TaskLockedViewModel>();
     final t = Translations.of(context);
 
-    void onDownload(BuildContext context) {
-      // TODO: Implement Download Logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Download (TODO)")),
-      );
+    Future<void> onDownload(BuildContext context) async {
+      try {
+        // 呼叫 VM 的匯出方法
+        // await vm.exportSettlementRecord();
+        await vm.exportSettlementRecord();
+      } catch (e) {
+        if (context.mounted) {
+          AppToast.showError(
+              context, t.common.error_prefix(message: "Failed to export: $e"));
+        }
+      }
     }
 
     Future<void> onShareTap() async {

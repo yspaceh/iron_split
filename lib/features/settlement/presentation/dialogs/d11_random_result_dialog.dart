@@ -1,6 +1,7 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For Haptics
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart'; //  用於存取自定義顏色
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -75,8 +76,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final int targetIndex =
         (targetRound * widget.members.length) + safeWinnerIndex;
 
-    debugPrint(
-        "[D11] Winner: ${widget.winnerId}, TargetIndex: $targetIndex"); // [LOG]
+    debugPrint("[D11] Winner: ${widget.winnerId}, TargetIndex: $targetIndex");
 
     _scrollController = FixedExtentScrollController(initialItem: 0);
 
@@ -152,12 +152,6 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     });
   }
 
-  void _onSkip() {
-    // 立即停止動畫，跳到結果
-    _scrollController.jumpToItem(_scrollController.selectedItem);
-    Navigator.of(context).pop();
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -172,25 +166,22 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final colorScheme = theme.colorScheme;
 
     // 單一 Item 高度
-    const double itemHeight = 150.0;
-    const double viewportHeight = 200.0; // 可視區域高度
+    const double itemHeight = 180.0;
 
     return CommonAlertDialog(
-      title: _isSpinning
-          ? t.D11_random_result.title
-          : t.D11_random_result.winner_reveal,
+      title: t.D11_random_result.title,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // [修改] 滾輪區域容器
           Container(
-            height: viewportHeight,
+            height: itemHeight,
             width: double.maxFinite,
             decoration: BoxDecoration(
               color: colorScheme.surface, // [修改] 淺灰跑道背景
               borderRadius: BorderRadius.circular(20),
             ),
-            clipBehavior: Clip.antiAlias,
+            clipBehavior: Clip.hardEdge,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -201,7 +192,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: colorScheme.onSurfaceVariant
-                        .withValues(alpha: 0.2), // [修改] 純白背景
+                        .withValues(alpha: 0.1), // [修改] 純白背景
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -227,52 +218,52 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                           Colors.black,
                           Colors.transparent, // 下方透明
                         ],
-                        stops: const [
-                          0.0,
-                          0.2, // 從 25% 開始顯示 (上下各留白 1/4)
-                          0.8, // 到 75% 結束
-                          1.0,
-                        ],
+                        stops: const [0.0, 0.2, 0.8, 1.0],
                       ).createShader(bounds);
                     },
                     blendMode: BlendMode.dstIn,
-                    child: ListWheelScrollView.useDelegate(
-                      controller: _scrollController,
-                      itemExtent: itemHeight,
-                      perspective: 0.002, // [修改] 更扁平的透視感
-                      diameterRatio: 1.5,
-                      physics: const NeverScrollableScrollPhysics(),
-                      childDelegate: ListWheelChildBuilderDelegate(
-                        childCount: _displayList.length,
-                        builder: (context, index) {
-                          if (index < 0 || index >= _displayList.length) {
-                            return null;
-                          }
-                          final member = _displayList[index];
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CommonAvatar(
-                                  avatarId: member.avatar,
-                                  name: member.displayName,
-                                  isLinked: member.isLinked,
-                                  radius: 36, // [修改] 適中大小
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  member.displayName,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w600,
+                    child: RepaintBoundary(
+                      child: ListWheelScrollView.useDelegate(
+                        controller: _scrollController,
+                        itemExtent: itemHeight,
+                        renderChildrenOutsideViewport: false,
+                        perspective: 0.002, // [修改] 更扁平的透視感
+                        diameterRatio: 1.5,
+                        physics: const NeverScrollableScrollPhysics(),
+                        clipBehavior: Clip.hardEdge,
+                        childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: _displayList.length,
+                          builder: (context, index) {
+                            if (index < 0 || index >= _displayList.length) {
+                              return null;
+                            }
+                            final member = _displayList[index];
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CommonAvatar(
+                                    avatarId: member.avatar,
+                                    name: member.displayName,
+                                    isLinked: member.isLinked,
+                                    radius: 48, // [修改] 適中大小
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    member.displayName,
+                                    style:
+                                        theme.textTheme.titleMedium?.copyWith(
+                                      color: colorScheme.onSurface,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -300,29 +291,15 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
               ],
             ),
           ),
-
-          // [修改] Skip 按鈕移到下方
-          if (_isSpinning)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: TextButton(
-                onPressed: _onSkip,
-                style: TextButton.styleFrom(
-                  foregroundColor: colorScheme.onSurfaceVariant, // 灰色文字
-                ),
-                child: Text(t.D11_random_result.skip),
-              ),
-            ),
         ],
       ),
       // Actions 只保留關閉按鈕 (動畫結束後顯示)
       actions: [
-        if (!_isSpinning)
-          AppButton(
-            text: t.D11_random_result.buttons.close,
-            type: AppButtonType.primary,
-            onPressed: () => Navigator.pop(context),
-          ),
+        AppButton(
+          text: t.D11_random_result.buttons.close,
+          type: AppButtonType.primary,
+          onPressed: !_isSpinning ? () => context.pop() : null,
+        ),
       ],
     );
   }

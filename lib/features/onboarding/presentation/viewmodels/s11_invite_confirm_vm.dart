@@ -1,83 +1,134 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
+import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 
 class S11InviteConfirmViewModel extends ChangeNotifier {
-  final OnboardingService _service;
+  final InviteRepository _inviteRepo;
 
-  // UI States
+  // State
   bool _isLoading = true;
   bool _isJoining = false;
-  Map<String, dynamic>? _taskData;
+  String? _errorCode; // 用於 UI 顯示錯誤 Dialog
 
-  // Ghost Logic
+  // Data
+  String _inviteCode = '';
+  Map<String, dynamic>? _taskData;
   List<Map<String, dynamic>> _ghosts = [];
+  bool _isAutoAssign = true; // Scenario A vs B
+
+  // Selection
   String? _selectedGhostId;
-  bool _isAutoAssign = true;
 
   // Getters
   bool get isLoading => _isLoading;
   bool get isJoining => _isJoining;
-  Map<String, dynamic>? get taskData => _taskData;
+  String? get errorCode => _errorCode;
+
+  String get taskName => _taskData?['taskName'] ?? '';
+  String get currencyCode => _taskData?['baseCurrency'] ?? 'TWD'; // Default
+
+  // Ghost List Logic
   List<Map<String, dynamic>> get ghosts => _ghosts;
   String? get selectedGhostId => _selectedGhostId;
-  bool get isAutoAssign => _isAutoAssign;
+  bool get showGhostSelection => !_isAutoAssign && _ghosts.isNotEmpty;
 
-  // 根據 autoAssign 與選擇狀態決定按鈕是否啟用
-  bool get canConfirm => _isAutoAssign || _selectedGhostId != null;
+  // Button Enable State
+  bool get canConfirm {
+    if (_isAutoAssign) return true; // 直接加入模式，隨時可按
+    return _selectedGhostId != null; // 選擇模式，必須選一個
+  }
 
-  S11InviteConfirmViewModel({required OnboardingService service})
-      : _service = service;
+  S11InviteConfirmViewModel({
+    required InviteRepository inviteRepo,
+  }) : _inviteRepo = inviteRepo;
 
-  Future<void> loadPreview(String code,
-      {required Function(String code, String? msg, dynamic details)
-          onError}) async {
+  // 初始化：載入預覽資訊
+  Future<void> init(String code) async {
+    _inviteCode = code;
     _isLoading = true;
+    _errorCode = null;
     notifyListeners();
 
     try {
-      final result = await _service.analyzeInvite(code);
-      _taskData = result.taskData;
-      _ghosts = result.ghosts;
-      _isAutoAssign = result.isAutoAssign;
-      _selectedGhostId = null; // 重置選擇
+      // 1. 呼叫 Repository 取得預覽
+      final result = await _inviteRepo.previewInviteCode(code);
+
+      _taskData = result['taskData'] as Map<String, dynamic>?;
+
+      // 處理 Ghost List
+      if (result['ghosts'] is List) {
+        _ghosts = List<Map<String, dynamic>>.from(result['ghosts']);
+      }
+
+      // 判斷是否為自動分配 (如果沒有 ghosts 或是後端回傳特定 flag)
+      // 這裡假設：如果有 ghosts 就要選，沒有就直接加入
+      _isAutoAssign = _ghosts.isEmpty;
     } catch (e) {
-      // 這裡簡化錯誤傳遞，實際專案可解析 FirebaseException
-      // TODO: handle error
-      onError('UNKNOWN', e.toString(), null);
+      // 解析錯誤代碼
+      _errorCode = _parseError(e);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  void selectGhost(String? ghostId) {
+  void selectGhost(String ghostId) {
+    if (_selectedGhostId == ghostId) return;
     _selectedGhostId = ghostId;
     notifyListeners();
   }
 
-  Future<void> joinTask(String code,
-      {required Function(String taskId) onSuccess,
-      required Function(String code, String? msg, dynamic details)
-          onError}) async {
+  // 確認加入
+  Future<void> confirmJoin({
+    required VoidCallback onSuccess,
+    required Function(String code) onError,
+  }) async {
     if (_isJoining) return;
-
     _isJoining = true;
     notifyListeners();
 
     try {
-      final taskId = await _service.confirmJoin(
-        code: code,
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
+
+      // 呼叫 Repository 加入
+      await _inviteRepo.joinTask(
+        code: _inviteCode,
+        displayName: user.displayName ?? 'New Member',
         targetMemberId: _selectedGhostId,
       );
-      onSuccess(taskId);
+
+      onSuccess();
     } catch (e) {
-      // TODO: handle error
-      // 這裡可以解析 e 來決定傳什麼 error code
-      // 暫時傳遞原始錯誤訊息，由 UI 轉譯
-      onError('UNKNOWN', e.toString(), null);
+      final code = _parseError(e);
+      onError(code);
     } finally {
       _isJoining = false;
       notifyListeners();
     }
+  }
+
+  String _parseError(dynamic e) {
+    final msg = e.toString();
+
+    // 優先匹配後端可能回傳的特定字串
+    if (msg.contains('TASK_FULL') || msg.contains('failed-precondition')) {
+      return AppErrorCodes.inviteTaskFull;
+    }
+    if (msg.contains('EXPIRED') || msg.contains('deadline-exceeded')) {
+      return AppErrorCodes.inviteExpired;
+    }
+    if (msg.contains('INVALID') || msg.contains('not-found')) {
+      return AppErrorCodes.inviteInvalid;
+    }
+    if (msg.contains('ALREADY') || msg.contains('already-exists')) {
+      return AppErrorCodes.inviteAlreadyJoined;
+    }
+    if (msg.contains('AUTH') || msg.contains('unauthenticated')) {
+      return AppErrorCodes.inviteAuthRequired;
+    }
+
+    return AppErrorCodes.unknown; // 回傳預設未知錯誤
   }
 }

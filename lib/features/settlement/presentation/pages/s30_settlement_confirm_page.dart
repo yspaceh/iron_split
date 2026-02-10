@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/settlement/presentation/bottom_sheets/b04_payment_merge_bottom_sheet.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/step_dots.dart';
@@ -64,7 +65,6 @@ class _S30Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
 
     // 使用 watch 監聽變化
     final vm = context.watch<S30SettlementConfirmViewModel>();
@@ -181,33 +181,48 @@ class _S30Content extends StatelessWidget {
                 child: Column(
                   children: [
                     // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: GroupBalanceCard(
-                        isSettlement: true,
-                        state: vm.balanceState,
-                        onCurrencyTap: () => showCurrencyPicker(context, vm),
-                        onRuleTap: vm.balanceState.remainder > 0
-                            ? () => onRemainderRuleChange(vm)
-                            : null,
-                      ),
+                    GroupBalanceCard(
+                      isSettlement: true,
+                      state: vm.balanceState,
+                      onCurrencyTap: () => showCurrencyPicker(context, vm),
+                      onRuleTap: vm.balanceState.remainder > 0
+                          ? () => onRemainderRuleChange(vm)
+                          : null,
                     ),
 
                     // 3. 隨機模式提示
-                    if (vm.remainderRule == RemainderRuleConstants.random &&
-                        vm.balanceState.remainder > 0)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: InfoBar(
-                          icon: Icons.savings_outlined,
-                          text: Text(
-                            t.S30_settlement_confirm.warning.random_reveal,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: theme.colorScheme.onTertiaryContainer),
-                          ),
+                    if (vm.balanceState.poolBalance != 0) ...[
+                      InfoBar(
+                        icon: Icons.wallet_outlined,
+                        text: Text(
+                          "${t.S13_Task_Dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
                         ),
                       ),
+                    ] else if (vm.remainderRule ==
+                            RemainderRuleConstants.random &&
+                        vm.balanceState.remainder.abs() > 0) ...[
+                      InfoBar(
+                        icon: Icons.savings_outlined,
+                        text: Text(
+                          t.S30_settlement_confirm.warning.random_reveal,
+                        ),
+                      ),
+                    ] else ...[
+                      const SizedBox(height: 16),
+                    ],
+
+                    // 3. 隨機模式提示
+                    if (vm.remainderRule == RemainderRuleConstants.random &&
+                        vm.balanceState.remainder.abs() > 0) ...[
+                      InfoBar(
+                        icon: Icons.savings_outlined,
+                        text: Text(
+                          t.S30_settlement_confirm.warning.random_reveal,
+                        ),
+                      ),
+                    ] else ...[
+                      const SizedBox(height: 16),
+                    ],
 
                     // 4. 成員列表
                     Expanded(

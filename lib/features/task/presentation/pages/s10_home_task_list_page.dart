@@ -61,69 +61,75 @@ class _S10Content extends StatelessWidget {
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),
-      body: Column(
-        children: [
-          // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            // [修正] 改用 CustomSlidingSegment
-            child: CustomSlidingSegment<int>(
-              selectedValue: vm.filterIndex,
-              onValueChanged: (val) => vm.setFilter(val),
-              segments: {
-                0: t.S10_Home_TaskList.tab_in_progress,
-                1: t.S10_Home_TaskList.tab_completed,
-              },
-            ),
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                // [修正] 改用 CustomSlidingSegment
+                child: CustomSlidingSegment<int>(
+                  selectedValue: vm.filterIndex,
+                  onValueChanged: (val) => vm.setFilter(val),
+                  segments: {
+                    0: t.S10_Home_TaskList.tab_in_progress,
+                    1: t.S10_Home_TaskList.tab_completed,
+                  },
+                ),
+              ),
 
-          // 2. 任務列表
-          Expanded(
-            child: vm.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : vm.displayTasks.isEmpty
-                    ? Center(
-                        child: Text(
-                          vm.filterIndex == 0
-                              ? t.S10_Home_TaskList.empty_in_progress
-                              : t.S10_Home_TaskList.empty_completed,
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.only(
-                            top: 8, bottom: 80), // 底部留白給 FAB
-                        itemCount: vm.displayTasks.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          final task = vm.displayTasks[index];
-                          // 使用 TaskListItem (已修正邏輯)
-                          return TaskListItem(
-                            task: task,
-                            currentUserId: vm.currentUserId, // 傳入 uid 找頭像
-                            isCaptain: vm.isCaptain(task),
-                            onTap: () {
-                              switch (task.status) {
-                                case 'ongoing':
-                                case 'pending':
-                                  context.pushNamed('S13', pathParameters: {
-                                    'taskId': task.id,
-                                  });
-                                  break;
-                                case 'settled':
-                                case 'closed':
-                                  context.pushNamed('S17', pathParameters: {
-                                    'taskId': task.id,
-                                  });
-                                  break;
-                                default:
-                              }
+              // 2. 任務列表
+              Expanded(
+                child: vm.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : vm.displayTasks.isEmpty
+                        ? Center(
+                            child: Text(
+                              vm.filterIndex == 0
+                                  ? t.S10_Home_TaskList.empty_in_progress
+                                  : t.S10_Home_TaskList.empty_completed,
+                            ),
+                          )
+                        : ListView.separated(
+                            padding: const EdgeInsets.only(
+                                top: 8, bottom: 80), // 底部留白給 FAB
+                            itemCount: vm.displayTasks.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 4),
+                            itemBuilder: (context, index) {
+                              final task = vm.displayTasks[index];
+                              // 使用 TaskListItem (已修正邏輯)
+                              return TaskListItem(
+                                task: task,
+                                currentUserId: vm.currentUserId, // 傳入 uid 找頭像
+                                isCaptain: vm.isCaptain(task),
+                                onTap: () {
+                                  switch (task.status) {
+                                    case 'ongoing':
+                                    case 'pending':
+                                      context.pushNamed('S13', pathParameters: {
+                                        'taskId': task.id,
+                                      });
+                                      break;
+                                    case 'settled':
+                                    case 'closed':
+                                      context.pushNamed('S17', pathParameters: {
+                                        'taskId': task.id,
+                                      });
+                                      break;
+                                    default:
+                                  }
+                                },
+                                onDelete: () => vm.deleteTask(task.id),
+                              );
                             },
-                            onDelete: () => vm.deleteTask(task.id),
-                          );
-                        },
-                      ),
+                          ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

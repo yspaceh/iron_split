@@ -91,7 +91,8 @@
         "order": "依照成員加入的順序，將零頭依序分配，直到分完為止。",
         "member": "指定一位特定的成員，固定由他/她來吸收所有的零頭。"
       },
-      "message_remainder": "零頭 {amount} 將存入零頭罐,結算時分配"
+      "message_remainder": "零頭 {amount} 將存入零頭罐,結算時分配",
+      "message_zero_balance": "零頭 {amount} 已與支付匯差自動抵銷"
     },
     "split_method": {
       "even": "平均分攤",
@@ -201,8 +202,6 @@
     "identity_match_desc": "此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。",
     "status_linking": "將以「連結帳號」方式加入",
     "status_new_member": "將以「新成員」身分加入",
-    "error_join_failed": "加入失敗：{message}",
-    "error_generic": "發生錯誤：{message}",
     "label_select_ghost": "選擇要繼承的成員",
     "label_prepaid": "已墊付",
     "label_expense": "應分攤"
@@ -366,7 +365,7 @@
       "payment_info": "收款設定"
     },
     "warning": {
-      "random_reveal": "餘額將於下一步結算完成後揭曉！"
+      "random_reveal": "零頭歸屬將於下一步結算完成後揭曉！"
     },
     "label_payable": "應付",
     "label_refund": "可退",
@@ -374,8 +373,8 @@
       "merged_label": "合併",
       "includes": "包含：",
       "principal": "本金",
-      "random_remainder": "隨機餘額",
-      "remainder": "餘額"
+      "random_remainder": "隨機零頭",
+      "remainder": "零頭"
     }
   },
   "S31_settlement_payment_info": {
@@ -392,7 +391,7 @@
     "title": "結算成功",
     "content": "所有帳目已核對無誤。請將結果分享給成員以進行付款。",
     "waiting_reveal": "等待揭曉...",
-    "remainder_winner_prefix": "餘額歸屬：",
+    "remainder_winner_prefix": "零頭歸屬：",
     "remainder_winner_total": "{winnerName}總金額變更至{prefix} {total}",
     "total_label": "本次結算總額",
     "buttons": {
@@ -544,7 +543,7 @@
     "deleted_success": "紀錄已刪除"
   },
   "D11_random_result": {
-    "title": "餘額輪盤得主",
+    "title": "零頭得主",
     "skip": "略過",
     "winner_reveal": "就是你了！",
     "buttons": {
@@ -681,7 +680,8 @@
       "delete_failed": "刪除失敗，請稍後再試",
       "rate_fetch_failed": "為替レートの更新失敗",
       "length_exceeded": "最多 {max} 個字",
-      "invalid_char": "包含無效字元"
+      "invalid_char": "包含無效字元",
+      "join_failed": "加入失敗：{message}"
     }
   }
 }

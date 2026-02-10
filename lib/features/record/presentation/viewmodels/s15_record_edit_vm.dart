@@ -131,37 +131,83 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   /// 計算總零頭 (Single Source of Truth)
   /// 供 UI 顯示與 saveRecord 存檔使用，確保兩者一致
-  double get calculatedTotalRemainder {
-    final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
-    double totalRemainder = 0.0;
+  // double get calculatedTotalRemainder {
+  //   final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
+  //   double totalRemainder = 0.0;
 
-    // 1. 計算已加入的 Details
-    for (var detail in _details) {
-      final result = BalanceCalculator.calculateSplit(
-          totalAmount: detail.amount,
-          exchangeRate: rate,
-          splitMethod: detail.splitMethod,
-          memberIds: detail.splitMemberIds,
-          details: detail.splitDetails ?? {},
-          baseCurrency: baseCurrency);
-      totalRemainder += result.remainder;
-    }
+  //   // 1. 計算已加入的 Details
+  //   for (var detail in _details) {
+  //     final result = BalanceCalculator.calculateSplit(
+  //         totalAmount: detail.amount,
+  //         exchangeRate: rate,
+  //         splitMethod: detail.splitMethod,
+  //         memberIds: detail.splitMemberIds,
+  //         details: detail.splitDetails ?? {},
+  //         baseCurrency: baseCurrency);
+  //     totalRemainder += result.remainder;
+  //   }
 
-    // 2. 計算剩餘未分配的 Base Card
-    if (baseRemainingAmount > 0 || _details.isEmpty) {
-      final result = BalanceCalculator.calculateSplit(
-          totalAmount:
-              baseRemainingAmount > 0 ? baseRemainingAmount : totalAmount,
-          exchangeRate: rate,
-          splitMethod: _baseSplitMethod,
-          memberIds: _baseMemberIds,
-          details: _baseRawDetails,
-          baseCurrency: baseCurrency);
-      totalRemainder += result.remainder;
-    }
+  //   // 2. 計算剩餘未分配的 Base Card
+  //   if (baseRemainingAmount > 0 || _details.isEmpty) {
+  //     final result = BalanceCalculator.calculateSplit(
+  //         totalAmount:
+  //             baseRemainingAmount > 0 ? baseRemainingAmount : totalAmount,
+  //         exchangeRate: rate,
+  //         splitMethod: _baseSplitMethod,
+  //         memberIds: _baseMemberIds,
+  //         details: _baseRawDetails,
+  //         baseCurrency: baseCurrency);
+  //     totalRemainder += result.remainder;
+  //   }
 
-    // 修正精度
-    return BalanceCalculator.floorToPrecision(totalRemainder, baseCurrency);
+  //   // 修正精度
+  //   return BalanceCalculator.floorToPrecision(totalRemainder, baseCurrency);
+  // }
+
+  /// 提供給 UI 顯示的詳細零頭結構 (Consumer, Payer, Net)
+  /// 完全委派給 BalanceCalculator 計算，確保邏輯單一
+  RemainderDetail get remainderDetail {
+    final double exchangeRate =
+        double.tryParse(exchangeRateController.text) ?? 1.0;
+
+    // 1. 建構一個暫時的 RecordModel 用於計算
+    // 注意：這裡只填入計算所需的必要欄位
+    final tempRecord = RecordModel(
+      id: recordId ?? 'temp',
+      date: _selectedDate,
+      title: '',
+      type: _recordTypeIndex == 1 ? 'income' : 'expense',
+      categoryIndex: 0,
+      categoryId: _selectedCategoryId,
+
+      // 付款資訊
+      payerType: _recordTypeIndex == 1 ? 'none' : _payerType,
+      payerId:
+          (_recordTypeIndex == 0 && _payerType == 'member') ? _payerId : null,
+      paymentDetails: _recordTypeIndex == 1 ? null : _complexPaymentData,
+
+      // 金額與匯率
+      amount: totalAmount,
+      currencyCode: _selectedCurrencyConstants.code,
+      exchangeRate: exchangeRate,
+      remainder: 0, // 暫時填 0，不影響計算
+
+      // 分帳邏輯
+      splitMethod: _baseSplitMethod,
+      splitMemberIds: _baseMemberIds,
+      splitDetails: _baseRawDetails,
+
+      // 細項 (Income 沒有 details)
+      details: _recordTypeIndex == 1 ? [] : _details,
+
+      memo: '',
+      createdAt: DateTime.now(),
+      createdBy: '',
+    );
+
+    // 2. 呼叫 BalanceCalculator 的靜態方法
+    // 這是我們剛剛在 BalanceCalculator 新增的方法
+    return BalanceCalculator.calculateDetailedRemainder(tempRecord);
   }
 
   // Constructor
@@ -452,6 +498,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
       final double exchangeRate =
           double.tryParse(exchangeRateController.text) ?? 1.0;
+      final netRemainder = remainderDetail.net;
 
       // 2. 建構 RecordModel 物件 (完全對應您的 Model 定義)
       final newRecord = RecordModel(
@@ -478,7 +525,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         amount: totalAmount,
         currencyCode: _selectedCurrencyConstants.code,
         exchangeRate: exchangeRate,
-        remainder: calculatedTotalRemainder,
+        remainder: netRemainder,
 
         // 分帳邏輯
         splitMethod: _baseSplitMethod,
@@ -685,6 +732,37 @@ class S15RecordEditViewModel extends ChangeNotifier {
       weights[id] = ratio;
     }
     return weights;
+  }
+
+  /// [新增] 取得「校正後」的公款餘額
+  /// 用途：在編輯模式下，需把「原本這筆單據佔用的公款額度」加回來，
+  /// 這樣 B07 彈窗和 UI 顯示的餘額才會是「如果我不付這筆錢，錢包裡會有多少錢」。
+  Map<String, double> get adjustedPoolBalances {
+    // 1. 複製目前的餘額表
+    final Map<String, double> adjusted = Map.from(poolBalancesByCurrency);
+
+    // 2. 如果是新增模式 (沒有原始紀錄)，直接回傳當前餘額
+    if (_originalRecord == null) return adjusted;
+
+    // 3. 如果是編輯模式，檢查原單據是否使用了公款
+    final r = _originalRecord!;
+    final code = r.originalCurrencyCode;
+    double amountToAddBack = 0.0;
+
+    if (r.payerType == 'prepay') {
+      amountToAddBack = r.originalAmount;
+    } else if (r.payerType == 'mixed' && r.paymentDetails != null) {
+      amountToAddBack =
+          (r.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
+    }
+
+    // 4. 加回餘額
+    if (amountToAddBack > 0) {
+      final current = adjusted[code] ?? 0.0;
+      adjusted[code] = current + amountToAddBack;
+    }
+
+    return adjusted;
   }
 
   @override

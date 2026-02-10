@@ -756,6 +756,7 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 	@override late final _TranslationsCommonRemainderRuleRuleJaJp rule = _TranslationsCommonRemainderRuleRuleJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleDescriptionJaJp description = _TranslationsCommonRemainderRuleDescriptionJaJp._(_root);
 	@override String message_remainder({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます';
+	@override String message_zero_balance({required Object amount}) => '残額 ${amount} は支払い差額と自動的に相殺されました';
 }
 
 // Path: common.split_method
@@ -1810,6 +1811,7 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.description.order' => 'メンバーの参加順に、端数がなくなるまで順番に配分します。',
 			'common.remainder_rule.description.member' => '特定のメンバーを指定し、常にその人が端数を負担するようにします。',
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます',
+			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '残額 ${amount} は支払い差額と自動的に相殺されました',
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '割合',
 			'common.split_method.exact' => '金額指定',
