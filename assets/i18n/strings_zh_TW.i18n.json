@@ -484,15 +484,7 @@
     }
   },
   "D02_Invite_Result": {
-    "title": "加入失敗",
-    "buttons": {
-      "back": "回首頁"
-    },
-    "error_INVALID_CODE": "邀請碼無效，請確認連結是否正確。",
-    "error_EXPIRED_CODE": "邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。",
-    "error_TASK_FULL": "任務人數已滿 (上限 15 人)，無法加入。",
-    "error_AUTH_REQUIRED": "身分驗證失敗，請重新啟動 App。",
-    "error_UNKNOWN": "發生未知錯誤，請稍後再試。"
+    "title": "加入失敗"
   },
   "D03_TaskCreate_Confirm": {
     "title": "確認任務設定",
@@ -681,7 +673,10 @@
       "rate_fetch_failed": "為替レートの更新失敗",
       "length_exceeded": "最多 {max} 個字",
       "invalid_char": "包含無效字元",
-      "join_failed": "加入失敗：{message}"
+      "invalid_code": "邀請碼無效，請確認連結是否正確。",
+      "expired_code": "邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。",
+      "task_full": "任務人數已滿 (上限 15 人)，無法加入。",
+      "auth_required": "身分驗證失敗，請重新啟動 App。"
     }
   }
 }

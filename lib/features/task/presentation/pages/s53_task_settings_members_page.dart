@@ -12,6 +12,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
+        inviteRepo: context.read<InviteRepository>(),
       ),
       child: const _S53Content(),
     );
@@ -147,7 +149,7 @@ class _S53Content extends StatelessWidget {
         final taskName = task.name;
         final createdBy = task.createdBy;
         final membersMap = task.members;
-        final membersList = vm.getSortedMembers(task);
+        final membersList = task.sortedMembers;
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -164,6 +166,8 @@ class _S53Content extends StatelessWidget {
               final memberId = entry.key;
               final memberData = entry.value as Map<String, dynamic>;
               final bool isOwner = (memberId == createdBy);
+              final bool amICaptain = (vm.currentUserId == createdBy);
+
               final isLinked = memberData['status'] == 'linked' ||
                   (memberData['isLinked'] == true);
 
@@ -196,42 +200,44 @@ class _S53Content extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 2),
-                            child: Text(
-                              memberData['displayName'],
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                            child: Row(
+                              children: [
+                                Text(
+                                  memberData['displayName'],
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onSurface,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (isOwner) ...[
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    Icons.star, // 或 star_rounded
+                                    size: 22,
+                                    color: AppTheme.starGold,
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                           Row(
                             children: [
-                              SizedBox(
-                                child: isOwner
-                                    ? Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: Icon(
-                                          Icons.star, // 或 star_rounded
-                                          size: 22,
-                                          color: AppTheme.starGold,
-                                        ),
-                                      )
-                                    : InkWell(
-                                        onTap: () => _handleDelete(
-                                            context, vm, membersMap, memberId),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(
-                                            Icons.delete_outline,
-                                            color: theme.colorScheme.error,
-                                            size: 18,
-                                          ),
-                                        ),
-                                      ),
-                              ),
+                              if (amICaptain && !isOwner) ...[
+                                InkWell(
+                                  onTap: () => _handleDelete(
+                                      context, vm, membersMap, memberId),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Icon(
+                                      Icons.delete_outline,
+                                      color: theme.colorScheme.error,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
                               if (!isLinked) ...[
                                 const SizedBox(width: 8),
                                 Container(
@@ -305,8 +311,7 @@ class _S53Content extends StatelessWidget {
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.add,
                 type: AppButtonType.primary,
-                onPressed:
-                    vm.isProcessing ? null : () => vm.addMember(membersMap, t),
+                onPressed: vm.isProcessing ? null : () => vm.addMember(t, task),
               ),
             ],
           ),

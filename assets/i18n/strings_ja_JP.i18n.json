@@ -9,7 +9,7 @@
       "edit": "編集",
       "close": "閉じる",
       "discard": "破棄",
-      "keep_editing": "編集を続ける",
+      "keep_editing": "編集を続行",
       "refresh": "更新",
       "ok": "OK",
       "retry": "リトライ"
@@ -202,8 +202,6 @@
     "identity_match_desc": "このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。",
     "status_linking": "「アカウント連携」で参加します",
     "status_new_member": "「新規メンバー」として参加します",
-    "error_join_failed": "参加失敗: {message}",
-    "error_generic": "エラー: {message}",
     "label_select_ghost": "引き継ぐメンバーを選択",
     "label_prepaid": "立替",
     "label_expense": "支出"
@@ -485,15 +483,7 @@
     }
   },
   "D02_Invite_Result": {
-    "title": "参加失敗",
-    "buttons": {
-      "back": "ホームへ戻る"
-    },
-    "error_INVALID_CODE": "招待コードが無効です。リンクが正しいか確認してください。",
-    "error_EXPIRED_CODE": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
-    "error_TASK_FULL": "定員オーバーです（上限15名）。参加できません。",
-    "error_AUTH_REQUIRED": "認証に失敗しました。アプリを再起動してください。",
-    "error_UNKNOWN": "不明なエラーが発生しました。後ほどお試しください。"
+    "title": "参加失敗"
   },
   "D03_TaskCreate_Confirm": {
     "title": "設定の確認",
@@ -681,7 +671,11 @@
       "delete_failed": "削除に失敗しました。しばらくしてから再試行してください",
       "rate_fetch_failed": "為替レートを",
       "length_exceeded": "{max}文字以内で入力してください",
-      "invalid_char": "無効な文字が含まれています"
+      "invalid_char": "無効な文字が含まれています",
+      "invalid_code": "招待コードが無効です。リンクが正しいか確認してください。",
+      "expired_code": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
+      "task_full": "定員オーバーです（上限15名）。参加できません。",
+      "auth_required": "認証に失敗しました。アプリを再起動してください。"
     }
   }
 }

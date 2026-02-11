@@ -8,6 +8,8 @@ import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart'; // 新增
+import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -21,6 +23,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   final DashboardService _service;
   final String taskId;
   final String currentUserId;
+  late final RecordService _recordService;
 
   TaskModel? _task;
   List<RecordModel> _records = [];
@@ -112,7 +115,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     required DashboardService service,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        _service = service;
+        _service = service {
+    _recordService = RecordService(_recordRepo, _taskRepo);
+  }
 
   void init() {
     _isLoading = true;
@@ -148,12 +153,14 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     _personalRecords =
         _service.filterPersonalRecords(_records, currentUserId, baseCurrency);
     _personalGroupedRecords = _service.groupRecordsByDate(_personalRecords);
-    _personalNetBalance = _service.calculatePersonalNetBalance(
-        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
-    _personalTotalExpense = _service.calculatePersonalDebit(
-        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
-    _personalTotalIncome = _service.calculatePersonalCredit(
-        allRecords: _records, uid: currentUserId, baseCurrency: baseCurrency);
+    final memberData =
+        _task!.members[currentUserId] as Map<String, dynamic>? ?? {};
+    final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
+    final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+
+    _personalTotalExpense = DualAmount(original: 0, base: expense);
+    _personalTotalIncome = DualAmount(original: 0, base: prepaid);
+    _personalNetBalance = DualAmount(original: 0, base: prepaid - expense);
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
     final startDate = _task!.startDate ?? DateTime.now();
@@ -350,7 +357,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       }
 
       // 2. 呼叫 Repository 執行刪除
-      await _recordRepo.deleteRecord(taskId, recordId);
+      await _recordService.deleteRecord(taskId, record);
 
       // 3. 寫入 Activity Log
       await ActivityLogService.log(
@@ -377,6 +384,16 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     } catch (e) {
       // TODO: handle error
       return false;
+    }
+  }
+
+  DualAmount getPersonalRecordDisplayAmount(RecordModel record) {
+    if (record.type == 'income') {
+      return BalanceCalculator.calculatePersonalCredit(
+          record, currentUserId, baseCurrency);
+    } else {
+      return BalanceCalculator.calculatePersonalDebit(
+          record, currentUserId, baseCurrency);
     }
   }
 

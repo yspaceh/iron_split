@@ -239,12 +239,6 @@ class TranslationsS11InviteConfirmZhTw {
 	/// zh-TW: '將以「新成員」身分加入'
 	String get status_new_member => '將以「新成員」身分加入';
 
-	/// zh-TW: '加入失敗：{message}'
-	String error_join_failed({required Object message}) => '加入失敗：${message}';
-
-	/// zh-TW: '發生錯誤：{message}'
-	String error_generic({required Object message}) => '發生錯誤：${message}';
-
 	/// zh-TW: '選擇要繼承的成員'
 	String get label_select_ghost => '選擇要繼承的成員';
 
@@ -644,23 +638,6 @@ class TranslationsD02InviteResultZhTw {
 
 	/// zh-TW: '加入失敗'
 	String get title => '加入失敗';
-
-	late final TranslationsD02InviteResultButtonsZhTw buttons = TranslationsD02InviteResultButtonsZhTw.internal(_root);
-
-	/// zh-TW: '邀請碼無效，請確認連結是否正確。'
-	String get error_INVALID_CODE => '邀請碼無效，請確認連結是否正確。';
-
-	/// zh-TW: '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。'
-	String get error_EXPIRED_CODE => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。';
-
-	/// zh-TW: '任務人數已滿 (上限 15 人)，無法加入。'
-	String get error_TASK_FULL => '任務人數已滿 (上限 15 人)，無法加入。';
-
-	/// zh-TW: '身分驗證失敗，請重新啟動 App。'
-	String get error_AUTH_REQUIRED => '身分驗證失敗，請重新啟動 App。';
-
-	/// zh-TW: '發生未知錯誤，請稍後再試。'
-	String get error_UNKNOWN => '發生未知錯誤，請稍後再試。';
 }
 
 // Path: D03_TaskCreate_Confirm
@@ -1996,18 +1973,6 @@ class TranslationsD01MemberRoleIntroDescriptionZhTw {
 	String get reroll_empty => '機會已用完';
 }
 
-// Path: D02_Invite_Result.buttons
-class TranslationsD02InviteResultButtonsZhTw {
-	TranslationsD02InviteResultButtonsZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '回首頁'
-	String get back => '回首頁';
-}
-
 // Path: D03_TaskCreate_Confirm.buttons
 class TranslationsD03TaskCreateConfirmButtonsZhTw {
 	TranslationsD03TaskCreateConfirmButtonsZhTw.internal(this._root);
@@ -2291,6 +2256,18 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '包含無效字元'
 	String get invalid_char => '包含無效字元';
+
+	/// zh-TW: '邀請碼無效，請確認連結是否正確。'
+	String get invalid_code => '邀請碼無效，請確認連結是否正確。';
+
+	/// zh-TW: '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。'
+	String get expired_code => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。';
+
+	/// zh-TW: '任務人數已滿 (上限 15 人)，無法加入。'
+	String get task_full => '任務人數已滿 (上限 15 人)，無法加入。';
+
+	/// zh-TW: '身分驗證失敗，請重新啟動 App。'
+	String get auth_required => '身分驗證失敗，請重新啟動 App。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2790,8 +2767,6 @@ extension on Translations {
 			'S11_Invite_Confirm.identity_match_desc' => '此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。',
 			'S11_Invite_Confirm.status_linking' => '將以「連結帳號」方式加入',
 			'S11_Invite_Confirm.status_new_member' => '將以「新成員」身分加入',
-			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '加入失敗：${message}',
-			'S11_Invite_Confirm.error_generic' => ({required Object message}) => '發生錯誤：${message}',
 			'S11_Invite_Confirm.label_select_ghost' => '選擇要繼承的成員',
 			'S11_Invite_Confirm.label_prepaid' => '已墊付',
 			'S11_Invite_Confirm.label_expense' => '應分攤',
@@ -2965,12 +2940,6 @@ extension on Translations {
 			'D01_MemberRole_Intro.description.reroll_left' => '還有 1 次機會',
 			'D01_MemberRole_Intro.description.reroll_empty' => '機會已用完',
 			'D02_Invite_Result.title' => '加入失敗',
-			'D02_Invite_Result.buttons.back' => '回首頁',
-			'D02_Invite_Result.error_INVALID_CODE' => '邀請碼無效，請確認連結是否正確。',
-			'D02_Invite_Result.error_EXPIRED_CODE' => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。',
-			'D02_Invite_Result.error_TASK_FULL' => '任務人數已滿 (上限 15 人)，無法加入。',
-			'D02_Invite_Result.error_AUTH_REQUIRED' => '身分驗證失敗，請重新啟動 App。',
-			'D02_Invite_Result.error_UNKNOWN' => '發生未知錯誤，請稍後再試。',
 			'D03_TaskCreate_Confirm.title' => '確認任務設定',
 			'D03_TaskCreate_Confirm.buttons.confirm' => '確認',
 			'D03_TaskCreate_Confirm.buttons.back' => '返回編輯',
@@ -3076,6 +3045,10 @@ extension on Translations {
 			'error.message.rate_fetch_failed' => '為替レートの更新失敗',
 			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字',
 			'error.message.invalid_char' => '包含無效字元',
+			'error.message.invalid_code' => '邀請碼無效，請確認連結是否正確。',
+			'error.message.expired_code' => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。',
+			'error.message.task_full' => '任務人數已滿 (上限 15 人)，無法加入。',
+			'error.message.auth_required' => '身分驗證失敗，請重新啟動 App。',
 			_ => null,
 		};
 	}

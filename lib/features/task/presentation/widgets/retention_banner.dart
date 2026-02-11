@@ -23,11 +23,13 @@ class RetentionBanner extends StatelessWidget {
         children: [
           Icon(Icons.timer_outlined, size: 16, color: color),
           const SizedBox(width: 4),
-          Text(
-            t.S17_Task_Locked.retention_notice(days: days),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: color,
-              fontWeight: isUrgent ? FontWeight.bold : null,
+          Expanded(
+            child: Text(
+              t.S17_Task_Locked.retention_notice(days: days),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: color,
+                fontWeight: isUrgent ? FontWeight.bold : null,
+              ),
             ),
           ),
         ],

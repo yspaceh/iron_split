@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -55,6 +56,9 @@ void main() async {
         Provider<AuthRepository>(
           create: (_) => AuthRepository(),
         ),
+        Provider<InviteRepository>(
+          create: (_) => InviteRepository(),
+        ),
         Provider<OnboardingService>(
           create: (context) =>
               OnboardingService(authRepo: context.read<AuthRepository>()),
@@ -63,7 +67,8 @@ void main() async {
           create: (_) => DashboardService(),
         ),
         Provider<RecordService>(
-          create: (context) => RecordService(context.read<RecordRepository>()),
+          create: (context) => RecordService(
+              context.read<RecordRepository>(), context.read<TaskRepository>()),
         ),
         Provider<SettlementService>(
           create: (context) =>
@@ -106,10 +111,12 @@ class _IronSplitAppState extends State<IronSplitApp> {
     _deepLinkService.initialize();
 
     _linkSubscription = _deepLinkService.intentStream.listen((intent) {
+      debugPrint("🔥 [DeepLink] intercepted intent: $intent");
       if (!mounted) return;
 
       switch (intent) {
         case JoinTaskIntent(:final code):
+          debugPrint("🔥 [DeepLink] JoinTaskIntent Code: $code");
           // 儲存邀請碼至 Provider 中斷恢復機制
           context.read<PendingInviteProvider>().saveInvite(code);
 

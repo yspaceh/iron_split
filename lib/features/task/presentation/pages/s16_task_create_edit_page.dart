@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
@@ -25,6 +28,7 @@ class S16TaskCreateEditPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => S16TaskCreateEditViewModel(
         taskRepo: context.read<TaskRepository>(),
+        inviteRepo: context.read<InviteRepository>(),
       ),
       child: const _S16Content(),
     );
@@ -70,16 +74,13 @@ class _S16ContentState extends State<_S16Content> {
     FocusScope.of(context).unfocus();
 
     // 1. 顯示 D03 確認框 (純 UI)
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => D03TaskCreateConfirmDialog(
-        taskName: _nameController.text.trim(),
-        startDate: vm.startDate,
-        endDate: vm.endDate,
-        baseCurrency: vm.baseCurrency,
-        memberCount: vm.memberCount,
-      ),
+    final bool? confirmed = await D03TaskCreateConfirmDialog.show<bool>(
+      context,
+      taskName: _nameController.text.trim(),
+      startDate: vm.startDate,
+      endDate: vm.endDate,
+      baseCurrency: vm.baseCurrency,
+      memberCount: vm.memberCount,
     );
 
     // 2. 如果使用者確認
@@ -90,17 +91,16 @@ class _S16ContentState extends State<_S16Content> {
 
         if (result != null && mounted) {
           // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
-          if (result.inviteCode != null) {
+          if (result.inviteCode != null && context.mounted) {
             await TaskShareHelper.inviteMember(
               context: context,
-              taskId: result.taskId,
               taskName: _nameController.text.trim(),
-              existingCode: result.inviteCode, //  傳入 VM 拿到的 Code
+              inviteCode: result.inviteCode!,
             );
           }
 
           // 3. 導航到任務 Dashboard
-          if (mounted) {
+          if (context.mounted) {
             context.goNamed(
               'S13', // 請確認您的 Router name (例如 S13)
               pathParameters: {'taskId': result.taskId},
@@ -108,15 +108,9 @@ class _S16ContentState extends State<_S16Content> {
           }
         }
       } catch (e) {
-        // TODO: handle error
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(Translations.of(context)
-                    .common
-                    .error_prefix(message: e.toString()))),
-          );
-        }
+        if (!context.mounted) return;
+        final friendlyMessage = ErrorMapper.map(context, e.toString());
+        AppToast.showError(context, friendlyMessage);
       }
     }
   }

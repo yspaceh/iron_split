@@ -93,22 +93,19 @@ class TaskRepository {
   /// [taskData] 已經組裝好的任務資料 Map (包含 members)
   /// 回傳新建立的 Task ID
   Future<String> createTask(Map<String, dynamic> taskData) async {
+    final docRef = _firestore.collection('tasks').doc();
     // 確保時間戳記是 Server Time
-    taskData['createdAt'] = FieldValue.serverTimestamp();
-    taskData['updatedAt'] = FieldValue.serverTimestamp();
+    final members = taskData['members'] as Map<String, dynamic>;
+    final memberIds = members.keys.toList();
 
-    // 預設狀態
-    taskData['status'] = 'ongoing';
-    taskData['activeInviteCode'] = null;
-
-    // 3. [關鍵] 自動生成 memberIds 陣列以供查詢
-    // 假設 taskData['members'] 是一個 Map
-    if (taskData['members'] is Map) {
-      final membersMap = taskData['members'] as Map<String, dynamic>;
-      taskData['memberIds'] = membersMap.keys.toList();
-    }
-
-    final docRef = await _firestore.collection('tasks').add(taskData);
+    await docRef.set({
+      ...taskData,
+      'id': docRef.id,
+      'status': 'ongoing',
+      'memberIds': memberIds, // 自動生成索引陣elf
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
     return docRef.id;
   }
 
@@ -177,5 +174,34 @@ class TaskRepository {
       'settlement.receiverInfos': captainPaymentInfoJson,
       'updatedAt': FieldValue.serverTimestamp(), // 確保每次更新都有時間戳記
     });
+  }
+
+  /// 擴充成員：同步更新人數與索引
+  Future<void> addMemberToTask(
+      String taskId, String virtualId, Map<String, dynamic> memberData) async {
+    final taskRef = _firestore.collection('tasks').doc(taskId);
+
+    // 使用 Batch 確保原子性
+    final batch = _firestore.batch();
+    batch.update(taskRef, {
+      'members.$virtualId': memberData,
+      'memberIds': FieldValue.arrayUnion([virtualId]),
+      'memberCount': FieldValue.increment(1),
+      'maxMembers': FieldValue.increment(1),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    await batch.commit();
+  }
+
+  /// 將純數值的增量 Map 轉換為 Firestore 原子增量更新格式
+  Map<String, dynamic> buildBalanceIncrementData(
+      Map<String, double> increments) {
+    final Map<String, dynamic> updateData = {};
+    increments.forEach((field, value) {
+      updateData[field] = FieldValue.increment(value);
+    });
+    updateData['updatedAt'] = FieldValue.serverTimestamp();
+    return updateData;
   }
 }

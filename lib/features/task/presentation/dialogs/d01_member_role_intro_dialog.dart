@@ -22,6 +22,23 @@ class D01MemberRoleIntroDialog extends StatelessWidget {
     required this.canReroll,
   });
 
+  static Future<void> show(
+    BuildContext context, {
+    required String taskId,
+    required String initialAvatar,
+    required bool canReroll,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => D01MemberRoleIntroDialog(
+        taskId: taskId,
+        initialAvatar: initialAvatar,
+        canReroll: canReroll,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 使用 Provider 注入 VM

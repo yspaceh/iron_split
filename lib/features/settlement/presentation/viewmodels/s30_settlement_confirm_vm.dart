@@ -60,7 +60,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
 
   List<Map<String, dynamic>> get availableCandidatesForMerge {
     if (_task == null) return [];
-    return _task!.members.entries
+    return _task!.sortedMembers
         .map((e) => e.value as Map<String, dynamic>)
         .toList();
   }

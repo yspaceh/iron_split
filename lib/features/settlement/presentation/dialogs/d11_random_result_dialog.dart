@@ -26,7 +26,7 @@ class D11RandomResultDialog extends StatefulWidget {
   }) {
     return showDialog(
       context: context,
-      barrierDismissible: false, // 強制使用者看動畫或按 Skip
+      barrierDismissible: false,
       builder: (context) => D11RandomResultDialog(
         members: members,
         winnerId: winnerId,

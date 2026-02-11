@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -76,15 +77,12 @@ class _S13ContentState extends State<_S13Content> {
         final memberData = vm.task!.members[vm.currentUserId];
         if (memberData == null) return;
 
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => D01MemberRoleIntroDialog(
+        await D01MemberRoleIntroDialog.show(context,
             taskId: vm.taskId,
-            initialAvatar: memberData['avatar'] ?? 'cow',
-            canReroll: true,
-          ),
-        );
+            initialAvatar:
+                memberData['avatar'] ?? AvatarConstants.defaultAvatar,
+            canReroll: true);
+
         if (mounted) {
           setState(() => _isShowingIntro = false);
         }

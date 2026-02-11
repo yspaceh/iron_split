@@ -38,4 +38,15 @@ class InviteRepository {
       rethrow;
     }
   }
+
+  Future<String> createInviteCode(String taskId) async {
+    try {
+      final callable = _functions.httpsCallable('createInviteCode');
+      final result = await callable.call({'taskId': taskId});
+      return result.data['code'] as String;
+    } catch (e) {
+      // TODO: 根據專案需求轉換成 AppErrorCode
+      rethrow;
+    }
+  }
 }

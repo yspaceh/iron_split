@@ -33,7 +33,7 @@ class SettlementService {
   }) {
     // 1. 取得 Base Net Balance
     // 因為 D09 已經更新了 DB 裡的匯率，所以這裡算出來的就是最新幣別的淨額
-    final baseBalances = _calculateBaseNetBalances(task, records);
+    final baseBalances = _getFastBaseNetBalances(task);
 
     final double totalRemainder =
         BalanceCalculator.calculateRemainderBuffer(records);
@@ -50,7 +50,21 @@ class SettlementService {
     return _processMerging(rawMembers: memberResults, mergeMap: mergeMap);
   }
 
-  Map<String, double> _calculateBaseNetBalances(
+  /// 極速版：直接讀取寫入時聚合好的 Task 數字
+  Map<String, double> _getFastBaseNetBalances(TaskModel task) {
+    final Map<String, double> balances = {};
+    for (var entry in task.sortedMembers) {
+      final uid = entry.key;
+      final memberData = task.members[uid] as Map<String, dynamic>? ?? {};
+      final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
+      final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+      balances[uid] = prepaid - expense;
+    }
+    return balances;
+  }
+
+  /// S31 最終結算用：最嚴謹的重算機制 (Safety Net)
+  Map<String, double> _calculateBaseNetBalancesFromRecords(
       TaskModel task, List<RecordModel> records) {
     final Map<String, double> balances = {};
     for (var uid in task.members.keys) {
@@ -247,7 +261,7 @@ class SettlementService {
 
     try {
       // 2. 準備計算資料 (需用到 task.baseCurrency)
-      final baseBalances = _calculateBaseNetBalances(task, records);
+      final baseBalances = _calculateBaseNetBalancesFromRecords(task, records);
       final double currentTotalRemainder =
           BalanceCalculator.calculateRemainderBuffer(records);
 

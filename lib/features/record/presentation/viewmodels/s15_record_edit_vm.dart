@@ -9,6 +9,7 @@ import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
@@ -23,6 +24,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   final memoController = TextEditingController();
   final RecordRepository _recordRepo;
   final TaskRepository _taskRepo;
+  late final RecordService _recordService;
 
   // Basic State
   late DateTime _selectedDate;
@@ -129,41 +131,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
     return availableBalance < (currentAmount - 0.01);
   }
 
-  /// 計算總零頭 (Single Source of Truth)
-  /// 供 UI 顯示與 saveRecord 存檔使用，確保兩者一致
-  // double get calculatedTotalRemainder {
-  //   final rate = double.tryParse(exchangeRateController.text) ?? 1.0;
-  //   double totalRemainder = 0.0;
-
-  //   // 1. 計算已加入的 Details
-  //   for (var detail in _details) {
-  //     final result = BalanceCalculator.calculateSplit(
-  //         totalAmount: detail.amount,
-  //         exchangeRate: rate,
-  //         splitMethod: detail.splitMethod,
-  //         memberIds: detail.splitMemberIds,
-  //         details: detail.splitDetails ?? {},
-  //         baseCurrency: baseCurrency);
-  //     totalRemainder += result.remainder;
-  //   }
-
-  //   // 2. 計算剩餘未分配的 Base Card
-  //   if (baseRemainingAmount > 0 || _details.isEmpty) {
-  //     final result = BalanceCalculator.calculateSplit(
-  //         totalAmount:
-  //             baseRemainingAmount > 0 ? baseRemainingAmount : totalAmount,
-  //         exchangeRate: rate,
-  //         splitMethod: _baseSplitMethod,
-  //         memberIds: _baseMemberIds,
-  //         details: _baseRawDetails,
-  //         baseCurrency: baseCurrency);
-  //     totalRemainder += result.remainder;
-  //   }
-
-  //   // 修正精度
-  //   return BalanceCalculator.floorToPrecision(totalRemainder, baseCurrency);
-  // }
-
   /// 提供給 UI 顯示的詳細零頭結構 (Consumer, Payer, Net)
   /// 完全委派給 BalanceCalculator 計算，確保邏輯單一
   RemainderDetail get remainderDetail {
@@ -223,6 +190,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   })  : _recordRepo = recordRepo,
         _taskRepo = taskRepo,
         _originalRecord = record {
+    _recordService = RecordService(_recordRepo, _taskRepo);
     _init(initialDate);
   }
 
@@ -547,7 +515,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
       // 4. 呼叫 Repository
       if (recordId == null) {
         // 新增
-        await _recordRepo.addRecord(taskId, newRecord);
+        await _recordService.createRecord(
+            taskId: taskId, draftRecord: newRecord);
 
         await ActivityLogService.log(
           taskId: taskId,
@@ -555,8 +524,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
           details: logDetails,
         );
       } else {
-        // 更新 (Repo 內部會去讀取 newRecord.id)
-        await _recordRepo.updateRecord(taskId, newRecord);
+        // 更新
+        await _recordService.updateRecord(
+            taskId: taskId, oldRecord: _originalRecord!, newRecord: newRecord);
 
         await ActivityLogService.log(
           taskId: taskId,
@@ -652,7 +622,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
         }
       }
 
-      await _recordRepo.deleteRecord(taskId, recordId!);
+      await _recordService.deleteRecord(taskId, _originalRecord!);
+
       ActivityLogService.log(
           taskId: taskId,
           action: LogAction.deleteRecord,
@@ -734,7 +705,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     return weights;
   }
 
-  /// [新增] 取得「校正後」的公款餘額
+  /// 取得「校正後」的公款餘額
   /// 用途：在編輯模式下，需把「原本這筆單據佔用的公款額度」加回來，
   /// 這樣 B07 彈窗和 UI 顯示的餘額才會是「如果我不付這筆錢，錢包裡會有多少錢」。
   Map<String, double> get adjustedPoolBalances {

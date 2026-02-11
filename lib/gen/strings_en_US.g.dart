@@ -162,8 +162,6 @@ class _TranslationsS11InviteConfirmEnUs extends TranslationsS11InviteConfirmZhTw
 	@override String get identity_match_desc => 'This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.';
 	@override String get status_linking => 'Joining by linking account';
 	@override String get status_new_member => 'Joining as new member';
-	@override String error_join_failed({required Object message}) => 'Join failed: ${message}';
-	@override String error_generic({required Object message}) => 'Error: ${message}';
 	@override String get label_select_ghost => 'Select Member to Inherit';
 	@override String get label_prepaid => 'Prepaid';
 	@override String get label_expense => 'Expense';
@@ -417,12 +415,6 @@ class _TranslationsD02InviteResultEnUs extends TranslationsD02InviteResultZhTw {
 
 	// Translations
 	@override String get title => 'Join Failed';
-	@override late final _TranslationsD02InviteResultButtonsEnUs buttons = _TranslationsD02InviteResultButtonsEnUs._(_root);
-	@override String get error_INVALID_CODE => 'Invalid invite code. Please check if the link is correct.';
-	@override String get error_EXPIRED_CODE => 'Invite link expired (over 15 mins). Please ask the captain to share again.';
-	@override String get error_TASK_FULL => 'Task is full (max 15 members). Cannot join.';
-	@override String get error_AUTH_REQUIRED => 'Authentication failed. Please restart the App.';
-	@override String get error_UNKNOWN => 'Unknown error. Please try again later.';
 }
 
 // Path: D03_TaskCreate_Confirm
@@ -1280,16 +1272,6 @@ class _TranslationsD01MemberRoleIntroDescriptionEnUs extends TranslationsD01Memb
 	@override String get reroll_empty => 'No chances left';
 }
 
-// Path: D02_Invite_Result.buttons
-class _TranslationsD02InviteResultButtonsEnUs extends TranslationsD02InviteResultButtonsZhTw {
-	_TranslationsD02InviteResultButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get back => 'Back to Home';
-}
-
 // Path: D03_TaskCreate_Confirm.buttons
 class _TranslationsD03TaskCreateConfirmButtonsEnUs extends TranslationsD03TaskCreateConfirmButtonsZhTw {
 	_TranslationsD03TaskCreateConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1491,6 +1473,10 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get rate_fetch_failed => 'Failed to fetch exchange rate';
 	@override String length_exceeded({required Object max}) => 'Max ${max} characters';
 	@override String get invalid_char => 'Invalid characters';
+	@override String get invalid_code => 'Invalid invite code. Please check if the link is correct.';
+	@override String get expired_code => 'Invite link expired (over 15 mins). Please ask the captain to share again.';
+	@override String get task_full => 'Task is full (max 15 members). Cannot join.';
+	@override String get auth_required => 'Authentication failed. Please restart the App.';
 }
 
 // Path: common.payment_info.mode
@@ -1884,8 +1870,6 @@ extension on TranslationsEnUs {
 			'S11_Invite_Confirm.identity_match_desc' => 'This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.',
 			'S11_Invite_Confirm.status_linking' => 'Joining by linking account',
 			'S11_Invite_Confirm.status_new_member' => 'Joining as new member',
-			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => 'Join failed: ${message}',
-			'S11_Invite_Confirm.error_generic' => ({required Object message}) => 'Error: ${message}',
 			'S11_Invite_Confirm.label_select_ghost' => 'Select Member to Inherit',
 			'S11_Invite_Confirm.label_prepaid' => 'Prepaid',
 			'S11_Invite_Confirm.label_expense' => 'Expense',
@@ -2058,12 +2042,6 @@ extension on TranslationsEnUs {
 			'D01_MemberRole_Intro.description.reroll_left' => '1 chance left',
 			'D01_MemberRole_Intro.description.reroll_empty' => 'No chances left',
 			'D02_Invite_Result.title' => 'Join Failed',
-			'D02_Invite_Result.buttons.back' => 'Back to Home',
-			'D02_Invite_Result.error_INVALID_CODE' => 'Invalid invite code. Please check if the link is correct.',
-			'D02_Invite_Result.error_EXPIRED_CODE' => 'Invite link expired (over 15 mins). Please ask the captain to share again.',
-			'D02_Invite_Result.error_TASK_FULL' => 'Task is full (max 15 members). Cannot join.',
-			'D02_Invite_Result.error_AUTH_REQUIRED' => 'Authentication failed. Please restart the App.',
-			'D02_Invite_Result.error_UNKNOWN' => 'Unknown error. Please try again later.',
 			'D03_TaskCreate_Confirm.title' => 'Confirm Settings',
 			'D03_TaskCreate_Confirm.buttons.confirm' => 'Confirm',
 			'D03_TaskCreate_Confirm.buttons.back' => 'Edit',
@@ -2169,6 +2147,10 @@ extension on TranslationsEnUs {
 			'error.message.rate_fetch_failed' => 'Failed to fetch exchange rate',
 			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters',
 			'error.message.invalid_char' => 'Invalid characters',
+			'error.message.invalid_code' => 'Invalid invite code. Please check if the link is correct.',
+			'error.message.expired_code' => 'Invite link expired (over 15 mins). Please ask the captain to share again.',
+			'error.message.task_full' => 'Task is full (max 15 members). Cannot join.',
+			'error.message.auth_required' => 'Authentication failed. Please restart the App.',
 			_ => null,
 		};
 	}

@@ -28,13 +28,27 @@ class DeepLinkService {
 
   Stream<DeepLinkIntent> get intentStream => _controller.stream;
 
-  void initialize() {
-    // [修正] app_links v6+ 不需要手動呼叫 getInitialLink
-    // uriLinkStream 現在會自動發送初始連結 (Cold Start)
+// 將原本的 void 改為 Future<void>，並加上 async
+  Future<void> initialize() async {
+    // 1. 強制手動抓取冷啟動 (Cold Start) 連結
+    // 這是為了彌補 main() 裡面 Firebase 初始化的時間差
+    try {
+      final initialUri = await _appLinks.getInitialLink();
+      if (initialUri != null) {
+        debugPrint("🔥 [DeepLinkService] 成功抓到冷啟動 URL: $initialUri");
+        _onNewUri(initialUri);
+      }
+    } catch (e) {
+      debugPrint("Failed to get initial link: $e");
+    }
+
+    // 2. 監聽熱啟動 (Warm Start) 與後續連結
     _appLinks.uriLinkStream.listen(
-      _onNewUri,
+      (uri) {
+        debugPrint("🔥 [DeepLinkService] 成功抓到熱啟動/Stream URL: $uri");
+        _onNewUri(uri);
+      },
       onError: (err) {
-        // TODO: 處理錯誤
         debugPrint('DeepLink Error: $err');
       },
     );
@@ -66,10 +80,9 @@ class DeepLinkService {
     // --- Custom Scheme 處理 (iron-split://) ---
     if (uri.scheme == 'iron-split') {
       // Case 1: Join Task
-      // iron-split://join?code=12345678
       if (uri.host == 'join') {
         final code = query['code'];
-        if (code != null && code.length == 8) {
+        if (code != null && code.isNotEmpty) {
           return JoinTaskIntent(code);
         }
       }

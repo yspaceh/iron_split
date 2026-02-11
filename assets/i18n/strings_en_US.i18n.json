@@ -202,8 +202,6 @@
     "identity_match_desc": "This task has pre-created members. If you are one of them, tap to link account; otherwise, join as new.",
     "status_linking": "Joining by linking account",
     "status_new_member": "Joining as new member",
-    "error_join_failed": "Join failed: {message}",
-    "error_generic": "Error: {message}",
     "label_select_ghost": "Select Member to Inherit",
     "label_prepaid": "Prepaid",
     "label_expense": "Expense"
@@ -485,15 +483,7 @@
     }
   },
   "D02_Invite_Result": {
-    "title": "Join Failed",
-    "buttons": {
-      "back": "Back to Home"
-    },
-    "error_INVALID_CODE": "Invalid invite code. Please check if the link is correct.",
-    "error_EXPIRED_CODE": "Invite link expired (over 15 mins). Please ask the captain to share again.",
-    "error_TASK_FULL": "Task is full (max 15 members). Cannot join.",
-    "error_AUTH_REQUIRED": "Authentication failed. Please restart the App.",
-    "error_UNKNOWN": "Unknown error. Please try again later."
+    "title": "Join Failed"
   },
   "D03_TaskCreate_Confirm": {
     "title": "Confirm Settings",
@@ -681,7 +671,11 @@
       "delete_failed": "Exchange rate update failed",
       "rate_fetch_failed": "Failed to fetch exchange rate",
       "length_exceeded": "Max {max} characters",
-      "invalid_char": "Invalid characters"
+      "invalid_char": "Invalid characters",
+      "invalid_code": "Invalid invite code. Please check if the link is correct.",
+      "expired_code": "Invite link expired (over 15 mins). Please ask the captain to share again.",
+      "task_full": "Task is full (max 15 members). Cannot join.",
+      "auth_required": "Authentication failed. Please restart the App."
     }
   }
 }

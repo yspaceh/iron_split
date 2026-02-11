@@ -162,8 +162,6 @@ class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw
 	@override String get identity_match_desc => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。';
 	@override String get status_linking => '「アカウント連携」で参加します';
 	@override String get status_new_member => '「新規メンバー」として参加します';
-	@override String error_join_failed({required Object message}) => '参加失敗: ${message}';
-	@override String error_generic({required Object message}) => 'エラー: ${message}';
 	@override String get label_select_ghost => '引き継ぐメンバーを選択';
 	@override String get label_prepaid => '立替';
 	@override String get label_expense => '支出';
@@ -417,12 +415,6 @@ class _TranslationsD02InviteResultJaJp extends TranslationsD02InviteResultZhTw {
 
 	// Translations
 	@override String get title => '参加失敗';
-	@override late final _TranslationsD02InviteResultButtonsJaJp buttons = _TranslationsD02InviteResultButtonsJaJp._(_root);
-	@override String get error_INVALID_CODE => '招待コードが無効です。リンクが正しいか確認してください。';
-	@override String get error_EXPIRED_CODE => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
-	@override String get error_TASK_FULL => '定員オーバーです（上限15名）。参加できません。';
-	@override String get error_AUTH_REQUIRED => '認証に失敗しました。アプリを再起動してください。';
-	@override String get error_UNKNOWN => '不明なエラーが発生しました。後ほどお試しください。';
 }
 
 // Path: D03_TaskCreate_Confirm
@@ -647,7 +639,7 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get edit => '編集';
 	@override String get close => '閉じる';
 	@override String get discard => '破棄';
-	@override String get keep_editing => '編集を続ける';
+	@override String get keep_editing => '編集を続行';
 	@override String get refresh => '更新';
 	@override String get ok => 'OK';
 	@override String get retry => 'リトライ';
@@ -1280,16 +1272,6 @@ class _TranslationsD01MemberRoleIntroDescriptionJaJp extends TranslationsD01Memb
 	@override String get reroll_empty => '変更不可';
 }
 
-// Path: D02_Invite_Result.buttons
-class _TranslationsD02InviteResultButtonsJaJp extends TranslationsD02InviteResultButtonsZhTw {
-	_TranslationsD02InviteResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get back => 'ホームへ戻る';
-}
-
 // Path: D03_TaskCreate_Confirm.buttons
 class _TranslationsD03TaskCreateConfirmButtonsJaJp extends TranslationsD03TaskCreateConfirmButtonsZhTw {
 	_TranslationsD03TaskCreateConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1491,6 +1473,10 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get rate_fetch_failed => '為替レートを';
 	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください';
 	@override String get invalid_char => '無効な文字が含まれています';
+	@override String get invalid_code => '招待コードが無効です。リンクが正しいか確認してください。';
+	@override String get expired_code => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
+	@override String get task_full => '定員オーバーです（上限15名）。参加できません。';
+	@override String get auth_required => '認証に失敗しました。アプリを再起動してください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -1742,7 +1728,7 @@ extension on TranslationsJaJp {
 			'common.buttons.edit' => '編集',
 			'common.buttons.close' => '閉じる',
 			'common.buttons.discard' => '破棄',
-			'common.buttons.keep_editing' => '編集を続ける',
+			'common.buttons.keep_editing' => '編集を続行',
 			'common.buttons.refresh' => '更新',
 			'common.buttons.ok' => 'OK',
 			'common.buttons.retry' => 'リトライ',
@@ -1884,8 +1870,6 @@ extension on TranslationsJaJp {
 			'S11_Invite_Confirm.identity_match_desc' => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。',
 			'S11_Invite_Confirm.status_linking' => '「アカウント連携」で参加します',
 			'S11_Invite_Confirm.status_new_member' => '「新規メンバー」として参加します',
-			'S11_Invite_Confirm.error_join_failed' => ({required Object message}) => '参加失敗: ${message}',
-			'S11_Invite_Confirm.error_generic' => ({required Object message}) => 'エラー: ${message}',
 			'S11_Invite_Confirm.label_select_ghost' => '引き継ぐメンバーを選択',
 			'S11_Invite_Confirm.label_prepaid' => '立替',
 			'S11_Invite_Confirm.label_expense' => '支出',
@@ -2058,12 +2042,6 @@ extension on TranslationsJaJp {
 			'D01_MemberRole_Intro.description.reroll_left' => 'あと1回変更可',
 			'D01_MemberRole_Intro.description.reroll_empty' => '変更不可',
 			'D02_Invite_Result.title' => '参加失敗',
-			'D02_Invite_Result.buttons.back' => 'ホームへ戻る',
-			'D02_Invite_Result.error_INVALID_CODE' => '招待コードが無効です。リンクが正しいか確認してください。',
-			'D02_Invite_Result.error_EXPIRED_CODE' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
-			'D02_Invite_Result.error_TASK_FULL' => '定員オーバーです（上限15名）。参加できません。',
-			'D02_Invite_Result.error_AUTH_REQUIRED' => '認証に失敗しました。アプリを再起動してください。',
-			'D02_Invite_Result.error_UNKNOWN' => '不明なエラーが発生しました。後ほどお試しください。',
 			'D03_TaskCreate_Confirm.title' => '設定の確認',
 			'D03_TaskCreate_Confirm.buttons.confirm' => '確認',
 			'D03_TaskCreate_Confirm.buttons.back' => '編集に戻る',
@@ -2169,6 +2147,10 @@ extension on TranslationsJaJp {
 			'error.message.rate_fetch_failed' => '為替レートを',
 			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください',
 			'error.message.invalid_char' => '無効な文字が含まれています',
+			'error.message.invalid_code' => '招待コードが無効です。リンクが正しいか確認してください。',
+			'error.message.expired_code' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
+			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません。',
+			'error.message.auth_required' => '認証に失敗しました。アプリを再起動してください。',
 			_ => null,
 		};
 	}

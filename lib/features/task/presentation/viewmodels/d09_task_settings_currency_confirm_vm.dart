@@ -43,7 +43,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
       });
 
       // 2. 準備匯率表 (Application Logic - 這是 VM 的職責)
-      final records = await _recordRepo.streamRecords(taskId).first;
+      final records = await _recordRepo.getRecordsOnce(taskId);
 
       if (records.isNotEmpty) {
         final uniqueRecordCurrencies = records
@@ -81,6 +81,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
       return true;
     } catch (e) {
       // TODO: handle error
+      debugPrint("Currency update failed: $e");
       return false;
     } finally {
       _isProcessing = false;

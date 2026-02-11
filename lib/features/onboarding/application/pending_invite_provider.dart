@@ -9,8 +9,11 @@ class PendingInviteProvider extends ChangeNotifier {
 
   /// 初始化：從磁碟載入並檢查 TTL
   Future<void> init() async {
-    _pendingCode = await _store.getValidCode();
-    notifyListeners();
+    final storedCode = await _store.getValidCode();
+    if (_pendingCode == null) {
+      _pendingCode = storedCode;
+      notifyListeners();
+    }
   }
 
   /// 儲存邀請碼：同步更新記憶體與磁碟

@@ -1,4 +1,3 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -6,43 +5,21 @@ import 'package:share_plus/share_plus.dart';
 
 class TaskShareHelper {
   /// 分享任務邀請連結
-  /// [existingCode]: 如果已經有邀請碼 (如 S16)，直接傳入可跳過 API 呼叫
+  /// [inviteCode]: 強制由外部傳入，Helper 不再負責呼叫 API
   static Future<void> inviteMember({
     required BuildContext context,
-    required String taskId,
     required String taskName,
-    String? existingCode, // ✅ 新增選填參數
+    required String inviteCode,
   }) async {
     final t = Translations.of(context);
-    String code;
-
-    // 1. 判斷是否需要呼叫 Cloud Function
-    if (existingCode != null && existingCode.isNotEmpty) {
-      code = existingCode;
-    } else {
-      // S53 情境：沒有 Code，去雲端拿
-      try {
-        final callable =
-            FirebaseFunctions.instance.httpsCallable('createInviteCode');
-        final res = await callable.call({'taskId': taskId});
-        final data = Map<String, dynamic>.from(res.data);
-        code = data['code'];
-      } catch (e) {
-        // TODO: handle error
-        rethrow;
-      }
-    }
-
-    // 2. 統一組裝連結 (Single Source of Truth)
-    // 確保這裡的 schema 全 App 只有一個地方定義
-    final link = DeepLinkService().generateJoinLink(taskId);
+    final link = DeepLinkService().generateJoinLink(inviteCode);
 
     // 3. 觸發原生 Share Sheet
     await SharePlus.instance.share(
       ShareParams(
         text: t.common.share.invite.message(
           taskName: taskName,
-          code: code,
+          code: inviteCode,
           link: link,
         ),
         subject: t.common.share.invite.subject,

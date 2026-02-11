@@ -43,7 +43,9 @@ class RecordRepository {
   // =========== S15 Add/Edit Record 用 (寫入) ===========
 
   /// 新增消費紀錄
-  Future<void> addRecord(String taskId, RecordModel record) async {
+  Future<void> addRecord(String taskId, RecordModel record,
+      {Map<String, dynamic>? taskUpdates}) async {
+    final batch = _firestore.batch();
     // 1. 取得原始 Map (此時已包含 remainder 欄位)
     final Map<String, dynamic> data = record.toMap();
 
@@ -58,16 +60,23 @@ class RecordRepository {
 
     data['updatedAt'] = FieldValue.serverTimestamp();
 
-    // 3. 寫入處理過的 data (Fix Bug: 之前錯誤使用 record.toMap() 導致 timestamp 失效)
-    await _firestore
-        .collection('tasks')
-        .doc(taskId)
-        .collection('records')
-        .add(data);
+    // 在 Batch 中，先產生 Document ID
+    final recordRef =
+        _firestore.collection('tasks').doc(taskId).collection('records').doc();
+    data['id'] = recordRef.id;
+    batch.set(recordRef, data);
+
+    // 同步更新 Task 餘額
+    if (taskUpdates != null) {
+      batch.update(_firestore.collection('tasks').doc(taskId), taskUpdates);
+    }
+    await batch.commit();
   }
 
   /// 更新消費紀錄
-  Future<void> updateRecord(String taskId, RecordModel record) async {
+  Future<void> updateRecord(String taskId, RecordModel record,
+      {Map<String, dynamic>? taskUpdates}) async {
+    final batch = _firestore.batch();
     // 1. 取得原始 Map
     final Map<String, dynamic> data = record.toMap();
 
@@ -80,54 +89,32 @@ class RecordRepository {
     data.remove('createdBy');
     // data.remove('id'); // ID 是 Document Key，不需寫入欄位
 
-    // 4. 寫入處理過的 data (Fix Bug)
-    await _firestore
+    final recordRef = _firestore
         .collection('tasks')
         .doc(taskId)
         .collection('records')
-        .doc(record.id)
-        .update(data);
+        .doc(record.id);
+    batch.update(recordRef, data);
+
+    if (taskUpdates != null) {
+      batch.update(_firestore.collection('tasks').doc(taskId), taskUpdates);
+    }
+    await batch.commit();
   }
 
   /// 刪除消費紀錄
-  Future<void> deleteRecord(String taskId, String recordId) async {
-    await _firestore
+  Future<void> deleteRecord(String taskId, String recordId,
+      {Map<String, dynamic>? taskUpdates}) async {
+    final batch = _firestore.batch();
+    batch.delete(_firestore
         .collection('tasks')
         .doc(taskId)
         .collection('records')
-        .doc(recordId)
-        .delete();
-  }
+        .doc(recordId));
 
-  // =========== 批次處理 (Batch Operations) ===========
-
-  ///  批次更新多筆紀錄
-  /// 用途：RecordService 算好新的匯率與零頭後，呼叫此方法一次寫入
-  Future<void> batchUpdateRecords(
-      String taskId, List<RecordModel> records) async {
-    if (records.isEmpty) return;
-
-    final batch = _firestore.batch();
-
-    for (var record in records) {
-      final docRef = _firestore
-          .collection('tasks')
-          .doc(taskId)
-          .collection('records')
-          .doc(record.id);
-
-      final Map<String, dynamic> data = record.toMap();
-
-      // 確保更新時間正確
-      data['updatedAt'] = FieldValue.serverTimestamp();
-
-      // 移除不應變動的欄位
-      data.remove('createdAt');
-      data.remove('createdBy');
-
-      batch.update(docRef, data);
+    if (taskUpdates != null) {
+      batch.update(_firestore.collection('tasks').doc(taskId), taskUpdates);
     }
-
     await batch.commit();
   }
 
@@ -187,8 +174,9 @@ class RecordRepository {
   /// Service 層算好後，把一包 (ID, 新匯率, 新零頭) 丟進來，這裡只負責寫入
   Future<void> batchUpdateRatesAndRemainders(
     String taskId,
-    List<({String id, double rate, double remainder})> updates,
-  ) async {
+    List<({String id, double rate, double remainder})> updates, {
+    Map<String, dynamic>? taskUpdates,
+  }) async {
     if (updates.isEmpty) return;
 
     final batch = _firestore.batch();
@@ -199,14 +187,15 @@ class RecordRepository {
           .doc(taskId)
           .collection('records')
           .doc(update.id);
-
       batch.update(docRef, {
         'exchangeRate': update.rate,
         'remainder': update.remainder,
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-
+    if (taskUpdates != null) {
+      batch.update(_firestore.collection('tasks').doc(taskId), taskUpdates);
+    }
     await batch.commit();
   }
 }

@@ -14,11 +14,14 @@ class S00SystemBootstrapViewModel extends ChangeNotifier {
 
   /// 初始化 App 狀態，決定去向
   /// [pendingInviteCode] 從 Provider 傳入，如果有值代表有點擊邀請連結
-  Future<BootstrapDestination> initApp({String? pendingInviteCode}) async {
+  Future<BootstrapDestination> initApp(
+      {required String? Function() getPendingCode}) async {
     // 1. 人為延遲 (為了讓 Logo 展示一下)
     await Future.delayed(const Duration(milliseconds: 800));
 
     final user = _repo.currentUser;
+
+    final pendingInviteCode = getPendingCode();
 
     // 2. 檢查登入狀態
     if (user == null) {
@@ -30,12 +33,10 @@ class S00SystemBootstrapViewModel extends ChangeNotifier {
     if (!isValid) {
       return BootstrapDestination.updateTerms; // 過期了，踢回去重簽
     }
-
     // 4. 檢查是否有名字
     if (user.displayName == null || user.displayName!.isEmpty) {
       return BootstrapDestination.setupName;
     }
-
     // 5. 檢查是否有邀請碼
     if (pendingInviteCode != null) {
       return BootstrapDestination.confirmInvite;

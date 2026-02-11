@@ -1,10 +1,11 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
+import 'package:iron_split/features/task/application/member_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -12,6 +13,7 @@ import 'package:iron_split/gen/strings.g.dart';
 
 class S16TaskCreateEditViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
+  final InviteRepository _inviteRepo;
   // State
   late DateTime _startDate;
   late DateTime _endDate;
@@ -32,7 +34,9 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
   S16TaskCreateEditViewModel({
     required TaskRepository taskRepo,
-  }) : _taskRepo = taskRepo {
+    required InviteRepository inviteRepo,
+  })  : _taskRepo = taskRepo,
+        _inviteRepo = inviteRepo {
     // 1. 初始化日期 (今天)
     final now = DateTime.now();
     _startDate = DateTime(now.year, now.month, now.day);
@@ -108,21 +112,18 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'avatar': avatars[0],
         'isLinked': true,
         'hasSeenRoleIntro': false,
+        'createdAt': baseTime.microsecondsSinceEpoch,
+        'prepaid': 0.0,
+        'expense': 0.0,
       };
 
       // B. Add Ghost Members
       for (int i = 1; i < _memberCount; i++) {
-        final ghostId = 'virtual_member_$i';
-        final prefix = t.common.member_prefix;
-
-        membersMap[ghostId] = {
-          'role': 'member',
-          'displayName': '$prefix ${i + 1}',
-          'joinedAt': baseTime.add(Duration(milliseconds: i)),
-          'avatar': avatars[i],
-          'isLinked': false,
-          'hasSeenRoleIntro': false,
-        };
+        final vid = MemberService.generateVirtualId();
+        membersMap[vid] = MemberService.createGhost(
+          displayName: '${t.common.member_prefix} ${i + 1}',
+        );
+        await Future.delayed(const Duration(milliseconds: 1));
       }
 
       // 2. 寫入 DB
@@ -161,11 +162,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         _statusText = t.D03_TaskCreate_Confirm.preparing_share;
         notifyListeners();
 
-        final callable =
-            FirebaseFunctions.instance.httpsCallable('createInviteCode');
-        final res = await callable.call({'taskId': taskId});
-        final data = Map<String, dynamic>.from(res.data);
-        inviteCode = data['code'];
+        inviteCode = await _inviteRepo.createInviteCode(taskId);
       }
 
       _isProcessing = false;

@@ -23,6 +23,27 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
     required this.memberCount,
   });
 
+  static Future<T?> show<T>(
+    BuildContext context, {
+    required String taskName,
+    required DateTime startDate,
+    required DateTime endDate,
+    required CurrencyConstants baseCurrency,
+    required int memberCount,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => D03TaskCreateConfirmDialog(
+        taskName: taskName,
+        startDate: startDate,
+        endDate: endDate,
+        baseCurrency: baseCurrency,
+        memberCount: memberCount,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -35,15 +56,16 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildRow(context, t.D03_TaskCreate_Confirm.label_name, taskName),
+            _buildColumn(
+                context, t.D03_TaskCreate_Confirm.label_name, taskName),
             const SizedBox(height: 16),
-            _buildRow(context, t.D03_TaskCreate_Confirm.label_period,
+            _buildColumn(context, t.D03_TaskCreate_Confirm.label_period,
                 '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
             const SizedBox(height: 16),
-            _buildRow(context, t.D03_TaskCreate_Confirm.label_currency,
+            _buildColumn(context, t.D03_TaskCreate_Confirm.label_currency,
                 baseCurrency.code),
             const SizedBox(height: 16),
-            _buildRow(context, t.D03_TaskCreate_Confirm.label_members,
+            _buildColumn(context, t.D03_TaskCreate_Confirm.label_members,
                 '$memberCount'),
           ],
         ),
@@ -63,7 +85,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(BuildContext context, String label, String value) {
+  Widget _buildColumn(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

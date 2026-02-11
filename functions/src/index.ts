@@ -52,6 +52,22 @@ const pickRandomAvatar = (usedAvatars: string[]): string => {
 };
 
 /**
+ * 判定是否為「空殼成員」
+ * 1. 尚未連結 (isLinked != true)
+ * 2. 預收與費用皆為 0
+ * 3. 名字符合系統預設格式 (例如: 成員 2, Member 3)
+ */
+const isEmptyGhost = (m: any): boolean => {
+  if (m.isLinked === true || m.uid != null) return false;
+  const prepaid = m.prepaid || 0;
+  const expense = m.expense || 0;
+  const name = (m.displayName || "").trim();
+  // 檢查名字是否為預設格式
+  const isDefaultName = /^(成員|Member|メンバー)\s*\d*$/i.test(name);
+  return prepaid === 0 && expense === 0 && isDefaultName;
+};
+
+/**
  * 建立邀請碼
  * 邏輯：檢查隊長權限 -> 產生亂數代碼 -> 寫入 Firestore
  */
@@ -65,9 +81,10 @@ export const createInviteCode = onCall(async (request) => {
 
   if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
 
-  // 檢查是否為隊長
-  if (taskDoc.data()?.createdBy !== uid) {
-    throw new HttpsError("permission-denied", "NOT_CAPTAIN");
+  // 放寬權限為「只要是這個 Task 的成員就可以產生邀請碼」
+  const members = taskDoc.data()?.members || {};
+  if (!members[uid]) {
+    throw new HttpsError("permission-denied", "NOT_MEMBER");
   }
 
   // 1. 這裡呼叫了 generateCode，警告就會消失
@@ -102,63 +119,68 @@ export const createInviteCode = onCall(async (request) => {
  * 邏輯：驗證代碼 -> 回傳任務資訊 + 未連結成員名單 (Ghost Members)
  */
 export const previewInviteCode = onCall(async (request) => {
+  // [檢查 1] 身份驗證
   if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
-
   const { code } = request.data;
-  const uid = request.auth.uid;
 
-  // 1. 找邀請碼
+  // [檢查 2] 邀請碼存在性
   const inviteDoc = await db.collection("invites").doc(code).get();
-  if (!inviteDoc.exists)
-    throw new HttpsError("invalid-argument", "INVALID_CODE");
-
+  if (!inviteDoc.exists) throw new HttpsError("invalid-argument", "INVALID_CODE");
   const { taskId, expiresAt } = inviteDoc.data()!;
-  const taskRef = db.collection("tasks").doc(taskId);
 
-  // 2. 檢查是否已經是成員
-  const mDoc = await taskRef.collection("members").doc(uid).get();
-  if (mDoc.exists) return { taskId, action: "OPEN_TASK" }; // 已經加入過，直接開任務
-
-  // 3. 讀取任務資料
-  const taskDoc = await taskRef.get();
+  // [檢查 3] 任務存在性
+  const taskDoc = await db.collection("tasks").doc(taskId).get();
   if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
   const taskData = taskDoc.data()!;
 
-  // 驗證有效性
-  if (taskData.activeInviteCode !== code)
-    throw new HttpsError("invalid-argument", "INVALID_CODE");
-  if (expiresAt.toMillis() < Date.now())
-    throw new HttpsError("failed-precondition", "EXPIRED_CODE");
-  if (taskData.memberCount >= taskData.maxMembers)
-    throw new HttpsError("failed-precondition", "TASK_FULL");
+  // [檢查 4] 邀請碼時效性
+  if (expiresAt.toMillis() < Date.now()) throw new HttpsError("failed-precondition", "EXPIRED_CODE");
 
-  // 4.  抓取未連結的成員 (Ghosts)
-  // 定義：在 members collection 中，isLinked != true 的成員 (或 uid 為空)
-  const membersSnapshot = await taskRef.collection("members").get();
-  const unlinkedMembers: { id: string; displayName: string }[] = [];
+  // [檢查 5] 邀請碼匹配性 (防止舊碼遭誤用)
+  if (taskData.activeInviteCode !== code) throw new HttpsError("invalid-argument", "INVALID_CODE");
 
-  membersSnapshot.forEach((doc) => {
-    const data = doc.data();
-    // 判斷邏輯：沒有 uid 或者是明確標記尚未連結
-    // 注意：captain 一定有 uid，所以不會被誤判
-    if (!data.uid || data.isLinked === false) {
-      unlinkedMembers.push({
-        id: doc.id,
-        displayName: data.displayName || "Unknown Member",
+  const members = taskData.members || {};
+  const activeGhosts: any[] = []; // 需要顯示在前端的
+  let emptySlotAvailable = false;
+  let linkedCount = 0;
+
+  for (const [id, m] of Object.entries(members)) {
+    const memberData = m as any;
+    if (memberData.uid === request.auth.uid) return { taskId, action: "OPEN_TASK" };
+
+    if (memberData.isLinked) {
+      linkedCount++;
+      continue;
+    }
+
+    // 執行空殼過濾邏輯
+    if (isEmptyGhost(memberData)) {
+      emptySlotAvailable = true; // 發現空位，但不放進回傳清單
+    } else {
+      activeGhosts.push({
+        id,
+        displayName: memberData.displayName,
+        prepaid: memberData.prepaid || 0,
+        expense: memberData.expense || 0,
       });
     }
-  });
+  }
+
+  // [檢查 6] 人數上限檢查
+  if (linkedCount >= taskData.maxMembers && activeGhosts.length === 0 && !emptySlotAvailable) {
+    throw new HttpsError("failed-precondition", "TASK_FULL");
+  }
 
   return {
     taskId,
     action: "NEED_JOIN",
-    taskSummary: {
-      name: taskData.name,
-      memberCount: taskData.memberCount,
-      maxMembers: taskData.maxMembers,
+    taskData: {
+      taskName: taskData.name,
       baseCurrency: taskData.baseCurrency,
+      startDate: taskData.startDate?.toMillis() || null, // 轉毫秒傳給前端
+      endDate: taskData.endDate?.toMillis() || null,
     },
-    unlinkedMembers, // 回傳給前端 S04 畫面選
+    ghosts: activeGhosts, // 僅回傳改過名字或有金額的成員
   };
 });
 
@@ -168,74 +190,82 @@ export const previewInviteCode = onCall(async (request) => {
  */
 export const joinByInviteCode = onCall(async (request) => {
   if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
-
-  // mergeMemberId: 如果使用者選了「我是成員A」，這裡會傳成員A的 docId
-  const { code, displayName, mergeMemberId } = request.data;
+  const { code, displayName, targetMemberId } = request.data;
   const uid = request.auth.uid;
 
   return db.runTransaction(async (transaction) => {
+    // [1] 安全檢查：邀請碼驗證 (絕對不刪)
     const inviteRef = db.collection("invites").doc(code);
     const inviteDoc = await transaction.get(inviteRef);
-    if (!inviteDoc.exists) throw new Error("INVALID_CODE");
-    const { taskId } = inviteDoc.data()!;
+    if (!inviteDoc.exists) throw new HttpsError("invalid-argument", "INVALID_CODE");
+    const { taskId, expiresAt } = inviteDoc.data()!;
+
+    if (expiresAt.toMillis() < Date.now()) throw new HttpsError("failed-precondition", "EXPIRED_CODE");
 
     const taskRef = db.collection("tasks").doc(taskId);
     const taskDoc = await transaction.get(taskRef);
-    if (!taskDoc.exists) throw new Error("TASK_NOT_FOUND");
+    if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
     const taskData = taskDoc.data()!;
 
-    // 1. 分配 Avatar
-    // 先抓出所有成員的 avatar
-    const allMembersSnap = await transaction.get(taskRef.collection("members"));
-    const usedAvatars: string[] = [];
-    allMembersSnap.forEach((doc) => {
-      const d = doc.data();
-      if (d.avatar) usedAvatars.push(d.avatar);
-    });
+    if (taskData.activeInviteCode !== code) throw new HttpsError("invalid-argument", "INVALID_CODE");
 
-    // 呼叫 pickRandomAvatar，這樣就不會跟現有成員重複
+    const members = taskData.members || {};
+    if (Object.values(members).some((m: any) => m.uid === uid)) {
+      throw new HttpsError("already-exists", "ALREADY_JOINED");
+    }
+
+    // [2] 頭像分配：確保不重複 (絕對不刪)
+    const usedAvatars: string[] = Object.values(members).map((m: any) => m.avatar).filter(Boolean);
     const assignedAvatar = pickRandomAvatar(usedAvatars);
 
-    // 2. 寫入成員資料
-    if (mergeMemberId) {
-      // 情境 A: 連結既有 Ghost Member
-      const ghostRef = taskRef.collection("members").doc(mergeMemberId);
-      const ghostDoc = await transaction.get(ghostRef);
-      if (!ghostDoc.exists) throw new Error("MEMBER_NOT_FOUND");
+    // [3] 核心邏輯：決定補位目標
+    let finalTargetId = targetMemberId;
 
-      transaction.update(ghostRef, {
-        uid: uid, // 綁定真實 User ID
-        displayName: displayName, // 更新為使用者現在想要的名字
-        avatar: assignedAvatar, // 賦予頭像 (Ghost 本來沒有)
-        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
-        isLinked: true,
-      });
-    } else {
-      // 情境 B: 新增全新成員
-      if (taskData.memberCount >= taskData.maxMembers)
-        throw new Error("TASK_FULL");
-
-      const newMemberRef = taskRef.collection("members").doc(uid); // 用 uid 當 docId
-      transaction.set(newMemberRef, {
-        uid: uid,
-        displayName,
-        role: "member",
-        avatar: assignedAvatar,
-        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
-        isLinked: true,
-      });
-
-      // 只有新增成員才需要 +1 (連結舊成員總數不變)
-      transaction.update(taskRef, {
-        memberCount: admin.firestore.FieldValue.increment(1),
-      });
+    if (!finalTargetId) {
+      // 如果前端沒指定，後端「自動補位」
+      const emptySlots = Object.entries(members)
+        .filter(([_, m]) => isEmptyGhost(m))
+        .sort((a, b) => (a[1] as any).createdAt - (b[1] as any).createdAt);
+        
+      if (emptySlots.length === 0) {
+        throw new HttpsError("failed-precondition", "TASK_FULL");
+      }
+      finalTargetId = emptySlots[0][0];
     }
+
+    // [4] 執行寫入 (僅更新既有位子)
+    if (!members[finalTargetId]) throw new HttpsError("not-found", "MEMBER_NOT_FOUND");
+    const ghostData = members[finalTargetId];
+    transaction.update(taskRef, {
+      [`members.${finalTargetId}`]: admin.firestore.FieldValue.delete(),
+      // 2. 建立新 UID Key 並精準繼承
+      [`members.${uid}`]: {
+        // [繼承資產]
+        prepaid: ghostData.prepaid || 0,
+        expense: ghostData.expense || 0,
+        // [繼承 Service 定義的旗標]
+        hasSeenRoleIntro: ghostData.hasSeenRoleIntro ?? false,
+        createdAt: ghostData.createdAt,
+        uid: uid,
+        displayName: displayName,
+        avatar: assignedAvatar,
+        isLinked: true,
+        role: "member",
+        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      memberIds: admin.firestore.FieldValue.arrayRemove(finalTargetId),
+    });
+
+    transaction.update(taskRef, {
+      memberIds: admin.firestore.FieldValue.arrayUnion(uid),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
 
     return {
       taskId,
       action: "JOINED",
-      avatar: assignedAvatar, // 回傳給前端 D01 顯示
-      canReroll: true, // 標記還有一次重抽機會
+      avatar: assignedAvatar,
+      canReroll: true,
     };
   });
 });

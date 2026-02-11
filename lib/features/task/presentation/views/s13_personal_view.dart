@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
-import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -100,11 +99,8 @@ class S13PersonalView extends StatelessWidget {
                         isEmpty: dayRecords.isEmpty,
                       ),
                       ...dayRecords.map((record) {
-                        DualAmount displayAmount = record.type == 'income'
-                            ? BalanceCalculator.calculatePersonalCredit(
-                                record, vm.currentUserId, vm.baseCurrency)
-                            : BalanceCalculator.calculatePersonalDebit(
-                                record, vm.currentUserId, vm.baseCurrency);
+                        final DualAmount displayAmount =
+                            vm.getPersonalRecordDisplayAmount(record);
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: RecordItem(

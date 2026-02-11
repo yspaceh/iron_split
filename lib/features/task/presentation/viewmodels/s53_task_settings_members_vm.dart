@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/application/member_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -10,18 +13,22 @@ import 'package:iron_split/gen/strings.g.dart'; // For default name
 class S53TaskSettingsMembersViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final InviteRepository _inviteRepo;
   final String taskId;
   bool _isProcessing = false;
 
   Stream<TaskModel?>? _taskStream;
   bool get isProcessing => _isProcessing;
+  String get currentUserId => FirebaseAuth.instance.currentUser?.uid ?? '';
 
   S53TaskSettingsMembersViewModel(
       {required TaskRepository taskRepo,
       required RecordRepository recordRepo,
+      required InviteRepository inviteRepo,
       required this.taskId})
       : _taskRepo = taskRepo,
-        _recordRepo = recordRepo;
+        _recordRepo = recordRepo,
+        _inviteRepo = inviteRepo;
 
   // 直接暴露 Firestore Stream 給 UI 使用 (也可以在 VM 內 listen)
   Stream<TaskModel?> get taskStream {
@@ -35,39 +42,21 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addMember(
-      Map<String, dynamic> currentMembersMap, Translations t) async {
+// 徹底重寫 addMember 方法，移除 temp_id, status, createdAt 等垃圾
+  Future<void> addMember(Translations t, TaskModel task) async {
+    if (_isProcessing) return;
     _isProcessing = true;
     notifyListeners();
 
     try {
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final newId = 'temp_$timestamp';
+      final nextNumber = (task.memberCount) + 1;
+      final virtualId = MemberService.generateVirtualId();
+      final newMember = MemberService.createGhost(
+          displayName: "${t.common.member_prefix} $nextNumber");
 
-      final newMember = {
-        'id': newId,
-        'displayName':
-            '${t.S53_TaskSettings_Members.member_default_name} ${currentMembersMap.length + 1}',
-        'role': 'member',
-        'status': 'unlinked',
-        'defaultSplitRatio': 1.0,
-        'avatar': null,
-        'isLinked': false,
-        'createdAt': timestamp,
-      };
+      await _taskRepo.addMemberToTask(taskId, virtualId, newMember);
 
-      final updatedMap = Map<String, dynamic>.from(currentMembersMap);
-      updatedMap[newId] = newMember;
-
-      await _taskRepo.replaceMembersMap(taskId, updatedMap);
-
-      await ActivityLogService.log(
-        taskId: taskId,
-        action: LogAction.addMember,
-        details: {'memberName': newMember['displayName']},
-      );
-    } catch (e) {
-      // TODO: handle error
+      // Activity Log ...
     } finally {
       _isProcessing = false;
       notifyListeners();
@@ -153,42 +142,20 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     _isProcessing = true;
     notifyListeners();
     try {
-      await TaskShareHelper.inviteMember(
-        context: context,
-        taskId: taskId,
-        taskName: taskName,
-      );
+      final inviteCode = await _inviteRepo.createInviteCode(taskId);
+      if (context.mounted) {
+        await TaskShareHelper.inviteMember(
+          context: context,
+          taskName: taskName,
+          inviteCode: inviteCode, // 這裡的參數現在跟 Helper 完美對齊了
+        );
+      }
     } catch (e) {
       // TODO: handle error
+      debugPrint("Invite Error: $e");
     } finally {
       _isProcessing = false;
       notifyListeners();
     }
-  }
-
-  /// 將成員 Map 轉換為排序後的 List
-  List<MapEntry<String, dynamic>> getSortedMembers(TaskModel task) {
-    final membersMap = task.members;
-    final List<MapEntry<String, dynamic>> membersList =
-        membersMap.entries.toList();
-
-    membersList.sort((a, b) {
-      final dataA = a.value as Map<String, dynamic>;
-      final dataB = b.value as Map<String, dynamic>;
-
-      final bool isALinked =
-          dataA['status'] == 'linked' || (dataA['isLinked'] == true);
-      final bool isBLinked =
-          dataB['status'] == 'linked' || (dataB['isLinked'] == true);
-
-      if (isALinked && !isBLinked) return -1;
-      if (!isALinked && isBLinked) return 1;
-
-      final int tA = dataA['createdAt'] as int? ?? 0;
-      final int tB = dataB['createdAt'] as int? ?? 0;
-      return tA.compareTo(tB);
-    });
-
-    return membersList;
   }
 }

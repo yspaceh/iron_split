@@ -65,13 +65,8 @@ class S13GroupView extends StatelessWidget {
           await Future.delayed(const Duration(milliseconds: 300));
 
           if (context.mounted) {
-            showDialog(
-              context: context,
-              builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
-                taskId: task.id,
-                newCurrency: selected,
-              ),
-            );
+            D09TaskSettingsCurrencyConfirmDialog.show(context,
+                taskId: task.id, newCurrency: selected);
           }
         },
       );

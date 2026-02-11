@@ -25,11 +25,11 @@ class _S00SystemBootstrapPageState extends State<S00SystemBootstrapPage> {
 
   Future<void> _startBootstrap() async {
     // 從 Provider 拿邀請碼 (UI 層的狀態)
-    final pendingInvite = context.read<PendingInviteProvider>().pendingCode;
+    final destination = await _vm.initApp(
+      getPendingCode: () => context.read<PendingInviteProvider>().pendingCode,
+    );
 
     // 呼叫 VM 判斷去向
-    final destination = await _vm.initApp(pendingInviteCode: pendingInvite);
-
     if (!mounted) return;
 
     // 根據結果導航
@@ -41,7 +41,8 @@ class _S00SystemBootstrapPageState extends State<S00SystemBootstrapPage> {
         context.goNamed('S51');
         break;
       case BootstrapDestination.confirmInvite:
-        context.goNamed('S11', queryParameters: {'code': pendingInvite});
+        final latestCode = context.read<PendingInviteProvider>().pendingCode;
+        context.goNamed('S11', queryParameters: {'code': latestCode});
         break;
       case BootstrapDestination.home:
         context.goNamed('S10');
