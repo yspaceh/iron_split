@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
@@ -9,6 +9,7 @@ import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -37,7 +38,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   bool _isSaving = false;
 
   LoadStatus _initStatus = LoadStatus.loading;
-  String? _initErrorCode;
+  AppErrorCodes? _initErrorCode;
 
   // Payment State
   String _payerType = 'prepay';
@@ -73,7 +74,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   bool get isRateLoading => _isRateLoading;
   bool get isSaving => _isSaving;
   LoadStatus get initStatus => _initStatus;
-  String? get initErrorCode => _initErrorCode;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
 
   String get payerType => _payerType;
   String get payerId => _payerId;
@@ -341,12 +342,13 @@ class S15RecordEditViewModel extends ChangeNotifier {
         _initStatus = LoadStatus.success;
       } else {
         _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.taskNotFound;
+        _initErrorCode = AppErrorCodes.dataNotFound;
       }
     } catch (e) {
       _initStatus = LoadStatus.error;
-      _initErrorCode =
-          e is FirebaseException ? e.code : AppErrorCodes.taskLoadFailed;
+      _initErrorCode = e is FirebaseException
+          ? ErrorMapper.parseErrorCode(e)
+          : AppErrorCodes.initFailed;
     } finally {
       notifyListeners();
     }
@@ -410,8 +412,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
         exchangeRateController.text = rate.toString();
       }
     } catch (e) {
-      // TODO: Record log?
-      debugPrint("Rate fetch failed: $e");
       throw AppErrorCodes.rateFetchFailed;
     } finally {
       _isRateLoading = false; // 確保 Loading 結束
@@ -558,9 +558,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
       }
     } catch (e) {
       // 捕捉錯誤並轉拋 AppErrorCode (如果它還不是 Code)
-      if (e is FirebaseException) rethrow;
       // 其他未知錯誤，包裝成 SAVE_FAILED
-      throw AppErrorCodes.saveFailed;
+      throw e is FirebaseException
+          ? ErrorMapper.parseErrorCode(e)
+          : AppErrorCodes.saveFailed;
     } finally {
       _isSaving = false;
       notifyListeners();
@@ -656,9 +657,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
           });
       return true;
     } catch (e) {
-      if (e is FirebaseException) rethrow;
-      // 包裝成 DELETE_FAILED
-      throw AppErrorCodes.deleteFailed;
+      throw e is FirebaseException
+          ? ErrorMapper.parseErrorCode(e)
+          : AppErrorCodes.saveFailed;
     }
   }
 

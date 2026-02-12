@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
@@ -12,7 +13,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // State
   bool _isLoading = true;
   bool _isJoining = false;
-  String? _errorCode; // 用於 UI 顯示錯誤 Dialog
+  AppErrorCodes? _errorCode; // 用於 UI 顯示錯誤 Dialog
 
   // Data
   String _inviteCode = '';
@@ -26,7 +27,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // Getters
   bool get isLoading => _isLoading;
   bool get isJoining => _isJoining;
-  String? get errorCode => _errorCode;
+  AppErrorCodes? get errorCode => _errorCode;
 
   String get taskName => _taskData?['taskName'] ?? '';
   DateTime get startDate => _parseDate(_taskData?['startDate']);
@@ -109,7 +110,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // 確認加入
   Future<void> confirmJoin({
     required Function(String taskId) onSuccess,
-    required Function(String code) onError,
+    required Function(AppErrorCodes code) onError,
   }) async {
     if (_isJoining) return;
     _isJoining = true;

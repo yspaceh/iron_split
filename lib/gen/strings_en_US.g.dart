@@ -1529,30 +1529,34 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get unknown => 'An unexpected error occurred';
-	@override String get invalid_amount => 'Invalid amount';
-	@override String get required => 'This field is required';
-	@override String empty({required Object key}) => 'Please enter ${key}';
-	@override String get format => 'Invalid format';
-	@override String zero({required Object key}) => '${key} cannot be 0';
-	@override String get amount_not_enough => 'Insufficient remaining amount';
-	@override String get amount_mismatch => 'Amount mismatch';
-	@override String get income_is_used => 'This amount has already been used';
-	@override String get permission_denied => 'Permission denied';
-	@override String get network_error => 'Network error. Please try again later';
-	@override String get data_not_found => 'Data not found. Please try again later';
-	@override String get load_failed => 'Load failed. Please try again later';
-	@override String enter_first({required Object key}) => 'Please enter ${key} first';
-	@override String get save_failed => 'Save failed. Please try again later';
-	@override String get delete_failed => 'Exchange rate update failed';
-	@override String get task_close_failed => 'Task close failed. Please try again later';
-	@override String get rate_fetch_failed => 'Failed to fetch exchange rate';
-	@override String length_exceeded({required Object max}) => 'Max ${max} characters';
-	@override String get invalid_char => 'Invalid characters';
+	@override String get unknown => 'An unexpected error occurred.';
+	@override String get invalid_amount => 'Invalid amount.';
+	@override String get required => 'This field is required.';
+	@override String empty({required Object key}) => 'Please enter ${key}.';
+	@override String get format => 'Invalid format.';
+	@override String zero({required Object key}) => '${key} cannot be 0.';
+	@override String get amount_not_enough => 'Insufficient remaining amount.';
+	@override String get amount_mismatch => 'Amount mismatch.';
+	@override String get income_is_used => 'This amount is used or balance is insufficient.';
+	@override String get permission_denied => 'Permission denied.';
+	@override String get network_error => 'Network connection failed. Please check your internet.';
+	@override String get data_not_found => 'Data not found. Please try again later.';
+	@override String enter_first({required Object key}) => 'Please enter ${key} first.';
+	@override String get save_failed => 'Failed to save. Please try again.';
+	@override String get delete_failed => 'Failed to delete. Please try again.';
+	@override String get task_close_failed => 'Task close failed. Please try again later.';
+	@override String get rate_fetch_failed => 'Failed to fetch exchange rate.';
+	@override String length_exceeded({required Object max}) => 'Max ${max} characters.';
+	@override String get invalid_char => 'Invalid characters.';
 	@override String get invalid_code => 'Invalid invite code. Please check if the link is correct.';
 	@override String get expired_code => 'Invite link expired (over 15 mins). Please ask the captain to share again.';
 	@override String get task_full => 'Task is full (max 15 members). Cannot join.';
 	@override String get auth_required => 'Authentication failed. Please restart the App.';
+	@override String get init_failed => 'Loading failed. Please try again.';
+	@override String get unauthorized => 'Not logged in. Please login again.';
+	@override String get task_locked => 'Room is settled and locked. Data cannot be modified.';
+	@override String get timeout => 'Server request timed out. Please try again later.';
+	@override String get quota_exceeded => 'System quota exceeded. Please try again later.';
 }
 
 // Path: common.payment_info.mode
@@ -2219,30 +2223,34 @@ extension on TranslationsEnUs {
 			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
 			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
 			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
-			'error.message.unknown' => 'An unexpected error occurred',
-			'error.message.invalid_amount' => 'Invalid amount',
-			'error.message.required' => 'This field is required',
-			'error.message.empty' => ({required Object key}) => 'Please enter ${key}',
-			'error.message.format' => 'Invalid format',
-			'error.message.zero' => ({required Object key}) => '${key} cannot be 0',
-			'error.message.amount_not_enough' => 'Insufficient remaining amount',
-			'error.message.amount_mismatch' => 'Amount mismatch',
-			'error.message.income_is_used' => 'This amount has already been used',
-			'error.message.permission_denied' => 'Permission denied',
-			'error.message.network_error' => 'Network error. Please try again later',
-			'error.message.data_not_found' => 'Data not found. Please try again later',
-			'error.message.load_failed' => 'Load failed. Please try again later',
-			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first',
-			'error.message.save_failed' => 'Save failed. Please try again later',
-			'error.message.delete_failed' => 'Exchange rate update failed',
-			'error.message.task_close_failed' => 'Task close failed. Please try again later',
-			'error.message.rate_fetch_failed' => 'Failed to fetch exchange rate',
-			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters',
-			'error.message.invalid_char' => 'Invalid characters',
+			'error.message.unknown' => 'An unexpected error occurred.',
+			'error.message.invalid_amount' => 'Invalid amount.',
+			'error.message.required' => 'This field is required.',
+			'error.message.empty' => ({required Object key}) => 'Please enter ${key}.',
+			'error.message.format' => 'Invalid format.',
+			'error.message.zero' => ({required Object key}) => '${key} cannot be 0.',
+			'error.message.amount_not_enough' => 'Insufficient remaining amount.',
+			'error.message.amount_mismatch' => 'Amount mismatch.',
+			'error.message.income_is_used' => 'This amount is used or balance is insufficient.',
+			'error.message.permission_denied' => 'Permission denied.',
+			'error.message.network_error' => 'Network connection failed. Please check your internet.',
+			'error.message.data_not_found' => 'Data not found. Please try again later.',
+			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first.',
+			'error.message.save_failed' => 'Failed to save. Please try again.',
+			'error.message.delete_failed' => 'Failed to delete. Please try again.',
+			'error.message.task_close_failed' => 'Task close failed. Please try again later.',
+			'error.message.rate_fetch_failed' => 'Failed to fetch exchange rate.',
+			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters.',
+			'error.message.invalid_char' => 'Invalid characters.',
 			'error.message.invalid_code' => 'Invalid invite code. Please check if the link is correct.',
 			'error.message.expired_code' => 'Invite link expired (over 15 mins). Please ask the captain to share again.',
 			'error.message.task_full' => 'Task is full (max 15 members). Cannot join.',
 			'error.message.auth_required' => 'Authentication failed. Please restart the App.',
+			'error.message.init_failed' => 'Loading failed. Please try again.',
+			'error.message.unauthorized' => 'Not logged in. Please login again.',
+			'error.message.task_locked' => 'Room is settled and locked. Data cannot be modified.',
+			'error.message.timeout' => 'Server request timed out. Please try again later.',
+			'error.message.quota_exceeded' => 'System quota exceeded. Please try again later.',
 			_ => null,
 		};
 	}

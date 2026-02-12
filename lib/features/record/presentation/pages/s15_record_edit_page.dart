@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/core/constants/app_error_codes.dart';
-import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
@@ -73,24 +72,29 @@ class _S15ContentState extends State<_S15Content> {
   Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {
     try {
       await vm.updateCurrency(code);
+    } on AppErrorCodes catch (code) {
+      if (!mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
     } catch (e) {
-      if (mounted) {
-        // [攔截錯誤] 顯示 Toast
-        final msg = ErrorMapper.map(context, e);
-        AppToast.showError(context, msg);
-      }
+      if (!mounted) return;
+      final msg = ErrorMapper.map(context, error: e.toString());
+      AppToast.showError(context, msg);
     }
   }
 
   Future<void> _onFetchExchangeRate(S15RecordEditViewModel vm) async {
     try {
       await vm.fetchExchangeRate();
+    } on AppErrorCodes catch (code) {
+      if (!mounted) return;
+      // [攔截錯誤] 顯示 Toast
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
     } catch (e) {
-      if (mounted) {
-        // [攔截錯誤] 顯示 Toast
-        final msg = ErrorMapper.map(context, e);
-        AppToast.showError(context, msg);
-      }
+      if (!mounted) return;
+      final msg = ErrorMapper.map(context, error: e.toString());
+      AppToast.showError(context, msg);
     }
   }
 
@@ -220,16 +224,20 @@ class _S15ContentState extends State<_S15Content> {
     try {
       await vm.saveRecord(t);
       if (mounted) context.pop();
-    } catch (e) {
-      if (!context.mounted) return;
-      final eStr = e.toString();
-      final friendlyMessage = ErrorMapper.map(context, e);
-      if (eStr.contains(AppErrorCodes.saveFailed)) {
+    } on AppErrorCodes catch (code) {
+      if (!mounted) return;
+      final String msg = ErrorMapper.map(context, code: code);
+
+      if (code == AppErrorCodes.saveFailed) {
         CommonInfoDialog.show(context,
-            title: t.error.dialog.unknown.title, content: friendlyMessage);
+            title: t.error.dialog.unknown.title, content: msg);
       } else {
-        AppToast.showError(context, friendlyMessage);
+        AppToast.showError(context, msg);
       }
+    } catch (e) {
+      if (!mounted) return;
+      final msg = ErrorMapper.map(context, error: e.toString());
+      AppToast.showError(context, msg);
     }
   }
 
@@ -254,32 +262,35 @@ class _S15ContentState extends State<_S15Content> {
     if (confirm == true && context.mounted) {
       try {
         final success = await vm.deleteRecord(t);
-        if (success) {
+        if (success && mounted) {
           // A. 刪除成功
           AppToast.showSuccess(
               context, t.D10_RecordDelete_Confirm.deleted_success);
 
-          if (context.mounted) context.pop();
+          context.pop();
         } else {
           // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
-          if (context.mounted) {
+          if (mounted) {
             CommonInfoDialog.show(context,
                 title: t.error.dialog.delete_failed.title,
                 content: t.error.dialog.delete_failed.message);
           }
         }
-      } catch (e) {
-        if (!context.mounted) return;
+      } on AppErrorCodes catch (code) {
+        if (!mounted) return;
 
-        final eStr = e.toString();
-        final friendlyMessage = ErrorMapper.map(context, e);
+        final msg = ErrorMapper.map(context, code: code);
 
-        if (eStr.contains(AppErrorCodes.recordNotFound)) {
+        if (code == AppErrorCodes.dataNotFound) {
           CommonInfoDialog.show(context,
-              title: t.error.dialog.unknown.title, content: friendlyMessage);
+              title: t.error.dialog.unknown.title, content: msg);
         } else {
-          AppToast.showError(context, friendlyMessage);
+          AppToast.showError(context, msg);
         }
+      } catch (e) {
+        if (!mounted) return;
+        final msg = ErrorMapper.map(context, error: e.toString());
+        AppToast.showError(context, msg);
       }
     }
   }
@@ -288,151 +299,121 @@ class _S15ContentState extends State<_S15Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S15RecordEditViewModel>();
-
-    if (vm.initStatus == LoadStatus.loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (vm.initStatus == LoadStatus.error) {
-      return Scaffold(
+    final title = vm.recordId == null
+        ? t.S15_Record_Edit.title.add
+        : t.S15_Record_Edit.title.edit;
+    final leading = IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        onPressed: () => _onClose(vm));
+    final actions = [
+      if (vm.recordId != null)
+        IconButton(
+          icon: const Icon(Icons.delete_outline),
+          color: Theme.of(context).colorScheme.error,
+          onPressed: () => _onDelete(vm),
+        ),
+    ];
+    return CommonStateView(
+      status: vm.initStatus,
+      title: title,
+      leading: leading,
+      actions: actions,
+      errorCode: vm.initErrorCode,
+      child: Scaffold(
         appBar: AppBar(
-          title: Text(vm.recordId == null
-              ? t.S15_Record_Edit.title.add
-              : t.S15_Record_Edit.title.edit),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () => _onClose(vm)),
-          actions: [
-            if (vm.recordId != null)
-              IconButton(
-                icon: const Icon(Icons.delete_outline),
-                color: Theme.of(context).colorScheme.error,
-                onPressed: () => _onDelete(vm),
-              ),
-          ],
+          title: Text(title),
+          leading: leading,
+          actions: actions,
         ),
-        // 1. 中間是共用純文字 View
-        body: CommonStateView(
-          message: ErrorMapper.map(context, vm.initErrorCode),
-        ),
-        // 2. 底部是 StickyBar + 重試按鈕
+        extendBody: true,
         bottomNavigationBar: StickyBottomActionBar(
+          isSheetMode: false,
           children: [
             AppButton(
-              text: t.common.buttons.retry,
+              text: t.common.buttons.save,
               type: AppButtonType.primary,
-              onPressed: () {
-                // 重試邏輯 (例如 vm.refresh() 或 pop)
-                Navigator.of(context).pop();
-              },
+              icon: Icons.add,
+              isLoading: vm.isSaving,
+              onPressed: vm.isSaving ? null : () => _onSave(vm),
             ),
           ],
         ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(vm.recordId == null
-            ? t.S15_Record_Edit.title.add
-            : t.S15_Record_Edit.title.edit),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => _onClose(vm)),
-        actions: [
-          if (vm.recordId != null)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              color: Theme.of(context).colorScheme.error,
-              onPressed: () => _onDelete(vm),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              // [修正] 改用 CustomSlidingSegment
+              child: CustomSlidingSegment<int>(
+                selectedValue: vm.recordTypeIndex,
+                onValueChanged: (val) => vm.setRecordType(val),
+                segments: {
+                  0: t.S15_Record_Edit.tab.expense,
+                  1: t.S15_Record_Edit.tab.income,
+                },
+              ),
             ),
-        ],
-      ),
-      extendBody: true,
-      bottomNavigationBar: StickyBottomActionBar(
-        isSheetMode: false,
-        children: [
-          AppButton(
-            text: t.common.buttons.save,
-            type: AppButtonType.primary,
-            icon: Icons.add,
-            isLoading: vm.isSaving,
-            onPressed: vm.isSaving ? null : () => _onSave(vm),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            // [修正] 改用 CustomSlidingSegment
-            child: CustomSlidingSegment<int>(
-              selectedValue: vm.recordTypeIndex,
-              onValueChanged: (val) => vm.setRecordType(val),
-              segments: {
-                0: t.S15_Record_Edit.tab.expense,
-                1: t.S15_Record_Edit.tab.income,
-              },
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: vm.recordTypeIndex == 0
+                    ? S15ExpenseForm(
+                        amountController: vm.amountController,
+                        titleController: vm.titleController,
+                        memoController: vm.memoController,
+                        exchangeRateController: vm.exchangeRateController,
+                        selectedDate: vm.selectedDate,
+                        selectedCurrencyConstants: vm.selectedCurrencyConstants,
+                        baseCurrency: vm.baseCurrency,
+                        selectedCategoryId: vm.selectedCategoryId,
+                        isRateLoading: vm.isRateLoading,
+                        poolBalancesByCurrency: vm.adjustedPoolBalances,
+                        members: vm.taskMembers,
+                        details: vm.details,
+                        baseRemainingAmount: vm.baseRemainingAmount,
+                        baseSplitMethod: vm.baseSplitMethod,
+                        baseMemberIds: vm.baseMemberIds,
+                        baseRawDetails: vm.baseRawDetails,
+                        remainderDetail: vm.remainderDetail,
+                        payerType: vm.payerType,
+                        payerId: vm.payerId,
+                        hasPaymentError: vm.hasPaymentError,
+                        onPaymentMethodTap: () => _onPaymentMethodTap(vm),
+                        onDateChanged: vm.updateDate,
+                        onCategoryChanged: vm.updateCategory,
+                        onCurrencyChanged: (code) =>
+                            _onUpdateCurrency(vm, code),
+                        onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                        onShowRateInfo: () => _showRateInfoDialog(),
+                        onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
+                        onAddItemTap: () => _onAddItemTap(vm),
+                        onDetailEditTap: (detail) =>
+                            _onDetailEditTap(vm, detail),
+                      )
+                    : S15IncomeForm(
+                        amountController: vm.amountController,
+                        memoController: vm.memoController,
+                        exchangeRateController: vm.exchangeRateController,
+                        selectedDate: vm.selectedDate,
+                        selectedCurrencyConstants: vm.selectedCurrencyConstants,
+                        baseCurrency: vm.baseCurrency,
+                        isRateLoading: vm.isRateLoading,
+                        members: vm.taskMembers,
+                        baseRemainingAmount: vm.totalAmount,
+                        remainderDetail: vm.remainderDetail,
+                        baseSplitMethod: vm.baseSplitMethod,
+                        baseMemberIds: vm.baseMemberIds,
+                        baseRawDetails: vm.baseRawDetails,
+                        onDateChanged: vm.updateDate,
+                        onCurrencyChanged: (code) =>
+                            _onUpdateCurrency(vm, code),
+                        onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                        onShowRateInfo: () => _showRateInfoDialog(),
+                        onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
+                      ),
+              ),
             ),
-          ),
-          Expanded(
-            child: Form(
-              key: _formKey,
-              child: vm.recordTypeIndex == 0
-                  ? S15ExpenseForm(
-                      amountController: vm.amountController,
-                      titleController: vm.titleController,
-                      memoController: vm.memoController,
-                      exchangeRateController: vm.exchangeRateController,
-                      selectedDate: vm.selectedDate,
-                      selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                      baseCurrency: vm.baseCurrency,
-                      selectedCategoryId: vm.selectedCategoryId,
-                      isRateLoading: vm.isRateLoading,
-                      poolBalancesByCurrency: vm.adjustedPoolBalances,
-                      members: vm.taskMembers,
-                      details: vm.details,
-                      baseRemainingAmount: vm.baseRemainingAmount,
-                      baseSplitMethod: vm.baseSplitMethod,
-                      baseMemberIds: vm.baseMemberIds,
-                      baseRawDetails: vm.baseRawDetails,
-                      remainderDetail: vm.remainderDetail,
-                      payerType: vm.payerType,
-                      payerId: vm.payerId,
-                      hasPaymentError: vm.hasPaymentError,
-                      onPaymentMethodTap: () => _onPaymentMethodTap(vm),
-                      onDateChanged: vm.updateDate,
-                      onCategoryChanged: vm.updateCategory,
-                      onCurrencyChanged: (code) => _onUpdateCurrency(vm, code),
-                      onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                      onShowRateInfo: () => _showRateInfoDialog(),
-                      onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                      onAddItemTap: () => _onAddItemTap(vm),
-                      onDetailEditTap: (detail) => _onDetailEditTap(vm, detail),
-                    )
-                  : S15IncomeForm(
-                      amountController: vm.amountController,
-                      memoController: vm.memoController,
-                      exchangeRateController: vm.exchangeRateController,
-                      selectedDate: vm.selectedDate,
-                      selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                      baseCurrency: vm.baseCurrency,
-                      isRateLoading: vm.isRateLoading,
-                      members: vm.taskMembers,
-                      baseRemainingAmount: vm.totalAmount,
-                      remainderDetail: vm.remainderDetail,
-                      baseSplitMethod: vm.baseSplitMethod,
-                      baseMemberIds: vm.baseMemberIds,
-                      baseRawDetails: vm.baseRawDetails,
-                      onDateChanged: vm.updateDate,
-                      onCurrencyChanged: (code) => _onUpdateCurrency(vm, code),
-                      onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                      onShowRateInfo: () => _showRateInfoDialog(),
-                      onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                    ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
@@ -166,40 +166,39 @@ class S13GroupView extends StatelessWidget {
                             onDelete: (ctx) async {
                               // 呼叫 Repo 進行刪除
                               try {
-                                final success =
-                                    await vm.deleteRecord(record.id!);
-                                // 顯示 SnackBar
-                                if (success) {
-                                  if (ctx.mounted) {
-                                    AppToast.showSuccess(
-                                        ctx,
-                                        t.D10_RecordDelete_Confirm
-                                            .deleted_success);
-                                  }
-                                } else {
-                                  // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
-                                  if (context.mounted) {
+                                await vm.deleteRecord(record.id!);
+                                if (ctx.mounted) {
+                                  AppToast.showSuccess(
+                                      ctx,
+                                      t.D10_RecordDelete_Confirm
+                                          .deleted_success);
+                                }
+                              } on AppErrorCodes catch (code) {
+                                if (!ctx.mounted) return;
+
+                                final msg = ErrorMapper.map(ctx, code: code);
+                                switch (code) {
+                                  case AppErrorCodes.incomeIsUsed:
                                     CommonInfoDialog.show(ctx,
                                         title:
                                             t.error.dialog.delete_failed.title,
                                         content: t.error.dialog.delete_failed
                                             .message);
-                                  }
+                                    break;
+                                  case AppErrorCodes.dataNotFound:
+                                    CommonInfoDialog.show(ctx,
+                                        title:
+                                            t.error.dialog.delete_failed.title,
+                                        content: msg);
+                                    break;
+                                  default:
+                                    AppToast.showError(ctx, msg);
                                 }
                               } catch (e) {
                                 if (!ctx.mounted) return;
-
-                                final eStr = e.toString();
-                                final friendlyMessage = ErrorMapper.map(ctx, e);
-
-                                if (eStr
-                                    .contains(AppErrorCodes.recordNotFound)) {
-                                  CommonInfoDialog.show(ctx,
-                                      title: t.error.dialog.unknown.title,
-                                      content: friendlyMessage);
-                                } else {
-                                  AppToast.showError(ctx, friendlyMessage);
-                                }
+                                final msg =
+                                    ErrorMapper.map(ctx, error: e.toString());
+                                AppToast.showError(ctx, msg);
                               }
                             },
                           ),

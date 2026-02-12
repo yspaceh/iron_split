@@ -1,14 +1,15 @@
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class RecordService {
-  final RecordRepository _recordRepository;
-  final TaskRepository _taskRepository;
+  final RecordRepository _recordRepo;
+  final TaskRepository _taskRepo;
 
-  RecordService(this._recordRepository, this._taskRepository);
+  RecordService(this._recordRepo, this._taskRepo);
 
   // =========== 公開方法 (給 ViewModel 呼叫) ===========
 
@@ -23,11 +24,9 @@ class RecordService {
 
     // 2. 準備 Task 更新包
     final rawIncrements = _calculateBalanceIncrements(recordToSave);
-    final taskUpdates =
-        _taskRepository.buildBalanceIncrementData(rawIncrements);
+    final taskUpdates = _taskRepo.buildBalanceIncrementData(rawIncrements);
 
-    await _recordRepository.addRecord(taskId, recordToSave,
-        taskUpdates: taskUpdates);
+    await _recordRepo.addRecord(taskId, recordToSave, taskUpdates: taskUpdates);
   }
 
   /// 更新紀錄 (撤銷舊、套用新)
@@ -44,9 +43,9 @@ class RecordService {
     final combined = Map<String, double>.from(undoOld);
     applyNew.forEach((k, v) => combined[k] = (combined[k] ?? 0) + v);
 
-    final taskUpdates = _taskRepository.buildBalanceIncrementData(combined);
+    final taskUpdates = _taskRepo.buildBalanceIncrementData(combined);
 
-    await _recordRepository.updateRecord(taskId, recordToSave,
+    await _recordRepo.updateRecord(taskId, recordToSave,
         taskUpdates: taskUpdates);
   }
 
@@ -54,8 +53,8 @@ class RecordService {
   Future<void> deleteRecord(String taskId, RecordModel record) async {
     final undo = _calculateBalanceIncrements(record, isUndo: true);
 
-    final taskUpdates = _taskRepository.buildBalanceIncrementData(undo);
-    await _recordRepository.deleteRecord(taskId, record.id!,
+    final taskUpdates = _taskRepo.buildBalanceIncrementData(undo);
+    await _recordRepo.deleteRecord(taskId, record.id!,
         taskUpdates: taskUpdates);
   }
 
@@ -65,7 +64,7 @@ class RecordService {
     required Map<String, double> newRates,
     required CurrencyConstants baseCurrency,
   }) async {
-    final records = await _recordRepository.getRecordsOnce(taskId);
+    final records = await _recordRepo.getRecordsOnce(taskId);
     final List<({String id, double rate, double remainder})> recordUpdates = [];
     final Map<String, double> totalTaskDelta = {};
 
@@ -99,10 +98,8 @@ class RecordService {
     }
 
     if (recordUpdates.isNotEmpty) {
-      final taskUpdates =
-          _taskRepository.buildBalanceIncrementData(totalTaskDelta);
-      await _recordRepository.batchUpdateRatesAndRemainders(
-          taskId, recordUpdates,
+      final taskUpdates = _taskRepo.buildBalanceIncrementData(totalTaskDelta);
+      await _recordRepo.batchUpdateRatesAndRemainders(taskId, recordUpdates,
           taskUpdates: taskUpdates);
     }
   }
@@ -181,5 +178,32 @@ class RecordService {
     }
 
     return uids;
+  }
+
+  /// 驗證並刪除紀錄
+  /// [taskId] 房間 ID
+  /// [record] 要刪除的紀錄
+  /// [poolBalances] 當前房間各幣別的公款餘額
+  Future<void> validateAndDelete(String taskId, RecordModel record,
+      Map<String, double> poolBalances) async {
+    // 1. 邏輯檢查：如果是收入，檢查是否可以刪除
+    if (record.type == 'income') {
+      // 檢查此收入是否已被其他支出引用（原則 2：Service 調用 Repo）
+      final isReferenced =
+          await _recordRepo.isRecordReferenced(taskId, record.id ?? '');
+      if (isReferenced) {
+        // 原則 4：拋出標準 AppErrorCodes
+        throw AppErrorCodes.incomeIsUsed;
+      }
+
+      // 檢查公款餘額是否足以扣除這筆收入 (避免餘額變成負數)
+      double currentBalance = poolBalances[record.currencyCode] ?? 0.0;
+      if (currentBalance < (record.amount - 0.01)) {
+        throw AppErrorCodes.incomeIsUsed; // 語意上這也代表這筆錢已經被花掉了
+      }
+    }
+
+    // 2. 通過驗證後，執行實際刪除
+    await _recordRepo.deleteRecord(taskId, record.id ?? '');
   }
 }

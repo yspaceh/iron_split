@@ -2,13 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart'; // 新增
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
@@ -20,14 +23,16 @@ import 'package:iron_split/features/task/presentation/viewmodels/balance_summary
 class S13TaskDashboardViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final AuthRepository _authRepo;
   final DashboardService _service;
   final String taskId;
-  final String currentUserId;
   late final RecordService _recordService;
 
+  late String _currentUserId;
   TaskModel? _task;
   List<RecordModel> _records = [];
-  bool _isLoading = true;
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
 
   BalanceSummaryState _balanceState = BalanceSummaryState.initial();
   Map<DateTime, List<RecordModel>> _groupedRecords = {};
@@ -58,8 +63,11 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId;
 
+  bool get shouldNavigateToS17 => _task?.status == 'settled';
+
   // Getters
-  bool get isLoading => _isLoading;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
   TaskModel? get task => _task;
   BalanceSummaryState get balanceState => _balanceState;
   Map<DateTime, List<RecordModel>> get groupedRecords => _groupedRecords;
@@ -77,6 +85,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   String get remainderRule => _remainderRule;
   String? get remainderAbsorberId => _remainderAbsorberId;
   Map<String, dynamic> get membersData => _task?.members ?? {};
+  String get currentUserId => _currentUserId;
 
   // 新增：為了支援 UI 顯示 Currency Symbol
   CurrencyConstants get baseCurrency {
@@ -91,17 +100,19 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
   StreamSubscription? _taskSub;
   StreamSubscription? _recordSub;
+  bool _hasTaskEmitted = false; // Task 流是否已發送過資料
+  bool _hasRecordsEmitted = false; // Records 流是否已發送過資料
 
   // 2. 新增：Page 需要知道是否為隊長
   bool get isCaptain {
     if (_task == null) return false;
-    return _task!.createdBy == currentUserId;
+    return _task!.createdBy == _currentUserId;
   }
 
   // 3. 新增：Page 需要知道是否顯示 Intro
   bool get shouldShowIntro {
     if (_task == null) return false;
-    final memberData = _task!.members[currentUserId];
+    final memberData = _task!.members[_currentUserId];
     if (memberData == null) return false;
     final bool hasSeen = memberData['hasSeenRoleIntro'] ?? true;
     return !hasSeen;
@@ -109,58 +120,78 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
   S13TaskDashboardViewModel({
     required this.taskId,
-    required this.currentUserId,
     required TaskRepository taskRepo,
+    required AuthRepository authRepo,
     required RecordRepository recordRepo,
     required DashboardService service,
   })  : _taskRepo = taskRepo,
+        _authRepo = authRepo,
         _recordRepo = recordRepo,
         _service = service {
     _recordService = RecordService(_recordRepo, _taskRepo);
   }
 
   void init() {
-    _isLoading = true;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
+    try {
+      // ✅ 原則 2: 使用 Repository 獲取當前使用者，不直接存取 FirebaseAuth
+      final currentUser = _authRepo.currentUser;
 
-    _taskSub = _taskRepo.streamTask(taskId).listen((taskData) {
-      if (taskData != null) {
-        _task = taskData;
-        _remainderRule = taskData.remainderRule;
-        _remainderAbsorberId = taskData.remainderAbsorberId;
-        _recalculate();
+      // ✅ 原則 1: UI 零邏輯，由 VM 判斷准入條件
+      if (currentUser == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.unauthorized;
+        notifyListeners();
+        return;
       }
-    });
+      _currentUserId = currentUser.uid;
 
-    _recordSub = _recordRepo.streamRecords(taskId).listen((records) {
-      _records = records;
-      _recalculate();
-    });
+      _taskSub = _taskRepo.streamTask(taskId).listen((taskData) {
+        if (taskData != null) {
+          _task = taskData;
+          _remainderRule = taskData.remainderRule;
+          _remainderAbsorberId = taskData.remainderAbsorberId;
+          _hasTaskEmitted = true;
+          _recalculate();
+        }
+      });
+
+      _recordSub = _recordRepo.streamRecords(taskId).listen((records) {
+        _records = records;
+        _hasRecordsEmitted = true;
+        _recalculate();
+      });
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = AppErrorCodes.initFailed;
+      notifyListeners();
+    }
   }
 
   void _recalculate() {
-    if (_task == null) return;
+    if (!_hasTaskEmitted || !_hasRecordsEmitted || _task == null) return;
 
     // A. 計算 State (Service 現在會用 BalanceCalculator 填好 poolDetail)
     _balanceState = _service.calculateBalanceState(
       task: _task!,
       records: _records,
-      currentUserId: currentUserId,
+      currentUserId: _currentUserId,
     );
 
     // B. 分組與個人數據
     _groupedRecords = _service.groupRecordsByDate(_records);
     _personalRecords =
-        _service.filterPersonalRecords(_records, currentUserId, baseCurrency);
+        _service.filterPersonalRecords(_records, _currentUserId, baseCurrency);
     _personalGroupedRecords = _service.groupRecordsByDate(_personalRecords);
-    final memberData =
-        _task!.members[currentUserId] as Map<String, dynamic>? ?? {};
-    final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
-    final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+    final personalStats = _service.calculatePersonalStats(
+      _task!.members[_currentUserId] as Map<String, dynamic>? ?? {},
+    );
 
-    _personalTotalExpense = DualAmount(original: 0, base: expense);
-    _personalTotalIncome = DualAmount(original: 0, base: prepaid);
-    _personalNetBalance = DualAmount(original: 0, base: prepaid - expense);
+    _personalTotalExpense = personalStats.expense;
+    _personalTotalIncome = personalStats.income;
+    _personalNetBalance = personalStats.netBalance;
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
     final startDate = _task!.startDate ?? DateTime.now();
@@ -191,11 +222,11 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     }
 
     // Auto Scroll
-    if (!_isLoading) {
+    if (_initStatus == LoadStatus.loading) {
       checkInitialScroll();
     }
 
-    _isLoading = false;
+    _initStatus = LoadStatus.success;
     notifyListeners();
   }
 
@@ -330,34 +361,15 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   /// 刪除消費紀錄
-  Future<bool> deleteRecord(String recordId) async {
+  Future<void> deleteRecord(String recordId) async {
     try {
       final record = _records.firstWhere(
         (r) => r.id == recordId,
         // [修正] 使用標準錯誤代碼
-        orElse: () => throw Exception(AppErrorCodes.recordNotFound),
+        orElse: () => throw AppErrorCodes.dataNotFound,
       );
 
-      // 如果是收入/預收 (Income)，必須檢查相依性與餘額
-      if (record.type == 'income') {
-        // A. 檢查是否被其他紀錄引用 (payerId)
-        final isReferenced =
-            await _recordRepo.isRecordReferenced(taskId, recordId);
-        if (isReferenced) return false;
-
-        // B. 檢查餘額 (Pool Balance)
-        // 如果刪除這筆收入，餘額是否會變成負數？
-        // poolBalances 是當前餘額 (包含此筆收入)
-        final currentBalance = poolBalances[record.currencyCode] ?? 0.0;
-
-        // 如果當前餘額小於此筆收入金額 (容許 0.01 誤差)，代表錢已經花掉了
-        if (currentBalance < (record.amount - 0.01)) {
-          return false;
-        }
-      }
-
-      // 2. 呼叫 Repository 執行刪除
-      await _recordService.deleteRecord(taskId, record);
+      await _recordService.validateAndDelete(taskId, record, poolBalances);
 
       // 3. 寫入 Activity Log
       await ActivityLogService.log(
@@ -369,31 +381,29 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
           'currency': record.currencyCode, // 注意：Model 的欄位是 currencyCode
         },
       );
-      return true;
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
-      // TODO: handle error
-      rethrow; // 拋出異常，讓 UI 層 (RecordItem) 可以顯示 SnackBar 錯誤訊息
+      throw ErrorMapper.parseErrorCode(e); // 其他系統錯誤轉化後拋出
     }
   }
 
-  Future<bool> lockTaskAndStartSettlement() async {
+  Future<void> lockTaskAndStartSettlement() async {
     try {
       // 1. 鎖定房間 (ongoing -> pending)
       await _taskRepo.updateTaskStatus(taskId, 'pending');
-      return true;
     } catch (e) {
-      // TODO: handle error
-      return false;
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 
   DualAmount getPersonalRecordDisplayAmount(RecordModel record) {
     if (record.type == 'income') {
       return BalanceCalculator.calculatePersonalCredit(
-          record, currentUserId, baseCurrency);
+          record, _currentUserId, baseCurrency);
     } else {
       return BalanceCalculator.calculatePersonalDebit(
-          record, currentUserId, baseCurrency);
+          record, _currentUserId, baseCurrency);
     }
   }
 

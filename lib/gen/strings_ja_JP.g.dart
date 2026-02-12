@@ -1529,30 +1529,34 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get unknown => '予期せぬエラーが発生しました';
-	@override String get invalid_amount => '金額が無効です';
-	@override String get required => '必須項目です';
-	@override String empty({required Object key}) => '${key}を入力してください';
-	@override String get format => '形式が正しくありません';
-	@override String zero({required Object key}) => '${key}は0にできません';
-	@override String get amount_not_enough => '残額が不足しています';
-	@override String get amount_mismatch => '金額が一致しません';
-	@override String get income_is_used => 'この金額はすでに使用されています';
-	@override String get permission_denied => '権限がありません';
-	@override String get network_error => 'ネットワークエラーが発生しました。しばらくしてから再試行してください';
-	@override String get data_not_found => 'データが見つかりません。しばらくしてから再試行してください';
-	@override String get load_failed => 'ロードが失敗しました。しばらくしてから再試行してください';
-	@override String enter_first({required Object key}) => '${key}を先に入力してください';
-	@override String get save_failed => '保存に失敗しました。しばらくしてから再試行してください';
-	@override String get delete_failed => '削除に失敗しました。しばらくしてから再試行してください';
-	@override String get task_close_failed => 'タスク終了に失敗しました。しばらくしてから再試行してください';
-	@override String get rate_fetch_failed => '為替レートを';
-	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください';
-	@override String get invalid_char => '無効な文字が含まれています';
+	@override String get unknown => '予期せぬエラーが発生しました。';
+	@override String get invalid_amount => '金額が無効です。';
+	@override String get required => '必須項目です。';
+	@override String empty({required Object key}) => '${key}を入力してください。';
+	@override String get format => '形式が正しくありません。';
+	@override String zero({required Object key}) => '${key}は0にできません。';
+	@override String get amount_not_enough => '残額が不足しています。';
+	@override String get amount_mismatch => '金額が一致しません。';
+	@override String get income_is_used => 'この金額は既に使用されているか、残高が不足しています。';
+	@override String get permission_denied => '権限がありません。';
+	@override String get network_error => 'ネットワーク接続に失敗しました。接続を確認してください。';
+	@override String get data_not_found => 'データが見つかりませんでした。もう一度お試しください。';
+	@override String enter_first({required Object key}) => '${key}を先に入力してください。';
+	@override String get save_failed => '保存に失敗しました。もう一度お試しください。';
+	@override String get delete_failed => '削除に失敗しました。もう一度お試しください。';
+	@override String get task_close_failed => 'タスク終了に失敗しました。しばらくしてから再試行してください。';
+	@override String get rate_fetch_failed => '為替レートの取得に失敗しました。';
+	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください。';
+	@override String get invalid_char => '無効な文字が含まれています。';
 	@override String get invalid_code => '招待コードが無効です。リンクが正しいか確認してください。';
 	@override String get expired_code => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
-	@override String get task_full => '定員オーバーです（上限15名）。参加できません。';
+	@override String get task_full => '定員オーバーです（上限15名）。参加できません';
 	@override String get auth_required => '認証に失敗しました。アプリを再起動してください。';
+	@override String get init_failed => '読み込みに失敗しました。もう一度お試しください。';
+	@override String get unauthorized => 'ログインしていません。再度ログインしてください。';
+	@override String get task_locked => '精算済みのた​​め、データを変更できません。';
+	@override String get timeout => 'タイムアウトしました。後でもう一度お試しください。';
+	@override String get quota_exceeded => '利用制限に達しました。しばらく経ってからお試しください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2219,30 +2223,34 @@ extension on TranslationsJaJp {
 			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
 			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
 			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
-			'error.message.unknown' => '予期せぬエラーが発生しました',
-			'error.message.invalid_amount' => '金額が無効です',
-			'error.message.required' => '必須項目です',
-			'error.message.empty' => ({required Object key}) => '${key}を入力してください',
-			'error.message.format' => '形式が正しくありません',
-			'error.message.zero' => ({required Object key}) => '${key}は0にできません',
-			'error.message.amount_not_enough' => '残額が不足しています',
-			'error.message.amount_mismatch' => '金額が一致しません',
-			'error.message.income_is_used' => 'この金額はすでに使用されています',
-			'error.message.permission_denied' => '権限がありません',
-			'error.message.network_error' => 'ネットワークエラーが発生しました。しばらくしてから再試行してください',
-			'error.message.data_not_found' => 'データが見つかりません。しばらくしてから再試行してください',
-			'error.message.load_failed' => 'ロードが失敗しました。しばらくしてから再試行してください',
-			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください',
-			'error.message.save_failed' => '保存に失敗しました。しばらくしてから再試行してください',
-			'error.message.delete_failed' => '削除に失敗しました。しばらくしてから再試行してください',
-			'error.message.task_close_failed' => 'タスク終了に失敗しました。しばらくしてから再試行してください',
-			'error.message.rate_fetch_failed' => '為替レートを',
-			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください',
-			'error.message.invalid_char' => '無効な文字が含まれています',
+			'error.message.unknown' => '予期せぬエラーが発生しました。',
+			'error.message.invalid_amount' => '金額が無効です。',
+			'error.message.required' => '必須項目です。',
+			'error.message.empty' => ({required Object key}) => '${key}を入力してください。',
+			'error.message.format' => '形式が正しくありません。',
+			'error.message.zero' => ({required Object key}) => '${key}は0にできません。',
+			'error.message.amount_not_enough' => '残額が不足しています。',
+			'error.message.amount_mismatch' => '金額が一致しません。',
+			'error.message.income_is_used' => 'この金額は既に使用されているか、残高が不足しています。',
+			'error.message.permission_denied' => '権限がありません。',
+			'error.message.network_error' => 'ネットワーク接続に失敗しました。接続を確認してください。',
+			'error.message.data_not_found' => 'データが見つかりませんでした。もう一度お試しください。',
+			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください。',
+			'error.message.save_failed' => '保存に失敗しました。もう一度お試しください。',
+			'error.message.delete_failed' => '削除に失敗しました。もう一度お試しください。',
+			'error.message.task_close_failed' => 'タスク終了に失敗しました。しばらくしてから再試行してください。',
+			'error.message.rate_fetch_failed' => '為替レートの取得に失敗しました。',
+			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください。',
+			'error.message.invalid_char' => '無効な文字が含まれています。',
 			'error.message.invalid_code' => '招待コードが無効です。リンクが正しいか確認してください。',
 			'error.message.expired_code' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
-			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません。',
+			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません',
 			'error.message.auth_required' => '認証に失敗しました。アプリを再起動してください。',
+			'error.message.init_failed' => '読み込みに失敗しました。もう一度お試しください。',
+			'error.message.unauthorized' => 'ログインしていません。再度ログインしてください。',
+			'error.message.task_locked' => '精算済みのた​​め、データを変更できません。',
+			'error.message.timeout' => 'タイムアウトしました。後でもう一度お試しください。',
+			'error.message.quota_exceeded' => '利用制限に達しました。しばらく経ってからお試しください。',
 			_ => null,
 		};
 	}

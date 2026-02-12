@@ -2307,65 +2307,62 @@ class TranslationsErrorMessageZhTw {
 
 	// Translations
 
-	/// zh-TW: '發生未預期的錯誤'
-	String get unknown => '發生未預期的錯誤';
+	/// zh-TW: '發生未知錯誤。'
+	String get unknown => '發生未知錯誤。';
 
-	/// zh-TW: '金額無效'
-	String get invalid_amount => '金額無效';
+	/// zh-TW: '金額無效。'
+	String get invalid_amount => '金額無效。';
 
-	/// zh-TW: '此欄位為必填'
-	String get required => '此欄位為必填';
+	/// zh-TW: '此欄位為必填。'
+	String get required => '此欄位為必填。';
 
-	/// zh-TW: '請輸入{key}'
-	String empty({required Object key}) => '請輸入${key}';
+	/// zh-TW: '請輸入{key}。'
+	String empty({required Object key}) => '請輸入${key}。';
 
-	/// zh-TW: '格式錯誤'
-	String get format => '格式錯誤';
+	/// zh-TW: '格式錯誤。'
+	String get format => '格式錯誤。';
 
-	/// zh-TW: '{key}不可為 0'
-	String zero({required Object key}) => '${key}不可為 0';
+	/// zh-TW: '{key}不可為 0。'
+	String zero({required Object key}) => '${key}不可為 0。';
 
-	/// zh-TW: '剩餘金額不足'
-	String get amount_not_enough => '剩餘金額不足';
+	/// zh-TW: '剩餘金額不足。'
+	String get amount_not_enough => '剩餘金額不足。';
 
-	/// zh-TW: '金額不符'
-	String get amount_mismatch => '金額不符';
+	/// zh-TW: '金額不符。'
+	String get amount_mismatch => '金額不符。';
 
-	/// zh-TW: '此款項已被使用'
-	String get income_is_used => '此款項已被使用';
+	/// zh-TW: '此筆款項已被使用或公款不足，無法更動。'
+	String get income_is_used => '此筆款項已被使用或公款不足，無法更動。';
 
-	/// zh-TW: '權限不足'
-	String get permission_denied => '權限不足';
+	/// zh-TW: '權限不足，無法執行此操作。'
+	String get permission_denied => '權限不足，無法執行此操作。';
 
-	/// zh-TW: '網路連線異常，請稍後再試'
-	String get network_error => '網路連線異常，請稍後再試';
+	/// zh-TW: '網路連線失敗，請檢查網路連線。'
+	String get network_error => '網路連線失敗，請檢查網路連線。';
 
-	/// zh-TW: '找不到資料，請稍後再試'
-	String get data_not_found => '找不到資料，請稍後再試';
+	/// zh-TW: '找不到相關資料。'
+	String get data_not_found => '找不到相關資料。';
 
-	/// zh-TW: '載入失敗，請稍後再試'
-	String get load_failed => '載入失敗，請稍後再試';
+	/// zh-TW: '請先輸入{key}。'
+	String enter_first({required Object key}) => '請先輸入${key}。';
 
-	/// zh-TW: '請先輸入{key}'
-	String enter_first({required Object key}) => '請先輸入${key}';
+	/// zh-TW: '儲存失敗，請稍後再試。'
+	String get save_failed => '儲存失敗，請稍後再試。';
 
-	/// zh-TW: '儲存失敗，請稍後再試'
-	String get save_failed => '儲存失敗，請稍後再試';
+	/// zh-TW: '刪除失敗，請稍後再試。'
+	String get delete_failed => '刪除失敗，請稍後再試。';
 
-	/// zh-TW: '刪除失敗，請稍後再試'
-	String get delete_failed => '刪除失敗，請稍後再試';
+	/// zh-TW: '任務關閉失敗，請稍後再試。'
+	String get task_close_failed => '任務關閉失敗，請稍後再試。';
 
-	/// zh-TW: '任務關閉失敗，請稍後再試'
-	String get task_close_failed => '任務關閉失敗，請稍後再試';
+	/// zh-TW: '匯率取得失敗。'
+	String get rate_fetch_failed => '匯率取得失敗。';
 
-	/// zh-TW: '為替レートの更新失敗'
-	String get rate_fetch_failed => '為替レートの更新失敗';
+	/// zh-TW: '最多 {max} 個字。'
+	String length_exceeded({required Object max}) => '最多 ${max} 個字。';
 
-	/// zh-TW: '最多 {max} 個字'
-	String length_exceeded({required Object max}) => '最多 ${max} 個字';
-
-	/// zh-TW: '包含無效字元'
-	String get invalid_char => '包含無效字元';
+	/// zh-TW: '包含無效字元。'
+	String get invalid_char => '包含無效字元。';
 
 	/// zh-TW: '邀請碼無效，請確認連結是否正確。'
 	String get invalid_code => '邀請碼無效，請確認連結是否正確。';
@@ -2378,6 +2375,21 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '身分驗證失敗，請重新啟動 App。'
 	String get auth_required => '身分驗證失敗，請重新啟動 App。';
+
+	/// zh-TW: '載入失敗，請稍後再試。'
+	String get init_failed => '載入失敗，請稍後再試。';
+
+	/// zh-TW: '帳號未登入，請重新登入。'
+	String get unauthorized => '帳號未登入，請重新登入。';
+
+	/// zh-TW: '房間已進入結算狀態，無法修改資料。'
+	String get task_locked => '房間已進入結算狀態，無法修改資料。';
+
+	/// zh-TW: '伺服器回應逾時，請稍後再試。'
+	String get timeout => '伺服器回應逾時，請稍後再試。';
+
+	/// zh-TW: '系統流量達到上限，請稍後再試。'
+	String get quota_exceeded => '系統流量達到上限，請稍後再試。';
 }
 
 // Path: common.remainder_rule.rule
@@ -3151,30 +3163,34 @@ extension on Translations {
 			'error.settlement.status_invalid' => '此任務狀態異常（可能已被結算），請刷新頁面。',
 			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
 			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
-			'error.message.unknown' => '發生未預期的錯誤',
-			'error.message.invalid_amount' => '金額無效',
-			'error.message.required' => '此欄位為必填',
-			'error.message.empty' => ({required Object key}) => '請輸入${key}',
-			'error.message.format' => '格式錯誤',
-			'error.message.zero' => ({required Object key}) => '${key}不可為 0',
-			'error.message.amount_not_enough' => '剩餘金額不足',
-			'error.message.amount_mismatch' => '金額不符',
-			'error.message.income_is_used' => '此款項已被使用',
-			'error.message.permission_denied' => '權限不足',
-			'error.message.network_error' => '網路連線異常，請稍後再試',
-			'error.message.data_not_found' => '找不到資料，請稍後再試',
-			'error.message.load_failed' => '載入失敗，請稍後再試',
-			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}',
-			'error.message.save_failed' => '儲存失敗，請稍後再試',
-			'error.message.delete_failed' => '刪除失敗，請稍後再試',
-			'error.message.task_close_failed' => '任務關閉失敗，請稍後再試',
-			'error.message.rate_fetch_failed' => '為替レートの更新失敗',
-			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字',
-			'error.message.invalid_char' => '包含無效字元',
+			'error.message.unknown' => '發生未知錯誤。',
+			'error.message.invalid_amount' => '金額無效。',
+			'error.message.required' => '此欄位為必填。',
+			'error.message.empty' => ({required Object key}) => '請輸入${key}。',
+			'error.message.format' => '格式錯誤。',
+			'error.message.zero' => ({required Object key}) => '${key}不可為 0。',
+			'error.message.amount_not_enough' => '剩餘金額不足。',
+			'error.message.amount_mismatch' => '金額不符。',
+			'error.message.income_is_used' => '此筆款項已被使用或公款不足，無法更動。',
+			'error.message.permission_denied' => '權限不足，無法執行此操作。',
+			'error.message.network_error' => '網路連線失敗，請檢查網路連線。',
+			'error.message.data_not_found' => '找不到相關資料。',
+			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}。',
+			'error.message.save_failed' => '儲存失敗，請稍後再試。',
+			'error.message.delete_failed' => '刪除失敗，請稍後再試。',
+			'error.message.task_close_failed' => '任務關閉失敗，請稍後再試。',
+			'error.message.rate_fetch_failed' => '匯率取得失敗。',
+			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字。',
+			'error.message.invalid_char' => '包含無效字元。',
 			'error.message.invalid_code' => '邀請碼無效，請確認連結是否正確。',
 			'error.message.expired_code' => '邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。',
 			'error.message.task_full' => '任務人數已滿 (上限 15 人)，無法加入。',
 			'error.message.auth_required' => '身分驗證失敗，請重新啟動 App。',
+			'error.message.init_failed' => '載入失敗，請稍後再試。',
+			'error.message.unauthorized' => '帳號未登入，請重新登入。',
+			'error.message.task_locked' => '房間已進入結算狀態，無法修改資料。',
+			'error.message.timeout' => '伺服器回應逾時，請稍後再試。',
+			'error.message.quota_exceeded' => '系統流量達到上限，請稍後再試。',
 			_ => null,
 		};
 	}

@@ -109,7 +109,7 @@ class _S16ContentState extends State<_S16Content> {
         }
       } catch (e) {
         if (!context.mounted) return;
-        final friendlyMessage = ErrorMapper.map(context, e.toString());
+        final friendlyMessage = ErrorMapper.map(context, error: e.toString());
         AppToast.showError(context, friendlyMessage);
       }
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -45,10 +46,10 @@ class _S11Content extends StatefulWidget {
 class _S11ContentState extends State<_S11Content> {
   bool _hasShownError = false;
   void _showErrorDialog(
-      BuildContext context, S11InviteConfirmViewModel vm, String error) {
+      BuildContext context, S11InviteConfirmViewModel vm, AppErrorCodes error) {
     final theme = Theme.of(context);
     final t = Translations.of(context);
-    final friendlyMessage = ErrorMapper.map(context, error);
+    final friendlyMessage = ErrorMapper.map(context, code: error);
     CommonAlertDialog.show(
       context,
       title: t.D02_Invite_Result.title,

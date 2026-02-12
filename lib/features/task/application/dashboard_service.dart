@@ -173,4 +173,15 @@ class DashboardService {
     }
     return totalPaid;
   }
+
+  ({DualAmount expense, DualAmount income, DualAmount netBalance})
+      calculatePersonalStats(Map<String, dynamic> memberData) {
+    final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
+    final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+
+    final totalExpense = DualAmount(original: 0, base: expense);
+    final totalIncome = DualAmount(original: 0, base: prepaid);
+    final netBalance = DualAmount(original: 0, base: prepaid - expense);
+    return (expense: totalExpense, income: totalIncome, netBalance: netBalance);
+  }
 }

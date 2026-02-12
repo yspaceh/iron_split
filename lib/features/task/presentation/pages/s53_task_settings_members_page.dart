@@ -6,7 +6,6 @@ import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
-import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; //
@@ -106,8 +105,12 @@ class _S53Content extends StatelessWidget {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
-            body: CommonStateView(
-              message: ErrorMapper.map(context, snapshot.error),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                ErrorMapper.map(context, error: snapshot.error.toString()),
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              ),
             ),
             bottomNavigationBar: StickyBottomActionBar(
               children: [
@@ -133,7 +136,13 @@ class _S53Content extends StatelessWidget {
         if (task == null) {
           return Scaffold(
             appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
-            body: CommonStateView(message: t.error.message.data_not_found),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                t.error.message.data_not_found,
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              ),
+            ),
             bottomNavigationBar: StickyBottomActionBar(
               children: [
                 AppButton(

@@ -1,123 +1,120 @@
 // error_mapper.dart
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:iron_split/core/constants/app_error_codes.dart';
+import 'package:flutter/material.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class ErrorMapper {
-  /// 將後端各種奇怪的 Exception 轉化為標準的 AppErrorCode
-  /// 所有的 VM 都可以呼叫這個方法來獲得乾淨的狀態碼
-  static String parseErrorCode(dynamic error) {
+  // error_mapper.dart
+
+  static AppErrorCodes parseErrorCode(dynamic error) {
     if (error == null) return AppErrorCodes.unknown;
+    if (error is AppErrorCodes) return error;
+
+    // ✅ 1. 完整還原並保留您提供的 Firebase 核心錯誤映射
+    if (error is FirebaseException) {
+      switch (error.code.toLowerCase()) {
+        case 'permission-denied':
+          return AppErrorCodes.permissionDenied;
+        case 'not-found':
+          return AppErrorCodes.dataNotFound; // 統一對應到 dataNotFound
+        case 'resource-exhausted':
+          return AppErrorCodes.quotaExceeded;
+        case 'unavailable':
+          return AppErrorCodes.unavailable;
+        case 'deadline-exceeded':
+          return AppErrorCodes.timeout;
+        case 'unauthenticated':
+          return AppErrorCodes.unauthorized;
+      }
+    }
 
     String eStr = error.toString().toUpperCase();
-    if (error is FirebaseException) {
-      eStr = "${error.code} ${error.message}".toUpperCase();
-    }
 
-    // 邀請相關
-    // 邀請相關
-    if (eStr.contains('TASK_FULL') || eStr.contains('FAILED-PRECONDITION')) {
-      return AppErrorCodes.inviteTaskFull;
-    }
-    if (eStr.contains('EXPIRED') || eStr.contains('DEADLINE-EXCEEDED')) {
-      return AppErrorCodes.inviteExpired;
-    }
-
-    // [修正] 加入 INVALID-ARGUMENT 和 NOT-FOUND
-    if (eStr.contains('INVALID') ||
-        eStr.contains('NOT-FOUND') ||
-        eStr.contains('INVALID-ARGUMENT')) {
-      return AppErrorCodes.inviteInvalid;
-    }
-
-    if (eStr.contains('ALREADY') || eStr.contains('ALREADY-EXISTS')) {
-      return AppErrorCodes.inviteAlreadyJoined;
-    }
-    if (eStr.contains('AUTH') || eStr.contains('UNAUTHENTICATED')) {
-      return AppErrorCodes.inviteAuthRequired;
-    }
-
-    // 其他現存的錯誤 (如果 eStr 已經是標準 Code，就直接回傳)
-    if (eStr.contains(AppErrorCodes.incomeIsUsed)) {
-      return AppErrorCodes.incomeIsUsed;
-    }
-    if (eStr.contains(AppErrorCodes.recordNotFound)) {
-      return AppErrorCodes.recordNotFound;
-    }
-    if (eStr.contains(AppErrorCodes.taskNotFound)) {
-      return AppErrorCodes.taskNotFound;
-    }
-    if (eStr.contains(AppErrorCodes.taskLoadFailed)) {
-      return AppErrorCodes.taskLoadFailed;
-    }
-    if (eStr.contains(AppErrorCodes.saveFailed)) {
-      return AppErrorCodes.saveFailed;
-    }
-    if (eStr.contains(AppErrorCodes.deleteFailed)) {
-      return AppErrorCodes.deleteFailed;
-    }
-    if (eStr.contains(AppErrorCodes.rateFetchFailed)) {
+    // 1. 識別匯率相關錯誤
+    if (eStr.contains('RATE') ||
+        eStr.contains('EXCHANGE') ||
+        eStr.contains('CURRENCY')) {
       return AppErrorCodes.rateFetchFailed;
     }
-    if (eStr.contains(AppErrorCodes.permissionDenied)) {
-      return AppErrorCodes.permissionDenied;
+
+    // 2. 動作關鍵字識別 (是什麼動作掛掉)
+    // 當 Firebase 噴出一個 generic error 時，我們靠這些關鍵字轉譯
+    if (eStr.contains('SAVE') ||
+        eStr.contains('UPDATE') ||
+        eStr.contains('CREATE')) {
+      return AppErrorCodes.saveFailed;
+    }
+    if (eStr.contains('DELETE') || eStr.contains('REMOVE')) {
+      return AppErrorCodes.deleteFailed;
     }
 
-    if (eStr.contains(AppErrorCodes.networkError) ||
-        eStr.contains("SocketException") ||
-        eStr.contains("unavailable")) {
+    // 2. 網路與連線類 (補強 Firebase 外的網路報錯)
+    if (eStr.contains('NETWORK') || eStr.contains('CONNECTION')) {
       return AppErrorCodes.networkError;
+    }
+
+    // 3. 邀請相關關鍵字
+    if (eStr.contains("TASK_FULL")) return AppErrorCodes.inviteTaskFull;
+    if (eStr.contains("EXPIRED")) return AppErrorCodes.inviteExpired;
+    if (eStr.contains("INVALID")) return AppErrorCodes.inviteInvalid;
+
+    // 4. 業務與初始化收斂
+    if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.incomeIsUsed;
+    if (eStr.contains('TASK_LOCKED')) return AppErrorCodes.taskLocked;
+    if (eStr.contains('INIT') ||
+        eStr.contains('LOAD') ||
+        eStr.contains('SPLIT')) {
+      return AppErrorCodes.initFailed;
     }
 
     return AppErrorCodes.unknown;
   }
 
-  /// 負責將標準 Code 轉成多國語系字串 (UI 顯示用)
-  static String map(BuildContext context, dynamic error) {
+  static String map(BuildContext context,
+      {AppErrorCodes? code, dynamic error}) {
     final t = Translations.of(context);
+    final finalCode = code ?? parseErrorCode(error);
 
-    // 先將不管什麼格式的 error，都先洗成標準的 AppErrorCode
-    final standardCode = parseErrorCode(error);
+    switch (finalCode) {
+      case AppErrorCodes.unauthorized:
+        return t.error.message.unauthorized;
+      case AppErrorCodes.permissionDenied:
+        return t.error.message.permission_denied;
+      case AppErrorCodes.dataNotFound:
+        return t.error.message.data_not_found;
+      case AppErrorCodes.initFailed:
+        return t.error.message.init_failed;
 
-    // 現在這裡的判斷變得非常乾淨，不用再去檢查 'failed-precondition' 了
-    switch (standardCode) {
+      // ✅ 這些精確錯誤即便對應到同一行文字，也能確保邏輯層級是分開的
+      case AppErrorCodes.quotaExceeded:
+      case AppErrorCodes.unavailable:
+        return t.error.message.network_error; // 顯示為「伺服器連線問題」
+      case AppErrorCodes.timeout:
+        return t.error.message.timeout; // 顯示為「回應逾時，請重試」
+      case AppErrorCodes.networkError:
+        return t.error.message.network_error; // 顯示為「網路連線失敗」
+
+      case AppErrorCodes.incomeIsUsed:
+        return t.error.message.income_is_used;
+      case AppErrorCodes.taskLocked:
+        return t.error.message.task_locked;
+
+      // 邀請流程
       case AppErrorCodes.inviteTaskFull:
         return t.error.dialog.task_full.message(limit: '15');
       case AppErrorCodes.inviteExpired:
         return t.error.dialog.expired_code.message(minutes: '30');
       case AppErrorCodes.inviteInvalid:
         return t.error.dialog.invalid_code.message;
-      case AppErrorCodes.inviteAlreadyJoined:
-        return t.error.dialog.already_in_task.message;
-      case AppErrorCodes.inviteAuthRequired:
-        return t.error.dialog.auth_required.message;
 
-      case AppErrorCodes.incomeIsUsed:
-        return t.error.message.income_is_used;
-      case AppErrorCodes.recordNotFound:
-      case AppErrorCodes.taskNotFound:
-        return t.error.message.data_not_found;
-      case AppErrorCodes.taskLoadFailed:
-        return t.error.message.load_failed;
-      case AppErrorCodes.saveFailed:
-        return t.error.message.save_failed;
-      case AppErrorCodes.deleteFailed:
-        return t.error.message.delete_failed;
-      case AppErrorCodes.rateFetchFailed:
-        return t.error.message.rate_fetch_failed;
-      case AppErrorCodes.permissionDenied:
-        return t.error.message.permission_denied;
-      case AppErrorCodes.networkError:
-        return t.error.message.network_error;
-
+      case AppErrorCodes.unknown:
       default:
-        // 清理 Exception 前綴的 Fallback
-        String eStr = error.toString();
-        if (eStr.startsWith("Exception: ")) {
-          return eStr.replaceFirst("Exception: ", "");
-        }
-        return "${t.error.message.unknown} ($eStr)";
+        // ✅ 保留偵錯模式：若無定義，則顯示原始字串 (Exception: xxx)
+        String eStr = error?.toString() ?? "";
+        if (eStr.startsWith("Exception: "))
+          eStr = eStr.replaceFirst("Exception: ", "");
+        return eStr.isNotEmpty ? eStr : t.error.message.unknown;
     }
   }
 }

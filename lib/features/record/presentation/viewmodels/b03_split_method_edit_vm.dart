@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
@@ -16,6 +17,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
 
   // --- State (嚴格對照原始檔案寄存邏輯) ---
   LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
   late String _splitMethod;
   late List<String> _selectedMemberIds;
   late Map<String, double> _details;
@@ -25,6 +27,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
 
   // --- Getters ---
   LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
   String get splitMethod => _splitMethod;
   List<String> get selectedMemberIds => _selectedMemberIds;
   Map<String, double> get details => _details;
@@ -71,6 +74,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
 
       _initStatus = LoadStatus.success;
     } catch (e) {
+      _initErrorCode = AppErrorCodes.initFailed;
       _initStatus = LoadStatus.error;
     }
     notifyListeners();
