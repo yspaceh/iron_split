@@ -58,6 +58,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
 	@override late final _TranslationsS70SystemSettingsEnUs S70_System_Settings = _TranslationsS70SystemSettingsEnUs._(_root);
 	@override late final _TranslationsS72TermsUpdateEnUs S72_TermsUpdate = _TranslationsS72TermsUpdateEnUs._(_root);
+	@override late final _TranslationsS74DeleteAccountNoticeEnUs S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeEnUs._(_root);
 	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
 	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
@@ -69,6 +70,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
 	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
 	@override late final _TranslationsD12LogoutConfirmEnUs D12_logout_confirm = _TranslationsD12LogoutConfirmEnUs._(_root);
+	@override late final _TranslationsD13DeleteAccountConfirmEnUs D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
@@ -95,6 +97,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonRemainderRuleEnUs remainder_rule = _TranslationsCommonRemainderRuleEnUs._(_root);
 	@override late final _TranslationsCommonSplitMethodEnUs split_method = _TranslationsCommonSplitMethodEnUs._(_root);
 	@override late final _TranslationsCommonLanguageEnUs language = _TranslationsCommonLanguageEnUs._(_root);
+	@override late final _TranslationsCommonThemeEnUs theme = _TranslationsCommonThemeEnUs._(_root);
 	@override late final _TranslationsCommonTermsEnUs terms = _TranslationsCommonTermsEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
@@ -380,6 +383,7 @@ class _TranslationsS70SystemSettingsEnUs extends TranslationsS70SystemSettingsZh
 
 	// Translations
 	@override String get title => 'System Settings';
+	@override late final _TranslationsS70SystemSettingsSectionEnUs section = _TranslationsS70SystemSettingsSectionEnUs._(_root);
 	@override late final _TranslationsS70SystemSettingsMenuEnUs menu = _TranslationsS70SystemSettingsMenuEnUs._(_root);
 }
 
@@ -393,6 +397,18 @@ class _TranslationsS72TermsUpdateEnUs extends TranslationsS72TermsUpdateZhTw {
 	@override String title({required Object type}) => '${type} Updated';
 	@override String description({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.';
 	@override late final _TranslationsS72TermsUpdateButtonsEnUs buttons = _TranslationsS72TermsUpdateButtonsEnUs._(_root);
+}
+
+// Path: S74_DeleteAccount_Notice
+class _TranslationsS74DeleteAccountNoticeEnUs extends TranslationsS74DeleteAccountNoticeZhTw {
+	_TranslationsS74DeleteAccountNoticeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Account Deletion';
+	@override String get content => 'This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).';
+	@override late final _TranslationsS74DeleteAccountNoticeButtonsEnUs buttons = _TranslationsS74DeleteAccountNoticeButtonsEnUs._(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -527,6 +543,18 @@ class _TranslationsD12LogoutConfirmEnUs extends TranslationsD12LogoutConfirmZhTw
 	@override String get title => 'Confirm Logout';
 	@override String get description => 'If you do not agree to the updated terms, you will not be able to continue using this service.\nYou will be logged out. If you are using an anonymous account, your data may not be recoverable after logging out.';
 	@override late final _TranslationsD12LogoutConfirmButtonsEnUs buttons = _TranslationsD12LogoutConfirmButtonsEnUs._(_root);
+}
+
+// Path: D13_DeleteAccount_Confirm
+class _TranslationsD13DeleteAccountConfirmEnUs extends TranslationsD13DeleteAccountConfirmZhTw {
+	_TranslationsD13DeleteAccountConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirm Delete Account';
+	@override late final _TranslationsD13DeleteAccountConfirmButtonsEnUs buttons = _TranslationsD13DeleteAccountConfirmButtonsEnUs._(_root);
+	@override String get content => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?';
 }
 
 // Path: B02_SplitExpense_Edit
@@ -799,6 +827,19 @@ class _TranslationsCommonLanguageEnUs extends TranslationsCommonLanguageZhTw {
 	@override String get zh_TW => 'Traditional Chinese';
 	@override String get en_US => 'English';
 	@override String get jp_JP => 'Japanese';
+}
+
+// Path: common.theme
+class _TranslationsCommonThemeEnUs extends TranslationsCommonThemeZhTw {
+	_TranslationsCommonThemeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Theme Settings';
+	@override String get system => 'System Default';
+	@override String get light => 'Light Mode';
+	@override String get dark => 'Dark Mode';
 }
 
 // Path: common.terms
@@ -1224,6 +1265,18 @@ class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53Task
 	@override String get invite => 'Invite';
 }
 
+// Path: S70_System_Settings.section
+class _TranslationsS70SystemSettingsSectionEnUs extends TranslationsS70SystemSettingsSectionZhTw {
+	_TranslationsS70SystemSettingsSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get basic => 'General Settings';
+	@override String get legal => 'Legal';
+	@override String get account => 'Account Settings';
+}
+
 // Path: S70_System_Settings.menu
 class _TranslationsS70SystemSettingsMenuEnUs extends TranslationsS70SystemSettingsMenuZhTw {
 	_TranslationsS70SystemSettingsMenuEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1233,9 +1286,11 @@ class _TranslationsS70SystemSettingsMenuEnUs extends TranslationsS70SystemSettin
 	// Translations
 	@override String get user_name => 'Display Name';
 	@override String get language => 'Display Language';
+	@override String get theme => 'Theme';
 	@override String get terms => 'Terms of Service';
 	@override String get privacy => 'Privacy Policy';
 	@override String get payment_info => 'Payment Information Settings';
+	@override String get delete_account => 'Delete Account';
 }
 
 // Path: S72_TermsUpdate.buttons
@@ -1247,6 +1302,16 @@ class _TranslationsS72TermsUpdateButtonsEnUs extends TranslationsS72TermsUpdateB
 	// Translations
 	@override String get agree => 'Accept';
 	@override String get decline => 'Decline';
+}
+
+// Path: S74_DeleteAccount_Notice.buttons
+class _TranslationsS74DeleteAccountNoticeButtonsEnUs extends TranslationsS74DeleteAccountNoticeButtonsZhTw {
+	_TranslationsS74DeleteAccountNoticeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get delete => 'Delete Account';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1332,6 +1397,16 @@ class _TranslationsD12LogoutConfirmButtonsEnUs extends TranslationsD12LogoutConf
 
 	// Translations
 	@override String get logout => 'Log out';
+}
+
+// Path: D13_DeleteAccount_Confirm.buttons
+class _TranslationsD13DeleteAccountConfirmButtonsEnUs extends TranslationsD13DeleteAccountConfirmButtonsZhTw {
+	_TranslationsD13DeleteAccountConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm => 'Confirm';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1470,6 +1545,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String enter_first({required Object key}) => 'Please enter ${key} first';
 	@override String get save_failed => 'Save failed. Please try again later';
 	@override String get delete_failed => 'Exchange rate update failed';
+	@override String get task_close_failed => 'Task close failed. Please try again later';
 	@override String get rate_fetch_failed => 'Failed to fetch exchange rate';
 	@override String length_exceeded({required Object max}) => 'Max ${max} characters';
 	@override String get invalid_char => 'Invalid characters';
@@ -1822,6 +1898,10 @@ extension on TranslationsEnUs {
 			'common.language.zh_TW' => 'Traditional Chinese',
 			'common.language.en_US' => 'English',
 			'common.language.jp_JP' => 'Japanese',
+			'common.theme.title' => 'Theme Settings',
+			'common.theme.system' => 'System Default',
+			'common.theme.light' => 'Light Mode',
+			'common.theme.dark' => 'Dark Mode',
 			'common.terms.label.terms' => 'Terms of Service',
 			'common.terms.label.privacy' => 'Privacy Policy',
 			'common.terms.label.both' => 'Legal Terms',
@@ -2026,15 +2106,23 @@ extension on TranslationsEnUs {
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S53_TaskSettings_Members.member_name' => 'Member Name',
 			'S70_System_Settings.title' => 'System Settings',
+			'S70_System_Settings.section.basic' => 'General Settings',
+			'S70_System_Settings.section.legal' => 'Legal',
+			'S70_System_Settings.section.account' => 'Account Settings',
 			'S70_System_Settings.menu.user_name' => 'Display Name',
 			'S70_System_Settings.menu.language' => 'Display Language',
+			'S70_System_Settings.menu.theme' => 'Theme',
 			'S70_System_Settings.menu.terms' => 'Terms of Service',
 			'S70_System_Settings.menu.privacy' => 'Privacy Policy',
 			'S70_System_Settings.menu.payment_info' => 'Payment Information Settings',
+			'S70_System_Settings.menu.delete_account' => 'Delete Account',
 			'S72_TermsUpdate.title' => ({required Object type}) => '${type} Updated',
 			'S72_TermsUpdate.description' => ({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.',
 			'S72_TermsUpdate.buttons.agree' => 'Accept',
 			'S72_TermsUpdate.buttons.decline' => 'Decline',
+			'S74_DeleteAccount_Notice.title' => 'Confirm Account Deletion',
+			'S74_DeleteAccount_Notice.content' => 'This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).',
+			'S74_DeleteAccount_Notice.buttons.delete' => 'Delete Account',
 			'D01_MemberRole_Intro.title' => 'Your Character',
 			'D01_MemberRole_Intro.buttons.reroll' => 'Change Animal',
 			'D01_MemberRole_Intro.buttons.enter' => 'Enter Task',
@@ -2075,6 +2163,9 @@ extension on TranslationsEnUs {
 			'D12_logout_confirm.title' => 'Confirm Logout',
 			'D12_logout_confirm.description' => 'If you do not agree to the updated terms, you will not be able to continue using this service.\nYou will be logged out. If you are using an anonymous account, your data may not be recoverable after logging out.',
 			'D12_logout_confirm.buttons.logout' => 'Log out',
+			'D13_DeleteAccount_Confirm.title' => 'Confirm Delete Account',
+			'D13_DeleteAccount_Confirm.buttons.confirm' => 'Confirm',
+			'D13_DeleteAccount_Confirm.content' => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?',
 			'B02_SplitExpense_Edit.title' => 'Edit Sub Item',
 			'B02_SplitExpense_Edit.buttons.save' => 'Confirm Split',
 			'B02_SplitExpense_Edit.label.sub_item' => 'Sub Item Name',
@@ -2144,6 +2235,7 @@ extension on TranslationsEnUs {
 			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first',
 			'error.message.save_failed' => 'Save failed. Please try again later',
 			'error.message.delete_failed' => 'Exchange rate update failed',
+			'error.message.task_close_failed' => 'Task close failed. Please try again later',
 			'error.message.rate_fetch_failed' => 'Failed to fetch exchange rate',
 			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters',
 			'error.message.invalid_char' => 'Invalid characters',

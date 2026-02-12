@@ -24,9 +24,14 @@ class CommonInfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return CommonAlertDialog(
       title: title,
-      content: Text(content),
+      content: Text(
+        content,
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+      ),
       actions: [
         AppButton(
           text: t.common.buttons.close,

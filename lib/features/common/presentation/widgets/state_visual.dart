@@ -39,7 +39,7 @@ class StateVisual extends StatelessWidget {
               )
             : Container(
                 // 預設佔位圖 (開發用)
-                color: Colors.amber.withValues(alpha: 0.2),
+                color: Colors.amber,
                 child: Icon(
                   Icons.image,
                   size: 48,

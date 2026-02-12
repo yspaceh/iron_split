@@ -46,6 +46,8 @@ class _S11ContentState extends State<_S11Content> {
   bool _hasShownError = false;
   void _showErrorDialog(
       BuildContext context, S11InviteConfirmViewModel vm, String error) {
+    final theme = Theme.of(context);
+    final t = Translations.of(context);
     final friendlyMessage = ErrorMapper.map(context, error);
     CommonAlertDialog.show(
       context,
@@ -60,7 +62,10 @@ class _S11ContentState extends State<_S11Content> {
           },
         ),
       ],
-      content: Text(friendlyMessage),
+      content: Text(
+        friendlyMessage,
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+      ),
     );
   }
 

@@ -105,6 +105,12 @@
       "en_US": "英文",
       "jp_JP": "日文"
     },
+    "theme": {
+      "title": "主題設定",
+      "system": "系統預設",
+      "light": "淺色模式",
+      "dark": "深色模式"
+    },
     "payment_info": {
       "mode": {
         "private": "請直接私訊聯絡",
@@ -455,12 +461,19 @@
   },
   "S70_System_Settings": {
     "title": "系統設定",
+    "section":{
+      "basic": "基本設定",
+      "legal": "相關條款",
+      "account": "帳號設定"
+    },
     "menu" : {
       "user_name": "顯示名稱",
       "language": "顯示語言",
+      "theme": "外觀主題",
       "terms": "服務條款",
       "privacy": "隱私政策",
-      "payment_info": "收款帳戶設定"
+      "payment_info": "收款帳戶設定",
+      "delete_account": "刪除帳號"
     }
   },
   "S72_TermsUpdate": {
@@ -469,6 +482,13 @@
     "buttons": {
       "agree": "同意",
       "decline": "不同意"
+    }
+  },
+  "S74_DeleteAccount_Notice": {
+    "title": "刪除帳號確認",
+    "content": "此動作無法復原，您的個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。",
+    "buttons": {
+      "delete": "刪除帳號"
     }
   },
   "D01_MemberRole_Intro": {
@@ -548,6 +568,13 @@
     "buttons": {
       "logout": "確認登出"
     }
+  },
+  "D13_DeleteAccount_Confirm": {
+    "title": "確認刪除帳號",
+    "buttons": {
+      "confirm": "確認"
+    },
+    "content": "此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？"
   },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",
@@ -670,6 +697,7 @@
       "enter_first": "請先輸入{key}",
       "save_failed": "儲存失敗，請稍後再試",
       "delete_failed": "刪除失敗，請稍後再試",
+      "task_close_failed": "任務關閉失敗，請稍後再試",
       "rate_fetch_failed": "為替レートの更新失敗",
       "length_exceeded": "最多 {max} 個字",
       "invalid_char": "包含無效字元",

@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/viewmodels/locale_vm.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
@@ -77,6 +79,8 @@ void main() async {
         Provider<DeepLinkService>(
           create: (context) => DeepLinkService(),
         ),
+        ChangeNotifierProvider(create: (_) => ThemeViewModel()),
+        ChangeNotifierProvider(create: (_) => LocaleViewModel()),
         // 註冊 PendingInviteProvider 並執行 init
         ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
       ],
@@ -146,20 +150,19 @@ class _IronSplitAppState extends State<IronSplitApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeVm = context.watch<ThemeViewModel>();
+    final localeVm = context.watch<LocaleViewModel>();
     // 使用 MaterialApp.router 整合 GoRouter
     return MaterialApp.router(
       title: 'Iron Split',
       // 設定語系支援
-      locale: TranslationProvider.of(context).flutterLocale,
+      locale: localeVm.currentLocale.flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-
-      // 路由配置
       routerConfig: _appRouter.router,
-
-      // 主題配置：使用 AppTheme 中定義的 M3 酒紅色主題
       theme: AppTheme.lightTheme,
-
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeVm.themeMode,
       debugShowCheckedModeBanner: false,
     );
   }

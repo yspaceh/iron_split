@@ -52,12 +52,15 @@ class _D09DialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final vm = context.watch<D09TaskSettingsCurrencyConfirmViewModel>();
 
     return CommonAlertDialog(
       title: t.D09_TaskSettings_CurrencyConfirm.title,
       content: Text(
-          "${t.D09_TaskSettings_CurrencyConfirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})"),
+        "${t.D09_TaskSettings_CurrencyConfirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})",
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+      ),
       actions: [
         AppButton(
           text: t.common.buttons.cancel,

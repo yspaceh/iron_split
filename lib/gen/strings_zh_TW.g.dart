@@ -59,6 +59,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
 	late final TranslationsS70SystemSettingsZhTw S70_System_Settings = TranslationsS70SystemSettingsZhTw.internal(_root);
 	late final TranslationsS72TermsUpdateZhTw S72_TermsUpdate = TranslationsS72TermsUpdateZhTw.internal(_root);
+	late final TranslationsS74DeleteAccountNoticeZhTw S74_DeleteAccount_Notice = TranslationsS74DeleteAccountNoticeZhTw.internal(_root);
 	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
 	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
 	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
@@ -70,6 +71,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
 	late final TranslationsD11RandomResultZhTw D11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
 	late final TranslationsD12LogoutConfirmZhTw D12_logout_confirm = TranslationsD12LogoutConfirmZhTw.internal(_root);
+	late final TranslationsD13DeleteAccountConfirmZhTw D13_DeleteAccount_Confirm = TranslationsD13DeleteAccountConfirmZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
@@ -94,6 +96,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonRemainderRuleZhTw remainder_rule = TranslationsCommonRemainderRuleZhTw.internal(_root);
 	late final TranslationsCommonSplitMethodZhTw split_method = TranslationsCommonSplitMethodZhTw.internal(_root);
 	late final TranslationsCommonLanguageZhTw language = TranslationsCommonLanguageZhTw.internal(_root);
+	late final TranslationsCommonThemeZhTw theme = TranslationsCommonThemeZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
 	late final TranslationsCommonPaymentStatusZhTw payment_status = TranslationsCommonPaymentStatusZhTw.internal(_root);
 	late final TranslationsCommonTermsZhTw terms = TranslationsCommonTermsZhTw.internal(_root);
@@ -593,6 +596,7 @@ class TranslationsS70SystemSettingsZhTw {
 	/// zh-TW: '系統設定'
 	String get title => '系統設定';
 
+	late final TranslationsS70SystemSettingsSectionZhTw section = TranslationsS70SystemSettingsSectionZhTw.internal(_root);
 	late final TranslationsS70SystemSettingsMenuZhTw menu = TranslationsS70SystemSettingsMenuZhTw.internal(_root);
 }
 
@@ -611,6 +615,23 @@ class TranslationsS72TermsUpdateZhTw {
 	String description({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。';
 
 	late final TranslationsS72TermsUpdateButtonsZhTw buttons = TranslationsS72TermsUpdateButtonsZhTw.internal(_root);
+}
+
+// Path: S74_DeleteAccount_Notice
+class TranslationsS74DeleteAccountNoticeZhTw {
+	TranslationsS74DeleteAccountNoticeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '刪除帳號確認'
+	String get title => '刪除帳號確認';
+
+	/// zh-TW: '此動作無法復原，您的個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。'
+	String get content => '此動作無法復原，您的個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。';
+
+	late final TranslationsS74DeleteAccountNoticeButtonsZhTw buttons = TranslationsS74DeleteAccountNoticeButtonsZhTw.internal(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -806,6 +827,23 @@ class TranslationsD12LogoutConfirmZhTw {
 	String get description => '若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。';
 
 	late final TranslationsD12LogoutConfirmButtonsZhTw buttons = TranslationsD12LogoutConfirmButtonsZhTw.internal(_root);
+}
+
+// Path: D13_DeleteAccount_Confirm
+class TranslationsD13DeleteAccountConfirmZhTw {
+	TranslationsD13DeleteAccountConfirmZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認刪除帳號'
+	String get title => '確認刪除帳號';
+
+	late final TranslationsD13DeleteAccountConfirmButtonsZhTw buttons = TranslationsD13DeleteAccountConfirmButtonsZhTw.internal(_root);
+
+	/// zh-TW: '此操作無法復原。所有資料將被永久刪除。 確定要繼續嗎？'
+	String get content => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？';
 }
 
 // Path: B02_SplitExpense_Edit
@@ -1257,6 +1295,27 @@ class TranslationsCommonLanguageZhTw {
 
 	/// zh-TW: '日文'
 	String get jp_JP => '日文';
+}
+
+// Path: common.theme
+class TranslationsCommonThemeZhTw {
+	TranslationsCommonThemeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '主題設定'
+	String get title => '主題設定';
+
+	/// zh-TW: '系統預設'
+	String get system => '系統預設';
+
+	/// zh-TW: '淺色模式'
+	String get light => '淺色模式';
+
+	/// zh-TW: '深色模式'
+	String get dark => '深色模式';
 }
 
 // Path: common.payment_info
@@ -1901,6 +1960,24 @@ class TranslationsS53TaskSettingsMembersButtonsZhTw {
 	String get invite => '發送邀請';
 }
 
+// Path: S70_System_Settings.section
+class TranslationsS70SystemSettingsSectionZhTw {
+	TranslationsS70SystemSettingsSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '基本設定'
+	String get basic => '基本設定';
+
+	/// zh-TW: '相關條款'
+	String get legal => '相關條款';
+
+	/// zh-TW: '帳號設定'
+	String get account => '帳號設定';
+}
+
 // Path: S70_System_Settings.menu
 class TranslationsS70SystemSettingsMenuZhTw {
 	TranslationsS70SystemSettingsMenuZhTw.internal(this._root);
@@ -1915,6 +1992,9 @@ class TranslationsS70SystemSettingsMenuZhTw {
 	/// zh-TW: '顯示語言'
 	String get language => '顯示語言';
 
+	/// zh-TW: '外觀主題'
+	String get theme => '外觀主題';
+
 	/// zh-TW: '服務條款'
 	String get terms => '服務條款';
 
@@ -1923,6 +2003,9 @@ class TranslationsS70SystemSettingsMenuZhTw {
 
 	/// zh-TW: '收款帳戶設定'
 	String get payment_info => '收款帳戶設定';
+
+	/// zh-TW: '刪除帳號'
+	String get delete_account => '刪除帳號';
 }
 
 // Path: S72_TermsUpdate.buttons
@@ -1938,6 +2021,18 @@ class TranslationsS72TermsUpdateButtonsZhTw {
 
 	/// zh-TW: '不同意'
 	String get decline => '不同意';
+}
+
+// Path: S74_DeleteAccount_Notice.buttons
+class TranslationsS74DeleteAccountNoticeButtonsZhTw {
+	TranslationsS74DeleteAccountNoticeButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '刪除帳號'
+	String get delete => '刪除帳號';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -2049,6 +2144,18 @@ class TranslationsD12LogoutConfirmButtonsZhTw {
 
 	/// zh-TW: '確認登出'
 	String get logout => '確認登出';
+}
+
+// Path: D13_DeleteAccount_Confirm.buttons
+class TranslationsD13DeleteAccountConfirmButtonsZhTw {
+	TranslationsD13DeleteAccountConfirmButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '確認'
+	String get confirm => '確認';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -2247,6 +2354,9 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '刪除失敗，請稍後再試'
 	String get delete_failed => '刪除失敗，請稍後再試';
+
+	/// zh-TW: '任務關閉失敗，請稍後再試'
+	String get task_close_failed => '任務關閉失敗，請稍後再試';
 
 	/// zh-TW: '為替レートの更新失敗'
 	String get rate_fetch_failed => '為替レートの更新失敗';
@@ -2702,6 +2812,10 @@ extension on Translations {
 			'common.language.zh_TW' => '繁體中文',
 			'common.language.en_US' => '英文',
 			'common.language.jp_JP' => '日文',
+			'common.theme.title' => '主題設定',
+			'common.theme.system' => '系統預設',
+			'common.theme.light' => '淺色模式',
+			'common.theme.dark' => '深色模式',
 			'common.payment_info.mode.private' => '請直接私訊聯絡',
 			'common.payment_info.mode.public' => '提供收款資訊',
 			'common.payment_info.description.private' => '不顯示詳細資訊，請成員直接找你',
@@ -2924,15 +3038,23 @@ extension on Translations {
 			'S53_TaskSettings_Members.member_default_name' => '成員',
 			'S53_TaskSettings_Members.member_name' => '成員名稱',
 			'S70_System_Settings.title' => '系統設定',
+			'S70_System_Settings.section.basic' => '基本設定',
+			'S70_System_Settings.section.legal' => '相關條款',
+			'S70_System_Settings.section.account' => '帳號設定',
 			'S70_System_Settings.menu.user_name' => '顯示名稱',
 			'S70_System_Settings.menu.language' => '顯示語言',
+			'S70_System_Settings.menu.theme' => '外觀主題',
 			'S70_System_Settings.menu.terms' => '服務條款',
 			'S70_System_Settings.menu.privacy' => '隱私政策',
 			'S70_System_Settings.menu.payment_info' => '收款帳戶設定',
+			'S70_System_Settings.menu.delete_account' => '刪除帳號',
 			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
 			'S72_TermsUpdate.description' => ({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。',
 			'S72_TermsUpdate.buttons.agree' => '同意',
 			'S72_TermsUpdate.buttons.decline' => '不同意',
+			'S74_DeleteAccount_Notice.title' => '刪除帳號確認',
+			'S74_DeleteAccount_Notice.content' => '此動作無法復原，您的個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。',
+			'S74_DeleteAccount_Notice.buttons.delete' => '刪除帳號',
 			'D01_MemberRole_Intro.title' => '你的角色是...',
 			'D01_MemberRole_Intro.buttons.reroll' => '換個動物',
 			'D01_MemberRole_Intro.buttons.enter' => '進入任務',
@@ -2973,6 +3095,9 @@ extension on Translations {
 			'D12_logout_confirm.title' => '登出確認',
 			'D12_logout_confirm.description' => '若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。',
 			'D12_logout_confirm.buttons.logout' => '確認登出',
+			'D13_DeleteAccount_Confirm.title' => '確認刪除帳號',
+			'D13_DeleteAccount_Confirm.buttons.confirm' => '確認',
+			'D13_DeleteAccount_Confirm.content' => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.buttons.save' => '確認分拆',
 			'B02_SplitExpense_Edit.label.sub_item' => '細項名稱',
@@ -3042,6 +3167,7 @@ extension on Translations {
 			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}',
 			'error.message.save_failed' => '儲存失敗，請稍後再試',
 			'error.message.delete_failed' => '刪除失敗，請稍後再試',
+			'error.message.task_close_failed' => '任務關閉失敗，請稍後再試',
 			'error.message.rate_fetch_failed' => '為替レートの更新失敗',
 			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字',
 			'error.message.invalid_char' => '包含無效字元',

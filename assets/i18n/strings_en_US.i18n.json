@@ -136,6 +136,12 @@
       "en_US": "English",
       "jp_JP": "Japanese"
     },
+    "theme": {
+      "title": "Theme Settings",
+      "system": "System Default",
+      "light": "Light Mode",
+      "dark": "Dark Mode"
+    },
     "terms": {
       "label": {
         "terms": "Terms of Service",
@@ -454,12 +460,19 @@
   },
   "S70_System_Settings": {
     "title": "System Settings",
+    "section": {
+      "basic": "General Settings",
+      "legal": "Legal",
+      "account": "Account Settings"
+    },
     "menu" : {
       "user_name": "Display Name",
       "language": "Display Language",
+      "theme": "Theme",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
-      "payment_info": "Payment Information Settings"
+      "payment_info": "Payment Information Settings",
+      "delete_account": "Delete Account"
     }
   },
   "S72_TermsUpdate": {
@@ -468,6 +481,13 @@
     "buttons": {
       "agree": "Accept",
       "decline": "Decline"
+    }
+  },
+  "S74_DeleteAccount_Notice": {
+    "title": "Confirm Account Deletion",
+    "content": "This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).",
+    "buttons": {
+      "delete": "Delete Account"
     }
   },
   "D01_MemberRole_Intro": {
@@ -547,6 +567,13 @@
     "buttons": {
       "logout": "Log out"
     }
+  },
+  "D13_DeleteAccount_Confirm": {
+    "title": "Confirm Delete Account",
+    "buttons": {
+      "confirm": "Confirm"
+    },
+    "content": "This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?"
   },
   "B02_SplitExpense_Edit": {
     "title": "Edit Sub Item",
@@ -669,6 +696,7 @@
       "enter_first": "Please enter {key} first",
       "save_failed": "Save failed. Please try again later",
       "delete_failed": "Exchange rate update failed",
+      "task_close_failed": "Task close failed. Please try again later",
       "rate_fetch_failed": "Failed to fetch exchange rate",
       "length_exceeded": "Max {max} characters",
       "invalid_char": "Invalid characters",

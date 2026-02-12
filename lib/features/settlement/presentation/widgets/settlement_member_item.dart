@@ -32,7 +32,7 @@ class SettlementMemberItem extends StatelessWidget {
     return Container(
       // [關鍵] 1. 裝飾層：與 RecordItem 一致的白底、圓角 16、極淡陰影
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16), // ✅ 圓角 16
         boxShadow: [
           BoxShadow(

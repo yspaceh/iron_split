@@ -3,56 +3,54 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
-import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/system/presentation/viewmodels/s74_delete_account_notice_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
-import 'package:iron_split/features/task/presentation/viewmodels/s12_task_close_notice_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class S12TaskCloseNoticePage extends StatelessWidget {
-  final String taskId;
-
-  const S12TaskCloseNoticePage({super.key, required this.taskId});
+class S74DeleteAccountNoticePage extends StatelessWidget {
+  const S74DeleteAccountNoticePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S12TaskCloseNoticeViewModel(
-        taskId: taskId,
-        taskRepo: context.read<TaskRepository>(),
-      ),
-      child: const _S12Content(),
+      create: (_) => S74DeleteAccountNoticeViewModel(),
+      child: const _S74Content(),
     );
   }
 }
 
-class _S12Content extends StatelessWidget {
-  const _S12Content();
+class _S74Content extends StatelessWidget {
+  const _S74Content();
 
-  Future<void> _handleClose(
-      BuildContext context, S12TaskCloseNoticeViewModel vm) async {
-    final success = await vm.closeTask();
+  Future<void> _handleDeleteAccount(
+      BuildContext context, S74DeleteAccountNoticeViewModel vm) async {
+    // 執行刪除
+    final success = await vm.deleteAccount();
 
-    if (success && context.mounted) {
-      context.goNamed(
-        'S17',
-        pathParameters: {'taskId': vm.taskId},
-      );
-    } else if (!success && context.mounted) {
-      AppToast.showError(context, t.error.message.task_close_failed);
+    if (!context.mounted) return;
+
+    if (success) {
+      // 成功後，跳轉回歡迎頁面 (S00)
+      // 使用 go (replace) 避免使用者按上一頁回到這裡
+      context.goNamed('S00');
+    } else {
+      // 失敗提示
+      // TODO:  update error
+      AppToast.showError(context, "Delete account failed. Please try again.");
     }
   }
 
   void _showConfirmDialog(
-      BuildContext context, S12TaskCloseNoticeViewModel vm) {
+      BuildContext context, S74DeleteAccountNoticeViewModel vm) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
     CommonAlertDialog.show(
       context,
-      title: t.D08_TaskClosed_Confirm.title,
+      title: t.D13_DeleteAccount_Confirm.title,
       content: Text(
-        t.D08_TaskClosed_Confirm.content,
+        t.D13_DeleteAccount_Confirm.content,
         style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
       ),
       actions: [
@@ -62,9 +60,12 @@ class _S12Content extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         AppButton(
-          text: t.D08_TaskClosed_Confirm.buttons.confirm,
+          text: t.D13_DeleteAccount_Confirm.buttons.confirm,
           type: AppButtonType.primary,
-          onPressed: () => _handleClose(context, vm),
+          onPressed: () {
+            context.pop(); // 關閉 Dialog
+            _handleDeleteAccount(context, vm); // 執行刪除
+          },
         ),
       ],
     );
@@ -74,11 +75,11 @@ class _S12Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
-    final vm = context.watch<S12TaskCloseNoticeViewModel>();
+    final vm = context.watch<S74DeleteAccountNoticeViewModel>();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S12_TaskClose_Notice.title),
+        title: Text(t.S74_DeleteAccount_Notice.title),
         centerTitle: true,
       ),
       bottomNavigationBar: StickyBottomActionBar(
@@ -89,7 +90,7 @@ class _S12Content extends StatelessWidget {
             onPressed: () => context.pop(),
           ),
           AppButton(
-            text: t.S12_TaskClose_Notice.buttons.close,
+            text: t.S74_DeleteAccount_Notice.buttons.delete,
             type: AppButtonType.primary,
             isLoading: vm.isProcessing,
             onPressed: () => _showConfirmDialog(context, vm),
@@ -102,7 +103,7 @@ class _S12Content extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                t.S12_TaskClose_Notice.content,
+                t.S74_DeleteAccount_Notice.content,
                 style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
               ),
             ],

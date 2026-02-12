@@ -58,6 +58,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS70SystemSettingsJaJp S70_System_Settings = _TranslationsS70SystemSettingsJaJp._(_root);
 	@override late final _TranslationsS72TermsUpdateJaJp S72_TermsUpdate = _TranslationsS72TermsUpdateJaJp._(_root);
+	@override late final _TranslationsS74DeleteAccountNoticeJaJp S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeJaJp._(_root);
 	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
 	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
 	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
@@ -69,6 +70,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
 	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
 	@override late final _TranslationsD12LogoutConfirmJaJp D12_logout_confirm = _TranslationsD12LogoutConfirmJaJp._(_root);
+	@override late final _TranslationsD13DeleteAccountConfirmJaJp D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
@@ -93,6 +95,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
 	@override late final _TranslationsCommonSplitMethodJaJp split_method = _TranslationsCommonSplitMethodJaJp._(_root);
 	@override late final _TranslationsCommonLanguageJaJp language = _TranslationsCommonLanguageJaJp._(_root);
+	@override late final _TranslationsCommonThemeJaJp theme = _TranslationsCommonThemeJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override late final _TranslationsCommonPaymentStatusJaJp payment_status = _TranslationsCommonPaymentStatusJaJp._(_root);
 	@override late final _TranslationsCommonTermsJaJp terms = _TranslationsCommonTermsJaJp._(_root);
@@ -380,6 +383,7 @@ class _TranslationsS70SystemSettingsJaJp extends TranslationsS70SystemSettingsZh
 
 	// Translations
 	@override String get title => 'システム設定';
+	@override late final _TranslationsS70SystemSettingsSectionJaJp section = _TranslationsS70SystemSettingsSectionJaJp._(_root);
 	@override late final _TranslationsS70SystemSettingsMenuJaJp menu = _TranslationsS70SystemSettingsMenuJaJp._(_root);
 }
 
@@ -393,6 +397,18 @@ class _TranslationsS72TermsUpdateJaJp extends TranslationsS72TermsUpdateZhTw {
 	@override String title({required Object type}) => '${type}更新';
 	@override String description({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。';
 	@override late final _TranslationsS72TermsUpdateButtonsJaJp buttons = _TranslationsS72TermsUpdateButtonsJaJp._(_root);
+}
+
+// Path: S74_DeleteAccount_Notice
+class _TranslationsS74DeleteAccountNoticeJaJp extends TranslationsS74DeleteAccountNoticeZhTw {
+	_TranslationsS74DeleteAccountNoticeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'アカウント削除の確認';
+	@override String get content => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。';
+	@override late final _TranslationsS74DeleteAccountNoticeButtonsJaJp buttons = _TranslationsS74DeleteAccountNoticeButtonsJaJp._(_root);
 }
 
 // Path: D01_MemberRole_Intro
@@ -527,6 +543,18 @@ class _TranslationsD12LogoutConfirmJaJp extends TranslationsD12LogoutConfirmZhTw
 	@override String get title => 'ログアウトの確認';
 	@override String get description => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。';
 	@override late final _TranslationsD12LogoutConfirmButtonsJaJp buttons = _TranslationsD12LogoutConfirmButtonsJaJp._(_root);
+}
+
+// Path: D13_DeleteAccount_Confirm
+class _TranslationsD13DeleteAccountConfirmJaJp extends TranslationsD13DeleteAccountConfirmZhTw {
+	_TranslationsD13DeleteAccountConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'アカウントの削除確認';
+	@override late final _TranslationsD13DeleteAccountConfirmButtonsJaJp buttons = _TranslationsD13DeleteAccountConfirmButtonsJaJp._(_root);
+	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？';
 }
 
 // Path: B02_SplitExpense_Edit
@@ -774,6 +802,19 @@ class _TranslationsCommonLanguageJaJp extends TranslationsCommonLanguageZhTw {
 	@override String get zh_TW => '繁体字中国語';
 	@override String get en_US => '英語';
 	@override String get jp_JP => '日本語';
+}
+
+// Path: common.theme
+class _TranslationsCommonThemeJaJp extends TranslationsCommonThemeZhTw {
+	_TranslationsCommonThemeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'テーマ設定';
+	@override String get system => 'システム設定';
+	@override String get light => 'ライトモード';
+	@override String get dark => 'ダークモード';
 }
 
 // Path: common.payment_info
@@ -1224,6 +1265,18 @@ class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53Task
 	@override String get invite => '招待送信';
 }
 
+// Path: S70_System_Settings.section
+class _TranslationsS70SystemSettingsSectionJaJp extends TranslationsS70SystemSettingsSectionZhTw {
+	_TranslationsS70SystemSettingsSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get basic => '基本設定';
+	@override String get legal => '関連規約';
+	@override String get account => 'アカウント設定';
+}
+
 // Path: S70_System_Settings.menu
 class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettingsMenuZhTw {
 	_TranslationsS70SystemSettingsMenuJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1233,9 +1286,11 @@ class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettin
 	// Translations
 	@override String get user_name => '表示名前';
 	@override String get language => '表示言語';
+	@override String get theme => 'テーマ';
 	@override String get terms => '利用規約';
 	@override String get privacy => 'プライバシーポリシー';
 	@override String get payment_info => '支払/受取口座設定';
+	@override String get delete_account => 'アカウントを削除';
 }
 
 // Path: S72_TermsUpdate.buttons
@@ -1247,6 +1302,16 @@ class _TranslationsS72TermsUpdateButtonsJaJp extends TranslationsS72TermsUpdateB
 	// Translations
 	@override String get agree => '同意する';
 	@override String get decline => '同意しない';
+}
+
+// Path: S74_DeleteAccount_Notice.buttons
+class _TranslationsS74DeleteAccountNoticeButtonsJaJp extends TranslationsS74DeleteAccountNoticeButtonsZhTw {
+	_TranslationsS74DeleteAccountNoticeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get delete => 'アカウントを削除';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1332,6 +1397,16 @@ class _TranslationsD12LogoutConfirmButtonsJaJp extends TranslationsD12LogoutConf
 
 	// Translations
 	@override String get logout => 'ログアウトする';
+}
+
+// Path: D13_DeleteAccount_Confirm.buttons
+class _TranslationsD13DeleteAccountConfirmButtonsJaJp extends TranslationsD13DeleteAccountConfirmButtonsZhTw {
+	_TranslationsD13DeleteAccountConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirm => '確認';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1470,6 +1545,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String enter_first({required Object key}) => '${key}を先に入力してください';
 	@override String get save_failed => '保存に失敗しました。しばらくしてから再試行してください';
 	@override String get delete_failed => '削除に失敗しました。しばらくしてから再試行してください';
+	@override String get task_close_failed => 'タスク終了に失敗しました。しばらくしてから再試行してください';
 	@override String get rate_fetch_failed => '為替レートを';
 	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください';
 	@override String get invalid_char => '無効な文字が含まれています';
@@ -1805,6 +1881,10 @@ extension on TranslationsJaJp {
 			'common.language.zh_TW' => '繁体字中国語',
 			'common.language.en_US' => '英語',
 			'common.language.jp_JP' => '日本語',
+			'common.theme.title' => 'テーマ設定',
+			'common.theme.system' => 'システム設定',
+			'common.theme.light' => 'ライトモード',
+			'common.theme.dark' => 'ダークモード',
 			'common.payment_info.mode.private' => '直接連絡してください',
 			'common.payment_info.mode.public' => '支払い情報を共有',
 			'common.payment_info.description.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
@@ -2026,15 +2106,23 @@ extension on TranslationsJaJp {
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',
 			'S70_System_Settings.title' => 'システム設定',
+			'S70_System_Settings.section.basic' => '基本設定',
+			'S70_System_Settings.section.legal' => '関連規約',
+			'S70_System_Settings.section.account' => 'アカウント設定',
 			'S70_System_Settings.menu.user_name' => '表示名前',
 			'S70_System_Settings.menu.language' => '表示言語',
+			'S70_System_Settings.menu.theme' => 'テーマ',
 			'S70_System_Settings.menu.terms' => '利用規約',
 			'S70_System_Settings.menu.privacy' => 'プライバシーポリシー',
 			'S70_System_Settings.menu.payment_info' => '支払/受取口座設定',
+			'S70_System_Settings.menu.delete_account' => 'アカウントを削除',
 			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
 			'S72_TermsUpdate.description' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
 			'S72_TermsUpdate.buttons.agree' => '同意する',
 			'S72_TermsUpdate.buttons.decline' => '同意しない',
+			'S74_DeleteAccount_Notice.title' => 'アカウント削除の確認',
+			'S74_DeleteAccount_Notice.content' => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。',
+			'S74_DeleteAccount_Notice.buttons.delete' => 'アカウントを削除',
 			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
 			'D01_MemberRole_Intro.buttons.reroll' => '動物を変える',
 			'D01_MemberRole_Intro.buttons.enter' => 'タスクへ進む',
@@ -2075,6 +2163,9 @@ extension on TranslationsJaJp {
 			'D12_logout_confirm.title' => 'ログアウトの確認',
 			'D12_logout_confirm.description' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。',
 			'D12_logout_confirm.buttons.logout' => 'ログアウトする',
+			'D13_DeleteAccount_Confirm.title' => 'アカウントの削除確認',
+			'D13_DeleteAccount_Confirm.buttons.confirm' => '確認',
+			'D13_DeleteAccount_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.save' => '決定',
 			'B02_SplitExpense_Edit.label.sub_item' => '子項目名',
@@ -2144,6 +2235,7 @@ extension on TranslationsJaJp {
 			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください',
 			'error.message.save_failed' => '保存に失敗しました。しばらくしてから再試行してください',
 			'error.message.delete_failed' => '削除に失敗しました。しばらくしてから再試行してください',
+			'error.message.task_close_failed' => 'タスク終了に失敗しました。しばらくしてから再試行してください',
 			'error.message.rate_fetch_failed' => '為替レートを',
 			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください',
 			'error.message.invalid_char' => '無効な文字が含まれています',

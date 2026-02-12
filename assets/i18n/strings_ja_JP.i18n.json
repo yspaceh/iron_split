@@ -105,6 +105,12 @@
       "en_US": "英語",
       "jp_JP": "日本語"
     },
+    "theme": {
+      "title": "テーマ設定",
+      "system": "システム設定",
+      "light": "ライトモード",
+      "dark": "ダークモード"
+    },
     "payment_info": {
       "mode": {
         "private": "直接連絡してください",
@@ -454,12 +460,19 @@
   },
   "S70_System_Settings": {
     "title": "システム設定",
+    "section": {
+      "basic": "基本設定",
+      "legal": "関連規約",
+      "account": "アカウント設定"
+    },
     "menu" : {
       "user_name": "表示名前",
       "language": "表示言語",
+      "theme": "テーマ",
       "terms": "利用規約",
       "privacy": "プライバシーポリシー",
-      "payment_info": "支払/受取口座設定"
+      "payment_info": "支払/受取口座設定",
+      "delete_account": "アカウントを削除"
     }
   },
   "S72_TermsUpdate": {
@@ -468,6 +481,13 @@
     "buttons": {
       "agree": "同意する",
       "decline": "同意しない"
+    }
+  },
+  "S74_DeleteAccount_Notice": {
+    "title": "アカウント削除の確認",
+    "content": "この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。",
+    "buttons": {
+      "delete": "アカウントを削除"
     }
   },
   "D01_MemberRole_Intro": {
@@ -547,6 +567,13 @@
     "buttons": {
       "logout": "ログアウトする"
     }
+  },
+  "D13_DeleteAccount_Confirm": {
+    "title": "アカウントの削除確認",
+    "buttons": {
+      "confirm": "確認"
+    },
+    "content": "この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？"
   },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",
@@ -669,6 +696,7 @@
       "enter_first": "{key}を先に入力してください",
       "save_failed": "保存に失敗しました。しばらくしてから再試行してください",
       "delete_failed": "削除に失敗しました。しばらくしてから再試行してください",
+      "task_close_failed": "タスク終了に失敗しました。しばらくしてから再試行してください",
       "rate_fetch_failed": "為替レートを",
       "length_exceeded": "{max}文字以内で入力してください",
       "invalid_char": "無効な文字が含まれています",

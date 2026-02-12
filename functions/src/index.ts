@@ -1,8 +1,25 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
+import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import { FieldPath } from "firebase-admin/firestore";
 
 admin.initializeApp();
 const db = admin.firestore();
+
+interface TaskMember {
+  isLinked?: boolean;
+  displayName?: string;
+  joinedAt?: admin.firestore.Timestamp; // 關鍵：讓 TS 知道這是一個 Timestamp
+  role?: string;
+  avatar?: string;
+  [key: string]: any; // 允許其他動態欄位
+}
+
+interface TaskData {
+  captainId: string;
+  members: Record<string, TaskMember>;
+  [key: string]: any;
+}
 
 // 20 隻英國農場動物清單 (聖經定義)
 const ALL_AVATARS = [
@@ -27,6 +44,41 @@ const ALL_AVATARS = [
   "badger",
   "robin",
 ];
+
+// --- Helper: 寫入 Activity Log ---
+
+/**
+ * 寫入活動紀錄 (支援一般寫入與 Batch)
+ * @param db Firestore 實例
+ * @param taskId 任務 ID
+ * @param operatorUid 操作者 UID
+ * @param action 動作類型 (對應 Flutter 的 LogAction 字串)
+ * @param details 詳細內容 Map
+ * @param batch (選用) 如果有傳入，會併入該 Batch；否則直接寫入
+ */
+const writeActivityLog = async (
+  db: admin.firestore.Firestore,
+  taskId: string,
+  operatorUid: string,
+  action: string, // 'add_member', 'remove_member', etc.
+  details: Record<string, any>,
+  batch?: admin.firestore.WriteBatch
+) => {
+  const logRef = db.collection("tasks").doc(taskId).collection("activity_logs").doc();
+  
+  const logData = {
+    operatorUid,
+    actionType: action,
+    details,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+  };
+
+  if (batch) {
+    batch.set(logRef, logData);
+  } else {
+    await logRef.set(logData);
+  }
+};
 
 // 輔助：隨機產生 8 碼大寫英數 (排除易混淆字元 I, L, 1, O, 0)
 const generateCode = (): string => {
@@ -261,6 +313,12 @@ export const joinByInviteCode = onCall(async (request) => {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
+      // 寫入 Log: 某人加入了
+    await writeActivityLog(db, taskId, uid, "add_member", {
+      memberName: displayName, // 記錄加入者的名字
+      method: "invite_code",   // 標記來源 (選用)
+    });
+
     return {
       taskId,
       action: "JOINED",
@@ -268,4 +326,110 @@ export const joinByInviteCode = onCall(async (request) => {
       canReroll: true,
     };
   });
+});
+
+/**
+ * 刪除帳號 (危險操作)
+ * 邏輯：
+ * 1. 找出該用戶參與的所有 Task
+ * 2. 若是普通成員 -> 變更為 Ghost (isLinked=false)
+ * 3. 若是隊長 ->
+ * a. 若群組內已無其他 Linked 成員 -> 刪除整個 Task
+ * b. 若還有其他 Linked 成員 -> 自動移交給 joinedAt 最早的人，自己變 Ghost
+ * 4. 刪除 User Document
+ * 5. 刪除 Auth 帳號
+ */
+export const deleteUserAccount = functions.https.onCall(async (data:any, context: any) => {
+  // v1 身份驗證寫法
+  if (!context || !context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "AUTH_REQUIRED");
+  }
+
+  const uid = context.auth.uid;
+  const db = admin.firestore();
+
+  const tasksSnapshot = await db
+    .collection("tasks")
+    .where(new FieldPath("members", uid, "isLinked"), "==", true)
+    .get();
+
+  const batch = db.batch();
+  const tasksToDelete: FirebaseFirestore.DocumentReference[] = [];
+
+  for (const doc of tasksSnapshot.docs) {
+    const taskData = doc.data() as TaskData;
+    const members = taskData.members || {};
+    const isCaptain = taskData.captainId === uid;
+
+    if (!isCaptain) {
+      // --- 普通成員 ---
+      batch.update(doc.ref, {
+        [`members.${uid}.isLinked`]: false,
+        [`members.${uid}.role`]: "member",
+        [`members.${uid}.displayName`]: `${members[uid].displayName}`,
+        [`members.${uid}.avatar`]: null,
+      });
+
+      await writeActivityLog(db, doc.id, uid, "remove_member", {
+        memberName: members[uid]?.displayName || "Unknown",
+        reason: "account_deleted"
+      }, batch);
+    } else {
+      // --- 隊長 ---
+      const candidates = Object.entries(members)
+        // [修正] 明確宣告參數型別為 [string, any]
+        .filter(([id, m]: [string, any]) => id !== uid && m.isLinked === true)
+        // [修正] 明確宣告參數型別為 [string, any]
+        .sort((a: [string, any], b: [string, any]) => {
+           // [關鍵修正] 強制斷言，TypeScript 絕對不會再說 unknown
+           const memberA = a[1] as TaskMember;
+           const memberB = b[1] as TaskMember;
+           const timeA = memberA.joinedAt?.toMillis() ?? 0;
+           const timeB = memberB.joinedAt?.toMillis() ?? 0;
+           return timeA - timeB;
+        });
+
+      if (candidates.length === 0) {
+        tasksToDelete.push(doc.ref);
+      } else {
+        const newCaptainEntry = candidates[0];
+        const newCaptainId = newCaptainEntry[0];
+        const newCaptainName = (newCaptainEntry[1] as TaskMember).displayName;
+        
+        batch.update(doc.ref, {
+            captainId: newCaptainId, 
+            [`members.${newCaptainId}.role`]: "captain", 
+            
+            [`members.${uid}.isLinked`]: false,
+            [`members.${uid}.role`]: "member",
+            [`members.${uid}.displayName`]: `${members[uid].displayName}`,
+            [`members.${uid}.avatar`]: null,
+        });
+        
+        await writeActivityLog(db, doc.id, uid, "update_settings", {
+          settingType: "captain_transfer",
+          oldCaptain: members[uid]?.displayName,
+          newCaptain: newCaptainName, 
+          newValue: newCaptainName 
+        }, batch);
+
+        await writeActivityLog(db, doc.id, uid, "remove_member", {
+          memberName: members[uid]?.displayName || "Unknown",
+          reason: "account_deleted"
+        }, batch);
+      }
+    }
+  }
+
+  await batch.commit();
+
+  if (tasksToDelete.length > 0) {
+     const deletePromises = tasksToDelete.map(ref => db.recursiveDelete(ref));
+     await Promise.all(deletePromises);
+  }
+
+  await db.collection("users").doc(uid).delete();
+  await admin.auth().deleteUser(uid);
+
+  return { success: true };
 });

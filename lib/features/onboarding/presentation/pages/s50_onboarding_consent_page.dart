@@ -33,14 +33,14 @@ class _S50Content extends StatelessWidget {
 
     // 定義連結文字的樣式 (使用 Primary Color 讓它看起來像連結)
     final linkStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: theme.colorScheme.primary,
-      fontWeight: FontWeight.bold,
-      decoration: TextDecoration.underline, // 可選：加底線更像連結
-      decorationColor: theme.colorScheme.primary,
-    );
+        color: theme.colorScheme.primary,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline, // 可選：加底線更像連結
+        decorationColor: theme.colorScheme.primary,
+        height: 1.5);
 
     // 定義一般文字樣式
-    final normalStyle = theme.textTheme.bodyMedium;
+    final normalStyle = theme.textTheme.bodyMedium?.copyWith(height: 1.5);
 
     return Scaffold(
       appBar: AppBar(title: Text(t.S50_Onboarding_Consent.title)),

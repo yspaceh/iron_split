@@ -82,7 +82,7 @@ class _S31Content extends StatelessWidget {
           title: t.error.dialog.data_conflict.title,
           content: Text(
             t.error.dialog.data_conflict.message,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
           ),
           actions: [
             AppButton(

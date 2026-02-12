@@ -63,6 +63,7 @@ class _S51ContentState extends State<_S51Content> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final vm = context.watch<S51OnboardingNameViewModel>();
 
     return Scaffold(
@@ -91,7 +92,10 @@ class _S51ContentState extends State<_S51Content> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(t.S51_Onboarding_Name.description),
+              Text(
+                t.S51_Onboarding_Name.description,
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              ),
               const SizedBox(height: 24),
               TaskNameInput(
                 controller: _controller,

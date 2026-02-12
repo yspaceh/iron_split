@@ -121,7 +121,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
                 avatar: AvatarConstants.getName(t, vm.currentAvatar),
               ),
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
             const SizedBox(height: 24),
 

@@ -3,7 +3,7 @@ import 'package:iron_split/gen/strings.g.dart'; // 必須引入 slang 生成的�
 
 class LanguageConstants {
   // 定義預設語系
-  static const AppLocale defaultLocale = AppLocale.zhTw; // 或 AppLocale.enUs
+  static const AppLocale defaultLocale = AppLocale.enUs; // 或 AppLocale.enUs
 
   // 定義清單 (直接使用 Enum)
   static const List<AppLocale> allLanguages = [

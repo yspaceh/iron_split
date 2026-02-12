@@ -30,6 +30,8 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return CommonAlertDialog(
         title: t.D10_RecordDelete_Confirm.delete_record_title,
         content: Text(
@@ -37,6 +39,7 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
               title: recordTitle,
               amount:
                   "${currency.symbol} ${CurrencyConstants.formatAmount(amount, currency.code)}"),
+          style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
         ),
         actions: [
           AppButton(

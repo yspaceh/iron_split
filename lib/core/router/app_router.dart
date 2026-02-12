@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/system/presentation/pages/s72_terms_update_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s73_system_settings_payment_info_page.dart';
+import 'package:iron_split/features/system/presentation/pages/s74_delete_account_notice_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s14_task_settings_page.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
@@ -249,6 +250,14 @@ class AppRouter {
             name: 'S73',
             builder: (context, state) {
               return S73SystemSettingsPaymentInfoPage();
+            },
+          ),
+          // S73_DeleteAccount_Notice`
+          GoRoute(
+            path: 'delete-account',
+            name: 'S74',
+            builder: (context, state) {
+              return S74DeleteAccountNoticePage();
             },
           ),
         ],

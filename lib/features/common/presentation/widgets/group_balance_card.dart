@@ -84,12 +84,13 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.expenseDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
                 ...state.expenseDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${_getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: TextStyle(fontFamily: 'RobotoMono'),
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -103,12 +104,13 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.incomeDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
                 ...state.incomeDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${_getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: TextStyle(fontFamily: 'RobotoMono'),
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -121,14 +123,13 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.poolDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
                 ...state.poolDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${_getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: TextStyle(
-                      fontFamily: 'RobotoMono',
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -139,7 +140,7 @@ class GroupBalanceCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: Colors.white, // [修改] 統一使用純白
+        color: theme.colorScheme.surface, // [修改] 統一使用純白
         borderRadius: BorderRadius.circular(20), // 大卡片維持 20 的圓角，比較大氣
         // [修改] 加入與 MemberItem 一致的極淡陰影
         boxShadow: [

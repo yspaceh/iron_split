@@ -49,7 +49,7 @@ class PersonalBalanceCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: Colors.white, // [修改] 純白
+        color: theme.colorScheme.surface, // [修改] 純白
         borderRadius: BorderRadius.circular(20), // [修改] 圓角 20
         // [修改] 統一陰影
         boxShadow: [

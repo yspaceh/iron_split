@@ -18,9 +18,14 @@ class D04CommonUnsavedConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return CommonAlertDialog(
         title: t.D04_CommonUnsaved_Confirm.title,
-        content: Text(t.D04_CommonUnsaved_Confirm.content),
+        content: Text(
+          t.D04_CommonUnsaved_Confirm.content,
+          style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        ),
         actions: [
           AppButton(
             text: t.common.buttons.discard,

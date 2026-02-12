@@ -34,6 +34,20 @@ class AppTheme {
   static const Color incomeDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
   static const Color starGold = Color(0xFFFBC02D);
 
+  // --- Dark Mode 專用調色盤 ---
+  // 背景：Material 推薦的標準深色背景 #121212
+  static const _darkBg = Color(0xFF121212);
+  // 卡片/對話框表面：比背景稍亮，營造層次感
+  static const _darkSurface = Color(0xFF1E1E1E);
+  // 邊框：深灰，低調的邊界
+  static const _darkBorder = Color(0xFF333333);
+  // 文字：淺灰白 (避免純白刺眼)
+  static const _textPrimaryDark = Color(0xFFE0E0E0);
+  // 次要文字：中灰
+  static const _textSecondaryDark = Color(0xFFA0A0A0);
+  // 輸入框背景
+  static const _inputFillDark = Color(0xFF2C2C2C);
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -193,8 +207,7 @@ class AppTheme {
 
         // 內文
         bodyLarge: TextStyle(color: _obsidian),
-        // 次要資訊：使用 #616161，清晰且不搶戲
-        bodyMedium: TextStyle(color: _mediumGrey),
+        bodyMedium: TextStyle(color: _obsidian),
         labelLarge: TextStyle(color: _obsidian, fontWeight: FontWeight.w600),
       ),
       snackBarTheme: SnackBarThemeData(
@@ -251,6 +264,222 @@ class AppTheme {
         // 調整大小與間距 (Extended FAB 預設有點大，我們可以微調)
         extendedPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+    );
+  }
+
+  // --- 新增 Dark Theme ---
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      fontFamily: 'Roboto',
+      brightness: Brightness.dark, // 關鍵：告訴 Flutter 這是深色模式
+
+      // 色彩計畫 (Dark Mode)
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: _ironWine,
+        brightness: Brightness.dark,
+
+        surface: _darkSurface, // 背景
+        onSurface: _textPrimaryDark, // 主要文字
+
+        error: const Color(0xFFCF6679), // M3 預設的深色模式紅
+        errorContainer: const Color(0xFFB00020),
+
+        // 次要內容：淺灰
+        onSurfaceVariant: _textSecondaryDark,
+
+        // 容器
+        surfaceContainerHighest: _darkSurface,
+        surfaceContainerLow: _darkBg,
+
+        // 邊框
+        outline: _darkBorder,
+        outlineVariant: _darkBorder.withValues(alpha: 0.5),
+
+        primary: _ironWine, // 保持品牌色
+        onPrimary: Colors.white,
+
+        // 收入綠色 (稍微調亮一點以適應深色背景)
+        tertiary: const Color(0xFF66BB6A),
+        tertiaryContainer: const Color(0xFF1B5E20),
+        onTertiaryContainer: Colors.white,
+
+        // 反向表面 (SnackBar 等) -> 變成淺色
+        inverseSurface: const Color(0xFFE0E0E0),
+        onInverseSurface: _darkBg,
+      ),
+
+      scaffoldBackgroundColor: _darkBg,
+
+      // AppBar (Dark)
+      appBarTheme: const AppBarTheme(
+        backgroundColor: _darkBg,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          color: _textPrimaryDark,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.5,
+        ),
+        iconTheme: IconThemeData(color: _textPrimaryDark),
+      ),
+
+      // Card (Dark)
+      cardTheme: CardThemeData(
+        color: _darkSurface, // 深色卡片
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: _darkBorder, width: 1),
+        ),
+      ),
+
+      // Button (Dark)
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _ironWine,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: const StadiumBorder(),
+          textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+        ),
+      ),
+
+      // Input (Dark)
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: _inputFillDark, // 深灰輸入框
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: _darkBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: _ironWine, width: 1.5),
+        ),
+        hintStyle: const TextStyle(color: _textSecondaryDark),
+      ),
+
+      // Dialog (Dark)
+      dialogTheme: DialogThemeData(
+        backgroundColor: _darkSurface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: _darkBorder, width: 1),
+        ),
+        titleTextStyle: const TextStyle(
+          color: _textPrimaryDark,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
+        contentTextStyle:
+            const TextStyle(color: _textPrimaryDark, fontSize: 16),
+      ),
+
+      // DatePicker (Dark)
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: _darkSurface,
+        surfaceTintColor: Colors.transparent,
+        headerBackgroundColor: _darkSurface,
+        headerForegroundColor: _textPrimaryDark,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: _darkBorder, width: 1),
+        ),
+        dayStyle:
+            const TextStyle(fontFamily: 'Roboto', color: _textPrimaryDark),
+        yearStyle:
+            const TextStyle(fontFamily: 'Roboto', color: _textPrimaryDark),
+        weekdayStyle:
+            const TextStyle(fontFamily: 'Roboto', color: _textSecondaryDark),
+        todayBorder: const BorderSide(color: _ironWine),
+        todayForegroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return Colors.white;
+          return _ironWine;
+        }),
+        cancelButtonStyle: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          minimumSize: const Size(120, 44),
+          side: const BorderSide(color: _darkBorder),
+          foregroundColor: _ironWine,
+          shape: const StadiumBorder(),
+        ),
+        confirmButtonStyle: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          minimumSize: const Size(120, 44),
+          backgroundColor: _ironWine,
+          foregroundColor: Colors.white,
+          shape: const StadiumBorder(),
+          elevation: 0,
+        ),
+      ),
+
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: _darkSurface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+      ),
+
+      // Text (Dark) - 全部反白
+      textTheme: const TextTheme(
+        displayMedium: TextStyle(
+            color: _textPrimaryDark,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1.0),
+        headlineMedium: TextStyle(
+            color: _textPrimaryDark,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.5),
+        titleLarge:
+            TextStyle(color: _textPrimaryDark, fontWeight: FontWeight.w700),
+        titleMedium:
+            TextStyle(color: _textPrimaryDark, fontWeight: FontWeight.w600),
+        bodyLarge: TextStyle(color: _textPrimaryDark),
+        bodyMedium: TextStyle(color: _textPrimaryDark),
+        labelLarge:
+            TextStyle(color: _textPrimaryDark, fontWeight: FontWeight.w600),
+        labelMedium: TextStyle(color: _textSecondaryDark),
+      ),
+
+      // SnackBar (Dark) - 為了對比，深色模式下的 SnackBar 改用淺灰底黑字
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        backgroundColor: const Color(0xFFE0E0E0), // 淺灰底
+        contentTextStyle: const TextStyle(
+          color: _obsidian, // 深黑字
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        elevation: 4,
+      ),
+
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: _ironWine,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+        shape: StadiumBorder(),
+        extendedTextStyle: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
+          letterSpacing: 0.5,
+        ),
+        extendedPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/viewmodels/locale_vm.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_theme_input.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
@@ -61,6 +64,8 @@ class _S70ContentState extends State<_S70Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S70SystemSettingsViewModel>();
+    final themeVm = context.watch<ThemeViewModel>();
+    final localeVm = context.watch<LocaleViewModel>();
 
     // 簡單的 Loading 狀態處理
     if (vm.isLoading && vm.nameController.text.isEmpty) {
@@ -71,7 +76,8 @@ class _S70ContentState extends State<_S70Content> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S14_Task_Settings.title), // 或 t.S70_System_Settings.title
+        title:
+            Text(t.S70_System_Settings.title), // 或 t.S70_System_Settings.title
       ),
       // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
       body: GestureDetector(
@@ -80,62 +86,66 @@ class _S70ContentState extends State<_S70Content> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
             SectionWrapper(
-              title: t.S14_Task_Settings.section.task_name,
+              title: t.S70_System_Settings.section.basic,
               children: [
-                // 4. 將 FocusNode 綁定到 Input
-                Focus(
-                  focusNode: _nameFocusNode,
-                  child: TaskNameInput(
-                    controller: vm.nameController,
-                    label: t.S70_System_Settings.menu.user_name,
-                    hint: t.S51_Onboarding_Name.hint,
-                    maxLength: 20,
-                  ),
-                ),
-                // if (vm.isLoading)
-                //   const Padding(
-                //     padding: EdgeInsets.only(top: 8.0),
-                //     child: LinearProgressIndicator(minHeight: 2),
-                //   ),
-                const SizedBox(height: 8),
-
-                // 5. 語言設定
-                TaskLanguageInput(
-                  language: vm.currentLocale,
-                  onLanguageChanged: (newLocale) =>
-                      vm.updateLanguage(newLocale),
+                // 顯示名稱
+                TaskNameInput(
+                  controller: vm.nameController,
+                  label: t.S70_System_Settings.menu.user_name,
+                  hint: t.S51_Onboarding_Name.hint,
+                  maxLength: 20,
                 ),
                 const SizedBox(height: 8),
-
-                // 6. 收款資料
+                // 收款資料
                 NavTile(
                   title: t.S70_System_Settings.menu.payment_info,
                   onTap: () => context.pushNamed('S73'),
                 ),
                 const SizedBox(height: 8),
-
-                // 7. 法律條款
-                NavTile(
-                  title: t.S70_System_Settings.menu.terms,
-                  onTap: () {
-                    context.pushNamed(
-                      'S71',
-                      extra: {'isTerms': true},
-                    );
-                  },
+                // 語言設定
+                TaskLanguageInput(
+                  language: localeVm.currentLocale,
+                  onLanguageChanged: (newLocale) =>
+                      localeVm.updateLanguage(newLocale),
                 ),
                 const SizedBox(height: 8),
-                NavTile(
-                  title: t.S70_System_Settings.menu.privacy,
-                  onTap: () {
-                    context.pushNamed(
-                      'S71',
-                      extra: {'isTerms': false},
-                    );
-                  },
+                // 深淺模式
+                TaskThemeInput(
+                  theme: themeVm.themeMode,
+                  onThemeChanged: (newTheme) => themeVm.setThemeMode(newTheme),
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+            SectionWrapper(
+                title: t.S70_System_Settings.section.legal,
+                children: [
+                  NavTile(
+                    title: t.S70_System_Settings.menu.terms,
+                    onTap: () => context.pushNamed(
+                      'S71',
+                      extra: {'isTerms': true},
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  NavTile(
+                    title: t.S70_System_Settings.menu.privacy,
+                    onTap: () => context.pushNamed(
+                      'S71',
+                      extra: {'isTerms': false},
+                    ),
+                  ),
+                ]),
+            const SizedBox(height: 16),
+            SectionWrapper(
+                title: t.S70_System_Settings.section.account,
+                children: [
+                  NavTile(
+                    title: t.S70_System_Settings.menu.delete_account,
+                    isDestructive: true,
+                    onTap: () => context.pushNamed('S74'),
+                  ),
+                ]),
             const SizedBox(height: 32),
           ],
         ),

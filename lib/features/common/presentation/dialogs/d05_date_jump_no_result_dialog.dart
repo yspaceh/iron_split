@@ -27,9 +27,14 @@ class D05DateJumpNoResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return CommonAlertDialog(
       title: t.D05_DateJump_NoResult.title,
-      content: Text(t.D05_DateJump_NoResult.content),
+      content: Text(
+        t.D05_DateJump_NoResult.content,
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+      ),
       actions: [
         AppButton(
           text: t.D05_DateJump_NoResult.buttons.cancel,

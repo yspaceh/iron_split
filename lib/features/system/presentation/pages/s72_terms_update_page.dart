@@ -30,11 +30,15 @@ class _S72Content extends StatelessWidget {
   // [新增] 顯示登出確認對話框
   Future<void> _showDeclineDialog(BuildContext context) async {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
 
     final shouldLogout = await CommonAlertDialog.show<bool>(
       context,
       title: t.D12_logout_confirm.title,
-      content: Text(t.D12_logout_confirm.description),
+      content: Text(
+        t.D12_logout_confirm.description,
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+      ),
       actions: [
         AppButton(
           text: t.common.buttons.cancel,

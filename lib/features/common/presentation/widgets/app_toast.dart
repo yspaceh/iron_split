@@ -43,6 +43,8 @@ class AppToast {
     required Color backgroundColor,
     required IconData icon,
   }) {
+    final theme = Theme.of(context);
+
     // 先隱藏舊的，避免堆疊
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -64,13 +66,13 @@ class AppToast {
         // 內容佈局
         content: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 20),
+            Icon(icon, color: theme.colorScheme.surface, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(
-                  color: Colors.white, // 白字配深底/紅底最清晰
+                style: TextStyle(
+                  color: theme.colorScheme.surface, // 白字配深底/紅底最清晰
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
