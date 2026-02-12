@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -33,6 +34,7 @@ class S32SettlementResultPage extends StatelessWidget {
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
         deepLinkService: context.read<DeepLinkService>(),
+        settlementService: context.read<SettlementService>(),
       )..init(),
       child: const _S32Content(),
     );
@@ -231,14 +233,14 @@ class _S32ContentState extends State<_S32Content> {
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(
-            text: t.S32_settlement_result.buttons.back,
+            text: t.S32_settlement_result.buttons.share,
             type: AppButtonType.secondary,
-            onPressed: onBackToTask,
+            onPressed: onShareTap,
           ),
           AppButton(
-            text: t.S32_settlement_result.buttons.share,
+            text: t.S32_settlement_result.buttons.back,
             type: AppButtonType.primary,
-            onPressed: onShareTap,
+            onPressed: onBackToTask,
           ),
         ],
       ),

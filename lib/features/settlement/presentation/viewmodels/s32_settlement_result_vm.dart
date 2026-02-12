@@ -2,23 +2,27 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S32SettlementResultViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final String taskId;
   final DeepLinkService _deepLinkService;
+  final SettlementService _settlementService;
 
   TaskModel? _task;
   bool _isLoading = true;
 
   StreamSubscription? _taskSubscription;
+  bool _hasmarkedAsSeen = false;
 
   // Getters
   bool get isLoading => _isLoading;
@@ -98,10 +102,14 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     required this.taskId,
     required TaskRepository taskRepo,
     required DeepLinkService deepLinkService,
+    required SettlementService settlementService,
   })  : _taskRepo = taskRepo,
-        _deepLinkService = deepLinkService;
+        _deepLinkService = deepLinkService,
+        _settlementService = settlementService;
 
   void init() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
     _isLoading = true;
     notifyListeners();
 
@@ -110,7 +118,40 @@ class S32SettlementResultViewModel extends ChangeNotifier {
       _task = taskData;
       _isLoading = false;
       notifyListeners();
+      _autoMarkAsSeen(uid);
     });
+  }
+
+  void _autoMarkAsSeen(String uid) {
+    debugPrint('uid: $uid');
+    // 如果已經標記過，或者資料還沒準備好，就跳過
+    debugPrint('_hasmarkedAsSeen: $_hasmarkedAsSeen');
+    if (_hasmarkedAsSeen || _task == null || _task!.settlement == null) return;
+
+    final viewStatus =
+        _task!.settlement!['viewStatus'] as Map<String, dynamic>? ?? {};
+
+    debugPrint('viewStatus: $viewStatus');
+
+    debugPrint('viewStatus[uid]: ${viewStatus[uid]}');
+
+    // 如果目前雲端紀錄我還沒看過
+    if (viewStatus[uid] != true) {
+      _hasmarkedAsSeen = true; // 先設為 true，防止串流多次觸發
+      markAsSeen(uid);
+    }
+  }
+
+  Future<void> markAsSeen(String uid) async {
+    try {
+      await _settlementService.markSettlementAsSeen(
+        taskId: taskId,
+        memberId: uid,
+      );
+    } catch (e) {
+      _hasmarkedAsSeen = false; // 萬一失敗，允許下次重試
+      debugPrint('S32 MarkAsSeen Failed: $e');
+    }
   }
 
   // Private Helper: 將 Task Member 資料與 Snapshot 金額結合成 SettlementMember

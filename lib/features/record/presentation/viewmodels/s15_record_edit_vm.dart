@@ -88,10 +88,32 @@ class S15RecordEditViewModel extends ChangeNotifier {
   // Computed Properties
   double get totalAmount => double.tryParse(amountController.text) ?? 0.0;
 
+  double get exchangeRateValue =>
+      double.tryParse(exchangeRateController.text) ?? 1.0;
+
+  double get amountToSplit =>
+      _recordTypeIndex == 1 ? totalAmount : baseRemainingAmount;
+
   double get baseRemainingAmount {
     final subTotal = _details.fold(0.0, (prev, curr) => prev + curr.amount);
     final remaining = totalAmount - subTotal;
     return remaining > 0 ? remaining : 0.0;
+  }
+
+  /// 供 B07 使用的初始墊付資料
+  Map<String, double> getInitialMemberAdvance() {
+    if (_complexPaymentData?['memberAdvance'] != null) {
+      return Map<String, double>.from(_complexPaymentData!['memberAdvance']);
+    }
+    return (_payerType == 'member' ? {_payerId: totalAmount} : {});
+  }
+
+  /// 取得所有成員的預設分帳比例 (供 B03/B02 使用)
+  Map<String, double> get memberDefaultWeights {
+    return {
+      for (var m in _taskMembers)
+        (m['id'] as String): (m['defaultSplitRatio'] as num? ?? 1.0).toDouble()
+    };
   }
 
   bool get hasPaymentError {
@@ -690,19 +712,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
   String _getMemberName(String id, Translations t) {
     final m = _taskMembers.firstWhere((e) => e['id'] == id, orElse: () => {});
     return m['displayName'] ?? t.S53_TaskSettings_Members.member_default_name;
-  }
-
-  /// 取得所有成員的預設分帳比例
-  /// 用於傳遞給 B03
-  Map<String, double> get memberDefaultWeights {
-    final Map<String, double> weights = {};
-    for (var m in _taskMembers) {
-      final id = m['id'] as String;
-      // 從 S53 更新的 'defaultSplitRatio' 欄位讀取
-      final ratio = (m['defaultSplitRatio'] as num? ?? 1.0).toDouble();
-      weights[id] = ratio;
-    }
-    return weights;
   }
 
   /// 取得「校正後」的公款餘額

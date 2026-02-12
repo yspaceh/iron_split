@@ -1,5 +1,4 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { FieldPath } from "firebase-admin/firestore";
 
@@ -339,13 +338,14 @@ export const joinByInviteCode = onCall(async (request) => {
  * 4. 刪除 User Document
  * 5. 刪除 Auth 帳號
  */
-export const deleteUserAccount = functions.https.onCall(async (data:any, context: any) => {
-  // v1 身份驗證寫法
-  if (!context || !context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "AUTH_REQUIRED");
+// ✅ 統一使用 v2 寫法，與您的 createInviteCode 保持一致
+export const deleteUserAccount = onCall(async (request) => {
+  // 這裡改用 request.auth，絕對能精準抓到您的登入狀態
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
   }
 
-  const uid = context.auth.uid;
+  const uid = request.auth.uid;
   const db = admin.firestore();
 
   const tasksSnapshot = await db
@@ -362,7 +362,6 @@ export const deleteUserAccount = functions.https.onCall(async (data:any, context
     const isCaptain = taskData.captainId === uid;
 
     if (!isCaptain) {
-      // --- 普通成員 ---
       batch.update(doc.ref, {
         [`members.${uid}.isLinked`]: false,
         [`members.${uid}.role`]: "member",
@@ -375,13 +374,9 @@ export const deleteUserAccount = functions.https.onCall(async (data:any, context
         reason: "account_deleted"
       }, batch);
     } else {
-      // --- 隊長 ---
       const candidates = Object.entries(members)
-        // [修正] 明確宣告參數型別為 [string, any]
         .filter(([id, m]: [string, any]) => id !== uid && m.isLinked === true)
-        // [修正] 明確宣告參數型別為 [string, any]
         .sort((a: [string, any], b: [string, any]) => {
-           // [關鍵修正] 強制斷言，TypeScript 絕對不會再說 unknown
            const memberA = a[1] as TaskMember;
            const memberB = b[1] as TaskMember;
            const timeA = memberA.joinedAt?.toMillis() ?? 0;

@@ -304,10 +304,12 @@ class SettlementService {
       // 6. 準備存檔資料
       final Map<String, double> allocations = {};
       final Map<String, bool> memberStatus = {};
+      final Map<String, bool> viewStatus = {};
 
       for (var m in finalMergedList) {
         allocations[m.id] = m.finalAmount;
         memberStatus[m.id] = false;
+        viewStatus[m.id] = false;
       }
 
       // 7.  產生 Dashboard 快照
@@ -327,6 +329,7 @@ class SettlementService {
           "remainderWinnerId": finalWinnerId,
           "allocations": allocations,
           "memberStatus": memberStatus,
+          "viewStatus": viewStatus,
           "receiverInfos": captainPaymentInfoJson,
           "dashboardSnapshot": snapshotState.toMap(),
         },
@@ -423,6 +426,17 @@ class SettlementService {
     // 使用 Dot Notation 直接更新 Map 中的特定 Key，不影響其他資料
     await _taskRepo.updateTask(taskId, {
       'settlement.memberStatus.$memberId': isCleared,
+    });
+  }
+
+  /// S32: 當成員看完結算畫面後，標記為已看過
+  Future<void> markSettlementAsSeen({
+    required String taskId,
+    required String memberId,
+  }) async {
+    // 使用 Dot Notation 更新，只動到這一個成員的值
+    await _taskRepo.updateTask(taskId, {
+      'settlement.viewStatus.$memberId': true,
     });
   }
 }

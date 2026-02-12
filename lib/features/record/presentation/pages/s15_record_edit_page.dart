@@ -96,21 +96,16 @@ class _S15ContentState extends State<_S15Content> {
 
   // Show B03
   Future<void> _onBaseSplitConfigTap(S15RecordEditViewModel vm) async {
-    final amountToSplit =
-        vm.recordTypeIndex == 1 ? vm.totalAmount : vm.baseRemainingAmount;
-
-    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
-
     final result = await B03SplitMethodEditBottomSheet.show(
       context,
-      totalAmount: amountToSplit,
+      totalAmount: vm.amountToSplit,
       selectedCurrency: vm.selectedCurrencyConstants,
       allMembers: vm.taskMembers,
       defaultMemberWeights: vm.memberDefaultWeights,
       initialSplitMethod: vm.baseSplitMethod,
       initialMemberIds: vm.baseMemberIds,
       initialDetails: vm.baseRawDetails,
-      exchangeRate: rate,
+      exchangeRate: vm.exchangeRateValue,
       baseCurrency: vm.baseCurrency,
     );
 
@@ -132,8 +127,6 @@ class _S15ContentState extends State<_S15Content> {
       for (var m in vm.taskMembers) (m['id'] as String): 1.0
     };
 
-    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
-
     final result = await B02SplitExpenseEditBottomSheet.show(
       context,
       detail: null,
@@ -142,7 +135,7 @@ class _S15ContentState extends State<_S15Content> {
       selectedCurrency: vm.selectedCurrencyConstants,
       parentTitle: vm.titleController.text,
       availableAmount: vm.baseRemainingAmount,
-      exchangeRate: rate,
+      exchangeRate: vm.exchangeRateValue,
       baseCurrency: vm.baseCurrency,
     );
 
@@ -197,12 +190,6 @@ class _S15ContentState extends State<_S15Content> {
       return;
     }
 
-    // 🛠️ 修正點 4：恢復完整的初始化邏輯，不簡化功能
-    final Map<String, double> initialMemberAdvance =
-        vm.complexPaymentData?['memberAdvance'] != null
-            ? Map<String, double>.from(vm.complexPaymentData!['memberAdvance'])
-            : (vm.payerType == 'member' ? {vm.payerId: vm.totalAmount} : {});
-
     final result = await B07PaymentMethodEditBottomSheet.show(
       context,
       totalAmount: vm.totalAmount,
@@ -214,7 +201,7 @@ class _S15ContentState extends State<_S15Content> {
           vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
       initialPrepayAmount: vm.complexPaymentData?['prepayAmount'] ??
           (vm.payerType == 'prepay' ? vm.totalAmount : 0.0),
-      initialMemberAdvance: initialMemberAdvance,
+      initialMemberAdvance: vm.getInitialMemberAdvance(),
     );
 
     if (result != null) vm.updatePaymentMethod(result);

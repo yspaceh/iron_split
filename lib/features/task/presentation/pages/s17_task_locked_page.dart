@@ -84,6 +84,23 @@ class _S17Content extends StatelessWidget {
       }
     }
 
+    if (vm.status == LockedPageStatus.settled && vm.task != null) {
+      final settlement = vm.task!.settlement;
+      final viewStatus =
+          settlement?['viewStatus'] as Map<String, dynamic>? ?? {};
+      final hasSeen = viewStatus[vm.currentUserId] ?? false;
+
+      if (!hasSeen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            // 沒看過摘要？先去 S32 報到
+            context.pushReplacementNamed('S32',
+                pathParameters: {'taskId': vm.taskId});
+          }
+        });
+      }
+    }
+
     Widget content;
     switch (vm.status) {
       case LockedPageStatus.loading:

@@ -67,6 +67,16 @@ class _S13ContentState extends State<_S13Content> {
       return const Scaffold(body: Center(child: Text("Task not found")));
     }
 
+    if (vm.task != null && vm.task?.status == 'settled') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          // 發現結算了，直接趕人去 S17
+          context.pushReplacementNamed('S17',
+              pathParameters: {'taskId': vm.taskId});
+        }
+      });
+    }
+
     // 2. Intro Logic (移植)
     // 檢查 VM 狀態，決定是否顯示彈窗
     if (vm.shouldShowIntro && !_isShowingIntro) {
