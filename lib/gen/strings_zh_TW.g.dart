@@ -984,7 +984,6 @@ class TranslationsErrorZhTw {
 
 	// Translations
 	late final TranslationsErrorDialogZhTw dialog = TranslationsErrorDialogZhTw.internal(_root);
-	late final TranslationsErrorSettlementZhTw settlement = TranslationsErrorSettlementZhTw.internal(_root);
 	late final TranslationsErrorMessageZhTw message = TranslationsErrorMessageZhTw.internal(_root);
 }
 
@@ -2281,24 +2280,6 @@ class TranslationsErrorDialogZhTw {
 	late final TranslationsErrorDialogDataConflictZhTw data_conflict = TranslationsErrorDialogDataConflictZhTw.internal(_root);
 }
 
-// Path: error.settlement
-class TranslationsErrorSettlementZhTw {
-	TranslationsErrorSettlementZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '此任務狀態異常（可能已被結算），請刷新頁面。'
-	String get status_invalid => '此任務狀態異常（可能已被結算），請刷新頁面。';
-
-	/// zh-TW: '只有建立者可以執行結算。'
-	String get permission_denied => '只有建立者可以執行結算。';
-
-	/// zh-TW: '系統錯誤，結算失敗，請稍後再試。'
-	String get transaction_failed => '系統錯誤，結算失敗，請稍後再試。';
-}
-
 // Path: error.message
 class TranslationsErrorMessageZhTw {
 	TranslationsErrorMessageZhTw.internal(this._root);
@@ -2346,6 +2327,9 @@ class TranslationsErrorMessageZhTw {
 	/// zh-TW: '請先輸入{key}。'
 	String enter_first({required Object key}) => '請先輸入${key}。';
 
+	/// zh-TW: '無法產生報表，請檢查儲存空間或稍後重試。'
+	String get export_failed => '無法產生報表，請檢查儲存空間或稍後重試。';
+
 	/// zh-TW: '儲存失敗，請稍後再試。'
 	String get save_failed => '儲存失敗，請稍後再試。';
 
@@ -2390,6 +2374,21 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '系統流量達到上限，請稍後再試。'
 	String get quota_exceeded => '系統流量達到上限，請稍後再試。';
+
+	/// zh-TW: '加入任務失敗，請稍後再試。'
+	String get join_failed => '加入任務失敗，請稍後再試。';
+
+	/// zh-TW: '無法產生邀請碼，請稍後再試。'
+	String get invite_create_failed => '無法產生邀請碼，請稍後再試。';
+
+	/// zh-TW: '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。'
+	String get data_conflict => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。';
+
+	/// zh-TW: '此任務狀態異常（可能已被結算），請刷新頁面。'
+	String get task_status_error => '此任務狀態異常（可能已被結算），請刷新頁面。';
+
+	/// zh-TW: '系統錯誤，結算失敗，請稍後再試。'
+	String get settlement_failed => '系統錯誤，結算失敗，請稍後再試。';
 }
 
 // Path: common.remainder_rule.rule
@@ -3160,9 +3159,6 @@ extension on Translations {
 			'error.dialog.member_delete_failed.message' => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。',
 			'error.dialog.data_conflict.title' => '帳目已變動',
 			'error.dialog.data_conflict.message' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
-			'error.settlement.status_invalid' => '此任務狀態異常（可能已被結算），請刷新頁面。',
-			'error.settlement.permission_denied' => '只有建立者可以執行結算。',
-			'error.settlement.transaction_failed' => '系統錯誤，結算失敗，請稍後再試。',
 			'error.message.unknown' => '發生未知錯誤。',
 			'error.message.invalid_amount' => '金額無效。',
 			'error.message.required' => '此欄位為必填。',
@@ -3176,6 +3172,7 @@ extension on Translations {
 			'error.message.network_error' => '網路連線失敗，請檢查網路連線。',
 			'error.message.data_not_found' => '找不到相關資料。',
 			'error.message.enter_first' => ({required Object key}) => '請先輸入${key}。',
+			'error.message.export_failed' => '無法產生報表，請檢查儲存空間或稍後重試。',
 			'error.message.save_failed' => '儲存失敗，請稍後再試。',
 			'error.message.delete_failed' => '刪除失敗，請稍後再試。',
 			'error.message.task_close_failed' => '任務關閉失敗，請稍後再試。',
@@ -3191,6 +3188,11 @@ extension on Translations {
 			'error.message.task_locked' => '房間已進入結算狀態，無法修改資料。',
 			'error.message.timeout' => '伺服器回應逾時，請稍後再試。',
 			'error.message.quota_exceeded' => '系統流量達到上限，請稍後再試。',
+			'error.message.join_failed' => '加入任務失敗，請稍後再試。',
+			'error.message.invite_create_failed' => '無法產生邀請碼，請稍後再試。',
+			'error.message.data_conflict' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
+			'error.message.task_status_error' => '此任務狀態異常（可能已被結算），請刷新頁面。',
+			'error.message.settlement_failed' => '系統錯誤，結算失敗，請稍後再試。',
 			_ => null,
 		};
 	}

@@ -648,7 +648,6 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 
 	// Translations
 	@override late final _TranslationsErrorDialogJaJp dialog = _TranslationsErrorDialogJaJp._(_root);
-	@override late final _TranslationsErrorSettlementJaJp settlement = _TranslationsErrorSettlementJaJp._(_root);
 	@override late final _TranslationsErrorMessageJaJp message = _TranslationsErrorMessageJaJp._(_root);
 }
 
@@ -1510,18 +1509,6 @@ class _TranslationsErrorDialogJaJp extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogDataConflictJaJp data_conflict = _TranslationsErrorDialogDataConflictJaJp._(_root);
 }
 
-// Path: error.settlement
-class _TranslationsErrorSettlementJaJp extends TranslationsErrorSettlementZhTw {
-	_TranslationsErrorSettlementJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get status_invalid => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
-	@override String get permission_denied => '精算を実行できるのは作成者のみです。';
-	@override String get transaction_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
-}
-
 // Path: error.message
 class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	_TranslationsErrorMessageJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1542,6 +1529,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get network_error => 'ネットワーク接続に失敗しました。接続を確認してください。';
 	@override String get data_not_found => 'データが見つかりませんでした。もう一度お試しください。';
 	@override String enter_first({required Object key}) => '${key}を先に入力してください。';
+	@override String get export_failed => 'レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。';
 	@override String get save_failed => '保存に失敗しました。もう一度お試しください。';
 	@override String get delete_failed => '削除に失敗しました。もう一度お試しください。';
 	@override String get task_close_failed => 'タスク終了に失敗しました。しばらくしてから再試行してください。';
@@ -1557,6 +1545,11 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get task_locked => '精算済みのた​​め、データを変更できません。';
 	@override String get timeout => 'タイムアウトしました。後でもう一度お試しください。';
 	@override String get quota_exceeded => '利用制限に達しました。しばらく経ってからお試しください。';
+	@override String get join_failed => 'タスクに参加できませんでした。，しばらく経ってからお試しください。';
+	@override String get invite_create_failed => '招待コードを作成できませんでした。しばらく経ってからお試しください。';
+	@override String get data_conflict => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
+	@override String get task_status_error => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
+	@override String get settlement_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2220,9 +2213,6 @@ extension on TranslationsJaJp {
 			'error.dialog.member_delete_failed.message' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'error.dialog.data_conflict.title' => 'データ更新あり',
 			'error.dialog.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
-			'error.settlement.status_invalid' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
-			'error.settlement.permission_denied' => '精算を実行できるのは作成者のみです。',
-			'error.settlement.transaction_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
 			'error.message.unknown' => '予期せぬエラーが発生しました。',
 			'error.message.invalid_amount' => '金額が無効です。',
 			'error.message.required' => '必須項目です。',
@@ -2236,6 +2226,7 @@ extension on TranslationsJaJp {
 			'error.message.network_error' => 'ネットワーク接続に失敗しました。接続を確認してください。',
 			'error.message.data_not_found' => 'データが見つかりませんでした。もう一度お試しください。',
 			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください。',
+			'error.message.export_failed' => 'レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。',
 			'error.message.save_failed' => '保存に失敗しました。もう一度お試しください。',
 			'error.message.delete_failed' => '削除に失敗しました。もう一度お試しください。',
 			'error.message.task_close_failed' => 'タスク終了に失敗しました。しばらくしてから再試行してください。',
@@ -2251,6 +2242,11 @@ extension on TranslationsJaJp {
 			'error.message.task_locked' => '精算済みのた​​め、データを変更できません。',
 			'error.message.timeout' => 'タイムアウトしました。後でもう一度お試しください。',
 			'error.message.quota_exceeded' => '利用制限に達しました。しばらく経ってからお試しください。',
+			'error.message.join_failed' => 'タスクに参加できませんでした。，しばらく経ってからお試しください。',
+			'error.message.invite_create_failed' => '招待コードを作成できませんでした。しばらく経ってからお試しください。',
+			'error.message.data_conflict' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
+			'error.message.task_status_error' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
+			'error.message.settlement_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
 			_ => null,
 		};
 	}

@@ -38,6 +38,8 @@ class ErrorMapper {
       return AppErrorCodes.rateFetchFailed;
     }
 
+    if (eStr.contains('CLOSE_TASK')) return AppErrorCodes.taskCloseFailed;
+
     // 2. 動作關鍵字識別 (是什麼動作掛掉)
     // 當 Firebase 噴出一個 generic error 時，我們靠這些關鍵字轉譯
     if (eStr.contains('SAVE') ||
@@ -85,6 +87,14 @@ class ErrorMapper {
         return t.error.message.data_not_found;
       case AppErrorCodes.initFailed:
         return t.error.message.init_failed;
+      case AppErrorCodes.rateFetchFailed:
+        return t.error.message.rate_fetch_failed;
+      case AppErrorCodes.saveFailed:
+        return t.error.message.save_failed;
+      case AppErrorCodes.deleteFailed:
+        return t.error.message.delete_failed;
+      case AppErrorCodes.taskCloseFailed:
+        return t.error.message.task_close_failed;
 
       // ✅ 這些精確錯誤即便對應到同一行文字，也能確保邏輯層級是分開的
       case AppErrorCodes.quotaExceeded:
@@ -107,13 +117,33 @@ class ErrorMapper {
         return t.error.dialog.expired_code.message(minutes: '30');
       case AppErrorCodes.inviteInvalid:
         return t.error.dialog.invalid_code.message;
+      case AppErrorCodes.joinFailed:
+        return t.error.message.join_failed;
+      case AppErrorCodes.inviteCreateFailed:
+        return t.error.message.invite_create_failed;
+
+      case AppErrorCodes.nameLengthExceeded:
+        return t.error.message.length_exceeded(max: 10);
+      case AppErrorCodes.invalidChar:
+        return t.error.message.invalid_char;
+      case AppErrorCodes.fieldRequired:
+        return t.error.message.required;
+      case AppErrorCodes.dataConflict:
+        return t.error.message.data_conflict;
+      case AppErrorCodes.taskStatusError:
+        return t.error.message.task_status_error;
+      case AppErrorCodes.settlementFailed:
+        return t.error.message.settlement_failed;
+      case AppErrorCodes.exportFailed:
+        return t.error.message.export_failed;
 
       case AppErrorCodes.unknown:
       default:
         // ✅ 保留偵錯模式：若無定義，則顯示原始字串 (Exception: xxx)
         String eStr = error?.toString() ?? "";
-        if (eStr.startsWith("Exception: "))
+        if (eStr.startsWith("Exception: ")) {
           eStr = eStr.replaceFirst("Exception: ", "");
+        }
         return eStr.isNotEmpty ? eStr : t.error.message.unknown;
     }
   }

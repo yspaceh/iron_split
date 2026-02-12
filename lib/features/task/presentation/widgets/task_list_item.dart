@@ -9,7 +9,6 @@ class TaskListItem extends StatelessWidget {
   final String currentUserId; // 用來找「我的頭像」
   final bool isCaptain;
   final VoidCallback onTap;
-  final VoidCallback onDelete;
 
   const TaskListItem({
     super.key,
@@ -17,7 +16,6 @@ class TaskListItem extends StatelessWidget {
     required this.currentUserId,
     required this.isCaptain,
     required this.onTap,
-    required this.onDelete,
   });
 
   @override
@@ -102,19 +100,6 @@ class TaskListItem extends StatelessWidget {
                 ),
               ),
             ),
-            // if (isSettled)
-            //   Positioned(
-            //     top: 4,
-            //     right: 16,
-            //     child: Text(
-            //       t.S10_Home_TaskList.label_settlement,
-            //       style: theme.textTheme.labelSmall?.copyWith(
-            //         color: colorScheme.onSurfaceVariant, // 白字
-            //         fontWeight: FontWeight.bold,
-            //         fontSize: 10,
-            //       ),
-            //     ),
-            //   ),
           ],
         ),
       ),

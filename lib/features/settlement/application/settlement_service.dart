@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
-import 'package:iron_split/core/error/exceptions.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
@@ -248,7 +248,7 @@ class SettlementService {
   }) async {
     // 0. 狀態檢查
     if (task.status == 'settled' || task.status == 'closed') {
-      throw SettlementStatusInvalidException(task.status);
+      throw AppErrorCodes.taskStatusError;
     }
 
     // 1. 檢查點驗證 (公款水位)
@@ -256,7 +256,7 @@ class SettlementService {
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
 
     if ((currentPoolBalance - checkPointPoolBalance).abs() > 0.01) {
-      throw SettlementDataConflictException();
+      throw AppErrorCodes.dataConflict;
     }
 
     try {
@@ -336,10 +336,10 @@ class SettlementService {
       );
 
       return finalWinnerId;
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
-      // TODO: handle error
-      if (e is SettlementException) rethrow;
-      throw SettlementTransactionFailedException(e.toString());
+      throw AppErrorCodes.settlementFailed;
     }
   }
 

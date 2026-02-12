@@ -1,6 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:iron_split/core/base/base_repository.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 
-class InviteRepository {
+class InviteRepository extends BaseRepository {
   final FirebaseFunctions _functions;
 
   InviteRepository({FirebaseFunctions? functions})
@@ -8,15 +10,11 @@ class InviteRepository {
 
   /// 呼叫 previewInviteCode
   Future<Map<String, dynamic>> previewInviteCode(String code) async {
-    try {
+    return await safeRun(() async {
       final callable = _functions.httpsCallable('previewInviteCode');
       final result = await callable.call({'code': code});
       return Map<String, dynamic>.from(result.data);
-    } catch (e) {
-      // 這裡可以做更細緻的錯誤轉換，暫時透傳
-      // TODO: handle error
-      rethrow;
-    }
+    }, AppErrorCodes.inviteInvalid);
   }
 
   /// 呼叫 joinByInviteCode
@@ -25,7 +23,7 @@ class InviteRepository {
     required String displayName,
     String? targetMemberId, // 對應 _selectedGhostId
   }) async {
-    try {
+    return await safeRun(() async {
       final callable = _functions.httpsCallable('joinByInviteCode');
       final result = await callable.call({
         'code': code,
@@ -33,20 +31,14 @@ class InviteRepository {
         'targetMemberId': targetMemberId,
       });
       return result.data['taskId'] as String;
-    } catch (e) {
-      // TODO: handle error
-      rethrow;
-    }
+    }, AppErrorCodes.joinFailed);
   }
 
   Future<String> createInviteCode(String taskId) async {
-    try {
+    return await safeRun(() async {
       final callable = _functions.httpsCallable('createInviteCode');
       final result = await callable.call({'taskId': taskId});
       return result.data['code'] as String;
-    } catch (e) {
-      // TODO: 根據專案需求轉換成 AppErrorCode
-      rethrow;
-    }
+    }, AppErrorCodes.inviteCreateFailed);
   }
 }

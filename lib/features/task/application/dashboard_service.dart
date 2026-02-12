@@ -1,4 +1,5 @@
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
@@ -12,76 +13,82 @@ class DashboardService {
     required List<RecordModel> records,
     required String currentUserId,
   }) {
-    // 1. [Pool Balance] 右上角大數字 (公款總值)
-    final double poolBalance =
-        BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
+    try {
+      // 1. [Pool Balance] 右上角大數字 (公款總值)
+      final double poolBalance =
+          BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
 
-    // 2. [Chart Stats] 圖表用的總收入與總支出 (歷史總量)
-    final double totalIncome = BalanceCalculator.calculateIncomeTotal(records);
+      // 2. [Chart Stats] 圖表用的總收入與總支出 (歷史總量)
+      final double totalIncome =
+          BalanceCalculator.calculateIncomeTotal(records);
 
-    final double totalExpense =
-        BalanceCalculator.calculateExpenseTotal(records);
+      final double totalExpense =
+          BalanceCalculator.calculateExpenseTotal(records);
 
-    // 3. [Remainder] 零錢罐
-    final double remainder =
-        BalanceCalculator.calculateRemainderBuffer(records);
+      // 3. [Remainder] 零錢罐
+      final double remainder =
+          BalanceCalculator.calculateRemainderBuffer(records);
 
-    // 4. [Pool Detail] 點擊後的各幣別庫存明細
-    final Map<String, double> poolDetail =
-        BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
+      // 4. [Pool Detail] 點擊後的各幣別庫存明細
+      final Map<String, double> poolDetail =
+          BalanceCalculator.calculatePoolBalancesByOriginalCurrency(records);
 
-    // 5. [Chart Detail] 收入與支出的幣別分布 (給圓餅圖或詳情用)
-    // 雖然 BalanceCalculator 沒直接給這個 map，但這只是單純分類加總，可以在這裡簡單做
-    // 或者如果您希望連這個都封裝進 Calculator，我可以再加，
-    // 但目前為了不改動 Calculator，我們在這裡做簡單的分類。
-    final Map<String, double> expenseDetail = {};
-    final Map<String, double> incomeDetail = {};
+      // 5. [Chart Detail] 收入與支出的幣別分布 (給圓餅圖或詳情用)
+      // 雖然 BalanceCalculator 沒直接給這個 map，但這只是單純分類加總，可以在這裡簡單做
+      // 或者如果您希望連這個都封裝進 Calculator，我可以再加，
+      // 但目前為了不改動 Calculator，我們在這裡做簡單的分類。
+      final Map<String, double> expenseDetail = {};
+      final Map<String, double> incomeDetail = {};
 
-    for (var r in records) {
-      if (r.type == 'income') {
-        incomeDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
-            ifAbsent: () => r.originalAmount);
-      } else {
-        expenseDetail.update(
-            r.originalCurrencyCode, (v) => v + r.originalAmount,
-            ifAbsent: () => r.originalAmount);
+      for (var r in records) {
+        if (r.type == 'income') {
+          incomeDetail.update(
+              r.originalCurrencyCode, (v) => v + r.originalAmount,
+              ifAbsent: () => r.originalAmount);
+        } else {
+          expenseDetail.update(
+              r.originalCurrencyCode, (v) => v + r.originalAmount,
+              ifAbsent: () => r.originalAmount);
+        }
       }
+
+      // 6. [Flex] 計算圖表比例
+      int expenseFlex = 0;
+      int incomeFlex = 0;
+
+      // 分母為兩者絕對值之和
+      final totalVolume = totalExpense.abs() + totalIncome.abs();
+
+      if (totalVolume > 0) {
+        // 計算支出佔的比例 (乘 1000 轉整數)
+        expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
+        // 收入佔剩餘比例 (確保加起來是 1000)
+        incomeFlex = 1000 - expenseFlex;
+      }
+
+      final baseCurrency =
+          CurrencyConstants.getCurrencyConstants(task.baseCurrency);
+
+      return BalanceSummaryState(
+        currencyCode: task.baseCurrency,
+        currencySymbol: baseCurrency.symbol,
+        poolBalance: poolBalance,
+        totalExpense: totalExpense,
+        totalIncome: totalIncome,
+        remainder: remainder,
+        expenseFlex: expenseFlex,
+        incomeFlex: incomeFlex,
+        ruleKey: task.remainderRule,
+        isLocked: task.status != 'ongoing',
+        expenseDetail: expenseDetail,
+        incomeDetail: incomeDetail,
+        poolDetail: poolDetail,
+        absorbedBy: null,
+        absorbedAmount: null,
+      );
+    } catch (e) {
+      throw AppErrorCodes.initFailed;
     }
-
-    // 6. [Flex] 計算圖表比例
-    int expenseFlex = 0;
-    int incomeFlex = 0;
-
-    // 分母為兩者絕對值之和
-    final totalVolume = totalExpense.abs() + totalIncome.abs();
-
-    if (totalVolume > 0) {
-      // 計算支出佔的比例 (乘 1000 轉整數)
-      expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
-      // 收入佔剩餘比例 (確保加起來是 1000)
-      incomeFlex = 1000 - expenseFlex;
-    }
-
-    CurrencyConstants baseCurrency =
-        CurrencyConstants.getCurrencyConstants(task.baseCurrency);
-
-    return BalanceSummaryState(
-      currencyCode: task.baseCurrency,
-      currencySymbol: baseCurrency.symbol,
-      poolBalance: poolBalance,
-      totalExpense: totalExpense,
-      totalIncome: totalIncome,
-      remainder: remainder,
-      expenseFlex: expenseFlex,
-      incomeFlex: incomeFlex,
-      ruleKey: task.remainderRule,
-      isLocked: task.status != 'ongoing',
-      expenseDetail: expenseDetail,
-      incomeDetail: incomeDetail,
-      poolDetail: poolDetail,
-      absorbedBy: null,
-      absorbedAmount: null,
-    );
   }
 
   // ... (其他方法保持不變)

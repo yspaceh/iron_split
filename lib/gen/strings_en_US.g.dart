@@ -648,7 +648,6 @@ class _TranslationsErrorEnUs extends TranslationsErrorZhTw {
 
 	// Translations
 	@override late final _TranslationsErrorDialogEnUs dialog = _TranslationsErrorDialogEnUs._(_root);
-	@override late final _TranslationsErrorSettlementEnUs settlement = _TranslationsErrorSettlementEnUs._(_root);
 	@override late final _TranslationsErrorMessageEnUs message = _TranslationsErrorMessageEnUs._(_root);
 }
 
@@ -1510,18 +1509,6 @@ class _TranslationsErrorDialogEnUs extends TranslationsErrorDialogZhTw {
 	@override late final _TranslationsErrorDialogDataConflictEnUs data_conflict = _TranslationsErrorDialogDataConflictEnUs._(_root);
 }
 
-// Path: error.settlement
-class _TranslationsErrorSettlementEnUs extends TranslationsErrorSettlementZhTw {
-	_TranslationsErrorSettlementEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get status_invalid => 'The task status is invalid (may be already settled). Please refresh.';
-	@override String get permission_denied => 'Only the creator can execute settlement.';
-	@override String get transaction_failed => 'System error. Settlement failed. Please try again later.';
-}
-
 // Path: error.message
 class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	_TranslationsErrorMessageEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1542,6 +1529,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get network_error => 'Network connection failed. Please check your internet.';
 	@override String get data_not_found => 'Data not found. Please try again later.';
 	@override String enter_first({required Object key}) => 'Please enter ${key} first.';
+	@override String get export_failed => 'Failed to generate report. Please check your storage or try again later.';
 	@override String get save_failed => 'Failed to save. Please try again.';
 	@override String get delete_failed => 'Failed to delete. Please try again.';
 	@override String get task_close_failed => 'Task close failed. Please try again later.';
@@ -1557,6 +1545,11 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get task_locked => 'Room is settled and locked. Data cannot be modified.';
 	@override String get timeout => 'Server request timed out. Please try again later.';
 	@override String get quota_exceeded => 'System quota exceeded. Please try again later.';
+	@override String get join_failed => 'Failed to join the room. Please try again later.';
+	@override String get invite_create_failed => 'Failed to create invite code. Please try again later.';
+	@override String get data_conflict => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.';
+	@override String get task_status_error => 'The task status is invalid (may be already settled). Please refresh.';
+	@override String get settlement_failed => 'System error. Settlement failed. Please try again later.';
 }
 
 // Path: common.payment_info.mode
@@ -2220,9 +2213,6 @@ extension on TranslationsEnUs {
 			'error.dialog.member_delete_failed.message' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
 			'error.dialog.data_conflict.title' => 'Data Changed',
 			'error.dialog.data_conflict.message' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
-			'error.settlement.status_invalid' => 'The task status is invalid (may be already settled). Please refresh.',
-			'error.settlement.permission_denied' => 'Only the creator can execute settlement.',
-			'error.settlement.transaction_failed' => 'System error. Settlement failed. Please try again later.',
 			'error.message.unknown' => 'An unexpected error occurred.',
 			'error.message.invalid_amount' => 'Invalid amount.',
 			'error.message.required' => 'This field is required.',
@@ -2236,6 +2226,7 @@ extension on TranslationsEnUs {
 			'error.message.network_error' => 'Network connection failed. Please check your internet.',
 			'error.message.data_not_found' => 'Data not found. Please try again later.',
 			'error.message.enter_first' => ({required Object key}) => 'Please enter ${key} first.',
+			'error.message.export_failed' => 'Failed to generate report. Please check your storage or try again later.',
 			'error.message.save_failed' => 'Failed to save. Please try again.',
 			'error.message.delete_failed' => 'Failed to delete. Please try again.',
 			'error.message.task_close_failed' => 'Task close failed. Please try again later.',
@@ -2251,6 +2242,11 @@ extension on TranslationsEnUs {
 			'error.message.task_locked' => 'Room is settled and locked. Data cannot be modified.',
 			'error.message.timeout' => 'Server request timed out. Please try again later.',
 			'error.message.quota_exceeded' => 'System quota exceeded. Please try again later.',
+			'error.message.join_failed' => 'Failed to join the room. Please try again later.',
+			'error.message.invite_create_failed' => 'Failed to create invite code. Please try again later.',
+			'error.message.data_conflict' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
+			'error.message.task_status_error' => 'The task status is invalid (may be already settled). Please refresh.',
+			'error.message.settlement_failed' => 'System error. Settlement failed. Please try again later.',
 			_ => null,
 		};
 	}

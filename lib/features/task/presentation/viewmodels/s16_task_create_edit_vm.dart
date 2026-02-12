@@ -1,9 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/member_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -14,14 +17,19 @@ import 'package:iron_split/gen/strings.g.dart';
 class S16TaskCreateEditViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final InviteRepository _inviteRepo;
+  final AuthRepository _authRepo;
+
   // State
   late DateTime _startDate;
   late DateTime _endDate;
   CurrencyConstants _baseCurrency = CurrencyConstants.defaultCurrencyConstants;
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
-  bool _isProcessing = false;
+  LoadStatus _actionStatus = LoadStatus.initial; // 按鈕狀態
   String? _statusText; // 用於顯示 Loading 狀態文字 (e.g. "建立中...", "產生邀請碼...")
+
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
 
   // Getters
   DateTime get startDate => _startDate;
@@ -29,34 +37,59 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   CurrencyConstants get baseCurrency => _baseCurrency;
   int get memberCount => _memberCount;
   bool get isCurrencyEnabled => true; // 保留原始邏輯
-  bool get isProcessing => _isProcessing;
+  LoadStatus get actionStatus => _actionStatus;
   String? get statusText => _statusText;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
 
   S16TaskCreateEditViewModel({
     required TaskRepository taskRepo,
     required InviteRepository inviteRepo,
+    required AuthRepository authRepo,
   })  : _taskRepo = taskRepo,
-        _inviteRepo = inviteRepo {
-    // 1. 初始化日期 (今天)
-    final now = DateTime.now();
-    _startDate = DateTime(now.year, now.month, now.day);
-    _endDate = _startDate;
-  }
+        _inviteRepo = inviteRepo,
+        _authRepo = authRepo;
 
-  // 初始化幣別 (避免重複偵測)
-  void initCurrency() {
-    if (!_isCurrencyInitialized) {
-      _isCurrencyInitialized = true;
-      final CurrencyConstants suggestedCurrency =
-          CurrencyConstants.detectSystemCurrency();
-      _baseCurrency = suggestedCurrency;
-      // 這裡不需 notifyListeners，因為通常是在 build 前或第一幀執行，
-      // 若有需要可加，但需注意 notify 時機
+  Future<void> init() async {
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
+    notifyListeners();
+
+    try {
+      // 登入確認移到 VM
+      final user = _authRepo.currentUser;
+      if (user == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.unauthorized;
+        notifyListeners();
+        return;
+      }
+
+      // 1. 初始化日期 (今天)
+      final now = DateTime.now();
+      _startDate = DateTime(now.year, now.month, now.day);
+      _endDate = _startDate;
+
+      // 初始化幣別
+      if (!_isCurrencyInitialized) {
+        _isCurrencyInitialized = true;
+        final CurrencyConstants suggestedCurrency =
+            CurrencyConstants.detectSystemCurrency();
+        _baseCurrency = suggestedCurrency;
+        // 這裡不需 notifyListeners，因為通常是在 build 前或第一幀執行，
+        // 若有需要可加，但需注意 notify 時機
+      }
+
+      _initStatus = LoadStatus.success;
+      notifyListeners();
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
     }
   }
 
   // --- Setters (Update State) ---
-
   void updateDateRange(DateTime start, DateTime end) {
     // 核心防呆：如果「開始」晚於「結束」，強制將「結束」拉到跟「開始」同一天
     if (start.isAfter(end)) {
@@ -83,18 +116,14 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   /// 核心邏輯：建立任務
   Future<({String taskId, String? inviteCode})?> createTask(
       String taskName, Translations t) async {
-    _isProcessing = true;
+    if (taskName.isEmpty) throw AppErrorCodes.fieldRequired;
+    _actionStatus = LoadStatus.loading;
     _statusText = t.D03_TaskCreate_Confirm.creating_task;
     notifyListeners();
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      _isProcessing = false;
-      notifyListeners();
-      throw Exception("User not logged in");
-    }
-
     try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
       // 1. Prepare Members Map
       final Map<String, dynamic> membersMap = {};
 
@@ -165,14 +194,17 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         inviteCode = await _inviteRepo.createInviteCode(taskId);
       }
 
-      _isProcessing = false;
+      _actionStatus = LoadStatus.success;
       notifyListeners();
       return (taskId: taskId, inviteCode: inviteCode);
-    } catch (e) {
-      // TODO: handle error
-      _isProcessing = false;
+    } on AppErrorCodes {
+      _actionStatus = LoadStatus.error;
       notifyListeners();
-      rethrow; // 拋出異常讓 Page 處理 (顯示 SnackBar)
+      rethrow;
+    } catch (e) {
+      _actionStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
     }
   }
 }

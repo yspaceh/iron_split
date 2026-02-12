@@ -152,11 +152,6 @@ class S13PersonalView extends StatelessWidget {
                                   default:
                                     AppToast.showError(ctx, msg);
                                 }
-                              } catch (e) {
-                                if (!ctx.mounted) return;
-                                final msg =
-                                    ErrorMapper.map(ctx, error: e.toString());
-                                AppToast.showError(ctx, msg);
                               }
                             },
                           ),

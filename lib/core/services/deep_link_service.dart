@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 
 // 保持 Sealed class 定義，確保對應 AppRouter 的 Intent 解析
 sealed class DeepLinkIntent {
@@ -35,21 +35,19 @@ class DeepLinkService {
     try {
       final initialUri = await _appLinks.getInitialLink();
       if (initialUri != null) {
-        debugPrint("🔥 [DeepLinkService] 成功抓到冷啟動 URL: $initialUri");
         _onNewUri(initialUri);
       }
     } catch (e) {
-      debugPrint("Failed to get initial link: $e");
+      throw AppErrorCodes.initFailed;
     }
 
     // 2. 監聽熱啟動 (Warm Start) 與後續連結
     _appLinks.uriLinkStream.listen(
       (uri) {
-        debugPrint("🔥 [DeepLinkService] 成功抓到熱啟動/Stream URL: $uri");
         _onNewUri(uri);
       },
       onError: (err) {
-        debugPrint('DeepLink Error: $err');
+        _controller.addError(AppErrorCodes.initFailed);
       },
     );
   }

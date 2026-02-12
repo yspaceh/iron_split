@@ -62,9 +62,10 @@ class RecordService {
   Future<void> updateTaskExchangeRates({
     required String taskId,
     required Map<String, double> newRates,
-    required CurrencyConstants baseCurrency,
+    required CurrencyConstants newCurrency,
   }) async {
     final records = await _recordRepo.getRecordsOnce(taskId);
+
     final List<({String id, double rate, double remainder})> recordUpdates = [];
     final Map<String, double> totalTaskDelta = {};
 
@@ -80,7 +81,7 @@ class RecordService {
           splitMethod: record.splitMethod,
           memberIds: record.splitMemberIds,
           details: record.splitDetails ?? {},
-          baseCurrency: baseCurrency,
+          baseCurrency: newCurrency,
         );
         final recordWithNewRate =
             record.copyWith(exchangeRate: newRate, remainder: newRes.remainder);
@@ -204,6 +205,6 @@ class RecordService {
     }
 
     // 2. 通過驗證後，執行實際刪除
-    await _recordRepo.deleteRecord(taskId, record.id ?? '');
+    await deleteRecord(taskId, record);
   }
 }

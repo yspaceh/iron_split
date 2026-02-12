@@ -1,3 +1,4 @@
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/onboarding/data/pending_invite_local_store.dart';
@@ -17,7 +18,7 @@ class OnboardingService {
 
   /// 驗證名字格式 (業務規則)
   /// 回傳錯誤訊息，若為 null 代表驗證通過
-  String? validateName(String name) {
+  AppErrorCodes? validateName(String name) {
     final trimmed = name.trim();
 
     if (trimmed.isEmpty) {
@@ -25,13 +26,13 @@ class OnboardingService {
     }
 
     if (trimmed.length > 10) {
-      return 'Name too long'; // 雖然 UI 有擋，後端邏輯也要擋
+      return AppErrorCodes.nameLengthExceeded; // 雖然 UI 有擋，後端邏輯也要擋
     }
 
     // 禁止控制字元 (Regex 規則從原本 UI 搬過來)
     final hasControlChars = trimmed.contains(RegExp(r'[\x00-\x1F\x7F]'));
     if (hasControlChars) {
-      return 'Contains invalid characters';
+      return AppErrorCodes.invalidChar;
     }
 
     return null; // Valid
@@ -39,9 +40,13 @@ class OnboardingService {
 
   /// 提交名字
   Future<void> submitName(String name) async {
-    // 再次確認驗證 (防禦性程式設計)
-    if (validateName(name) != null) {
-      throw Exception('Invalid name format');
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      throw AppErrorCodes.fieldRequired;
+    }
+    final error = validateName(trimmed);
+    if (error != null) {
+      throw error;
     }
     await _authRepo.updateDisplayName(name.trim());
   }
@@ -98,8 +103,7 @@ class OnboardingService {
   }) async {
     final user = _authRepo.currentUser;
     if (user == null) {
-      throw Exception(
-          'unauthenticated'); // 對應原本的 throw FirebaseFunctionsException code
+      throw AppErrorCodes.unauthorized;
     }
 
     final taskId = await _inviteRepo.joinTask(

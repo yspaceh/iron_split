@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class D01MemberRoleIntroViewModel extends ChangeNotifier {
@@ -40,7 +41,7 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
       final task = await _taskRepo.streamTask(taskId).first;
       if (task == null) {
         // TODO: handle error
-        throw Exception("Task not found");
+        throw AppErrorCodes.dataNotFound;
       }
 
       final usedAvatars = task.members.values

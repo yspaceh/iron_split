@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:iron_split/core/enums/app_error_codes.dart';
 
 class CurrencyService {
-  static Future<double?> fetchRate({
+  static Future<double> fetchRate({
     required String from,
     required String to,
   }) async {
@@ -11,11 +11,12 @@ class CurrencyService {
     if (from == to) return 1.0;
 
     try {
-      // 這個 API 支援 TWD，且不需要 API Key
+      // 使用第三方匯率 API (Open ER API)
       final urlString = 'https://open.er-api.com/v6/latest/$from';
-
       final url = Uri.parse(urlString);
-      final response = await http.get(url);
+
+      // 增加逾時控制 (10秒)，避免無限等待
+      final response = await http.get(url).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -26,17 +27,15 @@ class CurrencyService {
           // 確保轉型為 double
           return (rate as num).toDouble();
         }
+        // 找不到對應的目標匯率 (例如 API 暫時沒資料)
+        throw AppErrorCodes.rateFetchFailed;
       } else {
-        // TODO: handle error
-        // TODO: Handle non-200 status codes (e.g., log to Crashlytics)
-        debugPrint(
-            'API Error: Status ${response.statusCode}, Body: ${response.body}');
+        throw AppErrorCodes.rateFetchFailed;
       }
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
-      // TODO: handle error
-      // TODO: Log error to Crashlytics or Analytics
-      debugPrint('API Exception: $e');
+      throw AppErrorCodes.rateFetchFailed; // 其他系統錯誤轉化後拋出
     }
-    return null;
   }
 }

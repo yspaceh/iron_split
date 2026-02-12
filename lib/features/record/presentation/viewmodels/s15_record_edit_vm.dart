@@ -408,9 +408,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
       final rate = await CurrencyService.fetchRate(
           from: _selectedCurrencyConstants.code, to: baseCurrency.code);
-      if (rate != null) {
-        exchangeRateController.text = rate.toString();
-      }
+      exchangeRateController.text = rate.toString();
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
       throw AppErrorCodes.rateFetchFailed;
     } finally {
@@ -556,12 +556,14 @@ class S15RecordEditViewModel extends ChangeNotifier {
           details: logDetails,
         );
       }
-    } catch (e) {
+    } on AppErrorCodes {
+      rethrow;
+    } on FirebaseException catch (e) {
       // 捕捉錯誤並轉拋 AppErrorCode (如果它還不是 Code)
+      throw ErrorMapper.parseErrorCode(e);
+    } catch (e) {
       // 其他未知錯誤，包裝成 SAVE_FAILED
-      throw e is FirebaseException
-          ? ErrorMapper.parseErrorCode(e)
-          : AppErrorCodes.saveFailed;
+      throw AppErrorCodes.saveFailed;
     } finally {
       _isSaving = false;
       notifyListeners();
@@ -656,10 +658,13 @@ class S15RecordEditViewModel extends ChangeNotifier {
             'currency': _selectedCurrencyConstants.code
           });
       return true;
+    } on AppErrorCodes {
+      rethrow;
+    } on FirebaseException catch (e) {
+      // 捕捉錯誤並轉拋 AppErrorCode (如果它還不是 Code)
+      throw ErrorMapper.parseErrorCode(e);
     } catch (e) {
-      throw e is FirebaseException
-          ? ErrorMapper.parseErrorCode(e)
-          : AppErrorCodes.saveFailed;
+      throw AppErrorCodes.saveFailed;
     }
   }
 

@@ -7,6 +7,7 @@ enum AppErrorCodes {
   saveFailed, // 儲存/新增/更新失敗
   deleteFailed, // 刪除失敗
   rateFetchFailed, // 匯率取得失敗
+  taskCloseFailed,
 
   quotaExceeded, // Firebase 額度用完 (resource-exhausted)
   unavailable, // 伺服器不可用 (unavailable)
@@ -21,6 +22,18 @@ enum AppErrorCodes {
   inviteExpired,
   inviteInvalid,
   inviteAlreadyJoined,
+  joinFailed,
+  inviteCreateFailed,
+
+  nameLengthExceeded, // 長度超過限制
+  invalidChar, // 包含無效字元
+  fieldRequired, // 必填欄位為空
+
+  dataConflict, // 資料版本衝突 (原本的 SettlementDataConflictException)
+  taskStatusError, // 房間狀態異常 (原本的 SettlementStatusInvalidException)
+  settlementFailed,
+
+  exportFailed,
 
   unknown,
 }

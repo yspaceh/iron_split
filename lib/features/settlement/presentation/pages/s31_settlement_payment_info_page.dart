@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/core/error/exceptions.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -72,55 +74,59 @@ class _S31Content extends StatelessWidget {
         if (context.mounted) {
           context.goNamed('S32', pathParameters: {'taskId': vm.taskId});
         }
-      } on SettlementDataConflictException catch (_) {
-        // [異常處理] 資料變動
-        if (!context.mounted) return;
+      } on AppErrorCodes catch (code) {
+        switch (code) {
+          case AppErrorCodes.dataConflict:
+            // [異常處理] 資料變動
+            if (!context.mounted) return;
 
-        // 跳出警告 Dialog，並等待使用者按下按鈕
-        await CommonAlertDialog.show(
-          context,
-          title: t.error.dialog.data_conflict.title,
-          content: Text(
-            t.error.dialog.data_conflict.message,
-            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
-          ),
-          actions: [
-            AppButton(
-              text: t.common.buttons.back,
-              type: AppButtonType.primary,
-              // 按下後，只負責關閉 Dialog
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
+            // 跳出警告 Dialog，並等待使用者按下按鈕
+            await CommonAlertDialog.show(
+              context,
+              title: t.error.dialog.data_conflict.title,
+              content: Text(
+                t.error.dialog.data_conflict.message,
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              ),
+              actions: [
+                AppButton(
+                  text: t.common.buttons.back,
+                  type: AppButtonType.primary,
+                  // 按下後，只負責關閉 Dialog
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
 
-        // Dialog 關閉後，執行退回 S30 (這會觸發 PopScope 的解鎖邏輯)
-        if (context.mounted) {
-          Navigator.of(context).pop();
+            // Dialog 關閉後，執行退回 S30 (這會觸發 PopScope 的解鎖邏輯)
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+            break;
+          case AppErrorCodes.taskStatusError:
+            if (!context.mounted) return;
+            CommonAlertDialog.show(
+              context,
+              title: t.common.error.title,
+              content: Text(t.error.message.task_status_error),
+              actions: [
+                AppButton(
+                  text: t.common.buttons.ok,
+                  type: AppButtonType.primary,
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
+            break;
+          default:
+            if (!context.mounted) return;
+            final String msg = ErrorMapper.map(context, code: code);
+            AppToast.showError(context, msg);
         }
-      } on SettlementStatusInvalidException catch (_) {
-        if (!context.mounted) return;
-        CommonAlertDialog.show(
-          context,
-          title: t.common.error.title,
-          content: Text(t.error.settlement.status_invalid),
-          actions: [
-            AppButton(
-              text: t.common.buttons.ok,
-              type: AppButtonType.primary,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
       } catch (e) {
-        // TODO: handle error
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(t.common.error.unknown(error: e.toString())),
-            backgroundColor: theme.colorScheme.error,
-          ),
-        );
+        final msg = ErrorMapper.map(context, error: e.toString());
+        AppToast.showError(context, msg);
       }
     }
 

@@ -119,7 +119,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
     try {
       final user = FirebaseAuth.instance.currentUser;
       //TODO: handle error
-      if (user == null) throw Exception("User not logged in");
+      if (user == null) throw AppErrorCodes.unauthorized;
 
       // 呼叫 Repository 加入
       final taskId = await _inviteRepo.joinTask(

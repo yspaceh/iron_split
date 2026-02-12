@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
-import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
+
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s12_task_close_notice_vm.dart';
@@ -19,27 +23,63 @@ class S12TaskCloseNoticePage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => S12TaskCloseNoticeViewModel(
         taskId: taskId,
-        taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
+        service: context.read<TaskService>(),
       ),
       child: const _S12Content(),
     );
   }
 }
 
-class _S12Content extends StatelessWidget {
+class _S12Content extends StatefulWidget {
   const _S12Content();
+
+  @override
+  State<_S12Content> createState() => _S12ContentState();
+}
+
+class _S12ContentState extends State<_S12Content> {
+  @override
+  void initState() {
+    super.initState();
+    // 監聽未登入狀態並自動跳轉
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final vm = context.read<S12TaskCloseNoticeViewModel>();
+      vm.addListener(_onStateChanged);
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<S12TaskCloseNoticeViewModel>().removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    final vm = context.read<S12TaskCloseNoticeViewModel>();
+    // 處理自動導航 (如未登入)
+    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
 
   Future<void> _handleClose(
       BuildContext context, S12TaskCloseNoticeViewModel vm) async {
-    final success = await vm.closeTask();
+    try {
+      await vm.closeTask();
 
-    if (success && context.mounted) {
+      if (!context.mounted) return;
+      context.pop();
       context.goNamed(
         'S17',
         pathParameters: {'taskId': vm.taskId},
       );
-    } else if (!success && context.mounted) {
-      AppToast.showError(context, t.error.message.task_close_failed);
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
     }
   }
 

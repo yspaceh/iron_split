@@ -2,35 +2,40 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-// 定義頁面狀態，讓 Page 只要 switch 這個就好
-enum LockedPageStatus { loading, closed, settled, error }
+enum LockedPageType { closed, settled }
 
 class S17TaskLockedViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final AuthRepository _authRepo;
   final String taskId;
-  final String currentUserId;
 
   StreamSubscription? _taskSubscription;
 
   // UI State
-  LockedPageStatus _status = LockedPageStatus.loading;
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
+  LockedPageType _pageType = LockedPageType.closed;
   String _taskName = '';
 
   TaskModel? _task;
+  String _currentUserId = '';
 
   // S17 Pending View 需要的資料
   bool _isCaptain = false;
@@ -41,7 +46,9 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   int? _remainingDays;
 
   // Getters
-  LockedPageStatus get status => _status;
+  LockedPageType get pageType => _pageType;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
   String get taskName => _taskName;
   bool get isCaptain => _isCaptain;
   CurrencyConstants get baseCurrency => _baseCurrency;
@@ -50,40 +57,74 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   List<SettlementMember> get clearedMembers => _clearedMembers;
   int? get remainingDays => _remainingDays;
   TaskModel? get task => _task;
+  String get currentUserId => _currentUserId;
+  bool get hasSeen =>
+      _task?.settlement?['viewStatus']?[_currentUserId] ?? false;
 
   S17TaskLockedViewModel({
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
+    required AuthRepository authRepo,
     required this.taskId,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '' {
-    _init();
-  }
+        _authRepo = authRepo;
 
-  void _init() {
-    _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
-      if (task == null) {
-        _status = LockedPageStatus.error;
+  Future<void> init() async {
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
+    notifyListeners();
+    try {
+      // 登入確認移到 VM
+      final user = _authRepo.currentUser;
+      if (user == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.unauthorized;
         notifyListeners();
         return;
       }
 
-      _task = task;
+      _currentUserId = user.uid;
 
-      _taskName = task.name;
-      _baseCurrency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
-      _isCaptain = task.createdBy == currentUserId;
+      _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
+        try {
+          if (task == null) throw AppErrorCodes.dataNotFound;
+          _task = task;
+          _taskName = task.name;
+          _baseCurrency =
+              CurrencyConstants.getCurrencyConstants(task.baseCurrency);
+          _isCaptain = task.createdBy == currentUserId;
 
-      _determineStatusAndParseData(task);
+          _determineStatusAndParseData(task);
+
+          // 只有成功解析完資料才設為 success
+          _initStatus = LoadStatus.success;
+          notifyListeners();
+        } on AppErrorCodes catch (code) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = code;
+          notifyListeners();
+        } catch (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        }
+      }, onError: (e) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = ErrorMapper.parseErrorCode(e);
+        notifyListeners();
+      });
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
-    });
+    }
   }
 
   void _determineStatusAndParseData(TaskModel task) {
     // 1. 決定大狀態
     if (task.status == 'closed') {
-      _status = LockedPageStatus.closed;
+      _pageType = LockedPageType.closed;
       return;
     }
 
@@ -106,7 +147,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     }
 
     // 2. 如果是 Pending，進行資料解析 (原本在 Page 裡的邏輯)
-    _status = LockedPageStatus.settled;
+    _pageType = LockedPageType.settled;
     _parsePendingData(task, settlement);
   }
 
@@ -214,17 +255,14 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       await file.writeAsString('\uFEFF$csvContent', flush: true);
 
       // 4. 分享檔案
-      final result = await Share.shareXFiles(
+      await Share.shareXFiles(
         [XFile(file.path)],
         subject: '$_taskName Settlement Report',
       );
-
-      if (result.status == ShareResultStatus.dismissed) {
-        debugPrint('User dismissed export');
-      }
-    } catch (e) {
-      debugPrint("Export failed: $e");
+    } on AppErrorCodes {
       rethrow;
+    } catch (e) {
+      throw ErrorMapper.parseErrorCode(e); // 其他系統錯誤轉化後拋出
     }
   }
 

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -25,10 +30,11 @@ class S14TaskSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => S14TaskSettingsViewModel(
-          taskId: taskId,
-          taskRepo: context.read<TaskRepository>(),
-          recordRepo: context.read<RecordRepository>())
-        ..init(),
+        taskId: taskId,
+        taskRepo: context.read<TaskRepository>(),
+        recordRepo: context.read<RecordRepository>(),
+        authRepo: context.read<AuthRepository>(),
+      )..init(),
       child: const _S14Content(),
     );
   }
@@ -54,11 +60,29 @@ class _S14ContentState extends State<_S14Content> {
         vm.updateName();
       }
     });
+
+    // 監聽未登入狀態並自動跳轉
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final vm = context.read<S14TaskSettingsViewModel>();
+      vm.addListener(_onStateChanged);
+      _onStateChanged();
+    });
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    final vm = context.read<S14TaskSettingsViewModel>();
+    // 處理自動導航 (如未登入)
+    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
   }
 
   @override
   void dispose() {
     _nameFocusNode.dispose();
+    context.read<S14TaskSettingsViewModel>().removeListener(_onStateChanged);
     super.dispose();
   }
 
@@ -69,7 +93,7 @@ class _S14ContentState extends State<_S14Content> {
 
     // 等待 BottomSheet 關閉動畫
     await Future.delayed(const Duration(milliseconds: 300));
-    if (!mounted) return;
+    if (!context.mounted) return;
 
     // 呼叫 D09 Dialog
     final bool? success = await showDialog<bool>(
@@ -89,17 +113,12 @@ class _S14ContentState extends State<_S14Content> {
   Future<void> _onRemainderRuleChange(
       BuildContext context, S14TaskSettingsViewModel vm) async {
     // 1. 準備成員資料 (Map 轉 List)
-    final List<Map<String, dynamic>> membersList =
-        vm.membersData.entries.map((e) {
-      final m = e.value as Map<String, dynamic>;
-      return <String, dynamic>{...m, 'id': e.key};
-    }).toList();
 
     // 2. 呼叫 B01
     final result = await B01BalanceRuleEditBottomSheet.show(context,
         initialRule: vm.remainderRule,
         initialMemberId: vm.remainderAbsorberId,
-        members: membersList,
+        members: vm.membersList,
         currentRemainder: vm.currentRemainder, // 從 VM 拿
         baseCurrency: vm.currency!);
 
@@ -113,106 +132,132 @@ class _S14ContentState extends State<_S14Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S14TaskSettingsViewModel>();
+    final title = t.S14_Task_Settings.title;
 
-    if (vm.isLoading ||
-        vm.startDate == null ||
-        vm.endDate == null ||
-        vm.currency == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S14_Task_Settings.title),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          SectionWrapper(
-              title: t.S14_Task_Settings.section.task_name,
-              children: [
-                Focus(
-                  focusNode: _nameFocusNode,
-                  child: TaskNameInput(
-                    controller: vm.nameController,
-                    label: t.S16_TaskCreate_Edit.label.name,
-                    hint: t.S16_TaskCreate_Edit.hint.name,
-                    maxLength: 20,
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      onRetry: () => vm.init(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            SectionWrapper(
+                title: t.S14_Task_Settings.section.task_name,
+                children: [
+                  Focus(
+                    focusNode: _nameFocusNode,
+                    child: TaskNameInput(
+                      controller: vm.nameController,
+                      label: t.S16_TaskCreate_Edit.label.name,
+                      hint: t.S16_TaskCreate_Edit.hint.name,
+                      maxLength: 20,
+                    ),
                   ),
-                ),
-              ]),
-          SectionWrapper(
-              title: t.S14_Task_Settings.section.task_period,
+                ]),
+            SectionWrapper(
+                title: t.S14_Task_Settings.section.task_period,
+                children: [
+                  TaskDateInput(
+                      label: t.S16_TaskCreate_Edit.label.start_date,
+                      date: vm.startDate!,
+                      onDateChanged: (val) {
+                        try {
+                          vm.updateDateRange(val, vm.endDate!);
+                        } on AppErrorCodes catch (code) {
+                          final msg = ErrorMapper.map(context, code: code);
+                          AppToast.showError(context, msg);
+                        }
+                      }),
+                  const SizedBox(height: 8),
+                  TaskDateInput(
+                    label: t.S16_TaskCreate_Edit.label.end_date,
+                    date: vm.endDate!,
+                    onDateChanged: (val) {
+                      try {
+                        vm.updateDateRange(vm.startDate!, val);
+                      } on AppErrorCodes catch (code) {
+                        final msg = ErrorMapper.map(context, code: code);
+                        AppToast.showError(context, msg);
+                      }
+                    },
+                  ),
+                ]),
+            SectionWrapper(
+                title: t.S14_Task_Settings.section.settlement,
+                children: [
+                  TaskCurrencyInput(
+                    currency: vm.currency!,
+                    onCurrencyChanged: (val) {
+                      try {
+                        _onCurrencyChange(context, vm, val);
+                      } on AppErrorCodes catch (code) {
+                        final msg = ErrorMapper.map(context, code: code);
+                        AppToast.showError(context, msg);
+                      }
+                    },
+                    enabled: true,
+                  ),
+                  const SizedBox(height: 8),
+                  TaskRemainderRuleInput(
+                    rule: RemainderRuleConstants.getLabel(
+                        context, vm.remainderRule),
+                    onTap: () {
+                      try {
+                        _onRemainderRuleChange(context, vm);
+                      } on AppErrorCodes catch (code) {
+                        final msg = ErrorMapper.map(context, code: code);
+                        AppToast.showError(context, msg);
+                      }
+                    },
+                  ),
+                ]),
+            SectionWrapper(
+              title: t.S14_Task_Settings.section.other,
               children: [
-                TaskDateInput(
-                  label: t.S16_TaskCreate_Edit.label.start_date,
-                  date: vm.startDate!,
-                  onDateChanged: (val) => vm.updateDateRange(val, vm.endDate!),
+                NavTile(
+                  title: t.S14_Task_Settings.menu.member_settings,
+                  onTap: () {
+                    context.pushNamed(
+                      'S53',
+                      pathParameters: {'taskId': vm.taskId},
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
-                TaskDateInput(
-                  label: t.S16_TaskCreate_Edit.label.end_date,
-                  date: vm.endDate!,
-                  onDateChanged: (val) =>
-                      vm.updateDateRange(vm.startDate!, val),
+                NavTile(
+                  title: t.S14_Task_Settings.menu.history,
+                  onTap: () {
+                    context.pushNamed(
+                      'S52',
+                      pathParameters: {'taskId': vm.taskId},
+                      extra: vm.membersData,
+                    );
+                  },
                 ),
-              ]),
-          SectionWrapper(
-              title: t.S14_Task_Settings.section.settlement,
-              children: [
-                TaskCurrencyInput(
-                  currency: vm.currency!,
-                  onCurrencyChanged: (val) =>
-                      _onCurrencyChange(context, vm, val),
-                  enabled: true,
-                ),
-                const SizedBox(height: 8),
-                TaskRemainderRuleInput(
-                  rule: RemainderRuleConstants.getLabel(
-                      context, vm.remainderRule),
-                  onTap: () => _onRemainderRuleChange(context, vm),
-                ),
-              ]),
-          SectionWrapper(
-            title: t.S14_Task_Settings.section.other,
-            children: [
+              ],
+            ),
+            // Settings Navigation
+
+            if (vm.isOwner) ...[
+              const SizedBox(height: 16),
               NavTile(
-                title: t.S14_Task_Settings.menu.member_settings,
+                title: t.S14_Task_Settings.menu.close_task,
+                isDestructive: true,
                 onTap: () {
-                  context.pushNamed(
-                    'S53',
-                    pathParameters: {'taskId': vm.taskId},
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              NavTile(
-                title: t.S14_Task_Settings.menu.history,
-                onTap: () {
-                  context.pushNamed(
-                    'S52',
-                    pathParameters: {'taskId': vm.taskId},
-                    extra: vm.membersData,
-                  );
+                  context
+                      .pushNamed('S12', pathParameters: {'taskId': vm.taskId});
                 },
               ),
             ],
-          ),
-          // Settings Navigation
 
-          if (vm.isOwner) ...[
-            const SizedBox(height: 16),
-            NavTile(
-              title: t.S14_Task_Settings.menu.close_task,
-              isDestructive: true,
-              onTap: () {
-                context.pushNamed('S12', pathParameters: {'taskId': vm.taskId});
-              },
-            ),
+            const SizedBox(height: 32),
           ],
-
-          const SizedBox(height: 32),
-        ],
+        ),
       ),
     );
   }

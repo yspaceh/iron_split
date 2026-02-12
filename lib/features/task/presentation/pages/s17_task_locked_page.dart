@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/widgets/retention_banner.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
-
-// Services & Repos
 import 'package:iron_split/features/task/data/task_repository.dart';
-
-// VM
 import 'package:iron_split/features/task/presentation/viewmodels/s17_task_locked_vm.dart';
-
-// Views
 import 'package:iron_split/features/task/presentation/views/s17_settled_view.dart';
 import 'package:iron_split/features/task/presentation/views/s17_closed_view.dart';
 
@@ -33,14 +32,54 @@ class S17TaskLockedPage extends StatelessWidget {
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
-      ),
+        authRepo: context.read<AuthRepository>(),
+      )..init(),
       child: const _S17Content(),
     );
   }
 }
 
-class _S17Content extends StatelessWidget {
+class _S17Content extends StatefulWidget {
   const _S17Content();
+
+  @override
+  State<_S17Content> createState() => _S17ContentState();
+}
+
+class _S17ContentState extends State<_S17Content> {
+  @override
+  void initState() {
+    super.initState();
+    // 監聽未登入狀態並自動跳轉
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final vm = context.read<S17TaskLockedViewModel>();
+      vm.addListener(_onStateChanged);
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<S17TaskLockedViewModel>().removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    final vm = context.read<S17TaskLockedViewModel>();
+    // 處理自動導航 (如未登入)
+    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+
+    if (vm.initStatus == LoadStatus.success &&
+        vm.pageType == LockedPageType.settled &&
+        !vm.hasSeen) {
+      context
+          .pushReplacementNamed('S32', pathParameters: {'taskId': vm.taskId});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,122 +87,86 @@ class _S17Content extends StatelessWidget {
     final vm = context.watch<S17TaskLockedViewModel>();
     final t = Translations.of(context);
 
-    Future<void> onDownload(BuildContext context) async {
+    Future<void> handleExport(
+        BuildContext context, S17TaskLockedViewModel vm) async {
       try {
-        // 呼叫 VM 的匯出方法
-        // await vm.exportSettlementRecord();
         await vm.exportSettlementRecord();
-      } catch (e) {
-        if (context.mounted) {
-          AppToast.showError(
-              context, t.common.error_prefix(message: "Failed to export: $e"));
-        }
+      } on AppErrorCodes catch (code) {
+        if (!context.mounted) return;
+        final msg = ErrorMapper.map(context, code: code);
+        AppToast.showError(context, msg);
       }
     }
 
-    Future<void> onShareTap() async {
+    Future<void> handleShare(
+        BuildContext context, S17TaskLockedViewModel vm) async {
       try {
-        if (context.mounted) {
-          await TaskShareHelper.shareSettlement(
-            context: context,
-            taskId: vm.taskId,
-            taskName: vm.taskName,
-          );
-        }
+        await TaskShareHelper.shareSettlement(
+          context: context,
+          taskId: vm.taskId,
+          taskName: vm.taskName,
+        );
       } catch (e) {
-        // TODO: handle error
-        if (context.mounted) {
-          debugPrint(e.toString());
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(Translations.of(context)
-                    .common
-                    .error_prefix(message: e.toString()))),
-          );
-        }
+        if (!context.mounted) return;
+        final msg = ErrorMapper.map(context, error: e);
+        AppToast.showError(context, msg);
       }
     }
 
-    if (vm.status == LockedPageStatus.settled && vm.task != null) {
-      final settlement = vm.task!.settlement;
-      final viewStatus =
-          settlement?['viewStatus'] as Map<String, dynamic>? ?? {};
-      final hasSeen = viewStatus[vm.currentUserId] ?? false;
-
-      if (!hasSeen) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            // 沒看過摘要？先去 S32 報到
-            context.pushReplacementNamed('S32',
-                pathParameters: {'taskId': vm.taskId});
-          }
-        });
-      }
-    }
-
-    Widget content;
-    switch (vm.status) {
-      case LockedPageStatus.loading:
-        content = const Center(child: CircularProgressIndicator());
-        break;
-      case LockedPageStatus.closed:
-        content = const S17ClosedView();
-        break;
-      case LockedPageStatus.settled:
-        // 將 VM 處理好的資料傳給 View
-        // 注意：這裡我們確保 View 是 Dumb 的，它不需要知道 VM 的存在，只需要資料
-        content = S17SettledView(
+    Widget content = switch (vm.pageType) {
+      LockedPageType.closed => const S17ClosedView(),
+      LockedPageType.settled => S17SettledView(
           taskId: vm.taskId,
           task: vm.task,
           isCaptain: vm.isCaptain,
-          balanceState: vm.balanceState!,
+          balanceState: vm.balanceState!, // success 狀態下必有值
           pendingMembers: vm.pendingMembers,
           clearedMembers: vm.clearedMembers,
-        );
-        break;
-      case LockedPageStatus.error:
-        //TODO: Replace with Error View
-        content = const Center(child: Text('Error loading task'));
-        break;
-    }
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(vm.taskName),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.adaptive.arrow_back),
-            // S10 為 Dashboard，這是此流程的唯一出口
-            onPressed: () => context.goNamed('S10'),
-          ),
         ),
-        extendBody: true,
-        bottomNavigationBar: vm.status == LockedPageStatus.loading ||
-                vm.status == LockedPageStatus.error
-            ? null
-            : Column(
-                mainAxisSize: MainAxisSize.min,
+    };
+
+    final leading = IconButton(
+      icon: Icon(Icons.adaptive.arrow_back),
+      // S10 為 Dashboard，這是此流程的唯一出口
+      onPressed: () => context.goNamed('S10'),
+    );
+
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: vm.taskName,
+      leading: leading,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(vm.taskName),
+            centerTitle: true,
+            leading: leading,
+          ),
+          extendBody: true,
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RetentionBanner(days: vm.remainingDays!),
+              StickyBottomActionBar(
+                isSheetMode: false,
                 children: [
-                  RetentionBanner(days: vm.remainingDays!),
-                  StickyBottomActionBar(
-                    isSheetMode: false,
-                    children: [
-                      // 通知成員
-                      AppButton(
-                        text: t.S17_Task_Locked.buttons.notify_members,
-                        type: AppButtonType.secondary,
-                        onPressed: onShareTap,
-                      ),
-                      // 下載帳單
-                      AppButton(
-                        text: t.S17_Task_Locked.buttons.download,
-                        type: AppButtonType.primary,
-                        onPressed: () => onDownload(context),
-                      ),
-                    ],
+                  // 通知成員
+                  AppButton(
+                    text: t.S17_Task_Locked.buttons.notify_members,
+                    type: AppButtonType.secondary,
+                    onPressed: () => handleShare(context, vm),
+                  ),
+                  // 下載帳單
+                  AppButton(
+                    text: t.S17_Task_Locked.buttons.download,
+                    type: AppButtonType.primary,
+                    onPressed: () => handleExport(context, vm),
                   ),
                 ],
               ),
-        body: content);
+            ],
+          ),
+          body: content),
+    );
   }
 }

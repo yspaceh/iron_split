@@ -674,11 +674,6 @@
         "message": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy."
       }
     },
-    "settlement": {
-      "status_invalid": "The task status is invalid (may be already settled). Please refresh.",
-      "permission_denied": "Only the creator can execute settlement.",
-      "transaction_failed": "System error. Settlement failed. Please try again later."
-    },
     "message": {
       "unknown": "An unexpected error occurred.",
       "invalid_amount": "Invalid amount.",
@@ -693,6 +688,7 @@
       "network_error": "Network connection failed. Please check your internet.",
       "data_not_found" : "Data not found. Please try again later.",
       "enter_first": "Please enter {key} first.",
+      "export_failed": "Failed to generate report. Please check your storage or try again later.",
       "save_failed": "Failed to save. Please try again.",
       "delete_failed": "Failed to delete. Please try again.",
       "task_close_failed": "Task close failed. Please try again later.",
@@ -707,7 +703,12 @@
       "unauthorized": "Not logged in. Please login again.",
       "task_locked": "Room is settled and locked. Data cannot be modified.",
       "timeout": "Server request timed out. Please try again later.",
-      "quota_exceeded": "System quota exceeded. Please try again later."
+      "quota_exceeded": "System quota exceeded. Please try again later.",
+      "join_failed": "Failed to join the room. Please try again later.",
+      "invite_create_failed": "Failed to create invite code. Please try again later.",
+      "data_conflict": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.",
+      "task_status_error": "The task status is invalid (may be already settled). Please refresh.",
+      "settlement_failed": "System error. Settlement failed. Please try again later."
     }
   }
 }

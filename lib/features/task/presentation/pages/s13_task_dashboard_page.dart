@@ -52,8 +52,10 @@ class _S13ContentState extends State<_S13Content> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final vm = context.read<S13TaskDashboardViewModel>();
       vm.addListener(_onStateChanged);
+      _onStateChanged();
     });
   }
 
@@ -155,10 +157,6 @@ class _S13ContentState extends State<_S13Content> {
 
                       final msg = ErrorMapper.map(context, code: code);
 
-                      AppToast.showError(context, msg);
-                    } catch (e) {
-                      if (!context.mounted) return;
-                      final msg = ErrorMapper.map(context, error: e.toString());
                       AppToast.showError(context, msg);
                     }
                     // 1. 先鎖定

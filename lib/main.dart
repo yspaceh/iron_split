@@ -13,6 +13,7 @@ import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -67,6 +68,10 @@ void main() async {
         ),
         Provider<DashboardService>(
           create: (_) => DashboardService(),
+        ),
+        Provider<TaskService>(
+          create: (context) =>
+              TaskService(taskRepo: context.read<TaskRepository>()),
         ),
         Provider<RecordService>(
           create: (context) => RecordService(

@@ -1,7 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s10_task_list_vm.dart';
@@ -13,22 +16,51 @@ class S10HomeTaskListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return Scaffold(body: Center(child: Text(t.common.please_login)));
-    }
     return ChangeNotifierProvider(
       create: (_) => S10TaskListViewModel(
-        repo: TaskRepository(),
-        currentUserId: user.uid,
+        taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
+        service: context.read<TaskService>(),
       )..init(),
       child: const _S10Content(),
     );
   }
 }
 
-class _S10Content extends StatelessWidget {
+class _S10Content extends StatefulWidget {
   const _S10Content();
+
+  @override
+  State<_S10Content> createState() => _S10ContentState();
+}
+
+class _S10ContentState extends State<_S10Content> {
+  @override
+  void initState() {
+    super.initState();
+    // 監聽未登入狀態並自動跳轉
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final vm = context.read<S10TaskListViewModel>();
+      vm.addListener(_onStateChanged);
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<S10TaskListViewModel>().removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    final vm = context.read<S10TaskListViewModel>();
+    // 處理自動導航 (如未登入)
+    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,98 +68,90 @@ class _S10Content extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final vm = context.watch<S10TaskListViewModel>();
-
-    if (vm.currentUserId.isEmpty) {
-      return Scaffold(body: Center(child: Text(t.common.please_login)));
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S10_Home_TaskList.title),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.pushNamed('S70'),
-          ),
-        ],
+    final title = t.S10_Home_TaskList.title;
+    final actions = [
+      IconButton(
+        icon: const Icon(Icons.settings_outlined),
+        onPressed: () => context.pushNamed('S70'),
       ),
-      // 還原 FAB
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.pushNamed('S16'),
-        icon: const Icon(Icons.add),
-        label: Text(t.S16_TaskCreate_Edit.title), // 使用 S16 的標題 '建立任務'
-        shape: const StadiumBorder(),
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                // [修正] 改用 CustomSlidingSegment
-                child: CustomSlidingSegment<int>(
-                  selectedValue: vm.filterIndex,
-                  onValueChanged: (val) => vm.setFilter(val),
-                  segments: {
-                    0: t.S10_Home_TaskList.tab_in_progress,
-                    1: t.S10_Home_TaskList.tab_completed,
-                  },
+    ];
+
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      actions: actions,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          centerTitle: false,
+          actions: actions,
+        ),
+        // 還原 FAB
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => context.pushNamed('S16'),
+          icon: const Icon(Icons.add),
+          label: Text(t.S16_TaskCreate_Edit.title), // 使用 S16 的標題 '建立任務'
+          shape: const StadiumBorder(),
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  // [修正] 改用 CustomSlidingSegment
+                  child: CustomSlidingSegment<int>(
+                    selectedValue: vm.filterIndex,
+                    onValueChanged: (val) => vm.setFilter(val),
+                    segments: {
+                      0: t.S10_Home_TaskList.tab_in_progress,
+                      1: t.S10_Home_TaskList.tab_completed,
+                    },
+                  ),
                 ),
-              ),
 
-              // 2. 任務列表
-              Expanded(
-                child: vm.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : vm.displayTasks.isEmpty
-                        ? Center(
-                            child: Text(
-                              vm.filterIndex == 0
-                                  ? t.S10_Home_TaskList.empty_in_progress
-                                  : t.S10_Home_TaskList.empty_completed,
-                            ),
-                          )
-                        : ListView.separated(
-                            padding: const EdgeInsets.only(
-                                top: 8, bottom: 80), // 底部留白給 FAB
-                            itemCount: vm.displayTasks.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 4),
-                            itemBuilder: (context, index) {
-                              final task = vm.displayTasks[index];
-                              // 使用 TaskListItem (已修正邏輯)
-                              return TaskListItem(
-                                task: task,
-                                currentUserId: vm.currentUserId, // 傳入 uid 找頭像
-                                isCaptain: vm.isCaptain(task),
-                                onTap: () {
-                                  switch (task.status) {
-                                    case 'ongoing':
-                                    case 'pending':
-                                      context.pushNamed('S13', pathParameters: {
-                                        'taskId': task.id,
-                                      });
-                                      break;
-                                    case 'settled':
-                                    case 'closed':
-                                      context.pushNamed('S17', pathParameters: {
-                                        'taskId': task.id,
-                                      });
-                                      break;
-                                    default:
-                                  }
-                                },
-                                onDelete: () => vm.deleteTask(task.id),
-                              );
-                            },
+                // 2. 任務列表
+                Expanded(
+                  child: vm.displayTasks.isEmpty
+                      ? Center(
+                          child: Text(
+                            vm.filterIndex == 0
+                                ? t.S10_Home_TaskList.empty_in_progress
+                                : t.S10_Home_TaskList.empty_completed,
                           ),
-              ),
-            ],
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.only(
+                              top: 8, bottom: 80), // 底部留白給 FAB
+                          itemCount: vm.displayTasks.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 4),
+                          itemBuilder: (context, index) {
+                            final task = vm.displayTasks[index];
+                            // 使用 TaskListItem (已修正邏輯)
+                            return TaskListItem(
+                              task: task,
+                              currentUserId: vm.currentUserId, // 傳入 uid 找頭像
+                              isCaptain: vm.isCaptain(task),
+                              onTap: () {
+                                final nav = vm.getNavigationInfo(task);
+
+                                if (nav != null) {
+                                  context.pushNamed(nav.routeName,
+                                      pathParameters: nav.params);
+                                }
+                              },
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

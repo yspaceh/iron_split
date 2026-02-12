@@ -28,7 +28,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   final String taskId;
   late final RecordService _recordService;
 
-  late String _currentUserId;
+  String _currentUserId = '';
   TaskModel? _task;
   List<RecordModel> _records = [];
   LoadStatus _initStatus = LoadStatus.initial;
@@ -136,10 +136,10 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     _initErrorCode = null;
     notifyListeners();
     try {
-      // ✅ 原則 2: 使用 Repository 獲取當前使用者，不直接存取 FirebaseAuth
+      // 使用 Repository 獲取當前使用者，不直接存取 FirebaseAuth
       final currentUser = _authRepo.currentUser;
 
-      // ✅ 原則 1: UI 零邏輯，由 VM 判斷准入條件
+      // UI 零邏輯，由 VM 判斷准入條件
       if (currentUser == null) {
         _initStatus = LoadStatus.error;
         _initErrorCode = AppErrorCodes.unauthorized;
@@ -301,7 +301,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
           final viewport = RenderAbstractViewport.of(renderObject);
           final revealedOffset =
               viewport.getOffsetToReveal(renderObject, 0.0).offset;
-          // ✅ 使用 activeScrollController
+          // 使用 activeScrollController
           if (activeScrollController.hasClients) {
             activeScrollController.animateTo(
               revealedOffset.clamp(
@@ -392,6 +392,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     try {
       // 1. 鎖定房間 (ongoing -> pending)
       await _taskRepo.updateTaskStatus(taskId, 'pending');
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
       throw ErrorMapper.parseErrorCode(e);
     }

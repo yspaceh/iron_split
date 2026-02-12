@@ -1,82 +1,85 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart'; // 引用現有 Model
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S10TaskListViewModel extends ChangeNotifier {
-  final TaskRepository _repo;
-  final String currentUserId;
+  final TaskRepository _taskRepo;
+  final AuthRepository _authRepo;
+  final TaskService _service;
+
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
 
   // UI State
   List<TaskModel> _allTasks = [];
+  List<TaskModel> _displayTasks = [];
   int _filterIndex = 0; // 0: 進行中, 1: 已完成
-  bool _isLoading = true;
+
+  String _currentUserId = '';
   StreamSubscription? _subscription;
 
   // Getters
-  bool get isLoading => _isLoading;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+  List<TaskModel> get displayTasks => _displayTasks;
   int get filterIndex => _filterIndex;
-
-  // Computed Property: 篩選並排序
-  List<TaskModel> get displayTasks {
-    // 1. Filter Logic (適配 TaskModel 的 String status)
-    final filtered = _allTasks.where((task) {
-      if (_filterIndex == 0) {
-        // 進行中
-        switch (task.status) {
-          case 'ongoing':
-          case 'pending':
-            return true;
-          case 'settled':
-          case 'close':
-            return false;
-          default:
-            return false;
-        }
-      } else {
-        // 已完成 (包含 closed, settled,等)
-        switch (task.status) {
-          case 'ongoing':
-          case 'pending':
-            return false;
-          case 'settled':
-          case 'close':
-            return true;
-          default:
-            return false;
-        }
-      }
-    }).toList();
-
-    // 2. Sort Logic (Descending by updatedAt)
-    filtered.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-
-    return filtered;
-  }
+  String get currentUserId => _currentUserId;
 
   S10TaskListViewModel({
-    required TaskRepository repo,
-    required this.currentUserId,
-  }) : _repo = repo;
+    required TaskRepository taskRepo,
+    required AuthRepository authRepo,
+    required TaskService service,
+  })  : _taskRepo = taskRepo,
+        _authRepo = authRepo,
+        _service = service;
 
   void init() {
-    _isLoading = true;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
-    _subscription = _repo.streamUserTasks(currentUserId).listen((tasks) {
-      _allTasks = tasks;
-      _isLoading = false;
+    try {
+      // 登入確認移到 VM
+      final user = _authRepo.currentUser;
+      if (user == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.unauthorized;
+        notifyListeners();
+        return;
+      }
+      _currentUserId = user.uid;
+      _subscription = _taskRepo.streamUserTasks(currentUserId).listen((tasks) {
+        _allTasks = tasks;
+        _recalculate();
+        _initStatus = LoadStatus.success;
+        notifyListeners();
+      }, onError: (e) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = ErrorMapper.parseErrorCode(e);
+        notifyListeners();
+      });
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
-    }, onError: (e) {
-      debugPrint("Error fetching tasks: $e");
-      _isLoading = false;
-      notifyListeners();
-    });
+    }
   }
 
   void setFilter(int index) {
+    if (_filterIndex == index) return;
     _filterIndex = index;
+    _recalculate();
     notifyListeners();
+  }
+
+  void _recalculate() {
+    _displayTasks = _service.filterAndSortTasks(_allTasks, _filterIndex);
   }
 
   // 判斷是否為建立者 (權限檢查)
@@ -85,8 +88,18 @@ class S10TaskListViewModel extends ChangeNotifier {
     return task.createdBy == currentUserId;
   }
 
-  Future<void> deleteTask(String taskId) async {
-    await _repo.deleteTask(taskId);
+  ({String routeName, Map<String, String> params})? getNavigationInfo(
+      TaskModel task) {
+    switch (task.status) {
+      case 'ongoing':
+      case 'pending':
+        return (routeName: 'S13', params: {'taskId': task.id});
+      case 'settled':
+      case 'close':
+        return (routeName: 'S17', params: {'taskId': task.id});
+      default:
+        return null;
+    }
   }
 
   @override
