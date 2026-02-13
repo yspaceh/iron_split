@@ -11,6 +11,7 @@ class TaskNameInput extends StatelessWidget {
     required this.label,
     required this.hint,
     this.fillColor,
+    this.autofocus = false,
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class TaskNameInput extends StatelessWidget {
   final String label;
   final String hint;
   final Color? fillColor;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class TaskNameInput extends StatelessWidget {
       builder: (context, value, child) {
         return AppTextField(
           controller: controller,
-          autofocus: true,
+          autofocus: autofocus,
           labelText: label, // 或 field_name
           hintText: hint,
           fillColor: fillColor,

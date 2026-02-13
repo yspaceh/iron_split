@@ -102,6 +102,7 @@ class _S71SettingsTermsPageState extends State<S71SettingsTermsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),

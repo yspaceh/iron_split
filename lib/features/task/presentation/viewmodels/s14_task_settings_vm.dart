@@ -105,6 +105,10 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
       final records = await _recordRepo.getRecordsOnce(taskId);
       _currentRemainder = BalanceCalculator.calculateRemainderBuffer(records);
 
+      if (_startDate == null || _endDate == null || _currency == null) {
+        throw AppErrorCodes.initFailed;
+      }
+
       _initStatus = LoadStatus.success;
       notifyListeners();
     } catch (e) {

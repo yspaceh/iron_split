@@ -67,7 +67,10 @@ class _S51ContentState extends State<_S51Content> {
     final vm = context.watch<S51OnboardingNameViewModel>();
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.S51_Onboarding_Name.title)),
+      appBar: AppBar(
+        title: Text(t.S51_Onboarding_Name.title),
+        centerTitle: true,
+      ),
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(

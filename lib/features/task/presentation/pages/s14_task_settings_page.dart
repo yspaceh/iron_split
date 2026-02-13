@@ -138,124 +138,130 @@ class _S14ContentState extends State<_S14Content> {
       errorCode: vm.initErrorCode,
       title: title,
       onErrorAction: () => vm.init(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            SectionWrapper(
-                title: t.S14_Task_Settings.section.task_name,
-                children: [
-                  Focus(
-                    focusNode: _nameFocusNode,
-                    child: TaskNameInput(
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            centerTitle: true,
+          ),
+          body: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: [
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.task_name,
+                  children: [
+                    TaskNameInput(
                       controller: vm.nameController,
                       label: t.S16_TaskCreate_Edit.label.name,
                       hint: t.S16_TaskCreate_Edit.hint.name,
                       maxLength: 20,
                     ),
-                  ),
-                ]),
-            SectionWrapper(
-                title: t.S14_Task_Settings.section.task_period,
-                children: [
-                  TaskDateInput(
-                      label: t.S16_TaskCreate_Edit.label.start_date,
-                      date: vm.startDate!,
-                      onDateChanged: (val) {
+                  ]),
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.task_period,
+                  children: [
+                    if (vm.startDate != null && vm.endDate != null) ...[
+                      TaskDateInput(
+                          label: t.S16_TaskCreate_Edit.label.start_date,
+                          date: vm.startDate!,
+                          onDateChanged: (val) {
+                            try {
+                              vm.updateDateRange(val, vm.endDate!);
+                            } on AppErrorCodes catch (code) {
+                              final msg = ErrorMapper.map(context, code: code);
+                              AppToast.showError(context, msg);
+                            }
+                          }),
+                      const SizedBox(height: 8),
+                      TaskDateInput(
+                        label: t.S16_TaskCreate_Edit.label.end_date,
+                        date: vm.endDate!,
+                        onDateChanged: (val) {
+                          try {
+                            vm.updateDateRange(vm.startDate!, val);
+                          } on AppErrorCodes catch (code) {
+                            final msg = ErrorMapper.map(context, code: code);
+                            AppToast.showError(context, msg);
+                          }
+                        },
+                      ),
+                    ],
+                  ]),
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.settlement,
+                  children: [
+                    if (vm.currency != null) ...[
+                      TaskCurrencyInput(
+                        currency: vm.currency!,
+                        onCurrencyChanged: (val) {
+                          try {
+                            _onCurrencyChange(context, vm, val);
+                          } on AppErrorCodes catch (code) {
+                            final msg = ErrorMapper.map(context, code: code);
+                            AppToast.showError(context, msg);
+                          }
+                        },
+                        enabled: true,
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    TaskRemainderRuleInput(
+                      rule: RemainderRuleConstants.getLabel(
+                          context, vm.remainderRule),
+                      onTap: () {
                         try {
-                          vm.updateDateRange(val, vm.endDate!);
+                          _onRemainderRuleChange(context, vm);
                         } on AppErrorCodes catch (code) {
                           final msg = ErrorMapper.map(context, code: code);
                           AppToast.showError(context, msg);
                         }
-                      }),
-                  const SizedBox(height: 8),
-                  TaskDateInput(
-                    label: t.S16_TaskCreate_Edit.label.end_date,
-                    date: vm.endDate!,
-                    onDateChanged: (val) {
-                      try {
-                        vm.updateDateRange(vm.startDate!, val);
-                      } on AppErrorCodes catch (code) {
-                        final msg = ErrorMapper.map(context, code: code);
-                        AppToast.showError(context, msg);
-                      }
-                    },
-                  ),
-                ]),
-            SectionWrapper(
-                title: t.S14_Task_Settings.section.settlement,
+                      },
+                    ),
+                  ]),
+              SectionWrapper(
+                title: t.S14_Task_Settings.section.other,
                 children: [
-                  TaskCurrencyInput(
-                    currency: vm.currency!,
-                    onCurrencyChanged: (val) {
-                      try {
-                        _onCurrencyChange(context, vm, val);
-                      } on AppErrorCodes catch (code) {
-                        final msg = ErrorMapper.map(context, code: code);
-                        AppToast.showError(context, msg);
-                      }
+                  NavTile(
+                    title: t.S14_Task_Settings.menu.member_settings,
+                    onTap: () {
+                      context.pushNamed(
+                        'S53',
+                        pathParameters: {'taskId': vm.taskId},
+                      );
                     },
-                    enabled: true,
                   ),
                   const SizedBox(height: 8),
-                  TaskRemainderRuleInput(
-                    rule: RemainderRuleConstants.getLabel(
-                        context, vm.remainderRule),
+                  NavTile(
+                    title: t.S14_Task_Settings.menu.history,
                     onTap: () {
-                      try {
-                        _onRemainderRuleChange(context, vm);
-                      } on AppErrorCodes catch (code) {
-                        final msg = ErrorMapper.map(context, code: code);
-                        AppToast.showError(context, msg);
-                      }
+                      context.pushNamed(
+                        'S52',
+                        pathParameters: {'taskId': vm.taskId},
+                        extra: vm.membersData,
+                      );
                     },
                   ),
-                ]),
-            SectionWrapper(
-              title: t.S14_Task_Settings.section.other,
-              children: [
+                ],
+              ),
+              // Settings Navigation
+
+              if (vm.isOwner) ...[
+                const SizedBox(height: 16),
                 NavTile(
-                  title: t.S14_Task_Settings.menu.member_settings,
+                  title: t.S14_Task_Settings.menu.close_task,
+                  isDestructive: true,
                   onTap: () {
-                    context.pushNamed(
-                      'S53',
-                      pathParameters: {'taskId': vm.taskId},
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-                NavTile(
-                  title: t.S14_Task_Settings.menu.history,
-                  onTap: () {
-                    context.pushNamed(
-                      'S52',
-                      pathParameters: {'taskId': vm.taskId},
-                      extra: vm.membersData,
-                    );
+                    context.pushNamed('S12',
+                        pathParameters: {'taskId': vm.taskId});
                   },
                 ),
               ],
-            ),
-            // Settings Navigation
 
-            if (vm.isOwner) ...[
-              const SizedBox(height: 16),
-              NavTile(
-                title: t.S14_Task_Settings.menu.close_task,
-                isDestructive: true,
-                onTap: () {
-                  context
-                      .pushNamed('S12', pathParameters: {'taskId': vm.taskId});
-                },
-              ),
+              const SizedBox(height: 32),
             ],
-
-            const SizedBox(height: 32),
-          ],
+          ),
         ),
       ),
     );

@@ -322,6 +322,7 @@ class _S15ContentState extends State<_S15Content> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
+          centerTitle: true,
           leading: leading,
           actions: actions,
         ),

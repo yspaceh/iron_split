@@ -84,7 +84,7 @@ class _S10ContentState extends State<_S10Content> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
-          centerTitle: false,
+          centerTitle: true,
           actions: actions,
         ),
         // 還原 FAB

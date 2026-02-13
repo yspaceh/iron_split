@@ -35,6 +35,7 @@ class _S73Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.S70_System_Settings.menu.payment_info),
+        centerTitle: true,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

@@ -104,7 +104,10 @@ class _S53Content extends StatelessWidget {
         // Error State
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            appBar: AppBar(
+              title: Text(t.S53_TaskSettings_Members.title),
+              centerTitle: true,
+            ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
@@ -126,7 +129,10 @@ class _S53Content extends StatelessWidget {
         // Loading State
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            appBar: AppBar(
+              title: Text(t.S53_TaskSettings_Members.title),
+              centerTitle: true,
+            ),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
@@ -135,7 +141,10 @@ class _S53Content extends StatelessWidget {
         final task = snapshot.data;
         if (task == null) {
           return Scaffold(
-            appBar: AppBar(title: Text(t.S53_TaskSettings_Members.title)),
+            appBar: AppBar(
+              title: Text(t.S53_TaskSettings_Members.title),
+              centerTitle: true,
+            ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(

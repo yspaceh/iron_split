@@ -172,6 +172,7 @@ class _S32ContentState extends State<_S32Content> {
           onPressed: onBackToTask,
         ),
         title: Text(t.S32_settlement_result.title),
+        centerTitle: true,
       ),
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())

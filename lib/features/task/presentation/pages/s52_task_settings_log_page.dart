@@ -43,6 +43,7 @@ class _S52Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.S52_TaskSettings_Log.title),
+        centerTitle: true,
       ),
       body: Column(
         children: [

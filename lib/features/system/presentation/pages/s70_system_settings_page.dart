@@ -78,6 +78,7 @@ class _S70ContentState extends State<_S70Content> {
       appBar: AppBar(
         title:
             Text(t.S70_System_Settings.title), // 或 t.S70_System_Settings.title
+        centerTitle: true,
       ),
       // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
       body: GestureDetector(

@@ -61,7 +61,10 @@ class _S50Content extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.S50_Onboarding_Consent.title)),
+      appBar: AppBar(
+        title: Text(t.S50_Onboarding_Consent.title),
+        centerTitle: true,
+      ),
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(

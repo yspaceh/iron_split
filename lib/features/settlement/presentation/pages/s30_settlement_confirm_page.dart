@@ -167,8 +167,6 @@ class _S30Content extends StatelessWidget {
         appBar: AppBar(
           title: Text(t.S30_settlement_confirm.title),
           centerTitle: true,
-          // [M3]: AppBar 預設背景透明，捲動時自動染色 (Surface Tint)
-          // 若要全白可設 scrolledUnderElevation: 0
           actions: [
             StepDots(currentStep: 1),
             const SizedBox(width: 24),

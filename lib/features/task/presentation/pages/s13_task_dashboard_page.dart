@@ -131,6 +131,7 @@ class _S13ContentState extends State<_S13Content> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(vm.task?.name ?? t.S13_Task_Dashboard.title),
+          centerTitle: true,
           leading: leading,
           actions: actions,
         ),

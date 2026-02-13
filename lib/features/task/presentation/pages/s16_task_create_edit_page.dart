@@ -164,16 +164,17 @@ class _S16ContentState extends State<_S16Content> {
               if (didPop) return;
               await _handleClose();
             },
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-                leading: leading,
-              ),
-              // 1. 全局點擊偵測：點擊背景收起鍵盤
-              body: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                behavior: HitTestBehavior.translucent, // 確保點擊空白處也能觸發
-                child: SafeArea(
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              behavior: HitTestBehavior.translucent, // 確保點擊空白處也能觸發
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text(title),
+                  centerTitle: true,
+                  leading: leading,
+                ),
+                // 1. 全局點擊偵測：點擊背景收起鍵盤
+                body: SafeArea(
                   child: Form(
                     key: _formKey,
                     child: ListView(
@@ -238,16 +239,16 @@ class _S16ContentState extends State<_S16Content> {
                     ),
                   ),
                 ),
-              ),
-              bottomNavigationBar: StickyBottomActionBar(
-                isSheetMode: false,
-                children: [
-                  AppButton(
-                    text: t.S16_TaskCreate_Edit.buttons.save,
-                    type: AppButtonType.primary,
-                    onPressed: () => _onSave(context, vm),
-                  ),
-                ],
+                bottomNavigationBar: StickyBottomActionBar(
+                  isSheetMode: false,
+                  children: [
+                    AppButton(
+                      text: t.S16_TaskCreate_Edit.buttons.save,
+                      type: AppButtonType.primary,
+                      onPressed: () => _onSave(context, vm),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
