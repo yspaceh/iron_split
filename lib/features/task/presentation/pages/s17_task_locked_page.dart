@@ -47,37 +47,37 @@ class _S17Content extends StatefulWidget {
 }
 
 class _S17ContentState extends State<_S17Content> {
+  late S17TaskLockedViewModel _vm;
   @override
   void initState() {
     super.initState();
+    _vm = context.read<S17TaskLockedViewModel>();
+    _vm.addListener(_onStateChanged);
     // 監聽未登入狀態並自動跳轉
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S17TaskLockedViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
 
   @override
   void dispose() {
-    context.read<S17TaskLockedViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S17TaskLockedViewModel>();
     // 處理自動導航 (如未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
     }
 
-    if (vm.initStatus == LoadStatus.success &&
-        vm.pageType == LockedPageType.settled &&
-        !vm.hasSeen) {
+    if (_vm.initStatus == LoadStatus.success &&
+        _vm.pageType == LockedPageType.settled &&
+        !_vm.hasSeen) {
       context
-          .pushReplacementNamed('S32', pathParameters: {'taskId': vm.taskId});
+          .pushReplacementNamed('S32', pathParameters: {'taskId': _vm.taskId});
     }
   }
 

@@ -15,8 +15,9 @@ class S17ClosedView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          //TODO: 要準備放在這的圖片
-          const StateVisual(),
+          const StateVisual(
+            assetPath: 'assets/images/iron/iron_image_settlement.png',
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(t.S32_settlement_result.content),

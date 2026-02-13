@@ -19,13 +19,13 @@ class StateVisual extends StatelessWidget {
           // 統一的圓角 (例如 24)
           borderRadius: BorderRadius.circular(24),
           // 統一的陰影 (增加立體感，選用)
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withValues(alpha: 0.05),
+          //     blurRadius: 10,
+          //     offset: const Offset(0, 4),
+          //   ),
+          // ],
         ),
         // 裁切圖片以符合圓角
         clipBehavior: Clip.antiAlias,

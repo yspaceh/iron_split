@@ -1,19 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 
 class S11InviteConfirmViewModel extends ChangeNotifier {
   final InviteRepository _inviteRepo;
+  final AuthRepository _authRepo;
   final PendingInviteProvider _pendingProvider;
 
   // State
-  bool _isLoading = true;
-  bool _isJoining = false;
-  AppErrorCodes? _errorCode; // 用於 UI 顯示錯誤 Dialog
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
+  LoadStatus _isJoining = LoadStatus.initial;
+
+  late User? _currentUser;
 
   // Data
   String _inviteCode = '';
@@ -25,9 +30,10 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   String? _selectedGhostId;
 
   // Getters
-  bool get isLoading => _isLoading;
-  bool get isJoining => _isJoining;
-  AppErrorCodes? get errorCode => _errorCode;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+  LoadStatus get isJoining => _isJoining;
+  User? get currentUser => _currentUser;
 
   String get taskName => _taskData?['taskName'] ?? '';
   DateTime get startDate => _parseDate(_taskData?['startDate']);
@@ -48,8 +54,10 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
   S11InviteConfirmViewModel({
     required InviteRepository inviteRepo,
+    required AuthRepository authRepo,
     required PendingInviteProvider pendingProvider,
   })  : _inviteRepo = inviteRepo,
+        _authRepo = authRepo,
         _pendingProvider = pendingProvider;
 
   void clearInvite() {
@@ -65,11 +73,21 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // 初始化：載入預覽資訊
   Future<void> init(String code) async {
     _inviteCode = code;
-    _isLoading = true;
-    _errorCode = null;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
     try {
+      // 登入確認移到 VM
+      final user = _authRepo.currentUser;
+      if (user == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.unauthorized;
+        notifyListeners();
+        return;
+      }
+      _currentUser = user;
+
       // 1. 呼叫 Repository 取得預覽
       final result = await _inviteRepo.previewInviteCode(code);
 
@@ -92,11 +110,11 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       }
 
       _isAutoAssign = _ghosts.isEmpty;
+      _initStatus = LoadStatus.success;
+      notifyListeners();
     } catch (e) {
-      debugPrint("🔥 [S11 Init Error] 後端拒絕的原因是: $e");
-      _errorCode = ErrorMapper.parseErrorCode(e);
-    } finally {
-      _isLoading = false;
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
@@ -108,36 +126,31 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   }
 
   // 確認加入
-  Future<void> confirmJoin({
-    required Function(String taskId) onSuccess,
-    required Function(AppErrorCodes code) onError,
-  }) async {
-    if (_isJoining) return;
-    _isJoining = true;
+  Future<String?> confirmJoin() async {
+    if (_isJoining == LoadStatus.loading) return null;
+    _isJoining = LoadStatus.loading;
     notifyListeners();
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      //TODO: handle error
-      if (user == null) throw AppErrorCodes.unauthorized;
-
       // 呼叫 Repository 加入
       final taskId = await _inviteRepo.joinTask(
         code: _inviteCode,
-        displayName: user.displayName ?? 'New Member',
+        displayName: currentUser?.displayName ?? 'New Member',
         targetMemberId: _selectedGhostId,
       );
 
       await _pendingProvider.clear();
 
-      onSuccess(taskId);
-    } catch (e) {
-      debugPrint("🔥 [S11 confirmJoin Error] 後端拒絕的原因是: $e");
-      final code = ErrorMapper.parseErrorCode(e);
-      onError(code);
-    } finally {
-      _isJoining = false;
+      _isJoining = LoadStatus.success;
       notifyListeners();
+      return taskId;
+    } on AppErrorCodes {
+      _isJoining = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _isJoining = LoadStatus.error;
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

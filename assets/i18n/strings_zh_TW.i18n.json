@@ -408,10 +408,10 @@
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
     "buttons": {
-      "agree": "開始使用"
+      "agree": "開始"
     },
     "content": {
-      "prefix": "歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ",
+      "prefix": "讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ",
       "suffix": "。"
     },
     "login_failed": "登入失敗: {message}"

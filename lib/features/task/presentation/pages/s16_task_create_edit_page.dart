@@ -50,6 +50,7 @@ class _S16Content extends StatefulWidget {
 class _S16ContentState extends State<_S16Content> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  late S16TaskCreateEditViewModel _vm;
 
   @override
   void initState() {
@@ -58,20 +59,20 @@ class _S16ContentState extends State<_S16Content> {
     _nameController.addListener(() {
       setState(() {});
     });
+    _vm = context.read<S16TaskCreateEditViewModel>();
+    _vm.addListener(_onStateChanged);
+
     // 監聽未登入狀態並自動跳轉
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S16TaskCreateEditViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S16TaskCreateEditViewModel>();
     // 處理自動導航 (如未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
     }
   }
@@ -79,7 +80,7 @@ class _S16ContentState extends State<_S16Content> {
   @override
   void dispose() {
     _nameController.dispose();
-    context.read<S16TaskCreateEditViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
@@ -154,7 +155,7 @@ class _S16ContentState extends State<_S16Content> {
       errorCode: vm.initErrorCode,
       title: title,
       leading: leading,
-      onRetry: () => vm.init(),
+      onErrorAction: () => vm.init(),
       child: Stack(
         children: [
           PopScope(

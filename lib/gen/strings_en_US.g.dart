@@ -1216,7 +1216,7 @@ class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50Onboar
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => 'By clicking Start, you agree to our ';
+	@override String get prefix => 'Make splitting expenses simple.\n\nI’m Iron Roost.I handle the records and the sharing here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be clear.\n\nBy clicking Start, you agree to our ';
 	@override String get suffix => '. We use anonymous login to protect your privacy.';
 }
 
@@ -2071,7 +2071,7 @@ extension on TranslationsEnUs {
 			'S32_settlement_result.buttons.back' => 'Back to Task',
 			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
 			'S50_Onboarding_Consent.buttons.agree' => 'Start',
-			'S50_Onboarding_Consent.content.prefix' => 'By clicking Start, you agree to our ',
+			'S50_Onboarding_Consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Roost.I handle the records and the sharing here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be clear.\n\nBy clicking Start, you agree to our ',
 			'S50_Onboarding_Consent.content.suffix' => '. We use anonymous login to protect your privacy.',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: ${message}',
 			'S51_Onboarding_Name.title' => 'Set Display Name',

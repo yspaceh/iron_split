@@ -39,29 +39,28 @@ class _S12Content extends StatefulWidget {
 }
 
 class _S12ContentState extends State<_S12Content> {
+  late S12TaskCloseNoticeViewModel _vm;
   @override
   void initState() {
     super.initState();
-    // 監聽未登入狀態並自動跳轉
+    _vm = context.read<S12TaskCloseNoticeViewModel>();
+    _vm.addListener(_onStateChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S12TaskCloseNoticeViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
 
   @override
   void dispose() {
-    context.read<S12TaskCloseNoticeViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S12TaskCloseNoticeViewModel>();
     // 處理自動導航 (如未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
     }
   }

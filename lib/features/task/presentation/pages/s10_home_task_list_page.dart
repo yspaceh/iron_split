@@ -35,29 +35,29 @@ class _S10Content extends StatefulWidget {
 }
 
 class _S10ContentState extends State<_S10Content> {
+  late S10TaskListViewModel _vm;
   @override
   void initState() {
     super.initState();
+    _vm = context.read<S10TaskListViewModel>();
+    _vm.addListener(_onStateChanged);
     // 監聽未登入狀態並自動跳轉
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S10TaskListViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
 
   @override
   void dispose() {
-    context.read<S10TaskListViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S10TaskListViewModel>();
     // 處理自動導航 (如未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
     }
   }

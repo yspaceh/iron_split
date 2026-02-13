@@ -1,10 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/state_visual.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/onboarding/presentation/viewmodels/s50_onboarding_consent_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -15,7 +19,8 @@ class S50OnboardingConsentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S50OnboardingConsentViewModel(),
+      create: (_) => S50OnboardingConsentViewModel(
+          authRepo: context.read<AuthRepository>()),
       child: const _S50Content(),
     );
   }
@@ -42,6 +47,19 @@ class _S50Content extends StatelessWidget {
     // 定義一般文字樣式
     final normalStyle = theme.textTheme.bodyMedium?.copyWith(height: 1.5);
 
+    Future<void> handleAgree(
+        BuildContext context, S50OnboardingConsentViewModel vm) async {
+      try {
+        await vm.agreeAndContinue();
+        if (!context.mounted) return;
+        context.pushNamed('S51');
+      } on AppErrorCodes catch (code) {
+        if (!context.mounted) return;
+        final msg = ErrorMapper.map(context, code: code);
+        AppToast.showError(context, msg);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(t.S50_Onboarding_Consent.title)),
       bottomNavigationBar: StickyBottomActionBar(
@@ -49,17 +67,8 @@ class _S50Content extends StatelessWidget {
           AppButton(
             text: t.S50_Onboarding_Consent.buttons.agree,
             type: AppButtonType.primary,
-            onPressed: vm.isLoading
-                ? null
-                : () {
-                    // [修改] 改為呼叫 VM 方法
-                    vm.agreeAndContinue(
-                      onSuccess: () => context.pushNamed('S51'),
-                      onError: (msg) {
-                        AppToast.showError(context, msg);
-                      },
-                    );
-                  },
+            isLoading: vm.actionStatus == LoadStatus.loading,
+            onPressed: () => handleAgree(context, vm),
           ),
         ],
       ),
@@ -70,8 +79,9 @@ class _S50Content extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //TODO: 要準備放在這的圖片
-            const StateVisual(),
+            const StateVisual(
+              assetPath: 'assets/images/iron/iron_image_intro.png',
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: // 2. 條款文字區域 (RichText)

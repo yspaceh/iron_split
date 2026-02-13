@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart'; // [新增]
 
 class S50OnboardingConsentViewModel extends ChangeNotifier {
-  // 建立 Repo 實例
-  final AuthRepository _repo = AuthRepository();
+  final AuthRepository _authRepo;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  LoadStatus _actionStatus = LoadStatus.initial;
+
+  LoadStatus get actionStatus => _actionStatus;
+
+  S50OnboardingConsentViewModel({
+    required AuthRepository authRepo,
+  }) : _authRepo = authRepo;
 
   /// 同意條款並繼續
-  Future<void> agreeAndContinue({
-    required VoidCallback onSuccess,
-    required Function(String) onError,
-  }) async {
-    if (_isLoading) return;
+  Future<void> agreeAndContinue() async {
+    if (_actionStatus == LoadStatus.loading) return;
 
-    _isLoading = true;
+    _actionStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
       // 1. 先執行匿名登入 (確保有 UID)
-      await _repo.signInAnonymously();
+      await _authRepo.signInAnonymously();
 
       // 2. 寫入版本號到 Firestore
-      await _repo.acceptLegalTerms();
+      await _authRepo.acceptLegalTerms();
 
       // 3. 成功，通知 UI 跳轉
-      onSuccess();
-    } catch (e) {
-      print(e.toString());
-      onError(e.toString());
-    } finally {
-      _isLoading = false;
+      _actionStatus = LoadStatus.success;
       notifyListeners();
+    } on AppErrorCodes {
+      _actionStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _actionStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

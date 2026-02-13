@@ -1216,7 +1216,7 @@ class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50Onboar
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => '開始することで、';
+	@override String get prefix => '分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、';
 	@override String get suffix => ' に同意したものとみなされます。';
 }
 
@@ -2071,7 +2071,7 @@ extension on TranslationsJaJp {
 			'S32_settlement_result.buttons.back' => 'タスクに戻る',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
 			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
-			'S50_Onboarding_Consent.content.prefix' => '開始することで、',
+			'S50_Onboarding_Consent.content.prefix' => '分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、',
 			'S50_Onboarding_Consent.content.suffix' => ' に同意したものとみなされます。',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名前設定',

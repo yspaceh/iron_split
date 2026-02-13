@@ -48,13 +48,14 @@ class _S13Content extends StatefulWidget {
 }
 
 class _S13ContentState extends State<_S13Content> {
+  late S13TaskDashboardViewModel _vm;
   @override
   void initState() {
     super.initState();
+    _vm = context.read<S13TaskDashboardViewModel>();
+    _vm.addListener(_onStateChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S13TaskDashboardViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
@@ -62,35 +63,34 @@ class _S13ContentState extends State<_S13Content> {
   @override
   void dispose() {
     // 記得移除監聽
-    context.read<S13TaskDashboardViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S13TaskDashboardViewModel>();
 
     // 自動轉向 S00 (未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
       return;
     }
 
     // 處理結算自動跳轉
-    if (vm.shouldNavigateToS17) {
+    if (_vm.shouldNavigateToS17) {
       context
-          .pushReplacementNamed('S17', pathParameters: {'taskId': vm.taskId});
+          .pushReplacementNamed('S17', pathParameters: {'taskId': _vm.taskId});
       return; // 跳轉了就不用管後面的
     }
 
     // 2. 處理 Intro 彈窗 (VM 會判斷 hasSeenRoleIntro)
-    if (vm.shouldShowIntro) {
-      final memberData = vm.task!.members[vm.currentUserId];
+    if (_vm.shouldShowIntro) {
+      final memberData = _vm.task!.members[_vm.currentUserId];
       if (memberData == null) return;
 
       // 顯示彈窗
       D01MemberRoleIntroDialog.show(context,
-          taskId: vm.taskId,
+          taskId: _vm.taskId,
           initialAvatar: memberData['avatar'] ?? AvatarConstants.defaultAvatar,
           canReroll: true);
     }

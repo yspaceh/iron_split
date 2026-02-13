@@ -411,7 +411,7 @@
       "agree": "Start"
     },
     "content": {
-      "prefix": "By clicking Start, you agree to our ",
+      "prefix": "Make splitting expenses simple.\n\nI’m Iron Roost.I handle the records and the sharing here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be clear.\n\nBy clicking Start, you agree to our ",
       "suffix": ". We use anonymous login to protect your privacy."
     },
     "login_failed": "Login Failed: {message}"

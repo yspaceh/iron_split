@@ -49,32 +49,31 @@ class _S14Content extends StatefulWidget {
 
 class _S14ContentState extends State<_S14Content> {
   final FocusNode _nameFocusNode = FocusNode();
+  late S14TaskSettingsViewModel _vm;
 
   @override
   void initState() {
     super.initState();
-    final vm = context.read<S14TaskSettingsViewModel>();
+    _vm = context.read<S14TaskSettingsViewModel>();
+    _vm.addListener(_onStateChanged);
     // Auto-save Name when focus is lost
     _nameFocusNode.addListener(() {
       if (!_nameFocusNode.hasFocus) {
-        vm.updateName();
+        _vm.updateName();
       }
     });
 
     // 監聽未登入狀態並自動跳轉
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final vm = context.read<S14TaskSettingsViewModel>();
-      vm.addListener(_onStateChanged);
       _onStateChanged();
     });
   }
 
   void _onStateChanged() {
     if (!mounted) return;
-    final vm = context.read<S14TaskSettingsViewModel>();
     // 處理自動導航 (如未登入)
-    if (vm.initErrorCode == AppErrorCodes.unauthorized) {
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
       context.goNamed('S00');
     }
   }
@@ -82,7 +81,7 @@ class _S14ContentState extends State<_S14Content> {
   @override
   void dispose() {
     _nameFocusNode.dispose();
-    context.read<S14TaskSettingsViewModel>().removeListener(_onStateChanged);
+    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
@@ -138,7 +137,7 @@ class _S14ContentState extends State<_S14Content> {
       status: vm.initStatus,
       errorCode: vm.initErrorCode,
       title: title,
-      onRetry: () => vm.init(),
+      onErrorAction: () => vm.init(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),

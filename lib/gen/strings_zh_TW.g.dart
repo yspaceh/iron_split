@@ -1880,8 +1880,8 @@ class TranslationsS50OnboardingConsentButtonsZhTw {
 
 	// Translations
 
-	/// zh-TW: '開始使用'
-	String get agree => '開始使用';
+	/// zh-TW: '開始'
+	String get agree => '開始';
 }
 
 // Path: S50_Onboarding_Consent.content
@@ -1892,8 +1892,8 @@ class TranslationsS50OnboardingConsentContentZhTw {
 
 	// Translations
 
-	/// zh-TW: '歡迎使用 Iron Split。 點擊開始即代表您同意我們的 '
-	String get prefix => '歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ';
+	/// zh-TW: '讓分帳變得簡單。 我是艾隆・魯斯特。這裡負責記帳與分攤。 無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。 分帳,本該清楚。 點擊開始即代表您同意我們的 '
+	String get prefix => '讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ';
 
 	/// zh-TW: '。'
 	String get suffix => '。';
@@ -3015,8 +3015,8 @@ extension on Translations {
 			'S32_settlement_result.buttons.share' => '發送結算通知',
 			'S32_settlement_result.buttons.back' => '返回任務首頁',
 			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
-			'S50_Onboarding_Consent.buttons.agree' => '開始使用',
-			'S50_Onboarding_Consent.content.prefix' => '歡迎使用 Iron Split。\n點擊開始即代表您同意我們的 ',
+			'S50_Onboarding_Consent.buttons.agree' => '開始',
+			'S50_Onboarding_Consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.content.suffix' => '。',
 			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名稱設定',

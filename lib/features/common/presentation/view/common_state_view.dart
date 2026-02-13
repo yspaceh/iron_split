@@ -15,7 +15,8 @@ class CommonStateView extends StatelessWidget {
   final String title;
   final Widget child; // 成功時顯示的內容
   final AppErrorCodes? errorCode; // 錯誤代碼，用於對應翻譯
-  final VoidCallback? onRetry;
+  final String? errorActionText;
+  final VoidCallback? onErrorAction;
   final bool isSheetMode;
   final List<Widget>? actions;
 
@@ -24,11 +25,12 @@ class CommonStateView extends StatelessWidget {
       required this.status,
       required this.child,
       this.errorCode,
-      this.onRetry,
+      this.onErrorAction,
       this.isSheetMode = false,
       required this.title,
       this.leading,
-      this.actions});
+      this.actions,
+      this.errorActionText});
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +49,13 @@ class CommonStateView extends StatelessWidget {
         if (isSheetMode) {
           return CommonBottomSheet(
             title: title,
-            bottomActionBar: onRetry != null
+            bottomActionBar: onErrorAction != null
                 ? StickyBottomActionBar.sheet(
                     children: [
                       AppButton(
-                        text: t.common.buttons.retry,
+                        text: errorActionText ?? t.common.buttons.retry,
                         type: AppButtonType.primary,
-                        onPressed: onRetry,
+                        onPressed: onErrorAction,
                       ),
                     ],
                   )
@@ -74,13 +76,13 @@ class CommonStateView extends StatelessWidget {
               leading: leading,
               actions: actions,
             ),
-            bottomNavigationBar: onRetry != null
+            bottomNavigationBar: onErrorAction != null
                 ? StickyBottomActionBar.sheet(
                     children: [
                       AppButton(
-                        text: t.common.buttons.retry,
+                        text: errorActionText ?? t.common.buttons.retry,
                         type: AppButtonType.primary,
-                        onPressed: onRetry,
+                        onPressed: onErrorAction,
                       ),
                     ],
                   )

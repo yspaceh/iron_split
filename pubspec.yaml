@@ -64,4 +64,5 @@ flutter:
   assets:
     - assets/images/
     - assets/images/avatars/
+    - assets/images/iron/
     - assets/i18n/
