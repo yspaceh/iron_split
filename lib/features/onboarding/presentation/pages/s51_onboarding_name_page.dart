@@ -48,7 +48,7 @@ class _S51ContentState extends State<_S51Content> {
 
   void _submit(BuildContext context, S51OnboardingNameViewModel vm) {
     vm.saveName(
-      onSuccess: () => context.pushNamed('S10'), // 假設下個頁面是任務列表
+      onSuccess: () => context.goNamed('S10'),
       onError: (msg) => AppToast.showError(context, msg),
     );
   }
