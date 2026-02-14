@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
@@ -13,6 +14,8 @@ import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
+import 'package:iron_split/features/task/application/export_service.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -31,12 +34,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化 Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  final results = await Future.wait([
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    SharedPreferences.getInstance(),
+  ]);
 
   // 讀取儲存的語言設定
-  final prefs = await SharedPreferences.getInstance();
+  final prefs = results[1] as SharedPreferences;
   final savedLocaleCode = prefs.getString('app_locale');
 
   if (savedLocaleCode != null) {
@@ -81,8 +85,17 @@ void main() async {
           create: (context) =>
               SettlementService(context.read<TaskRepository>()),
         ),
+        Provider<ExportService>(
+          create: (context) => ExportService(),
+        ),
+        Provider<ShareService>(
+          create: (context) => ShareService(),
+        ),
         Provider<DeepLinkService>(
           create: (context) => DeepLinkService(),
+        ),
+        Provider<PreferencesService>(
+          create: (_) => PreferencesService(prefs),
         ),
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),
@@ -112,7 +125,9 @@ class _IronSplitAppState extends State<IronSplitApp> {
     super.initState();
     // 修正點：現在 AppRouter 接收 deepLinkService 作為參數
     _appRouter = AppRouter(_deepLinkService);
-    _setupDeepLinkListener();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setupDeepLinkListener();
+    });
   }
 
   /// 設置 Deep Link 監聽邏輯
@@ -120,7 +135,6 @@ class _IronSplitAppState extends State<IronSplitApp> {
     _deepLinkService.initialize();
 
     _linkSubscription = _deepLinkService.intentStream.listen((intent) {
-      debugPrint("🔥 [DeepLink] intercepted intent: $intent");
       if (!mounted) return;
 
       switch (intent) {

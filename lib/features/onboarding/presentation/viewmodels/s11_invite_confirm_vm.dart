@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -16,7 +17,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // State
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
-  LoadStatus _isJoining = LoadStatus.initial;
+  LoadStatus _joinStatus = LoadStatus.initial;
 
   late User? _currentUser;
 
@@ -32,7 +33,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // Getters
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
-  LoadStatus get isJoining => _isJoining;
+  LoadStatus get joinStatus => _joinStatus;
   User? get currentUser => _currentUser;
 
   String get taskName => _taskData?['taskName'] ?? '';
@@ -72,6 +73,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
   // 初始化：載入預覽資訊
   Future<void> init(String code) async {
+    if (_initStatus == LoadStatus.loading) return;
     _inviteCode = code;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
@@ -80,12 +82,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
     try {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
-      if (user == null) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.unauthorized;
-        notifyListeners();
-        return;
-      }
+      if (user == null) throw AppErrorCodes.unauthorized;
+
       _currentUser = user;
 
       // 1. 呼叫 Repository 取得預覽
@@ -102,15 +100,15 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
         _ghosts =
             rawGhosts.map((e) => Map<String, dynamic>.from(e as Map)).toList();
 
-        _ghosts.sort((a, b) {
-          final timeA = _parseDate(a['createdAt']).millisecondsSinceEpoch;
-          final timeB = _parseDate(b['createdAt']).millisecondsSinceEpoch;
-          return timeA.compareTo(timeB);
-        });
+        _ghosts.sort(TaskModel.compareMemberData);
       }
 
       _isAutoAssign = _ghosts.isEmpty;
       _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
       notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;
@@ -127,8 +125,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
   // 確認加入
   Future<String?> confirmJoin() async {
-    if (_isJoining == LoadStatus.loading) return null;
-    _isJoining = LoadStatus.loading;
+    if (_joinStatus == LoadStatus.loading) return null;
+    _joinStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -141,15 +139,15 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
       await _pendingProvider.clear();
 
-      _isJoining = LoadStatus.success;
+      _joinStatus = LoadStatus.success;
       notifyListeners();
       return taskId;
     } on AppErrorCodes {
-      _isJoining = LoadStatus.error;
+      _joinStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
     } catch (e) {
-      _isJoining = LoadStatus.error;
+      _joinStatus = LoadStatus.error;
       throw ErrorMapper.parseErrorCode(e);
     }
   }

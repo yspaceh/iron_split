@@ -14,14 +14,13 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
 
   // State
   LoadStatus _initStatus = LoadStatus.initial; // 頁面狀態
-  LoadStatus _actionStatus = LoadStatus.initial; // 按鈕狀態
+  LoadStatus _closeStatus = LoadStatus.initial; // 按鈕狀態
   AppErrorCodes? _initErrorCode;
 
   // Getters
   LoadStatus get initStatus => _initStatus;
-  LoadStatus get actionStatus => _actionStatus;
+  LoadStatus get closeStatus => _closeStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
-  bool get isProcessing => _actionStatus == LoadStatus.loading;
 
   S12TaskCloseNoticeViewModel({
     required this.taskId,
@@ -31,27 +30,34 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
         _service = service;
 
   void init() {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
-    // 登入確認移到 VM
-    final user = _authRepo.currentUser;
-    if (user == null) {
-      _initStatus = LoadStatus.error;
-      _initErrorCode = AppErrorCodes.unauthorized;
+    try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+
+      // 3. 成功 (此頁面不需要撈資料，確認有人就好)
+      _initStatus = LoadStatus.success;
       notifyListeners();
-      return;
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
     }
-
-    // 這裡若是純靜態頁面，檢查完登入即可設為 success
-    _initStatus = LoadStatus.success;
-    notifyListeners();
   }
 
   /// 執行結束任務邏輯
   /// Returns: true if success
   Future<void> closeTask() async {
-    _actionStatus = LoadStatus.loading;
+    if (_closeStatus == LoadStatus.loading) return;
+    _closeStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -64,14 +70,14 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
         details: {},
       );
 
-      _actionStatus = LoadStatus.success;
+      _closeStatus = LoadStatus.success;
       notifyListeners();
     } on AppErrorCodes {
-      _actionStatus = LoadStatus.error;
+      _closeStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
     } catch (e) {
-      _actionStatus = LoadStatus.error;
+      _closeStatus = LoadStatus.error;
       notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }

@@ -6,6 +6,7 @@ import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
@@ -91,8 +92,32 @@ class B03SplitMethodEditBottomSheet extends StatelessWidget {
   }
 }
 
-class _B03Content extends StatelessWidget {
+class _B03Content extends StatefulWidget {
   const _B03Content();
+
+  @override
+  State<_B03Content> createState() => _B03ContentState();
+}
+
+class _B03ContentState extends State<_B03Content> {
+  final Map<String, FocusNode> _focusNodes = {};
+  @override
+  void dispose() {
+    // ✅ 2. [新增] 釋放所有 Node
+    for (var node in _focusNodes.values) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  // ✅ 3. [新增] Helper 方法：取得或建立 Node
+  FocusNode _getFocusNode(String memberId) {
+    if (!_focusNodes.containsKey(memberId)) {
+      _focusNodes[memberId] = FocusNode();
+    }
+    return _focusNodes[memberId]!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<B03SplitMethodEditViewModel>();
@@ -103,111 +128,117 @@ class _B03Content extends StatelessWidget {
     final int selectedIndex =
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
     final title = t.B03_SplitMethod_Edit.title;
+    final activeNodes =
+        vm.allMembers.map((m) => _getFocusNode(m['id'])).toList();
 
     //  使用 CommonBottomSheet
-    return CommonStateView(
-      status: vm.initStatus,
-      title: title,
-      errorCode: vm.initErrorCode,
-      child: CommonBottomSheet(
+    return AppKeyboardActionsWrapper(
+      focusNodes: activeNodes,
+      child: CommonStateView(
+        status: vm.initStatus,
         title: title,
-        // 底部按鈕區：使用 .sheet 建構子
-        bottomActionBar: vm.initStatus == LoadStatus.success
-            ? StickyBottomActionBar.sheet(
-                children: [
-                  AppButton(
-                    text: t.common.buttons.save,
-                    type: AppButtonType.primary,
-                    onPressed: vm.isValid
-                        ? () {
-                            Navigator.pop(context, vm.save());
-                          }
-                        : null,
-                  ),
-                ],
-              )
-            : null,
+        errorCode: vm.initErrorCode,
+        child: CommonBottomSheet(
+          title: title,
+          // 底部按鈕區：使用 .sheet 建構子
+          bottomActionBar: vm.initStatus == LoadStatus.success
+              ? StickyBottomActionBar.sheet(
+                  children: [
+                    AppButton(
+                      text: t.common.buttons.save,
+                      type: AppButtonType.primary,
+                      onPressed: vm.isValid
+                          ? () {
+                              Navigator.pop(context, vm.save());
+                            }
+                          : null,
+                    ),
+                  ],
+                )
+              : null,
 
-        // 內容區：改為 Column 結構，實現「上方固定，下方捲動」
-        children: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CustomSlidingSegment<int>(
-                selectedValue: selectedIndex,
-                onValueChanged: (val) {
-                  vm.switchMethod(SplitMethodConstant.allRules[val]);
-                },
-                segments: {
-                  0: SplitMethodConstant.getLabel(
-                      context, SplitMethodConstant.even),
-                  1: SplitMethodConstant.getLabel(
-                      context, SplitMethodConstant.exact),
-                  2: SplitMethodConstant.getLabel(
-                      context, SplitMethodConstant.percent),
-                },
+          // 內容區：改為 Column 結構，實現「上方固定，下方捲動」
+          children: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: CustomSlidingSegment<int>(
+                  selectedValue: selectedIndex,
+                  onValueChanged: (val) {
+                    vm.switchMethod(SplitMethodConstant.allRules[val]);
+                  },
+                  segments: {
+                    0: SplitMethodConstant.getLabel(
+                        context, SplitMethodConstant.even),
+                    1: SplitMethodConstant.getLabel(
+                        context, SplitMethodConstant.exact),
+                    2: SplitMethodConstant.getLabel(
+                        context, SplitMethodConstant.percent),
+                  },
+                ),
               ),
-            ),
-            // 1. Info Bar (金額 & 方式) - 固定在上方
-            Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SummaryRow(
-                      label: t.S15_Record_Edit.label.amount,
-                      amount: vm.totalAmount,
-                      currencyConstants: vm.selectedCurrency),
-                  if (vm.exchangeRate != 1.0) ...[
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, vm.baseCurrency.code)}",
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontSize: 12,
+              // 1. Info Bar (金額 & 方式) - 固定在上方
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SummaryRow(
+                        label: t.S15_Record_Edit.label.amount,
+                        amount: vm.totalAmount,
+                        currencyConstants: vm.selectedCurrency),
+                    if (vm.exchangeRate != 1.0) ...[
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, vm.baseCurrency.code)}",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontSize: 12,
+                          ),
                         ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    Divider(
+                      height: 1,
+                      color:
+                          colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                    ),
+                    InfoBar(
+                      icon: Icons.savings_outlined,
+                      backgroundColor: colorScheme.surface,
+                      text: Text(
+                        t.common.remainder_rule.message_remainder(
+                            amount:
+                                "${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(vm.selectedMemberIds.isEmpty ? 0 : result.remainder, vm.baseCurrency.code)}"),
+                        style: TextStyle(fontSize: 12),
                       ),
                     ),
                   ],
-                  const SizedBox(height: 16),
-                  Divider(
-                    height: 1,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-                  ),
-                  InfoBar(
-                    icon: Icons.savings_outlined,
-                    backgroundColor: colorScheme.surface,
-                    text: Text(
-                      t.common.remainder_rule.message_remainder(
-                          amount:
-                              "${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(vm.selectedMemberIds.isEmpty ? 0 : result.remainder, vm.baseCurrency.code)}"),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
 
-            // 2. Content Area - 捲動區
-            // 使用 Expanded 佔滿剩餘高度，內部使用 ListView 實現捲動
-            Expanded(
-              child: ListView(
-                children: [
-                  // 注意：這裡假設您的原始檔案中有定義 _buildEvenSection 等方法
-                  // 否則這裡會報錯。如果您需要我補上這些方法的空殼或實作，請告知。
-                  if (vm.splitMethod == SplitMethodConstant.even)
-                    _buildEvenSection(vm, theme),
-                  if (vm.splitMethod == SplitMethodConstant.percent)
-                    _buildPercentSection(vm, theme),
-                  if (vm.splitMethod == SplitMethodConstant.exact)
-                    _buildExactSection(vm, theme, t),
-                  const SizedBox(height: 40),
-                ],
+              // 2. Content Area - 捲動區
+              // 使用 Expanded 佔滿剩餘高度，內部使用 ListView 實現捲動
+              Expanded(
+                child: ListView(
+                  children: [
+                    // 注意：這裡假設您的原始檔案中有定義 _buildEvenSection 等方法
+                    // 否則這裡會報錯。如果您需要我補上這些方法的空殼或實作，請告知。
+                    if (vm.splitMethod == SplitMethodConstant.even)
+                      _buildEvenSection(vm, theme),
+                    if (vm.splitMethod == SplitMethodConstant.percent)
+                      _buildPercentSection(vm, theme),
+                    if (vm.splitMethod == SplitMethodConstant.exact)
+                      _buildExactSection(vm, theme, t),
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -380,6 +411,7 @@ class _B03Content extends StatelessWidget {
                 children: [
                   CompactAmountInput(
                     controller: vm.amountControllers[id],
+                    focusNode: _getFocusNode(id),
                     onChanged: (val) => vm.updateAmount(id, val),
                     hintText: '0',
                     currencyConstants: vm.selectedCurrency,

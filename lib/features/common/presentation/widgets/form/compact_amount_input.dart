@@ -10,6 +10,7 @@ class CompactAmountInput extends StatelessWidget {
   final CurrencyConstants currencyConstants;
   final Color? fillColor;
   final AutovalidateMode? autovalidateMode;
+  final FocusNode? focusNode;
 
   const CompactAmountInput({
     super.key,
@@ -19,6 +20,7 @@ class CompactAmountInput extends StatelessWidget {
     this.fillColor,
     required this.currencyConstants,
     this.autovalidateMode,
+    this.focusNode,
   });
 
   @override
@@ -59,6 +61,7 @@ class CompactAmountInput extends StatelessWidget {
         color: colorScheme.onSurface,
         height: 1.5,
       ),
+      focusNode: focusNode,
       autovalidateMode: autovalidateMode,
       onChanged: onChanged,
       decoration: InputDecoration(

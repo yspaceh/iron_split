@@ -6,6 +6,7 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -54,8 +55,47 @@ class S31SettlementPaymentInfoPage extends StatelessWidget {
   }
 }
 
-class _S31Content extends StatelessWidget {
+class _S31Content extends StatefulWidget {
   const _S31Content();
+
+  @override
+  State<_S31Content> createState() => _S31ContentState();
+}
+
+class _S31ContentState extends State<_S31Content> {
+  late FocusNode _bankNameNode;
+  late FocusNode _bankAccountNode;
+  final Map<int, FocusNode> _appNameNodes = {};
+  final Map<int, FocusNode> _appLinkNodes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _bankNameNode = FocusNode();
+    _bankAccountNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _bankNameNode.dispose();
+    _bankAccountNode.dispose();
+    for (var node in _appNameNodes.values) {
+      node.dispose();
+    }
+    for (var node in _appLinkNodes.values) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  // 取得動態 Node 的 Helper
+  FocusNode _getAppLinkNode(int index) {
+    return _appLinkNodes.putIfAbsent(index, () => FocusNode());
+  }
+
+  FocusNode _getAppNameNode(int index) {
+    return _appNameNodes.putIfAbsent(index, () => FocusNode());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,62 +197,74 @@ class _S31Content extends StatelessWidget {
           false;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S31_settlement_payment_info.title), // 需新增 i18n
-        centerTitle: true,
-        actions: [
-          StepDots(currentStep: 2, totalSteps: 2), // Step 2/2
-          const SizedBox(width: 24),
-        ],
-      ),
-      body: vm.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: PaymentInfoForm(
-                controller: vm.formController,
-                isSelectedBackgroundColor: colorScheme.surface,
-                backgroundColor: colorScheme.surfaceContainerLow,
-              ),
-            ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Sync Checkbox (Smart Display)
-          if (vm.showSyncOption &&
-              vm.formController.mode == PaymentMode.specific)
-            SelectionTile(
-              isSelected: vm.isSyncChecked,
-              isRadio: false, // Checkbox 模式
-              onTap: () => vm.toggleSync(!vm.isSyncChecked),
-              title: vm.isUpdate
-                  ? t.S31_settlement_payment_info.sync_update // "更新我的預設收款資訊"
-                  : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
-              backgroundColor: Colors.transparent,
-              isSelectedBackgroundColor: Colors.transparent,
-            ),
+    final allNodes = [
+      _bankNameNode,
+      _bankAccountNode,
+      ...List.generate(
+          vm.formController.appControllers.length, (i) => _getAppNameNode(i)),
+      ...List.generate(
+          vm.formController.appControllers.length, (i) => _getAppLinkNode(i)),
+    ];
 
-          StickyBottomActionBar(
-            children: [
-              AppButton(
-                text: t.S31_settlement_payment_info.buttons.prev_step,
-                type: AppButtonType.secondary,
-                onPressed: () => context.pop(),
+    return AppKeyboardActionsWrapper(
+      focusNodes: allNodes,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(t.S31_settlement_payment_info.title), // 需新增 i18n
+          centerTitle: true,
+          actions: [
+            StepDots(currentStep: 2, totalSteps: 2), // Step 2/2
+            const SizedBox(width: 24),
+          ],
+        ),
+        body: vm.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: PaymentInfoForm(
+                  controller: vm.formController,
+                  isSelectedBackgroundColor: colorScheme.surface,
+                  backgroundColor: colorScheme.surfaceContainerLow,
+                ),
               ),
-              AppButton(
-                text: t.S31_settlement_payment_info.buttons.settle, // "結算"
-                type: AppButtonType.primary,
-                onPressed: () async {
-                  final bool shouldSettle = await showRateInfoDialog();
-                  debugPrint(shouldSettle.toString());
-                  if (shouldSettle == true && context.mounted) {
-                    await executeSettlement();
-                  }
-                },
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Sync Checkbox (Smart Display)
+            if (vm.showSyncOption &&
+                vm.formController.mode == PaymentMode.specific)
+              SelectionTile(
+                isSelected: vm.isSyncChecked,
+                isRadio: false, // Checkbox 模式
+                onTap: () => vm.toggleSync(!vm.isSyncChecked),
+                title: vm.isUpdate
+                    ? t.S31_settlement_payment_info.sync_update // "更新我的預設收款資訊"
+                    : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
+                backgroundColor: Colors.transparent,
+                isSelectedBackgroundColor: Colors.transparent,
               ),
-            ],
-          ),
-        ],
+
+            StickyBottomActionBar(
+              children: [
+                AppButton(
+                  text: t.S31_settlement_payment_info.buttons.prev_step,
+                  type: AppButtonType.secondary,
+                  onPressed: () => context.pop(),
+                ),
+                AppButton(
+                  text: t.S31_settlement_payment_info.buttons.settle, // "結算"
+                  type: AppButtonType.primary,
+                  onPressed: () async {
+                    final bool shouldSettle = await showRateInfoDialog();
+                    debugPrint(shouldSettle.toString());
+                    if (shouldSettle == true && context.mounted) {
+                      await executeSettlement();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

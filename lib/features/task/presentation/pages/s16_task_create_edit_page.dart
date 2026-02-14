@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
-import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
@@ -34,6 +36,8 @@ class S16TaskCreateEditPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         authRepo: context.read<AuthRepository>(),
         inviteRepo: context.read<InviteRepository>(),
+        shareService: context.read<ShareService>(),
+        deepLinkService: context.read<DeepLinkService>(),
       )..init(),
       child: const _S16Content(),
     );
@@ -50,12 +54,14 @@ class _S16Content extends StatefulWidget {
 class _S16ContentState extends State<_S16Content> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  late FocusNode _nameFocusNode;
   late S16TaskCreateEditViewModel _vm;
 
   @override
   void initState() {
     super.initState();
     // 監聽文字變動以即時更新 Suffix 計數器 (保留原邏輯)
+    _nameFocusNode = FocusNode();
     _nameController.addListener(() {
       setState(() {});
     });
@@ -80,6 +86,7 @@ class _S16ContentState extends State<_S16Content> {
   @override
   void dispose() {
     _nameController.dispose();
+    _nameFocusNode.dispose();
     _vm.removeListener(_onStateChanged);
     super.dispose();
   }
@@ -87,7 +94,7 @@ class _S16ContentState extends State<_S16Content> {
   Future<void> _onSave(
       BuildContext context, S16TaskCreateEditViewModel vm) async {
     if (!_formKey.currentState!.validate()) return;
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     // 1. 顯示 D03 確認框 (純 UI)
     final bool? confirmed = await D03TaskCreateConfirmDialog.show<bool>(
@@ -103,25 +110,28 @@ class _S16ContentState extends State<_S16Content> {
     if (confirmed == true && mounted) {
       try {
         // 呼叫 VM 執行建立流程
-        final result = await vm.createTask(_nameController.text.trim(), t);
+        final result = await vm.createTask(_nameController.text.trim());
 
         if (result != null && mounted) {
           // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
-          if (result.inviteCode != null && context.mounted) {
-            await TaskShareHelper.inviteMember(
-              context: context,
-              taskName: _nameController.text.trim(),
-              inviteCode: result.inviteCode!,
-            );
-          }
+          if (!context.mounted) return;
+          if (result.inviteCode == null) throw AppErrorCodes.initFailed;
+          final message = t.common.share.invite.message(
+            taskName: _nameController.text.trim(),
+            code: result.inviteCode!,
+            link: vm.link,
+          );
 
+          await vm.notifyMembers(
+            message: message,
+            subject: t.common.share.invite.subject,
+          );
           // 3. 導航到任務 Dashboard
-          if (context.mounted) {
-            context.goNamed(
-              'S13', // 請確認您的 Router name (例如 S13)
-              pathParameters: {'taskId': result.taskId},
-            );
-          }
+          if (!context.mounted) return;
+          context.goNamed(
+            'S13', // 請確認您的 Router name (例如 S13)
+            pathParameters: {'taskId': result.taskId},
+          );
         }
       } on AppErrorCodes catch (code) {
         if (!context.mounted) return;
@@ -164,9 +174,8 @@ class _S16ContentState extends State<_S16Content> {
               if (didPop) return;
               await _handleClose();
             },
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              behavior: HitTestBehavior.translucent, // 確保點擊空白處也能觸發
+            child: AppKeyboardActionsWrapper(
+              focusNodes: [_nameFocusNode],
               child: Scaffold(
                 appBar: AppBar(
                   title: Text(title),
@@ -185,6 +194,7 @@ class _S16ContentState extends State<_S16Content> {
                             children: [
                               TaskNameInput(
                                 controller: _nameController,
+                                focusNode: _nameFocusNode,
                                 label: t.S16_TaskCreate_Edit.label.name,
                                 hint: t.S16_TaskCreate_Edit.hint.name,
                                 maxLength: 20,
@@ -253,7 +263,7 @@ class _S16ContentState extends State<_S16Content> {
             ),
           ),
           // 全局 Loading Overlay
-          if (vm.actionStatus == LoadStatus.loading)
+          if (vm.createStatus == LoadStatus.loading)
             Container(
               color: Colors.black54,
               child: Center(
@@ -263,7 +273,7 @@ class _S16ContentState extends State<_S16Content> {
                     const CircularProgressIndicator(color: Colors.white),
                     const SizedBox(height: 16),
                     Text(
-                      vm.statusText ?? t.D03_TaskCreate_Confirm.creating_task,
+                      t.D03_TaskCreate_Confirm.creating_task,
                       style: theme.textTheme.titleMedium
                           ?.copyWith(color: Colors.white),
                     ),

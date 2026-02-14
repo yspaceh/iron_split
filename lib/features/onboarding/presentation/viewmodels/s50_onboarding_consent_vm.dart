@@ -7,9 +7,9 @@ import 'package:iron_split/features/onboarding/data/auth_repository.dart'; // [�
 class S50OnboardingConsentViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
 
-  LoadStatus _actionStatus = LoadStatus.initial;
+  LoadStatus _agreeStatus = LoadStatus.initial;
 
-  LoadStatus get actionStatus => _actionStatus;
+  LoadStatus get agreeStatus => _agreeStatus;
 
   S50OnboardingConsentViewModel({
     required AuthRepository authRepo,
@@ -17,9 +17,9 @@ class S50OnboardingConsentViewModel extends ChangeNotifier {
 
   /// 同意條款並繼續
   Future<void> agreeAndContinue() async {
-    if (_actionStatus == LoadStatus.loading) return;
+    if (_agreeStatus == LoadStatus.loading) return;
 
-    _actionStatus = LoadStatus.loading;
+    _agreeStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -30,14 +30,14 @@ class S50OnboardingConsentViewModel extends ChangeNotifier {
       await _authRepo.acceptLegalTerms();
 
       // 3. 成功，通知 UI 跳轉
-      _actionStatus = LoadStatus.success;
+      _agreeStatus = LoadStatus.success;
       notifyListeners();
     } on AppErrorCodes {
-      _actionStatus = LoadStatus.error;
+      _agreeStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
     } catch (e) {
-      _actionStatus = LoadStatus.error;
+      _agreeStatus = LoadStatus.error;
       notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }

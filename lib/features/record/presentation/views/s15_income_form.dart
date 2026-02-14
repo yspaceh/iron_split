@@ -36,6 +36,10 @@ class S15IncomeForm extends StatelessWidget {
   final VoidCallback onShowRateInfo;
   final VoidCallback onBaseSplitConfigTap;
 
+  final FocusNode amountFocusNode;
+  final FocusNode rateFocusNode;
+  final FocusNode memoFocusNode;
+
   const S15IncomeForm({
     super.key,
     required this.amountController,
@@ -56,6 +60,9 @@ class S15IncomeForm extends StatelessWidget {
     required this.remainderDetail,
     required this.onDateChanged,
     required this.onCurrencyChanged,
+    required this.amountFocusNode,
+    required this.rateFocusNode,
+    required this.memoFocusNode,
   });
 
   Widget buildRemainderInfo() {
@@ -112,6 +119,7 @@ class S15IncomeForm extends StatelessWidget {
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
           selectedCurrencyConstants: selectedCurrencyConstants,
+          focusNode: amountFocusNode,
           isIncome: true,
         ),
         if (isForeign) ...[
@@ -121,6 +129,7 @@ class S15IncomeForm extends StatelessWidget {
             baseCurrency: baseCurrency,
             targetCurrency: selectedCurrencyConstants,
             amountController: amountController,
+            focusNode: rateFocusNode,
             isRateLoading: isRateLoading,
             onFetchRate: onFetchExchangeRate,
             onShowRateInfo: onShowRateInfo,
@@ -152,6 +161,7 @@ class S15IncomeForm extends StatelessWidget {
         ],
         TaskMemoInput(
           memoController: memoController,
+          focusNode: memoFocusNode,
         ),
         const SizedBox(height: 100),
       ],

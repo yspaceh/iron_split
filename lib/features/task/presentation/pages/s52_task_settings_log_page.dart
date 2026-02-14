@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/task/application/export_service.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/activity_log_item.dart';
 import 'package:provider/provider.dart';
@@ -24,93 +33,153 @@ class S52TaskSettingsLogPage extends StatelessWidget {
       create: (_) => S52TaskSettingsLogViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
+        exportService: context.read<ExportService>(),
+        shareService: context.read<ShareService>(),
         membersData: membersData,
-      ),
+      )..init(),
       child: const _S52Content(),
     );
   }
 }
 
-class _S52Content extends StatelessWidget {
+class _S52Content extends StatefulWidget {
   const _S52Content();
+
+  @override
+  State<_S52Content> createState() => _S52ContentState();
+}
+
+class _S52ContentState extends State<_S52Content> {
+  late S52TaskSettingsLogViewModel _vm;
+  @override
+  void initState() {
+    super.initState();
+    _vm = context.read<S52TaskSettingsLogViewModel>();
+    _vm.addListener(_onStateChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    _vm.removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    // 處理自動導航 (如未登入)
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = Translations.of(context);
     final vm = context.watch<S52TaskSettingsLogViewModel>();
+    final title = t.S52_TaskSettings_Log.title;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S52_TaskSettings_Log.title),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<List<ActivityLogModel>>(
-              stream: vm.logsStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                      child: Text(t.common
-                          .error_prefix(message: snapshot.error.toString())));
-                }
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<List<ActivityLogModel>>(
+                stream: vm.logsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                        child: Text(t.common
+                            .error_prefix(message: snapshot.error.toString())));
+                  }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                final logs = snapshot.data ?? [];
+                  final logs = snapshot.data ?? [];
 
-                if (logs.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          t.S52_TaskSettings_Log.empty_log,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                  if (logs.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            t.S52_TaskSettings_Log.empty_log,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: logs.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 1,
-                    color: theme.colorScheme.onSurfaceVariant
-                        .withValues(alpha: 0.2),
-                  ),
-                  itemBuilder: (context, index) {
-                    final log = logs[index];
-
-                    return ActivityLogItem(
-                      log: log,
-                      memberData: vm.membersData, // Use data from VM
+                        ],
+                      ),
                     );
-                  },
-                );
-              },
+                  }
+
+                  return ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: logs.length,
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      color: theme.colorScheme.onSurfaceVariant
+                          .withValues(alpha: 0.2),
+                    ),
+                    itemBuilder: (context, index) {
+                      final log = logs[index];
+
+                      return ActivityLogItem(
+                        log: log,
+                        memberData: vm.membersData, // Use data from VM
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-      extendBody: true,
-      bottomNavigationBar: StickyBottomActionBar(
-        isSheetMode: false,
-        children: [
-          AppButton(
+          ],
+        ),
+        extendBody: true,
+        bottomNavigationBar: StickyBottomActionBar(
+          isSheetMode: false,
+          children: [
+            AppButton(
               text: t.S52_TaskSettings_Log.buttons.export_csv,
               type: AppButtonType.secondary,
-              isLoading: vm.isExporting,
-              onPressed: vm.isExporting ? null : () => vm.exportCsv(context)),
-        ],
+              isLoading: vm.exportStatus == LoadStatus.loading,
+              onPressed: () async {
+                try {
+                  await vm.exportCsv(
+                    subject: t.S52_TaskSettings_Log.title,
+                    fileName: t.S52_TaskSettings_Log.export_file_prefix,
+                    header: '${t.S52_TaskSettings_Log.csv_header.time},'
+                        '${t.S52_TaskSettings_Log.csv_header.user},'
+                        '${t.S52_TaskSettings_Log.csv_header.action},'
+                        '${t.S52_TaskSettings_Log.csv_header.details}',
+                    getAction: (log) => log.getLocalizedAction(context),
+                    getDetails: (log) => log.getFormattedDetails(context),
+                    defaultMemberName:
+                        t.S53_TaskSettings_Members.member_default_name,
+                  );
+                } on AppErrorCodes catch (code) {
+                  if (!context.mounted) return;
+                  final msg = ErrorMapper.map(context, code: code);
+                  AppToast.showError(context, msg);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

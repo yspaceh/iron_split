@@ -255,14 +255,10 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsJaJp buttons = _TranslationsS17TaskLockedButtonsJaJp._(_root);
+	@override late final _TranslationsS17TaskLockedSectionJaJp section = _TranslationsS17TaskLockedSectionJaJp._(_root);
 	@override String retention_notice({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。';
-	@override String label_remainder_absorbed_by({required Object name}) => 'は ${name} が負担';
-	@override String get section_pending => '未完了';
-	@override String get section_cleared => '完了';
-	@override String get member_payment_status_pay => '支払';
-	@override String get member_payment_status_receive => '受取';
-	@override String get dialog_mark_cleared_title => '完了確認';
-	@override String dialog_mark_cleared_content({required Object name}) => '${name} を完了としてマークしますか？';
+	@override String remainder_absorbed_by({required Object name}) => 'は ${name} が負担';
+	@override late final _TranslationsS17TaskLockedExportJaJp export = _TranslationsS17TaskLockedExportJaJp._(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -321,7 +317,6 @@ class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingCon
 	@override String get title => 'Iron Split へようこそ';
 	@override late final _TranslationsS50OnboardingConsentButtonsJaJp buttons = _TranslationsS50OnboardingConsentButtonsJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentContentJaJp content = _TranslationsS50OnboardingConsentContentJaJp._(_root);
-	@override String login_failed({required Object message}) => 'ログイン失敗: ${message}';
 }
 
 // Path: S51_Onboarding_Name
@@ -670,6 +665,7 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get refresh => '更新';
 	@override String get ok => 'OK';
 	@override String get retry => 'リトライ';
+	@override String get done => '完成';
 }
 
 // Path: common.error
@@ -1132,6 +1128,55 @@ class _TranslationsS17TaskLockedButtonsJaJp extends TranslationsS17TaskLockedBut
 	@override String get view_payment_details => '支払/受取口座を確認';
 }
 
+// Path: S17_Task_Locked.section
+class _TranslationsS17TaskLockedSectionJaJp extends TranslationsS17TaskLockedSectionZhTw {
+	_TranslationsS17TaskLockedSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get pending => '未完了';
+	@override String get cleared => '完了';
+}
+
+// Path: S17_Task_Locked.export
+class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExportZhTw {
+	_TranslationsS17TaskLockedExportJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get report_info => 'レポート情報';
+	@override String get task_name => 'タスク名';
+	@override String get export_time => 'レポート作成日時';
+	@override String get base_currency => '基準通貨';
+	@override String get settlement_summary => '精算サマリー';
+	@override String get member => 'メンバー';
+	@override String get role => '役割';
+	@override String get net_amount => '純額';
+	@override String get status => 'ステータス';
+	@override String get receiver => '返金対象';
+	@override String get payer => '支払対象';
+	@override String get cleared => '処理済み';
+	@override String get pending => '未処理';
+	@override String get fund_analysis => '資金および端数';
+	@override String get total_expense => '総支出';
+	@override String get total_income => '総預かり金';
+	@override String get remainder_buffer => '端数合計';
+	@override String get remainder_absorbed_by => '端数受取人';
+	@override String get transaction_details => '取引明細';
+	@override String get date => '日付';
+	@override String get title => 'タイトル';
+	@override String get type => '種別';
+	@override String get original_amount => '原通貨金額';
+	@override String get currency => '通貨';
+	@override String get rate => '為替レート';
+	@override String get base_amount => '基準通貨金額';
+	@override String get net_remainder => '端数';
+	@override String get pool => '預かり金';
+	@override String get mixed => '混合支払い';
+}
+
 // Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1525,6 +1570,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get amount_not_enough => '残額が不足しています。';
 	@override String get amount_mismatch => '金額が一致しません。';
 	@override String get income_is_used => 'この金額は既に使用されているか、残高が不足しています。';
+	@override String get data_is_used => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 	@override String get permission_denied => '権限がありません。';
 	@override String get network_error => 'ネットワーク接続に失敗しました。接続を確認してください。';
 	@override String get data_not_found => 'データが見つかりませんでした。もう一度お試しください。';
@@ -1550,6 +1596,9 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get data_conflict => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
 	@override String get task_status_error => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
 	@override String get settlement_failed => 'システムエラーが発生しました。後でもう一度お試しください。';
+	@override String get share_failed => 'シェアが失敗しました。後でもう一度お試しください。';
+	@override String get login_failed => 'ログインが失敗しました。後でもう一度お試しください。';
+	@override String get logout_failed => 'ログアウトが失敗しました。後でもう一度お試しください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -1805,6 +1854,7 @@ extension on TranslationsJaJp {
 			'common.buttons.refresh' => '更新',
 			'common.buttons.ok' => 'OK',
 			'common.buttons.retry' => 'リトライ',
+			'common.buttons.done' => '完成',
 			'common.error.title' => 'エラー',
 			'common.error.unknown' => ({required Object error}) => '不明なエラー: ${error}',
 			'common.category.food' => '食事',
@@ -2035,14 +2085,39 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.buttons.download' => '記録をダウンロード',
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
 			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
+			'S17_Task_Locked.section.pending' => '未完了',
+			'S17_Task_Locked.section.cleared' => '完了',
 			'S17_Task_Locked.retention_notice' => ({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'は ${name} が負担',
-			'S17_Task_Locked.section_pending' => '未完了',
-			'S17_Task_Locked.section_cleared' => '完了',
-			'S17_Task_Locked.member_payment_status_pay' => '支払',
-			'S17_Task_Locked.member_payment_status_receive' => '受取',
-			'S17_Task_Locked.dialog_mark_cleared_title' => '完了確認',
-			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '${name} を完了としてマークしますか？',
+			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => 'は ${name} が負担',
+			'S17_Task_Locked.export.report_info' => 'レポート情報',
+			'S17_Task_Locked.export.task_name' => 'タスク名',
+			'S17_Task_Locked.export.export_time' => 'レポート作成日時',
+			'S17_Task_Locked.export.base_currency' => '基準通貨',
+			'S17_Task_Locked.export.settlement_summary' => '精算サマリー',
+			'S17_Task_Locked.export.member' => 'メンバー',
+			'S17_Task_Locked.export.role' => '役割',
+			'S17_Task_Locked.export.net_amount' => '純額',
+			'S17_Task_Locked.export.status' => 'ステータス',
+			'S17_Task_Locked.export.receiver' => '返金対象',
+			'S17_Task_Locked.export.payer' => '支払対象',
+			'S17_Task_Locked.export.cleared' => '処理済み',
+			'S17_Task_Locked.export.pending' => '未処理',
+			'S17_Task_Locked.export.fund_analysis' => '資金および端数',
+			'S17_Task_Locked.export.total_expense' => '総支出',
+			'S17_Task_Locked.export.total_income' => '総預かり金',
+			'S17_Task_Locked.export.remainder_buffer' => '端数合計',
+			'S17_Task_Locked.export.remainder_absorbed_by' => '端数受取人',
+			'S17_Task_Locked.export.transaction_details' => '取引明細',
+			'S17_Task_Locked.export.date' => '日付',
+			'S17_Task_Locked.export.title' => 'タイトル',
+			'S17_Task_Locked.export.type' => '種別',
+			'S17_Task_Locked.export.original_amount' => '原通貨金額',
+			'S17_Task_Locked.export.currency' => '通貨',
+			'S17_Task_Locked.export.rate' => '為替レート',
+			'S17_Task_Locked.export.base_amount' => '基準通貨金額',
+			'S17_Task_Locked.export.net_remainder' => '端数',
+			'S17_Task_Locked.export.pool' => '預かり金',
+			'S17_Task_Locked.export.mixed' => '混合支払い',
 			'S30_settlement_confirm.title' => '精算確認',
 			'S30_settlement_confirm.buttons.next' => '受取設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '金額確認',
@@ -2073,7 +2148,6 @@ extension on TranslationsJaJp {
 			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
 			'S50_Onboarding_Consent.content.prefix' => '分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、',
 			'S50_Onboarding_Consent.content.suffix' => ' に同意したものとみなされます。',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'ログイン失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名前設定',
 			'S51_Onboarding_Name.buttons.next' => '設定',
 			'S51_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
@@ -2222,6 +2296,7 @@ extension on TranslationsJaJp {
 			'error.message.amount_not_enough' => '残額が不足しています。',
 			'error.message.amount_mismatch' => '金額が一致しません。',
 			'error.message.income_is_used' => 'この金額は既に使用されているか、残高が不足しています。',
+			'error.message.data_is_used' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'error.message.permission_denied' => '権限がありません。',
 			'error.message.network_error' => 'ネットワーク接続に失敗しました。接続を確認してください。',
 			'error.message.data_not_found' => 'データが見つかりませんでした。もう一度お試しください。',
@@ -2247,6 +2322,9 @@ extension on TranslationsJaJp {
 			'error.message.data_conflict' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.message.task_status_error' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',
 			'error.message.settlement_failed' => 'システムエラーが発生しました。後でもう一度お試しください。',
+			'error.message.share_failed' => 'シェアが失敗しました。後でもう一度お試しください。',
+			'error.message.login_failed' => 'ログインが失敗しました。後でもう一度お試しください。',
+			'error.message.logout_failed' => 'ログアウトが失敗しました。後でもう一度お試しください。',
 			_ => null,
 		};
 	}

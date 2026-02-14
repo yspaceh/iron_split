@@ -15,6 +15,7 @@ class TaskExchangeRateInput extends StatelessWidget {
     required this.onFetchRate,
     required this.onShowRateInfo,
     this.isIncome = false,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -25,6 +26,7 @@ class TaskExchangeRateInput extends StatelessWidget {
   final VoidCallback onFetchRate;
   final VoidCallback onShowRateInfo;
   final bool isIncome;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                   }
                   return null;
                 },
+                focusNode: focusNode,
                 // 右側只保留 Info 按鈕
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.info_outline),

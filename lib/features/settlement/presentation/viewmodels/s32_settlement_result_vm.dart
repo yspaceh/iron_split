@@ -10,6 +10,7 @@ import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S32SettlementResultViewModel extends ChangeNotifier {
@@ -17,6 +18,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   final String taskId;
   final DeepLinkService _deepLinkService;
   final SettlementService _settlementService;
+  final ShareService _shareService;
 
   TaskModel? _task;
   bool _isLoading = true;
@@ -33,6 +35,8 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     if (_task == null) return CurrencyConstants.defaultCurrencyConstants;
     return CurrencyConstants.getCurrencyConstants(_task!.baseCurrency);
   }
+
+  String get link => _deepLinkService.generateTaskLink(taskId);
 
   double get snapshotRemainder {
     if (_task == null || _task!.settlement == null) return 0.0;
@@ -103,9 +107,11 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required DeepLinkService deepLinkService,
     required SettlementService settlementService,
+    required ShareService shareService,
   })  : _taskRepo = taskRepo,
         _deepLinkService = deepLinkService,
-        _settlementService = settlementService;
+        _settlementService = settlementService,
+        _shareService = shareService;
 
   void init() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -174,9 +180,10 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     );
   }
 
-  Future<String> generateShareLink() async {
-    // 直接呼叫 Service 產生，確保格式跟 _parseUri 對得上
-    return _deepLinkService.generateTaskLink(taskId);
+  /// 通知成員 (純文字分享)
+  Future<void> notifyMembers(
+      {required String message, required String subject}) async {
+    await _shareService.shareText(message, subject: subject);
   }
 
   @override

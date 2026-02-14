@@ -12,6 +12,7 @@ class TaskNameInput extends StatelessWidget {
     required this.hint,
     this.fillColor,
     this.autofocus = false,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -20,6 +21,7 @@ class TaskNameInput extends StatelessWidget {
   final String hint;
   final Color? fillColor;
   final bool autofocus;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +41,11 @@ class TaskNameInput extends StatelessWidget {
           inputFormatters: [
             FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
           ],
-
-          // [關鍵] 動態傳入計數文字
           suffixText: "${value.text.length}/$inputMaxLength",
-
-          // 驗證邏輯
           validator: (val) => (val == null || val.trim().isEmpty)
               ? t.error.message.empty(key: label)
               : null,
+          focusNode: focusNode,
         );
       },
     );

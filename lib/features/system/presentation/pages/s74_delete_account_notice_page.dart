@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s74_delete_account_notice_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -14,30 +19,59 @@ class S74DeleteAccountNoticePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S74DeleteAccountNoticeViewModel(),
+      create: (_) => S74DeleteAccountNoticeViewModel(
+          authRepo: context.read<AuthRepository>(),
+          prefsService: context.read<PreferencesService>())
+        ..init(),
       child: const _S74Content(),
     );
   }
 }
 
-class _S74Content extends StatelessWidget {
+class _S74Content extends StatefulWidget {
   const _S74Content();
+
+  @override
+  State<_S74Content> createState() => _S74ContentState();
+}
+
+class _S74ContentState extends State<_S74Content> {
+  late S74DeleteAccountNoticeViewModel _vm;
+  @override
+  void initState() {
+    super.initState();
+    _vm = context.read<S74DeleteAccountNoticeViewModel>();
+    _vm.addListener(_onStateChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    _vm.removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    // 處理自動導航 (如未登入)
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
 
   Future<void> _handleDeleteAccount(
       BuildContext context, S74DeleteAccountNoticeViewModel vm) async {
     // 執行刪除
-    final success = await vm.deleteAccount();
-
-    if (!context.mounted) return;
-
-    if (success) {
-      // 成功後，跳轉回歡迎頁面 (S00)
-      // 使用 go (replace) 避免使用者按上一頁回到這裡
+    try {
+      await vm.deleteAccount();
+      if (!context.mounted) return;
       context.goNamed('S00');
-    } else {
-      // 失敗提示
-      // TODO:  update error
-      AppToast.showError(context, "Delete account failed. Please try again.");
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
     }
   }
 
@@ -92,7 +126,7 @@ class _S74Content extends StatelessWidget {
           AppButton(
             text: t.S74_DeleteAccount_Notice.buttons.delete,
             type: AppButtonType.primary,
-            isLoading: vm.isProcessing,
+            isLoading: vm.deleteStatus == LoadStatus.loading,
             onPressed: () => _showConfirmDialog(context, vm),
           ),
         ],

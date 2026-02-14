@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
@@ -8,11 +11,14 @@ import 'package:iron_split/features/common/presentation/dialogs/common_alert_dia
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; //
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s53_task_settings_members_vm.dart';
@@ -34,17 +40,50 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         inviteRepo: context.read<InviteRepository>(),
-      ),
+        authRepo: context.read<AuthRepository>(),
+        shareService: context.read<ShareService>(),
+        deepLinkService: context.read<DeepLinkService>(),
+      )..init(),
       child: const _S53Content(),
     );
   }
 }
 
-class _S53Content extends StatelessWidget {
+class _S53Content extends StatefulWidget {
   const _S53Content();
 
-  // --- Logic Helpers ---
+  @override
+  State<_S53Content> createState() => _S53ContentState();
+}
 
+class _S53ContentState extends State<_S53Content> {
+  late S53TaskSettingsMembersViewModel _vm;
+  @override
+  void initState() {
+    super.initState();
+    _vm = context.read<S53TaskSettingsMembersViewModel>();
+    _vm.addListener(_onStateChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    _vm.removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    // 處理自動導航 (如未登入)
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
+
+  // --- Logic Helpers ---
   void _showRenameDialog(
       BuildContext context,
       S53TaskSettingsMembersViewModel vm,
@@ -68,9 +107,11 @@ class _S53Content extends StatelessWidget {
       Map<String, dynamic> membersMap,
       String memberId) async {
     final t = Translations.of(context);
-    final success = await vm.deleteMember(membersMap, memberId);
 
-    if (!success && context.mounted) {
+    try {
+      await vm.deleteMember(membersMap, memberId);
+    } on AppErrorCodes {
+      if (!context.mounted) return;
       CommonInfoDialog.show(
         context,
         title: t.error.dialog.member_delete_failed.title,
@@ -79,19 +120,40 @@ class _S53Content extends StatelessWidget {
     }
   }
 
-  // 權重調整邏輯
-  void _updateRatio(
-    S53TaskSettingsMembersViewModel vm,
-    Map<String, dynamic> membersMap,
-    String memberId,
-    double newRatio, // 直接傳入算好的值
-  ) {
-    // 這裡只負責呼叫 VM 更新，數學計算交給 Helper 做了
-    vm.updateRatio(membersMap, memberId, newRatio);
+  Future<void> handleShare(BuildContext context,
+      S53TaskSettingsMembersViewModel vm, String taskName) async {
+    final t = Translations.of(context);
+    try {
+      final inviteCode = await vm.inviteMember();
+      final message = t.common.share.invite.message(
+        taskName: taskName,
+        code: inviteCode,
+        link: vm.link,
+      );
+      // 2. 委派 VM 執行
+      await vm.notifyMembers(
+        message: message,
+        subject: t.common.share.invite.subject,
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> handleAdd(BuildContext context,
+      S53TaskSettingsMembersViewModel vm, TaskModel task) async {
+    try {
+      await vm.addMember(task);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
   }
 
   // --- UI Build ---
-
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -286,24 +348,24 @@ class _S53Content extends StatelessWidget {
                               const Spacer(),
                               AppStepper(
                                 text: SplitRatioHelper.format(currentRatio),
-                                onDecrease: vm.isProcessing
-                                    ? null
-                                    : () => _updateRatio(
-                                          vm,
-                                          membersMap,
-                                          memberId,
-                                          SplitRatioHelper.decrease(
-                                              currentRatio), // 這裡！
-                                        ),
-                                onIncrease: vm.isProcessing
-                                    ? null
-                                    : () => _updateRatio(
-                                          vm,
-                                          membersMap,
-                                          memberId,
-                                          SplitRatioHelper.increase(
-                                              currentRatio), // 這裡！
-                                        ),
+                                onDecrease:
+                                    vm.updateStatus == LoadStatus.loading
+                                        ? null
+                                        : () => vm.updateRatio(
+                                              membersMap,
+                                              memberId,
+                                              SplitRatioHelper.decrease(
+                                                  currentRatio), // 這裡！
+                                            ),
+                                onIncrease:
+                                    vm.updateStatus == LoadStatus.loading
+                                        ? null
+                                        : () => vm.updateRatio(
+                                              membersMap,
+                                              memberId,
+                                              SplitRatioHelper.increase(
+                                                  currentRatio), // 這裡！
+                                            ),
                               ),
                             ],
                           ),
@@ -322,14 +384,14 @@ class _S53Content extends StatelessWidget {
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.invite,
                 type: AppButtonType.secondary,
-                onPressed: vm.isProcessing
-                    ? null
-                    : () => vm.inviteMember(context, taskName),
+                isLoading: vm.inviteMemberStatus == LoadStatus.loading,
+                onPressed: () => handleShare(context, vm, taskName),
               ),
               AppButton(
                 text: t.S53_TaskSettings_Members.buttons.add,
                 type: AppButtonType.primary,
-                onPressed: vm.isProcessing ? null : () => vm.addMember(t, task),
+                isLoading: vm.addMemberStatus == LoadStatus.loading,
+                onPressed: () => handleAdd(context, vm, task),
               ),
             ],
           ),

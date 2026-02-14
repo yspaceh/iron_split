@@ -53,6 +53,11 @@ class S15ExpenseForm extends StatelessWidget {
   final VoidCallback onAddItemTap; // 點擊新增細項時
   final Function(RecordDetail) onDetailEditTap; // 點擊既有細項時
 
+  final FocusNode amountFocusNode;
+  final FocusNode rateFocusNode;
+  final FocusNode titleFocusNode;
+  final FocusNode memoFocusNode;
+
   const S15ExpenseForm({
     super.key,
     required this.amountController,
@@ -84,6 +89,10 @@ class S15ExpenseForm extends StatelessWidget {
     required this.remainderDetail,
     required this.onCategoryChanged,
     required this.onCurrencyChanged,
+    required this.amountFocusNode,
+    required this.rateFocusNode,
+    required this.titleFocusNode,
+    required this.memoFocusNode,
   });
 
   // 支援多種支付型態顯示
@@ -176,11 +185,13 @@ class S15ExpenseForm extends StatelessWidget {
         TaskItemInput(
             onCategoryChanged: onCategoryChanged,
             titleController: titleController,
+            focusNode: titleFocusNode,
             selectedCategoryId: selectedCategoryId),
         const SizedBox(height: 8),
         TaskAmountInput(
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
+          focusNode: amountFocusNode,
           selectedCurrencyConstants: selectedCurrencyConstants,
           isIncome: false,
         ),
@@ -191,6 +202,7 @@ class S15ExpenseForm extends StatelessWidget {
             baseCurrency: baseCurrency,
             targetCurrency: selectedCurrencyConstants,
             amountController: amountController,
+            focusNode: rateFocusNode,
             isRateLoading: isRateLoading,
             onFetchRate: onFetchExchangeRate,
             onShowRateInfo: onShowRateInfo,
@@ -238,6 +250,7 @@ class S15ExpenseForm extends StatelessWidget {
         const SizedBox(height: 8),
         TaskMemoInput(
           memoController: memoController,
+          focusNode: memoFocusNode,
         ),
         const SizedBox(height: 100),
       ],

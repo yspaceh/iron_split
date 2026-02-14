@@ -5,10 +5,12 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/member_service.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -18,6 +20,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final InviteRepository _inviteRepo;
   final AuthRepository _authRepo;
+  final ShareService _shareService;
+  final DeepLinkService _deepLinkService;
 
   // State
   late DateTime _startDate;
@@ -25,11 +29,11 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   CurrencyConstants _baseCurrency = CurrencyConstants.defaultCurrencyConstants;
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
-  LoadStatus _actionStatus = LoadStatus.initial; // 按鈕狀態
-  String? _statusText; // 用於顯示 Loading 狀態文字 (e.g. "建立中...", "產生邀請碼...")
+  LoadStatus _createStatus = LoadStatus.initial; // 按鈕狀態
 
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
+  String inviteCode = '';
 
   // Getters
   DateTime get startDate => _startDate;
@@ -37,20 +41,25 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   CurrencyConstants get baseCurrency => _baseCurrency;
   int get memberCount => _memberCount;
   bool get isCurrencyEnabled => true; // 保留原始邏輯
-  LoadStatus get actionStatus => _actionStatus;
-  String? get statusText => _statusText;
+  LoadStatus get createStatus => _createStatus;
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
+  String get link => _deepLinkService.generateJoinLink(inviteCode);
 
   S16TaskCreateEditViewModel({
     required TaskRepository taskRepo,
     required InviteRepository inviteRepo,
     required AuthRepository authRepo,
+    required ShareService shareService,
+    required DeepLinkService deepLinkService,
   })  : _taskRepo = taskRepo,
         _inviteRepo = inviteRepo,
-        _authRepo = authRepo;
+        _authRepo = authRepo,
+        _shareService = shareService,
+        _deepLinkService = deepLinkService;
 
   Future<void> init() async {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
     notifyListeners();
@@ -58,12 +67,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
     try {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
-      if (user == null) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.unauthorized;
-        notifyListeners();
-        return;
-      }
+      if (user == null) throw AppErrorCodes.unauthorized;
 
       // 1. 初始化日期 (今天)
       final now = DateTime.now();
@@ -81,6 +85,10 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       }
 
       _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
       notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;
@@ -113,12 +121,33 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 核心邏輯：建立任務
+  // 定義一個私有變數，用來存放「正在進行中」的任務
+  Future<({String taskId, String? inviteCode})?>? _ongoingTask;
+
   Future<({String taskId, String? inviteCode})?> createTask(
-      String taskName, Translations t) async {
+      String taskName) async {
+    // ✅ 這是「升級版」的 Guard Clause：
+    // 如果任務正在跑，就直接回傳同一個 Future 給呼叫者，而不是結束它。
+    if (_ongoingTask != null) {
+      return _ongoingTask!;
+    }
+
+    // 將邏輯封裝並存入變數
+    _ongoingTask = _createTask(taskName);
+
+    try {
+      return await _ongoingTask!;
+    } finally {
+      // 任務結束後務必清空，否則之後無法再次呼叫
+      _ongoingTask = null;
+    }
+  }
+
+  /// 核心邏輯：建立任務
+  Future<({String taskId, String? inviteCode})?> _createTask(
+      String taskName) async {
     if (taskName.isEmpty) throw AppErrorCodes.fieldRequired;
-    _actionStatus = LoadStatus.loading;
-    _statusText = t.D03_TaskCreate_Confirm.creating_task;
+    _createStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -186,25 +215,27 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       );
 
       // 4. Invite Code & Share
-      String? inviteCode;
       if (_memberCount > 1) {
-        _statusText = t.D03_TaskCreate_Confirm.preparing_share;
-        notifyListeners();
-
         inviteCode = await _inviteRepo.createInviteCode(taskId);
       }
 
-      _actionStatus = LoadStatus.success;
+      _createStatus = LoadStatus.success;
       notifyListeners();
       return (taskId: taskId, inviteCode: inviteCode);
     } on AppErrorCodes {
-      _actionStatus = LoadStatus.error;
+      _createStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
     } catch (e) {
-      _actionStatus = LoadStatus.error;
+      _createStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
     }
+  }
+
+  /// 通知成員 (純文字分享)
+  Future<void> notifyMembers(
+      {required String message, required String subject}) async {
+    await _shareService.shareText(message, subject: subject);
   }
 }

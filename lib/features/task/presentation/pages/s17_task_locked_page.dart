@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -9,7 +10,8 @@ import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
-import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
+import 'package:iron_split/features/task/application/export_service.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/presentation/widgets/retention_banner.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +35,9 @@ class S17TaskLockedPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
+        shareService: context.read<ShareService>(),
+        exportService: context.read<ExportService>(),
+        deepLinkService: context.read<DeepLinkService>(),
       )..init(),
       child: const _S17Content(),
     );
@@ -89,8 +94,46 @@ class _S17ContentState extends State<_S17Content> {
 
     Future<void> handleExport(
         BuildContext context, S17TaskLockedViewModel vm) async {
+      final t = Translations.of(context);
+      final l = t.S17_Task_Locked.export;
+
       try {
-        await vm.exportSettlementRecord();
+        await vm.exportSettlementRecord(
+          fileName:
+              "${vm.taskName}_Settlement_Report_${DateTime.now().toIso8601String().split('T').first}.csv",
+          subject: '${vm.taskName} Settlement Report',
+          labels: {
+            'reportInfo': l.report_info,
+            'taskName': l.task_name,
+            'exportTime': l.export_time,
+            'baseCurrency': l.base_currency,
+            'settlementSummary': l.settlement_summary,
+            'member': l.member,
+            'role': l.role,
+            'netAmount': l.net_amount,
+            'status': l.status,
+            'receiver': l.receiver,
+            'payer': l.payer,
+            'cleared': l.cleared,
+            'pending': l.pending,
+            'fundAnalysis': l.fund_analysis,
+            'totalExpense': l.total_expense,
+            'totalIncome': l.total_income,
+            'remainderBuffer': l.remainder_buffer,
+            'remainderAbsorbedBy': l.remainder_absorbed_by,
+            'transactionDetails': l.transaction_details,
+            'date': l.date,
+            'title': l.title,
+            'type': l.type,
+            'origAmt': l.original_amount,
+            'currency': l.currency,
+            'rate': l.rate,
+            'baseAmt': l.base_amount,
+            'netRemainder': l.net_remainder,
+            'pool': l.pool,
+            'mixed': l.mixed,
+          },
+        );
       } on AppErrorCodes catch (code) {
         if (!context.mounted) return;
         final msg = ErrorMapper.map(context, code: code);
@@ -100,15 +143,22 @@ class _S17ContentState extends State<_S17Content> {
 
     Future<void> handleShare(
         BuildContext context, S17TaskLockedViewModel vm) async {
+      final t = Translations.of(context);
+      // 1. UI 負責組裝字串 (包含 DeepLink)
+      final message = t.common.share.settlement.message(
+        taskName: vm.taskName,
+        link: vm.link,
+      );
+
       try {
-        await TaskShareHelper.shareSettlement(
-          context: context,
-          taskId: vm.taskId,
-          taskName: vm.taskName,
+        // 2. 委派 VM 執行
+        await vm.notifyMembers(
+          message: message,
+          subject: t.common.share.settlement.subject,
         );
-      } catch (e) {
+      } on AppErrorCodes catch (code) {
         if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, error: e);
+        final msg = ErrorMapper.map(context, code: code);
         AppToast.showError(context, msg);
       }
     }

@@ -367,30 +367,15 @@ class TranslationsS17TaskLockedZhTw {
 
 	// Translations
 	late final TranslationsS17TaskLockedButtonsZhTw buttons = TranslationsS17TaskLockedButtonsZhTw.internal(_root);
+	late final TranslationsS17TaskLockedSectionZhTw section = TranslationsS17TaskLockedSectionZhTw.internal(_root);
 
 	/// zh-TW: '資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄'
 	String retention_notice({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載您的紀錄';
 
 	/// zh-TW: '由 {name} 吸收'
-	String label_remainder_absorbed_by({required Object name}) => '由 ${name} 吸收';
+	String remainder_absorbed_by({required Object name}) => '由 ${name} 吸收';
 
-	/// zh-TW: '待處理'
-	String get section_pending => '待處理';
-
-	/// zh-TW: '已處理'
-	String get section_cleared => '已處理';
-
-	/// zh-TW: '應付'
-	String get member_payment_status_pay => '應付';
-
-	/// zh-TW: '應收'
-	String get member_payment_status_receive => '應收';
-
-	/// zh-TW: '確認收款/付款'
-	String get dialog_mark_cleared_title => '確認收款/付款';
-
-	/// zh-TW: '確定將 {name} 標記為已處理？'
-	String dialog_mark_cleared_content({required Object name}) => '確定將 ${name} 標記為已處理？';
+	late final TranslationsS17TaskLockedExportZhTw export = TranslationsS17TaskLockedExportZhTw.internal(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -482,9 +467,6 @@ class TranslationsS50OnboardingConsentZhTw {
 
 	late final TranslationsS50OnboardingConsentButtonsZhTw buttons = TranslationsS50OnboardingConsentButtonsZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentContentZhTw content = TranslationsS50OnboardingConsentContentZhTw.internal(_root);
-
-	/// zh-TW: '登入失敗: {message}'
-	String login_failed({required Object message}) => '登入失敗: ${message}';
 }
 
 // Path: S51_Onboarding_Name
@@ -1030,6 +1012,9 @@ class TranslationsCommonButtonsZhTw {
 
 	/// zh-TW: '重試'
 	String get retry => '重試';
+
+	/// zh-TW: '完成'
+	String get done => '完成';
 }
 
 // Path: common.error
@@ -1779,6 +1764,117 @@ class TranslationsS17TaskLockedButtonsZhTw {
 	String get view_payment_details => '隊長收退款帳戶';
 }
 
+// Path: S17_Task_Locked.section
+class TranslationsS17TaskLockedSectionZhTw {
+	TranslationsS17TaskLockedSectionZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '待處理'
+	String get pending => '待處理';
+
+	/// zh-TW: '已處理'
+	String get cleared => '已處理';
+}
+
+// Path: S17_Task_Locked.export
+class TranslationsS17TaskLockedExportZhTw {
+	TranslationsS17TaskLockedExportZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '報表資訊'
+	String get report_info => '報表資訊';
+
+	/// zh-TW: '任務名稱'
+	String get task_name => '任務名稱';
+
+	/// zh-TW: '報表製作時間'
+	String get export_time => '報表製作時間';
+
+	/// zh-TW: '結算幣別'
+	String get base_currency => '結算幣別';
+
+	/// zh-TW: '結算總表'
+	String get settlement_summary => '結算總表';
+
+	/// zh-TW: '成員'
+	String get member => '成員';
+
+	/// zh-TW: '角色'
+	String get role => '角色';
+
+	/// zh-TW: '淨額'
+	String get net_amount => '淨額';
+
+	/// zh-TW: '狀態'
+	String get status => '狀態';
+
+	/// zh-TW: '可退'
+	String get receiver => '可退';
+
+	/// zh-TW: '應付'
+	String get payer => '應付';
+
+	/// zh-TW: '已處理'
+	String get cleared => '已處理';
+
+	/// zh-TW: '未處理'
+	String get pending => '未處理';
+
+	/// zh-TW: '資金與零頭'
+	String get fund_analysis => '資金與零頭';
+
+	/// zh-TW: '總費用'
+	String get total_expense => '總費用';
+
+	/// zh-TW: '總預收'
+	String get total_income => '總預收';
+
+	/// zh-TW: '零頭總額'
+	String get remainder_buffer => '零頭總額';
+
+	/// zh-TW: '零頭得主'
+	String get remainder_absorbed_by => '零頭得主';
+
+	/// zh-TW: '交易流水帳'
+	String get transaction_details => '交易流水帳';
+
+	/// zh-TW: '日期'
+	String get date => '日期';
+
+	/// zh-TW: '標題'
+	String get title => '標題';
+
+	/// zh-TW: '類型'
+	String get type => '類型';
+
+	/// zh-TW: '原始金額'
+	String get original_amount => '原始金額';
+
+	/// zh-TW: '幣別'
+	String get currency => '幣別';
+
+	/// zh-TW: '匯率'
+	String get rate => '匯率';
+
+	/// zh-TW: '結算幣別金額'
+	String get base_amount => '結算幣別金額';
+
+	/// zh-TW: '零頭'
+	String get net_remainder => '零頭';
+
+	/// zh-TW: '預收款'
+	String get pool => '預收款';
+
+	/// zh-TW: '混和支付'
+	String get mixed => '混和支付';
+}
+
 // Path: S30_settlement_confirm.buttons
 class TranslationsS30SettlementConfirmButtonsZhTw {
 	TranslationsS30SettlementConfirmButtonsZhTw.internal(this._root);
@@ -2315,6 +2411,9 @@ class TranslationsErrorMessageZhTw {
 	/// zh-TW: '此筆款項已被使用或公款不足，無法更動。'
 	String get income_is_used => '此筆款項已被使用或公款不足，無法更動。';
 
+	/// zh-TW: '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。'
+	String get data_is_used => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。';
+
 	/// zh-TW: '權限不足，無法執行此操作。'
 	String get permission_denied => '權限不足，無法執行此操作。';
 
@@ -2389,6 +2488,15 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '系統錯誤，結算失敗，請稍後再試。'
 	String get settlement_failed => '系統錯誤，結算失敗，請稍後再試。';
+
+	/// zh-TW: '分享失敗，請稍後再試。'
+	String get share_failed => '分享失敗，請稍後再試。';
+
+	/// zh-TW: '登入失敗，請稍後再試。'
+	String get login_failed => '登入失敗，請稍後再試。';
+
+	/// zh-TW: '登出失敗，請稍後再試。'
+	String get logout_failed => '登出失敗，請稍後再試。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2750,6 +2858,7 @@ extension on Translations {
 			'common.buttons.ok' => '確定',
 			'common.buttons.refresh' => '重新整理',
 			'common.buttons.retry' => '重試',
+			'common.buttons.done' => '完成',
 			'common.error.title' => '錯誤',
 			'common.error.unknown' => ({required Object error}) => '發生未知錯誤: ${error}',
 			'common.category.food' => '飲食',
@@ -2980,14 +3089,39 @@ extension on Translations {
 			'S17_Task_Locked.buttons.download' => '下載紀錄',
 			'S17_Task_Locked.buttons.notify_members' => '通知成員',
 			'S17_Task_Locked.buttons.view_payment_details' => '隊長收退款帳戶',
+			'S17_Task_Locked.section.pending' => '待處理',
+			'S17_Task_Locked.section.cleared' => '已處理',
 			'S17_Task_Locked.retention_notice' => ({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載您的紀錄',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => '由 ${name} 吸收',
-			'S17_Task_Locked.section_pending' => '待處理',
-			'S17_Task_Locked.section_cleared' => '已處理',
-			'S17_Task_Locked.member_payment_status_pay' => '應付',
-			'S17_Task_Locked.member_payment_status_receive' => '應收',
-			'S17_Task_Locked.dialog_mark_cleared_title' => '確認收款/付款',
-			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => '確定將 ${name} 標記為已處理？',
+			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => '由 ${name} 吸收',
+			'S17_Task_Locked.export.report_info' => '報表資訊',
+			'S17_Task_Locked.export.task_name' => '任務名稱',
+			'S17_Task_Locked.export.export_time' => '報表製作時間',
+			'S17_Task_Locked.export.base_currency' => '結算幣別',
+			'S17_Task_Locked.export.settlement_summary' => '結算總表',
+			'S17_Task_Locked.export.member' => '成員',
+			'S17_Task_Locked.export.role' => '角色',
+			'S17_Task_Locked.export.net_amount' => '淨額',
+			'S17_Task_Locked.export.status' => '狀態',
+			'S17_Task_Locked.export.receiver' => '可退',
+			'S17_Task_Locked.export.payer' => '應付',
+			'S17_Task_Locked.export.cleared' => '已處理',
+			'S17_Task_Locked.export.pending' => '未處理',
+			'S17_Task_Locked.export.fund_analysis' => '資金與零頭',
+			'S17_Task_Locked.export.total_expense' => '總費用',
+			'S17_Task_Locked.export.total_income' => '總預收',
+			'S17_Task_Locked.export.remainder_buffer' => '零頭總額',
+			'S17_Task_Locked.export.remainder_absorbed_by' => '零頭得主',
+			'S17_Task_Locked.export.transaction_details' => '交易流水帳',
+			'S17_Task_Locked.export.date' => '日期',
+			'S17_Task_Locked.export.title' => '標題',
+			'S17_Task_Locked.export.type' => '類型',
+			'S17_Task_Locked.export.original_amount' => '原始金額',
+			'S17_Task_Locked.export.currency' => '幣別',
+			'S17_Task_Locked.export.rate' => '匯率',
+			'S17_Task_Locked.export.base_amount' => '結算幣別金額',
+			'S17_Task_Locked.export.net_remainder' => '零頭',
+			'S17_Task_Locked.export.pool' => '預收款',
+			'S17_Task_Locked.export.mixed' => '混和支付',
 			'S30_settlement_confirm.title' => '結算確認',
 			'S30_settlement_confirm.buttons.next' => '收款設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '確認金額',
@@ -3018,7 +3152,6 @@ extension on Translations {
 			'S50_Onboarding_Consent.buttons.agree' => '開始',
 			'S50_Onboarding_Consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ',
 			'S50_Onboarding_Consent.content.suffix' => '。',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => '登入失敗: ${message}',
 			'S51_Onboarding_Name.title' => '名稱設定',
 			'S51_Onboarding_Name.buttons.next' => '設定完成',
 			'S51_Onboarding_Name.description' => '請輸入您在 Iron Split 內的顯示名稱。',
@@ -3168,6 +3301,7 @@ extension on Translations {
 			'error.message.amount_not_enough' => '剩餘金額不足。',
 			'error.message.amount_mismatch' => '金額不符。',
 			'error.message.income_is_used' => '此筆款項已被使用或公款不足，無法更動。',
+			'error.message.data_is_used' => '此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。',
 			'error.message.permission_denied' => '權限不足，無法執行此操作。',
 			'error.message.network_error' => '網路連線失敗，請檢查網路連線。',
 			'error.message.data_not_found' => '找不到相關資料。',
@@ -3193,6 +3327,9 @@ extension on Translations {
 			'error.message.data_conflict' => '在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。',
 			'error.message.task_status_error' => '此任務狀態異常（可能已被結算），請刷新頁面。',
 			'error.message.settlement_failed' => '系統錯誤，結算失敗，請稍後再試。',
+			'error.message.share_failed' => '分享失敗，請稍後再試。',
+			'error.message.login_failed' => '登入失敗，請稍後再試。',
+			'error.message.logout_failed' => '登出失敗，請稍後再試。',
 			_ => null,
 		};
 	}

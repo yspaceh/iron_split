@@ -12,7 +12,8 @@
       "keep_editing": "Keep Editing",
       "refresh": "Refresh",
       "ok": "OK",
-      "retry": "Retry"
+      "retry": "Retry",
+      "done": "Done"
     },
     "error": {
       "title": "Error",
@@ -346,20 +347,49 @@
       "name": "e.g. Tokyo Trip"
     }
   },
-  "S17_Task_Locked": {
-    "buttons": {
+   "S17_Task_Locked": {
+     "buttons": {
       "download": "Download Records",
       "notify_members": "Notify Members",
       "view_payment_details": "View Payment Details"
     },
+    "section": {
+      "pending": "Pending",
+      "cleared": "Cleared"
+    },    
     "retention_notice": "Data will be deleted after {days} days. Please download your records in time.",
-    "label_remainder_absorbed_by": "absorbed by {name}",
-    "section_pending": "Pending",
-    "section_cleared": "Cleared",
-    "member_payment_status_pay": "To Pay",
-    "member_payment_status_receive": "To Receive",
-    "dialog_mark_cleared_title": "Mark as Cleared",
-    "dialog_mark_cleared_content": "Mark {name} as cleared?"
+    "remainder_absorbed_by": "absorbed by {name}",
+    "export": {
+      "report_info": "Report Information",
+      "task_name": "Task Name",
+      "export_time": "Export Time",
+      "base_currency": "Base Currency",
+      "settlement_summary": "Settlement Summary",
+      "member": "Member",
+      "role": "Role",
+      "net_amount": "Net Amount",
+      "status": "Status",
+      "receiver": "Receivable",
+      "payer": "Payable",
+      "cleared": "Cleared",
+      "pending": "Pending",
+      "fund_analysis": "Funds & Remainders",
+      "total_expense": "Total Expense",
+      "total_income": "Total Prepaid",
+      "remainder_buffer": "Total Remainder",
+      "remainder_absorbed_by": "Remainder Recipient",
+      "transaction_details": "Transaction Details",
+      "date": "Date",
+      "title": "Title",
+      "type": "Type",
+      "original_amount": "Original Amount",
+      "currency": "Currency",
+      "rate": "Exchange Rate",
+      "base_amount": "Base Currency Amount",
+      "net_remainder": "Remainder",
+      "pool": "Prepaid Pool",
+      "mixed": "Mixed Payment"
+    }
   },
   "S30_settlement_confirm": {
     "title": "Confirm Settlement",
@@ -413,8 +443,7 @@
     "content": {
       "prefix": "Make splitting expenses simple.\n\nI’m Iron Roost.I handle the records and the sharing here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be clear.\n\nBy clicking Start, you agree to our ",
       "suffix": ". We use anonymous login to protect your privacy."
-    },
-    "login_failed": "Login Failed: {message}"
+    }
   },
   "S51_Onboarding_Name": {
     "title": "Set Display Name",
@@ -684,6 +713,7 @@
       "amount_not_enough": "Insufficient remaining amount.",
       "amount_mismatch": "Amount mismatch.",
       "income_is_used": "This amount is used or balance is insufficient.",
+      "data_is_used": "This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.",
       "permission_denied": "Permission denied.",
       "network_error": "Network connection failed. Please check your internet.",
       "data_not_found" : "Data not found. Please try again later.",
@@ -708,7 +738,10 @@
       "invite_create_failed": "Failed to create invite code. Please try again later.",
       "data_conflict": "Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.",
       "task_status_error": "The task status is invalid (may be already settled). Please refresh.",
-      "settlement_failed": "System error. Settlement failed. Please try again later."
+      "settlement_failed": "System error. Settlement failed. Please try again later.",
+      "share_failed": "Share failed. Please try again later.",
+      "login_failed": "Login failed. Please try again later.",
+      "logout_failed": "Logout failed. Please try again later."
     }
   }
 }

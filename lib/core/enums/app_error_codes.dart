@@ -15,6 +15,7 @@ enum AppErrorCodes {
   networkError, // 網路連線失敗 (network-request-failed)
 
   incomeIsUsed, // 業務邏輯：款項已使用
+  dataIsUsed,
   taskLocked, // 業務邏輯：房間已鎖定
 
   // 邀請流程 (因 UI 顯示內容高度特殊，保留專用碼)
@@ -34,6 +35,8 @@ enum AppErrorCodes {
   settlementFailed,
 
   exportFailed,
+  shareFailed,
+  logoutFailed,
 
   unknown,
 }

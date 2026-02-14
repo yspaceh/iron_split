@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // [新增]
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -83,5 +84,27 @@ class AuthRepository extends BaseRepository {
       }
       return true; // 全部通過
     }, AppErrorCodes.initFailed);
+  }
+
+  /// 登出
+  Future<void> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw AppErrorCodes.logoutFailed;
+    }
+  }
+
+  /// 呼叫 Cloud Function 徹底刪除使用者帳號
+  /// 這會觸發後端的 deleteUserAccount 函式 (移交權限、轉幽靈等)
+  Future<void> deleteUserAccountPermanently() async {
+    try {
+      final functions = FirebaseFunctions.instance;
+      // 呼叫對應的 Cloud Function 名稱
+      final callable = functions.httpsCallable('deleteUserAccount');
+      await callable.call();
+    } catch (e) {
+      throw AppErrorCodes.deleteFailed;
+    }
   }
 }

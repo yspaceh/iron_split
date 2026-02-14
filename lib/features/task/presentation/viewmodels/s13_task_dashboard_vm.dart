@@ -132,21 +132,18 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   void init() {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
     notifyListeners();
     try {
       // 使用 Repository 獲取當前使用者，不直接存取 FirebaseAuth
-      final currentUser = _authRepo.currentUser;
+      final user = _authRepo.currentUser;
 
       // UI 零邏輯，由 VM 判斷准入條件
-      if (currentUser == null) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.unauthorized;
-        notifyListeners();
-        return;
-      }
-      _currentUserId = currentUser.uid;
+      if (user == null) throw AppErrorCodes.unauthorized;
+
+      _currentUserId = user.uid;
 
       _taskSub = _taskRepo.streamTask(taskId).listen((taskData) {
         if (taskData != null) {
@@ -163,6 +160,10 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
         _hasRecordsEmitted = true;
         _recalculate();
       });
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;
       _initErrorCode = AppErrorCodes.initFailed;
@@ -194,24 +195,28 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     _personalNetBalance = personalStats.netBalance;
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
-    final startDate = _task!.startDate ?? DateTime.now();
-    final endDate =
-        _task!.endDate ?? DateTime.now().add(const Duration(days: 7));
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-    // 注意：Personal View 的日期列表可能跟 Group 不一樣嗎？
-    // 依據原本代碼：_generateFullDateRangeDescending 邏輯是一樣的，
-    // 但 uniqueDates 是合併 _personalRecords 的日期。
-    // 如果我們想讓兩個 Tab 的 Scroll 行為一致 (切換 Tab 不會跳來跳去)，
-    // 通常建議共用 displayDates。
-    // 但原本代碼是分開算的。為了完全還原，我們這裡可以共用 displayDates
-    // (因為它是 full range + any record date)，只要 Group View 的日期比 Personal 多就沒問題。
-    // 這裡我們暫時共用 _displayDates，因為它是 "Full Range" + "All Records"，
-    // 肯定包含 "Personal Records" 的日期。
-    _displayDates = _service.generateDisplayDates(
-      startDate: startDate,
-      endDate: endDate,
-      groupedRecords: _groupedRecords, // 用全部紀錄產生的 group 來補日期，範圍最大
+    var start = _task!.startDate ?? today;
+    start = DateTime(start.year, start.month, start.day); // 強制轉為 00:00
+
+    var end = _task!.endDate ?? today.add(const Duration(days: 7));
+    end = DateTime(end.year, end.month, end.day); // 強制轉為 00:00
+
+    // 2. 生成日期列表
+    final rawDates = _service.generateDisplayDates(
+      startDate: start,
+      endDate: end,
+      groupedRecords: _groupedRecords,
     );
+
+    // 強制去重複並排序 (由新到舊)
+    _displayDates = rawDates
+        .map((d) => DateTime(d.year, d.month, d.day)) // 去除時間成分
+        .toSet() // 去重複
+        .toList()
+      ..sort((a, b) => b.compareTo(a));
 
     // Key 生成
     for (var date in _displayDates) {

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s73_system_settings_payment_info_vm.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,49 @@ class S73SystemSettingsPaymentInfoPage extends StatelessWidget {
   }
 }
 
-class _S73Content extends StatelessWidget {
+class _S73Content extends StatefulWidget {
   const _S73Content();
+
+  @override
+  State<_S73Content> createState() => _S73ContentState();
+}
+
+class _S73ContentState extends State<_S73Content> {
+  // 1. 靜態欄位 Node
+  late FocusNode _bankNameNode;
+  late FocusNode _bankAccountNode;
+  final Map<int, FocusNode> _appNameNodes = {};
+  final Map<int, FocusNode> _appLinkNodes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _bankNameNode = FocusNode();
+    _bankAccountNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _bankNameNode.dispose();
+    _bankAccountNode.dispose();
+    for (var node in _appNameNodes.values) {
+      node.dispose();
+    }
+    for (var node in _appLinkNodes.values) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  // 取得動態 Node 的 Helper
+  FocusNode _getAppLinkNode(int index) {
+    return _appLinkNodes.putIfAbsent(index, () => FocusNode());
+  }
+
+  FocusNode _getAppNameNode(int index) {
+    return _appNameNodes.putIfAbsent(index, () => FocusNode());
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -32,14 +74,23 @@ class _S73Content extends StatelessWidget {
 
     final vm = context.watch<S73SystemSettingsPaymentInfoViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S70_System_Settings.menu.payment_info),
-        centerTitle: true,
-      ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: vm.isLoading
+    final allNodes = [
+      _bankNameNode,
+      _bankAccountNode,
+      ...List.generate(
+          vm.formController.appControllers.length, (i) => _getAppNameNode(i)),
+      ...List.generate(
+          vm.formController.appControllers.length, (i) => _getAppLinkNode(i)),
+    ];
+
+    return AppKeyboardActionsWrapper(
+      focusNodes: allNodes,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(t.S70_System_Settings.menu.payment_info),
+          centerTitle: true,
+        ),
+        body: vm.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 child: Column(
@@ -53,32 +104,32 @@ class _S73Content extends StatelessWidget {
                   ],
                 ),
               ),
-      ),
-      bottomNavigationBar: StickyBottomActionBar(
-        children: [
-          AppButton(
-            text: t.common.buttons.back,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(),
-          ),
-          AppButton(
-            text: t.common.buttons.save,
-            type: AppButtonType.primary,
-            onPressed: () {
-              // 收起鍵盤
-              FocusScope.of(context).unfocus();
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            AppButton(
+              text: t.common.buttons.back,
+              type: AppButtonType.secondary,
+              onPressed: () => context.pop(),
+            ),
+            AppButton(
+              text: t.common.buttons.save,
+              type: AppButtonType.primary,
+              onPressed: () {
+                // 收起鍵盤
+                FocusManager.instance.primaryFocus?.unfocus();
 
-              // [修正] 呼叫 VM 的 save 方法，而不是傳遞 undefined 的 info
-              vm.save(() {
-                // 成功後顯示提示並返回
-                if (context.mounted) {
-                  AppToast.showSuccess(context, t.success.saved);
-                  context.pop();
-                }
-              });
-            },
-          ),
-        ],
+                // [修正] 呼叫 VM 的 save 方法，而不是傳遞 undefined 的 info
+                vm.save(() {
+                  // 成功後顯示提示並返回
+                  if (context.mounted) {
+                    AppToast.showSuccess(context, t.success.saved);
+                    context.pop();
+                  }
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

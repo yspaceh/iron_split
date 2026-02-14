@@ -190,12 +190,7 @@ class RecordService {
     // 1. 邏輯檢查：如果是收入，檢查是否可以刪除
     if (record.type == 'income') {
       // 檢查此收入是否已被其他支出引用（原則 2：Service 調用 Repo）
-      final isReferenced =
-          await _recordRepo.isRecordReferenced(taskId, record.id ?? '');
-      if (isReferenced) {
-        // 原則 4：拋出標準 AppErrorCodes
-        throw AppErrorCodes.incomeIsUsed;
-      }
+      await _recordRepo.checkRecordReferenced(taskId, record.id ?? '');
 
       // 檢查公款餘額是否足以扣除這筆收入 (避免餘額變成負數)
       double currentBalance = poolBalances[record.currencyCode] ?? 0.0;

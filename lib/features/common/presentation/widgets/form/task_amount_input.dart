@@ -14,8 +14,8 @@ class TaskAmountInput extends StatelessWidget {
     this.isIncome = false,
     this.showCurrencyPicker = true,
     this.fillColor,
-    //  外部驗證器
     this.externalValidator,
+    this.focusNode,
   });
 
   final ValueChanged<String>? onCurrencyChanged;
@@ -25,6 +25,7 @@ class TaskAmountInput extends StatelessWidget {
   final bool showCurrencyPicker;
   final Color? fillColor;
   final String? Function(double value)? externalValidator;
+  final FocusNode? focusNode;
 
   void _showCurrencyPicker(BuildContext context) {
     if (onCurrencyChanged == null) return;
@@ -124,6 +125,7 @@ class TaskAmountInput extends StatelessWidget {
 
               return null;
             },
+            focusNode: focusNode,
           ),
         ),
       ],

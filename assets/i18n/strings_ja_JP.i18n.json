@@ -12,7 +12,8 @@
       "keep_editing": "編集を続行",
       "refresh": "更新",
       "ok": "OK",
-      "retry": "リトライ"
+      "retry": "リトライ",
+      "done": "完成"
     },
     "error": {
       "title": "エラー",
@@ -352,14 +353,43 @@
       "notify_members": "メンバーに通知",
       "view_payment_details": "支払/受取口座を確認"
     },
+    "section": {
+      "pending": "未完了",
+      "cleared": "完了"
+    },    
     "retention_notice": "{days} 日後にデータは自動削除されます。期間内にダウンロードしてください。",
-    "label_remainder_absorbed_by": "は {name} が負担",
-    "section_pending": "未完了",
-    "section_cleared": "完了",
-    "member_payment_status_pay": "支払",
-    "member_payment_status_receive": "受取",
-    "dialog_mark_cleared_title": "完了確認",
-    "dialog_mark_cleared_content": "{name} を完了としてマークしますか？"
+   "remainder_absorbed_by": "は {name} が負担",
+    "export": {
+      "report_info": "レポート情報",
+      "task_name": "タスク名",
+      "export_time": "レポート作成日時",
+      "base_currency": "基準通貨",
+      "settlement_summary": "精算サマリー",
+      "member": "メンバー",
+      "role": "役割",
+      "net_amount": "純額",
+      "status": "ステータス",
+      "receiver": "返金対象",
+      "payer": "支払対象",
+      "cleared": "処理済み",
+      "pending": "未処理",
+      "fund_analysis": "資金および端数",
+      "total_expense": "総支出",
+      "total_income": "総預かり金",
+      "remainder_buffer": "端数合計",
+      "remainder_absorbed_by": "端数受取人",
+      "transaction_details": "取引明細",
+      "date": "日付",
+      "title": "タイトル",
+      "type": "種別",
+      "original_amount": "原通貨金額",
+      "currency": "通貨",
+      "rate": "為替レート",
+      "base_amount": "基準通貨金額",
+      "net_remainder": "端数",
+      "pool": "預かり金",
+      "mixed": "混合支払い"
+    }
   },
   "S30_settlement_confirm": {
     "title": "精算確認",
@@ -413,8 +443,7 @@
     "content": {
       "prefix": "分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、",
       "suffix": " に同意したものとみなされます。"
-    },
-    "login_failed": "ログイン失敗: {message}"
+    }
   },
   "S51_Onboarding_Name": {
     "title": "名前設定",
@@ -684,6 +713,7 @@
       "amount_not_enough": "残額が不足しています。",
       "amount_mismatch": "金額が一致しません。",
       "income_is_used": "この金額は既に使用されているか、残高が不足しています。",
+      "data_is_used": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。",
       "permission_denied": "権限がありません。",
       "network_error": "ネットワーク接続に失敗しました。接続を確認してください。",
       "data_not_found" : "データが見つかりませんでした。もう一度お試しください。",
@@ -708,7 +738,11 @@
       "invite_create_failed": "招待コードを作成できませんでした。しばらく経ってからお試しください。",
       "data_conflict": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。",
       "task_status_error": "タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。",
-      "settlement_failed": "システムエラーが発生しました。後でもう一度お試しください。"
+      "settlement_failed": "システムエラーが発生しました。後でもう一度お試しください。",
+      "share_failed": "シェアが失敗しました。後でもう一度お試しください。",
+      "login_failed": "ログインが失敗しました。後でもう一度お試しください。",
+      "logout_failed": "ログアウトが失敗しました。後でもう一度お試しください。"
+      
     }
   }
 }

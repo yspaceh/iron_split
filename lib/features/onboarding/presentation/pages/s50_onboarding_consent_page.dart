@@ -70,7 +70,7 @@ class _S50Content extends StatelessWidget {
           AppButton(
             text: t.S50_Onboarding_Consent.buttons.agree,
             type: AppButtonType.primary,
-            isLoading: vm.actionStatus == LoadStatus.loading,
+            isLoading: vm.agreeStatus == LoadStatus.loading,
             onPressed: () => handleAgree(context, vm),
           ),
         ],
@@ -85,49 +85,53 @@ class _S50Content extends StatelessWidget {
             const StateVisual(
               assetPath: 'assets/images/iron/iron_image_intro.png',
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: // 2. 條款文字區域 (RichText)
-                  RichText(
-                textAlign: TextAlign.left, // 文字置中
-                text: TextSpan(
-                  style: normalStyle,
-                  children: [
-                    // A. 前綴: "Read our "
-                    TextSpan(text: t.S50_Onboarding_Consent.content.prefix),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: // 2. 條款文字區域 (RichText)
+                      RichText(
+                    textAlign: TextAlign.left, // 文字置中
+                    text: TextSpan(
+                      style: normalStyle,
+                      children: [
+                        // A. 前綴: "Read our "
+                        TextSpan(text: t.S50_Onboarding_Consent.content.prefix),
 
-                    // B. 連結: "Terms of Service"
-                    TextSpan(
-                      text: t.common.terms.label.terms,
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          context.pushNamed(
-                            'S71',
-                            extra: {'isTerms': true},
-                          );
-                        },
+                        // B. 連結: "Terms of Service"
+                        TextSpan(
+                          text: t.common.terms.label.terms,
+                          style: linkStyle,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              context.pushNamed(
+                                'S71',
+                                extra: {'isTerms': true},
+                              );
+                            },
+                        ),
+
+                        // C. 中間: " and "
+                        TextSpan(text: t.common.terms.and),
+
+                        // D. 連結: "Privacy Policy"
+                        TextSpan(
+                          text: t.common.terms.label.privacy,
+                          style: linkStyle,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              context.pushNamed(
+                                'S71',
+                                extra: {'isTerms': false},
+                              );
+                            },
+                        ),
+
+                        // E. 後綴: ". Tap 'Agree' to accept."
+                        TextSpan(text: t.S50_Onboarding_Consent.content.suffix),
+                      ],
                     ),
-
-                    // C. 中間: " and "
-                    TextSpan(text: t.common.terms.and),
-
-                    // D. 連結: "Privacy Policy"
-                    TextSpan(
-                      text: t.common.terms.label.privacy,
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          context.pushNamed(
-                            'S71',
-                            extra: {'isTerms': false},
-                          );
-                        },
-                    ),
-
-                    // E. 後綴: ". Tap 'Agree' to accept."
-                    TextSpan(text: t.S50_Onboarding_Consent.content.suffix),
-                  ],
+                  ),
                 ),
               ),
             ),

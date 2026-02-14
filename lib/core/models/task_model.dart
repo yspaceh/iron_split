@@ -142,48 +142,35 @@ class TaskModel {
       'settlement': settlement,
     };
   }
-}
 
-extension TaskModelMemberSorting on TaskModel {
-  /// [新增] 全 App 統一的成員排序名單
-  /// 1. 已連結者優先，按 joinedAt (加入時間) 排序
-  /// 2. 未連結者在後，按 createdAt (生成時間) 排序
-  List<MapEntry<String, dynamic>> get sortedMembers {
-    final List<MapEntry<String, dynamic>> membersList =
-        members.entries.toList();
+  //  靜態排序邏輯 (讓外部也能用)
+  static int compareMemberData(
+      Map<String, dynamic> dataA, Map<String, dynamic> dataB) {
+    final bool isALinked = dataA['isLinked'] == true;
+    final bool isBLinked = dataB['isLinked'] == true;
 
-    membersList.sort((a, b) {
-      final dataA = a.value as Map<String, dynamic>;
-      final dataB = b.value as Map<String, dynamic>;
+    // 1. 狀態不同：已連結優先
+    if (isALinked != isBLinked) {
+      return isALinked ? -1 : 1;
+    }
 
-      final bool isALinked = dataA['isLinked'] == true;
-      final bool isBLinked = dataB['isLinked'] == true;
-
-      // 1. 狀態不同：已連結優先
-      if (isALinked != isBLinked) {
-        return isALinked ? -1 : 1; // -1 代表 a 排在 b 前面
-      }
-
-      // 2. 狀態相同：比較時間
-      if (isALinked) {
-        // 皆為已連結：按加入時間 (joinedAt)
-        final timeA = _parseTime(dataA['joinedAt']);
-        final timeB = _parseTime(dataB['joinedAt']);
-        return timeA.compareTo(timeB);
-      } else {
-        // 皆為未連結 (幽靈)：按生成時間 (createdAt)
-        final timeA = _parseTime(dataA['createdAt']);
-        final timeB = _parseTime(dataB['createdAt']);
-        return timeA.compareTo(timeB);
-      }
-    });
-
-    return membersList;
+    // 2. 狀態相同：比較時間
+    if (isALinked) {
+      // 皆為已連結：按 joinedAt
+      final timeA = _parseTimeStatic(dataA['joinedAt']);
+      final timeB = _parseTimeStatic(dataB['joinedAt']);
+      return timeA.compareTo(timeB);
+    } else {
+      // 皆為未連結：按 createdAt
+      final timeA = _parseTimeStatic(dataA['createdAt']);
+      final timeB = _parseTimeStatic(dataB['createdAt']);
+      return timeA.compareTo(timeB);
+    }
   }
 
-  /// [防呆輔助] 處理 Firestore Timestamp、毫秒 int 與字串的差異
-  int _parseTime(dynamic val) {
-    if (val == null) return 0; // 避免 null 報錯，預設排在最前面
+  // 靜態時間解析 (將原本的 _parseTime 改為 static)
+  static int _parseTimeStatic(dynamic val) {
+    if (val == null) return 0;
     if (val is Timestamp) return val.millisecondsSinceEpoch;
     if (val is int) return val;
     if (val is DateTime) return val.millisecondsSinceEpoch;
@@ -191,5 +178,21 @@ extension TaskModelMemberSorting on TaskModel {
       return DateTime.tryParse(val)?.millisecondsSinceEpoch ?? 0;
     }
     return 0;
+  }
+}
+
+// Extension 改為呼叫上面的靜態方法
+extension TaskModelMemberSorting on TaskModel {
+  List<MapEntry<String, dynamic>> get sortedMembers {
+    final List<MapEntry<String, dynamic>> membersList =
+        members.entries.toList();
+
+    // 直接使用靜態方法
+    membersList.sort((a, b) {
+      return TaskModel.compareMemberData(
+          a.value as Map<String, dynamic>, b.value as Map<String, dynamic>);
+    });
+
+    return membersList;
   }
 }

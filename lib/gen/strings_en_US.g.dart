@@ -255,14 +255,10 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 
 	// Translations
 	@override late final _TranslationsS17TaskLockedButtonsEnUs buttons = _TranslationsS17TaskLockedButtonsEnUs._(_root);
+	@override late final _TranslationsS17TaskLockedSectionEnUs section = _TranslationsS17TaskLockedSectionEnUs._(_root);
 	@override String retention_notice({required Object days}) => 'Data will be deleted after ${days} days. Please download your records in time.';
-	@override String label_remainder_absorbed_by({required Object name}) => 'absorbed by ${name}';
-	@override String get section_pending => 'Pending';
-	@override String get section_cleared => 'Cleared';
-	@override String get member_payment_status_pay => 'To Pay';
-	@override String get member_payment_status_receive => 'To Receive';
-	@override String get dialog_mark_cleared_title => 'Mark as Cleared';
-	@override String dialog_mark_cleared_content({required Object name}) => 'Mark ${name} as cleared?';
+	@override String remainder_absorbed_by({required Object name}) => 'absorbed by ${name}';
+	@override late final _TranslationsS17TaskLockedExportEnUs export = _TranslationsS17TaskLockedExportEnUs._(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -321,7 +317,6 @@ class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingCon
 	@override String get title => 'Welcome to Iron Split';
 	@override late final _TranslationsS50OnboardingConsentButtonsEnUs buttons = _TranslationsS50OnboardingConsentButtonsEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentContentEnUs content = _TranslationsS50OnboardingConsentContentEnUs._(_root);
-	@override String login_failed({required Object message}) => 'Login Failed: ${message}';
 }
 
 // Path: S51_Onboarding_Name
@@ -670,6 +665,7 @@ class _TranslationsCommonButtonsEnUs extends TranslationsCommonButtonsZhTw {
 	@override String get refresh => 'Refresh';
 	@override String get ok => 'OK';
 	@override String get retry => 'Retry';
+	@override String get done => 'Done';
 }
 
 // Path: common.error
@@ -1132,6 +1128,55 @@ class _TranslationsS17TaskLockedButtonsEnUs extends TranslationsS17TaskLockedBut
 	@override String get view_payment_details => 'View Payment Details';
 }
 
+// Path: S17_Task_Locked.section
+class _TranslationsS17TaskLockedSectionEnUs extends TranslationsS17TaskLockedSectionZhTw {
+	_TranslationsS17TaskLockedSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get pending => 'Pending';
+	@override String get cleared => 'Cleared';
+}
+
+// Path: S17_Task_Locked.export
+class _TranslationsS17TaskLockedExportEnUs extends TranslationsS17TaskLockedExportZhTw {
+	_TranslationsS17TaskLockedExportEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get report_info => 'Report Information';
+	@override String get task_name => 'Task Name';
+	@override String get export_time => 'Export Time';
+	@override String get base_currency => 'Base Currency';
+	@override String get settlement_summary => 'Settlement Summary';
+	@override String get member => 'Member';
+	@override String get role => 'Role';
+	@override String get net_amount => 'Net Amount';
+	@override String get status => 'Status';
+	@override String get receiver => 'Receivable';
+	@override String get payer => 'Payable';
+	@override String get cleared => 'Cleared';
+	@override String get pending => 'Pending';
+	@override String get fund_analysis => 'Funds & Remainders';
+	@override String get total_expense => 'Total Expense';
+	@override String get total_income => 'Total Prepaid';
+	@override String get remainder_buffer => 'Total Remainder';
+	@override String get remainder_absorbed_by => 'Remainder Recipient';
+	@override String get transaction_details => 'Transaction Details';
+	@override String get date => 'Date';
+	@override String get title => 'Title';
+	@override String get type => 'Type';
+	@override String get original_amount => 'Original Amount';
+	@override String get currency => 'Currency';
+	@override String get rate => 'Exchange Rate';
+	@override String get base_amount => 'Base Currency Amount';
+	@override String get net_remainder => 'Remainder';
+	@override String get pool => 'Prepaid Pool';
+	@override String get mixed => 'Mixed Payment';
+}
+
 // Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1525,6 +1570,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get amount_not_enough => 'Insufficient remaining amount.';
 	@override String get amount_mismatch => 'Amount mismatch.';
 	@override String get income_is_used => 'This amount is used or balance is insufficient.';
+	@override String get data_is_used => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.';
 	@override String get permission_denied => 'Permission denied.';
 	@override String get network_error => 'Network connection failed. Please check your internet.';
 	@override String get data_not_found => 'Data not found. Please try again later.';
@@ -1550,6 +1596,9 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get data_conflict => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.';
 	@override String get task_status_error => 'The task status is invalid (may be already settled). Please refresh.';
 	@override String get settlement_failed => 'System error. Settlement failed. Please try again later.';
+	@override String get share_failed => 'Share failed. Please try again later.';
+	@override String get login_failed => 'Login failed. Please try again later.';
+	@override String get logout_failed => 'Logout failed. Please try again later.';
 }
 
 // Path: common.payment_info.mode
@@ -1805,6 +1854,7 @@ extension on TranslationsEnUs {
 			'common.buttons.refresh' => 'Refresh',
 			'common.buttons.ok' => 'OK',
 			'common.buttons.retry' => 'Retry',
+			'common.buttons.done' => 'Done',
 			'common.error.title' => 'Error',
 			'common.error.unknown' => ({required Object error}) => 'Unknown error: ${error}',
 			'common.category.food' => 'Food',
@@ -2035,14 +2085,39 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.buttons.download' => 'Download Records',
 			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
 			'S17_Task_Locked.buttons.view_payment_details' => 'View Payment Details',
+			'S17_Task_Locked.section.pending' => 'Pending',
+			'S17_Task_Locked.section.cleared' => 'Cleared',
 			'S17_Task_Locked.retention_notice' => ({required Object days}) => 'Data will be deleted after ${days} days. Please download your records in time.',
-			'S17_Task_Locked.label_remainder_absorbed_by' => ({required Object name}) => 'absorbed by ${name}',
-			'S17_Task_Locked.section_pending' => 'Pending',
-			'S17_Task_Locked.section_cleared' => 'Cleared',
-			'S17_Task_Locked.member_payment_status_pay' => 'To Pay',
-			'S17_Task_Locked.member_payment_status_receive' => 'To Receive',
-			'S17_Task_Locked.dialog_mark_cleared_title' => 'Mark as Cleared',
-			'S17_Task_Locked.dialog_mark_cleared_content' => ({required Object name}) => 'Mark ${name} as cleared?',
+			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => 'absorbed by ${name}',
+			'S17_Task_Locked.export.report_info' => 'Report Information',
+			'S17_Task_Locked.export.task_name' => 'Task Name',
+			'S17_Task_Locked.export.export_time' => 'Export Time',
+			'S17_Task_Locked.export.base_currency' => 'Base Currency',
+			'S17_Task_Locked.export.settlement_summary' => 'Settlement Summary',
+			'S17_Task_Locked.export.member' => 'Member',
+			'S17_Task_Locked.export.role' => 'Role',
+			'S17_Task_Locked.export.net_amount' => 'Net Amount',
+			'S17_Task_Locked.export.status' => 'Status',
+			'S17_Task_Locked.export.receiver' => 'Receivable',
+			'S17_Task_Locked.export.payer' => 'Payable',
+			'S17_Task_Locked.export.cleared' => 'Cleared',
+			'S17_Task_Locked.export.pending' => 'Pending',
+			'S17_Task_Locked.export.fund_analysis' => 'Funds & Remainders',
+			'S17_Task_Locked.export.total_expense' => 'Total Expense',
+			'S17_Task_Locked.export.total_income' => 'Total Prepaid',
+			'S17_Task_Locked.export.remainder_buffer' => 'Total Remainder',
+			'S17_Task_Locked.export.remainder_absorbed_by' => 'Remainder Recipient',
+			'S17_Task_Locked.export.transaction_details' => 'Transaction Details',
+			'S17_Task_Locked.export.date' => 'Date',
+			'S17_Task_Locked.export.title' => 'Title',
+			'S17_Task_Locked.export.type' => 'Type',
+			'S17_Task_Locked.export.original_amount' => 'Original Amount',
+			'S17_Task_Locked.export.currency' => 'Currency',
+			'S17_Task_Locked.export.rate' => 'Exchange Rate',
+			'S17_Task_Locked.export.base_amount' => 'Base Currency Amount',
+			'S17_Task_Locked.export.net_remainder' => 'Remainder',
+			'S17_Task_Locked.export.pool' => 'Prepaid Pool',
+			'S17_Task_Locked.export.mixed' => 'Mixed Payment',
 			'S30_settlement_confirm.title' => 'Confirm Settlement',
 			'S30_settlement_confirm.buttons.next' => 'Payment Info',
 			'S30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
@@ -2073,7 +2148,6 @@ extension on TranslationsEnUs {
 			'S50_Onboarding_Consent.buttons.agree' => 'Start',
 			'S50_Onboarding_Consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Roost.I handle the records and the sharing here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be clear.\n\nBy clicking Start, you agree to our ',
 			'S50_Onboarding_Consent.content.suffix' => '. We use anonymous login to protect your privacy.',
-			'S50_Onboarding_Consent.login_failed' => ({required Object message}) => 'Login Failed: ${message}',
 			'S51_Onboarding_Name.title' => 'Set Display Name',
 			'S51_Onboarding_Name.buttons.next' => 'Set',
 			'S51_Onboarding_Name.description' => 'Please enter your display name.',
@@ -2222,6 +2296,7 @@ extension on TranslationsEnUs {
 			'error.message.amount_not_enough' => 'Insufficient remaining amount.',
 			'error.message.amount_mismatch' => 'Amount mismatch.',
 			'error.message.income_is_used' => 'This amount is used or balance is insufficient.',
+			'error.message.data_is_used' => 'This member still has related expense records or unsettled payments. Please modify or delete the relevant records and try again.',
 			'error.message.permission_denied' => 'Permission denied.',
 			'error.message.network_error' => 'Network connection failed. Please check your internet.',
 			'error.message.data_not_found' => 'Data not found. Please try again later.',
@@ -2247,6 +2322,9 @@ extension on TranslationsEnUs {
 			'error.message.data_conflict' => 'Other members updated the records while you were viewing. Please go back and refresh to ensure accuracy.',
 			'error.message.task_status_error' => 'The task status is invalid (may be already settled). Please refresh.',
 			'error.message.settlement_failed' => 'System error. Settlement failed. Please try again later.',
+			'error.message.share_failed' => 'Share failed. Please try again later.',
+			'error.message.login_failed' => 'Login failed. Please try again later.',
+			'error.message.logout_failed' => 'Logout failed. Please try again later.',
 			_ => null,
 		};
 	}

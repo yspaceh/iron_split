@@ -120,7 +120,7 @@ class S13GroupView extends StatelessWidget {
             // Record List
             SliverToBoxAdapter(
               child: Column(
-                children: vm.displayDates.map((date) {
+                children: vm.displayDates.toSet().map((date) {
                   final dayRecords = vm.groupedRecords[date] ?? [];
                   final dateKeyStr = DateFormat('yyyyMMdd').format(date);
                   final key = vm.dateKeys[dateKeyStr];

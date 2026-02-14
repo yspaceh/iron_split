@@ -69,6 +69,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
         _authRepo = authRepo;
 
   Future<void> init() async {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
     notifyListeners();
@@ -76,18 +77,10 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
     try {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
-      if (user == null) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.unauthorized;
-        notifyListeners();
-        return;
-      }
+      if (user == null) throw AppErrorCodes.unauthorized;
 
       final task = await _taskRepo.streamTask(taskId).first;
-
-      if (task == null) {
-        throw AppErrorCodes.dataNotFound;
-      }
+      if (task == null) throw AppErrorCodes.dataNotFound;
 
       nameController.text = task.name;
       _initialName = task.name;
@@ -110,6 +103,10 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
       }
 
       _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
       notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;

@@ -12,7 +12,8 @@
       "keep_editing": "繼續編輯",
       "ok": "確定",
       "refresh": "重新整理",
-      "retry": "重試"
+      "retry": "重試",
+      "done": "完成"
     },
     "error": {
       "title": "錯誤",
@@ -352,14 +353,43 @@
       "notify_members": "通知成員",
       "view_payment_details": "隊長收退款帳戶"
     },
+    "section": {
+      "pending": "待處理",
+      "cleared": "已處理"
+    },    
     "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄",
-    "label_remainder_absorbed_by": "由 {name} 吸收",
-    "section_pending": "待處理",
-    "section_cleared": "已處理",
-    "member_payment_status_pay": "應付",
-    "member_payment_status_receive": "應收",
-    "dialog_mark_cleared_title": "確認收款/付款",
-    "dialog_mark_cleared_content": "確定將 {name} 標記為已處理？"
+    "remainder_absorbed_by": "由 {name} 吸收",
+    "export": {
+      "report_info": "報表資訊",
+      "task_name": "任務名稱",
+      "export_time": "報表製作時間",
+      "base_currency": "結算幣別",
+      "settlement_summary": "結算總表",
+      "member": "成員",
+      "role": "角色",
+      "net_amount": "淨額",
+      "status": "狀態",
+      "receiver": "可退",
+      "payer": "應付",
+      "cleared": "已處理",
+      "pending": "未處理",
+      "fund_analysis": "資金與零頭",
+      "total_expense": "總費用",
+      "total_income": "總預收",
+      "remainder_buffer": "零頭總額",
+      "remainder_absorbed_by": "零頭得主",
+      "transaction_details": "交易流水帳",
+      "date": "日期",
+      "title": "標題",
+      "type": "類型",
+      "original_amount": "原始金額",
+      "currency":"幣別",
+      "rate": "匯率",
+      "base_amount": "結算幣別金額",
+      "net_remainder": "零頭",
+      "pool": "預收款",
+      "mixed": "混和支付"
+    }
   },
   "S30_settlement_confirm": {
     "title": "結算確認",
@@ -413,8 +443,7 @@
     "content": {
       "prefix": "讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ",
       "suffix": "。"
-    },
-    "login_failed": "登入失敗: {message}"
+    }
   },
   "S51_Onboarding_Name": {
     "title": "名稱設定",
@@ -685,6 +714,7 @@
       "amount_not_enough": "剩餘金額不足。",
       "amount_mismatch": "金額不符。",
       "income_is_used": "此筆款項已被使用或公款不足，無法更動。",
+      "data_is_used": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
       "permission_denied": "權限不足，無法執行此操作。",
       "network_error" : "網路連線失敗，請檢查網路連線。",
       "data_not_found" : "找不到相關資料。",
@@ -709,7 +739,10 @@
       "invite_create_failed": "無法產生邀請碼，請稍後再試。",
       "data_conflict": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。",
       "task_status_error": "此任務狀態異常（可能已被結算），請刷新頁面。",
-      "settlement_failed": "系統錯誤，結算失敗，請稍後再試。"
+      "settlement_failed": "系統錯誤，結算失敗，請稍後再試。",
+      "share_failed": "分享失敗，請稍後再試。",
+      "login_failed": "登入失敗，請稍後再試。",
+      "logout_failed": "登出失敗，請稍後再試。"
     }
   }
 }

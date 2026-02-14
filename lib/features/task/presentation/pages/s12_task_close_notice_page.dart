@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -25,7 +27,7 @@ class S12TaskCloseNoticePage extends StatelessWidget {
         taskId: taskId,
         authRepo: context.read<AuthRepository>(),
         service: context.read<TaskService>(),
-      ),
+      )..init(),
       child: const _S12Content(),
     );
   }
@@ -114,37 +116,43 @@ class _S12ContentState extends State<_S12Content> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final vm = context.watch<S12TaskCloseNoticeViewModel>();
+    final title = t.S12_TaskClose_Notice.title;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.S12_TaskClose_Notice.title),
-        centerTitle: true,
-      ),
-      bottomNavigationBar: StickyBottomActionBar(
-        children: [
-          AppButton(
-            text: t.common.buttons.back,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(),
-          ),
-          AppButton(
-            text: t.S12_TaskClose_Notice.buttons.close,
-            type: AppButtonType.primary,
-            isLoading: vm.isProcessing,
-            onPressed: () => _showConfirmDialog(context, vm),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-          child: Column(
-            children: [
-              Text(
-                t.S12_TaskClose_Notice.content,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
-              ),
-            ],
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          centerTitle: true,
+        ),
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            AppButton(
+              text: t.common.buttons.back,
+              type: AppButtonType.secondary,
+              onPressed: () => context.pop(),
+            ),
+            AppButton(
+              text: t.S12_TaskClose_Notice.buttons.close,
+              type: AppButtonType.primary,
+              isLoading: vm.closeStatus == LoadStatus.loading,
+              onPressed: () => _showConfirmDialog(context, vm),
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+            child: Column(
+              children: [
+                Text(
+                  t.S12_TaskClose_Notice.content,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                ),
+              ],
+            ),
           ),
         ),
       ),

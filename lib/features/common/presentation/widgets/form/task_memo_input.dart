@@ -7,9 +7,11 @@ class TaskMemoInput extends StatelessWidget {
     super.key,
     required this.memoController,
     this.fillColor,
+    this.focusNode,
   });
   final TextEditingController memoController;
   final Color? fillColor;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +21,9 @@ class TaskMemoInput extends StatelessWidget {
       fillColor: fillColor,
       labelText: t.S15_Record_Edit.label.memo, // 標題
       hintText: t.S15_Record_Edit.hint.memo, // 增加一點提示 (Optional)
-
-      // 多行設定
       keyboardType: TextInputType.multiline,
-      maxLines: 3, // 稍微高一點，讓備註欄位看起來不一樣
-
-      // AppTextField 內部已經設定好 "淡灰底 + 圓角 16"
+      maxLines: 3,
+      focusNode: focusNode,
     );
   }
 }

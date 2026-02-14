@@ -11,11 +11,13 @@ class TaskItemInput extends StatelessWidget {
     required this.onCategoryChanged,
     required this.titleController,
     required this.selectedCategoryId,
+    this.focusNode,
   });
 
   final ValueChanged<String> onCategoryChanged;
   final TextEditingController titleController;
   final String selectedCategoryId;
+  final FocusNode? focusNode;
 
   void _showCategoryPicker(BuildContext context) {
     CategoryPickerSheet.show(
@@ -67,11 +69,11 @@ class TaskItemInput extends StatelessWidget {
           child: AppTextField(
             controller: titleController,
             labelText: t.S15_Record_Edit.label.title,
-            // 加一點提示文字，增加 UX
             hintText: t.S15_Record_Edit.hint.item(
                 category: CategoryConstant.getHint(t, selectedCategoryId)),
             validator: (v) =>
                 v?.isEmpty == true ? t.error.message.required : null,
+            focusNode: focusNode,
           ),
         ),
       ],

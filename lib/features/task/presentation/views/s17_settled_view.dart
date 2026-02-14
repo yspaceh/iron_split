@@ -78,8 +78,8 @@ class _S17SettledViewState extends State<S17SettledView> {
                 });
               },
               segments: {
-                0: "${t.S17_Task_Locked.section_pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
-                1: "${t.S17_Task_Locked.section_cleared} (${widget.clearedMembers.length})", // "已處理"
+                0: "${t.S17_Task_Locked.section.pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
+                1: "${t.S17_Task_Locked.section.cleared} (${widget.clearedMembers.length})", // "已處理"
               },
             ),
           ),

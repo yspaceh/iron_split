@@ -12,12 +12,20 @@ class PaymentInfoForm extends StatelessWidget {
   final PaymentInfoFormController controller;
   final Color? backgroundColor;
   final Color? isSelectedBackgroundColor;
+  final FocusNode? bankNameFocusNode;
+  final FocusNode? bankAccountFocusNode;
+  final FocusNode Function(int)? getAppNameFocusNode;
+  final FocusNode Function(int)? getAppLinkFocusNode;
 
   const PaymentInfoForm(
       {super.key,
       required this.controller,
       this.backgroundColor,
-      this.isSelectedBackgroundColor});
+      this.isSelectedBackgroundColor,
+      this.bankNameFocusNode,
+      this.bankAccountFocusNode,
+      this.getAppNameFocusNode,
+      this.getAppLinkFocusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +103,7 @@ class PaymentInfoForm extends StatelessWidget {
                             children: [
                               AppTextField(
                                 controller: controller.bankNameCtrl,
+                                focusNode: bankNameFocusNode,
                                 labelText:
                                     t.common.payment_info.label.bank_name,
                                 hintText: t.common.payment_info.hint.bank_name,
@@ -102,6 +111,7 @@ class PaymentInfoForm extends StatelessWidget {
                               const SizedBox(height: 12),
                               AppTextField(
                                 controller: controller.bankAccountCtrl,
+                                focusNode: bankAccountFocusNode,
                                 labelText:
                                     t.common.payment_info.label.bank_account,
                                 hintText:
@@ -148,6 +158,8 @@ class PaymentInfoForm extends StatelessWidget {
                                         Expanded(
                                           child: AppTextField(
                                             controller: input.nameCtrl,
+                                            focusNode:
+                                                getAppNameFocusNode!(index),
                                             labelText: t.common.payment_info
                                                 .label.app_name,
                                             hintText: t.common.payment_info.hint
@@ -173,6 +185,7 @@ class PaymentInfoForm extends StatelessWidget {
                                     const SizedBox(height: 12),
                                     AppTextField(
                                       controller: input.linkCtrl,
+                                      focusNode: getAppLinkFocusNode!(index),
                                       labelText:
                                           t.common.payment_info.label.app_link,
                                       hintText:

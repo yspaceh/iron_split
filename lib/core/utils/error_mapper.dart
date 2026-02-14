@@ -107,6 +107,8 @@ class ErrorMapper {
 
       case AppErrorCodes.incomeIsUsed:
         return t.error.message.income_is_used;
+      case AppErrorCodes.dataIsUsed:
+        return t.error.message.data_is_used;
       case AppErrorCodes.taskLocked:
         return t.error.message.task_locked;
 
@@ -136,6 +138,10 @@ class ErrorMapper {
         return t.error.message.settlement_failed;
       case AppErrorCodes.exportFailed:
         return t.error.message.export_failed;
+      case AppErrorCodes.shareFailed:
+        return t.error.message.share_failed;
+      case AppErrorCodes.logoutFailed:
+        return t.error.message.logout_failed;
 
       case AppErrorCodes.unknown:
       default:

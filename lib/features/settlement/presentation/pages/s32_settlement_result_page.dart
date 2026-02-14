@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
-import 'package:iron_split/features/task/presentation/helpers/task_share_helper.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -35,6 +38,7 @@ class S32SettlementResultPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         deepLinkService: context.read<DeepLinkService>(),
         settlementService: context.read<SettlementService>(),
+        shareService: context.read<ShareService>(),
       )..init(),
       child: const _S32Content(),
     );
@@ -137,31 +141,25 @@ class _S32ContentState extends State<_S32Content> {
       context.goNamed('S17', pathParameters: {'taskId': vm.taskId});
     }
 
-    Future<void> onShareTap() async {
-      try {
-        if (context.mounted) {
-          await TaskShareHelper.shareSettlement(
-            context: context,
-            taskId: vm.taskId,
-            taskName: vm.task!.name,
-          );
+    Future<void> handleShare(
+        BuildContext context, S32SettlementResultViewModel vm) async {
+      final t = Translations.of(context);
+      // 1. UI 負責組裝字串 (包含 DeepLink)
+      final message = t.common.share.settlement.message(
+        taskName: vm.task!.name,
+        link: vm.link,
+      );
 
-          // 3. 導航到任務 Dashboard
-          if (mounted) {
-            onBackToTask();
-          }
-        }
-      } catch (e) {
-        // TODO: handle error
-        if (context.mounted) {
-          debugPrint(e.toString());
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(Translations.of(context)
-                    .common
-                    .error_prefix(message: e.toString()))),
-          );
-        }
+      try {
+        // 2. 委派 VM 執行
+        await vm.notifyMembers(
+          message: message,
+          subject: t.common.share.settlement.subject,
+        );
+      } on AppErrorCodes catch (code) {
+        if (!context.mounted) return;
+        final msg = ErrorMapper.map(context, code: code);
+        AppToast.showError(context, msg);
       }
     }
 
@@ -184,50 +182,60 @@ class _S32ContentState extends State<_S32Content> {
                     const StateVisual(
                       assetPath: 'assets/images/iron/iron_image_settlement.png',
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Text(t.S32_settlement_result.content),
-                    ),
-                    if (vm.shouldShowRoulette)
-                      Visibility(
-                        visible: showWinnerCard,
-                        replacement: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(t.S32_settlement_result.waiting_reveal),
-                        ),
-                        child: InfoCard(
-                          icon: Icons.info_outline,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(t.S32_settlement_result
-                                      .remainder_winner_prefix),
-                                  const SizedBox(width: 8),
-                                  if (winner != null)
-                                    CommonAvatar(
-                                      avatarId: winner.avatar,
-                                      name: winner.displayName,
-                                      isLinked: winner.isLinked,
-                                      radius: 12,
-                                    ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    winner?.displayName ?? '',
-                                    style:
-                                        theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Text(t.S32_settlement_result.content),
+                            ),
+                            if (vm.shouldShowRoulette)
+                              Visibility(
+                                visible: showWinnerCard,
+                                replacement: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                      t.S32_settlement_result.waiting_reveal),
+                                ),
+                                child: InfoCard(
+                                  icon: Icons.info_outline,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(t.S32_settlement_result
+                                              .remainder_winner_prefix),
+                                          const SizedBox(width: 8),
+                                          if (winner != null)
+                                            CommonAvatar(
+                                              avatarId: winner.avatar,
+                                              name: winner.displayName,
+                                              isLinked: winner.isLinked,
+                                              radius: 12,
+                                            ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            winner?.displayName ?? '',
+                                            style: theme.textTheme.titleMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(winnerTotalText),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                              const SizedBox(height: 8),
-                              Text(winnerTotalText),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -237,7 +245,7 @@ class _S32ContentState extends State<_S32Content> {
           AppButton(
             text: t.S32_settlement_result.buttons.share,
             type: AppButtonType.secondary,
-            onPressed: onShareTap,
+            onPressed: () => handleShare(context, vm),
           ),
           AppButton(
             text: t.S32_settlement_result.buttons.back,

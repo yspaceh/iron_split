@@ -40,6 +40,7 @@ class S10TaskListViewModel extends ChangeNotifier {
         _service = service;
 
   void init() {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
     notifyListeners();
@@ -47,12 +48,8 @@ class S10TaskListViewModel extends ChangeNotifier {
     try {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
-      if (user == null) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = AppErrorCodes.unauthorized;
-        notifyListeners();
-        return;
-      }
+      if (user == null) throw AppErrorCodes.unauthorized;
+
       _currentUserId = user.uid;
       _subscription = _taskRepo.streamUserTasks(currentUserId).listen((tasks) {
         _allTasks = tasks;
@@ -60,10 +57,20 @@ class S10TaskListViewModel extends ChangeNotifier {
         _initStatus = LoadStatus.success;
         notifyListeners();
       }, onError: (e) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = ErrorMapper.parseErrorCode(e);
-        notifyListeners();
+        if (e is AppErrorCodes) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = e;
+          notifyListeners();
+        } else {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        }
       });
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;
       _initErrorCode = ErrorMapper.parseErrorCode(e);

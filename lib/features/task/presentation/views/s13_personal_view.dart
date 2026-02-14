@@ -83,7 +83,7 @@ class S13PersonalView extends StatelessWidget {
             // Full Date Record List
             SliverToBoxAdapter(
               child: Column(
-                children: vm.displayDates.map((date) {
+                children: vm.displayDates.toSet().map((date) {
                   // 取出個人的分組紀錄
                   final dayRecords = vm.personalGroupedRecords[date] ?? [];
 

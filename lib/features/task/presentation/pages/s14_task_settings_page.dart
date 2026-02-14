@@ -5,6 +5,7 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -138,9 +139,8 @@ class _S14ContentState extends State<_S14Content> {
       errorCode: vm.initErrorCode,
       title: title,
       onErrorAction: () => vm.init(),
-      child: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        behavior: HitTestBehavior.translucent,
+      child: AppKeyboardActionsWrapper(
+        focusNodes: [_nameFocusNode],
         child: Scaffold(
           appBar: AppBar(
             title: Text(title),
@@ -154,6 +154,7 @@ class _S14ContentState extends State<_S14Content> {
                   children: [
                     TaskNameInput(
                       controller: vm.nameController,
+                      focusNode: _nameFocusNode,
                       label: t.S16_TaskCreate_Edit.label.name,
                       hint: t.S16_TaskCreate_Edit.hint.name,
                       maxLength: 20,

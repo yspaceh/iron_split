@@ -484,4 +484,38 @@ class BalanceCalculator {
 
     return const RemainderDetail();
   }
+
+  /// [新增] 檢查公款餘額是否足夠支付
+  /// 自動處理「編輯模式」下，將原單據佔用的公款額度「加回來」的邏輯
+  static bool isPoolBalanceSufficient({
+    required double amountToCheck,
+    required String currency,
+    required Map<String, double> currentPoolBalances,
+    RecordModel? originalRecord,
+  }) {
+    // 1. 取得目前帳面餘額
+    double available = currentPoolBalances[currency] ?? 0.0;
+
+    // 2. [核心邏輯] 校正可用餘額
+    // 如果是編輯模式，且原單據也是用同幣別公款，先把該筆錢視為「可用的」
+    if (originalRecord != null &&
+        originalRecord.originalCurrencyCode == currency) {
+      // 情況 A: 原本是全額公款
+      if (originalRecord.payerType == 'prepay') {
+        available += originalRecord.originalAmount;
+      }
+      // 情況 B: 原本是混合支付，且有使用公款
+      else if (originalRecord.payerType == 'mixed' &&
+          originalRecord.paymentDetails != null) {
+        final oldPrepay =
+            (originalRecord.paymentDetails!['prepayAmount'] as num?)
+                    ?.toDouble() ??
+                0.0;
+        available += oldPrepay;
+      }
+    }
+
+    // 3. 判斷餘額是否足夠 (容許 0.01 誤差)
+    return available >= (amountToCheck - 0.01);
+  }
 }

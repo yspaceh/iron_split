@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_card.dart';
@@ -80,6 +81,9 @@ class _B07PaymentMethodEditBottomSheetState
   final Map<String, TextEditingController> _memberControllers = {};
   late TextEditingController _prepayController;
 
+  late FocusNode _prepayFocusNode;
+  final Map<String, FocusNode> _memberFocusNodes = {}; // 用 Map 對應每個成員 ID
+
   @override
   void initState() {
     super.initState();
@@ -87,10 +91,14 @@ class _B07PaymentMethodEditBottomSheetState
 
     // 初始化代墊
     _memberAdvance = Map.from(widget.initialMemberAdvance);
+    _prepayFocusNode = FocusNode();
+
     for (var m in widget.members) {
       if (!_memberAdvance.containsKey(m['id'])) {
         _memberAdvance[m['id']] = 0.0;
       }
+      final id = m['id'];
+      _memberFocusNodes[id] = FocusNode();
     }
 
     // 檢查是否有使用代墊
@@ -140,6 +148,10 @@ class _B07PaymentMethodEditBottomSheetState
     _prepayController.dispose();
     for (var c in _memberControllers.values) {
       c.dispose();
+    }
+    _prepayFocusNode.dispose();
+    for (var node in _memberFocusNodes.values) {
+      node.dispose();
     }
     super.dispose();
   }
@@ -262,174 +274,185 @@ class _B07PaymentMethodEditBottomSheetState
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final allNodes = [
+      _prepayFocusNode,
+      ..._memberFocusNodes.values, // 把 Map 裡所有的 Node 攤平加進來
+    ];
 
-    return CommonBottomSheet(
-      title: t.B07_PaymentMethod_Edit.title,
-      bottomActionBar: StickyBottomActionBar.sheet(
-        children: [
-          AppButton(
-            text: t.common.buttons.cancel,
-            type: AppButtonType.secondary,
-            onPressed: () => context.pop(),
-          ),
-          AppButton(
-            text: t.common.buttons.confirm,
-            type: AppButtonType.primary,
-            onPressed: _isValid ? _onSave : null,
-          ),
-        ],
-      ),
-      children: Column(
-        children: [
-          // 1. 固定高度的 Header
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                SummaryRow(
-                  label: t.B07_PaymentMethod_Edit.total_label,
-                  amount: widget.totalAmount,
-                  currencyConstants: widget.selectedCurrency,
-                ),
-                const SizedBox(height: 8),
-                // 即使金額為0也顯示，保持高度穩定
-                SummaryRow(
-                  label: t.B07_PaymentMethod_Edit.total_prepay,
-                  amount: _usePrepay ? _prepayAmount : 0.0,
-                  currencyConstants: widget.selectedCurrency,
-                ),
-                const SizedBox(height: 4),
-                SummaryRow(
-                  label: t.B07_PaymentMethod_Edit.total_advance,
-                  amount: _useAdvance ? _currentAdvanceTotal : 0.0,
-                  currencyConstants: widget.selectedCurrency,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Divider(
-                    height: 1,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-                  ),
-                ),
-                SummaryRow(
-                  label: _isValid
-                      ? t.B07_PaymentMethod_Edit.status_balanced
-                      : t.B07_PaymentMethod_Edit.status_remaining(
-                          amount: CurrencyConstants.formatAmount(
-                              _remaining.abs(), widget.selectedCurrency.code)),
-                  amount: _remaining,
-                  currencyConstants: widget.selectedCurrency,
-                  hideAmount: true,
-                  valueColor:
-                      _isValid ? colorScheme.tertiary : colorScheme.error,
-                  customValueText: _isValid ? "OK" : null,
-                ),
-              ],
+    return AppKeyboardActionsWrapper(
+      focusNodes: allNodes,
+      child: CommonBottomSheet(
+        title: t.B07_PaymentMethod_Edit.title,
+        bottomActionBar: StickyBottomActionBar.sheet(
+          children: [
+            AppButton(
+              text: t.common.buttons.cancel,
+              type: AppButtonType.secondary,
+              onPressed: () => context.pop(),
             ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // 2. 選擇區域
-          Expanded(
-            child: ListView(
-              children: [
-                // A. 公款支付卡片
-                SelectionCard(
-                  title: t.B07_PaymentMethod_Edit.type_prepay,
-                  isSelected: _usePrepay,
-                  isRadio: false,
-                  onToggle: _onPrepayToggle,
-                  // 如果收合時也想顯示金額在右側，可在此傳入 trailing
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 餘額提示
-                      Text(
-                        t.B07_PaymentMethod_Edit.prepay_balance(
-                            amount:
-                                "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
-                        style: TextStyle(
-                          color: _currentCurrencyPoolBalance <
-                                      widget.totalAmount &&
-                                  _usePrepay
-                              ? colorScheme.error
-                              : colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      // 重用 TaskAmountInput
-                      TaskAmountInput(
-                        amountController: _prepayController,
-                        selectedCurrencyConstants: widget.selectedCurrency,
-                        showCurrencyPicker: false, // 隱藏幣別選擇器
-                        externalValidator: (val) {
-                          if (val > _currentCurrencyPoolBalance) {
-                            return t
-                                .B07_PaymentMethod_Edit.err_balance_not_enough;
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+            AppButton(
+              text: t.common.buttons.confirm,
+              type: AppButtonType.primary,
+              onPressed: _isValid ? _onSave : null,
+            ),
+          ],
+        ),
+        children: Column(
+          children: [
+            // 1. 固定高度的 Header
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                children: [
+                  SummaryRow(
+                    label: t.B07_PaymentMethod_Edit.total_label,
+                    amount: widget.totalAmount,
+                    currencyConstants: widget.selectedCurrency,
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  // 即使金額為0也顯示，保持高度穩定
+                  SummaryRow(
+                    label: t.B07_PaymentMethod_Edit.total_prepay,
+                    amount: _usePrepay ? _prepayAmount : 0.0,
+                    currencyConstants: widget.selectedCurrency,
+                  ),
+                  const SizedBox(height: 4),
+                  SummaryRow(
+                    label: t.B07_PaymentMethod_Edit.total_advance,
+                    amount: _useAdvance ? _currentAdvanceTotal : 0.0,
+                    currencyConstants: widget.selectedCurrency,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Divider(
+                      height: 1,
+                      color:
+                          colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  SummaryRow(
+                    label: _isValid
+                        ? t.B07_PaymentMethod_Edit.status_balanced
+                        : t.B07_PaymentMethod_Edit.status_remaining(
+                            amount: CurrencyConstants.formatAmount(
+                                _remaining.abs(),
+                                widget.selectedCurrency.code)),
+                    amount: _remaining,
+                    currencyConstants: widget.selectedCurrency,
+                    hideAmount: true,
+                    valueColor:
+                        _isValid ? colorScheme.tertiary : colorScheme.error,
+                    customValueText: _isValid ? "OK" : null,
+                  ),
+                ],
+              ),
+            ),
 
-                const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-                // B. 成員墊付卡片
-                SelectionCard(
-                  title: t.B07_PaymentMethod_Edit.type_member,
-                  isSelected: _useAdvance,
-                  isRadio: false,
-                  onToggle: _onAdvanceToggle,
-                  child: Column(
-                    children: widget.members.map((m) {
-                      final id = m['id'];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          children: [
-                            CommonAvatar(
-                              avatarId: m['avatar'],
-                              name: m['displayName'],
-                              radius: 18,
-                              fontSize: 14,
-                              isLinked: m['isLinked'] ?? false,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                  m['displayName'] ??
-                                      t.S53_TaskSettings_Members
-                                          .member_default_name,
-                                  style: theme.textTheme.bodyLarge),
-                            ),
-                            const SizedBox(width: 8),
-                            // 使用 Compact Input
-                            SizedBox(
-                              width: 120, // 限制寬度
-                              child: CompactAmountInput(
-                                controller: _memberControllers[id],
-                                onChanged: (val) =>
-                                    _onMemberAdvanceChanged(id, val),
-                                hintText: '0',
-                                currencyConstants: widget.selectedCurrency,
+            // 2. 選擇區域
+            Expanded(
+              child: ListView(
+                children: [
+                  // A. 公款支付卡片
+                  SelectionCard(
+                    title: t.B07_PaymentMethod_Edit.type_prepay,
+                    isSelected: _usePrepay,
+                    isRadio: false,
+                    onToggle: _onPrepayToggle,
+                    // 如果收合時也想顯示金額在右側，可在此傳入 trailing
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 餘額提示
+                        Text(
+                          t.B07_PaymentMethod_Edit.prepay_balance(
+                              amount:
+                                  "${widget.selectedCurrency.code}${widget.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(_currentCurrencyPoolBalance, widget.selectedCurrency.code)}"),
+                          style: TextStyle(
+                            color: _currentCurrencyPoolBalance <
+                                        widget.totalAmount &&
+                                    _usePrepay
+                                ? colorScheme.error
+                                : colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // 重用 TaskAmountInput
+                        TaskAmountInput(
+                          amountController: _prepayController,
+                          selectedCurrencyConstants: widget.selectedCurrency,
+                          focusNode: _prepayFocusNode,
+                          showCurrencyPicker: false, // 隱藏幣別選擇器
+                          externalValidator: (val) {
+                            if (val > _currentCurrencyPoolBalance) {
+                              return t.B07_PaymentMethod_Edit
+                                  .err_balance_not_enough;
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // B. 成員墊付卡片
+                  SelectionCard(
+                    title: t.B07_PaymentMethod_Edit.type_member,
+                    isSelected: _useAdvance,
+                    isRadio: false,
+                    onToggle: _onAdvanceToggle,
+                    child: Column(
+                      children: widget.members.map((m) {
+                        final id = m['id'];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            children: [
+                              CommonAvatar(
+                                avatarId: m['avatar'],
+                                name: m['displayName'],
+                                radius: 18,
+                                fontSize: 14,
+                                isLinked: m['isLinked'] ?? false,
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                    m['displayName'] ??
+                                        t.S53_TaskSettings_Members
+                                            .member_default_name,
+                                    style: theme.textTheme.bodyLarge),
+                              ),
+                              const SizedBox(width: 8),
+                              // 使用 Compact Input
+                              SizedBox(
+                                width: 120, // 限制寬度
+                                child: CompactAmountInput(
+                                  controller: _memberControllers[id],
+                                  focusNode: _memberFocusNodes[id],
+                                  onChanged: (val) =>
+                                      _onMemberAdvanceChanged(id, val),
+                                  hintText: '0',
+                                  currencyConstants: widget.selectedCurrency,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
 
-                // 底部留白
-                const SizedBox(height: 48),
-              ],
+                  // 底部留白
+                  const SizedBox(height: 48),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

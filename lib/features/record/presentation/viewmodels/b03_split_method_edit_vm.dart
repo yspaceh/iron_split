@@ -23,7 +23,6 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
   late Map<String, double> _details;
 
   final Map<String, TextEditingController> _amountControllers = {};
-  final Map<String, FocusNode> _focusNodes = {};
 
   // --- Getters ---
   LoadStatus get initStatus => _initStatus;
@@ -125,7 +124,6 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
           _amountControllers[id]?.text =
               CurrencyConstants.formatAmount(remaining, selectedCurrency.code);
         }
-        _focusNodes[id]?.requestFocus();
       } else {
         _selectedMemberIds.remove(id);
         _details.remove(id);
@@ -206,16 +204,10 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
     };
   }
 
-  FocusNode focusNode(String id) =>
-      _focusNodes.putIfAbsent(id, () => FocusNode());
-
   @override
   void dispose() {
     for (var c in _amountControllers.values) {
       c.dispose();
-    }
-    for (var fn in _focusNodes.values) {
-      fn.dispose();
     }
     super.dispose();
   }

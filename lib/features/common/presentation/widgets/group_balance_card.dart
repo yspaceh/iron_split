@@ -330,7 +330,7 @@ class GroupBalanceCard extends StatelessWidget {
                         if (state.remainder.abs() > 0.001) ...[
                           if (state.isLocked && state.absorbedBy != null)
                             Text(
-                              t.S17_Task_Locked.label_remainder_absorbed_by(
+                              t.S17_Task_Locked.remainder_absorbed_by(
                                   name: state.absorbedBy ?? ""),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,

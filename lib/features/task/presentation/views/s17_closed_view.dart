@@ -18,9 +18,13 @@ class S17ClosedView extends StatelessWidget {
           const StateVisual(
             assetPath: 'assets/images/iron/iron_image_settlement.png',
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Text(t.S32_settlement_result.content),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(t.S32_settlement_result.content),
+              ),
+            ),
           ),
         ],
       ),

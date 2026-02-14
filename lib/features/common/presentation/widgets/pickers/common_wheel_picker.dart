@@ -12,7 +12,7 @@ void showCommonWheelPicker({
   final t = Translations.of(context);
 
   // 收起鍵盤
-  FocusScope.of(context).unfocus();
+  FocusManager.instance.primaryFocus?.unfocus();
 
   showModalBottomSheet(
     context: context,

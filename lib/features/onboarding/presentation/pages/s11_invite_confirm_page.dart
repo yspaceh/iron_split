@@ -153,7 +153,7 @@ class _S11ContentState extends State<_S11Content> {
             AppButton(
               text: t.S11_Invite_Confirm.buttons.confirm,
               type: AppButtonType.primary,
-              isLoading: vm.isJoining == LoadStatus.loading,
+              isLoading: vm.joinStatus == LoadStatus.loading,
               // 按鈕狀態由 VM 決定 (是否已選 Ghost)
               onPressed:
                   vm.canConfirm ? () => handleConfirm(context, vm) : null,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_theme_input.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:provider/provider.dart';
@@ -81,8 +82,8 @@ class _S70ContentState extends State<_S70Content> {
         centerTitle: true,
       ),
       // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+      body: AppKeyboardActionsWrapper(
+        focusNodes: [_nameFocusNode],
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
@@ -92,6 +93,7 @@ class _S70ContentState extends State<_S70Content> {
                 // 顯示名稱
                 TaskNameInput(
                   controller: vm.nameController,
+                  focusNode: _nameFocusNode,
                   label: t.S70_System_Settings.menu.user_name,
                   hint: t.S51_Onboarding_Name.hint,
                   maxLength: 20,

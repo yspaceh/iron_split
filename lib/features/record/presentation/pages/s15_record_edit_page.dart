@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
@@ -9,7 +11,9 @@ import 'package:iron_split/features/common/presentation/view/common_state_view.d
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -53,7 +57,9 @@ class S15RecordEditPage extends StatelessWidget {
         initialDate: initialDate,
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
-      ),
+        authRepo: context.read<AuthRepository>(),
+        prefsService: context.read<PreferencesService>(),
+      )..init(),
       child: const _S15Content(),
     );
   }
@@ -67,7 +73,45 @@ class _S15Content extends StatefulWidget {
 }
 
 class _S15ContentState extends State<_S15Content> {
+  late S15RecordEditViewModel _vm;
   final _formKey = GlobalKey<FormState>();
+  late FocusNode _amountNode;
+  late FocusNode _rateNode;
+  late FocusNode _titleNode; // 新增：給品項名稱
+  late FocusNode _memoNode; // 新增：給備註
+  @override
+  void initState() {
+    super.initState();
+    _amountNode = FocusNode();
+    _rateNode = FocusNode();
+    _titleNode = FocusNode();
+    _memoNode = FocusNode();
+    _vm = context.read<S15RecordEditViewModel>();
+    _vm.addListener(_onStateChanged);
+    // 監聽未登入狀態並自動跳轉
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _onStateChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    _vm.removeListener(_onStateChanged);
+    _amountNode.dispose();
+    _rateNode.dispose();
+    _titleNode.dispose();
+    _memoNode.dispose();
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    if (!mounted) return;
+    // 處理自動導航 (如未登入)
+    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
+      context.goNamed('S00');
+    }
+  }
 
   Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {
     try {
@@ -261,21 +305,13 @@ class _S15ContentState extends State<_S15Content> {
 
     if (confirm == true && context.mounted) {
       try {
-        final success = await vm.deleteRecord(t);
-        if (success && mounted) {
-          // A. 刪除成功
-          AppToast.showSuccess(
-              context, t.D10_RecordDelete_Confirm.deleted_success);
+        await vm.deleteRecord(t);
+        if (!mounted) return;
+        // A. 刪除成功
+        AppToast.showSuccess(
+            context, t.D10_RecordDelete_Confirm.deleted_success);
 
-          context.pop();
-        } else {
-          // B. 刪除失敗 (因為被使用) -> 彈出錯誤 Dialog
-          if (mounted) {
-            CommonInfoDialog.show(context,
-                title: t.error.dialog.delete_failed.title,
-                content: t.error.dialog.delete_failed.message);
-          }
-        }
+        context.pop();
       } on AppErrorCodes catch (code) {
         if (!mounted) return;
 
@@ -319,101 +355,117 @@ class _S15ContentState extends State<_S15Content> {
       leading: leading,
       actions: actions,
       errorCode: vm.initErrorCode,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          centerTitle: true,
-          leading: leading,
-          actions: actions,
-        ),
-        extendBody: true,
-        bottomNavigationBar: StickyBottomActionBar(
-          isSheetMode: false,
-          children: [
-            AppButton(
-              text: t.common.buttons.save,
-              type: AppButtonType.primary,
-              icon: Icons.add,
-              isLoading: vm.isSaving,
-              onPressed: vm.isSaving ? null : () => _onSave(vm),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              // [修正] 改用 CustomSlidingSegment
-              child: CustomSlidingSegment<int>(
-                selectedValue: vm.recordTypeIndex,
-                onValueChanged: (val) => vm.setRecordType(val),
-                segments: {
-                  0: t.S15_Record_Edit.tab.expense,
-                  1: t.S15_Record_Edit.tab.income,
-                },
+      child: AppKeyboardActionsWrapper(
+        // 4. [新增] 把所有 Node 都註冊進去
+        focusNodes: [_amountNode, _rateNode, _titleNode, _memoNode],
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            centerTitle: true,
+            leading: leading,
+            actions: actions,
+          ),
+          extendBody: true,
+          bottomNavigationBar: StickyBottomActionBar(
+            isSheetMode: false,
+            children: [
+              AppButton(
+                text: t.common.buttons.save,
+                type: AppButtonType.primary,
+                icon: Icons.add,
+                isLoading: vm.saveStatus == LoadStatus.loading,
+                onPressed: () => _onSave(vm),
               ),
-            ),
-            Expanded(
-              child: Form(
-                key: _formKey,
-                child: vm.recordTypeIndex == 0
-                    ? S15ExpenseForm(
-                        amountController: vm.amountController,
-                        titleController: vm.titleController,
-                        memoController: vm.memoController,
-                        exchangeRateController: vm.exchangeRateController,
-                        selectedDate: vm.selectedDate,
-                        selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                        baseCurrency: vm.baseCurrency,
-                        selectedCategoryId: vm.selectedCategoryId,
-                        isRateLoading: vm.isRateLoading,
-                        poolBalancesByCurrency: vm.adjustedPoolBalances,
-                        members: vm.taskMembers,
-                        details: vm.details,
-                        baseRemainingAmount: vm.baseRemainingAmount,
-                        baseSplitMethod: vm.baseSplitMethod,
-                        baseMemberIds: vm.baseMemberIds,
-                        baseRawDetails: vm.baseRawDetails,
-                        remainderDetail: vm.remainderDetail,
-                        payerType: vm.payerType,
-                        payerId: vm.payerId,
-                        hasPaymentError: vm.hasPaymentError,
-                        onPaymentMethodTap: () => _onPaymentMethodTap(vm),
-                        onDateChanged: vm.updateDate,
-                        onCategoryChanged: vm.updateCategory,
-                        onCurrencyChanged: (code) =>
-                            _onUpdateCurrency(vm, code),
-                        onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                        onShowRateInfo: () => _showRateInfoDialog(),
-                        onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                        onAddItemTap: () => _onAddItemTap(vm),
-                        onDetailEditTap: (detail) =>
-                            _onDetailEditTap(vm, detail),
-                      )
-                    : S15IncomeForm(
-                        amountController: vm.amountController,
-                        memoController: vm.memoController,
-                        exchangeRateController: vm.exchangeRateController,
-                        selectedDate: vm.selectedDate,
-                        selectedCurrencyConstants: vm.selectedCurrencyConstants,
-                        baseCurrency: vm.baseCurrency,
-                        isRateLoading: vm.isRateLoading,
-                        members: vm.taskMembers,
-                        baseRemainingAmount: vm.totalAmount,
-                        remainderDetail: vm.remainderDetail,
-                        baseSplitMethod: vm.baseSplitMethod,
-                        baseMemberIds: vm.baseMemberIds,
-                        baseRawDetails: vm.baseRawDetails,
-                        onDateChanged: vm.updateDate,
-                        onCurrencyChanged: (code) =>
-                            _onUpdateCurrency(vm, code),
-                        onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                        onShowRateInfo: () => _showRateInfoDialog(),
-                        onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                      ),
+            ],
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                // [修正] 改用 CustomSlidingSegment
+                child: CustomSlidingSegment<int>(
+                  selectedValue: vm.recordTypeIndex,
+                  onValueChanged: (val) => vm.setRecordType(val),
+                  segments: {
+                    0: t.S15_Record_Edit.tab.expense,
+                    1: t.S15_Record_Edit.tab.income,
+                  },
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: vm.recordTypeIndex == 0
+                      ? S15ExpenseForm(
+                          amountController: vm.amountController,
+                          titleController: vm.titleController,
+                          memoController: vm.memoController,
+                          exchangeRateController: vm.exchangeRateController,
+                          selectedDate: vm.selectedDate,
+                          selectedCurrencyConstants:
+                              vm.selectedCurrencyConstants,
+                          baseCurrency: vm.baseCurrency,
+                          selectedCategoryId: vm.selectedCategoryId,
+                          isRateLoading:
+                              vm.rateLoadStatus == LoadStatus.loading,
+                          poolBalancesByCurrency: vm.adjustedPoolBalances,
+                          members: vm.taskMembers,
+                          details: vm.details,
+                          baseRemainingAmount: vm.baseRemainingAmount,
+                          baseSplitMethod: vm.baseSplitMethod,
+                          baseMemberIds: vm.baseMemberIds,
+                          baseRawDetails: vm.baseRawDetails,
+                          remainderDetail: vm.remainderDetail,
+                          payerType: vm.payerType,
+                          payerId: vm.payerId,
+                          hasPaymentError: vm.hasPaymentError,
+                          amountFocusNode: _amountNode,
+                          rateFocusNode: _rateNode,
+                          titleFocusNode: _titleNode,
+                          memoFocusNode: _memoNode,
+                          onPaymentMethodTap: () => _onPaymentMethodTap(vm),
+                          onDateChanged: vm.updateDate,
+                          onCategoryChanged: vm.updateCategory,
+                          onCurrencyChanged: (code) =>
+                              _onUpdateCurrency(vm, code),
+                          onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                          onShowRateInfo: () => _showRateInfoDialog(),
+                          onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
+                          onAddItemTap: () => _onAddItemTap(vm),
+                          onDetailEditTap: (detail) =>
+                              _onDetailEditTap(vm, detail),
+                        )
+                      : S15IncomeForm(
+                          amountController: vm.amountController,
+                          memoController: vm.memoController,
+                          exchangeRateController: vm.exchangeRateController,
+                          selectedDate: vm.selectedDate,
+                          selectedCurrencyConstants:
+                              vm.selectedCurrencyConstants,
+                          baseCurrency: vm.baseCurrency,
+                          isRateLoading:
+                              vm.rateLoadStatus == LoadStatus.loading,
+                          members: vm.taskMembers,
+                          baseRemainingAmount: vm.totalAmount,
+                          remainderDetail: vm.remainderDetail,
+                          baseSplitMethod: vm.baseSplitMethod,
+                          baseMemberIds: vm.baseMemberIds,
+                          baseRawDetails: vm.baseRawDetails,
+                          amountFocusNode: _amountNode,
+                          rateFocusNode: _rateNode,
+                          memoFocusNode: _memoNode,
+                          onDateChanged: vm.updateDate,
+                          onCurrencyChanged: (code) =>
+                              _onUpdateCurrency(vm, code),
+                          onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                          onShowRateInfo: () => _showRateInfoDialog(),
+                          onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
