@@ -962,6 +962,7 @@ class _TranslationsS14TaskSettingsMenuEnUs extends TranslationsS14TaskSettingsMe
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
+	@override String get invite => 'Invite';
 	@override String get member_settings => 'Member Settings';
 	@override String get history => 'History';
 	@override String get close_task => 'End Task';
@@ -1306,7 +1307,6 @@ class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53Task
 
 	// Translations
 	@override String get add => 'Add Member';
-	@override String get invite => 'Invite';
 }
 
 // Path: S70_System_Settings.section
@@ -2027,6 +2027,7 @@ extension on TranslationsEnUs {
 			'S14_Task_Settings.section.task_period' => 'Task Period',
 			'S14_Task_Settings.section.settlement' => 'Settlement Settings',
 			'S14_Task_Settings.section.other' => 'Other Settings',
+			'S14_Task_Settings.menu.invite' => 'Invite',
 			'S14_Task_Settings.menu.member_settings' => 'Member Settings',
 			'S14_Task_Settings.menu.history' => 'History',
 			'S14_Task_Settings.menu.close_task' => 'End Task',
@@ -2172,7 +2173,6 @@ extension on TranslationsEnUs {
 			'S52_TaskSettings_Log.unit_items' => 'items',
 			'S53_TaskSettings_Members.title' => 'Member Management',
 			'S53_TaskSettings_Members.buttons.add' => 'Add Member',
-			'S53_TaskSettings_Members.buttons.invite' => 'Invite',
 			'S53_TaskSettings_Members.label_default_ratio' => 'Default Ratio',
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S53_TaskSettings_Members.member_name' => 'Member Name',

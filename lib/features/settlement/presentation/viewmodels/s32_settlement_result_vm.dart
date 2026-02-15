@@ -2,32 +2,39 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S32SettlementResultViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
+  final AuthRepository _authRepo;
   final String taskId;
   final DeepLinkService _deepLinkService;
   final SettlementService _settlementService;
   final ShareService _shareService;
 
   TaskModel? _task;
-  bool _isLoading = true;
-
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
   StreamSubscription? _taskSubscription;
   bool _hasmarkedAsSeen = false;
+  bool _isRevealed = false;
+  bool get isRevealed => _isRevealed;
 
   // Getters
-  bool get isLoading => _isLoading;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
   TaskModel? get task => _task;
 
   // 從 Task 中取得 Base Currency
@@ -105,47 +112,58 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   S32SettlementResultViewModel({
     required this.taskId,
     required TaskRepository taskRepo,
+    required AuthRepository authRepo,
     required DeepLinkService deepLinkService,
     required SettlementService settlementService,
     required ShareService shareService,
   })  : _taskRepo = taskRepo,
+        _authRepo = authRepo,
         _deepLinkService = deepLinkService,
         _settlementService = settlementService,
         _shareService = shareService;
 
   void init() {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return;
-    _isLoading = true;
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
+    try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+      final uid = user.uid;
 
-    // 監聽 Task 變化 (通常 S32 進來時資料已經是 settled/pending)
-    _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-      _task = taskData;
-      _isLoading = false;
+      // 監聽 Task 變化 (通常 S32 進來時資料已經是 settled/pending)
+      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
+        _task = taskData;
+        _autoMarkAsSeen(uid);
+      });
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
       notifyListeners();
-      _autoMarkAsSeen(uid);
-    });
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
+    }
   }
 
   void _autoMarkAsSeen(String uid) {
-    debugPrint('uid: $uid');
-    // 如果已經標記過，或者資料還沒準備好，就跳過
-    debugPrint('_hasmarkedAsSeen: $_hasmarkedAsSeen');
     if (_hasmarkedAsSeen || _task == null || _task!.settlement == null) return;
 
     final viewStatus =
         _task!.settlement!['viewStatus'] as Map<String, dynamic>? ?? {};
-
-    debugPrint('viewStatus: $viewStatus');
-
-    debugPrint('viewStatus[uid]: ${viewStatus[uid]}');
 
     // 如果目前雲端紀錄我還沒看過
     if (viewStatus[uid] != true) {
       _hasmarkedAsSeen = true; // 先設為 true，防止串流多次觸發
       markAsSeen(uid);
     }
+    if (!shouldShowRoulette) {
+      _isRevealed = true;
+    }
+    _initStatus = LoadStatus.success;
+    notifyListeners();
   }
 
   Future<void> markAsSeen(String uid) async {
@@ -184,6 +202,13 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   Future<void> notifyMembers(
       {required String message, required String subject}) async {
     await _shareService.shareText(message, subject: subject);
+  }
+
+  void setRevealed(bool value) {
+    if (_isRevealed != value) {
+      _isRevealed = value;
+      notifyListeners();
+    }
   }
 
   @override

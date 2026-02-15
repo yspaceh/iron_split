@@ -1,76 +1,68 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-
-enum UpdateType {
-  none,
-  tosOnly, // 只有條款更新
-  privacyOnly, // 只有隱私更新
-  both, // 兩個都更新
-}
-
-// 用於 CustomSlidingSegment 的 Key
-enum LegalTab { terms, privacy }
+import 'package:iron_split/features/system/data/system_repository.dart';
 
 class S72TermsUpdateViewModel extends ChangeNotifier {
-  final AuthRepository _repo = AuthRepository();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthRepository _authRepo;
+  final SystemRepository _systemRepo;
 
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
-
-  bool _isAgreed = false; // 按鈕 Loading
-  bool get isAgreed => _isAgreed;
-
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
+  LoadStatus _agreeStatus = LoadStatus.initial;
+  LoadStatus _logoutStatus = LoadStatus.initial;
   UpdateType _type = UpdateType.none;
-  UpdateType get type => _type;
-
-  // [新增] 當前顯示的 Tab (預設先顯示 Terms)
   LegalTab _currentTab = LegalTab.terms;
+
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+  LoadStatus get agreeStatus => _agreeStatus;
+  LoadStatus get logoutStatus => _logoutStatus;
+  UpdateType get type => _type;
   LegalTab get currentTab => _currentTab;
 
-  /// 初始化：檢查版本
-  Future<void> checkUpdateType() async {
-    _isLoading = true;
+  S72TermsUpdateViewModel({
+    required AuthRepository authRepo,
+    required SystemRepository systemRepo,
+  })  : _authRepo = authRepo,
+        _systemRepo = systemRepo;
+
+  Future<void> init() async {
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
     try {
-      final user = _repo.currentUser;
-      if (user == null) return;
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
 
-      final results = await Future.wait([
-        _firestore.collection('config').doc('legal').get(),
-        _firestore.collection('users').doc(user.uid).get(),
-      ]);
+      final status = await _systemRepo.checkLegalVersionStatus(user.uid);
 
-      final sysData = results[0].data();
-      final userData = results[1].data();
-
-      final int sysTos = sysData?['latest_tos_version'] ?? 1;
-      final int sysPrivacy = sysData?['latest_privacy_version'] ?? 1;
-
-      final int userTos = userData?['agreed_tos_version'] ?? 0;
-      final int userPrivacy = userData?['agreed_privacy_version'] ?? 0;
-
-      final bool tosOutdated = userTos < sysTos;
-      final bool privacyOutdated = userPrivacy < sysPrivacy;
-
-      if (tosOutdated && privacyOutdated) {
+      if (status.tosOutdated && status.privacyOutdated) {
         _type = UpdateType.both;
-        _currentTab = LegalTab.terms; // 兩個都有時，預設先看 Terms
-      } else if (tosOutdated) {
+        _currentTab = LegalTab.terms;
+      } else if (status.tosOutdated) {
         _type = UpdateType.tosOnly;
         _currentTab = LegalTab.terms;
-      } else if (privacyOutdated) {
+      } else if (status.privacyOutdated) {
         _type = UpdateType.privacyOnly;
         _currentTab = LegalTab.privacy;
       } else {
         _type = UpdateType.none;
       }
+
+      _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
-      debugPrint("S72 check failed: $e");
-    } finally {
-      _isLoading = false;
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
@@ -84,19 +76,54 @@ class S72TermsUpdateViewModel extends ChangeNotifier {
   }
 
   /// 同意並繼續
-  Future<void> agreeLatestTerms({required VoidCallback onSuccess}) async {
-    if (_isAgreed) return;
-
-    _isAgreed = true;
+  Future<void> agreeLatestTerms() async {
+    if (_agreeStatus == LoadStatus.loading) return;
+    _agreeStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
-      await _repo.acceptLegalTerms();
-      onSuccess();
-    } catch (e) {
-      debugPrint("Agree failed: $e");
-      _isAgreed = false;
+      await _authRepo.acceptLegalTerms();
+      _agreeStatus = LoadStatus.success;
       notifyListeners();
+    } on AppErrorCodes {
+      _agreeStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _agreeStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> logout() async {
+    if (_logoutStatus == LoadStatus.loading) return;
+    _logoutStatus = LoadStatus.loading;
+    notifyListeners();
+
+    try {
+      // 🔥 加入這兩行，直接檢查 Firebase Auth 真正的底層狀態
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+
+      // 登出 (非關鍵)
+      try {
+        await _authRepo.signOut();
+      } catch (e) {
+        // 如果登出失敗 (例如網路剛好斷了)，也不要報錯
+        // 因為帳號已經沒了，使用者下次進來一樣會被擋在門外
+      }
+
+      _logoutStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes {
+      _logoutStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _logoutStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

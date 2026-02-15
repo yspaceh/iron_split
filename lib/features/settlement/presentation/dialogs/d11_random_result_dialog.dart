@@ -76,22 +76,15 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final int targetIndex =
         (targetRound * widget.members.length) + safeWinnerIndex;
 
-    debugPrint("[D11] Winner: ${widget.winnerId}, TargetIndex: $targetIndex");
-
     _scrollController = FixedExtentScrollController(initialItem: 0);
 
-    // [修改] 改用 _tryStartSpinning 安全啟動
-    debugPrint("[D11] Scheduling initial check..."); // [LOG]
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _tryStartSpinning(targetIndex));
   }
 
   // [新增] 安全啟動檢查
   void _tryStartSpinning(int targetIndex, [int attempt = 1]) {
-    if (!mounted) {
-      debugPrint("[D11] Unmounted during check."); // [LOG]
-      return;
-    }
+    if (!mounted) return;
 
     bool isReady = false;
     bool hasClients = _scrollController.hasClients;
@@ -100,23 +93,15 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
       try {
         isReady = _scrollController.position.haveDimensions;
       } catch (e) {
-        debugPrint("[D11] position error: $e"); // [LOG]
         isReady = false;
       }
     }
 
-    debugPrint(
-        "[D11] Check #$attempt - hasClients: $hasClients, isReady: $isReady"); // [LOG]
-
     if (isReady) {
-      debugPrint("[D11] Ready! Starting animation."); // [LOG]
       _startSpinning(targetIndex);
     } else {
       // 防無窮迴圈 (試超過 100 次就放棄)
-      if (attempt > 100) {
-        debugPrint("[D11] Timeout waiting for dimensions."); // [LOG]
-        return;
-      }
+      if (attempt > 100) return;
       // 下一幀再試
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => _tryStartSpinning(targetIndex, attempt + 1));

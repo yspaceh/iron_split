@@ -14,6 +14,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_bottom_sh
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/b03_split_method_edit_vm.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/summary_row.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -77,6 +78,7 @@ class B03SplitMethodEditBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => B03SplitMethodEditViewModel(
+        authRepo: context.read<AuthRepository>(),
         totalAmount: totalAmount,
         selectedCurrency: selectedCurrency,
         allMembers: allMembers,
@@ -103,14 +105,14 @@ class _B03ContentState extends State<_B03Content> {
   final Map<String, FocusNode> _focusNodes = {};
   @override
   void dispose() {
-    // ✅ 2. [新增] 釋放所有 Node
+    //  2. [新增] 釋放所有 Node
     for (var node in _focusNodes.values) {
       node.dispose();
     }
     super.dispose();
   }
 
-  // ✅ 3. [新增] Helper 方法：取得或建立 Node
+  //  3. [新增] Helper 方法：取得或建立 Node
   FocusNode _getFocusNode(String memberId) {
     if (!_focusNodes.containsKey(memberId)) {
       _focusNodes[memberId] = FocusNode();
@@ -138,6 +140,7 @@ class _B03ContentState extends State<_B03Content> {
         status: vm.initStatus,
         title: title,
         errorCode: vm.initErrorCode,
+        isSheetMode: true,
         child: CommonBottomSheet(
           title: title,
           // 底部按鈕區：使用 .sheet 建構子

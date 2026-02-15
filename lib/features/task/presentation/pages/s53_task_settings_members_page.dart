@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
-import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
@@ -16,9 +15,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_avatar.da
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
-import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s53_task_settings_members_vm.dart';
@@ -39,49 +36,15 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
-        inviteRepo: context.read<InviteRepository>(),
         authRepo: context.read<AuthRepository>(),
-        shareService: context.read<ShareService>(),
-        deepLinkService: context.read<DeepLinkService>(),
       )..init(),
       child: const _S53Content(),
     );
   }
 }
 
-class _S53Content extends StatefulWidget {
+class _S53Content extends StatelessWidget {
   const _S53Content();
-
-  @override
-  State<_S53Content> createState() => _S53ContentState();
-}
-
-class _S53ContentState extends State<_S53Content> {
-  late S53TaskSettingsMembersViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S53TaskSettingsMembersViewModel>();
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   // --- Logic Helpers ---
   void _showRenameDialog(
@@ -120,29 +83,7 @@ class _S53ContentState extends State<_S53Content> {
     }
   }
 
-  Future<void> handleShare(BuildContext context,
-      S53TaskSettingsMembersViewModel vm, String taskName) async {
-    final t = Translations.of(context);
-    try {
-      final inviteCode = await vm.inviteMember();
-      final message = t.common.share.invite.message(
-        taskName: taskName,
-        code: inviteCode,
-        link: vm.link,
-      );
-      // 2. 委派 VM 執行
-      await vm.notifyMembers(
-        message: message,
-        subject: t.common.share.invite.subject,
-      );
-    } on AppErrorCodes catch (code) {
-      if (!context.mounted) return;
-      final msg = ErrorMapper.map(context, code: code);
-      AppToast.showError(context, msg);
-    }
-  }
-
-  Future<void> handleAdd(BuildContext context,
+  Future<void> _handleAdd(BuildContext context,
       S53TaskSettingsMembersViewModel vm, TaskModel task) async {
     try {
       await vm.addMember(task);
@@ -226,7 +167,6 @@ class _S53ContentState extends State<_S53Content> {
           );
         }
 
-        final taskName = task.name;
         final createdBy = task.createdBy;
         final membersMap = task.members;
         final membersList = task.sortedMembers;
@@ -382,16 +322,10 @@ class _S53ContentState extends State<_S53Content> {
             isSheetMode: false,
             children: [
               AppButton(
-                text: t.S53_TaskSettings_Members.buttons.invite,
-                type: AppButtonType.secondary,
-                isLoading: vm.inviteMemberStatus == LoadStatus.loading,
-                onPressed: () => handleShare(context, vm, taskName),
-              ),
-              AppButton(
                 text: t.S53_TaskSettings_Members.buttons.add,
                 type: AppButtonType.primary,
                 isLoading: vm.addMemberStatus == LoadStatus.loading,
-                onPressed: () => handleAdd(context, vm, task),
+                onPressed: () => _handleAdd(context, vm, task),
               ),
             ],
           ),

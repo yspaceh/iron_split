@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_theme_input.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_language_input.dart';
@@ -25,8 +30,9 @@ class S70SystemSettingsPage extends StatelessWidget {
       create: (context) => S70SystemSettingsViewModel(
         onboardingService: context.read<OnboardingService>(),
         authRepo: context.read<AuthRepository>(),
+        systemRepo: context.read<SystemRepository>(),
         initialName: '',
-      ), // VM 內部建構子已包含 _init() 呼叫
+      )..init(),
       child: const _S70Content(),
     );
   }
@@ -40,17 +46,23 @@ class _S70Content extends StatefulWidget {
 }
 
 class _S70ContentState extends State<_S70Content> {
-  // 2. 建立 FocusNode
+  late S70SystemSettingsViewModel _vm;
   final FocusNode _nameFocusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
-    // 3. 綁定監聽器：焦點失去時自動儲存
-    final vm = context.read<S70SystemSettingsViewModel>();
-    _nameFocusNode.addListener(() {
+    _vm = context.read<S70SystemSettingsViewModel>();
+
+    _nameFocusNode.addListener(() async {
       if (!_nameFocusNode.hasFocus) {
-        vm.updateName();
+        try {
+          await _vm.updateName();
+          if (!mounted) return;
+          AppToast.showSuccess(context, t.success.saved);
+        } on AppErrorCodes catch (code) {
+          final msg = ErrorMapper.map(context, code: code);
+          AppToast.showError(context, msg);
+        }
       }
     });
   }
@@ -67,90 +79,89 @@ class _S70ContentState extends State<_S70Content> {
     final vm = context.watch<S70SystemSettingsViewModel>();
     final themeVm = context.watch<ThemeViewModel>();
     final localeVm = context.watch<LocaleViewModel>();
+    final title = t.S70_System_Settings.title;
 
-    // 簡單的 Loading 狀態處理
-    if (vm.isLoading && vm.nameController.text.isEmpty) {
-      // 只有在初始載入且沒資料時才顯示全頁 Loading
-      // 避免 updateName 時畫面閃爍
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            Text(t.S70_System_Settings.title), // 或 t.S70_System_Settings.title
-        centerTitle: true,
-      ),
-      // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
-      body: AppKeyboardActionsWrapper(
-        focusNodes: [_nameFocusNode],
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            SectionWrapper(
-              title: t.S70_System_Settings.section.basic,
-              children: [
-                // 顯示名稱
-                TaskNameInput(
-                  controller: vm.nameController,
-                  focusNode: _nameFocusNode,
-                  label: t.S70_System_Settings.menu.user_name,
-                  hint: t.S51_Onboarding_Name.hint,
-                  maxLength: 20,
-                ),
-                const SizedBox(height: 8),
-                // 收款資料
-                NavTile(
-                  title: t.S70_System_Settings.menu.payment_info,
-                  onTap: () => context.pushNamed('S73'),
-                ),
-                const SizedBox(height: 8),
-                // 語言設定
-                TaskLanguageInput(
-                  language: localeVm.currentLocale,
-                  onLanguageChanged: (newLocale) =>
-                      localeVm.updateLanguage(newLocale),
-                ),
-                const SizedBox(height: 8),
-                // 深淺模式
-                TaskThemeInput(
-                  theme: themeVm.themeMode,
-                  onThemeChanged: (newTheme) => themeVm.setThemeMode(newTheme),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SectionWrapper(
-                title: t.S70_System_Settings.section.legal,
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title), // 或 t.S70_System_Settings.title
+          centerTitle: true,
+        ),
+        // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
+        body: AppKeyboardActionsWrapper(
+          focusNodes: [_nameFocusNode],
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: [
+              SectionWrapper(
+                title: t.S70_System_Settings.section.basic,
                 children: [
-                  NavTile(
-                    title: t.S70_System_Settings.menu.terms,
-                    onTap: () => context.pushNamed(
-                      'S71',
-                      extra: {'isTerms': true},
-                    ),
+                  // 顯示名稱
+                  TaskNameInput(
+                    controller: vm.nameController,
+                    focusNode: _nameFocusNode,
+                    label: t.S70_System_Settings.menu.user_name,
+                    hint: t.S51_Onboarding_Name.hint,
+                    maxLength: 20,
                   ),
                   const SizedBox(height: 8),
+                  // 收款資料
                   NavTile(
-                    title: t.S70_System_Settings.menu.privacy,
-                    onTap: () => context.pushNamed(
-                      'S71',
-                      extra: {'isTerms': false},
+                    title: t.S70_System_Settings.menu.payment_info,
+                    onTap: () => context.pushNamed('S73'),
+                  ),
+                  const SizedBox(height: 8),
+                  // 語言設定
+                  TaskLanguageInput(
+                    language: localeVm.currentLocale,
+                    onLanguageChanged: (newLocale) =>
+                        localeVm.updateLanguage(newLocale),
+                  ),
+                  const SizedBox(height: 8),
+                  // 深淺模式
+                  TaskThemeInput(
+                    theme: themeVm.themeMode,
+                    onThemeChanged: (newTheme) =>
+                        themeVm.setThemeMode(newTheme),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SectionWrapper(
+                  title: t.S70_System_Settings.section.legal,
+                  children: [
+                    NavTile(
+                      title: t.S70_System_Settings.menu.terms,
+                      onTap: () => context.pushNamed(
+                        'S71',
+                        extra: {'isTerms': true},
+                      ),
                     ),
-                  ),
-                ]),
-            const SizedBox(height: 16),
-            SectionWrapper(
-                title: t.S70_System_Settings.section.account,
-                children: [
-                  NavTile(
-                    title: t.S70_System_Settings.menu.delete_account,
-                    isDestructive: true,
-                    onTap: () => context.pushNamed('S74'),
-                  ),
-                ]),
-            const SizedBox(height: 32),
-          ],
+                    const SizedBox(height: 8),
+                    NavTile(
+                      title: t.S70_System_Settings.menu.privacy,
+                      onTap: () => context.pushNamed(
+                        'S71',
+                        extra: {'isTerms': false},
+                      ),
+                    ),
+                  ]),
+              const SizedBox(height: 16),
+              SectionWrapper(
+                  title: t.S70_System_Settings.section.account,
+                  children: [
+                    NavTile(
+                      title: t.S70_System_Settings.menu.delete_account,
+                      isDestructive: true,
+                      onTap: () => context.pushNamed('S74'),
+                    ),
+                  ]),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

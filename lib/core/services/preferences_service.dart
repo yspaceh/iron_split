@@ -7,6 +7,7 @@ class PreferencesService {
   final FlutterSecureStorage _secureStorage;
 
   static const String _keyLastCurrency = 'last_used_currency';
+  static const String _keyDefaultPaymentInfo = 'user_default_payment_info';
 
   /// 建構子：注入 SharedPreferences 與 SecureStorage
   PreferencesService(this._prefs, {FlutterSecureStorage? secureStorage})
@@ -42,6 +43,27 @@ class PreferencesService {
     try {
       return _prefs.getString(_keyLastCurrency);
     } catch (e) {
+      return null;
+    }
+  }
+
+  /// 儲存預設收款資訊
+  Future<void> saveDefaultPaymentInfo(String jsonString) async {
+    try {
+      await _secureStorage.write(
+          key: _keyDefaultPaymentInfo, value: jsonString);
+    } catch (e) {
+      // 這裡可以考慮拋出 AppErrorCodes.storageWriteFailed
+      throw AppErrorCodes.saveFailed;
+    }
+  }
+
+  /// 讀取預設收款資訊
+  Future<String?> getDefaultPaymentInfo() async {
+    try {
+      return await _secureStorage.read(key: _keyDefaultPaymentInfo);
+    } catch (e) {
+      // 讀取失敗視為無資料
       return null;
     }
   }

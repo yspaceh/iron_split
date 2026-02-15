@@ -28,39 +28,8 @@ class S74DeleteAccountNoticePage extends StatelessWidget {
   }
 }
 
-class _S74Content extends StatefulWidget {
+class _S74Content extends StatelessWidget {
   const _S74Content();
-
-  @override
-  State<_S74Content> createState() => _S74ContentState();
-}
-
-class _S74ContentState extends State<_S74Content> {
-  late S74DeleteAccountNoticeViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S74DeleteAccountNoticeViewModel>();
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   Future<void> _handleDeleteAccount(
       BuildContext context, S74DeleteAccountNoticeViewModel vm) async {

@@ -185,10 +185,7 @@ class RecordRepository extends BaseRepository {
           .limit(1)
           .get();
 
-      if (payerQuery.docs.isNotEmpty) return;
-
-      // 2. 如果未來有其他引用方式 (例如關聯轉帳)，也可以在這裡檢查
-      throw AppErrorCodes.incomeIsUsed;
+      if (payerQuery.docs.isNotEmpty) throw AppErrorCodes.incomeIsUsed;
     }, AppErrorCodes.initFailed);
   }
 

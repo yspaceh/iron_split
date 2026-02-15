@@ -73,7 +73,6 @@ class _S15Content extends StatefulWidget {
 }
 
 class _S15ContentState extends State<_S15Content> {
-  late S15RecordEditViewModel _vm;
   final _formKey = GlobalKey<FormState>();
   late FocusNode _amountNode;
   late FocusNode _rateNode;
@@ -86,31 +85,15 @@ class _S15ContentState extends State<_S15Content> {
     _rateNode = FocusNode();
     _titleNode = FocusNode();
     _memoNode = FocusNode();
-    _vm = context.read<S15RecordEditViewModel>();
-    _vm.addListener(_onStateChanged);
-    // 監聽未登入狀態並自動跳轉
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
   }
 
   @override
   void dispose() {
-    _vm.removeListener(_onStateChanged);
     _amountNode.dispose();
     _rateNode.dispose();
     _titleNode.dispose();
     _memoNode.dispose();
     super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
   }
 
   Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {

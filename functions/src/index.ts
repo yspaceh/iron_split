@@ -338,7 +338,7 @@ export const joinByInviteCode = onCall(async (request) => {
  * 4. 刪除 User Document
  * 5. 刪除 Auth 帳號
  */
-// ✅ 統一使用 v2 寫法，與您的 createInviteCode 保持一致
+//  統一使用 v2 寫法，與您的 createInviteCode 保持一致
 export const deleteUserAccount = onCall(async (request) => {
   // 這裡改用 request.auth，絕對能精準抓到您的登入狀態
   if (!request.auth) {

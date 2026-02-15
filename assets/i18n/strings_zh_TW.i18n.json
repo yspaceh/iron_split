@@ -260,6 +260,7 @@
       "other": "其他設定"
     },
     "menu" : {
+      "invite": "發送邀請",
       "member_settings": "成員設定",
       "history": "歷史紀錄",
       "close_task": "結束任務"
@@ -481,8 +482,7 @@
   "S53_TaskSettings_Members": {
     "title": "成員管理",
     "buttons": {
-      "add": "新增成員",
-      "invite": "發送邀請"
+      "add": "新增成員"
     },
     "label_default_ratio": "預設比例",
     "member_default_name": "成員",

@@ -2,10 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +39,7 @@ class S32SettlementResultPage extends StatelessWidget {
       create: (context) => S32SettlementResultViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
         deepLinkService: context.read<DeepLinkService>(),
         settlementService: context.read<SettlementService>(),
         shareService: context.read<ShareService>(),
@@ -53,9 +57,6 @@ class _S32Content extends StatefulWidget {
 }
 
 class _S32ContentState extends State<_S32Content> {
-  // 狀態：是否已經揭曉
-  bool _hasRevealed = false;
-
   // 標記：是否已經嘗試觸發過 Dialog (避免重複觸發)
   bool _dialogTriggered = false;
 
@@ -65,22 +66,44 @@ class _S32ContentState extends State<_S32Content> {
     // 預設先不揭曉，等待 VM 資料載入後決定
   }
 
+  void _onBackToTask(S32SettlementResultViewModel vm) {
+    // 清除 Stack，回到 S17 並帶上 taskId
+    context.goNamed('S17', pathParameters: {'taskId': vm.taskId});
+  }
+
+  Future<void> _handleShare(
+      BuildContext context, S32SettlementResultViewModel vm) async {
+    final t = Translations.of(context);
+    // 1. UI 負責組裝字串 (包含 DeepLink)
+    final message = t.common.share.settlement.message(
+      taskName: vm.task!.name,
+      link: vm.link,
+    );
+
+    try {
+      // 2. 委派 VM 執行
+      await vm.notifyMembers(
+        message: message,
+        subject: t.common.share.settlement.subject,
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   // 監聽 VM 變化來觸發 Dialog
   void _checkAndTriggerDialog(S32SettlementResultViewModel vm) {
-    if (_dialogTriggered) return;
-    if (vm.isLoading || vm.task == null) return; // 資料還沒好
+    if (_dialogTriggered || vm.isRevealed) return;
+    if (vm.initStatus == LoadStatus.loading || vm.task == null) return; // 資料還沒好
 
     _dialogTriggered = true; // 標記已觸發
 
     if (vm.shouldShowRoulette) {
-      // 是 Random 模式 且 有零頭 且 有名單 -> 啟動輪盤流程
+      _dialogTriggered = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showRouletteDialog(vm);
-      });
-    } else {
-      // 一般模式 或 零頭為0 -> 直接視為已揭曉
-      setState(() {
-        _hasRevealed = true;
       });
     }
   }
@@ -98,11 +121,8 @@ class _S32ContentState extends State<_S32Content> {
     );
 
     // Dialog 關閉後，揭曉結果
-    if (mounted) {
-      setState(() {
-        _hasRevealed = true;
-      });
-    }
+    if (!mounted) return;
+    vm.setRevealed(true);
   }
 
   @override
@@ -120,7 +140,7 @@ class _S32ContentState extends State<_S32Content> {
 
     // 如果是輪盤模式，且還沒揭曉，就不顯示贏家區塊 (顯示 Waiting)
     final bool showWinnerCard =
-        vm.isRandomMode && _hasRevealed && winner != null;
+        vm.isRandomMode && vm.isRevealed && winner != null;
 
     // UI 文字準備
     String winnerTotalText = '';
@@ -136,123 +156,102 @@ class _S32ContentState extends State<_S32Content> {
           winnerName: winner.displayName, total: total, prefix: prefix);
     }
 
-    void onBackToTask() {
-      // 清除 Stack，回到 S17 並帶上 taskId
-      context.goNamed('S17', pathParameters: {'taskId': vm.taskId});
-    }
+    final title = t.S32_settlement_result.title;
+    final leading = IconButton(
+      icon: const Icon(Icons.close),
+      onPressed: () => _onBackToTask(vm),
+    );
 
-    Future<void> handleShare(
-        BuildContext context, S32SettlementResultViewModel vm) async {
-      final t = Translations.of(context);
-      // 1. UI 負責組裝字串 (包含 DeepLink)
-      final message = t.common.share.settlement.message(
-        taskName: vm.task!.name,
-        link: vm.link,
-      );
-
-      try {
-        // 2. 委派 VM 執行
-        await vm.notifyMembers(
-          message: message,
-          subject: t.common.share.settlement.subject,
-        );
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: onBackToTask,
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      leading: leading,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: leading,
+          title: Text(t.S32_settlement_result.title),
+          centerTitle: true,
         ),
-        title: Text(t.S32_settlement_result.title),
-        centerTitle: true,
-      ),
-      body: vm.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const StateVisual(
-                      assetPath: 'assets/images/iron/iron_image_settlement.png',
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Text(t.S32_settlement_result.content),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                const StateVisual(
+                  assetPath: 'assets/images/iron/iron_image_settlement.png',
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Text(t.S32_settlement_result.content),
+                        ),
+                        if (vm.shouldShowRoulette)
+                          Visibility(
+                            visible: showWinnerCard,
+                            replacement: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child:
+                                  Text(t.S32_settlement_result.waiting_reveal),
                             ),
-                            if (vm.shouldShowRoulette)
-                              Visibility(
-                                visible: showWinnerCard,
-                                replacement: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                      t.S32_settlement_result.waiting_reveal),
-                                ),
-                                child: InfoCard(
-                                  icon: Icons.info_outline,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            child: InfoCard(
+                              icon: Icons.info_outline,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text(t.S32_settlement_result
-                                              .remainder_winner_prefix),
-                                          const SizedBox(width: 8),
-                                          if (winner != null)
-                                            CommonAvatar(
-                                              avatarId: winner.avatar,
-                                              name: winner.displayName,
-                                              isLinked: winner.isLinked,
-                                              radius: 12,
-                                            ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            winner?.displayName ?? '',
-                                            style: theme.textTheme.titleMedium
-                                                ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
+                                      Text(t.S32_settlement_result
+                                          .remainder_winner_prefix),
+                                      const SizedBox(width: 8),
+                                      if (winner != null)
+                                        CommonAvatar(
+                                          avatarId: winner.avatar,
+                                          name: winner.displayName,
+                                          isLinked: winner.isLinked,
+                                          radius: 12,
+                                        ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        winner?.displayName ?? '',
+                                        style: theme.textTheme.titleMedium
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      const SizedBox(height: 8),
-                                      Text(winnerTotalText),
                                     ],
                                   ),
-                                ),
+                                  const SizedBox(height: 8),
+                                  Text(winnerTotalText),
+                                ],
                               ),
-                          ],
-                        ),
-                      ),
+                            ),
+                          ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-      bottomNavigationBar: StickyBottomActionBar(
-        children: [
-          AppButton(
-            text: t.S32_settlement_result.buttons.share,
-            type: AppButtonType.secondary,
-            onPressed: () => handleShare(context, vm),
           ),
-          AppButton(
-            text: t.S32_settlement_result.buttons.back,
-            type: AppButtonType.primary,
-            onPressed: onBackToTask,
-          ),
-        ],
+        ),
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            AppButton(
+              text: t.S32_settlement_result.buttons.share,
+              type: AppButtonType.secondary,
+              onPressed: () => _handleShare(context, vm),
+            ),
+            AppButton(
+              text: t.S32_settlement_result.buttons.back,
+              type: AppButtonType.primary,
+              onPressed: () => _onBackToTask(vm),
+            ),
+          ],
+        ),
       ),
     );
   }

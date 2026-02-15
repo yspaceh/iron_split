@@ -1,48 +1,51 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class D01MemberRoleIntroViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
+  final AuthRepository _authRepo;
   final String taskId;
-
   late String _currentAvatar;
   late bool _canReroll;
-  bool _isUpdating = false;
+
+  LoadStatus _rerollStatus = LoadStatus.loading;
+  LoadStatus _enterStatus = LoadStatus.loading;
 
   // Getters
   String get currentAvatar => _currentAvatar;
   bool get canReroll => _canReroll;
-  bool get isUpdating => _isUpdating;
+  LoadStatus get rerollStatus => _rerollStatus;
+  LoadStatus get enterStatus => _enterStatus;
 
   D01MemberRoleIntroViewModel({
     required this.taskId,
     required TaskRepository taskRepo,
+    required AuthRepository authRepo,
     required String initialAvatar,
     required bool canReroll,
-  }) : _taskRepo = taskRepo {
+  })  : _taskRepo = taskRepo,
+        _authRepo = authRepo {
     _currentAvatar = initialAvatar;
     _canReroll = canReroll;
   }
 
   Future<void> handleReroll() async {
-    if (!_canReroll || _isUpdating) return;
-
-    _isUpdating = true;
+    if (!_canReroll || _rerollStatus == LoadStatus.loading) return;
+    _rerollStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final uid = _authRepo.currentUser?.uid;
       if (uid == null) return;
 
       // 1. 讀取 Task 取得已用頭像
       final task = await _taskRepo.streamTask(taskId).first;
-      if (task == null) {
-        // TODO: handle error
-        throw AppErrorCodes.dataNotFound;
-      }
+      if (task == null) throw AppErrorCodes.dataNotFound;
 
       final usedAvatars = task.members.values
           .map((m) => m['avatar'] as String?)
@@ -61,25 +64,40 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
 
       _currentAvatar = newAvatar;
       _canReroll = false;
-    } catch (e) {
-      // TODO: handle error
-    } finally {
-      _isUpdating = false;
+      _rerollStatus = LoadStatus.success;
       notifyListeners();
+    } on AppErrorCodes {
+      _rerollStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _rerollStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 
   Future<void> handleEnter() async {
+    if (_enterStatus == LoadStatus.loading) return;
+    _enterStatus = LoadStatus.loading;
+    notifyListeners();
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final uid = _authRepo.currentUser?.uid;
       if (uid == null) return;
 
       await _taskRepo.updateMemberFields(taskId, uid, {
         'hasSeenRoleIntro': true,
       });
+      _enterStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes {
+      _enterStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
     } catch (e) {
-      // TODO: handle error
-      // 這裡不 throw，因為即使失敗也要讓使用者進入 Dashboard
+      _enterStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

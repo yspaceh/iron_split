@@ -11,7 +11,7 @@ class ErrorMapper {
     if (error == null) return AppErrorCodes.unknown;
     if (error is AppErrorCodes) return error;
 
-    // ✅ 1. 完整還原並保留您提供的 Firebase 核心錯誤映射
+    //  1. 完整還原並保留您提供的 Firebase 核心錯誤映射
     if (error is FirebaseException) {
       switch (error.code.toLowerCase()) {
         case 'permission-denied':
@@ -96,7 +96,7 @@ class ErrorMapper {
       case AppErrorCodes.taskCloseFailed:
         return t.error.message.task_close_failed;
 
-      // ✅ 這些精確錯誤即便對應到同一行文字，也能確保邏輯層級是分開的
+      //  這些精確錯誤即便對應到同一行文字，也能確保邏輯層級是分開的
       case AppErrorCodes.quotaExceeded:
       case AppErrorCodes.unavailable:
         return t.error.message.network_error; // 顯示為「伺服器連線問題」
@@ -145,7 +145,7 @@ class ErrorMapper {
 
       case AppErrorCodes.unknown:
       default:
-        // ✅ 保留偵錯模式：若無定義，則顯示原始字串 (Exception: xxx)
+        //  保留偵錯模式：若無定義，則顯示原始字串 (Exception: xxx)
         String eStr = error?.toString() ?? "";
         if (eStr.startsWith("Exception: ")) {
           eStr = eStr.replaceFirst("Exception: ", "");

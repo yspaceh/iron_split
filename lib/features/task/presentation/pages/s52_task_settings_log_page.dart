@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -43,39 +42,8 @@ class S52TaskSettingsLogPage extends StatelessWidget {
   }
 }
 
-class _S52Content extends StatefulWidget {
+class _S52Content extends StatelessWidget {
   const _S52Content();
-
-  @override
-  State<_S52Content> createState() => _S52ContentState();
-}
-
-class _S52ContentState extends State<_S52Content> {
-  late S52TaskSettingsLogViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S52TaskSettingsLogViewModel>();
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -9,7 +10,9 @@ import 'package:iron_split/features/common/presentation/widgets/form/app_keyboar
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +38,9 @@ class S14TaskSettingsPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
+        inviteRepo: context.read<InviteRepository>(),
+        deepLinkService: context.read<DeepLinkService>(),
+        shareService: context.read<ShareService>(),
       )..init(),
       child: const _S14Content(),
     );
@@ -56,33 +62,17 @@ class _S14ContentState extends State<_S14Content> {
   void initState() {
     super.initState();
     _vm = context.read<S14TaskSettingsViewModel>();
-    _vm.addListener(_onStateChanged);
     // Auto-save Name when focus is lost
     _nameFocusNode.addListener(() {
       if (!_nameFocusNode.hasFocus) {
         _vm.updateName();
       }
     });
-
-    // 監聽未登入狀態並自動跳轉
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
   }
 
   @override
   void dispose() {
     _nameFocusNode.dispose();
-    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 
@@ -128,6 +118,28 @@ class _S14ContentState extends State<_S14Content> {
     }
   }
 
+  Future<void> _handleShare(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    final t = Translations.of(context);
+    try {
+      final inviteCode = await vm.inviteMember();
+      final message = t.common.share.invite.message(
+        taskName: vm.nameController.value.text,
+        code: inviteCode,
+        link: vm.link,
+      );
+      // 2. 委派 VM 執行
+      await vm.notifyMembers(
+        message: message,
+        subject: t.common.share.invite.subject,
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -158,6 +170,11 @@ class _S14ContentState extends State<_S14Content> {
                       label: t.S16_TaskCreate_Edit.label.name,
                       hint: t.S16_TaskCreate_Edit.hint.name,
                       maxLength: 20,
+                    ),
+                    const SizedBox(height: 8),
+                    NavTile(
+                      title: t.S14_Task_Settings.menu.invite,
+                      onTap: () => _handleShare(context, vm),
                     ),
                   ]),
               SectionWrapper(

@@ -260,6 +260,7 @@
       "other": "Other Settings"
     },
     "menu" : {
+      "invite": "Invite",
       "member_settings": "Member Settings",
       "history": "History",
       "close_task": "End Task"
@@ -480,8 +481,7 @@
   "S53_TaskSettings_Members": {
     "title": "Member Management",
     "buttons": {
-      "add": "Add Member",
-      "invite": "Invite"
+      "add": "Add Member"
     },
     "label_default_ratio": "Default Ratio",
     "member_default_name": "Member",

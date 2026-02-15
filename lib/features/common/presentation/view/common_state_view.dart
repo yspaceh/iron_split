@@ -1,6 +1,7 @@
 // lib/features/common/presentation/widgets/common_simple_state_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -19,6 +20,8 @@ class CommonStateView extends StatelessWidget {
   final VoidCallback? onErrorAction;
   final bool isSheetMode;
   final List<Widget>? actions;
+  final Color? loadingBackgroundColor;
+  final Color? loadingForegroundColor;
 
   const CommonStateView(
       {super.key,
@@ -30,7 +33,9 @@ class CommonStateView extends StatelessWidget {
       required this.title,
       this.leading,
       this.actions,
-      this.errorActionText});
+      this.errorActionText,
+      this.loadingBackgroundColor,
+      this.loadingForegroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +45,31 @@ class CommonStateView extends StatelessWidget {
     switch (status) {
       case LoadStatus.initial:
       case LoadStatus.loading:
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
+        return Scaffold(
+          backgroundColor:
+              loadingBackgroundColor ?? theme.colorScheme.surfaceContainerLow,
+          body: Center(
+            child: CircularProgressIndicator(
+                color: loadingForegroundColor ?? theme.colorScheme.primary),
+          ),
         );
       case LoadStatus.success:
         return child;
       case LoadStatus.error:
+        if (errorCode == AppErrorCodes.unauthorized) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // 避免重複導航 (如果已經在 S00 就不用跳了)
+            if (GoRouter.of(context)
+                    .routerDelegate
+                    .currentConfiguration
+                    .fullPath !=
+                '/') {
+              context.goNamed('S00');
+            }
+          });
+          // 導航發生前，顯示轉圈圈或空白，不要顯示錯誤文字
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
         if (isSheetMode) {
           return CommonBottomSheet(
             title: title,
@@ -71,7 +95,7 @@ class CommonStateView extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text(t.S11_Invite_Confirm.title),
+              title: Text(title),
               centerTitle: true,
               leading: leading,
               actions: actions,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -27,40 +26,8 @@ class S10HomeTaskListPage extends StatelessWidget {
   }
 }
 
-class _S10Content extends StatefulWidget {
+class _S10Content extends StatelessWidget {
   const _S10Content();
-
-  @override
-  State<_S10Content> createState() => _S10ContentState();
-}
-
-class _S10ContentState extends State<_S10Content> {
-  late S10TaskListViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S10TaskListViewModel>();
-    _vm.addListener(_onStateChanged);
-    // 監聽未登入狀態並自動跳轉
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

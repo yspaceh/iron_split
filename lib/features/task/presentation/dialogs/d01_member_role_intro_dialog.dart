@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
@@ -46,6 +48,7 @@ class D01MemberRoleIntroDialog extends StatelessWidget {
       create: (_) => D01MemberRoleIntroViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
         initialAvatar: initialAvatar,
         canReroll: canReroll,
       ),
@@ -86,7 +89,8 @@ class _D01DialogContentState extends State<_D01DialogContent>
   Future<void> _onEnter(
       BuildContext context, D01MemberRoleIntroViewModel vm) async {
     await vm.handleEnter();
-    if (mounted) context.pop();
+    if (!context.mounted) return;
+    context.pop();
   }
 
   @override
@@ -128,7 +132,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
             // Reroll Button
             TextButton.icon(
               onPressed: vm.canReroll ? vm.handleReroll : null,
-              icon: vm.isUpdating
+              icon: vm.rerollStatus == LoadStatus.loading
                   ? const SizedBox(
                       width: 16,
                       height: 16,

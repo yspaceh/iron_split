@@ -33,10 +33,10 @@ class SettlementMemberItem extends StatelessWidget {
       // [關鍵] 1. 裝飾層：與 RecordItem 一致的白底、圓角 16、極淡陰影
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16), // ✅ 圓角 16
+        borderRadius: BorderRadius.circular(16), //  圓角 16
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03), // ✅ 極淡陰影 (3%)
+            color: Colors.black.withValues(alpha: 0.03), //  極淡陰影 (3%)
             offset: const Offset(0, 2),
             blurRadius: 4,
           ),
@@ -44,7 +44,7 @@ class SettlementMemberItem extends StatelessWidget {
       ),
       // [關鍵] 2. 裁切層：確保內容不會超出圓角
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16), // ✅ 圓角 16
+        borderRadius: BorderRadius.circular(16), //  圓角 16
         child: isGroup
             ? _buildGroupContent(context, colorScheme)
             : _buildSingleRow(context, colorScheme),
@@ -60,7 +60,7 @@ class SettlementMemberItem extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              // ✅ 垂直內距 12 + 頭像 40 = 高度 64px (與 RecordItem 一致)
+              //  垂直內距 12 + 頭像 40 = 高度 64px (與 RecordItem 一致)
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: _buildInfoContent(
                 context,
@@ -68,7 +68,7 @@ class SettlementMemberItem extends StatelessWidget {
                   avatarId: member.avatar,
                   name: member.displayName,
                   isLinked: member.isLinked,
-                  radius: 20, // ✅ 直徑 40px
+                  radius: 20, //  直徑 40px
                 ),
                 name: member.displayName,
                 amount: member.finalAmount,
@@ -133,7 +133,7 @@ class SettlementMemberItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  // ✅ Header 保持一致的高度設定
+                  //  Header 保持一致的高度設定
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: _buildInfoContent(

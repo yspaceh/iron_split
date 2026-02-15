@@ -73,10 +73,6 @@ class _S17ContentState extends State<_S17Content> {
 
   void _onStateChanged() {
     if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
 
     if (_vm.initStatus == LoadStatus.success &&
         _vm.pageType == LockedPageType.settled &&

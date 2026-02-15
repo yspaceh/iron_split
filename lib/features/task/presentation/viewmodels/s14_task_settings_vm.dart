@@ -4,10 +4,13 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -16,6 +19,9 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final AuthRepository _authRepo;
   final RecordRepository _recordRepo;
+  final InviteRepository _inviteRepo;
+  final ShareService _shareService;
+  final DeepLinkService _deepLinkService;
   final String taskId;
 
   // UI State
@@ -28,7 +34,8 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
-
+  LoadStatus _inviteMemberStatus = LoadStatus.initial;
+  String inviteCode = '';
   // Logic Helper
   String? _initialName;
   String? _createdBy;
@@ -46,6 +53,9 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   AppErrorCodes? get initErrorCode => _initErrorCode;
   Map<String, dynamic> get membersData => _membersData;
   double get currentRemainder => _currentRemainder;
+  LoadStatus get inviteMemberStatus => _inviteMemberStatus;
+
+  String get link => _deepLinkService.generateJoinLink(inviteCode);
 
   List<Map<String, dynamic>> get membersList {
     return _membersData.entries.map((e) {
@@ -64,9 +74,15 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
     required AuthRepository authRepo,
+    required InviteRepository inviteRepo,
+    required DeepLinkService deepLinkService,
+    required ShareService shareService,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        _authRepo = authRepo;
+        _authRepo = authRepo,
+        _inviteRepo = inviteRepo,
+        _deepLinkService = deepLinkService,
+        _shareService = shareService;
 
   Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
@@ -221,6 +237,54 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   void updateCurrency(CurrencyConstants newCurrency) {
     _currency = newCurrency;
     notifyListeners();
+  }
+
+  // 定義一個私有變數，用來存放「正在進行中」的任務
+  Future<String>? _ongoingInviteTask;
+
+  Future<String> inviteMember() async {
+    //  這是「升級版」的 Guard Clause：
+    // 如果任務正在跑，就直接回傳同一個 Future 給呼叫者，而不是結束它。
+    if (_ongoingInviteTask != null) {
+      return _ongoingInviteTask!;
+    }
+
+    // 將邏輯封裝並存入變數
+    _ongoingInviteTask = _inviteMember();
+
+    try {
+      return await _ongoingInviteTask!;
+    } finally {
+      // 任務結束後務必清空，否則之後無法再次呼叫
+      _ongoingInviteTask = null;
+    }
+  }
+
+  Future<String> _inviteMember() async {
+    _inviteMemberStatus = LoadStatus.loading;
+    notifyListeners();
+
+    try {
+      inviteCode = await _inviteRepo.createInviteCode(taskId);
+      _inviteMemberStatus = LoadStatus.success;
+      notifyListeners();
+      return inviteCode;
+    } on AppErrorCodes {
+      // Deleted
+      _inviteMemberStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _inviteMemberStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
+    }
+  }
+
+  /// 通知成員 (純文字分享)
+  Future<void> notifyMembers(
+      {required String message, required String subject}) async {
+    await _shareService.shareText(message, subject: subject);
   }
 
   @override

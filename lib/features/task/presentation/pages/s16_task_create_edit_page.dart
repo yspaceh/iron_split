@@ -55,7 +55,6 @@ class _S16ContentState extends State<_S16Content> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   late FocusNode _nameFocusNode;
-  late S16TaskCreateEditViewModel _vm;
 
   @override
   void initState() {
@@ -65,29 +64,12 @@ class _S16ContentState extends State<_S16Content> {
     _nameController.addListener(() {
       setState(() {});
     });
-    _vm = context.read<S16TaskCreateEditViewModel>();
-    _vm.addListener(_onStateChanged);
-
-    // 監聽未登入狀態並自動跳轉
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _nameFocusNode.dispose();
-    _vm.removeListener(_onStateChanged);
     super.dispose();
   }
 

@@ -1,53 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
-import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 
 /// B05 VM
 class B05PaymentInfoEditViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
+  final SystemRepository _systemRepo;
+  final AuthRepository _authRepo;
   final String taskId;
-
-  // Storage
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'user_default_payment_info';
 
   late PaymentInfoFormController formController;
 
 // UI States
-  bool isSaving = false;
-  bool _isLoading = true; // 用於等待 Storage 讀取
+  LoadStatus _saveStatus = LoadStatus.initial;
+  LoadStatus _initStatus = LoadStatus.initial; // 頁面狀態// 按鈕狀態
+  AppErrorCodes? _initErrorCode;
 
   // Sync Logic States
   PaymentInfoModel? _loadedDefault; // 手機裡目前的預設值
   bool _isSyncChecked = true;
 
-  B05PaymentInfoEditViewModel({
-    required TaskRepository taskRepo,
-    required TaskModel task,
-  })  : _taskRepo = taskRepo,
-        taskId = task.id {
-    // 解析現有資料
-    PaymentInfoModel? initialData;
-    try {
-      final settlement = task.settlement;
-      if (settlement != null && settlement['receiverInfos'] != null) {
-        final rawData = settlement['receiverInfos'];
-        initialData = PaymentInfoModel.fromJson(rawData);
-      }
-    } catch (e) {
-      // TODO: handle error
-      debugPrint("Error parsing receiverInfos in B05: $e");
-    }
-
-    formController = PaymentInfoFormController(initialData: initialData);
-  }
-
   // Getters
-  bool get isLoading => _isLoading;
   bool get isSyncChecked => _isSyncChecked;
 
   // 判斷是否顯示同步選項 (邏輯與 S31 一致)
@@ -60,21 +40,43 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
   // 顯示文字判定: "更新" vs "儲存"
   bool get isUpdate => _loadedDefault != null;
 
+  LoadStatus get saveStatus => _saveStatus;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+
+  B05PaymentInfoEditViewModel({
+    required TaskRepository taskRepo,
+    required SystemRepository systemRepo,
+    required AuthRepository authRepo,
+    required TaskModel task,
+  })  : _taskRepo = taskRepo,
+        _systemRepo = systemRepo,
+        _authRepo = authRepo,
+        taskId = task.id {
+    formController = PaymentInfoFormController();
+  }
+
   // 初始化: 讀取 SecureStorage
   Future<void> init() async {
-    _isLoading = true;
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
     try {
-      final jsonStr = await _storage.read(key: _storageKey);
-      if (jsonStr != null) {
-        _loadedDefault = PaymentInfoModel.fromJson(jsonStr);
-      }
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+
+      _loadedDefault = await _systemRepo.getDefaultPaymentInfo();
+      _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
-      // TODO: handle error
-      debugPrint("Error loading local preference: $e");
-    } finally {
-      _isLoading = false;
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
@@ -84,8 +86,9 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> save(Translations t) async {
-    isSaving = true;
+  Future<void> save() async {
+    if (_saveStatus == LoadStatus.loading) return;
+    _saveStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -95,20 +98,22 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
       // 1. 更新 Firestore (部分更新)
       await _taskRepo.updateTaskReceiverInfos(taskId, newDataMap);
 
-      // 2. 如果勾選同步，更新 Local Storage
       if (formController.mode == PaymentMode.specific &&
           _isSyncChecked &&
           showSyncOption) {
-        await _storage.write(key: _storageKey, value: newData.toJson());
+        await _systemRepo.saveDefaultPaymentInfo(newData);
       }
 
-      isSaving = false;
+      _saveStatus = LoadStatus.success;
       notifyListeners();
-    } catch (e) {
-      // TODO: handle error
-      isSaving = false;
+    } on AppErrorCodes {
+      _saveStatus = LoadStatus.error;
       notifyListeners();
       rethrow;
+    } catch (e) {
+      _saveStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 

@@ -1507,6 +1507,9 @@ class TranslationsS14TaskSettingsMenuZhTw {
 
 	// Translations
 
+	/// zh-TW: '發送邀請'
+	String get invite => '發送邀請';
+
 	/// zh-TW: '成員設定'
 	String get member_settings => '成員設定';
 
@@ -2050,9 +2053,6 @@ class TranslationsS53TaskSettingsMembersButtonsZhTw {
 
 	/// zh-TW: '新增成員'
 	String get add => '新增成員';
-
-	/// zh-TW: '發送邀請'
-	String get invite => '發送邀請';
 }
 
 // Path: S70_System_Settings.section
@@ -3031,6 +3031,7 @@ extension on Translations {
 			'S14_Task_Settings.section.task_period' => '任務期間',
 			'S14_Task_Settings.section.settlement' => '結算設定',
 			'S14_Task_Settings.section.other' => '其他設定',
+			'S14_Task_Settings.menu.invite' => '發送邀請',
 			'S14_Task_Settings.menu.member_settings' => '成員設定',
 			'S14_Task_Settings.menu.history' => '歷史紀錄',
 			'S14_Task_Settings.menu.close_task' => '結束任務',
@@ -3177,7 +3178,6 @@ extension on Translations {
 			'S52_TaskSettings_Log.unit_items' => '細項',
 			'S53_TaskSettings_Members.title' => '成員管理',
 			'S53_TaskSettings_Members.buttons.add' => '新增成員',
-			'S53_TaskSettings_Members.buttons.invite' => '發送邀請',
 			'S53_TaskSettings_Members.label_default_ratio' => '預設比例',
 			'S53_TaskSettings_Members.member_default_name' => '成員',
 			'S53_TaskSettings_Members.member_name' => '成員名稱',

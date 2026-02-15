@@ -58,7 +58,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         _shareService = shareService,
         _deepLinkService = deepLinkService;
 
-  Future<void> init() async {
+  void init() {
     if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
@@ -126,7 +126,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
   Future<({String taskId, String? inviteCode})?> createTask(
       String taskName) async {
-    // ✅ 這是「升級版」的 Guard Clause：
+    //  這是「升級版」的 Guard Clause：
     // 如果任務正在跑，就直接回傳同一個 Future 給呼叫者，而不是結束它。
     if (_ongoingTask != null) {
       return _ongoingTask!;

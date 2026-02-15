@@ -2,26 +2,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
 class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'user_default_payment_info';
+  final TaskRepository _taskRepo;
+  final RecordRepository _recordRepo;
+  final AuthRepository _authRepo;
+  final SystemRepository _systemRepo;
 
   final String taskId;
   final double checkPointPoolBalance;
   final Map<String, List<String>> mergeMap;
-
   final SettlementService _settlementService;
-  final TaskRepository _taskRepo;
-  final RecordRepository _recordRepo;
   final PaymentInfoFormController formController = PaymentInfoFormController();
 
   TaskModel? _task;
@@ -30,15 +33,19 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   StreamSubscription? _taskSubscription;
   StreamSubscription? _recordSubscription;
 
-  // UI States
-  bool _isLoading = true;
+  // State
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
+  LoadStatus _settlementStatus = LoadStatus.initial;
 
   // Sync Checkbox State
   bool _isSyncChecked = true;
   PaymentInfoModel? _loadedDefault; // 用來比對是否變更
 
   // Getters
-  bool get isLoading => _isLoading;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+  LoadStatus get settlementStatus => _settlementStatus;
   bool get isSyncChecked => _isSyncChecked;
   bool get isDataReady => _task != null;
 
@@ -62,23 +69,28 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
     required SettlementService settlementService,
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
+    required AuthRepository authRepo,
+    required SystemRepository systemRepo,
   })  : _settlementService = settlementService,
         _taskRepo = taskRepo,
-        _recordRepo = recordRepo {
+        _recordRepo = recordRepo,
+        _authRepo = authRepo,
+        _systemRepo = systemRepo {
     formController.addListener(notifyListeners);
   }
 
   Future<void> init() async {
-    _isLoading = true;
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
     try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+
       // 讀取 Secure Storage
-      final jsonStr = await _storage.read(key: _storageKey);
-      if (jsonStr != null) {
-        final data = PaymentInfoModel.fromJson(jsonStr);
-        _loadedDefault = data;
-      }
+      _loadedDefault = await _systemRepo.getDefaultPaymentInfo();
       // 初始化 Controller 並注入預設值
       formController.loadData(_loadedDefault);
       formController.addListener(notifyListeners);
@@ -87,7 +99,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         if (taskData != null) {
           _task = taskData;
           if (_task != null) {
-            _isLoading = false;
+            _initStatus = LoadStatus.success;
             notifyListeners();
           }
         }
@@ -98,11 +110,13 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         // Records 更新通常不影響 S31 畫面顯示，但要確保變數是最新的
         // 如果需要像 S30 那樣有 _recalculate，可以在這裡呼叫
       });
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
-      // TODO: handle error
-      debugPrint("Error loading payment info: $e");
-    } finally {
-      _isLoading = false;
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
@@ -116,8 +130,9 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // --- Final Execution Logic ---
 
-  Future<bool> handleExecuteSettlement() async {
-    _isLoading = true;
+  Future<void> handleExecuteSettlement() async {
+    if (_settlementStatus == LoadStatus.loading) return;
+    _settlementStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -133,23 +148,28 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         captainPaymentInfoJson: myPaymentInfo.toJson(), // 直接傳 JSON
         checkPointPoolBalance: checkPointPoolBalance,
       );
-
-      return true;
-    } catch (e) {
-      // TODO: handle error
-      debugPrint("Settlement Execution Failed: $e");
-      rethrow;
-    } finally {
-      _isLoading = false;
+    } on AppErrorCodes {
+      _settlementStatus = LoadStatus.error;
       notifyListeners();
+      rethrow;
+    } catch (e) {
+      _settlementStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 
   Future<void> _saveLocalPreference(PaymentInfoModel info) async {
     if (formController.mode == PaymentMode.specific &&
-        _isSyncChecked &&
-        showSyncOption) {
-      await _storage.write(key: _storageKey, value: info.toJson());
+        showSyncOption &&
+        _isSyncChecked) {
+      try {
+        await _systemRepo.saveDefaultPaymentInfo(info);
+      } on AppErrorCodes {
+        rethrow;
+      } catch (e) {
+        throw ErrorMapper.parseErrorCode(e);
+      }
     }
   }
 

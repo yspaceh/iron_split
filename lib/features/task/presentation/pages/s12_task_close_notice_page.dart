@@ -33,39 +33,8 @@ class S12TaskCloseNoticePage extends StatelessWidget {
   }
 }
 
-class _S12Content extends StatefulWidget {
+class _S12Content extends StatelessWidget {
   const _S12Content();
-
-  @override
-  State<_S12Content> createState() => _S12ContentState();
-}
-
-class _S12ContentState extends State<_S12Content> {
-  late S12TaskCloseNoticeViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S12TaskCloseNoticeViewModel>();
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   Future<void> _handleClose(
       BuildContext context, S12TaskCloseNoticeViewModel vm) async {

@@ -17,16 +17,21 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
 
     return KeyboardActions(
       // 1. 設定全域通用的樣式
       config: KeyboardActionsConfig(
         keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-        keyboardBarColor: Colors.grey[200],
+        keyboardBarColor: theme.brightness == Brightness.dark
+            ? const Color(0xFF1E1E1E) // 深色模式鍵盤色
+            : const Color(0xFFF8F8F8),
+        keyboardBarElevation: 0,
         nextFocus: nextFocus,
         actions: focusNodes.map((node) {
           return KeyboardActionsItem(
             focusNode: node,
+            toolbarAlignment: MainAxisAlignment.end,
             toolbarButtons: [
               // 2. 統一的「完成」按鈕
               (node) {
@@ -37,9 +42,9 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
                         horizontal: 16.0, vertical: 8.0),
                     child: Text(
                       t.common.buttons.done, // "完成"
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: theme.colorScheme.primary,
                         fontSize: 16,
                       ),
                     ),

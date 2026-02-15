@@ -962,6 +962,7 @@ class _TranslationsS14TaskSettingsMenuJaJp extends TranslationsS14TaskSettingsMe
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
+	@override String get invite => '招待送信';
 	@override String get member_settings => 'メンバー設定';
 	@override String get history => '履歴';
 	@override String get close_task => 'タスク終了';
@@ -1306,7 +1307,6 @@ class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53Task
 
 	// Translations
 	@override String get add => 'メンバー追加';
-	@override String get invite => '招待送信';
 }
 
 // Path: S70_System_Settings.section
@@ -2027,6 +2027,7 @@ extension on TranslationsJaJp {
 			'S14_Task_Settings.section.task_period' => 'タスク期間',
 			'S14_Task_Settings.section.settlement' => '精算設定',
 			'S14_Task_Settings.section.other' => 'その他設定',
+			'S14_Task_Settings.menu.invite' => '招待送信',
 			'S14_Task_Settings.menu.member_settings' => 'メンバー設定',
 			'S14_Task_Settings.menu.history' => '履歴',
 			'S14_Task_Settings.menu.close_task' => 'タスク終了',
@@ -2172,7 +2173,6 @@ extension on TranslationsJaJp {
 			'S52_TaskSettings_Log.unit_items' => '項目',
 			'S53_TaskSettings_Members.title' => 'メンバー管理',
 			'S53_TaskSettings_Members.buttons.add' => 'メンバー追加',
-			'S53_TaskSettings_Members.buttons.invite' => '招待送信',
 			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',

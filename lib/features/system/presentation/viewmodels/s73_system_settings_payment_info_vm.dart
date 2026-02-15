@@ -2,53 +2,64 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:iron_split/core/models/payment_info_model.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 
 class S73SystemSettingsPaymentInfoViewModel extends ChangeNotifier {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'user_default_payment_info';
   final PaymentInfoFormController formController = PaymentInfoFormController();
+  final AuthRepository _authRepo;
+  final SystemRepository _systemRepo;
 
-  // UI States
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
+  LoadStatus _initStatus = LoadStatus.initial;
+  AppErrorCodes? _initErrorCode;
+  LoadStatus _saveStatus = LoadStatus.initial;
 
-  S73SystemSettingsPaymentInfoViewModel() {
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
+  LoadStatus get saveStatus => _saveStatus;
+
+  S73SystemSettingsPaymentInfoViewModel({
+    required AuthRepository authRepo,
+    required SystemRepository systemRepo,
+  })  : _authRepo = authRepo,
+        _systemRepo = systemRepo {
     formController.addListener(notifyListeners);
   }
 
   Future<void> init() async {
-    _isLoading = true;
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
     try {
-      final jsonStr = await _storage.read(key: _storageKey);
-      PaymentInfoModel? loadedData;
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
 
-      if (jsonStr != null) {
-        // 使用 try-catch 避免 JSON 格式錯誤導致崩潰
-        try {
-          loadedData = PaymentInfoModel.fromJson(jsonStr);
-        } catch (e) {
-          debugPrint("JSON parse error: $e");
-        }
-      }
+      final loadedData = await _systemRepo.getDefaultPaymentInfo();
 
       // 將讀取到的資料填入表單
       formController.loadData(loadedData);
+      _initStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
     } catch (e) {
-      debugPrint("Error loading payment info: $e");
-    } finally {
-      _isLoading = false;
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
 
   /// 儲存設定
-  /// [onSuccess] 儲存成功後的回呼 (通常是 pop 頁面)
-  Future<void> save(VoidCallback onSuccess) async {
-    _isLoading = true;
+  Future<void> save() async {
+    if (_saveStatus == LoadStatus.loading) return;
+    _saveStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -56,18 +67,18 @@ class S73SystemSettingsPaymentInfoViewModel extends ChangeNotifier {
       final currentInfo = formController.buildModel();
 
       // 2. 轉成 JSON 字串並寫入 Secure Storage
-      await _storage.write(
-        key: _storageKey,
-        value: currentInfo.toJson(),
-      );
+      await _systemRepo.saveDefaultPaymentInfo(currentInfo);
 
-      // 3. 成功回調
-      onSuccess();
-    } catch (e) {
-      debugPrint("Error saving payment info: $e");
-    } finally {
-      _isLoading = false;
+      _saveStatus = LoadStatus.success;
       notifyListeners();
+    } on AppErrorCodes {
+      _saveStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _saveStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
     }
   }
 

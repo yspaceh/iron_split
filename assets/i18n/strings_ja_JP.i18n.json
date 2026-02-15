@@ -260,6 +260,7 @@
       "other": "その他設定"
     },
     "menu" : {
+      "invite": "招待送信",
       "member_settings": "メンバー設定",
       "history": "履歴",
       "close_task": "タスク終了"
@@ -480,8 +481,7 @@
   "S53_TaskSettings_Members": {
     "title": "メンバー管理",
     "buttons": {
-      "add": "メンバー追加",
-      "invite": "招待送信"
+      "add": "メンバー追加"
     },
     "label_default_ratio": "デフォルト比率",
     "member_default_name": "メンバー",

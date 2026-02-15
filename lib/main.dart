@@ -13,6 +13,7 @@ import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/task/application/export_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
@@ -96,6 +97,12 @@ void main() async {
         ),
         Provider<PreferencesService>(
           create: (_) => PreferencesService(prefs),
+        ),
+        // ✅ [新增] 註冊 SystemRepository
+        // 使用 ProxyProvider 因為它依賴上面的 PreferencesService
+        ProxyProvider<PreferencesService, SystemRepository>(
+          update: (context, prefsService, previous) =>
+              previous ?? SystemRepository(prefsService),
         ),
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),

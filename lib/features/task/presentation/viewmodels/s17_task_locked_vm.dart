@@ -82,7 +82,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         _shareService = shareService,
         _deepLinkService = deepLinkService;
 
-  Future<void> init() async {
+  void init() {
     if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;

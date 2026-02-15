@@ -1,7 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/system/presentation/pages/s71_system_settings_terms_page.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s72_terms_update_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -18,21 +24,60 @@ class S72TermsUpdatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S72TermsUpdateViewModel()..checkUpdateType(),
+      create: (_) => S72TermsUpdateViewModel(
+        authRepo: context.read<AuthRepository>(),
+        systemRepo: context.read<SystemRepository>(),
+      )..init(),
       child: const _S72Content(),
     );
   }
 }
 
-class _S72Content extends StatelessWidget {
+class _S72Content extends StatefulWidget {
   const _S72Content();
 
-  // [新增] 顯示登出確認對話框
-  Future<void> _showDeclineDialog(BuildContext context) async {
+  @override
+  State<_S72Content> createState() => _S72ContentState();
+}
+
+class _S72ContentState extends State<_S72Content> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _handleAgree(
+      BuildContext context, S72TermsUpdateViewModel vm) async {
+    try {
+      await vm.agreeLatestTerms();
+
+      if (!context.mounted) return;
+      context.goNamed('S00');
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleLogout(
+      BuildContext context, S72TermsUpdateViewModel vm) async {
+    try {
+      await vm.logout();
+
+      if (!context.mounted) return;
+      context.pop();
+      context.goNamed('S50');
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  void _showDeclineDialog(BuildContext context, S72TermsUpdateViewModel vm) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
-    final shouldLogout = await CommonAlertDialog.show<bool>(
+    CommonAlertDialog.show(
       context,
       title: t.D12_logout_confirm.title,
       content: Text(
@@ -43,31 +88,21 @@ class _S72Content extends StatelessWidget {
         AppButton(
           text: t.common.buttons.cancel,
           type: AppButtonType.secondary,
-          onPressed: () => context.pop(false),
+          onPressed: () => context.pop(),
         ),
         AppButton(
           text: t.D12_logout_confirm.buttons.logout,
           type: AppButtonType.primary,
-          onPressed: () => context.pop(true),
+          onPressed: () => _handleLogout(context, vm),
         ),
       ],
     );
-
-    if (shouldLogout == true && context.mounted) {
-      // 1. 執行登出
-      await FirebaseAuth.instance.signOut();
-
-      // 2. 導回 S50 (Onboarding)
-      // 使用 go 而不是 push，清除導航堆疊
-      if (context.mounted) context.goNamed('S50');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S72TermsUpdateViewModel>();
-    final theme = Theme.of(context);
 
     String getTitleTypeLabel(S72TermsUpdateViewModel vm) {
       switch (vm.type) {
@@ -95,71 +130,61 @@ class _S72Content extends StatelessWidget {
     String description =
         t.S72_TermsUpdate.description(type: getDescriptionTypeLabel(vm));
 
-    if (vm.isLoading) {
-      return Scaffold(
-        backgroundColor: theme.colorScheme.surface,
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
-      bottomNavigationBar: StickyBottomActionBar(
-        children: [
-          // 不同意並登出
-          AppButton(
-            text: t.S72_TermsUpdate.buttons.decline,
-            type: AppButtonType.secondary,
-            onPressed: () => _showDeclineDialog(context),
-          ),
-          // 同意
-          AppButton(
-            text: t.S72_TermsUpdate.buttons.agree,
-            type: AppButtonType.primary,
-            isLoading: vm.isAgreed,
-            onPressed: vm.isAgreed
-                ? null
-                : () {
-                    vm.agreeLatestTerms(
-                      onSuccess: () {
-                        context.goNamed('S00');
-                      },
-                    );
-                  },
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              Text(description),
-              if (vm.type == UpdateType.both) ...[
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+        ),
+        bottomNavigationBar: StickyBottomActionBar(
+          children: [
+            // 不同意並登出
+            AppButton(
+              text: t.S72_TermsUpdate.buttons.decline,
+              type: AppButtonType.secondary,
+              onPressed: () => _showDeclineDialog(context, vm),
+            ),
+            // 同意
+            AppButton(
+              text: t.S72_TermsUpdate.buttons.agree,
+              type: AppButtonType.primary,
+              isLoading: vm.agreeStatus == LoadStatus.loading,
+              onPressed: () => _handleAgree(context, vm),
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                Text(description),
+                if (vm.type == UpdateType.both) ...[
+                  const SizedBox(height: 8),
+                  CustomSlidingSegment<LegalTab>(
+                    selectedValue: vm.currentTab,
+                    segments: {
+                      LegalTab.terms: t.common.terms.label.terms,
+                      LegalTab.privacy: t.common.terms.label.privacy,
+                    },
+                    onValueChanged: (tab) {
+                      vm.setTab(tab);
+                    },
+                  ),
+                ],
                 const SizedBox(height: 8),
-                CustomSlidingSegment<LegalTab>(
-                  selectedValue: vm.currentTab,
-                  segments: {
-                    LegalTab.terms: t.common.terms.label.terms,
-                    LegalTab.privacy: t.common.terms.label.privacy,
-                  },
-                  onValueChanged: (tab) {
-                    vm.setTab(tab);
-                  },
+                Expanded(
+                  child: S71SettingsTermsPage(
+                    isTerms: _isTermsVisible(vm),
+                    isEmbedded: true,
+                  ),
                 ),
               ],
-              const SizedBox(height: 8),
-              Expanded(
-                child: S71SettingsTermsPage(
-                  isTerms: _isTermsVisible(vm),
-                  isEmbedded: true,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

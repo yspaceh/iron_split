@@ -139,8 +139,6 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     try {
       // 使用 Repository 獲取當前使用者，不直接存取 FirebaseAuth
       final user = _authRepo.currentUser;
-
-      // UI 零邏輯，由 VM 判斷准入條件
       if (user == null) throw AppErrorCodes.unauthorized;
 
       _currentUserId = user.uid;

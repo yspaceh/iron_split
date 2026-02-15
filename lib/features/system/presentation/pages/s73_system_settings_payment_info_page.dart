@@ -2,9 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s73_system_settings_payment_info_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -17,7 +22,10 @@ class S73SystemSettingsPaymentInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => S73SystemSettingsPaymentInfoViewModel()..init(),
+      create: (_) => S73SystemSettingsPaymentInfoViewModel(
+        authRepo: context.read<AuthRepository>(),
+        systemRepo: context.read<SystemRepository>(),
+      )..init(),
       child: const _S73Content(),
     );
   }
@@ -36,7 +44,6 @@ class _S73ContentState extends State<_S73Content> {
   late FocusNode _bankAccountNode;
   final Map<int, FocusNode> _appNameNodes = {};
   final Map<int, FocusNode> _appLinkNodes = {};
-
   @override
   void initState() {
     super.initState();
@@ -66,6 +73,21 @@ class _S73ContentState extends State<_S73Content> {
     return _appNameNodes.putIfAbsent(index, () => FocusNode());
   }
 
+  Future<void> _handleSave(
+      BuildContext context, S73SystemSettingsPaymentInfoViewModel vm) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      vm.save();
+
+      if (!context.mounted) return;
+      AppToast.showSuccess(context, t.success.saved);
+      context.pop();
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -83,52 +105,45 @@ class _S73ContentState extends State<_S73Content> {
           vm.formController.appControllers.length, (i) => _getAppLinkNode(i)),
     ];
 
-    return AppKeyboardActionsWrapper(
-      focusNodes: allNodes,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(t.S70_System_Settings.menu.payment_info),
-          centerTitle: true,
-        ),
-        body: vm.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    PaymentInfoForm(
-                      controller: vm.formController,
-                      isSelectedBackgroundColor: colorScheme.surface,
-                      backgroundColor: colorScheme.surfaceContainerLow,
-                    ),
-                    const SizedBox(height: 80),
-                  ],
-                ),
-              ),
-        bottomNavigationBar: StickyBottomActionBar(
-          children: [
-            AppButton(
-              text: t.common.buttons.back,
-              type: AppButtonType.secondary,
-              onPressed: () => context.pop(),
-            ),
-            AppButton(
-              text: t.common.buttons.save,
-              type: AppButtonType.primary,
-              onPressed: () {
-                // 收起鍵盤
-                FocusManager.instance.primaryFocus?.unfocus();
+    final title = t.S70_System_Settings.menu.payment_info;
 
-                // [修正] 呼叫 VM 的 save 方法，而不是傳遞 undefined 的 info
-                vm.save(() {
-                  // 成功後顯示提示並返回
-                  if (context.mounted) {
-                    AppToast.showSuccess(context, t.success.saved);
-                    context.pop();
-                  }
-                });
-              },
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: AppKeyboardActionsWrapper(
+        focusNodes: allNodes,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                PaymentInfoForm(
+                  controller: vm.formController,
+                  isSelectedBackgroundColor: colorScheme.surface,
+                  backgroundColor: colorScheme.surfaceContainerLow,
+                ),
+                const SizedBox(height: 80),
+              ],
             ),
-          ],
+          ),
+          bottomNavigationBar: StickyBottomActionBar(
+            children: [
+              AppButton(
+                text: t.common.buttons.back,
+                type: AppButtonType.secondary,
+                onPressed: () => context.pop(),
+              ),
+              AppButton(
+                text: t.common.buttons.save,
+                type: AppButtonType.primary,
+                onPressed: () => _handleSave(context, vm),
+              ),
+            ],
+          ),
         ),
       ),
     );

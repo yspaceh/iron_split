@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
@@ -17,19 +21,19 @@ import 'package:iron_split/features/settlement/application/settlement_service.da
 class S30SettlementConfirmViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
-
+  final AuthRepository _authRepo;
   final DashboardService _dashboardService;
   final SettlementService _settlementService;
 
   final String taskId;
-  final String currentUserId;
 
   TaskModel? _task;
   List<RecordModel> _records = [];
-
+  String currentUserId = '';
   StreamSubscription? _taskSubscription;
   StreamSubscription? _recordSubscription;
-  bool _isLoading = true;
+  LoadStatus _initStatus = LoadStatus.initial; // 頁面狀態// 按鈕狀態
+  AppErrorCodes? _initErrorCode;
 
   double _checkPointPoolBalance = 0.0;
 
@@ -47,7 +51,8 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   }
 
   // Getters
-  bool get isLoading => _isLoading;
+  LoadStatus get initStatus => _initStatus;
+  AppErrorCodes? get initErrorCode => _initErrorCode;
   TaskModel? get task => _task;
   double get checkPointPoolBalance => _checkPointPoolBalance;
 
@@ -107,39 +112,52 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
 
   S30SettlementConfirmViewModel({
     required this.taskId,
-    required this.currentUserId,
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
+    required AuthRepository authRepo,
     required DashboardService dashboardService,
     required SettlementService settlementService,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
+        _authRepo = authRepo,
         _dashboardService = dashboardService,
         _settlementService = settlementService;
 
   void init() {
-    _isLoading = true;
+    if (_initStatus == LoadStatus.loading) return;
+    _initStatus = LoadStatus.loading;
+    _initErrorCode = null;
     notifyListeners();
 
-    _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-      if (taskData != null) {
-        _task = taskData;
-        _recalculate();
-      }
-    });
+    try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
+      currentUserId = user.uid;
 
-    _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
-      _records = records;
-      _recalculate();
-    });
+      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
+        if (taskData != null) {
+          _task = taskData;
+          _recalculate();
+        }
+      });
+
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
+        _records = records;
+        _recalculate();
+      });
+    } on AppErrorCodes catch (code) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
+    }
   }
 
   void _recalculate() {
-    if (_task == null) {
-      _isLoading = false;
-      notifyListeners();
-      return;
-    }
+    if (_task == null) return;
 
     _checkPointPoolBalance =
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(_records);
@@ -162,7 +180,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
       mergeMap: _mergeMap,
     );
 
-    _isLoading = false;
+    _initStatus = LoadStatus.success;
     notifyListeners();
   }
 
@@ -174,12 +192,17 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
 
   Future<void> updateRemainderRule(
       String newRule, String? newAbsorberId) async {
-    // 直接更新 DB，觸發 Stream 更新
-    await _taskRepo.updateTask(taskId, {
-      'remainderRule': newRule,
-      'remainderAbsorberId':
-          newRule == RemainderRuleConstants.member ? newAbsorberId : null,
-    });
+    try {
+      await _taskRepo.updateTask(taskId, {
+        'remainderRule': newRule,
+        'remainderAbsorberId':
+            newRule == RemainderRuleConstants.member ? newAbsorberId : null,
+      });
+    } on AppErrorCodes {
+      rethrow;
+    } catch (e) {
+      throw ErrorMapper.parseErrorCode(e);
+    }
   }
 
   void mergeMembers(String headId, List<String> childrenIds) {
@@ -200,9 +223,10 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     try {
       // pending -> ongoing
       await _taskRepo.updateTaskStatus(taskId, 'ongoing');
+    } on AppErrorCodes {
+      rethrow;
     } catch (e) {
-      // TODO: handle error
-      debugPrint("Unlock failed: $e");
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 

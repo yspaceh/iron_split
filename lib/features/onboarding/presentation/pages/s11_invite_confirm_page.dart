@@ -40,39 +40,8 @@ class S11InviteConfirmPage extends StatelessWidget {
   }
 }
 
-class _S11Content extends StatefulWidget {
+class _S11Content extends StatelessWidget {
   const _S11Content();
-
-  @override
-  State<_S11Content> createState() => _S11ContentState();
-}
-
-class _S11ContentState extends State<_S11Content> {
-  late S11InviteConfirmViewModel _vm;
-  @override
-  void initState() {
-    super.initState();
-    _vm = context.read<S11InviteConfirmViewModel>();
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
-  }
-
-  @override
-  void dispose() {
-    _vm.removeListener(_onStateChanged);
-    super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
-  }
 
   Future<void> handleConfirm(
       BuildContext context, S11InviteConfirmViewModel vm) async {
@@ -115,23 +84,22 @@ class _S11ContentState extends State<_S11Content> {
     final colorScheme = theme.colorScheme;
     final vm = context.watch<S11InviteConfirmViewModel>();
     final dateFormat = DateFormat('yyyy/MM/dd');
+    void onCancel() {
+      vm.clearInvite();
+      context.goNamed('S00');
+    }
+
     final title = t.S11_Invite_Confirm.title;
     final leading = IconButton(
       icon: const Icon(Icons.close),
-      onPressed: () {
-        vm.clearInvite();
-        context.goNamed('S00');
-      }, // 取消
+      onPressed: () => onCancel(), // 取消
     );
 
     return CommonStateView(
       status: vm.initStatus,
       errorCode: vm.initErrorCode,
       errorActionText: t.common.buttons.back,
-      onErrorAction: () {
-        vm.clearInvite();
-        context.goNamed('S00');
-      },
+      onErrorAction: () => onCancel(),
       title: title,
       leading: leading,
       child: Scaffold(
@@ -145,10 +113,7 @@ class _S11ContentState extends State<_S11Content> {
             AppButton(
               text: t.S11_Invite_Confirm.buttons.cancel,
               type: AppButtonType.secondary,
-              onPressed: () {
-                vm.clearInvite();
-                context.goNamed('S00');
-              },
+              onPressed: () => onCancel(),
             ),
             AppButton(
               text: t.S11_Invite_Confirm.buttons.confirm,

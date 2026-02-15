@@ -305,9 +305,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _initStatus = LoadStatus.error;
-      _initErrorCode = e is FirebaseException
-          ? ErrorMapper.parseErrorCode(e)
-          : AppErrorCodes.initFailed;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
   }
@@ -563,7 +561,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       // 2. 防呆檢查：只有編輯模式 (_originalRecord 存在) 才能刪除
       if (_originalRecord == null) throw AppErrorCodes.dataNotFound;
 
-      // ✅ [修正] 核心邏輯：委派給 Service，與 S13 保持 100% 一致
+      //  [修正] 核心邏輯：委派給 Service，與 S13 保持 100% 一致
       // Service 內部會自動處理：
       //   a. 檢查是否為收入 (Income)
       //   b. 檢查是否被其他紀錄引用 (checkRecordReferenced)
@@ -619,7 +617,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // 檢查金額變更
     if ((totalAmount - r.originalAmount).abs() > 0.001) return true;
 
-    // 檢查標題變更 (✅ 修正重點)
+    // 檢查標題變更 ( 修正重點)
     // 只有當「現在是支出」且「資料庫原本也是支出」時，才比對標題
     // 因為 Income 的 Controller 通常是空的，比對會出錯
     if (_recordTypeIndex == 0 && r.type == 'expense') {

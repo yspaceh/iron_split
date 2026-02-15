@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/presentation/viewmodels/b05_payment_info_edit_vm.dart';
 import 'package:iron_split/features/settlement/presentation/widgets/payment_info_form.dart';
+import 'package:iron_split/features/system/data/system_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +41,8 @@ class B05PaymentinfoEditBottomSheet extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => B05PaymentInfoEditViewModel(
         taskRepo: context.read<TaskRepository>(),
+        authRepo: context.read<AuthRepository>(),
+        systemRepo: context.read<SystemRepository>(),
         task: task,
       )..init(),
       child: const _B05Content(),
@@ -84,13 +92,26 @@ class _B05ContentState extends State<_B05Content> {
     return _appNameNodes.putIfAbsent(index, () => FocusNode());
   }
 
+  Future<void> _handleSave(
+      BuildContext context, B05PaymentInfoEditViewModel vm) async {
+    try {
+      await vm.save();
+
+      if (!context.mounted) return;
+      context.pop();
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<B05PaymentInfoEditViewModel>();
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final title = t.S31_settlement_payment_info.title;
 
     final allNodes = [
       _bankNameNode,
@@ -103,67 +124,59 @@ class _B05ContentState extends State<_B05Content> {
 
     return AppKeyboardActionsWrapper(
       focusNodes: allNodes,
-      child: CommonBottomSheet(
-        title: t.S31_settlement_payment_info.title,
-        bottomActionBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Sync Checkbox (Smart Display)
-            if (vm.showSyncOption)
-              Container(
-                color: colorScheme.surfaceContainerLow,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: CheckboxListTile(
-                  value: vm.isSyncChecked,
-                  onChanged: vm.toggleSync,
-                  title: Text(
-                    vm.isUpdate
-                        ? t.S31_settlement_payment_info
-                            .sync_update // "更新我的預設收款資訊"
-                        : t.S31_settlement_payment_info
-                            .sync_save, // "儲存為預設收款資訊"
-                    style: textTheme.bodySmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+      child: CommonStateView(
+        status: vm.initStatus,
+        title: title,
+        errorCode: vm.initErrorCode,
+        isSheetMode: true,
+        child: CommonBottomSheet(
+          title: t.S31_settlement_payment_info.title,
+          bottomActionBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Sync Checkbox (Smart Display)
+              if (vm.showSyncOption)
+                Container(
+                  color: theme.colorScheme.surfaceContainerLow,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: CheckboxListTile(
+                    value: vm.isSyncChecked,
+                    onChanged: vm.toggleSync,
+                    title: Text(
+                      vm.isUpdate
+                          ? t.S31_settlement_payment_info
+                              .sync_update // "更新我的預設收款資訊"
+                          : t.S31_settlement_payment_info
+                              .sync_save, // "儲存為預設收款資訊"
+                      style: textTheme.bodySmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: theme.colorScheme.primary,
                   ),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  activeColor: colorScheme.primary,
                 ),
+              StickyBottomActionBar.sheet(
+                children: [
+                  AppButton(
+                    text: t.common.buttons.cancel,
+                    type: AppButtonType.secondary,
+                    onPressed: () => context.pop(),
+                  ),
+                  AppButton(
+                    text: t.common.buttons.save,
+                    type: AppButtonType.primary,
+                    onPressed: () => _handleSave(context, vm),
+                  ),
+                ],
               ),
-            StickyBottomActionBar.sheet(
-              children: [
-                AppButton(
-                  text: t.common.buttons.cancel,
-                  type: AppButtonType.secondary,
-                  onPressed: () => context.pop(),
-                ),
-                AppButton(
-                  text: t.common.buttons.save,
-                  type: AppButtonType.primary,
-                  onPressed: () async {
-                    try {
-                      await vm.save(t);
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    } catch (e) {
-                      // TODO: handle error
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(e.toString())),
-                        );
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        children: SingleChildScrollView(
-          child: PaymentInfoForm(controller: vm.formController),
+            ],
+          ),
+          children: SingleChildScrollView(
+            child: PaymentInfoForm(controller: vm.formController),
+          ),
         ),
       ),
     );

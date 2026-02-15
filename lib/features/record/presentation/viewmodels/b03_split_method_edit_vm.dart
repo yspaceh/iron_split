@@ -4,10 +4,12 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
+import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 
 class B03SplitMethodEditViewModel extends ChangeNotifier {
-  // --- Properties ---
+  final AuthRepository _authRepo;
   final double totalAmount;
   final CurrencyConstants selectedCurrency;
   final List<Map<String, dynamic>> allMembers;
@@ -34,6 +36,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
       _amountControllers;
 
   B03SplitMethodEditViewModel({
+    required AuthRepository authRepo,
     required this.totalAmount,
     required this.selectedCurrency,
     required this.allMembers,
@@ -43,7 +46,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
     required String initialSplitMethod,
     required List<String> initialMemberIds,
     required Map<String, double> initialDetails,
-  }) {
+  }) : _authRepo = authRepo {
     _splitMethod = initialSplitMethod;
     _selectedMemberIds = List.from(initialMemberIds);
     _details = Map.from(initialDetails);
@@ -55,6 +58,8 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final user = _authRepo.currentUser;
+      if (user == null) throw AppErrorCodes.unauthorized;
       for (var m in allMembers) {
         final id = m['id'];
         final val = _details[id] ?? 0.0;
@@ -72,11 +77,16 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
       }
 
       _initStatus = LoadStatus.success;
-    } catch (e) {
-      _initErrorCode = AppErrorCodes.initFailed;
+      notifyListeners();
+    } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
+      _initErrorCode = code;
+      notifyListeners();
+    } catch (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   // 對照原始 _getSplitResult 邏輯

@@ -46,27 +46,13 @@ class _S51ContentState extends State<_S51Content> {
     _vm = context.read<S51OnboardingNameViewModel>();
     _vm.init();
     _controller.addListener(_onTextChanged);
-    _vm.addListener(_onStateChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onStateChanged();
-    });
   }
 
   @override
   void dispose() {
-    _vm.removeListener(_onStateChanged);
     _controller.removeListener(_onTextChanged);
     _controller.dispose();
     super.dispose();
-  }
-
-  void _onStateChanged() {
-    if (!mounted) return;
-    // 處理自動導航 (如未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-    }
   }
 
   void _onTextChanged() {
@@ -74,11 +60,12 @@ class _S51ContentState extends State<_S51Content> {
     context.read<S51OnboardingNameViewModel>().onNameChanged(_controller.text);
   }
 
-  void _submit(BuildContext context, S51OnboardingNameViewModel vm) {
+  Future<void> _submit(
+      BuildContext context, S51OnboardingNameViewModel vm) async {
     try {
-      vm.saveName();
+      await vm.saveName();
       if (!context.mounted) return;
-      () => context.goNamed('S10');
+      context.goNamed('S10');
     } on AppErrorCodes catch (code) {
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
