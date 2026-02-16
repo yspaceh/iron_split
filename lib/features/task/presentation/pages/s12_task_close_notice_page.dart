@@ -45,7 +45,7 @@ class _S12Content extends StatelessWidget {
 
       if (!context.mounted) return;
       context.pop();
-      context.goNamed('S10');
+      context.goNamed('S00');
     } on AppErrorCodes catch (code) {
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);

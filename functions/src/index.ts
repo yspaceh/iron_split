@@ -1,4 +1,5 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as admin from "firebase-admin";
 import { FieldPath } from "firebase-admin/firestore";
 
@@ -427,4 +428,38 @@ export const deleteUserAccount = onCall(async (request) => {
   await admin.auth().deleteUser(uid);
 
   return { success: true };
+});
+
+// index.ts 最下方
+
+/**
+ * 每日排程：刪除過期任務 (v2 寫法)
+ */
+export const deleteExpiredTasks = onSchedule("every 24 hours", async (event) => {
+  const db = admin.firestore();
+  
+  // 計算 30 天前的時間點
+  const now = Date.now();
+  const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+  const cutoffDate = admin.firestore.Timestamp.fromMillis(thirtyDaysAgo);
+
+  // 1. 查詢過期任務
+  const snapshot = await db.collection("tasks")
+    .where("status", "==", "closed")
+    .where("finalizedAt", "<=", cutoffDate)
+    .get();
+
+  if (snapshot.empty) {
+    console.log("No expired tasks found.");
+    return;
+  }
+
+  console.log(`Found ${snapshot.size} expired tasks. Deleting...`);
+
+  // 2. 執行遞迴刪除
+  const deletePromises = snapshot.docs.map((doc) => db.recursiveDelete(doc.ref));
+  
+  await Promise.all(deletePromises);
+  
+  console.log(`Successfully deleted ${snapshot.size} expired tasks.`);
 });

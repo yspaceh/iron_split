@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
@@ -26,7 +27,19 @@ class RecordRepository extends BaseRepository {
       return snapshot.docs
           .map((doc) => RecordModel.fromFirestore(doc))
           .toList();
-    }).handleError((e) {
+    }).handleError((e, stack) {
+      final String errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('permission-denied') ||
+          errorStr.contains('permission_denied') ||
+          (e is FirebaseException && e.code == 'permission-denied')) {
+        // 如果是因為權限不足（通常是因為文件被刪除導致規則失效），
+        // 我們選擇「吞掉」這個錯誤，不拋出，讓 Stream 靜靜結束或保持原狀。
+        return;
+      }
+
+      // 其他錯誤才拋出
+      FirebaseCrashlytics.instance
+          .recordError(e, stack, reason: 'streamTask failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }
