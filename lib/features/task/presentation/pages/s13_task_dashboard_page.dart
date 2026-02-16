@@ -49,6 +49,7 @@ class _S13Content extends StatefulWidget {
 
 class _S13ContentState extends State<_S13Content> {
   late S13TaskDashboardViewModel _vm;
+  bool _isIntroShown = false;
   @override
   void initState() {
     super.initState();
@@ -84,15 +85,20 @@ class _S13ContentState extends State<_S13Content> {
     }
 
     // 2. 處理 Intro 彈窗 (VM 會判斷 hasSeenRoleIntro)
-    if (_vm.shouldShowIntro) {
+    if (_vm.shouldShowIntro && !_isIntroShown) {
       final memberData = _vm.task!.members[_vm.currentUserId];
       if (memberData == null) return;
 
+      _isIntroShown = true;
+      final bool hasRerolled = memberData['hasRerolled'] ?? false;
+
       // 顯示彈窗
-      D01MemberRoleIntroDialog.show(context,
-          taskId: _vm.taskId,
-          initialAvatar: memberData['avatar'] ?? AvatarConstants.defaultAvatar,
-          canReroll: true);
+      D01MemberRoleIntroDialog.show(
+        context,
+        taskId: _vm.taskId,
+        initialAvatar: memberData['avatar'] ?? AvatarConstants.defaultAvatar,
+        canReroll: !hasRerolled,
+      );
     }
   }
 

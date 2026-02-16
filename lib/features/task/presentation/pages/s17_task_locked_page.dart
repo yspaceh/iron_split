@@ -159,17 +159,20 @@ class _S17ContentState extends State<_S17Content> {
       }
     }
 
-    Widget content = switch (vm.pageType) {
-      LockedPageType.closed => const S17ClosedView(),
-      LockedPageType.settled => S17SettledView(
-          taskId: vm.taskId,
-          task: vm.task,
-          isCaptain: vm.isCaptain,
-          balanceState: vm.balanceState!, // success 狀態下必有值
-          pendingMembers: vm.pendingMembers,
-          clearedMembers: vm.clearedMembers,
-        ),
-    };
+    Widget? content;
+    if (vm.initStatus == LoadStatus.success) {
+      content = switch (vm.pageType) {
+        LockedPageType.closed => const S17ClosedView(),
+        LockedPageType.settled => S17SettledView(
+            taskId: vm.taskId,
+            task: vm.task,
+            isCaptain: vm.isCaptain,
+            balanceState: vm.balanceState!, // success 狀態下必有值
+            pendingMembers: vm.pendingMembers,
+            clearedMembers: vm.clearedMembers,
+          ),
+      };
+    }
 
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back),
@@ -182,37 +185,41 @@ class _S17ContentState extends State<_S17Content> {
       errorCode: vm.initErrorCode,
       title: vm.taskName,
       leading: leading,
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(vm.taskName),
-            centerTitle: true,
-            leading: leading,
-          ),
-          extendBody: true,
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RetentionBanner(days: vm.remainingDays!),
-              StickyBottomActionBar(
-                isSheetMode: false,
+      child: vm.initStatus != LoadStatus.success
+          ? const SizedBox.shrink()
+          : Scaffold(
+              appBar: AppBar(
+                title: Text(vm.taskName),
+                centerTitle: true,
+                leading: leading,
+              ),
+              extendBody: true,
+              bottomNavigationBar: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 通知成員
-                  AppButton(
-                    text: t.S17_Task_Locked.buttons.notify_members,
-                    type: AppButtonType.secondary,
-                    onPressed: () => handleShare(context, vm),
-                  ),
-                  // 下載帳單
-                  AppButton(
-                    text: t.S17_Task_Locked.buttons.download,
-                    type: AppButtonType.primary,
-                    onPressed: () => handleExport(context, vm),
+                  vm.remainingDays == null
+                      ? const SizedBox.shrink()
+                      : RetentionBanner(days: vm.remainingDays!),
+                  StickyBottomActionBar(
+                    isSheetMode: false,
+                    children: [
+                      // 通知成員
+                      AppButton(
+                        text: t.S17_Task_Locked.buttons.notify_members,
+                        type: AppButtonType.secondary,
+                        onPressed: () => handleShare(context, vm),
+                      ),
+                      // 下載帳單
+                      AppButton(
+                        text: t.S17_Task_Locked.buttons.download,
+                        type: AppButtonType.primary,
+                        onPressed: () => handleExport(context, vm),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-          body: content),
+              body: content),
     );
   }
 }

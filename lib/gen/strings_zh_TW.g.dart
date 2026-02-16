@@ -108,8 +108,8 @@ class TranslationsCommonZhTw {
 	/// zh-TW: '請先登入'
 	String get please_login => '請先登入';
 
-	/// zh-TW: '讀取中...'
-	String get loading => '讀取中...';
+	/// zh-TW: '準備中...'
+	String get preparing => '準備中...';
 
 	/// zh-TW: '我'
 	String get me => '我';
@@ -185,9 +185,6 @@ class TranslationsS10HomeTaskListZhTw {
 
 	/// zh-TW: '已完成'
 	String get tab_completed => '已完成';
-
-	/// zh-TW: '鐵公雞準備中...'
-	String get mascot_preparing => '鐵公雞準備中...';
 
 	/// zh-TW: '目前沒有進行中的任務'
 	String get empty_in_progress => '目前沒有進行中的任務';
@@ -670,9 +667,6 @@ class TranslationsD03TaskCreateConfirmZhTw {
 
 	/// zh-TW: '正在建立任務...'
 	String get creating_task => '正在建立任務...';
-
-	/// zh-TW: '準備邀請函...'
-	String get preparing_share => '準備邀請函...';
 }
 
 // Path: D04_CommonUnsaved_Confirm
@@ -2963,7 +2957,7 @@ extension on Translations {
 			'common.share.settlement.message' => ({required Object taskName, required Object link}) => '結算已完成！\n請開啟 Iron Split App 確認「${taskName}」您的支付金額。\n連結：${link}',
 			'common.error_prefix' => ({required Object message}) => '錯誤: ${message}',
 			'common.please_login' => '請先登入',
-			'common.loading' => '讀取中...',
+			'common.preparing' => '準備中...',
 			'common.me' => '我',
 			'common.required' => '必填',
 			'common.member_prefix' => '成員',
@@ -2983,7 +2977,6 @@ extension on Translations {
 			'S10_Home_TaskList.title' => '我的任務',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '已完成',
-			'S10_Home_TaskList.mascot_preparing' => '鐵公雞準備中...',
 			'S10_Home_TaskList.empty_in_progress' => '目前沒有進行中的任務',
 			'S10_Home_TaskList.empty_completed' => '沒有已完成的任務',
 			'S10_Home_TaskList.date_tbd' => '日期未定',
@@ -3214,7 +3207,6 @@ extension on Translations {
 			'D03_TaskCreate_Confirm.label_currency' => '幣別',
 			'D03_TaskCreate_Confirm.label_members' => '人數',
 			'D03_TaskCreate_Confirm.creating_task' => '正在建立任務...',
-			'D03_TaskCreate_Confirm.preparing_share' => '準備邀請函...',
 			'D04_CommonUnsaved_Confirm.title' => '尚未儲存',
 			'D04_CommonUnsaved_Confirm.content' => '變更將不會被儲存，確定要離開嗎？',
 			'D05_DateJump_NoResult.title' => '無紀錄',

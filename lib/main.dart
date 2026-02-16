@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ui';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,6 +53,17 @@ void main() async {
     // 跟隨系統
     LocaleSettings.useDeviceLocale();
   }
+
+  // 捕獲 Flutter 框架內的錯誤
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  // 捕獲非同步錯誤（例如未處理的 Future error）
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   runApp(
     MultiProvider(
@@ -123,7 +136,6 @@ class IronSplitApp extends StatefulWidget {
 }
 
 class _IronSplitAppState extends State<IronSplitApp> {
-  final DeepLinkService _deepLinkService = DeepLinkService();
   late final AppRouter _appRouter;
   StreamSubscription? _linkSubscription;
 
@@ -131,17 +143,18 @@ class _IronSplitAppState extends State<IronSplitApp> {
   void initState() {
     super.initState();
     // 修正點：現在 AppRouter 接收 deepLinkService 作為參數
-    _appRouter = AppRouter(_deepLinkService);
+    final deepLinkService = context.read<DeepLinkService>();
+    _appRouter = AppRouter(deepLinkService);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _setupDeepLinkListener();
+      _setupDeepLinkListener(deepLinkService);
     });
   }
 
   /// 設置 Deep Link 監聽邏輯
-  void _setupDeepLinkListener() {
-    _deepLinkService.initialize();
+  void _setupDeepLinkListener(DeepLinkService service) {
+    service.initialize();
 
-    _linkSubscription = _deepLinkService.intentStream.listen((intent) {
+    _linkSubscription = service.intentStream.listen((intent) {
       if (!mounted) return;
 
       switch (intent) {
@@ -170,7 +183,6 @@ class _IronSplitAppState extends State<IronSplitApp> {
   @override
   void dispose() {
     _linkSubscription?.cancel();
-    _deepLinkService.dispose();
     super.dispose();
   }
 

@@ -31,13 +31,25 @@ class TaskService {
   }
 
   /// S12: 執行結束任務的完整業務流程
-  Future<void> closeTask(String taskId) async {
+  Future<void> closeTaskWithRetention(String taskId) async {
     try {
-      await _taskRepo.closeTask(taskId);
+      await _taskRepo.closeTaskWithRetention(taskId);
     } on AppErrorCodes {
       rethrow;
     } catch (e) {
       throw AppErrorCodes.taskCloseFailed;
+    }
+  }
+
+  /// S12: 執行刪除任務 (物理刪除)
+  /// 適用於：任務內完全沒有記帳資料，直接清除
+  Future<void> deleteTask(String taskId) async {
+    try {
+      await _taskRepo.deleteTask(taskId);
+    } on AppErrorCodes {
+      rethrow;
+    } catch (e) {
+      throw AppErrorCodes.deleteFailed; // 請確認 ErrorCode
     }
   }
 }

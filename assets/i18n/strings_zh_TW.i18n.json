@@ -163,7 +163,7 @@
     },
     "error_prefix": "錯誤: {message}",
     "please_login": "請先登入",
-    "loading": "讀取中...",
+    "preparing": "準備中...",
     "me": "我",
     "required": "必填",
     "member_prefix": "成員",
@@ -187,7 +187,6 @@
     "title": "我的任務",
     "tab_in_progress": "進行中",
     "tab_completed": "已完成",
-    "mascot_preparing": "鐵公雞準備中...",
     "empty_in_progress": "目前沒有進行中的任務",
     "empty_completed": "沒有已完成的任務",
     "date_tbd": "日期未定",
@@ -545,8 +544,7 @@
     "label_period": "期間",
     "label_currency": "幣別",
     "label_members": "人數",
-    "creating_task": "正在建立任務...",
-    "preparing_share": "準備邀請函..."
+    "creating_task": "正在建立任務..."
   },
   "D04_CommonUnsaved_Confirm": {
     "title": "尚未儲存",

@@ -13,6 +13,7 @@ class TaskModel {
   final String remainderRule; // Added to match S14
   final String? remainderAbsorberId;
   final DateTime createdAt;
+  final DateTime? finalizedAt;
   final DateTime updatedAt; // Added
   final DateTime? startDate;
   final DateTime? endDate;
@@ -30,6 +31,7 @@ class TaskModel {
     required this.remainderRule,
     required this.createdAt,
     required this.updatedAt,
+    this.finalizedAt,
     this.startDate,
     this.endDate,
     this.memberCount = 1,
@@ -115,6 +117,8 @@ class TaskModel {
       remainderAbsorberId: data['remainderAbsorberId'] as String?,
       createdAt: parseDate(data['createdAt']),
       updatedAt: parseDate(data['updatedAt']),
+      finalizedAt:
+          data['finalizedAt'] != null ? parseDate(data['finalizedAt']) : null,
       startDate:
           data['startDate'] != null ? parseDate(data['startDate']) : null,
       endDate: data['endDate'] != null ? parseDate(data['endDate']) : null,
@@ -136,6 +140,8 @@ class TaskModel {
       'remainderAbsorberId': remainderAbsorberId,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
+      'finalizedAt':
+          finalizedAt != null ? Timestamp.fromDate(finalizedAt!) : null,
       'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
       'memberCount': memberCount,

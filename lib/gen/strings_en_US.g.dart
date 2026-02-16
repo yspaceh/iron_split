@@ -102,7 +102,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String error_prefix({required Object message}) => 'Error: ${message}';
 	@override String get please_login => 'Please Login';
-	@override String get loading => 'Loading...';
+	@override String get preparing => 'Preparing...';
 	@override String get me => 'Me';
 	@override String get required => 'Required';
 	@override String get member_prefix => 'Member';
@@ -140,7 +140,6 @@ class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 	@override String get title => 'My Tasks';
 	@override String get tab_in_progress => 'Active';
 	@override String get tab_completed => 'Finished';
-	@override String get mascot_preparing => 'Iron Rooster preparing...';
 	@override String get empty_in_progress => 'No active tasks';
 	@override String get empty_completed => 'No finished tasks';
 	@override String get date_tbd => 'Date TBD';
@@ -442,7 +441,6 @@ class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateCon
 	@override String get label_currency => 'Currency';
 	@override String get label_members => 'Members';
 	@override String get creating_task => 'Creating task...';
-	@override String get preparing_share => 'Preparing invite...';
 }
 
 // Path: D04_CommonUnsaved_Confirm
@@ -1959,7 +1957,7 @@ extension on TranslationsEnUs {
 			'common.share.settlement.message' => ({required Object taskName, required Object link}) => 'Settlement completed!\nPlease open the Iron Split app to check your "${taskName}" payment amount.\nLink：${link}',
 			'common.error_prefix' => ({required Object message}) => 'Error: ${message}',
 			'common.please_login' => 'Please Login',
-			'common.loading' => 'Loading...',
+			'common.preparing' => 'Preparing...',
 			'common.me' => 'Me',
 			'common.required' => 'Required',
 			'common.member_prefix' => 'Member',
@@ -1979,7 +1977,6 @@ extension on TranslationsEnUs {
 			'S10_Home_TaskList.title' => 'My Tasks',
 			'S10_Home_TaskList.tab_in_progress' => 'Active',
 			'S10_Home_TaskList.tab_completed' => 'Finished',
-			'S10_Home_TaskList.mascot_preparing' => 'Iron Rooster preparing...',
 			'S10_Home_TaskList.empty_in_progress' => 'No active tasks',
 			'S10_Home_TaskList.empty_completed' => 'No finished tasks',
 			'S10_Home_TaskList.date_tbd' => 'Date TBD',
@@ -2209,7 +2206,6 @@ extension on TranslationsEnUs {
 			'D03_TaskCreate_Confirm.label_currency' => 'Currency',
 			'D03_TaskCreate_Confirm.label_members' => 'Members',
 			'D03_TaskCreate_Confirm.creating_task' => 'Creating task...',
-			'D03_TaskCreate_Confirm.preparing_share' => 'Preparing invite...',
 			'D04_CommonUnsaved_Confirm.title' => 'Unsaved Changes?',
 			'D04_CommonUnsaved_Confirm.content' => 'Changes you made will not be saved.',
 			'D05_DateJump_NoResult.title' => 'No Record',

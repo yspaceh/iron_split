@@ -10,6 +10,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_button.dart'
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
+import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
@@ -134,7 +135,6 @@ class _S16ContentState extends State<_S16Content> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final vm = context.watch<S16TaskCreateEditViewModel>();
     final title = t.S16_TaskCreate_Edit.title;
     final leading = IconButton(
@@ -245,24 +245,7 @@ class _S16ContentState extends State<_S16Content> {
             ),
           ),
           // 全局 Loading Overlay
-          if (vm.createStatus == LoadStatus.loading)
-            Container(
-              color: Colors.black54,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircularProgressIndicator(color: Colors.white),
-                    const SizedBox(height: 16),
-                    Text(
-                      t.D03_TaskCreate_Confirm.creating_task,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          if (vm.createStatus == LoadStatus.loading) SharePreparing(),
         ],
       ),
     );

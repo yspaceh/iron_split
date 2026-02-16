@@ -3,13 +3,15 @@ import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 
 class S12TaskCloseNoticeViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
-  final TaskService _service;
+  final TaskService _taskService;
+  final RecordRepository _recordRepo; // ✅ 新增：用來檢查是否有紀錄
   final String taskId;
 
   // State
@@ -25,9 +27,11 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
   S12TaskCloseNoticeViewModel({
     required this.taskId,
     required AuthRepository authRepo,
-    required TaskService service,
+    required RecordRepository record,
+    required TaskService taskService,
   })  : _authRepo = authRepo,
-        _service = service;
+        _recordRepo = record,
+        _taskService = taskService;
 
   void init() {
     if (_initStatus == LoadStatus.loading) return;
@@ -61,14 +65,18 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _service.closeTask(taskId);
-
-      // 2. 寫入 Log
-      await ActivityLogService.log(
-        taskId: taskId,
-        action: LogAction.closeTask,
-        details: {},
-      );
+      final records = await _recordRepo.getRecordsOnce(taskId);
+      if (records.isEmpty) {
+        await _taskService.deleteTask(taskId);
+      } else {
+        await _taskService.closeTaskWithRetention(taskId);
+        // 2. 寫入 Log
+        await ActivityLogService.log(
+          taskId: taskId,
+          action: LogAction.closeTask,
+          details: {},
+        );
+      }
 
       _closeStatus = LoadStatus.success;
       notifyListeners();

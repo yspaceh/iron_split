@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
@@ -99,9 +98,6 @@ class S17TaskLockedViewModel extends ChangeNotifier {
           if (task == null) throw AppErrorCodes.dataNotFound;
           _task = task;
           _taskName = task.name;
-          _baseCurrency =
-              CurrencyConstants.getCurrencyConstants(task.baseCurrency);
-          _isCaptain = task.createdBy == currentUserId;
 
           _determineStatusAndParseData(task);
 
@@ -134,33 +130,39 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   }
 
   void _determineStatusAndParseData(TaskModel task) {
-    // 1. 決定大狀態
-    if (task.status == 'closed') {
-      _pageType = LockedPageType.closed;
-      return;
+    final isClosed = _task!.status == 'closed';
+    final isSettled = _task!.status == 'settled';
+
+    if (!isClosed && !isSettled) {
+      throw AppErrorCodes.taskStatusError;
     }
+
+    // 1. 決定大狀態
+    _pageType = isClosed ? LockedPageType.closed : LockedPageType.settled;
 
     final settlement = task.settlement ?? {};
-    final finalizedAtRaw = settlement['finalizedAt'];
+    final finalizedDate = task.finalizedAt;
+    _calculateRemainingDays(finalizedDate);
 
-    if (finalizedAtRaw != null && finalizedAtRaw is Timestamp) {
-      final finalizedDate = finalizedAtRaw.toDate();
-      final deadlineDate = finalizedDate.add(const Duration(days: 30));
-      final now = DateTime.now();
-
-      // 計算差異天數 (只要還有時間都算 1 天，除非過期)
-      final difference = deadlineDate.difference(now).inDays;
-
-      // 如果 difference < 0 代表已過期，這裡取 max(0, diff) 防止負數
-      _remainingDays = difference < 0 ? 0 : difference;
-    } else {
-      // 如果沒有結算時間 (舊資料)，給個預設值或不顯示
-      _remainingDays = null;
-    }
+    _baseCurrency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
+    _isCaptain = task.createdBy == currentUserId;
 
     // 2. 如果是 Pending，進行資料解析 (原本在 Page 裡的邏輯)
     _pageType = LockedPageType.settled;
     _parsePendingData(task, settlement);
+  }
+
+  void _calculateRemainingDays(DateTime? finalizedDate) {
+    if (finalizedDate == null) {
+      _remainingDays = null;
+      return;
+    }
+    final deadlineDate = finalizedDate.add(const Duration(days: 30));
+    final now = DateTime.now();
+    final difference = deadlineDate.difference(now).inDays;
+
+    // 如果 difference < 0 代表已過期，這裡取 max(0, diff) 防止負數
+    _remainingDays = difference < 0 ? 0 : difference;
   }
 
   void _parsePendingData(TaskModel task, Map<String, dynamic> settlement) {

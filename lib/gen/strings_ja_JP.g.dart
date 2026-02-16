@@ -102,7 +102,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonShareJaJp share = _TranslationsCommonShareJaJp._(_root);
 	@override String error_prefix({required Object message}) => 'エラー: ${message}';
 	@override String get please_login => 'ログインしてください';
-	@override String get loading => '読み込み中...';
+	@override String get preparing => '準備中...';
 	@override String get me => '自分';
 	@override String get required => '必須';
 	@override String get member_prefix => 'メンバー';
@@ -140,7 +140,6 @@ class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 	@override String get title => 'マイタスク';
 	@override String get tab_in_progress => '進行中';
 	@override String get tab_completed => '完了済';
-	@override String get mascot_preparing => '鉄の雄鶏、準備中...';
 	@override String get empty_in_progress => '進行中のタスクはありません';
 	@override String get empty_completed => '完了したタスクはありません';
 	@override String get date_tbd => '日付未定';
@@ -442,7 +441,6 @@ class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateCon
 	@override String get label_currency => '通貨';
 	@override String get label_members => '人数';
 	@override String get creating_task => '作成中...';
-	@override String get preparing_share => '招待を準備中...';
 }
 
 // Path: D04_CommonUnsaved_Confirm
@@ -1959,7 +1957,7 @@ extension on TranslationsJaJp {
 			'common.share.settlement.message' => ({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}',
 			'common.error_prefix' => ({required Object message}) => 'エラー: ${message}',
 			'common.please_login' => 'ログインしてください',
-			'common.loading' => '読み込み中...',
+			'common.preparing' => '準備中...',
 			'common.me' => '自分',
 			'common.required' => '必須',
 			'common.member_prefix' => 'メンバー',
@@ -1979,7 +1977,6 @@ extension on TranslationsJaJp {
 			'S10_Home_TaskList.title' => 'マイタスク',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '完了済',
-			'S10_Home_TaskList.mascot_preparing' => '鉄の雄鶏、準備中...',
 			'S10_Home_TaskList.empty_in_progress' => '進行中のタスクはありません',
 			'S10_Home_TaskList.empty_completed' => '完了したタスクはありません',
 			'S10_Home_TaskList.date_tbd' => '日付未定',
@@ -2209,7 +2206,6 @@ extension on TranslationsJaJp {
 			'D03_TaskCreate_Confirm.label_currency' => '通貨',
 			'D03_TaskCreate_Confirm.label_members' => '人数',
 			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
-			'D03_TaskCreate_Confirm.preparing_share' => '招待を準備中...',
 			'D04_CommonUnsaved_Confirm.title' => '未保存の変更',
 			'D04_CommonUnsaved_Confirm.content' => '変更内容は保存されません。',
 			'D05_DateJump_NoResult.title' => '記録なし',

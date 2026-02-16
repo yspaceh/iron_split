@@ -92,14 +92,21 @@ class TaskRepository extends BaseRepository {
   }
 
   /// 結束任務 (將狀態改為 closed 並記錄時間)
-  Future<void> closeTask(String taskId) async {
+  Future<void> closeTaskWithRetention(String taskId) async {
     await safeRun(
       () => _firestore.collection('tasks').doc(taskId).update({
         'status': 'closed',
-        'closedAt': FieldValue.serverTimestamp(),
+        'finalizedAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(), // 建議同時更新 updatedAt
       }),
       AppErrorCodes.taskCloseFailed,
+    );
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    await safeRun(
+      () => _firestore.collection('tasks').doc(taskId).delete(),
+      AppErrorCodes.deleteFailed, // 請確認 AppErrorCodes 有加入此列舉，若無可用 saveFailed 代替
     );
   }
 
@@ -173,6 +180,7 @@ class TaskRepository extends BaseRepository {
           ...settlementData, // 展開其他欄位 (allocations, stats, etc.)
         },
         // 3. 更新時間
+        'finalizedAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       }),
       AppErrorCodes.saveFailed,

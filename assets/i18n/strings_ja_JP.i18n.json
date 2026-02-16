@@ -163,7 +163,7 @@
     },
     "error_prefix": "エラー: {message}",
     "please_login": "ログインしてください",
-    "loading": "読み込み中...",
+    "preparing": "準備中...",
     "me": "自分",
     "required": "必須",
     "member_prefix": "メンバー",
@@ -187,7 +187,6 @@
     "title": "マイタスク",
     "tab_in_progress": "進行中",
     "tab_completed": "完了済",
-    "mascot_preparing": "鉄の雄鶏、準備中...",
     "empty_in_progress": "進行中のタスクはありません",
     "empty_completed": "完了したタスクはありません",
     "date_tbd": "日付未定",
@@ -544,8 +543,7 @@
     "label_period": "期間",
     "label_currency": "通貨",
     "label_members": "人数",
-    "creating_task": "作成中...",
-    "preparing_share": "招待を準備中..."
+    "creating_task": "作成中..."
   },
   "D04_CommonUnsaved_Confirm": {
     "title": "未保存の変更",

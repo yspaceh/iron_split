@@ -8,6 +8,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_button.dart'
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
 
 import 'package:provider/provider.dart';
@@ -26,7 +27,8 @@ class S12TaskCloseNoticePage extends StatelessWidget {
       create: (_) => S12TaskCloseNoticeViewModel(
         taskId: taskId,
         authRepo: context.read<AuthRepository>(),
-        service: context.read<TaskService>(),
+        record: context.read<RecordRepository>(),
+        taskService: context.read<TaskService>(),
       )..init(),
       child: const _S12Content(),
     );
@@ -43,10 +45,7 @@ class _S12Content extends StatelessWidget {
 
       if (!context.mounted) return;
       context.pop();
-      context.goNamed(
-        'S17',
-        pathParameters: {'taskId': vm.taskId},
-      );
+      context.goNamed('S10');
     } on AppErrorCodes catch (code) {
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);

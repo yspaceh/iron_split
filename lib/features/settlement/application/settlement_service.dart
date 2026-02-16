@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -324,7 +323,6 @@ class SettlementService {
       await _taskRepo.settleTask(
         taskId: task.id,
         settlementData: {
-          "finalizedAt": Timestamp.now(),
           "baseCurrency": task.baseCurrency, // 這裡用到了 task
           "remainderWinnerId": finalWinnerId,
           "allocations": allocations,

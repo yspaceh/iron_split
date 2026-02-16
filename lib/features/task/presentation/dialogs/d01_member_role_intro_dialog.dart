@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -86,11 +89,19 @@ class _D01DialogContentState extends State<_D01DialogContent>
     super.dispose();
   }
 
-  Future<void> _onEnter(
+  Future<void> _handleEnter(
       BuildContext context, D01MemberRoleIntroViewModel vm) async {
-    await vm.handleEnter();
-    if (!context.mounted) return;
-    context.pop();
+    try {
+      await vm.enterTask();
+      debugPrint('context.mounted: ${context.mounted}');
+      if (!context.mounted) return;
+      debugPrint('Finish');
+      context.pop();
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
   }
 
   @override
@@ -148,7 +159,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
           AppButton(
             text: t.D01_MemberRole_Intro.buttons.enter,
             type: AppButtonType.primary,
-            onPressed: () => _onEnter(context, vm),
+            onPressed: () => _handleEnter(context, vm),
           ),
         ],
       ),

@@ -163,7 +163,7 @@
     },
     "error_prefix": "Error: {message}",
     "please_login": "Please Login",
-    "loading": "Loading...",
+    "preparing": "Preparing...",
     "me": "Me",
     "required": "Required",
     "member_prefix": "Member",
@@ -187,7 +187,6 @@
     "title": "My Tasks",
     "tab_in_progress": "Active",
     "tab_completed": "Finished",
-    "mascot_preparing": "Iron Rooster preparing...",
     "empty_in_progress": "No active tasks",
     "empty_completed": "No finished tasks",
     "date_tbd": "Date TBD",
@@ -544,8 +543,7 @@
     "label_period": "Period",
     "label_currency": "Currency",
     "label_members": "Members",
-    "creating_task": "Creating task...",
-    "preparing_share": "Preparing invite..."
+    "creating_task": "Creating task..."
   },
   "D04_CommonUnsaved_Confirm": {
     "title": "Unsaved Changes?",

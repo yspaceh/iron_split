@@ -13,8 +13,8 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
   late String _currentAvatar;
   late bool _canReroll;
 
-  LoadStatus _rerollStatus = LoadStatus.loading;
-  LoadStatus _enterStatus = LoadStatus.loading;
+  LoadStatus _rerollStatus = LoadStatus.initial;
+  LoadStatus _enterStatus = LoadStatus.initial;
 
   // Getters
   String get currentAvatar => _currentAvatar;
@@ -77,13 +77,14 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> handleEnter() async {
+  Future<void> enterTask() async {
+    debugPrint("_enterStatus: $_enterStatus");
     if (_enterStatus == LoadStatus.loading) return;
     _enterStatus = LoadStatus.loading;
     notifyListeners();
     try {
       final uid = _authRepo.currentUser?.uid;
-      if (uid == null) return;
+      if (uid == null) throw AppErrorCodes.unauthorized;
 
       await _taskRepo.updateMemberFields(taskId, uid, {
         'hasSeenRoleIntro': true,
