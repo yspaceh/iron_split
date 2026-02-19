@@ -133,10 +133,20 @@ class BalanceCalculator {
     if (record.type == RecordType.expense) {
       double rawAmount = 0.0;
 
-      // 情況 A: 單一成員全額代墊
-      if (record.payerType == PayerType.member &&
-          record.payersId.first == uid) {
-        rawAmount = record.originalAmount;
+      // 情況 A: 成員全額代墊
+      if (record.payerType == PayerType.member) {
+        if (record.payersId.contains(uid)) {
+          // 如果您原本的邏輯是直接把總額給他（單人代墊）
+          if (record.payersId.length == 1) {
+            rawAmount += record.amount; // (或 baseAmount，依您原本的變數為準)
+          }
+          // 如果是多人代墊 (Mixed 或 Member 多人)，則要從 paymentDetails 裡面抓
+          else if (record.paymentDetails != null &&
+              record.paymentDetails!['memberAdvance'] != null) {
+            final advances = record.paymentDetails!['memberAdvance'] as Map;
+            rawAmount += (advances[uid] ?? 0.0).toDouble();
+          }
+        }
       }
       // 情況 B: 混合支付 (Mixed) 中的成員代墊部分
       else if (record.payerType == PayerType.mixed &&

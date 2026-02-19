@@ -75,6 +75,9 @@ class RecordRepository extends BaseRepository {
       // 2. 強制轉換時間格式 (Fix Bug)
       data['date'] = Timestamp.fromDate(record.date);
 
+      data['dateString'] =
+          "${record.date.year}-${record.date.month.toString().padLeft(2, '0')}-${record.date.day.toString().padLeft(2, '0')}";
+
       if (record.createdAt != null) {
         data['createdAt'] = Timestamp.fromDate(record.createdAt!);
       } else {
@@ -110,6 +113,8 @@ class RecordRepository extends BaseRepository {
 
       // 2. 強制轉換時間格式
       data['date'] = Timestamp.fromDate(record.date);
+      data['dateString'] =
+          "${record.date.year}-${record.date.month.toString().padLeft(2, '0')}-${record.date.day.toString().padLeft(2, '0')}";
       data['updatedAt'] = FieldValue.serverTimestamp();
 
       // 3. 安全性過濾
@@ -165,7 +170,12 @@ class RecordRepository extends BaseRepository {
         final data = doc.data();
 
         // 1. 檢查付款人
-        if (data['payerId'] == memberId) return true;
+        if (data['payersId'] is List) {
+          final payers = List<String>.from(data['payersId']);
+          if (payers.contains(memberId)) return true;
+        } else if (data['payerId'] == memberId) {
+          return true; // 為了相容資料庫裡還沒被更新的舊單據
+        }
 
         // 2. 檢查分帳對象
         if (data['splitMemberIds'] is List) {
@@ -196,7 +206,7 @@ class RecordRepository extends BaseRepository {
           .collection('tasks')
           .doc(taskId)
           .collection('records')
-          .where('payerId', isEqualTo: recordId)
+          .where('payersId', isEqualTo: recordId)
           .limit(1)
           .get();
 

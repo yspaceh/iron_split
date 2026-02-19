@@ -99,7 +99,7 @@ class DashboardService {
     final Map<DateTime, List<RecordModel>> grouped = {};
     for (var record in records) {
       final date =
-          DateTime(record.date.year, record.date.month, record.date.day);
+          DateTime(record.date.year, record.date.month, record.date.day, 12);
       if (!grouped.containsKey(date)) {
         grouped[date] = [];
       }
@@ -131,9 +131,9 @@ class DashboardService {
   DateTime calculateInitialTargetDate(DateTime start, DateTime end) {
     // ...
     final now = DateTime.now();
-    final dStart = DateTime(start.year, start.month, start.day);
-    final dEnd = DateTime(end.year, end.month, end.day);
-    final dNow = DateTime(now.year, now.month, now.day);
+    final dStart = DateTime(start.year, start.month, start.day, 12);
+    final dEnd = DateTime(end.year, end.month, end.day, 12);
+    final dNow = DateTime(now.year, now.month, now.day, 12);
     if (dNow.isBefore(dStart) || dNow.isAfter(dEnd)) {
       return start;
     } else {

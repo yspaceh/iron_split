@@ -54,6 +54,7 @@ class RecordDetail {
 class RecordModel {
   final String? id;
   final DateTime date;
+  final String? dateString;
   final String title;
   final RecordType type; // 'expense' or 'income'
   final int categoryIndex;
@@ -76,6 +77,7 @@ class RecordModel {
   RecordModel({
     this.id,
     required this.date,
+    this.dateString,
     required this.title,
     this.type = RecordType.expense,
     this.categoryIndex = 0,
@@ -117,6 +119,7 @@ class RecordModel {
   RecordModel copyWith({
     String? id,
     DateTime? date,
+    String? dateString,
     String? title,
     RecordType? type,
     int? categoryIndex,
@@ -139,6 +142,7 @@ class RecordModel {
     return RecordModel(
       id: id ?? this.id,
       date: date ?? this.date,
+      dateString: dateString ?? this.dateString,
       title: title ?? this.title,
       type: type ?? this.type,
       categoryIndex: categoryIndex ?? this.categoryIndex,
@@ -163,6 +167,8 @@ class RecordModel {
   Map<String, dynamic> toMap() {
     return {
       'date': Timestamp.fromDate(date),
+      'dateString':
+          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
       'title': title,
       'type': type.code,
       'categoryIndex': categoryIndex,
@@ -189,9 +195,25 @@ class RecordModel {
 
   factory RecordModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    DateTime finalDate =
+        (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
+    // 就用使用者的「本地手機」重新建構這一天，並強制定在中午 12 點！
+    if (data['dateString'] != null) {
+      final parts = (data['dateString'] as String).split('-');
+      if (parts.length == 3) {
+        finalDate = DateTime(int.parse(parts[0]), int.parse(parts[1]),
+            int.parse(parts[2]), 12 // 永遠鎖定在中午 12 點，完美避開午夜跨日問題
+            );
+      }
+    } else {
+      // 🛡️ 舊資料防呆：如果這是一筆還沒有 dateString 的舊帳單，
+      // 我們也順手把它強制定在中午 12 點，加減拯救一下時區差！
+      finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day, 12);
+    }
     return RecordModel(
       id: doc.id,
-      date: (data['date'] as Timestamp).toDate(),
+      date: finalDate,
+      dateString: data['dateString'],
       title: data['title'] ?? '',
       type: RecordType.fromCode(data['type'] as String?),
       categoryIndex: data['categoryIndex'] ?? 0,
@@ -200,7 +222,7 @@ class RecordModel {
       payerType: PayerType.fromCode(data['payerType'] as String?),
       payersId: data['payersId'] != null
           ? List<String>.from(data['payersId'])
-          : (data['payerId'] != null ? [data['payerId'] as String] : []),
+          : (data['payersId'] != null ? [data['payersId'] as String] : []),
       paymentDetails: data['paymentDetails'],
 
       // 從 DB 讀取原始欄位

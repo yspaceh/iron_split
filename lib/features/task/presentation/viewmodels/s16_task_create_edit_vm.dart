@@ -71,7 +71,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
       // 1. 初始化日期 (今天)
       final now = DateTime.now();
-      _startDate = DateTime(now.year, now.month, now.day);
+      _startDate = DateTime(now.year, now.month, now.day, 12);
       _endDate = _startDate;
 
       // 初始化幣別

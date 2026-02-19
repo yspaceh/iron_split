@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
@@ -33,7 +32,7 @@ class TaskDateInput extends StatelessWidget {
         initialDateTime: date,
         mode: CupertinoDatePickerMode.date,
         onDateTimeChanged: (val) {
-          tempDate = DateTime(val.year, val.month, val.day);
+          tempDate = DateTime(val.year, val.month, val.day, 12);
         },
       ),
     );

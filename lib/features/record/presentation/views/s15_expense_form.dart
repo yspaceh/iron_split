@@ -112,13 +112,18 @@ class S15ExpenseForm extends StatelessWidget {
       case PayerType.mixed:
         return t.B07_PaymentMethod_Edit.type_mixed;
       case PayerType.member:
-        if (payersId.length > 1) {
+        if (payersId.isEmpty || payersId.length > 1) {
           return t.B07_PaymentMethod_Edit.type_member;
         }
-        final member = members.firstWhere(
-          (m) => m.id == payersId.first,
-        );
-        return t.S15_Record_Edit.val.member_paid(name: member.displayName);
+        final member = members.where((m) => m.id == payersId.first).firstOrNull;
+
+        if (member != null) {
+          // 如果有找到人，就顯示「OOO 代墊」
+          return t.S15_Record_Edit.val.member_paid(name: member.displayName);
+        } else {
+          // 如果找不到這個人，退回顯示泛型文字
+          return t.B07_PaymentMethod_Edit.type_member;
+        }
     }
   }
 

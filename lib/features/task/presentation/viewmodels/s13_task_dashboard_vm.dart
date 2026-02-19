@@ -195,13 +195,13 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+    final today = DateTime(now.year, now.month, now.day, 12);
 
     var start = _task!.startDate ?? today;
-    start = DateTime(start.year, start.month, start.day); // 強制轉為 00:00
+    start = DateTime(start.year, start.month, start.day, 12); // 強制轉為 00:00
 
     var end = _task!.endDate ?? today.add(const Duration(days: 7));
-    end = DateTime(end.year, end.month, end.day); // 強制轉為 00:00
+    end = DateTime(end.year, end.month, end.day, 12); // 強制轉為 00:00
 
     // 2. 生成日期列表
     final rawDates = _dashboardService.generateDisplayDates(
@@ -212,7 +212,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
     // 強制去重複並排序 (由新到舊)
     _displayDates = rawDates
-        .map((d) => DateTime(d.year, d.month, d.day)) // 去除時間成分
+        .map((d) => DateTime(d.year, d.month, d.day, 12)) // 去除時間成分
         .toSet() // 去重複
         .toList()
       ..sort((a, b) => b.compareTo(a));
