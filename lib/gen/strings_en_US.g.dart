@@ -344,15 +344,9 @@ class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLog
 	@override String get empty_log => 'No activity logs found';
 	@override String get export_file_prefix => 'Activity_Log';
 	@override late final _TranslationsS52TaskSettingsLogCsvHeaderEnUs csv_header = _TranslationsS52TaskSettingsLogCsvHeaderEnUs._(_root);
-	@override String get type_income => 'Income';
-	@override String get type_expense => 'Expense';
-	@override String get label_payment => 'Payment';
-	@override String get payment_income => 'Advance';
-	@override String get payment_pool => 'Paid from Pool';
-	@override String get payment_single_suffix => ' paid';
-	@override String get payment_multiple => 'Multiple Payers';
-	@override String get unit_members => 'ppl';
-	@override String get unit_items => 'items';
+	@override late final _TranslationsS52TaskSettingsLogTypeEnUs type = _TranslationsS52TaskSettingsLogTypeEnUs._(_root);
+	@override late final _TranslationsS52TaskSettingsLogPaymentTypeEnUs payment_type = _TranslationsS52TaskSettingsLogPaymentTypeEnUs._(_root);
+	@override late final _TranslationsS52TaskSettingsLogUnitEnUs unit = _TranslationsS52TaskSettingsLogUnitEnUs._(_root);
 }
 
 // Path: S53_TaskSettings_Members
@@ -1297,6 +1291,40 @@ class _TranslationsS52TaskSettingsLogCsvHeaderEnUs extends TranslationsS52TaskSe
 	@override String get details => 'Details';
 }
 
+// Path: S52_TaskSettings_Log.type
+class _TranslationsS52TaskSettingsLogTypeEnUs extends TranslationsS52TaskSettingsLogTypeZhTw {
+	_TranslationsS52TaskSettingsLogTypeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => 'Prepay';
+	@override String get expense => 'Expense';
+}
+
+// Path: S52_TaskSettings_Log.payment_type
+class _TranslationsS52TaskSettingsLogPaymentTypeEnUs extends TranslationsS52TaskSettingsLogPaymentTypeZhTw {
+	_TranslationsS52TaskSettingsLogPaymentTypeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => 'Paid from Pool';
+	@override String get single_suffix => 'paid';
+	@override String get multiple => 'Multiple Payers';
+}
+
+// Path: S52_TaskSettings_Log.unit
+class _TranslationsS52TaskSettingsLogUnitEnUs extends TranslationsS52TaskSettingsLogUnitZhTw {
+	_TranslationsS52TaskSettingsLogUnitEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get members => 'ppl';
+	@override String get items => 'items';
+}
+
 // Path: S53_TaskSettings_Members.buttons
 class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53TaskSettingsMembersButtonsZhTw {
 	_TranslationsS53TaskSettingsMembersButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -2159,15 +2187,13 @@ extension on TranslationsEnUs {
 			'S52_TaskSettings_Log.csv_header.user' => 'User',
 			'S52_TaskSettings_Log.csv_header.action' => 'Action',
 			'S52_TaskSettings_Log.csv_header.details' => 'Details',
-			'S52_TaskSettings_Log.type_income' => 'Income',
-			'S52_TaskSettings_Log.type_expense' => 'Expense',
-			'S52_TaskSettings_Log.label_payment' => 'Payment',
-			'S52_TaskSettings_Log.payment_income' => 'Advance',
-			'S52_TaskSettings_Log.payment_pool' => 'Paid from Pool',
-			'S52_TaskSettings_Log.payment_single_suffix' => ' paid',
-			'S52_TaskSettings_Log.payment_multiple' => 'Multiple Payers',
-			'S52_TaskSettings_Log.unit_members' => 'ppl',
-			'S52_TaskSettings_Log.unit_items' => 'items',
+			'S52_TaskSettings_Log.type.prepay' => 'Prepay',
+			'S52_TaskSettings_Log.type.expense' => 'Expense',
+			'S52_TaskSettings_Log.payment_type.prepay' => 'Paid from Pool',
+			'S52_TaskSettings_Log.payment_type.single_suffix' => 'paid',
+			'S52_TaskSettings_Log.payment_type.multiple' => 'Multiple Payers',
+			'S52_TaskSettings_Log.unit.members' => 'ppl',
+			'S52_TaskSettings_Log.unit.items' => 'items',
 			'S53_TaskSettings_Members.title' => 'Member Management',
 			'S53_TaskSettings_Members.buttons.add' => 'Add Member',
 			'S53_TaskSettings_Members.label_default_ratio' => 'Default Ratio',

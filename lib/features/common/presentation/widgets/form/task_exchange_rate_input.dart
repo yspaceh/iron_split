@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class TaskExchangeRateInput extends StatelessWidget {
   const TaskExchangeRateInput({
@@ -31,8 +33,15 @@ class TaskExchangeRateInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final themeVm = context.watch<ThemeViewModel>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final expenseColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.expenseLight
+        : AppTheme.expenseDeep;
+    final incomeColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.incomeLight
+        : AppTheme.incomeDeep;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -64,16 +73,14 @@ class TaskExchangeRateInput extends StatelessWidget {
                             height: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              color: isIncome == true
-                                  ? AppTheme.incomeDeep
-                                  : AppTheme.expenseDeep,
+                              color:
+                                  isIncome == true ? incomeColor : expenseColor,
                             ),
                           )
                         : Icon(
                             Icons.currency_exchange_outlined, // 更新/交換圖示
-                            color: isIncome == true
-                                ? AppTheme.incomeDeep
-                                : AppTheme.expenseDeep,
+                            color:
+                                isIncome == true ? incomeColor : expenseColor,
                             size: 24,
                           ),
                   ),

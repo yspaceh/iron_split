@@ -180,16 +180,20 @@ class S32SettlementResultViewModel extends ChangeNotifier {
 
   // Private Helper: 將 Task Member 資料與 Snapshot 金額結合成 SettlementMember
   SettlementMember _reconstructMember(String uid, {double? amountOverride}) {
-    final memberInfo = _task?.members[uid];
+    final memberData = _task?.members[uid] ??
+        TaskMember(
+          id: uid,
+          displayName: 'Unknown Member', // 或使用多國語系字串
+          isLinked: false,
+          role: 'member',
+          joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+        );
     final snapshotAmount = amountOverride ??
         (_task?.settlement?['allocations']?[uid] as num?)?.toDouble() ??
         0.0;
 
     return SettlementMember(
-      id: uid,
-      displayName: memberInfo?['displayName'] ?? 'Unknown',
-      avatar: memberInfo?['avatar'],
-      isLinked: memberInfo?['isLinked'] ?? false,
+      memberData: memberData,
       finalAmount: snapshotAmount, // 這裡是重點：顯示最終金額
       baseAmount: 0, // S32 不顯示細節，設為 0 即可
       remainderAmount: 0,

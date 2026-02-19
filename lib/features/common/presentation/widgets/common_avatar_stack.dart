@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 
 enum AvatarStackType {
@@ -7,7 +8,7 @@ enum AvatarStackType {
 }
 
 class CommonAvatarStack extends StatelessWidget {
-  final List<Map<String, dynamic>> allMembers;
+  final List<TaskMember> allMembers;
   final List<String> targetMemberIds;
   final double radius;
   final double? fontSize;
@@ -35,7 +36,7 @@ class CommonAvatarStack extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. 篩選有效成員
     final activeMembers =
-        allMembers.where((m) => targetMemberIds.contains(m['id'])).toList();
+        allMembers.where((m) => targetMemberIds.contains(m.id)).toList();
 
     if (activeMembers.isEmpty) return const SizedBox();
 
@@ -48,7 +49,7 @@ class CommonAvatarStack extends StatelessWidget {
   }
 
   // --- 舊有的 Wrap 模式 (B02 之前的行為) ---
-  Widget _buildWrap(List<Map<String, dynamic>> members) {
+  Widget _buildWrap(List<TaskMember> members) {
     // 如果想要完全保留舊行為，這裡不應該有 limit 邏輯，或者依需求加上
     return Container(
       constraints: const BoxConstraints(maxWidth: 220),
@@ -58,11 +59,11 @@ class CommonAvatarStack extends StatelessWidget {
         runSpacing: 4,
         children: members.map((member) {
           return CommonAvatar(
-            avatarId: member['avatar'],
-            name: member['displayName'],
+            avatarId: member.avatar,
+            name: member.displayName,
             radius: radius,
             fontSize: fontSize,
-            isLinked: member['isLinked'] ?? false,
+            isLinked: member.isLinked,
           );
         }).toList(),
       ),
@@ -70,12 +71,12 @@ class CommonAvatarStack extends StatelessWidget {
   }
 
   // --- 新的 Stack 模式 (S30/S17 使用) ---
-  Widget _buildStack(BuildContext context, List<Map<String, dynamic>> members) {
+  Widget _buildStack(BuildContext context, List<TaskMember> members) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     // 處理 Limit
-    List<Map<String, dynamic>> displayMembers = members;
+    List<TaskMember> displayMembers = members;
     int remainder = 0;
 
     if (limit != null && members.length > limit!) {
@@ -133,11 +134,11 @@ class CommonAvatarStack extends StatelessWidget {
           top: 0,
           bottom: 0,
           child: CommonAvatar(
-            avatarId: member['avatar'],
-            name: member['displayName'],
+            avatarId: member.avatar,
+            name: member.displayName,
             radius: radius,
             fontSize: fontSize,
-            isLinked: member['isLinked'] ?? false,
+            isLinked: member.isLinked,
           ),
         ),
       );

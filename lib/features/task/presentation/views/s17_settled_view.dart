@@ -140,7 +140,7 @@ class _S17SettledViewState extends State<S17SettledView> {
                   onActionTap: () {
                     settlementService.updateMemberStatus(
                       taskId: widget.taskId,
-                      memberId: member.id,
+                      memberId: member.memberData.id,
                       isCleared: isShowingPending,
                     );
                   },

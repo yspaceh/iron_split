@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class TaskItemInput extends StatelessWidget {
   const TaskItemInput({
@@ -34,6 +36,10 @@ class TaskItemInput extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
+    final themeVm = context.watch<ThemeViewModel>();
+    final expenseColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.expenseLight
+        : AppTheme.expenseDeep;
 
     return Row(
       // [對齊策略]：對齊底部，讓左側方塊跟右側輸入框平行
@@ -55,7 +61,7 @@ class TaskItemInput extends StatelessWidget {
               ),
               child: Icon(
                 CategoryConstant.getCategoryById(selectedCategoryId).icon,
-                color: AppTheme.expenseDeep,
+                color: expenseColor,
                 size: 24,
               ),
             ),

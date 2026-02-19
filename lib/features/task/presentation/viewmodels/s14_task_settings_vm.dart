@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -39,7 +40,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   // Logic Helper
   String? _initialName;
   String? _createdBy;
-  Map<String, dynamic> _membersData = {};
+  Map<String, TaskMember> _membersData = {};
 
   double _currentRemainder = 0.0;
 
@@ -51,17 +52,14 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   String? get remainderAbsorberId => _remainderAbsorberId;
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
-  Map<String, dynamic> get membersData => _membersData;
+  Map<String, TaskMember> get membersData => _membersData;
   double get currentRemainder => _currentRemainder;
   LoadStatus get inviteMemberStatus => _inviteMemberStatus;
 
   String get link => _deepLinkService.generateJoinLink(inviteCode);
 
-  List<Map<String, dynamic>> get membersList {
-    return _membersData.entries.map((e) {
-      final m = e.value as Map<String, dynamic>;
-      return <String, dynamic>{...m, 'id': e.key};
-    }).toList();
+  List<TaskMember> get membersList {
+    return _membersData.entries.map((m) => m.value).toList();
   }
 
   bool get isOwner {
@@ -218,7 +216,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
       if (newRule == RemainderRuleConstants.member && newAbsorberId != null) {
         final memberName =
-            _membersData[newAbsorberId]?['displayName'] ?? 'Unknown';
+            _membersData[newAbsorberId]?.displayName ?? 'Unknown Member';
         logDetails['absorberName'] = memberName;
       }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
@@ -25,7 +26,7 @@ class S15IncomeForm extends StatelessWidget {
   final double baseRemainingAmount; // 這裡通常指總金額 (Total Amount)
   final String baseSplitMethod; // 分配方式
   final List<String> baseMemberIds; // 分配對象
-  final List<Map<String, dynamic>> members; // 成員列表
+  final List<TaskMember> members; // 成員列表
   final Map<String, double> baseRawDetails;
   final RemainderDetail remainderDetail;
 
@@ -163,7 +164,14 @@ class S15IncomeForm extends StatelessWidget {
           memoController: memoController,
           focusNode: memoFocusNode,
         ),
-        const SizedBox(height: 100),
+        AnimatedBuilder(
+          animation: memoFocusNode,
+          builder: (context, child) {
+            return SizedBox(
+              height: memoFocusNode.hasFocus ? 400.0 : 0,
+            );
+          },
+        ),
       ],
     );
   }

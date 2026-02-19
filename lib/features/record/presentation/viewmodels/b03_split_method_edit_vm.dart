@@ -3,6 +3,7 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
@@ -12,7 +13,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final double totalAmount;
   final CurrencyConstants selectedCurrency;
-  final List<Map<String, dynamic>> allMembers;
+  final List<TaskMember> allMembers;
   final Map<String, double> defaultMemberWeights;
   final double exchangeRate;
   final CurrencyConstants baseCurrency;
@@ -61,7 +62,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
       for (var m in allMembers) {
-        final id = m['id'];
+        final id = m.id;
         final val = _details[id] ?? 0.0;
         _amountControllers[id] = TextEditingController(
           text: val > 0
@@ -73,7 +74,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
       // 防呆：如果進來時沒選人，且是 Even 模式，預設全選
       if (_selectedMemberIds.isEmpty &&
           _splitMethod == SplitMethodConstant.even) {
-        _selectedMemberIds = allMembers.map((m) => m['id'] as String).toList();
+        _selectedMemberIds = allMembers.map((m) => m.id).toList();
       }
 
       _initStatus = LoadStatus.success;

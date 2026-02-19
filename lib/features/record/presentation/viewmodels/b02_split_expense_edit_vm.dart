@@ -4,13 +4,14 @@ import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 
 class B02SplitExpenseEditViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final RecordDetail? initialDetail;
-  final List<Map<String, dynamic>> allMembers;
+  final List<TaskMember> allMembers;
   final CurrencyConstants selectedCurrency;
 
   // --- 1. 狀態管理 (Rule 5: 使用 LoadStatus) ---
@@ -71,8 +72,8 @@ class B02SplitExpenseEditViewModel extends ChangeNotifier {
           initialDetail?.splitMethod ?? SplitMethodConstant.defaultMethod;
 
       // 預設選中所有人，或是從 detail 讀取
-      splitMemberIds = initialDetail?.splitMemberIds ??
-          allMembers.map((m) => m['id'] as String).toList();
+      splitMemberIds =
+          initialDetail?.splitMemberIds ?? allMembers.map((m) => m.id).toList();
 
       splitDetails = initialDetail?.splitDetails;
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
@@ -13,7 +14,7 @@ import 'package:iron_split/gen/strings.g.dart';
 class B01BalanceRuleEditBottomSheet extends StatefulWidget {
   final String initialRule; // 'random', 'order', 'member'
   final String? initialMemberId; // 如果規則是 member，當前選中的人
-  final List<Map<String, dynamic>> members; // 成員清單
+  final List<TaskMember> members; // 成員清單
   final double currentRemainder;
   final CurrencyConstants baseCurrency;
 
@@ -30,7 +31,7 @@ class B01BalanceRuleEditBottomSheet extends StatefulWidget {
     BuildContext context, {
     required String initialRule,
     String? initialMemberId,
-    required List<Map<String, dynamic>> members,
+    required List<TaskMember> members,
     required double currentRemainder,
     required CurrencyConstants baseCurrency,
   }) {
@@ -169,10 +170,10 @@ class _B01BalanceRuleEditBottomSheetState
               const SizedBox(height: 12),
               // 成員清單
               ...widget.members.map((m) {
-                final id = m['id'];
+                final id = m.id;
                 final isMe = id == _selectedMemberId;
                 return SelectionTile(
-                  title: m['displayName'],
+                  title: m.displayName,
                   isSelected: isMe,
                   isRadio: true,
                   isSelectedBackgroundColor: theme.colorScheme.surface,
@@ -181,9 +182,9 @@ class _B01BalanceRuleEditBottomSheetState
                     setState(() => _selectedMemberId = id);
                   },
                   leading: CommonAvatar(
-                    avatarId: m['avatar'],
-                    name: m['displayName'],
-                    isLinked: m['isLinked'] ?? false,
+                    avatarId: m.avatar,
+                    name: m.displayName,
+                    isLinked: m.isLinked,
                   ),
                 );
               }),

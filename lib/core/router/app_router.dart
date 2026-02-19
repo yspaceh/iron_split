@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/system/presentation/pages/s72_terms_update_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s73_system_settings_payment_info_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s74_delete_account_notice_page.dart';
@@ -143,7 +144,7 @@ class AppRouter {
                   final taskId = state.pathParameters['taskId']!;
                   // Retrieve complex data passed via 'extra'
                   final membersData =
-                      state.extra as Map<String, dynamic>? ?? {};
+                      state.extra as Map<String, TaskMember>? ?? {};
 
                   return S52TaskSettingsLogPage(
                       taskId: taskId, membersData: membersData);

@@ -177,7 +177,9 @@ class RecordRepository extends BaseRepository {
         if (data['paymentDetails'] != null &&
             data['paymentDetails']['memberAdvance'] is Map) {
           final advances = data['paymentDetails']['memberAdvance'] as Map;
-          if (advances.containsKey(memberId)) return true;
+          if (advances.containsKey(memberId) && advances[memberId] > 0.0) {
+            return true;
+          }
         }
       }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/application/export_service.dart';
@@ -15,7 +16,7 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
   final ExportService _exportService;
   final ShareService _shareService;
   final String taskId;
-  final Map<String, dynamic> membersData;
+  final Map<String, TaskMember> membersData;
 
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
@@ -93,7 +94,7 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
         getAction: getAction,
         getDetails: getDetails,
         getMemberName: (uid) =>
-            membersData[uid]?['displayName'] ?? defaultMemberName,
+            membersData[uid]?.displayName ?? defaultMemberName,
       );
 
       // 4. 透過基礎 Service 分享檔案

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -38,11 +39,8 @@ class S13GroupView extends StatelessWidget {
       final task = vm.task;
       if (task == null) return;
 
-      final List<Map<String, dynamic>> membersList =
-          task.members.entries.map((e) {
-        final m = e.value as Map<String, dynamic>;
-        return <String, dynamic>{...m, 'id': e.key};
-      }).toList();
+      final List<TaskMember> membersList =
+          task.members.entries.map((m) => m.value).toList();
 
       final result = await B01BalanceRuleEditBottomSheet.show(context,
           initialRule: task.remainderRule,

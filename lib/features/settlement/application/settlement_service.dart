@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
@@ -54,9 +55,9 @@ class SettlementService {
     final Map<String, double> balances = {};
     for (var entry in task.sortedMembers) {
       final uid = entry.key;
-      final memberData = task.members[uid] as Map<String, dynamic>? ?? {};
-      final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
-      final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+      final memberData = task.members[uid];
+      final double expense = memberData?.expense ?? 0.0;
+      final double prepaid = memberData?.prepaid ?? 0.0;
       balances[uid] = prepaid - expense;
     }
     return balances;
@@ -152,16 +153,20 @@ class SettlementService {
     // 5. 組裝最終結果
     baseAmountMap.forEach((uid, base) {
       double rem = allocatedRemMap[uid] ?? 0.0;
-      final memberData = task.members[uid] ?? {};
+      final memberData = task.members[uid] ??
+          TaskMember(
+            id: uid,
+            displayName: 'Unknown Member', // 或使用多國語系字串
+            isLinked: false,
+            role: 'member',
+            joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+          );
 
       // 檢查是否為 Random 模式 (決定是否要在 UI 上標示為隱藏/抽獎中)
       bool isRandom = (remainderRule == RemainderRuleConstants.random);
 
       results[uid] = SettlementMember(
-        id: uid,
-        displayName: memberData['displayName'] ?? 'Unknown',
-        avatar: memberData['avatar'],
-        isLinked: memberData['isLinked'] ?? false,
+        memberData: memberData,
         // 最終金額 = 基本盤 + 分配到的零頭
         finalAmount: double.parse((base + rem).toStringAsFixed(exponent)),
         baseAmount: base,
@@ -217,10 +222,7 @@ class SettlementService {
 
         // 建立合併後的 Head 物件
         list.add(SettlementMember(
-            id: currentId,
-            displayName: currentModel.displayName,
-            avatar: currentModel.avatar,
-            isLinked: currentModel.isLinked,
+            memberData: currentModel.memberData,
             finalAmount: mergedFinal,
             baseAmount: mergedBase,
             remainderAmount: mergedRem,
@@ -306,9 +308,9 @@ class SettlementService {
       final Map<String, bool> viewStatus = {};
 
       for (var m in finalMergedList) {
-        allocations[m.id] = m.finalAmount;
-        memberStatus[m.id] = false;
-        viewStatus[m.id] = false;
+        allocations[m.memberData.id] = m.finalAmount;
+        memberStatus[m.memberData.id] = false;
+        viewStatus[m.memberData.id] = false;
       }
 
       // 7.  產生 Dashboard 快照
@@ -366,7 +368,7 @@ class SettlementService {
     final Map<String, double> incomeDetail = {};
 
     for (var r in records) {
-      if (r.type == 'income') {
+      if (r.type == RecordType.income) {
         incomeDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
             ifAbsent: () => r.originalAmount);
       } else {
@@ -391,7 +393,7 @@ class SettlementService {
     if (finalWinnerId != null) {
       final winner = task.members[finalWinnerId];
       if (winner != null) {
-        winnerName = winner['displayName'];
+        winnerName = winner.displayName;
       }
     }
 

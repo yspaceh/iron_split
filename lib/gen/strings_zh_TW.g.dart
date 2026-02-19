@@ -512,33 +512,9 @@ class TranslationsS52TaskSettingsLogZhTw {
 	String get export_file_prefix => '活動紀錄';
 
 	late final TranslationsS52TaskSettingsLogCsvHeaderZhTw csv_header = TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(_root);
-
-	/// zh-TW: '預收'
-	String get type_income => '預收';
-
-	/// zh-TW: '支出'
-	String get type_expense => '支出';
-
-	/// zh-TW: '支付'
-	String get label_payment => '支付';
-
-	/// zh-TW: '預收款'
-	String get payment_income => '預收款';
-
-	/// zh-TW: '公款支付'
-	String get payment_pool => '公款支付';
-
-	/// zh-TW: '代墊'
-	String get payment_single_suffix => '代墊';
-
-	/// zh-TW: '多人代墊'
-	String get payment_multiple => '多人代墊';
-
-	/// zh-TW: '人'
-	String get unit_members => '人';
-
-	/// zh-TW: '細項'
-	String get unit_items => '細項';
+	late final TranslationsS52TaskSettingsLogTypeZhTw type = TranslationsS52TaskSettingsLogTypeZhTw.internal(_root);
+	late final TranslationsS52TaskSettingsLogPaymentTypeZhTw payment_type = TranslationsS52TaskSettingsLogPaymentTypeZhTw.internal(_root);
+	late final TranslationsS52TaskSettingsLogUnitZhTw unit = TranslationsS52TaskSettingsLogUnitZhTw.internal(_root);
 }
 
 // Path: S53_TaskSettings_Members
@@ -2037,6 +2013,54 @@ class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	String get details => '內容';
 }
 
+// Path: S52_TaskSettings_Log.type
+class TranslationsS52TaskSettingsLogTypeZhTw {
+	TranslationsS52TaskSettingsLogTypeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '預收'
+	String get prepay => '預收';
+
+	/// zh-TW: '支出'
+	String get expense => '支出';
+}
+
+// Path: S52_TaskSettings_Log.payment_type
+class TranslationsS52TaskSettingsLogPaymentTypeZhTw {
+	TranslationsS52TaskSettingsLogPaymentTypeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '公款支付'
+	String get prepay => '公款支付';
+
+	/// zh-TW: '代墊'
+	String get single_suffix => '代墊';
+
+	/// zh-TW: '多人代墊'
+	String get multiple => '多人代墊';
+}
+
+// Path: S52_TaskSettings_Log.unit
+class TranslationsS52TaskSettingsLogUnitZhTw {
+	TranslationsS52TaskSettingsLogUnitZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '人'
+	String get members => '人';
+
+	/// zh-TW: '細項'
+	String get items => '細項';
+}
+
 // Path: S53_TaskSettings_Members.buttons
 class TranslationsS53TaskSettingsMembersButtonsZhTw {
 	TranslationsS53TaskSettingsMembersButtonsZhTw.internal(this._root);
@@ -3160,15 +3184,13 @@ extension on Translations {
 			'S52_TaskSettings_Log.csv_header.user' => '操作者',
 			'S52_TaskSettings_Log.csv_header.action' => '動作',
 			'S52_TaskSettings_Log.csv_header.details' => '內容',
-			'S52_TaskSettings_Log.type_income' => '預收',
-			'S52_TaskSettings_Log.type_expense' => '支出',
-			'S52_TaskSettings_Log.label_payment' => '支付',
-			'S52_TaskSettings_Log.payment_income' => '預收款',
-			'S52_TaskSettings_Log.payment_pool' => '公款支付',
-			'S52_TaskSettings_Log.payment_single_suffix' => '代墊',
-			'S52_TaskSettings_Log.payment_multiple' => '多人代墊',
-			'S52_TaskSettings_Log.unit_members' => '人',
-			'S52_TaskSettings_Log.unit_items' => '細項',
+			'S52_TaskSettings_Log.type.prepay' => '預收',
+			'S52_TaskSettings_Log.type.expense' => '支出',
+			'S52_TaskSettings_Log.payment_type.prepay' => '公款支付',
+			'S52_TaskSettings_Log.payment_type.single_suffix' => '代墊',
+			'S52_TaskSettings_Log.payment_type.multiple' => '多人代墊',
+			'S52_TaskSettings_Log.unit.members' => '人',
+			'S52_TaskSettings_Log.unit.items' => '細項',
 			'S53_TaskSettings_Members.title' => '成員管理',
 			'S53_TaskSettings_Members.buttons.add' => '新增成員',
 			'S53_TaskSettings_Members.label_default_ratio' => '預設比例',

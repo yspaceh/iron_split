@@ -85,6 +85,24 @@ class _S15ContentState extends State<_S15Content> {
     _rateNode = FocusNode();
     _titleNode = FocusNode();
     _memoNode = FocusNode();
+    _memoNode.addListener(() {
+      if (_memoNode.hasFocus) {
+        // 延遲 100 毫秒，確保底層的 SizedBox(height: 400) 已經瞬間出現了
+        Future.delayed(const Duration(milliseconds: 100), () {
+          final memoContext = _memoNode.context;
+          if (memoContext != null && memoContext.mounted) {
+            Scrollable.ensureVisible(
+              memoContext,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              // alignment 0.2 代表將備註欄推到「從螢幕上方往下數 20%」的位置
+              // 這樣絕對不可能被下方的鍵盤遮到！
+              alignment: 0.2,
+            );
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -155,7 +173,7 @@ class _S15ContentState extends State<_S15Content> {
 
     // 🛠️ 修正點 2：明確轉型為 Map<String, double>
     final Map<String, double> defaultWeights = {
-      for (var m in vm.taskMembers) (m['id'] as String): 1.0
+      for (var m in vm.taskMembers) (m.id): 1.0
     };
 
     final result = await B02SplitExpenseEditBottomSheet.show(
@@ -178,7 +196,7 @@ class _S15ContentState extends State<_S15Content> {
       S15RecordEditViewModel vm, RecordDetail detail) async {
     // 🛠️ 修正點 3：明確轉型為 Map<String, double>
     final Map<String, double> defaultWeights = {
-      for (var m in vm.taskMembers) (m['id'] as String): 1.0
+      for (var m in vm.taskMembers) (m.id): 1.0
     };
 
     final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
@@ -361,93 +379,97 @@ class _S15ContentState extends State<_S15Content> {
               ),
             ],
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                // [修正] 改用 CustomSlidingSegment
-                child: CustomSlidingSegment<int>(
-                  selectedValue: vm.recordTypeIndex,
-                  onValueChanged: (val) => vm.setRecordType(val),
-                  segments: {
-                    0: t.S15_Record_Edit.tab.expense,
-                    1: t.S15_Record_Edit.tab.income,
-                  },
+          body: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  // [修正] 改用 CustomSlidingSegment
+                  child: CustomSlidingSegment<int>(
+                    selectedValue: vm.recordTypeIndex,
+                    onValueChanged: (val) => vm.setRecordType(val),
+                    segments: {
+                      0: t.S15_Record_Edit.tab.expense,
+                      1: t.S15_Record_Edit.tab.income,
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: vm.recordTypeIndex == 0
-                      ? S15ExpenseForm(
-                          amountController: vm.amountController,
-                          titleController: vm.titleController,
-                          memoController: vm.memoController,
-                          exchangeRateController: vm.exchangeRateController,
-                          selectedDate: vm.selectedDate,
-                          selectedCurrencyConstants:
-                              vm.selectedCurrencyConstants,
-                          baseCurrency: vm.baseCurrency,
-                          selectedCategoryId: vm.selectedCategoryId,
-                          isRateLoading:
-                              vm.rateLoadStatus == LoadStatus.loading,
-                          poolBalancesByCurrency: vm.adjustedPoolBalances,
-                          members: vm.taskMembers,
-                          details: vm.details,
-                          baseRemainingAmount: vm.baseRemainingAmount,
-                          baseSplitMethod: vm.baseSplitMethod,
-                          baseMemberIds: vm.baseMemberIds,
-                          baseRawDetails: vm.baseRawDetails,
-                          remainderDetail: vm.remainderDetail,
-                          payerType: vm.payerType,
-                          payerId: vm.payerId,
-                          hasPaymentError: vm.hasPaymentError,
-                          amountFocusNode: _amountNode,
-                          rateFocusNode: _rateNode,
-                          titleFocusNode: _titleNode,
-                          memoFocusNode: _memoNode,
-                          onPaymentMethodTap: () => _onPaymentMethodTap(vm),
-                          onDateChanged: vm.updateDate,
-                          onCategoryChanged: vm.updateCategory,
-                          onCurrencyChanged: (code) =>
-                              _onUpdateCurrency(vm, code),
-                          onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                          onShowRateInfo: () => _showRateInfoDialog(),
-                          onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                          onAddItemTap: () => _onAddItemTap(vm),
-                          onDetailEditTap: (detail) =>
-                              _onDetailEditTap(vm, detail),
-                        )
-                      : S15IncomeForm(
-                          amountController: vm.amountController,
-                          memoController: vm.memoController,
-                          exchangeRateController: vm.exchangeRateController,
-                          selectedDate: vm.selectedDate,
-                          selectedCurrencyConstants:
-                              vm.selectedCurrencyConstants,
-                          baseCurrency: vm.baseCurrency,
-                          isRateLoading:
-                              vm.rateLoadStatus == LoadStatus.loading,
-                          members: vm.taskMembers,
-                          baseRemainingAmount: vm.totalAmount,
-                          remainderDetail: vm.remainderDetail,
-                          baseSplitMethod: vm.baseSplitMethod,
-                          baseMemberIds: vm.baseMemberIds,
-                          baseRawDetails: vm.baseRawDetails,
-                          amountFocusNode: _amountNode,
-                          rateFocusNode: _rateNode,
-                          memoFocusNode: _memoNode,
-                          onDateChanged: vm.updateDate,
-                          onCurrencyChanged: (code) =>
-                              _onUpdateCurrency(vm, code),
-                          onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                          onShowRateInfo: () => _showRateInfoDialog(),
-                          onBaseSplitConfigTap: () => _onBaseSplitConfigTap(vm),
-                        ),
+                Expanded(
+                  child: Form(
+                    key: _formKey,
+                    child: vm.recordTypeIndex == 0
+                        ? S15ExpenseForm(
+                            amountController: vm.amountController,
+                            titleController: vm.titleController,
+                            memoController: vm.memoController,
+                            exchangeRateController: vm.exchangeRateController,
+                            selectedDate: vm.selectedDate,
+                            selectedCurrencyConstants:
+                                vm.selectedCurrencyConstants,
+                            baseCurrency: vm.baseCurrency,
+                            selectedCategoryId: vm.selectedCategoryId,
+                            isRateLoading:
+                                vm.rateLoadStatus == LoadStatus.loading,
+                            poolBalancesByCurrency: vm.adjustedPoolBalances,
+                            members: vm.taskMembers,
+                            details: vm.details,
+                            baseRemainingAmount: vm.baseRemainingAmount,
+                            baseSplitMethod: vm.baseSplitMethod,
+                            baseMemberIds: vm.baseMemberIds,
+                            baseRawDetails: vm.baseRawDetails,
+                            remainderDetail: vm.remainderDetail,
+                            payerType: vm.payerType,
+                            payersId: vm.payersId,
+                            hasPaymentError: vm.hasPaymentError,
+                            amountFocusNode: _amountNode,
+                            rateFocusNode: _rateNode,
+                            titleFocusNode: _titleNode,
+                            memoFocusNode: _memoNode,
+                            onPaymentMethodTap: () => _onPaymentMethodTap(vm),
+                            onDateChanged: vm.updateDate,
+                            onCategoryChanged: vm.updateCategory,
+                            onCurrencyChanged: (code) =>
+                                _onUpdateCurrency(vm, code),
+                            onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                            onShowRateInfo: () => _showRateInfoDialog(),
+                            onBaseSplitConfigTap: () =>
+                                _onBaseSplitConfigTap(vm),
+                            onAddItemTap: () => _onAddItemTap(vm),
+                            onDetailEditTap: (detail) =>
+                                _onDetailEditTap(vm, detail),
+                          )
+                        : S15IncomeForm(
+                            amountController: vm.amountController,
+                            memoController: vm.memoController,
+                            exchangeRateController: vm.exchangeRateController,
+                            selectedDate: vm.selectedDate,
+                            selectedCurrencyConstants:
+                                vm.selectedCurrencyConstants,
+                            baseCurrency: vm.baseCurrency,
+                            isRateLoading:
+                                vm.rateLoadStatus == LoadStatus.loading,
+                            members: vm.taskMembers,
+                            baseRemainingAmount: vm.totalAmount,
+                            remainderDetail: vm.remainderDetail,
+                            baseSplitMethod: vm.baseSplitMethod,
+                            baseMemberIds: vm.baseMemberIds,
+                            baseRawDetails: vm.baseRawDetails,
+                            amountFocusNode: _amountNode,
+                            rateFocusNode: _rateNode,
+                            memoFocusNode: _memoNode,
+                            onDateChanged: vm.updateDate,
+                            onCurrencyChanged: (code) =>
+                                _onUpdateCurrency(vm, code),
+                            onFetchExchangeRate: () => _onFetchExchangeRate(vm),
+                            onShowRateInfo: () => _showRateInfoDialog(),
+                            onBaseSplitConfigTap: () =>
+                                _onBaseSplitConfigTap(vm),
+                          ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

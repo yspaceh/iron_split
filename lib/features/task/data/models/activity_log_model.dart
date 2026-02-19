@@ -113,10 +113,10 @@ class ActivityLogModel {
 
     String getRecordTypeTag(String type) {
       if (type == 'income') {
-        return "[${t.S52_TaskSettings_Log.type_income}]"; // 使用 S52 Key
+        return "[${t.S52_TaskSettings_Log.type.prepay}]"; // 使用 S52 Key
       }
       if (type == 'expense') {
-        return "[${t.S52_TaskSettings_Log.type_expense}]"; // 使用 S52 Key
+        return "[${t.S52_TaskSettings_Log.type.expense}]"; // 使用 S52 Key
       }
       return "";
     }
@@ -184,7 +184,7 @@ class ActivityLogModel {
     // [舊版分帳資訊]
     if (details.containsKey('splitCount')) {
       // [修正] 使用 i18n key 取代 "ppl"
-      final unit = t.S52_TaskSettings_Log.unit_members;
+      final unit = t.S52_TaskSettings_Log.unit.members;
       buffer.write(" • ${details['splitCount']} $unit");
 
       if (details.containsKey('splitMethod')) {
@@ -198,7 +198,7 @@ class ActivityLogModel {
     // [舊版細項數量]
     if (details.containsKey('itemCount') && (details['itemCount'] as int) > 0) {
       // [修正] 使用 i18n key 取代 "items"
-      final unit = t.S52_TaskSettings_Log.unit_items;
+      final unit = t.S52_TaskSettings_Log.unit.items;
       buffer.write(" • ${details['itemCount']} $unit");
     }
 
@@ -218,8 +218,8 @@ class ActivityLogModel {
     String title = getLocalizedAction(context);
     if (details.containsKey('recordType')) {
       final typeStr = details['recordType'] == 'income'
-          ? t.S52_TaskSettings_Log.type_income // "預收"
-          : t.S52_TaskSettings_Log.type_expense; // "支出"
+          ? t.S52_TaskSettings_Log.type.prepay // "預收"
+          : t.S52_TaskSettings_Log.type.expense; // "支出"
       title += "：[$typeStr]";
     }
 
@@ -247,33 +247,43 @@ class ActivityLogModel {
       if (mode == 'basic' && groups.isNotEmpty) {
         final g = groups.first;
         final method = SplitMethodConstant.getLabel(context, g['method']);
-        final unit = t.S52_TaskSettings_Log.unit_members;
+        final unit = t.S52_TaskSettings_Log.unit.members;
         bufferMain.write(" / ${g['count']}$unit $method");
       }
       bufferMain.write(")");
 
       // --- B. 支付資訊 ---
       // 格式: " • 支付：xxx"
-      bufferMain.write(" • ${t.S52_TaskSettings_Log.label_payment}：");
+      bufferMain.write(" • ${t.S52_TaskSettings_Log.type.expense}：");
 
       final payType = payment['type'];
-      if (payType == 'income') {
-        bufferMain.write(t.S52_TaskSettings_Log.payment_income); // "預收款"
-      } else if (payType == 'pool') {
-        bufferMain.write(t.S52_TaskSettings_Log.payment_pool); // "公款支付"
-      } else if (payType == 'single') {
+      if (payType == 'prepay') {
+        bufferMain.write(t.S52_TaskSettings_Log.payment_type.prepay); // "公款支付"
+      } else if (payType == 'member') {
         final contributors = (payment['contributors'] as List);
-        if (contributors.isNotEmpty) {
-          // "Alice代墊"
+        if (contributors.length > 1) {
+          final unit = t.S52_TaskSettings_Log.unit.members;
+          // "多人代墊(2人)"
           bufferMain.write(
-              "${contributors.first['displayName']}${t.S52_TaskSettings_Log.payment_single_suffix}");
+              "${t.S52_TaskSettings_Log.payment_type.multiple}(${contributors.length}$unit)");
+        } else {
+          bufferMain.write(
+              "${contributors.first['displayName']}${t.S52_TaskSettings_Log.payment_type.single_suffix}");
         }
-      } else if (payType == 'multiple') {
-        final list = payment['contributors'] as List;
-        final unit = t.S52_TaskSettings_Log.unit_members;
-        // "多人代墊(2人)"
-        bufferMain.write(
-            "${t.S52_TaskSettings_Log.payment_multiple}(${list.length}$unit)");
+      } else {
+        final contributors = (payment['contributors'] as List);
+        final String member;
+        if (contributors.length > 1) {
+          final unit = t.S52_TaskSettings_Log.unit.members;
+          // "多人代墊(2人)"
+          member =
+              "${t.S52_TaskSettings_Log.payment_type.multiple}(${contributors.length}$unit)";
+        } else {
+          member =
+              "${contributors.first['displayName']}${t.S52_TaskSettings_Log.payment_type.single_suffix}";
+        }
+        bufferMain
+            .write("${t.S52_TaskSettings_Log.payment_type.prepay} & $member");
       }
 
       // --- C. 子行 (詳細分拆) ---
@@ -284,7 +294,7 @@ class ActivityLogModel {
           final amt = CurrencyConstants.formatAmount(g['amount'], currency);
           final count = g['count'];
           final method = SplitMethodConstant.getLabel(context, g['method']);
-          final unit = t.S52_TaskSettings_Log.unit_members;
+          final unit = t.S52_TaskSettings_Log.unit.members;
           // 格式: "- drink (JPY 1,000 / 2人 平分)"
           return "- $label ($currency $amt / $count$unit $method)";
         }).join("\n");

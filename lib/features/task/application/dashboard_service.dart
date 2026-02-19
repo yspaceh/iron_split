@@ -1,4 +1,5 @@
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
@@ -41,7 +42,7 @@ class DashboardService {
       final Map<String, double> incomeDetail = {};
 
       for (var r in records) {
-        if (r.type == 'income') {
+        if (r.type == RecordType.income) {
           incomeDetail.update(
               r.originalCurrencyCode, (v) => v + r.originalAmount,
               ifAbsent: () => r.originalAmount);
@@ -182,9 +183,9 @@ class DashboardService {
   }
 
   ({DualAmount expense, DualAmount income, DualAmount netBalance})
-      calculatePersonalStats(Map<String, dynamic> memberData) {
-    final double expense = (memberData['expense'] as num?)?.toDouble() ?? 0.0;
-    final double prepaid = (memberData['prepaid'] as num?)?.toDouble() ?? 0.0;
+      calculatePersonalStats(TaskMember? memberData) {
+    final double expense = memberData?.expense ?? 0.0;
+    final double prepaid = memberData?.prepaid ?? 0.0;
 
     final totalExpense = DualAmount(original: 0, base: expense);
     final totalIncome = DualAmount(original: 0, base: prepaid);

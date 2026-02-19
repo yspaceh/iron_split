@@ -90,13 +90,13 @@ class _S13ContentState extends State<_S13Content> {
       if (memberData == null) return;
 
       _isIntroShown = true;
-      final bool hasRerolled = memberData['hasRerolled'] ?? false;
+      final bool hasRerolled = memberData.hasRerolled;
 
       // 顯示彈窗
       D01MemberRoleIntroDialog.show(
         context,
         taskId: _vm.taskId,
-        initialAvatar: memberData['avatar'] ?? AvatarConstants.defaultAvatar,
+        initialAvatar: memberData.avatar ?? AvatarConstants.defaultAvatar,
         canReroll: !hasRerolled,
       );
     }

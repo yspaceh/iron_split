@@ -24,7 +24,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // Data
   String _inviteCode = '';
   Map<String, dynamic>? _taskData;
-  List<Map<String, dynamic>> _ghosts = [];
+  List<TaskMember> _ghosts = [];
   bool _isAutoAssign = true; // Scenario A vs B
 
   // Selection
@@ -43,7 +43,7 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       CurrencyConstants.getCurrencyConstants(_taskData?['baseCurrency']);
 
   // Ghost List Logic
-  List<Map<String, dynamic>> get ghosts => _ghosts;
+  List<TaskMember> get ghosts => _ghosts;
   String? get selectedGhostId => _selectedGhostId;
   bool get showGhostSelection => !_isAutoAssign && _ghosts.isNotEmpty;
 
@@ -97,10 +97,14 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       // 處理 Ghost List
       if (result['ghosts'] is List) {
         final rawGhosts = result['ghosts'] as List;
-        _ghosts =
-            rawGhosts.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        _ghosts = rawGhosts.map((e) {
+          final map = Map<String, dynamic>.from(e as Map);
+          // 透過 fromMap 轉換成 TaskMember，後端通常會把 key 放在 'id' 裡回傳
+          return TaskMember.fromMap(map['id'] ?? map['uid'] ?? '', map);
+        }).toList();
 
-        _ghosts.sort(TaskModel.compareMemberData);
+        // 使用 TaskModel 中為 TaskMember 準備的靜態排序方法
+        _ghosts.sort(TaskModel.compareMembers);
       }
 
       _isAutoAssign = _ghosts.isEmpty;

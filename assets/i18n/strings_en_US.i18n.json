@@ -467,15 +467,19 @@
       "action": "Action",
       "details": "Details"
     },
-    "type_income": "Income",
-    "type_expense": "Expense",
-    "label_payment": "Payment",
-    "payment_income": "Advance",
-    "payment_pool": "Paid from Pool",
-    "payment_single_suffix": " paid",
-    "payment_multiple": "Multiple Payers",
-    "unit_members": "ppl",
-    "unit_items": "items"
+    "type": {
+      "prepay": "Prepay",
+      "expense": "Expense"
+    },
+    "payment_type": {
+      "prepay": "Paid from Pool",
+      "single_suffix": "paid",
+      "multiple": "Multiple Payers"
+    },
+    "unit": {
+      "members": "ppl",
+      "items": "items"
+    }
   },
   "S53_TaskSettings_Members": {
     "title": "Member Management",

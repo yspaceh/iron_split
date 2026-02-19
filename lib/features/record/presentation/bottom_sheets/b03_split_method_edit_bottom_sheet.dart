@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -23,7 +24,7 @@ import 'package:provider/provider.dart';
 class B03SplitMethodEditBottomSheet extends StatelessWidget {
   final double totalAmount;
   final CurrencyConstants selectedCurrency;
-  final List<Map<String, dynamic>> allMembers;
+  final List<TaskMember> allMembers;
   final Map<String, double> defaultMemberWeights;
   final double exchangeRate;
   final CurrencyConstants baseCurrency;
@@ -48,7 +49,7 @@ class B03SplitMethodEditBottomSheet extends StatelessWidget {
     BuildContext context, {
     required double totalAmount,
     required CurrencyConstants selectedCurrency,
-    required List<Map<String, dynamic>> allMembers,
+    required List<TaskMember> allMembers,
     required Map<String, double> defaultMemberWeights,
     double exchangeRate = 1.0,
     required CurrencyConstants baseCurrency,
@@ -130,8 +131,7 @@ class _B03ContentState extends State<_B03Content> {
     final int selectedIndex =
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
     final title = t.B03_SplitMethod_Edit.title;
-    final activeNodes =
-        vm.allMembers.map((m) => _getFocusNode(m['id'])).toList();
+    final activeNodes = vm.allMembers.map((m) => _getFocusNode(m.id)).toList();
 
     //  使用 CommonBottomSheet
     return AppKeyboardActionsWrapper(
@@ -257,7 +257,7 @@ class _B03ContentState extends State<_B03Content> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...vm.allMembers.map((m) {
-          final id = m['id'];
+          final id = m.id;
           final isSelected = vm.selectedMemberIds.contains(id);
           final amount = memberAmounts[id]?.original ?? 0.0;
           final baseAmount = memberAmounts[id]?.base ?? 0.0;
@@ -267,10 +267,8 @@ class _B03ContentState extends State<_B03Content> {
             isRadio: false,
             onTap: () => vm.toggleMember(id),
             leading: CommonAvatar(
-                avatarId: m['avatar'],
-                name: m['displayName'],
-                isLinked: m['isLinked'] ?? false),
-            title: m['displayName'],
+                avatarId: m.avatar, name: m.displayName, isLinked: m.isLinked),
+            title: m.displayName,
             trailing: Visibility(
               visible: isSelected,
               child: Column(
@@ -310,7 +308,7 @@ class _B03ContentState extends State<_B03Content> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...vm.allMembers.map((m) {
-          final id = m['id'];
+          final id = m.id;
           final weight = vm.details[id] ?? 0.0;
           final isSelected = weight > 0;
           final amount = memberAmounts[id]?.original ?? 0.0;
@@ -321,10 +319,8 @@ class _B03ContentState extends State<_B03Content> {
             isRadio: false,
             onTap: () => vm.toggleMember(id),
             leading: CommonAvatar(
-                avatarId: m['avatar'],
-                name: m['displayName'],
-                isLinked: m['isLinked'] ?? false),
-            title: m['displayName'],
+                avatarId: m.avatar, name: m.displayName, isLinked: m.isLinked),
+            title: m.displayName,
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -394,7 +390,7 @@ class _B03ContentState extends State<_B03Content> {
         ),
         const SizedBox(height: 8),
         ...vm.allMembers.map((m) {
-          final id = m['id'];
+          final id = m.id;
           final isSelected = vm.selectedMemberIds.contains(id);
           final baseAmount = memberAmounts[id]?.base ?? 0.0;
 
@@ -403,10 +399,8 @@ class _B03ContentState extends State<_B03Content> {
             isRadio: false,
             onTap: () => vm.toggleMember(id),
             leading: CommonAvatar(
-                avatarId: m['avatar'],
-                name: m['displayName'],
-                isLinked: m['isLinked'] ?? false),
-            title: m['displayName'],
+                avatarId: m.avatar, name: m.displayName, isLinked: m.isLinked),
+            title: m.displayName,
             trailing: SizedBox(
               width: 120,
               child: Column(

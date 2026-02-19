@@ -344,15 +344,9 @@ class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLog
 	@override String get empty_log => '活動履歴はありません';
 	@override String get export_file_prefix => '活動履歴';
 	@override late final _TranslationsS52TaskSettingsLogCsvHeaderJaJp csv_header = _TranslationsS52TaskSettingsLogCsvHeaderJaJp._(_root);
-	@override String get type_income => '収入';
-	@override String get type_expense => '支出';
-	@override String get label_payment => '支払';
-	@override String get payment_income => '前受金';
-	@override String get payment_pool => '共益費払';
-	@override String get payment_single_suffix => '立替';
-	@override String get payment_multiple => '複数立替';
-	@override String get unit_members => '名';
-	@override String get unit_items => '項目';
+	@override late final _TranslationsS52TaskSettingsLogTypeJaJp type = _TranslationsS52TaskSettingsLogTypeJaJp._(_root);
+	@override late final _TranslationsS52TaskSettingsLogPaymentTypeJaJp payment_type = _TranslationsS52TaskSettingsLogPaymentTypeJaJp._(_root);
+	@override late final _TranslationsS52TaskSettingsLogUnitJaJp unit = _TranslationsS52TaskSettingsLogUnitJaJp._(_root);
 }
 
 // Path: S53_TaskSettings_Members
@@ -1297,6 +1291,40 @@ class _TranslationsS52TaskSettingsLogCsvHeaderJaJp extends TranslationsS52TaskSe
 	@override String get details => '詳細';
 }
 
+// Path: S52_TaskSettings_Log.type
+class _TranslationsS52TaskSettingsLogTypeJaJp extends TranslationsS52TaskSettingsLogTypeZhTw {
+	_TranslationsS52TaskSettingsLogTypeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => '収入';
+	@override String get expense => '支出';
+}
+
+// Path: S52_TaskSettings_Log.payment_type
+class _TranslationsS52TaskSettingsLogPaymentTypeJaJp extends TranslationsS52TaskSettingsLogPaymentTypeZhTw {
+	_TranslationsS52TaskSettingsLogPaymentTypeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get prepay => '前受金';
+	@override String get single_suffix => '立替';
+	@override String get multiple => '複数立替';
+}
+
+// Path: S52_TaskSettings_Log.unit
+class _TranslationsS52TaskSettingsLogUnitJaJp extends TranslationsS52TaskSettingsLogUnitZhTw {
+	_TranslationsS52TaskSettingsLogUnitJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get members => '名';
+	@override String get items => '項目';
+}
+
 // Path: S53_TaskSettings_Members.buttons
 class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53TaskSettingsMembersButtonsZhTw {
 	_TranslationsS53TaskSettingsMembersButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -2159,15 +2187,13 @@ extension on TranslationsJaJp {
 			'S52_TaskSettings_Log.csv_header.user' => '操作者',
 			'S52_TaskSettings_Log.csv_header.action' => '操作',
 			'S52_TaskSettings_Log.csv_header.details' => '詳細',
-			'S52_TaskSettings_Log.type_income' => '収入',
-			'S52_TaskSettings_Log.type_expense' => '支出',
-			'S52_TaskSettings_Log.label_payment' => '支払',
-			'S52_TaskSettings_Log.payment_income' => '前受金',
-			'S52_TaskSettings_Log.payment_pool' => '共益費払',
-			'S52_TaskSettings_Log.payment_single_suffix' => '立替',
-			'S52_TaskSettings_Log.payment_multiple' => '複数立替',
-			'S52_TaskSettings_Log.unit_members' => '名',
-			'S52_TaskSettings_Log.unit_items' => '項目',
+			'S52_TaskSettings_Log.type.prepay' => '収入',
+			'S52_TaskSettings_Log.type.expense' => '支出',
+			'S52_TaskSettings_Log.payment_type.prepay' => '前受金',
+			'S52_TaskSettings_Log.payment_type.single_suffix' => '立替',
+			'S52_TaskSettings_Log.payment_type.multiple' => '複数立替',
+			'S52_TaskSettings_Log.unit.members' => '名',
+			'S52_TaskSettings_Log.unit.items' => '項目',
 			'S53_TaskSettings_Members.title' => 'メンバー管理',
 			'S53_TaskSettings_Members.buttons.add' => 'メンバー追加',
 			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',

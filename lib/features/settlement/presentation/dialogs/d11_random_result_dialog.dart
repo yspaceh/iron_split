@@ -70,7 +70,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     }
 
     final int winnerBaseIndex =
-        widget.members.indexWhere((m) => m.id == widget.winnerId);
+        widget.members.indexWhere((m) => m.memberData.id == widget.winnerId);
     final int safeWinnerIndex = winnerBaseIndex == -1 ? 0 : winnerBaseIndex;
     final int targetRound = _loopCount - 5;
     final int targetIndex =
@@ -228,14 +228,14 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CommonAvatar(
-                                    avatarId: member.avatar,
-                                    name: member.displayName,
-                                    isLinked: member.isLinked,
+                                    avatarId: member.memberData.avatar,
+                                    name: member.memberData.displayName,
+                                    isLinked: member.memberData.isLinked,
                                     radius: 48, // [修改] 適中大小
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    member.displayName,
+                                    member.memberData.displayName,
                                     style:
                                         theme.textTheme.titleMedium?.copyWith(
                                       color: colorScheme.onSurface,

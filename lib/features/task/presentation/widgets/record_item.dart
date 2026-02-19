@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class RecordItem extends StatelessWidget {
   final RecordModel record;
@@ -27,16 +30,23 @@ class RecordItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
-    final isIncome = record.type == 'income';
+    final isIncome = record.type == RecordType.income;
     final originalCurrencyConstants = CurrencyConstants.getCurrencyConstants(
         record.currencyCode); // 注意這裡用 currencyCode
+    final themeVm = context.watch<ThemeViewModel>();
+    final expenseColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.expenseLight
+        : AppTheme.expenseDeep;
+    final incomeColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.incomeLight
+        : AppTheme.incomeDeep;
 
     // UI 顯示邏輯 (Icon, Color, Title) 可以保留在 View 層
     final category = CategoryConstant.getCategoryById(record.categoryId);
     final title =
         (record.title.isNotEmpty) ? record.title : category.getName(t);
     final icon = isIncome ? Icons.savings_outlined : category.icon;
-    final iconColor = isIncome ? AppTheme.incomeDeep : AppTheme.expenseDeep;
+    final iconColor = isIncome ? incomeColor : expenseColor;
     final amountColor =
         isIncome ? theme.colorScheme.tertiary : theme.colorScheme.primary;
 

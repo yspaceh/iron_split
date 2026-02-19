@@ -28,7 +28,7 @@ class B04PaymentMergeViewModel extends ChangeNotifier {
   // 邏輯 1: 計算總金額 (移至 VM)
   double get totalAmount {
     final selectedCandidatesSum = candidateMembers
-        .where((m) => _selectedIds.contains(m.id))
+        .where((m) => _selectedIds.contains(m.memberData.id))
         .fold(0.0, (sum, m) => sum + m.finalAmount);
     return headMember.finalAmount + selectedCandidatesSum;
   }

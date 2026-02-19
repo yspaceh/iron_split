@@ -85,11 +85,7 @@ class _S30Content extends StatelessWidget {
     final task = vm.task;
     if (task == null) return;
 
-    final List<Map<String, dynamic>> membersList =
-        vm.task!.members.entries.map((e) {
-      final m = e.value as Map<String, dynamic>;
-      return <String, dynamic>{...m, 'id': e.key};
-    }).toList();
+    final membersList = task.sortedMembersList;
 
     final result = await B01BalanceRuleEditBottomSheet.show(
       context,
@@ -134,7 +130,7 @@ class _S30Content extends StatelessWidget {
     final candidates = vm.getMergeCandidates(head);
 
     // 2. 取得目前已經合併在該 Head 底下的 ID
-    final initialMergedIds = vm.currentMergeMap[head.id] ?? [];
+    final initialMergedIds = vm.currentMergeMap[head.memberData.id] ?? [];
 
     // 3. 開啟 B04
     final result = await B04PaymentMergeBottomSheet.show(
@@ -149,7 +145,7 @@ class _S30Content extends StatelessWidget {
     if (result == null || !context.mounted) return;
     if (result.isEmpty) {
       try {
-        vm.unmergeMembers(head.id);
+        vm.unmergeMembers(head.memberData.id);
       } on AppErrorCodes catch (code) {
         if (!context.mounted) return;
         final msg = ErrorMapper.map(context, code: code);
@@ -158,7 +154,7 @@ class _S30Content extends StatelessWidget {
       return;
     }
     try {
-      vm.mergeMembers(head.id, result);
+      vm.mergeMembers(head.memberData.id, result);
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
@@ -213,16 +209,13 @@ class _S30Content extends StatelessWidget {
                       "${t.S13_Task_Dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
                     ),
                   ),
-                ] else if (vm.remainderRule == RemainderRuleConstants.random &&
-                    vm.balanceState.remainder.abs() > 0) ...[
-                  InfoBar(
-                    icon: Icons.savings_outlined,
-                    text: Text(
-                      t.S30_settlement_confirm.warning.random_reveal,
-                    ),
-                  ),
                 ] else ...[
-                  const SizedBox(height: 16),
+                  if (vm.remainderRule == RemainderRuleConstants.random &&
+                      vm.balanceState.remainder.abs() > 0) ...[
+                    Container(),
+                  ] else ...[
+                    const SizedBox(height: 16)
+                  ]
                 ],
 
                 // 3. 隨機模式提示

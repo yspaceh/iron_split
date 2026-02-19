@@ -26,7 +26,14 @@ class TaskListItem extends StatelessWidget {
     final dateFormat = DateFormat('yyyy/MM/dd');
 
     // 1. 還原：找出我在這個任務裡的資料 (Avatar & DisplayName)
-    final myMemberData = task.members[currentUserId] ?? {};
+    final myMemberData = task.members[currentUserId] ??
+        TaskMember(
+          id: currentUserId,
+          displayName: 'Unknown Member', // 或使用多國語系字串
+          isLinked: false,
+          role: 'member',
+          joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+        );
 
     // 2. 還原：日期區間顯示邏輯
     String periodText = t.S10_Home_TaskList.date_tbd; // '日期未定'
@@ -66,9 +73,9 @@ class TaskListItem extends StatelessWidget {
                 child: Row(
                   children: [
                     CommonAvatar(
-                        avatarId: myMemberData['avatar'],
-                        name: myMemberData['displayName'],
-                        isLinked: myMemberData['isLinked'] ?? false),
+                        avatarId: myMemberData.avatar,
+                        name: myMemberData.displayName,
+                        isLinked: myMemberData.isLinked),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(

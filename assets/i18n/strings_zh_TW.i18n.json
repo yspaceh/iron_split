@@ -468,15 +468,19 @@
       "action": "動作",
       "details": "內容"
     },
-    "type_income": "預收",
-    "type_expense": "支出",
-    "label_payment": "支付",
-    "payment_income": "預收款",
-    "payment_pool": "公款支付",
-    "payment_single_suffix": "代墊",
-    "payment_multiple": "多人代墊",
-    "unit_members": "人",
-    "unit_items": "細項"
+    "type": {
+      "prepay": "預收",
+      "expense": "支出"
+    },
+    "payment_type": {
+      "prepay": "公款支付",
+      "single_suffix": "代墊",
+      "multiple": "多人代墊"
+    },
+    "unit": {
+      "members": "人",
+      "items": "細項"
+    }
   },
   "S53_TaskSettings_Members": {
     "title": "成員管理",

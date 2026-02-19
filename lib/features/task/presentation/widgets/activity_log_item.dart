@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // 確保路徑正確
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:intl/intl.dart';
-import 'package:iron_split/gen/strings.g.dart';
 
 class ActivityLogItem extends StatelessWidget {
   final ActivityLogModel log;
-  final Map<String, dynamic>? memberData; // 用於顯示頭像 (Optional)
+  final Map<String, TaskMember>? members; // 用於顯示頭像 (Optional)
 
   const ActivityLogItem({
     super.key,
     required this.log,
-    this.memberData,
+    this.members,
   });
 
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -26,11 +25,14 @@ class ActivityLogItem extends StatelessWidget {
     // 格式化時間
     final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(log.createdAt);
 
-    final member = memberData?[log.operatorUid] as Map<String, dynamic>?;
-
-    final String avatarId = member?['avatar'];
-    final String operatorName = member?['displayName'] as String? ??
-        t.S53_TaskSettings_Members.member_default_name;
+    final member = members?[log.operatorUid] ??
+        TaskMember(
+          id: log.operatorUid,
+          displayName: 'Unknown Member', // 或使用多國語系字串
+          isLinked: false,
+          role: 'member',
+          joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+        );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -41,8 +43,9 @@ class ActivityLogItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: CommonAvatar(
-              avatarId: avatarId, // 這裡需依照您的專案邏輯取得操作者頭像
-              name: operatorName,
+              avatarId: member.avatar, // 這裡需依照您的專案邏輯取得操作者頭像
+              name: member.displayName,
+              isLinked: member.isLinked,
               radius: 20,
             ),
           ),
@@ -102,7 +105,7 @@ class ActivityLogItem extends StatelessWidget {
 
                 // 4. 時間與操作者 (Footer)
                 Text(
-                  "$operatorName • $timeStr",
+                  "${member.displayName} • $timeStr",
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontSize: 12,

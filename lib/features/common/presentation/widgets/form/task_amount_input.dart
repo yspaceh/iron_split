@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
+import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/currency_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class TaskAmountInput extends StatelessWidget {
   const TaskAmountInput({
@@ -42,10 +44,17 @@ class TaskAmountInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final themeVm = context.watch<ThemeViewModel>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final expenseColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.expenseLight
+        : AppTheme.expenseDeep;
+    final incomeColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.incomeLight
+        : AppTheme.incomeDeep;
 
-    final amountColor = isIncome ? AppTheme.incomeDeep : AppTheme.expenseDeep;
+    final amountColor = isIncome ? incomeColor : expenseColor;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

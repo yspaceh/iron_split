@@ -13,18 +13,18 @@ import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
+import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
-import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class S13TaskDashboardViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
   final AuthRepository _authRepo;
-  final DashboardService _service;
+  final DashboardService _dashboardService;
   final String taskId;
   late final RecordService _recordService;
 
@@ -84,7 +84,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       _currentTabIndex == 0 ? groupScrollController : personalScrollController;
   String get remainderRule => _remainderRule;
   String? get remainderAbsorberId => _remainderAbsorberId;
-  Map<String, dynamic> get membersData => _task?.members ?? {};
+  Map<String, TaskMember> get membersData => _task?.members ?? {};
   String get currentUserId => _currentUserId;
 
   // 新增：為了支援 UI 顯示 Currency Symbol
@@ -114,7 +114,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     if (_task == null) return false;
     final memberData = _task!.members[_currentUserId];
     if (memberData == null) return false;
-    final bool hasSeen = memberData['hasSeenRoleIntro'] ?? true;
+    final bool hasSeen = memberData.hasSeenRoleIntro;
     return !hasSeen;
   }
 
@@ -127,7 +127,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   })  : _taskRepo = taskRepo,
         _authRepo = authRepo,
         _recordRepo = recordRepo,
-        _service = service {
+        _dashboardService = service {
     _recordService = RecordService(_recordRepo, _taskRepo);
   }
 
@@ -173,19 +173,20 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     if (!_hasTaskEmitted || !_hasRecordsEmitted || _task == null) return;
 
     // A. 計算 State (Service 現在會用 BalanceCalculator 填好 poolDetail)
-    _balanceState = _service.calculateBalanceState(
+    _balanceState = _dashboardService.calculateBalanceState(
       task: _task!,
       records: _records,
       currentUserId: _currentUserId,
     );
 
     // B. 分組與個人數據
-    _groupedRecords = _service.groupRecordsByDate(_records);
-    _personalRecords =
-        _service.filterPersonalRecords(_records, _currentUserId, baseCurrency);
-    _personalGroupedRecords = _service.groupRecordsByDate(_personalRecords);
-    final personalStats = _service.calculatePersonalStats(
-      _task!.members[_currentUserId] as Map<String, dynamic>? ?? {},
+    _groupedRecords = _dashboardService.groupRecordsByDate(_records);
+    _personalRecords = _dashboardService.filterPersonalRecords(
+        _records, _currentUserId, baseCurrency);
+    _personalGroupedRecords =
+        _dashboardService.groupRecordsByDate(_personalRecords);
+    final personalStats = _dashboardService.calculatePersonalStats(
+      _task!.members[_currentUserId],
     );
 
     _personalTotalExpense = personalStats.expense;
@@ -203,7 +204,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     end = DateTime(end.year, end.month, end.day); // 強制轉為 00:00
 
     // 2. 生成日期列表
-    final rawDates = _service.generateDisplayDates(
+    final rawDates = _dashboardService.generateDisplayDates(
       startDate: start,
       endDate: end,
       groupedRecords: _groupedRecords,
@@ -254,7 +255,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     final endDate =
         _task!.endDate ?? DateTime.now().add(const Duration(days: 7));
     // 計算目標日期 (今天 或 開始日)
-    final targetDate = _service.calculateInitialTargetDate(startDate, endDate);
+    final targetDate =
+        _dashboardService.calculateInitialTargetDate(startDate, endDate);
 
     // 標記該 Tab 已捲動過 (避免之後 _recalculate 重複觸發)
     if (_currentTabIndex == 0) _hasScrolledGroup = true;
@@ -271,7 +273,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     final startDate = _task!.startDate ?? DateTime.now();
     final endDate =
         _task!.endDate ?? DateTime.now().add(const Duration(days: 7));
-    final targetDate = _service.calculateInitialTargetDate(startDate, endDate);
+    final targetDate =
+        _dashboardService.calculateInitialTargetDate(startDate, endDate);
 
     if (_currentTabIndex == 0 && !_hasScrolledGroup) {
       _hasScrolledGroup = true;
@@ -352,7 +355,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
     if (newRule == RemainderRuleConstants.member && newAbsorberId != null) {
       final memberName =
-          membersData[newAbsorberId]?['displayName'] ?? 'Unknown';
+          membersData[newAbsorberId]?.displayName ?? 'Unknown Member';
       logDetails['absorberName'] = memberName;
     }
 
@@ -403,7 +406,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   DualAmount getPersonalRecordDisplayAmount(RecordModel record) {
-    if (record.type == 'income') {
+    if (record.type == RecordType.income) {
       return BalanceCalculator.calculatePersonalCredit(
           record, _currentUserId, baseCurrency);
     } else {

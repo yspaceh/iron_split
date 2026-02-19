@@ -65,12 +65,12 @@ class SettlementMemberItem extends StatelessWidget {
               child: _buildInfoContent(
                 context,
                 avatarWidget: CommonAvatar(
-                  avatarId: member.avatar,
-                  name: member.displayName,
-                  isLinked: member.isLinked,
+                  avatarId: member.memberData.avatar,
+                  name: member.memberData.displayName,
+                  isLinked: member.memberData.isLinked,
                   radius: 20, //  直徑 40px
                 ),
-                name: member.displayName,
+                name: member.memberData.displayName,
                 amount: member.finalAmount,
                 colorScheme: colorScheme,
               ),
@@ -100,10 +100,7 @@ class SettlementMemberItem extends StatelessWidget {
     final double headIndividualAmount = member.finalAmount - childrenSum;
 
     final individualHead = SettlementMember(
-      id: member.id,
-      displayName: member.displayName,
-      avatar: member.avatar,
-      isLinked: member.isLinked,
+      memberData: member.memberData,
       finalAmount: headIndividualAmount,
       baseAmount: 0,
       remainderAmount: 0,
@@ -114,15 +111,8 @@ class SettlementMemberItem extends StatelessWidget {
 
     final allSubMembers = [individualHead, ...member.subMembers];
 
-    final allMembersMap = allSubMembers
-        .map((m) => {
-              'id': m.id,
-              'avatar': m.avatar,
-              'displayName': m.displayName,
-              'isLinked': m.isLinked,
-            })
-        .toList();
-    final allIds = allSubMembers.map((m) => m.id).toList();
+    final validMembers = allSubMembers.map((m) => m.memberData).toList();
+    final allIds = validMembers.map((m) => m.id).toList();
 
     return Column(
       children: [
@@ -139,14 +129,14 @@ class SettlementMemberItem extends StatelessWidget {
                   child: _buildInfoContent(
                     context,
                     avatarWidget: CommonAvatarStack(
-                      allMembers: allMembersMap,
+                      allMembers: validMembers,
                       targetMemberIds: allIds,
                       overlapRatio: 0.5,
                       radius: 20,
                       type: AvatarStackType.stack,
                       limit: 3,
                     ),
-                    name: member.displayName,
+                    name: member.memberData.displayName,
                     amount: member.finalAmount,
                     colorScheme: colorScheme,
                   ),
@@ -267,15 +257,15 @@ class SettlementMemberItem extends StatelessWidget {
         children: [
           const SizedBox(width: 16), // 縮排
           CommonAvatar(
-            avatarId: sub.avatar,
-            name: sub.displayName,
-            isLinked: sub.isLinked,
+            avatarId: sub.memberData.avatar,
+            name: sub.memberData.displayName,
+            isLinked: sub.memberData.isLinked,
             radius: 16,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              sub.displayName,
+              sub.memberData.displayName,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
               ),

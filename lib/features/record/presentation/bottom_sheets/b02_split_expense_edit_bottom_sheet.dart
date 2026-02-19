@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -23,7 +24,7 @@ import 'package:provider/provider.dart';
 
 class B02SplitExpenseEditBottomSheet extends StatelessWidget {
   final RecordDetail? detail;
-  final List<Map<String, dynamic>> allMembers;
+  final List<TaskMember> allMembers;
   final Map<String, double> defaultWeights;
   final CurrencyConstants selectedCurrency;
   final String parentTitle;
@@ -46,7 +47,7 @@ class B02SplitExpenseEditBottomSheet extends StatelessWidget {
   static Future<dynamic> show(
     BuildContext context, {
     RecordDetail? detail,
-    required List<Map<String, dynamic>> allMembers,
+    required List<TaskMember> allMembers,
     required Map<String, double> defaultWeights,
     required CurrencyConstants selectedCurrency,
     required String parentTitle,
@@ -127,6 +128,24 @@ class _B02ContentState extends State<_B02Content> {
     _amountNode = FocusNode();
     _nameNode = FocusNode();
     _memoNode = FocusNode();
+    _memoNode.addListener(() {
+      if (_memoNode.hasFocus) {
+        // 延遲 100 毫秒，確保底層的 SizedBox(height: 400) 已經瞬間出現了
+        Future.delayed(const Duration(milliseconds: 100), () {
+          final memoContext = _memoNode.context;
+          if (memoContext != null && memoContext.mounted) {
+            Scrollable.ensureVisible(
+              memoContext,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              // alignment 0.2 代表將備註欄推到「從螢幕上方往下數 20%」的位置
+              // 這樣絕對不可能被下方的鍵盤遮到！
+              alignment: 0.2,
+            );
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -291,8 +310,14 @@ class _B02ContentState extends State<_B02Content> {
                     focusNode: _memoNode,
                     fillColor: theme.colorScheme.surfaceContainerLow,
                   ),
-                  // 底部安全留白
-                  const SizedBox(height: 32),
+                  AnimatedBuilder(
+                    animation: _memoNode,
+                    builder: (context, child) {
+                      return SizedBox(
+                        height: _memoNode.hasFocus ? 400.0 : 80.0,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

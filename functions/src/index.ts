@@ -262,9 +262,7 @@ export const joinByInviteCode = onCall(async (request) => {
     if (taskData.activeInviteCode !== code) throw new HttpsError("invalid-argument", "INVALID_CODE");
 
     const members = taskData.members || {};
-    if (Object.values(members).some((m: any) => m.uid === uid)) {
-      throw new HttpsError("already-exists", "ALREADY_JOINED");
-    }
+    const emptySlots = Object.entries(members).filter(([_, m]) => !(m as TaskMember).isLinked);
 
     // [2] 頭像分配：確保不重複 (絕對不刪)
     const usedAvatars: string[] = Object.values(members).map((m: any) => m.avatar).filter(Boolean);
@@ -272,30 +270,40 @@ export const joinByInviteCode = onCall(async (request) => {
 
     // [3] 核心邏輯：決定補位目標
     let finalTargetId = targetMemberId;
-
     if (!finalTargetId) {
-      // 如果前端沒指定，後端「自動補位」
-      const emptySlots = Object.entries(members)
-        .filter(([_, m]) => isEmptyGhost(m))
-        .sort((a, b) => (a[1] as any).createdAt - (b[1] as any).createdAt);
-        
-      if (emptySlots.length === 0) {
+      if (emptySlots.length > 0) {
+        // A. 有空位：優先遞補第一個 Ghost
+        finalTargetId = emptySlots[0][0];
+      } else {
+        // B. [修正] 沒空位：禁止擴充，直接拋出錯誤
+        // 前端 (S11) 收到這個錯誤後，應顯示「任務人數已滿」的訊息
         throw new HttpsError("failed-precondition", "TASK_FULL");
       }
-      finalTargetId = emptySlots[0][0];
+    } else {
+      // 如果前端有指定 targetMemberId，要確保該 ID 真的存在且是 Ghost
+      // (雖然前端通常會擋，但後端再檢查一次比較安全)
+      if (!members[finalTargetId]) throw new HttpsError("not-found", "MEMBER_NOT_FOUND");
+      if ((members[finalTargetId] as TaskMember).isLinked) {
+         throw new HttpsError("already-exists", "MEMBER_ALREADY_LINKED");
+      }
+    }
+  
+    const ghostData = members[finalTargetId];
+
+    // [修正] 手動計算新的 memberIds 陣列，避免 arrayRemove/Union 衝突
+   const currentMemberIds = taskData.memberIds || [];
+    const newMemberIds = currentMemberIds.filter((id: string) => id !== finalTargetId);
+    if (!newMemberIds.includes(uid)) {
+      newMemberIds.push(uid);
     }
 
-    // [4] 執行寫入 (僅更新既有位子)
-    if (!members[finalTargetId]) throw new HttpsError("not-found", "MEMBER_NOT_FOUND");
-    const ghostData = members[finalTargetId];
+    // [4] 執行寫入 (合併成單次 update)
     transaction.update(taskRef, {
+      // 1. Map 操作：刪除舊 Key，新增新 Key
       [`members.${finalTargetId}`]: admin.firestore.FieldValue.delete(),
-      // 2. 建立新 UID Key 並精準繼承
       [`members.${uid}`]: {
-        // [繼承資產]
         prepaid: ghostData.prepaid || 0,
         expense: ghostData.expense || 0,
-        // [繼承 Service 定義的旗標]
         hasSeenRoleIntro: ghostData.hasSeenRoleIntro ?? false,
         createdAt: ghostData.createdAt,
         uid: uid,
@@ -305,11 +313,10 @@ export const joinByInviteCode = onCall(async (request) => {
         role: "member",
         joinedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
-      memberIds: admin.firestore.FieldValue.arrayRemove(finalTargetId),
-    });
-
-    transaction.update(taskRef, {
-      memberIds: admin.firestore.FieldValue.arrayUnion(uid),
+      
+      // 2. Array 操作：直接寫入計算好的新陣列
+      memberIds: newMemberIds,
+      // 3. 其他欄位
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 

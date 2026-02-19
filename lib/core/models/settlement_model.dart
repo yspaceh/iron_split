@@ -1,12 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:iron_split/core/models/task_model.dart';
 
 /// 結算成員模型
 /// 用於 S30 結算確認頁面及後續寫入 Settlement Record
 class SettlementMember extends Equatable {
-  final String id;
-  final String displayName;
-  final String? avatar;
-  final bool isLinked;
+  final TaskMember memberData;
 
   // 金額資訊
   final double finalAmount; // 最終顯示金額 (Base + Remainder)
@@ -22,14 +20,11 @@ class SettlementMember extends Equatable {
   final List<SettlementMember> subMembers; // 被合併的成員 (如果是 Head)
 
   const SettlementMember({
-    required this.id,
-    required this.displayName,
-    this.avatar,
+    required this.memberData,
     required this.finalAmount,
     required this.baseAmount,
     required this.remainderAmount,
     required this.isRemainderAbsorber,
-    required this.isLinked,
     this.isRemainderHidden = false,
     this.isMergedHead = false,
     this.subMembers = const [],
@@ -37,10 +32,7 @@ class SettlementMember extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        displayName,
-        avatar,
-        isLinked,
+        memberData,
         finalAmount,
         baseAmount,
         remainderAmount,

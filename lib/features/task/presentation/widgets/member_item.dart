@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_ratio_stepper.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class MemberItem extends StatelessWidget {
-  final Map<String, dynamic> member;
+  final TaskMember member;
   final bool isOwner;
   final ValueChanged<double> onRatioChanged;
   final VoidCallback onDelete;
@@ -26,19 +27,11 @@ class MemberItem extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
-    final isLinked =
-        member['status'] == 'linked' || (member['isLinked'] == true);
-    final avatarId = member['avatar'];
-    final ratio = (member['defaultSplitRatio'] as num? ?? 1.0).toDouble();
+    final isLinked = member.isLinked;
+    final avatarId = member.avatar;
+    final ratio = member.defaultSplitRatio;
 
-    String displayLabel;
-    if (isLinked) {
-      displayLabel = member['displayName'] ??
-          t.S53_TaskSettings_Members.member_default_name;
-    } else {
-      displayLabel = member['displayName'] ??
-          t.S53_TaskSettings_Members.member_default_name;
-    }
+    String displayLabel = member.displayName;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

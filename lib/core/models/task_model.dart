@@ -6,7 +6,7 @@ class TaskModel {
   final String id;
   final String name; // Was 'title'
   final String baseCurrency;
-  final Map<String, dynamic> members;
+  final Map<String, TaskMember> members;
   final List<String> memberIds;
   final String status; // Was 'mode'/'state', now 'ongoing' etc.
   final String createdBy; // Was 'ownerId'
@@ -61,20 +61,14 @@ class TaskModel {
     }
 
     // 邏輯：先抓 Linked (保持原順序)，再抓 Unlinked (保持原順序)，最後組合成新的 Map
-    Map<String, dynamic> sortMembers(Map<String, dynamic> rawMembers) {
-      final entries = rawMembers.entries.toList();
+    Map<String, TaskMember> sortMembers(Map<String, TaskMember> members) {
+      final entries = members.entries.toList();
 
       // 1. 連結成員 (Linked)
-      final linked = entries.where((e) {
-        final mData = e.value as Map<String, dynamic>;
-        return mData['isLinked'] == true;
-      });
+      final linked = entries.where((e) => e.value.isLinked);
 
       // 2. 未連結成員 (Unlinked)
-      final unlinked = entries.where((e) {
-        final mData = e.value as Map<String, dynamic>;
-        return mData['isLinked'] != true;
-      });
+      final unlinked = entries.where((e) => !e.value.isLinked);
 
       // 3. 重新組裝成有序的 Map
       // Map.fromEntries 會依照 List 的順序建立 Key，確保遍歷順序正確
@@ -82,9 +76,14 @@ class TaskModel {
     }
 
     // 取得原始 Map
-    final rawMembers = data['members'] is Map
-        ? Map<String, dynamic>.from(data['members'])
-        : <String, dynamic>{};
+    final rawMembers = data['members'] as Map<String, dynamic>? ?? {};
+
+    final parsedMembers = rawMembers.map((key, value) {
+      return MapEntry(
+        key,
+        TaskMember.fromMap(key, value as Map<String, dynamic>),
+      );
+    });
 
     List<String> parsedMemberIds = [];
     if (data['memberIds'] is List) {
@@ -108,7 +107,7 @@ class TaskModel {
       name: data['name'] as String? ?? '', // Matches D03 write
       baseCurrency:
           data['baseCurrency'] as String? ?? CurrencyConstants.defaultCode,
-      members: sortMembers(rawMembers),
+      members: sortMembers(parsedMembers),
       memberIds: parsedMemberIds,
       status: data['status'] as String? ?? 'ongoing',
       createdBy: data['createdBy'] as String? ?? '',
@@ -150,55 +149,107 @@ class TaskModel {
   }
 
   //  靜態排序邏輯 (讓外部也能用)
-  static int compareMemberData(
-      Map<String, dynamic> dataA, Map<String, dynamic> dataB) {
-    final bool isALinked = dataA['isLinked'] == true;
-    final bool isBLinked = dataB['isLinked'] == true;
-
+  static int compareMembers(TaskMember a, TaskMember b) {
     // 1. 狀態不同：已連結優先
-    if (isALinked != isBLinked) {
-      return isALinked ? -1 : 1;
+    if (a.isLinked != b.isLinked) {
+      return a.isLinked ? -1 : 1;
     }
 
-    // 2. 狀態相同：比較時間
-    if (isALinked) {
-      // 皆為已連結：按 joinedAt
-      final timeA = _parseTimeStatic(dataA['joinedAt']);
-      final timeB = _parseTimeStatic(dataB['joinedAt']);
-      return timeA.compareTo(timeB);
-    } else {
-      // 皆為未連結：按 createdAt
-      final timeA = _parseTimeStatic(dataA['createdAt']);
-      final timeB = _parseTimeStatic(dataB['createdAt']);
-      return timeA.compareTo(timeB);
-    }
+    // 2. 狀態相同：比較加入時間
+    return a.joinedAt.compareTo(b.joinedAt);
   }
 
-  // 靜態時間解析 (將原本的 _parseTime 改為 static)
-  static int _parseTimeStatic(dynamic val) {
-    if (val == null) return 0;
-    if (val is Timestamp) return val.millisecondsSinceEpoch;
-    if (val is int) return val;
-    if (val is DateTime) return val.millisecondsSinceEpoch;
-    if (val is String) {
-      return DateTime.tryParse(val)?.millisecondsSinceEpoch ?? 0;
-    }
-    return 0;
+  // 直接把 Getter 寫在 TaskModel 類別裡面，不使用 Extension
+  List<MapEntry<String, TaskMember>> get sortedMembers {
+    final membersList = members.entries.toList();
+    membersList.sort((a, b) {
+      return TaskModel.compareMembers(a.value, b.value);
+    });
+    return membersList;
+  }
+
+  // 直接把 Getter 寫在 TaskModel 類別裡面，不使用 Extension
+  List<TaskMember> get sortedMembersList {
+    final list = members.values.toList();
+    list.sort(TaskModel.compareMembers);
+    return list;
   }
 }
 
-// Extension 改為呼叫上面的靜態方法
-extension TaskModelMemberSorting on TaskModel {
-  List<MapEntry<String, dynamic>> get sortedMembers {
-    final List<MapEntry<String, dynamic>> membersList =
-        members.entries.toList();
+class TaskMember {
+  final String id; // uid
+  final String displayName;
+  final String? avatar;
+  final bool isLinked;
+  final String role; // 'captain' | 'member'
+  final DateTime joinedAt;
+  final double prepaid;
+  final double expense;
+  final bool hasSeenRoleIntro;
+  final bool hasRerolled;
+  final double defaultSplitRatio;
 
-    // 直接使用靜態方法
-    membersList.sort((a, b) {
-      return TaskModel.compareMemberData(
-          a.value as Map<String, dynamic>, b.value as Map<String, dynamic>);
-    });
+  // Constructor
+  TaskMember({
+    required this.id,
+    required this.displayName,
+    this.avatar,
+    required this.isLinked,
+    required this.role,
+    required this.joinedAt,
+    this.prepaid = 0.0,
+    this.expense = 0.0,
+    this.hasSeenRoleIntro = false,
+    this.hasRerolled = false,
+    this.defaultSplitRatio = 1.0,
+  });
 
-    return membersList;
+  // Factory: 從 Firestore Map 轉換
+  // 這裡是「防呆」的第一線，所有 ?? '' 都在這裡處理完
+  factory TaskMember.fromMap(String id, Map<String, dynamic> data) {
+    return TaskMember(
+      id: id,
+      // 強制給預設值，解決 Null Error
+      displayName: data['displayName'] as String? ?? 'Unknown Member',
+      avatar: data['avatar'] as String?,
+      isLinked: data['isLinked'] as bool? ?? false,
+      role: data['role'] as String? ?? 'member',
+      joinedAt: _parseTime(data['joinedAt']),
+      prepaid: (data['prepaid'] as num?)?.toDouble() ?? 0.0,
+      expense: (data['expense'] as num?)?.toDouble() ?? 0.0,
+      hasSeenRoleIntro: data['hasSeenRoleIntro'] as bool? ?? false,
+      hasRerolled: data['hasRerolled'] as bool? ?? false,
+      defaultSplitRatio: (data['defaultSplitRatio'] as num?)?.toDouble() ?? 1.0,
+    );
+  }
+
+  // Helper: 判斷是否為隊長
+  bool get isCaptain => role == 'captain';
+
+  // Helper: 判斷是否為 Ghost
+  bool get isGhost => !isLinked;
+
+  // 時間解析 helper
+  static DateTime _parseTime(dynamic val) {
+    if (val is Timestamp) return val.toDate();
+    if (val is String) return DateTime.tryParse(val) ?? DateTime.now();
+    return DateTime.now();
+  }
+
+  // 轉回 Map (寫入 DB 用)
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': id,
+      'displayName': displayName,
+      'avatar': avatar,
+      'isLinked': isLinked,
+      'role': role,
+      'joinedAt': Timestamp.fromDate(joinedAt),
+      'prepaid': prepaid,
+      'expense': expense,
+      'hasSeenRoleIntro': hasSeenRoleIntro,
+      'hasRerolled': hasRerolled,
+      'defaultSplitRatio': defaultSplitRatio,
+    };
   }
 }

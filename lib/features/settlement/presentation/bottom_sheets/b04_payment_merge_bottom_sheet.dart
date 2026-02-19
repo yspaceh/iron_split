@@ -131,14 +131,14 @@ class _B04Content extends StatelessWidget {
               // 為了讓鎖定的 checkbox 看起來不同，可以考慮給一個 disabled 的顏色
               // 但如果 SelectionTile 內部有處理 null onTap 的樣式則不必
               leading: CommonAvatar(
-                avatarId: vm.headMember.avatar,
-                name: vm.headMember.displayName,
-                isLinked: vm.headMember.isLinked,
+                avatarId: vm.headMember.memberData.avatar,
+                name: vm.headMember.memberData.displayName,
+                isLinked: vm.headMember.memberData.isLinked,
                 radius: 20,
               ),
               // [修改] 標題加上 "(代表成員)"
               title:
-                  "${vm.headMember.displayName} - ${t.B04_payment_merge.label.head_member}",
+                  "${vm.headMember.memberData.displayName} - ${t.B04_payment_merge.label.head_member}",
               trailing: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -163,21 +163,22 @@ class _B04Content extends StatelessWidget {
               Container()
             else
               ...vm.candidateMembers.map((member) {
-                final isSelected = vm.isSelected(member.id); // 從 VM 判斷
+                final isSelected =
+                    vm.isSelected(member.memberData.id); // 從 VM 判斷
                 final amountStr = CurrencyConstants.formatAmount(
                     member.finalAmount.abs(), vm.baseCurrency.code);
 
                 return SelectionTile(
                   isSelected: isSelected,
                   isRadio: false, // Checkbox 樣式
-                  onTap: () => vm.toggleSelection(member.id),
+                  onTap: () => vm.toggleSelection(member.memberData.id),
                   leading: CommonAvatar(
-                    avatarId: member.avatar,
-                    name: member.displayName,
-                    isLinked: member.isLinked,
+                    avatarId: member.memberData.avatar,
+                    name: member.memberData.displayName,
+                    isLinked: member.memberData.isLinked,
                     radius: 20,
                   ),
-                  title: member.displayName,
+                  title: member.memberData.displayName,
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 
@@ -9,7 +10,7 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final double totalAmount;
   final Map<String, double> poolBalancesByCurrency;
-  final List<Map<String, dynamic>> members;
+  final List<TaskMember> members;
   final CurrencyConstants selectedCurrency;
 
   // --- 狀態管理 (Rule 5) ---
@@ -73,7 +74,7 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
 
       // 確保所有成員 ID 都有在 Map 裡，避免後面讀取失敗
       for (var m in members) {
-        final id = m['id'];
+        final id = m.id;
         if (!memberAdvance.containsKey(id)) {
           memberAdvance[id] = 0.0;
         }
@@ -102,7 +103,7 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
           : CurrencyConstants.formatAmount(prepayAmount, selectedCurrency.code);
 
       for (var m in members) {
-        final id = m['id'];
+        final id = m.id;
         final val = memberAdvance[id] ?? 0.0;
         memberControllers[id] = TextEditingController(
           text: val == 0

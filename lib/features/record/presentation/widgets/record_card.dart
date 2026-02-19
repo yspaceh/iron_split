@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -15,7 +16,7 @@ class RecordCard extends StatelessWidget {
   final bool showSplitAction;
   final VoidCallback? onSplitTap;
   final CurrencyConstants selectedCurrencyConstants;
-  final List<Map<String, dynamic>> members;
+  final List<TaskMember> members;
   final bool isIncome;
 
   const RecordCard({

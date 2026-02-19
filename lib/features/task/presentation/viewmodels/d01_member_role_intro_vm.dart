@@ -48,7 +48,7 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
       if (task == null) throw AppErrorCodes.dataNotFound;
 
       final usedAvatars = task.members.values
-          .map((m) => m['avatar'] as String?)
+          .map((m) => m.avatar)
           .where((a) => a != null)
           .cast<String>()
           .toSet();

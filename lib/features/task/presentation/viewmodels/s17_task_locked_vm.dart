@@ -171,7 +171,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     String? remainderWinnerName;
     if (remainderWinnerId != null) {
       final winner = task.members[remainderWinnerId];
-      if (winner != null) remainderWinnerName = winner['displayName'];
+      if (winner != null) remainderWinnerName = winner.displayName;
     }
 
     // 嘗試從 dashboardSnapshot 讀取，如果沒有(舊資料)則 fallback 到初始狀態
@@ -216,10 +216,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       final bool isCleared = memberStatus[uid] == true;
 
       final member = SettlementMember(
-        id: uid,
-        displayName: memberData['displayName'] ?? 'Unknown',
-        avatar: memberData['avatar'],
-        isLinked: memberData['isLinked'] ?? false,
+        memberData: memberData,
         finalAmount: amount,
         baseAmount: amount,
         remainderAmount: 0,

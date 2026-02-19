@@ -50,7 +50,7 @@ class _S53Content extends StatelessWidget {
   void _showRenameDialog(
       BuildContext context,
       S53TaskSettingsMembersViewModel vm,
-      Map<String, dynamic> membersMap,
+      Map<String, TaskMember> membersMap,
       String memberId,
       String currentName) {
     showDialog(
@@ -67,7 +67,7 @@ class _S53Content extends StatelessWidget {
   Future<void> _handleDelete(
       BuildContext context,
       S53TaskSettingsMembersViewModel vm,
-      Map<String, dynamic> membersMap,
+      Map<String, TaskMember> membersMap,
       String memberId) async {
     final t = Translations.of(context);
 
@@ -184,16 +184,15 @@ class _S53Content extends StatelessWidget {
             itemBuilder: (context, index) {
               final entry = membersList[index];
               final memberId = entry.key;
-              final memberData = entry.value as Map<String, dynamic>;
+              final memberData = entry.value;
               final bool isOwner = (memberId == createdBy);
               final bool amICaptain = (vm.currentUserId == createdBy);
 
-              final isLinked = memberData['status'] == 'linked' ||
-                  (memberData['isLinked'] == true);
+              final isLinked = memberData.isLinked;
 
               // 取得目前權重，預設 1.0 (注意這裡要處理 dynamic -> double 的轉型安全)
               // 舊資料的 defaultSplitRatio 可能不存在
-              final rawRatio = memberData['defaultSplitRatio'] ?? 1.0;
+              final rawRatio = memberData.defaultSplitRatio;
               final double currentRatio = (rawRatio as num).toDouble();
 
               // [核心] 成員卡片
@@ -208,9 +207,9 @@ class _S53Content extends StatelessWidget {
                 child: Row(
                   children: [
                     CommonAvatar(
-                      avatarId: memberData['avatar'],
-                      name: memberData['displayName'],
-                      isLinked: memberData['isLinked'] ?? false,
+                      avatarId: memberData.avatar,
+                      name: memberData.displayName,
+                      isLinked: memberData.isLinked,
                       radius: 32,
                     ),
                     const SizedBox(width: 12),
@@ -223,7 +222,7 @@ class _S53Content extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  memberData['displayName'],
+                                  memberData.displayName,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: theme.colorScheme.onSurface,
@@ -273,7 +272,7 @@ class _S53Content extends StatelessWidget {
                                       vm,
                                       membersMap,
                                       memberId,
-                                      memberData['displayName'] ?? ''),
+                                      memberData.displayName),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8),

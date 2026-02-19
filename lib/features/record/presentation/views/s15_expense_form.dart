@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
@@ -29,7 +31,7 @@ class S15ExpenseForm extends StatelessWidget {
   final Map<String, double> poolBalancesByCurrency;
 
   // 3. 接收複雜邏輯資料
-  final List<Map<String, dynamic>> members; // 從 parent 傳入 members
+  final List<TaskMember> members; // 從 parent 傳入 members
   final List<RecordDetail> details; // 從 parent 傳入 _details
   final double baseRemainingAmount;
   final String baseSplitMethod;
@@ -38,8 +40,8 @@ class S15ExpenseForm extends StatelessWidget {
   final RemainderDetail remainderDetail;
 
   // 4. 接收支付狀態
-  final String payerType;
-  final String payerId;
+  final PayerType payerType;
+  final List<String> payersId;
   final bool hasPaymentError;
 
   // 5. 定義動作 (當使用者點擊時，通知 Parent 執行)
@@ -75,7 +77,7 @@ class S15ExpenseForm extends StatelessWidget {
     required this.baseSplitMethod,
     required this.baseMemberIds,
     required this.payerType,
-    required this.payerId,
+    required this.payersId,
     required this.hasPaymentError,
     required this.onDateChanged,
     required this.onPaymentMethodTap,
@@ -96,30 +98,28 @@ class S15ExpenseForm extends StatelessWidget {
   });
 
   // 支援多種支付型態顯示
-  String _getPayerDisplayName(Translations t, String type, String id) {
-    if (type == 'prepay') {
-      // 1. 取得當前選擇幣別的公款餘額
-      final currentCode = selectedCurrencyConstants.code;
-      final balance = poolBalancesByCurrency[currentCode] ?? 0.0;
+  String _getPayerDisplayName(
+      Translations t, PayerType type, List<String> payersId) {
+    switch (type) {
+      case PayerType.prepay:
+        // 1. 取得當前選擇幣別的公款餘額
+        final currentCode = selectedCurrencyConstants.code;
+        final balance = poolBalancesByCurrency[currentCode] ?? 0.0;
 
-      // 2. 智慧顯示：直接顯示該幣別的餘額 (例如: JPY 30,000)
-      // 不再強制換算回 Base Currency，這樣更符合物理錢包直覺
-      return "${selectedCurrencyConstants.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(balance, currentCode)})";
+        // 2. 智慧顯示：直接顯示該幣別的餘額 (例如: JPY 30,000)
+        // 不再強制換算回 Base Currency，這樣更符合物理錢包直覺
+        return "${selectedCurrencyConstants.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(balance, currentCode)})";
+      case PayerType.mixed:
+        return t.B07_PaymentMethod_Edit.type_mixed;
+      case PayerType.member:
+        if (payersId.length > 1) {
+          return t.B07_PaymentMethod_Edit.type_member;
+        }
+        final member = members.firstWhere(
+          (m) => m.id == payersId.first,
+        );
+        return t.S15_Record_Edit.val.member_paid(name: member.displayName);
     }
-
-    // ... (混合支付與成員代墊的邏輯保持不變)
-    if (type == 'mixed') {
-      return t.B07_PaymentMethod_Edit.type_mixed;
-    }
-    if (id == 'multiple') {
-      return t.B07_PaymentMethod_Edit.type_member;
-    }
-
-    final member = members.firstWhere(
-      (m) => m['id'] == id,
-      orElse: () => {'displayName': '?'},
-    );
-    return t.S15_Record_Edit.val.member_paid(name: member['displayName']);
   }
 
   Widget buildRemainderInfo() {
@@ -175,7 +175,7 @@ class S15ExpenseForm extends StatelessWidget {
         // 2. 支付方式 (保留外部邏輯，因為邏輯太複雜不適合封裝)
         AppSelectField(
           labelText: t.S15_Record_Edit.label.payment_method,
-          text: _getPayerDisplayName(t, payerType, payerId),
+          text: _getPayerDisplayName(t, payerType, payersId),
           onTap: onPaymentMethodTap,
           errorText: hasPaymentError
               ? t.B07_PaymentMethod_Edit.err_balance_not_enough
@@ -252,7 +252,14 @@ class S15ExpenseForm extends StatelessWidget {
           memoController: memoController,
           focusNode: memoFocusNode,
         ),
-        const SizedBox(height: 100),
+        AnimatedBuilder(
+          animation: memoFocusNode,
+          builder: (context, child) {
+            return SizedBox(
+              height: memoFocusNode.hasFocus ? 400.0 : 0,
+            );
+          },
+        ),
       ],
     );
   }

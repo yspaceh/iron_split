@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 
@@ -78,7 +79,7 @@ class BalanceCalculator {
   static DualAmount calculatePersonalDebit(
       RecordModel record, String uid, CurrencyConstants baseCurrency) {
     // 收入不產生 Debit
-    if (record.type == 'income') return DualAmount.zero;
+    if (record.type == RecordType.income) return DualAmount.zero;
 
     DualAmount totalDebit = DualAmount.zero;
 
@@ -129,15 +130,17 @@ class BalanceCalculator {
   static DualAmount calculatePersonalCredit(
       RecordModel record, String uid, CurrencyConstants baseCurrency) {
     // --- 處理支出 (Expense) 的代墊貢獻 ---
-    if (record.type == 'expense') {
+    if (record.type == RecordType.expense) {
       double rawAmount = 0.0;
 
       // 情況 A: 單一成員全額代墊
-      if (record.payerType == 'member' && record.payerId == uid) {
+      if (record.payerType == PayerType.member &&
+          record.payersId.first == uid) {
         rawAmount = record.originalAmount;
       }
       // 情況 B: 混合支付 (Mixed) 中的成員代墊部分
-      else if (record.payerType == 'mixed' && record.paymentDetails != null) {
+      else if (record.payerType == PayerType.mixed &&
+          record.paymentDetails != null) {
         final advances = record.paymentDetails!['memberAdvance'];
         if (advances is Map && advances.containsKey(uid)) {
           rawAmount = (advances[uid] as num).toDouble();
@@ -166,7 +169,7 @@ class BalanceCalculator {
     }
 
     // --- 處理收入 (Income) 的入金貢獻 ---
-    if (record.type == 'income') {
+    if (record.type == RecordType.income) {
       // Income 的邏輯是：將錢「分」給出資者
       final splitResult = calculateSplit(
         totalAmount: record.originalAmount,
@@ -188,10 +191,10 @@ class BalanceCalculator {
   static double calculateRemainderBuffer(List<RecordModel> records) {
     double totalBuffer = 0.0;
     for (var r in records) {
-      if (r.type == 'income') {
+      if (r.type == RecordType.income) {
         // 預收：加項
         totalBuffer += r.remainder;
-      } else if (r.type == 'expense') {
+      } else if (r.type == RecordType.expense) {
         // 費用：減項
         totalBuffer -= r.remainder;
       }
@@ -211,19 +214,19 @@ class BalanceCalculator {
       final CurrencyConstants currency =
           CurrencyConstants.getCurrencyConstants(r.currencyCode);
       // 1. 收入：全部視為公款增加
-      if (r.type == 'income') {
+      if (r.type == RecordType.income) {
         // originalAmount * exchangeRate
         totalPoolIncomeBase +=
             roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
       // 2. 支出：檢查是否有用到公款
-      else if (r.type == 'expense') {
+      else if (r.type == RecordType.expense) {
         double deductionInOriginal = 0.0;
 
-        if (r.payerType == 'prepay') {
+        if (r.payerType == PayerType.prepay) {
           // 全額公款：扣除整筆金額
           deductionInOriginal = r.originalAmount;
-        } else if (r.payerType == 'mixed' && r.paymentDetails != null) {
+        } else if (r.payerType == PayerType.mixed && r.paymentDetails != null) {
           // 混合支付：只扣除定義在 details 裡的 prepayAmount
           deductionInOriginal =
               (r.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
@@ -264,7 +267,7 @@ class BalanceCalculator {
   static double calculateExpenseTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      if (r.type == 'expense') {
+      if (r.type == RecordType.expense) {
         final currency = CurrencyConstants.getCurrencyConstants(r.currencyCode);
         total += roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
@@ -275,7 +278,7 @@ class BalanceCalculator {
   static double calculateIncomeTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      if (r.type == 'income') {
+      if (r.type == RecordType.income) {
         final currency = CurrencyConstants.getCurrencyConstants(r.currencyCode);
         total += roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
@@ -294,18 +297,18 @@ class BalanceCalculator {
       final currency = r.originalCurrencyCode;
       final amount = r.originalAmount;
 
-      if (r.type == 'income') {
+      if (r.type == RecordType.income) {
         // 收入：增加庫存
         balances.update(currency, (val) => val + amount,
             ifAbsent: () => amount);
-      } else if (r.type == 'expense') {
+      } else if (r.type == RecordType.expense) {
         // 支出：判斷支付方式
         double prepayDeduction = 0.0;
 
-        if (r.payerType == 'prepay') {
+        if (r.payerType == PayerType.prepay) {
           // 全額公款
           prepayDeduction = amount;
-        } else if (r.payerType == 'mixed' && r.paymentDetails != null) {
+        } else if (r.payerType == PayerType.mixed && r.paymentDetails != null) {
           // [修正] 混合支付：需讀取其中的 prepayAmount
           prepayDeduction =
               (r.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
@@ -426,7 +429,7 @@ class BalanceCalculator {
         CurrencyConstants.getCurrencyConstants(record.currencyCode);
 
     // 1. Income (通常只有分攤餘數)
-    if (record.type == 'income') {
+    if (record.type == RecordType.income) {
       final splitRes = calculateSplit(
           totalAmount: record.originalAmount,
           exchangeRate: record.exchangeRate,
@@ -439,7 +442,7 @@ class BalanceCalculator {
     }
 
     // 2. Expense
-    if (record.type == 'expense') {
+    if (record.type == RecordType.expense) {
       final double baseTotal = roundToPrecision(
           record.originalAmount * record.exchangeRate, currency);
 
@@ -455,9 +458,11 @@ class BalanceCalculator {
 
       // B. 支付端 (Mixed/Multiple)
       double allocatedPayerSum = 0.0;
-      if (record.payerType == 'member' || record.payerType == 'prepay') {
+      if (record.payerType == PayerType.member ||
+          record.payerType == PayerType.prepay) {
         allocatedPayerSum = baseTotal;
-      } else if (record.payerType == 'mixed' && record.paymentDetails != null) {
+      } else if (record.payerType == PayerType.mixed &&
+          record.paymentDetails != null) {
         final prepay =
             (record.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
         final advances = record.paymentDetails!['memberAdvance'] as Map? ?? {};
@@ -501,11 +506,11 @@ class BalanceCalculator {
     if (originalRecord != null &&
         originalRecord.originalCurrencyCode == currency) {
       // 情況 A: 原本是全額公款
-      if (originalRecord.payerType == 'prepay') {
+      if (originalRecord.payerType == PayerType.prepay) {
         available += originalRecord.originalAmount;
       }
       // 情況 B: 原本是混合支付，且有使用公款
-      else if (originalRecord.payerType == 'mixed' &&
+      else if (originalRecord.payerType == PayerType.mixed &&
           originalRecord.paymentDetails != null) {
         final oldPrepay =
             (originalRecord.paymentDetails!['prepayAmount'] as num?)

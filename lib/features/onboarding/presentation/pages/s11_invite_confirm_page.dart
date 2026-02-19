@@ -167,13 +167,10 @@ class _S11Content extends StatelessWidget {
                       title: t.S11_Invite_Confirm.label_select_ghost,
                       children: [
                         ...vm.ghosts.map((ghost) {
-                          final id = ghost['id'] as String;
-                          final name = ghost['displayName'] as String;
-                          final prepaid =
-                              (ghost['prepaid'] as num?)?.toDouble() ?? 0.0;
-                          final expense =
-                              (ghost['expense'] as num?)?.toDouble() ?? 0.0;
-
+                          final id = ghost.id;
+                          final name = ghost.displayName;
+                          final prepaid = ghost.prepaid;
+                          final expense = ghost.expense;
                           final isSelected = vm.selectedGhostId == id;
 
                           return SelectionTile(

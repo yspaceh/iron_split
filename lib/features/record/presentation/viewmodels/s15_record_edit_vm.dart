@@ -46,12 +46,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
   AppErrorCodes? _initErrorCode;
 
   // Payment State
-  String _payerType = 'prepay';
-  String _payerId = '';
+  PayerType _payerType = PayerType.prepay;
+  List<String> _payersId = [];
   Map<String, dynamic>? _complexPaymentData;
 
   // Members State
-  List<Map<String, dynamic>> _taskMembers = [];
+  List<TaskMember> _taskMembers = [];
 
   // Split State
   final List<RecordDetail> _details = [];
@@ -81,11 +81,11 @@ class S15RecordEditViewModel extends ChangeNotifier {
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
 
-  String get payerType => _payerType;
-  String get payerId => _payerId;
+  PayerType get payerType => _payerType;
+  List<String> get payersId => _payersId;
   Map<String, dynamic>? get complexPaymentData => _complexPaymentData;
 
-  List<Map<String, dynamic>> get taskMembers => _taskMembers;
+  List<TaskMember> get taskMembers => _taskMembers;
   List<RecordDetail> get details => _details;
   String get baseSplitMethod => _baseSplitMethod;
   List<String> get baseMemberIds => _baseMemberIds;
@@ -111,20 +111,20 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if (_complexPaymentData?['memberAdvance'] != null) {
       return Map<String, double>.from(_complexPaymentData!['memberAdvance']);
     }
-    return (_payerType == 'member' ? {_payerId: totalAmount} : {});
+    if (_payerType == PayerType.member && _payersId.isNotEmpty) {
+      return {_payersId.first: totalAmount};
+    }
+    return {};
   }
 
   /// 取得所有成員的預設分帳比例 (供 B03/B02 使用)
   Map<String, double> get memberDefaultWeights {
-    return {
-      for (var m in _taskMembers)
-        (m['id'] as String): (m['defaultSplitRatio'] as num? ?? 1.0).toDouble()
-    };
+    return {for (var m in _taskMembers) m.id: m.defaultSplitRatio};
   }
 
   bool get hasPaymentError {
     // 1. 基本 UI 條件檢查
-    if (_payerType != 'prepay') return false;
+    if (_payerType != PayerType.prepay) return false;
     if (totalAmount <= 0) return false;
 
     // 2. 呼叫 Service 執行業務檢查
@@ -147,13 +147,13 @@ class S15RecordEditViewModel extends ChangeNotifier {
       id: recordId, // 新增時為 null
       date: _selectedDate,
       title: isIncome ? '' : titleController.text, // 標題由外部決定或這裡暫空
-      type: isIncome ? 'income' : 'expense',
+      type: isIncome ? RecordType.income : RecordType.expense,
       categoryIndex: 0, // 簡化，以 ID 為準
       categoryId: _selectedCategoryId,
 
       // 付款資訊
-      payerType: isIncome ? 'none' : _payerType,
-      payerId: (!isIncome && _payerType == 'member') ? _payerId : null,
+      payerType: isIncome ? PayerType.prepay : _payerType,
+      payersId: (!isIncome && _payerType == PayerType.member) ? _payersId : [],
       paymentDetails: isIncome ? null : _complexPaymentData,
 
       // 金額
@@ -206,7 +206,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // 1. 同步設定區 (Safe Zone) - 絕對不加 listener
     if (_originalRecord != null) {
       final r = _originalRecord!;
-      _recordTypeIndex = r.type == 'income' ? 1 : 0;
+      _recordTypeIndex = r.type == RecordType.income ? 1 : 0;
 
       // 直接賦值，不觸發 listener
       amountController.text =
@@ -219,13 +219,13 @@ class S15RecordEditViewModel extends ChangeNotifier {
           CurrencyConstants.getCurrencyConstants(r.originalCurrencyCode);
       exchangeRateController.text = r.exchangeRate.toString();
 
-      if (r.type == 'expense') {
+      if (r.type == RecordType.expense) {
         titleController.text = r.title;
         _selectedCategoryId = r.categoryId;
       }
       memoController.text = r.memo ?? '';
       _payerType = r.payerType;
-      _payerId = r.payerId ?? '';
+      _payersId = r.payersId;
       _complexPaymentData = r.paymentDetails;
       _baseSplitMethod = r.splitMethod;
       _baseMemberIds = List.from(r.splitMemberIds);
@@ -276,26 +276,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
       // 2. 判斷 task 是否存在 (取代 docSnapshot.exists)
       if (task == null) throw AppErrorCodes.dataNotFound;
-
-      final sortedEntries = task.sortedMembers;
-      // 3. 資料轉換: TaskModel -> List<Map>
-      _taskMembers = sortedEntries.map((entry) {
-        final memberData = Map<String, dynamic>.from(entry.value);
-        memberData['id'] = entry.key; // 補上 ID
-
-        // 確保 displayName 有值
-        if (memberData['displayName'] == null ||
-            memberData['displayName'].isEmpty) {
-          // 這裡無法直接取得 translations，通常用預設字串或在 UI 層處理
-          // 但為了相容舊邏輯，我們可以暫時給一個 key 或空值
-          memberData['displayName'] = 'Unknown Member';
-        }
-        return memberData;
-      }).toList();
+      _taskMembers = task.sortedMembersList;
 
       // 5. 初始化分帳成員 (保留原樣)
       if (_originalRecord == null) {
-        _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
+        // [修正] 改用 m.id 直接讀取屬性
+        _baseMemberIds = _taskMembers.map((m) => m.id).toList();
       }
       _initStatus = LoadStatus.success;
       notifyListeners();
@@ -319,7 +305,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         _details.clear();
         _baseSplitMethod = SplitMethodConstant.defaultMethod;
         if (_taskMembers.isNotEmpty) {
-          _baseMemberIds = _taskMembers.map((m) => m['id'] as String).toList();
+          _baseMemberIds = _taskMembers.map((m) => m.id).toList();
         }
         _baseRawDetails.clear();
       }
@@ -413,17 +399,16 @@ class S15RecordEditViewModel extends ChangeNotifier {
     final Map<String, double> advances = result['memberAdvance'];
 
     if (usePrepay && !useAdvance) {
-      _payerType = 'prepay';
+      _payerType = PayerType.prepay;
+      _payersId = [];
     } else if (!usePrepay && useAdvance) {
-      _payerType = 'member';
-      final payers = advances.entries.where((e) => e.value > 0).toList();
-      if (payers.length == 1) {
-        _payerId = payers.first.key;
-      } else {
-        _payerId = 'multiple';
-      }
+      _payerType = PayerType.member;
+      _payersId =
+          advances.entries.where((e) => e.value > 0).map((e) => e.key).toList();
     } else {
-      _payerType = 'mixed';
+      _payerType = PayerType.mixed;
+      _payersId =
+          advances.entries.where((e) => e.value > 0).map((e) => e.key).toList();
     }
     notifyListeners();
   }
@@ -503,30 +488,51 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
     if (isIncome) {
       paymentLogData = {'type': 'income', 'contributors': []};
-    } else if (_payerType == 'prepay') {
-      paymentLogData = {'type': 'pool', 'contributors': []};
-    } else if (_payerType == 'member') {
-      final name = _getMemberName(_payerId, t);
-      paymentLogData = {
-        'type': 'single',
-        'contributors': [
-          {'displayName': name, 'amount': totalAmount}
-        ]
-      };
-    } else if (_payerType == 'multiple') {
-      // 嘗試從 complexPaymentData 解析多位付款人
-      List<Map<String, dynamic>> contributors = [];
-      if (_complexPaymentData != null &&
-          _complexPaymentData!['memberAdvance'] is Map) {
-        final advances =
-            _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
-        contributors = advances.entries
-            .where((e) => (e.value as num) > 0)
-            .map((e) =>
-                {'displayName': _getMemberName(e.key, t), 'amount': e.value})
-            .toList();
+    } else {
+      switch (_payerType) {
+        case PayerType.prepay:
+          paymentLogData = {'type': _payerType.code, 'contributors': []};
+          break;
+        case PayerType.member:
+          List<Map<String, dynamic>> contributors = [];
+          if (_complexPaymentData != null &&
+              _complexPaymentData!['memberAdvance'] is Map) {
+            final advances =
+                _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
+            contributors = advances.entries
+                .where((e) => (e.value as num) > 0)
+                .map((e) => {
+                      'displayName': _getMemberName(_payersId, t),
+                      'amount': e.value
+                    })
+                .toList();
+          }
+          paymentLogData = {
+            'type': _payerType.code,
+            'contributors': contributors
+          };
+          break;
+        case PayerType.mixed:
+          List<Map<String, dynamic>> contributors = [];
+          if (_complexPaymentData != null &&
+              _complexPaymentData!['memberAdvance'] is Map) {
+            final advances =
+                _complexPaymentData!['memberAdvance'] as Map<String, dynamic>;
+            contributors = advances.entries
+                .where((e) => (e.value as num) > 0)
+                .map((e) => {
+                      'displayName': _getMemberName(_payersId, t),
+                      'amount': e.value
+                    })
+                .toList();
+          }
+          paymentLogData = {
+            'type': _payerType.code,
+            'contributors': contributors
+          };
+
+          break;
       }
-      paymentLogData = {'type': 'multiple', 'contributors': contributors};
     }
 
     // B. 建構 Allocation Log Info (簡化版)
@@ -609,7 +615,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
     // 2. 編輯模式 (Edit Mode)
     final r = _originalRecord!;
-    final currentType = _recordTypeIndex == 0 ? 'expense' : 'income';
+    final currentType =
+        _recordTypeIndex == 0 ? RecordType.expense : RecordType.income;
 
     // 檢查類型變更
     if (currentType != r.type) return true;
@@ -620,7 +627,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // 檢查標題變更 ( 修正重點)
     // 只有當「現在是支出」且「資料庫原本也是支出」時，才比對標題
     // 因為 Income 的 Controller 通常是空的，比對會出錯
-    if (_recordTypeIndex == 0 && r.type == 'expense') {
+    if (_recordTypeIndex == 0 && r.type == RecordType.expense) {
       if (titleController.text != r.title) return true;
     }
 
@@ -635,7 +642,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // (建議) 檢查付款人/成員是否變更 (防止改了付款人卻沒警告)
     // 簡單檢查 payerType 或 payerId
     if (_payerType != r.payerType) return true;
-    if (_payerType == 'member' && _payerId != r.payerId) return true;
+    if (_payerType == PayerType.member && _payersId != r.payersId) return true;
 
     return false;
   }
@@ -643,9 +650,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  String _getMemberName(String id, Translations t) {
-    final m = _taskMembers.firstWhere((e) => e['id'] == id, orElse: () => {});
-    return m['displayName'] ?? t.S53_TaskSettings_Members.member_default_name;
+  String _getMemberName(List<String> payersId, Translations t) {
+    if (payersId.length > 1) {
+      return t.S15_Record_Edit.payer_multiple;
+    }
+    final m = _taskMembers.where((e) => e.id == payersId.first).firstOrNull;
+    return m?.displayName ?? 'Unknown Member';
   }
 
   /// 取得「校正後」的公款餘額
@@ -663,9 +673,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
     final code = r.originalCurrencyCode;
     double amountToAddBack = 0.0;
 
-    if (r.payerType == 'prepay') {
+    if (r.payerType == PayerType.prepay) {
       amountToAddBack = r.originalAmount;
-    } else if (r.payerType == 'mixed' && r.paymentDetails != null) {
+    } else if (r.payerType == PayerType.mixed && r.paymentDetails != null) {
       amountToAddBack =
           (r.paymentDetails!['prepayAmount'] as num?)?.toDouble() ?? 0.0;
     }

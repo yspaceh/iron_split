@@ -63,11 +63,9 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
   BalanceSummaryState get balanceState => _balanceState;
   List<SettlementMember> get settlementMembers => _settlementMembers;
 
-  List<Map<String, dynamic>> get availableCandidatesForMerge {
+  List<TaskMember> get availableCandidatesForMerge {
     if (_task == null) return [];
-    return _task!.sortedMembers
-        .map((e) => e.value as Map<String, dynamic>)
-        .toList();
+    return _task!.sortedMembersList;
   }
 
   Map<String, List<String>> get currentMergeMap => _mergeMap;
@@ -94,10 +92,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
         // 創建一個暫時的 Head 個人物件 (僅用於列表顯示與 B04 候選)
         // 這裡我們手動複製 m 的屬性，但金額改為個人金額
         flattened.add(SettlementMember(
-          id: m.id,
-          displayName: m.displayName,
-          avatar: m.avatar,
-          isLinked: m.isLinked,
+          memberData: m.memberData,
           finalAmount: headIndividualAmount, // <--- 關鍵修改
           baseAmount: m.baseAmount, // 這裡視需求可能也要扣除，但顯示上主要看 finalAmount
           remainderAmount: 0, // 簡化處理
@@ -239,7 +234,7 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     // 2. 找出哪些人已經被「別人」合併了
     final Set<String> mergedToOthers = {};
     _mergeMap.forEach((headId, childrenIds) {
-      if (headId != head.id) {
+      if (headId != head.memberData.id) {
         mergedToOthers.addAll(childrenIds);
       }
     });
@@ -247,9 +242,9 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
     // 3. 過濾
     return all.where((m) {
       // 排除自己 (Head)
-      if (m.id == head.id) return false;
+      if (m.memberData.id == head.memberData.id) return false;
       // 排除已被別人合併的 (但保留被自己合併的)
-      if (mergedToOthers.contains(m.id)) return false;
+      if (mergedToOthers.contains(m.memberData.id)) return false;
 
       return true;
     }).toList();

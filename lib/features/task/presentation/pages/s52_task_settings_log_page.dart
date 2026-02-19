@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -24,7 +25,7 @@ class S52TaskSettingsLogPage extends StatelessWidget {
   });
 
   final String taskId;
-  final Map<String, dynamic> membersData;
+  final Map<String, TaskMember> membersData;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +109,7 @@ class _S52Content extends StatelessWidget {
 
                       return ActivityLogItem(
                         log: log,
-                        memberData: vm.membersData, // Use data from VM
+                        members: vm.membersData, // Use data from VM
                       );
                     },
                   );

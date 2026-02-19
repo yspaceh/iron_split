@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
@@ -18,7 +19,7 @@ import 'package:provider/provider.dart';
 class B07PaymentMethodEditBottomSheet extends StatelessWidget {
   final double totalAmount; // 該筆費用的總金額
   final Map<String, double> poolBalancesByCurrency;
-  final List<Map<String, dynamic>> members; // 成員清單
+  final List<TaskMember> members; // 成員清單
   final CurrencyConstants selectedCurrency;
   final CurrencyConstants baseCurrency;
 
@@ -42,7 +43,7 @@ class B07PaymentMethodEditBottomSheet extends StatelessWidget {
   static Future<Map<String, dynamic>?> show(BuildContext context,
       {required double totalAmount, // 該筆費用的總金額
       required Map<String, double> poolBalancesByCurrency,
-      required List<Map<String, dynamic>> members, // 成員清單
+      required List<TaskMember> members, // 成員清單
       required CurrencyConstants selectedCurrency,
       required CurrencyConstants baseCurrency,
       bool initialUsePrepay = true,
@@ -102,7 +103,7 @@ class _B07ContentState extends State<_B07Content> {
     _prepayFocusNode = FocusNode();
     final vm = context.read<B07PaymentMethodEditViewModel>();
     for (var m in vm.members) {
-      _memberFocusNodes[m['id']] = FocusNode();
+      _memberFocusNodes[m.id] = FocusNode();
     }
   }
 
@@ -255,24 +256,21 @@ class _B07ContentState extends State<_B07Content> {
                     onToggle: vm.onAdvanceToggle,
                     child: Column(
                       children: vm.members.map((m) {
-                        final id = m['id'];
+                        final id = m.id;
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
                             children: [
                               CommonAvatar(
-                                avatarId: m['avatar'],
-                                name: m['displayName'],
+                                avatarId: m.avatar,
+                                name: m.displayName,
                                 radius: 18,
                                 fontSize: 14,
-                                isLinked: m['isLinked'] ?? false,
+                                isLinked: m.isLinked,
                               ),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: Text(
-                                    m['displayName'] ??
-                                        t.S53_TaskSettings_Members
-                                            .member_default_name,
+                                child: Text(m.displayName,
                                     style: theme.textTheme.bodyLarge),
                               ),
                               const SizedBox(width: 8),

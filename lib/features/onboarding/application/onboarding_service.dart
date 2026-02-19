@@ -1,4 +1,5 @@
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/onboarding/data/pending_invite_local_store.dart';
@@ -57,14 +58,16 @@ class OnboardingService {
     final data = await _inviteRepo.previewInviteCode(code);
 
     // 解析 Ghosts
-    List<Map<String, dynamic>> ghosts = [];
+    List<TaskMember> ghosts = [];
     final ghostsData = data['ghosts'] as List?;
 
     bool autoAssign = true;
 
     if (ghostsData != null) {
-      ghosts =
-          ghostsData.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      ghosts = ghostsData.map((e) {
+        final map = Map<String, dynamic>.from(e as Map);
+        return TaskMember.fromMap(map['id'] ?? map['uid'] ?? '', map);
+      }).toList();
 
       // [核心邏輯] Check if all ghosts are financially identical
       if (ghosts.length > 1) {
@@ -73,12 +76,12 @@ class OnboardingService {
 
         for (var i = 1; i < ghosts.length; i++) {
           final current = ghosts[i];
-          final double prepaid1 = (first['prepaid'] as num?)?.toDouble() ?? 0.0;
-          final double prepaid2 =
-              (current['prepaid'] as num?)?.toDouble() ?? 0.0;
-          final double expense1 = (first['expense'] as num?)?.toDouble() ?? 0.0;
-          final double expense2 =
-              (current['expense'] as num?)?.toDouble() ?? 0.0;
+
+          // 直接讀取 TaskMember 的 prepaid 與 expense 屬性
+          final double prepaid1 = first.prepaid;
+          final double prepaid2 = current.prepaid;
+          final double expense1 = first.expense;
+          final double expense2 = current.expense;
 
           if ((prepaid1 - prepaid2).abs() > epsilon ||
               (expense1 - expense2).abs() > epsilon) {
@@ -120,7 +123,7 @@ class OnboardingService {
 /// 簡單的 DTO 用來回傳分析結果
 class InviteAnalysisResult {
   final Map<String, dynamic> taskData;
-  final List<Map<String, dynamic>> ghosts;
+  final List<TaskMember> ghosts;
   final bool isAutoAssign;
 
   InviteAnalysisResult({

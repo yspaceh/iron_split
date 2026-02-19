@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 
 class RecordDetail {
   String id;
@@ -54,11 +55,11 @@ class RecordModel {
   final String? id;
   final DateTime date;
   final String title;
-  final String type; // 'expense' or 'income'
+  final RecordType type; // 'expense' or 'income'
   final int categoryIndex;
   final String categoryId;
-  final String payerType; // 'member', 'prepay'
-  final String? payerId;
+  final PayerType payerType; // 'member', 'prepay'
+  final List<String> payersId;
   final Map<String, dynamic>? paymentDetails;
   final double amount; // 存入 DB 的金額
   final String currencyCode; // 存入 DB 的幣別代碼 (String)
@@ -76,11 +77,11 @@ class RecordModel {
     this.id,
     required this.date,
     required this.title,
-    this.type = 'expense',
+    this.type = RecordType.expense,
     this.categoryIndex = 0,
     this.categoryId = 'other',
-    this.payerType = 'prepay',
-    this.payerId,
+    this.payerType = PayerType.prepay,
+    this.payersId = const [],
     this.paymentDetails,
     required this.amount,
     required this.currencyCode,
@@ -117,11 +118,11 @@ class RecordModel {
     String? id,
     DateTime? date,
     String? title,
-    String? type,
+    RecordType? type,
     int? categoryIndex,
     String? categoryId,
-    String? payerType,
-    String? payerId,
+    PayerType? payerType,
+    List<String>? payersId,
     Map<String, dynamic>? paymentDetails,
     double? amount,
     String? currencyCode,
@@ -143,7 +144,7 @@ class RecordModel {
       categoryIndex: categoryIndex ?? this.categoryIndex,
       categoryId: categoryId ?? this.categoryId,
       payerType: payerType ?? this.payerType,
-      payerId: payerId ?? this.payerId,
+      payersId: payersId ?? this.payersId,
       paymentDetails: paymentDetails ?? this.paymentDetails,
       amount: amount ?? this.amount,
       currencyCode: currencyCode ?? this.currencyCode,
@@ -163,11 +164,11 @@ class RecordModel {
     return {
       'date': Timestamp.fromDate(date),
       'title': title,
-      'type': type,
+      'type': type.code,
       'categoryIndex': categoryIndex,
       'categoryId': categoryId,
-      'payerType': payerType,
-      'payerId': payerId,
+      'payerType': payerType.code,
+      'payersId': payersId,
       'paymentDetails': paymentDetails,
       // 存入資料庫時使用原始欄位名稱
       'amount': amount,
@@ -192,12 +193,14 @@ class RecordModel {
       id: doc.id,
       date: (data['date'] as Timestamp).toDate(),
       title: data['title'] ?? '',
-      type: data['type'] ?? 'expense',
+      type: RecordType.fromCode(data['type'] as String?),
       categoryIndex: data['categoryIndex'] ?? 0,
       categoryId:
           data['categoryId'] ?? _mapCategoryIndexToId(data['categoryIndex']),
-      payerType: data['payerType'] ?? 'prepay',
-      payerId: data['payerId'],
+      payerType: PayerType.fromCode(data['payerType'] as String?),
+      payersId: data['payersId'] != null
+          ? List<String>.from(data['payersId'])
+          : (data['payerId'] != null ? [data['payerId'] as String] : []),
       paymentDetails: data['paymentDetails'],
 
       // 從 DB 讀取原始欄位

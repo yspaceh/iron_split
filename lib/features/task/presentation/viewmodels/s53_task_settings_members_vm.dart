@@ -112,21 +112,16 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> renameMember(Map<String, dynamic> currentMembersMap,
+  Future<void> renameMember(Map<String, TaskMember> currentMembersMap,
       String memberId, String newName) async {
     final trimmedName = newName.trim();
     if (trimmedName.isEmpty) return;
 
-    final oldData = currentMembersMap[memberId] as Map<String, dynamic>?;
+    final oldData = currentMembersMap[memberId];
     if (oldData == null) return;
-    if (oldData['displayName'] == trimmedName) return;
+    if (oldData.displayName == trimmedName) return;
 
     try {
-      final updatedMap = Map<String, dynamic>.from(currentMembersMap);
-      final updatedMemberData = Map<String, dynamic>.from(oldData);
-      updatedMemberData['displayName'] = trimmedName;
-      updatedMap[memberId] = updatedMemberData;
-
       await _taskRepo
           .updateMemberFields(taskId, memberId, {'displayName': trimmedName});
     } on AppErrorCodes {
@@ -136,7 +131,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateRatio(Map<String, dynamic> currentMembersMap,
+  Future<void> updateRatio(Map<String, TaskMember> currentMembersMap,
       String memberId, double newRatio) async {
     if (_updateStatus == LoadStatus.loading) return;
     _updateStatus = LoadStatus.loading;
@@ -161,8 +156,8 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
   /// 嘗試刪除成員
   /// Returns: true if deleted, false if blocked (has data)
   Future<void> deleteMember(
-      Map<String, dynamic> currentMembersMap, String memberId) async {
-    final memberToDelete = currentMembersMap[memberId] as Map<String, dynamic>?;
+      Map<String, TaskMember> currentMembersMap, String memberId) async {
+    final memberToDelete = currentMembersMap[memberId];
     if (memberToDelete == null) throw AppErrorCodes.dataNotFound;
     if (_deleteMemberStatus == LoadStatus.loading) return;
     _deleteMemberStatus = LoadStatus.loading;
@@ -175,7 +170,8 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       if (hasData) throw AppErrorCodes.dataIsUsed;
 
       // 2. 執行刪除
-      final updatedMap = Map<String, dynamic>.from(currentMembersMap);
+      final updatedMap =
+          currentMembersMap.map((key, value) => MapEntry(key, value.toMap()));
       updatedMap.remove(memberId);
 
       await _taskRepo.replaceMembersMap(taskId, updatedMap);
@@ -183,7 +179,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       await ActivityLogService.log(
         taskId: taskId,
         action: LogAction.removeMember,
-        details: {'memberName': memberToDelete['displayName']},
+        details: {'memberName': memberToDelete.displayName},
       );
       _deleteMemberStatus = LoadStatus.success;
       notifyListeners();

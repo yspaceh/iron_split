@@ -1,4 +1,5 @@
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -157,7 +158,7 @@ class RecordService {
     final Set<String> uids = {};
 
     // 付款人
-    if (record.payerId != null) uids.add(record.payerId!);
+    if (record.payersId.isNotEmpty) uids.addAll(record.payersId);
 
     // 主分擔人
     if (record.splitMemberIds.isNotEmpty) uids.addAll(record.splitMemberIds);
@@ -188,7 +189,7 @@ class RecordService {
   Future<void> validateAndDelete(String taskId, RecordModel record,
       Map<String, double> poolBalances) async {
     // 1. 邏輯檢查：如果是收入，檢查是否可以刪除
-    if (record.type == 'income') {
+    if (record.type == RecordType.income) {
       // 檢查此收入是否已被其他支出引用（原則 2：Service 調用 Repo）
       await _recordRepo.checkRecordReferenced(taskId, record.id ?? '');
 

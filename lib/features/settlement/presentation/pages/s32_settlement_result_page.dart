@@ -153,7 +153,9 @@ class _S32ContentState extends State<_S32Content> {
           '${currency.code} ${currency.symbol}${CurrencyConstants.formatAmount(amount, currency.code)}';
 
       winnerTotalText = t.S32_settlement_result.remainder_winner_total(
-          winnerName: winner.displayName, total: total, prefix: prefix);
+          winnerName: winner.memberData.displayName,
+          total: total,
+          prefix: prefix);
     }
 
     final title = t.S32_settlement_result.title;
@@ -209,14 +211,15 @@ class _S32ContentState extends State<_S32Content> {
                                       const SizedBox(width: 8),
                                       if (winner != null)
                                         CommonAvatar(
-                                          avatarId: winner.avatar,
-                                          name: winner.displayName,
-                                          isLinked: winner.isLinked,
+                                          avatarId: winner.memberData.avatar,
+                                          name: winner.memberData.displayName,
+                                          isLinked: winner.memberData.isLinked,
                                           radius: 12,
                                         ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        winner?.displayName ?? '',
+                                        winner?.memberData.displayName ??
+                                            'UnKnown Member',
                                         style: theme.textTheme.titleMedium
                                             ?.copyWith(
                                           fontWeight: FontWeight.bold,

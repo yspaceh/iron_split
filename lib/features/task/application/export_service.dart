@@ -2,8 +2,10 @@
 
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 
@@ -20,7 +22,7 @@ class ExportService {
     required double remainderBuffer,
     required String? absorbedBy,
     required Map<String, String> labels, // 由 Page 傳入翻譯好的標籤
-    required Map<String, dynamic> taskMembers, // 用於查詢成員名稱
+    required Map<String, TaskMember> taskMembers, // 用於查詢成員名稱
   }) {
     final buffer = StringBuffer();
     final baseSymbol = baseCurrency.code;
@@ -50,7 +52,8 @@ class ExportService {
           clearedMembers.contains(m) ? labels['cleared'] : labels['pending'];
       final amount =
           BalanceCalculator.roundToPrecision(m.finalAmount, baseCurrency);
-      buffer.writeln('${_escape(m.displayName)},$role,$amount,$status');
+      buffer.writeln(
+          '${_escape(m.memberData.displayName)},$role,$amount,$status');
     }
     buffer.writeln('');
 
@@ -81,7 +84,7 @@ class ExportService {
         '${labels['baseAmt']} ($baseSymbol),${labels['netRemainder']}');
 
     for (var m in allMembers) {
-      buffer.write(',${_escape(m.displayName)} (Net)');
+      buffer.write(',${_escape(m.memberData.displayName)} (Net)');
     }
     buffer.writeln();
 
@@ -92,12 +95,23 @@ class ExportService {
       final type = record.type;
 
       String payerName = '-';
-      if (record.payerType == 'prepay') {
+      if (record.payerType == PayerType.prepay) {
         payerName = labels['pool'] ?? 'Pool';
-      } else if (record.payerType == 'mixed') {
+      } else if (record.payerType == PayerType.mixed) {
         payerName = labels['mixed'] ?? 'Mixed';
-      } else if (record.payerType == 'member') {
-        payerName = taskMembers[record.payerId]?['displayName'] ?? 'Unknown';
+      } else if (record.payerType == PayerType.member) {
+        if (record.payersId.isEmpty) {
+          payerName = 'Unknown Member';
+        } else if (record.payersId.length == 1) {
+          // 單一付款人：直接取第一個 ID 去找名字
+          payerName = taskMembers[record.payersId.first]?.displayName ??
+              'Unknown Member';
+        } else {
+          // 複數付款人：找出所有人的名字並用 ' & ' 串接
+          payerName = record.payersId
+              .map((id) => taskMembers[id]?.displayName ?? 'Unknown Member')
+              .join(' & ');
+        }
       }
 
       final baseAmt = BalanceCalculator.roundToPrecision(
@@ -111,11 +125,11 @@ class ExportService {
 
       for (var m in allMembers) {
         final credit = BalanceCalculator.calculatePersonalCredit(
-                record, m.id, baseCurrency)
+                record, m.memberData.id, baseCurrency)
             .base;
-        final debit =
-            BalanceCalculator.calculatePersonalDebit(record, m.id, baseCurrency)
-                .base;
+        final debit = BalanceCalculator.calculatePersonalDebit(
+                record, m.memberData.id, baseCurrency)
+            .base;
         final net = credit - debit;
         buffer
             .write(',${BalanceCalculator.floorToPrecision(net, baseCurrency)}');

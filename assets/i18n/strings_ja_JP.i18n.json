@@ -467,15 +467,19 @@
       "action": "操作",
       "details": "詳細"
     },
-    "type_income": "収入",
-    "type_expense": "支出",
-    "label_payment": "支払",
-    "payment_income": "前受金",
-    "payment_pool": "共益費払",
-    "payment_single_suffix": "立替",
-    "payment_multiple": "複数立替",
-    "unit_members": "名",
-    "unit_items": "項目"
+    "type": {
+      "prepay": "収入",
+      "expense": "支出"
+    },
+    "payment_type": {
+      "prepay": "前受金",
+      "single_suffix": "立替",
+      "multiple": "複数立替"
+    },
+    "unit": {
+      "members": "名",
+      "items": "項目"
+    }
   },
   "S53_TaskSettings_Members": {
     "title": "メンバー管理",

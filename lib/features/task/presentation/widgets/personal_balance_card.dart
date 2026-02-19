@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -12,7 +13,7 @@ class PersonalBalanceCard extends StatelessWidget {
   final DualAmount totalExpense; // 個人總支出
   final DualAmount totalIncome; // 個人總預收
   final String uid;
-  final Map<String, dynamic>? memberData;
+  final TaskMember? memberData;
   final double? fixedHeight;
 
   const PersonalBalanceCard({
@@ -43,7 +44,7 @@ class PersonalBalanceCard extends StatelessWidget {
     // 邊框色
     final Color borderColor =
         theme.colorScheme.outlineVariant.withValues(alpha: 0.5);
-    final displayName = memberData?['displayName'] ??
+    final displayName = memberData?.displayName ??
         t.S53_TaskSettings_Members.member_default_name;
 
     return Container(
@@ -74,7 +75,7 @@ class PersonalBalanceCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CommonAvatar(
-                        avatarId: memberData?['avatar'],
+                        avatarId: memberData?.avatar,
                         name: displayName,
                         radius: 48,
                       ),
