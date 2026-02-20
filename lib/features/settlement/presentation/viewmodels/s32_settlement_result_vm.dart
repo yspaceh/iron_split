@@ -150,7 +150,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
 
   void _autoMarkAsSeen(String uid) {
     if (_hasmarkedAsSeen || _task == null || _task!.settlement == null) return;
-
+    bool shouldNotify = false;
     final viewStatus =
         _task!.settlement!['viewStatus'] as Map<String, dynamic>? ?? {};
 
@@ -158,12 +158,19 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     if (viewStatus[uid] != true) {
       _hasmarkedAsSeen = true; // 先設為 true，防止串流多次觸發
       markAsSeen(uid);
+      shouldNotify = true;
     }
     if (!shouldShowRoulette) {
       _isRevealed = true;
+      shouldNotify = true;
     }
-    _initStatus = LoadStatus.success;
-    notifyListeners();
+    if (_initStatus != LoadStatus.success) {
+      _initStatus = LoadStatus.success;
+      shouldNotify = true;
+    }
+    if (shouldNotify) {
+      notifyListeners();
+    }
   }
 
   Future<void> markAsSeen(String uid) async {

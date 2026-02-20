@@ -37,7 +37,7 @@ class CurrencyConstants {
 
     return NumberFormat.currency(
       customPattern:
-          '#,##0${decimalDigits > 0 ? '.' + '0' * decimalDigits : ''}',
+          '#,##0${decimalDigits > 0 ? '.${'0' * decimalDigits}' : ''}',
       decimalDigits: decimalDigits,
     ).format(amount);
   }

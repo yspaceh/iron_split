@@ -36,6 +36,9 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
   LoadStatus _inviteMemberStatus = LoadStatus.initial;
+  LoadStatus _updateNameStatus = LoadStatus.initial;
+  LoadStatus _updateDateRangeStatus = LoadStatus.initial;
+  LoadStatus _updateRemainderStatus = LoadStatus.initial;
   String inviteCode = '';
   // Logic Helper
   String? _initialName;
@@ -55,6 +58,9 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   Map<String, TaskMember> get membersData => _membersData;
   double get currentRemainder => _currentRemainder;
   LoadStatus get inviteMemberStatus => _inviteMemberStatus;
+  LoadStatus get updateNameStatus => _updateNameStatus;
+  LoadStatus get updateDateRangeStatus => _updateDateRangeStatus;
+  LoadStatus get updateRemainderStatus => _updateRemainderStatus;
 
   String get link => _deepLinkService.generateJoinLink(inviteCode);
 
@@ -132,6 +138,10 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   // --- Actions ---
 
   Future<void> updateName() async {
+    if (_updateNameStatus == LoadStatus.loading) return;
+    _updateNameStatus = LoadStatus.loading;
+    notifyListeners();
+
     final newName = nameController.text.trim();
     if (newName.isEmpty || newName == _initialName) return;
     try {
@@ -147,14 +157,24 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
           'newValue': newName,
         },
       );
+      _updateNameStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
+      _updateNameStatus = LoadStatus.error;
+      notifyListeners();
       rethrow;
     } catch (e) {
+      _updateNameStatus = LoadStatus.error;
+      notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }
   }
 
   Future<void> updateDateRange(DateTime start, DateTime end) async {
+    if (_updateDateRangeStatus == LoadStatus.loading) return;
+    _updateDateRangeStatus = LoadStatus.loading;
+    notifyListeners();
+
     try {
       //  核心防呆邏輯
       // 如果「開始日」跑到了「結束日」後面，就強制把「結束日」拉過來跟「開始日」同一天
@@ -164,7 +184,6 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
       _startDate = start;
       _endDate = end;
-      notifyListeners();
 
       await _taskRepo.updateTask(taskId, {
         'startDate': start,
@@ -183,9 +202,15 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
           'newValue': dateStr,
         },
       );
+      _updateDateRangeStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
+      _updateDateRangeStatus = LoadStatus.error;
+      notifyListeners();
       rethrow;
     } catch (e) {
+      _updateDateRangeStatus = LoadStatus.error;
+      notifyListeners();
       throw ErrorMapper.parseErrorCode(e); // 其他系統錯誤轉化後拋出
     }
   }
@@ -193,11 +218,14 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   /// 更新餘額處理規則
   Future<void> updateRemainderRule(
       String newRule, String? newAbsorberId) async {
+    if (_updateRemainderStatus == LoadStatus.loading) return;
+    _updateRemainderStatus = LoadStatus.loading;
+    notifyListeners();
+
     try {
       // 1. 樂觀更新
       _remainderRule = newRule;
       _remainderAbsorberId = newAbsorberId;
-      notifyListeners();
 
       // 2. 準備資料
       final Map<String, dynamic> updateData = {
@@ -225,9 +253,15 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
         action: LogAction.updateSettings,
         details: logDetails,
       );
+      _updateRemainderStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
+      _updateRemainderStatus = LoadStatus.error;
+      notifyListeners();
       rethrow;
     } catch (e) {
+      _updateRemainderStatus = LoadStatus.error;
+      notifyListeners();
       throw ErrorMapper.parseErrorCode(e); // 其他系統錯誤轉化後拋出
     }
   }

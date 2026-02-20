@@ -246,10 +246,10 @@ class _S15ContentState extends State<_S15Content> {
       selectedCurrency: vm.selectedCurrencyConstants,
       baseCurrency: vm.baseCurrency,
       members: vm.taskMembers,
-      initialUsePrepay:
-          vm.complexPaymentData?['usePrepay'] ?? (vm.payerType == 'prepay'),
+      initialUsePrepay: vm.complexPaymentData?['usePrepay'] ??
+          (vm.payerType == PayerType.prepay),
       initialPrepayAmount: vm.complexPaymentData?['prepayAmount'] ??
-          (vm.payerType == 'prepay' ? vm.totalAmount : 0.0),
+          (vm.payerType == PayerType.prepay ? vm.totalAmount : 0.0),
       initialMemberAdvance: vm.getInitialMemberAdvance(),
     );
 

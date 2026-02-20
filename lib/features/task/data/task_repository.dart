@@ -125,7 +125,10 @@ class TaskRepository extends BaseRepository {
     return await safeRun(() async {
       final docRef = _firestore.collection('tasks').doc();
       // 確保時間戳記是 Server Time
-      final members = taskData['members'] as Map<String, dynamic>;
+      final members = (taskData['members'] as Map<String, dynamic>?) ?? {};
+      if (members.isEmpty) {
+        throw AppErrorCodes.saveFailed; // 例如：任務建立失敗，因為沒有成員數據
+      }
       final memberIds = members.keys.toList();
 
       await docRef.set({

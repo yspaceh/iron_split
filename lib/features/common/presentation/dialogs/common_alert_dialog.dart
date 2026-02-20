@@ -13,9 +13,6 @@ class CommonAlertDialog extends StatelessWidget {
   });
 
   /// Helper static method
-  /// 1. 加入泛型 <T>，讓呼叫者決定回傳型別 (例如 bool, String, int)。
-  /// 2. 回傳 Future<T?>，這樣 showDialog 的結果才能傳出去。
-  /// 3. 如果呼叫時不指定 <T>，它預設就是 dynamic，不接值也沒問題（相容舊代碼）。
   static Future<T?> show<T>(
     BuildContext context, {
     required String title,

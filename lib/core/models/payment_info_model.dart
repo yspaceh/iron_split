@@ -51,11 +51,13 @@ class PaymentInfoModel {
       acceptCash: map['acceptCash'] ?? false,
       bankName: map['bankName'],
       bankAccount: map['bankAccount'],
-      paymentApps: List<PaymentAppInfo>.from(
-        (map['paymentApps'] as List? ?? []).map<PaymentAppInfo>(
-          (x) => PaymentAppInfo.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      paymentApps: map['paymentApps'] is List
+          ? (map['paymentApps'] as List)
+              .map((x) =>
+                  x is Map<String, dynamic> ? PaymentAppInfo.fromMap(x) : null)
+              .whereType<PaymentAppInfo>()
+              .toList()
+          : [],
     );
   }
 

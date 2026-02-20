@@ -20,7 +20,7 @@ class TaskService {
         return task.status == 'ongoing' || task.status == 'pending';
       } else {
         // 已完成
-        return task.status == 'settled' || task.status == 'close';
+        return task.status == 'settled' || task.status == 'closed';
       }
     }).toList();
 

@@ -129,17 +129,31 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
       if (user == null) throw AppErrorCodes.unauthorized;
       currentUserId = user.uid;
 
-      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-        if (taskData != null) {
-          _task = taskData;
-          _recalculate();
-        }
-      });
+      _taskSubscription = _taskRepo.streamTask(taskId).listen(
+        (taskData) {
+          if (taskData != null) {
+            _task = taskData;
+            _recalculate();
+          }
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
 
-      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
-        _records = records;
-        _recalculate();
-      });
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen(
+        (records) {
+          _records = records;
+          _recalculate();
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;

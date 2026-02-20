@@ -171,7 +171,8 @@ class RecordRepository extends BaseRepository {
 
         // 1. 檢查付款人
         if (data['payersId'] is List) {
-          final payers = List<String>.from(data['payersId']);
+          final payers =
+              (data['payersId'] as List).whereType<String>().toList();
           if (payers.contains(memberId)) return true;
         } else if (data['payerId'] == memberId) {
           return true; // 為了相容資料庫裡還沒被更新的舊單據
@@ -179,16 +180,22 @@ class RecordRepository extends BaseRepository {
 
         // 2. 檢查分帳對象
         if (data['splitMemberIds'] is List) {
-          final splits = List<String>.from(data['splitMemberIds']);
+          final splits =
+              (data['splitMemberIds'] as List).whereType<String>().toList();
           if (splits.contains(memberId)) return true;
         }
 
         // 3. 檢查細項付款人
-        if (data['paymentDetails'] != null &&
-            data['paymentDetails']['memberAdvance'] is Map) {
-          final advances = data['paymentDetails']['memberAdvance'] as Map;
-          if (advances.containsKey(memberId) && advances[memberId] > 0.0) {
-            return true;
+        final paymentDetails = data['paymentDetails'];
+        if (paymentDetails is Map) {
+          final advances = paymentDetails['memberAdvance'];
+          // 第二層保險：確保 memberAdvance 也是 Map
+          if (advances is Map && advances.containsKey(memberId)) {
+            // 第三層保險：確保金額大於 0
+            final amount = advances[memberId];
+            if (amount is num && amount > 0) {
+              return true;
+            }
           }
         }
       }

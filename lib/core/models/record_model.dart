@@ -43,9 +43,14 @@ class RecordDetail {
       amount: (map['amount'] ?? 0).toDouble(),
       memo: map['memo'],
       splitMethod: map['splitMethod'] ?? SplitMethodConstant.defaultMethod,
-      splitMemberIds: List<String>.from(map['splitMemberIds'] ?? []),
-      splitDetails: map['splitDetails'] != null
-          ? Map<String, double>.from(map['splitDetails'])
+      splitMemberIds: map['splitMemberIds'] is List
+          ? (map['splitMemberIds'] as List).whereType<String>().toList()
+          : [],
+      splitDetails: map['splitDetails'] is Map
+          ? (map['splitDetails'] as Map).map(
+              (key, value) =>
+                  MapEntry(key.toString(), (value as num).toDouble()),
+            )
           : null,
     );
   }
@@ -194,22 +199,21 @@ class RecordModel {
   }
 
   factory RecordModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    DateTime finalDate =
+    Map<String, dynamic> data =
+        doc.data() is Map ? doc.data() as Map<String, dynamic> : {};
+    DateTime baseDate =
         (data['date'] as Timestamp?)?.toDate() ?? DateTime.now();
+    final dateStr = data['dateString'] as String?;
     // 就用使用者的「本地手機」重新建構這一天，並強制定在中午 12 點！
-    if (data['dateString'] != null) {
-      final parts = (data['dateString'] as String).split('-');
-      if (parts.length == 3) {
-        finalDate = DateTime(int.parse(parts[0]), int.parse(parts[1]),
-            int.parse(parts[2]), 12 // 永遠鎖定在中午 12 點，完美避開午夜跨日問題
-            );
+    if (dateStr != null) {
+      // tryParse 遇到格式錯誤會安全回傳 null，不會閃退
+      final parsedDate = DateTime.tryParse(dateStr);
+      if (parsedDate != null) {
+        baseDate = parsedDate;
       }
-    } else {
-      // 🛡️ 舊資料防呆：如果這是一筆還沒有 dateString 的舊帳單，
-      // 我們也順手把它強制定在中午 12 點，加減拯救一下時區差！
-      finalDate = DateTime(finalDate.year, finalDate.month, finalDate.day, 12);
     }
+    final DateTime finalDate =
+        DateTime(baseDate.year, baseDate.month, baseDate.day, 12);
     return RecordModel(
       id: doc.id,
       date: finalDate,
@@ -220,9 +224,9 @@ class RecordModel {
       categoryId:
           data['categoryId'] ?? _mapCategoryIndexToId(data['categoryIndex']),
       payerType: PayerType.fromCode(data['payerType'] as String?),
-      payersId: data['payersId'] != null
-          ? List<String>.from(data['payersId'])
-          : (data['payersId'] != null ? [data['payersId'] as String] : []),
+      payersId: data['payersId'] is List
+          ? (data['payersId'] as List).whereType<String>().toList()
+          : (data['payersId'] is String ? [data['payersId'] as String] : []),
       paymentDetails: data['paymentDetails'],
 
       // 從 DB 讀取原始欄位
@@ -231,15 +235,23 @@ class RecordModel {
       exchangeRate: (data['exchangeRate'] ?? 1.0).toDouble(),
       remainder: (data['remainder'] ?? 0).toDouble(),
       splitMethod: data['splitMethod'] ?? SplitMethodConstant.defaultMethod,
-      splitMemberIds: List<String>.from(data['splitMemberIds'] ?? []),
-      splitDetails: data['splitDetails'] != null
-          ? Map<String, double>.from(data['splitDetails'])
+      splitMemberIds: data['splitMemberIds'] is List
+          ? (data['splitMemberIds'] as List).whereType<String>().toList()
+          : [],
+      splitDetails: data['splitDetails'] is Map
+          ? (data['splitDetails'] as Map).map(
+              (key, value) =>
+                  MapEntry(key.toString(), (value as num).toDouble()),
+            )
           : null,
       memo: data['memo'],
-      details: (data['details'] as List<dynamic>?)
-              ?.map((x) => RecordDetail.fromMap(x as Map<String, dynamic>))
-              .toList() ??
-          [],
+      details: data['details'] is List
+          ? (data['details'] as List)
+              .map((x) =>
+                  x is Map<String, dynamic> ? RecordDetail.fromMap(x) : null)
+              .whereType<RecordDetail>()
+              .toList()
+          : [],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       createdBy: data['createdBy'],
     );

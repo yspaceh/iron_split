@@ -95,21 +95,35 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
       formController.loadData(_loadedDefault);
       formController.addListener(notifyListeners);
 
-      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-        if (taskData != null) {
-          _task = taskData;
-          if (_task != null) {
-            _initStatus = LoadStatus.success;
-            notifyListeners();
+      _taskSubscription = _taskRepo.streamTask(taskId).listen(
+        (taskData) {
+          if (taskData != null) {
+            _task = taskData;
+            if (_task != null) {
+              _initStatus = LoadStatus.success;
+              notifyListeners();
+            }
           }
-        }
-      });
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
 
-      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
-        _records = records;
-        // Records 更新通常不影響 S31 畫面顯示，但要確保變數是最新的
-        // 如果需要像 S30 那樣有 _recalculate，可以在這裡呼叫
-      });
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen(
+        (records) {
+          _records = records;
+          // Records 更新通常不影響 S31 畫面顯示，但要確保變數是最新的
+          // 如果需要像 S30 那樣有 _recalculate，可以在這裡呼叫
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;

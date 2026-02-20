@@ -55,7 +55,7 @@ class GroupBalanceCard extends StatelessWidget {
     final Color borderColor =
         theme.colorScheme.outlineVariant.withValues(alpha: 0.5);
 
-    String _getAmountWithSymbol(double amount, String currencyCode) {
+    String getAmountWithSymbol(double amount, String currencyCode) {
       final currencyConstants =
           CurrencyConstants.getCurrencyConstants(currencyCode);
       return "${currencyConstants.symbol} ${CurrencyConstants.formatAmount(amount, currencyCode)}";
@@ -89,7 +89,7 @@ class GroupBalanceCard extends StatelessWidget {
               ] else ...[
                 ...state.expenseDetail.entries.map(
                   (e) => Text(
-                    "${e.key} ${_getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    "${e.key} ${getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
                     style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
@@ -109,7 +109,7 @@ class GroupBalanceCard extends StatelessWidget {
               ] else ...[
                 ...state.incomeDetail.entries.map(
                   (e) => Text(
-                    "${e.key} ${_getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    "${e.key} ${getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
                     style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
@@ -128,7 +128,7 @@ class GroupBalanceCard extends StatelessWidget {
               ] else ...[
                 ...state.poolDetail.entries.map(
                   (e) => Text(
-                    "${e.key} ${_getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    "${e.key} ${getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
                     style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),

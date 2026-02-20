@@ -33,9 +33,25 @@ class PendingInviteLocalStore {
       if (jsonString == null) return null;
 
       try {
-        final Map<String, dynamic> data = jsonDecode(jsonString);
-        final String code = data['code'];
-        final DateTime receivedAt = DateTime.parse(data['receivedAt']);
+        final decodedData = jsonDecode(jsonString);
+        if (decodedData is! Map<String, dynamic>) {
+          await clear(); // 資料格式壞了，順手清掉
+          return null;
+        }
+        final data = decodedData;
+        final String? code = data['code'] as String?;
+        final String? receivedAtString = data['receivedAt'] as String?;
+
+        if (code == null || receivedAtString == null) {
+          await clear();
+          return null; // 資料不完整，視為無效
+        }
+
+        final DateTime? receivedAt = DateTime.tryParse(receivedAtString);
+        if (receivedAt == null) {
+          await clear();
+          return null; // 日期格式錯誤，視為無效
+        }
 
         // 檢查是否超過 15 分鐘
         if (DateTime.now().difference(receivedAt).inMinutes < 15) {

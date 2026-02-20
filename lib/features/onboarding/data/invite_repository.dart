@@ -13,7 +13,11 @@ class InviteRepository extends BaseRepository {
     return await safeRun(() async {
       final callable = _functions.httpsCallable('previewInviteCode');
       final result = await callable.call({'code': code});
-      return Map<String, dynamic>.from(result.data);
+      if (result.data is Map<String, dynamic>) {
+        return Map<String, dynamic>.from(result.data);
+      } else {
+        throw AppErrorCodes.inviteInvalid;
+      }
     }, AppErrorCodes.inviteInvalid);
   }
 
@@ -30,7 +34,12 @@ class InviteRepository extends BaseRepository {
         'displayName': displayName,
         'targetMemberId': targetMemberId,
       });
-      return result.data['taskId'] as String;
+      final taskId = result.data?['taskId'];
+      if (taskId is String) {
+        return taskId;
+      } else {
+        throw AppErrorCodes.joinFailed; // 或其他更具體的錯誤
+      }
     }, AppErrorCodes.joinFailed);
   }
 
@@ -38,7 +47,12 @@ class InviteRepository extends BaseRepository {
     return await safeRun(() async {
       final callable = _functions.httpsCallable('createInviteCode');
       final result = await callable.call({'taskId': taskId});
-      return result.data['code'] as String;
+      final code = result.data?['code'];
+      if (code is String) {
+        return code;
+      } else {
+        throw AppErrorCodes.inviteCreateFailed; // 或其他更具體的錯誤
+      }
     }, AppErrorCodes.inviteCreateFailed);
   }
 }

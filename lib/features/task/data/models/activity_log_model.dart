@@ -42,12 +42,13 @@ class ActivityLogModel {
   });
 
   factory ActivityLogModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() is Map ? doc.data() as Map<String, dynamic> : {};
     return ActivityLogModel(
       id: doc.id,
       operatorUid: data['operatorUid'] ?? '',
       actionType: _parseAction(data['actionType']),
-      details: data['details'] as Map<String, dynamic>? ?? {},
+      details:
+          data['details'] is Map ? data['details'] as Map<String, dynamic> : {},
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -196,10 +197,13 @@ class ActivityLogModel {
     }
 
     // [舊版細項數量]
-    if (details.containsKey('itemCount') && (details['itemCount'] as int) > 0) {
-      // [修正] 使用 i18n key 取代 "items"
+    final rawItemCount = details['itemCount'];
+    final int itemCount = rawItemCount is int
+        ? rawItemCount
+        : (int.tryParse(rawItemCount?.toString() ?? '') ?? 0);
+    if (itemCount > 0) {
       final unit = t.S52_TaskSettings_Log.unit.items;
-      buffer.write(" • ${details['itemCount']} $unit");
+      buffer.write(" • $itemCount $unit");
     }
 
     // 兜底
@@ -228,10 +232,18 @@ class ActivityLogModel {
     final bufferSub = StringBuffer();
 
     if (details.containsKey('allocation') && details.containsKey('payment')) {
-      final allocation = details['allocation'] as Map<String, dynamic>;
-      final payment = details['payment'] as Map<String, dynamic>;
-      final groups =
-          (allocation['groups'] as List).cast<Map<String, dynamic>>();
+      final allocation = details['allocation'] is Map
+          ? details['allocation'] as Map<String, dynamic>
+          : {};
+      final payment = details['payment'] is Map
+          ? details['payment'] as Map<String, dynamic>
+          : {};
+      final groups = (allocation['groups'] is List)
+          ? (allocation['groups'] as List)
+              .whereType<
+                  Map<String, dynamic>>() // 過濾掉非 Map<String, dynamic> 的元素
+              .toList()
+          : [];
       final mode = allocation['mode'];
 
       final currency = details['currency'];
@@ -257,11 +269,16 @@ class ActivityLogModel {
       bufferMain.write(" • ${t.S52_TaskSettings_Log.type.expense}：");
 
       final payType = payment['type'];
+      final rawContributors = payment['contributors'];
+      final List<Map<String, dynamic>> contributors = (rawContributors is List)
+          ? rawContributors.whereType<Map<String, dynamic>>().toList()
+          : [];
       if (payType == 'prepay') {
         bufferMain.write(t.S52_TaskSettings_Log.payment_type.prepay); // "公款支付"
       } else if (payType == 'member') {
-        final contributors = (payment['contributors'] as List);
-        if (contributors.length > 1) {
+        if (contributors.isEmpty) {
+          bufferMain.write(t.S52_TaskSettings_Log.payment_type.multiple);
+        } else if (contributors.length > 1) {
           final unit = t.S52_TaskSettings_Log.unit.members;
           // "多人代墊(2人)"
           bufferMain.write(
@@ -271,9 +288,10 @@ class ActivityLogModel {
               "${contributors.first['displayName']}${t.S52_TaskSettings_Log.payment_type.single_suffix}");
         }
       } else {
-        final contributors = (payment['contributors'] as List);
         final String member;
-        if (contributors.length > 1) {
+        if (contributors.isEmpty) {
+          member = t.S52_TaskSettings_Log.payment_type.multiple;
+        } else if (contributors.length > 1) {
           final unit = t.S52_TaskSettings_Log.unit.members;
           // "多人代墊(2人)"
           member =

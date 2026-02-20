@@ -178,8 +178,12 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
   }
 
   void onMemberAdvanceChanged(String memberId, String val) {
+    bool stateChanged = false;
     final v = double.tryParse(val.replaceAll(',', '')) ?? 0.0;
-    memberAdvance[memberId] = v;
+    if (memberAdvance[memberId] != v) {
+      memberAdvance[memberId] = v;
+      stateChanged = true;
+    }
 
     if (usePrepay) {
       prepayAmount = _calculateAutoPrepay(currentAdvanceTotal);
@@ -189,9 +193,12 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
 
       if (prepayController.text != newText) {
         prepayController.text = newText;
+        stateChanged = true;
       }
     }
-    notifyListeners();
+    if (stateChanged) {
+      notifyListeners();
+    }
   }
 
   Map<String, dynamic> prepareResult() {

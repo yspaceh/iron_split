@@ -40,7 +40,7 @@ class TaskModel {
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>?;
+    final data = doc.data() is Map ? doc.data() as Map<String, dynamic> : null;
 
     if (data == null) {
       // Fallback for empty/error docs
@@ -56,7 +56,7 @@ class TaskModel {
         remainderAbsorberId: null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        settlement: data!['settlement'] as Map<String, dynamic>?,
+        settlement: null,
       );
     }
 
@@ -76,21 +76,26 @@ class TaskModel {
     }
 
     // 取得原始 Map
-    final rawMembers = data['members'] as Map<String, dynamic>? ?? {};
+    final rawMembers =
+        data['members'] is Map ? data['members'] as Map<String, dynamic> : {};
 
-    final parsedMembers = rawMembers.map((key, value) {
+    final parsedMembers = rawMembers.map<String, TaskMember>((key, value) {
+      final String safeKey = key.toString();
       return MapEntry(
-        key,
-        TaskMember.fromMap(key, value as Map<String, dynamic>),
+        safeKey,
+        value is Map<String, dynamic>
+            ? TaskMember.fromMap(safeKey, value)
+            : TaskMember.fromMap(safeKey, {}), // 提供預設空 Map 或處理錯誤
       );
     });
 
     List<String> parsedMemberIds = [];
     if (data['memberIds'] is List) {
-      parsedMemberIds = List<String>.from(data['memberIds']);
+      parsedMemberIds =
+          (data['memberIds'] as List).whereType<String>().toList();
     } else {
       // 兼容舊資料：自動補齊
-      parsedMemberIds = rawMembers.keys.toList();
+      parsedMemberIds = rawMembers.keys.whereType<String>().toList();
     }
 
     // Helper to parse dates safely
@@ -121,7 +126,9 @@ class TaskModel {
       startDate:
           data['startDate'] != null ? parseDate(data['startDate']) : null,
       endDate: data['endDate'] != null ? parseDate(data['endDate']) : null,
-      settlement: data['settlement'] as Map<String, dynamic>?,
+      settlement: data['settlement'] is Map
+          ? data['settlement'] as Map<String, dynamic>
+          : null,
       memberCount:
           (data['memberCount'] as num?)?.toInt() ?? parsedMemberIds.length,
     );
@@ -131,7 +138,7 @@ class TaskModel {
     return {
       'name': name,
       'baseCurrency': baseCurrency,
-      'members': members,
+      'members': members.map((key, value) => MapEntry(key, value.toMap())),
       'memberIds': members.keys.toList(),
       'status': status,
       'createdBy': createdBy,
