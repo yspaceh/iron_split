@@ -78,7 +78,6 @@ class D01MemberRoleIntroViewModel extends ChangeNotifier {
   }
 
   Future<void> enterTask() async {
-    debugPrint("_enterStatus: $_enterStatus");
     if (_enterStatus == LoadStatus.loading) return;
     _enterStatus = LoadStatus.loading;
     notifyListeners();

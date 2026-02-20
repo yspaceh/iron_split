@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -42,13 +46,26 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
         recordService: context.read<RecordService>(),
         newCurrency: newCurrency,
       ),
-      child: const _D09DialogContent(),
+      child: const _D09Content(),
     );
   }
 }
 
-class _D09DialogContent extends StatelessWidget {
-  const _D09DialogContent();
+class _D09Content extends StatelessWidget {
+  const _D09Content();
+  Future<void> _handleConfirm(
+      BuildContext context, D09TaskSettingsCurrencyConfirmViewModel vm) async {
+    try {
+      await vm.confirm();
+      if (!context.mounted) return;
+      context.pop();
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -70,13 +87,8 @@ class _D09DialogContent extends StatelessWidget {
         AppButton(
           text: t.common.buttons.confirm,
           type: AppButtonType.primary,
-          isLoading: vm.isProcessing,
-          onPressed: () async {
-            final success = await vm.handleConfirm();
-            if (context.mounted) {
-              context.pop(success);
-            }
-          },
+          isLoading: vm.confirmStatus == LoadStatus.loading,
+          onPressed: () => _handleConfirm(context, vm),
         ),
       ],
     );

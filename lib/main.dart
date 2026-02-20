@@ -164,7 +164,6 @@ class _IronSplitAppState extends State<IronSplitApp> {
 
       switch (intent) {
         case JoinTaskIntent(:final code):
-          debugPrint("🔥 [DeepLink] JoinTaskIntent Code: $code");
           // 儲存邀請碼至 Provider 中斷恢復機制
           context.read<PendingInviteProvider>().saveInvite(code);
 

@@ -174,7 +174,6 @@ class S32SettlementResultViewModel extends ChangeNotifier {
       );
     } catch (e) {
       _hasmarkedAsSeen = false; // 萬一失敗，允許下次重試
-      debugPrint('S32 MarkAsSeen Failed: $e');
     }
   }
 

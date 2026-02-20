@@ -1,5 +1,6 @@
 // lib/core/viewmodels/locale_vm.dart
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iron_split/gen/strings.g.dart'; // 記得 import slang 生成的檔案
 
@@ -55,7 +56,7 @@ class LocaleViewModel extends ChangeNotifier {
       await prefs.setString(_key, newLocale.languageCode);
       // 註：如果是 zh-Hant 這種複雜的，建議存 newLocale.languageTag
     } catch (e) {
-      debugPrint("Save locale error: $e");
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

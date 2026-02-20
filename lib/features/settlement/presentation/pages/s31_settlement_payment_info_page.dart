@@ -127,7 +127,7 @@ class _S31ContentState extends State<_S31Content> {
                 text: t.common.buttons.back,
                 type: AppButtonType.primary,
                 // 按下後，只負責關閉 Dialog
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
               ),
             ],
           );
@@ -145,7 +145,7 @@ class _S31ContentState extends State<_S31Content> {
               AppButton(
                 text: t.common.buttons.ok,
                 type: AppButtonType.primary,
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
               ),
             ],
           );

@@ -93,9 +93,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
       BuildContext context, D01MemberRoleIntroViewModel vm) async {
     try {
       await vm.enterTask();
-      debugPrint('context.mounted: ${context.mounted}');
       if (!context.mounted) return;
-      debugPrint('Finish');
       context.pop();
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;

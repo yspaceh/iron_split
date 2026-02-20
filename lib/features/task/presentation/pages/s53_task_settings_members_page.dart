@@ -6,17 +6,16 @@ import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
-import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; //
-import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/task/presentation/dialogs/d07_rename_member_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s53_task_settings_members_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -53,15 +52,10 @@ class _S53Content extends StatelessWidget {
       Map<String, TaskMember> membersMap,
       String memberId,
       String currentName) {
-    showDialog(
-      context: context,
-      builder: (context) => _RenameMemberDialog(
-        initialName: currentName,
+    D07RenameMemberDialog.show(context, initialName: currentName,
         onConfirm: (newName) {
-          vm.renameMember(membersMap, memberId, newName);
-        },
-      ),
-    );
+      vm.renameMember(membersMap, memberId, newName);
+    });
   }
 
   Future<void> _handleDelete(
@@ -123,7 +117,7 @@ class _S53Content extends StatelessWidget {
                 AppButton(
                   text: t.common.buttons.retry,
                   type: AppButtonType.primary,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => context.pop(),
                 ),
               ],
             ),
@@ -330,81 +324,6 @@ class _S53Content extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-// Rename Dialog 保持不變
-class _RenameMemberDialog extends StatefulWidget {
-  final String initialName;
-  final ValueChanged<String> onConfirm;
-
-  const _RenameMemberDialog({
-    required this.initialName,
-    required this.onConfirm,
-  });
-
-  @override
-  State<_RenameMemberDialog> createState() => _RenameMemberDialogState();
-}
-
-class _RenameMemberDialogState extends State<_RenameMemberDialog> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialName);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    final newName = _controller.text.trim();
-    if (newName.isEmpty) return;
-    Navigator.of(context).pop();
-    widget.onConfirm(newName);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
-    return CommonAlertDialog(
-      title: t.S53_TaskSettings_Members.title,
-      content: SizedBox(
-        width: double.maxFinite,
-        child: TaskNameInput(
-          controller: _controller,
-          maxLength: 10,
-          fillColor: theme.colorScheme.surfaceContainerLow,
-          label: t.S53_TaskSettings_Members.member_name,
-          hint: t.S53_TaskSettings_Members.member_name,
-        ),
-      ),
-      actions: [
-        AppButton(
-          text: t.common.buttons.cancel,
-          type: AppButtonType.secondary,
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        ValueListenableBuilder<TextEditingValue>(
-          valueListenable: _controller,
-          builder: (context, value, child) {
-            final isValid = value.text.trim().isNotEmpty;
-            return AppButton(
-              text: t.common.buttons.confirm,
-              type: AppButtonType.primary,
-              onPressed: isValid ? _submit : null,
-            );
-          },
-        ),
-      ],
     );
   }
 }

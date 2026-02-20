@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/currency_service.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
@@ -14,9 +17,9 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
   final RecordRepository _recordRepo;
   final RecordService _recordService;
 
-  bool _isProcessing = false;
+  LoadStatus _confirmStatus = LoadStatus.initial;
 
-  bool get isProcessing => _isProcessing;
+  LoadStatus get confirmStatus => _confirmStatus;
 
   D09TaskSettingsCurrencyConfirmViewModel({
     required this.taskId,
@@ -30,8 +33,9 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
 
   /// 執行更新邏輯
   /// Returns: true if success, false if failed
-  Future<bool> handleConfirm() async {
-    _isProcessing = true;
+  Future<void> confirm() async {
+    if (_confirmStatus == LoadStatus.loading) return;
+    _confirmStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
@@ -77,15 +81,14 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
           'newValue': newCurrency.code,
         },
       );
-
-      return true;
-    } catch (e) {
-      // TODO: handle error
-      debugPrint("Currency update failed: $e");
-      return false;
-    } finally {
-      _isProcessing = false;
+    } on AppErrorCodes {
+      _confirmStatus = LoadStatus.error;
       notifyListeners();
+      rethrow;
+    } catch (e) {
+      _confirmStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 }

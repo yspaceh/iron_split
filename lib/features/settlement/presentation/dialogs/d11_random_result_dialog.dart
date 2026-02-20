@@ -51,15 +51,13 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
   @override
   void initState() {
     super.initState();
-    debugPrint("[D11] initState called"); // [LOG]
 
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
 
     if (widget.members.isEmpty) {
-      debugPrint("[D11] Member list empty, closing."); // [LOG]
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pop();
+        context.pop();
       });
       return;
     }
