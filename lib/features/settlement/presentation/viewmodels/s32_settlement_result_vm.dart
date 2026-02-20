@@ -61,6 +61,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
 
   // 判斷是否顯示輪盤
   bool get shouldShowRoulette {
+    if (_task == null || _task!.settlement == null) return false;
     // 1. 基本門檻：必須是隨機模式
     if (_task?.remainderRule != RemainderRuleConstants.random) return false;
 

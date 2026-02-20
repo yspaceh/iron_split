@@ -104,11 +104,11 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       end = start;
     }
 
-    _startDate = start;
-    _endDate = end;
-
-    // 只有一次通知，效能更好
-    notifyListeners();
+    if (_startDate != start || _endDate != end) {
+      _startDate = start;
+      _endDate = end;
+      notifyListeners();
+    }
   }
 
   void updateCurrency(CurrencyConstants currency) {
@@ -177,11 +177,10 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
       // B. Add Ghost Members
       for (int i = 1; i < _memberCount; i++) {
-        final vid = MemberService.generateVirtualId();
+        final vid = MemberService.generateVirtualId(index: i);
         membersMap[vid] = MemberService.createGhost(
           displayName: '${t.common.member_prefix} ${i + 1}',
         );
-        await Future.delayed(const Duration(milliseconds: 1));
       }
 
       // 2. 寫入 DB

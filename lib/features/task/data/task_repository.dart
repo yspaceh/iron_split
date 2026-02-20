@@ -30,7 +30,9 @@ class TaskRepository extends BaseRepository {
       // 二次過濾：確保使用者真的在 members Map 裡
       // (這是為了避免索引問題導致的權限溢出，做一層前端過濾最安全)
       return tasks.where((t) => t.members.containsKey(userId)).toList();
-    }).handleError((e) {
+    }).handleError((e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+          reason: 'Task repository streamUserTasks failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }
@@ -40,7 +42,9 @@ class TaskRepository extends BaseRepository {
     return _firestore.collection('tasks').doc(taskId).snapshots().map((doc) {
       if (!doc.exists) return null;
       return TaskModel.fromFirestore(doc);
-    }).handleError((e, stack) {
+    }).handleError((e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+          reason: 'Task repository streamTask failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||
           errorStr.contains('permission_denied') ||
@@ -51,8 +55,6 @@ class TaskRepository extends BaseRepository {
       }
 
       // 其他錯誤才拋出
-      FirebaseCrashlytics.instance
-          .recordError(e, stack, reason: 'streamTask failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }
@@ -155,7 +157,9 @@ class TaskRepository extends BaseRepository {
       return snapshot.docs
           .map((doc) => ActivityLogModel.fromFirestore(doc))
           .toList();
-    }).handleError((e) {
+    }).handleError((e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+          reason: 'Task repository streamActivityLogs failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }
@@ -194,7 +198,7 @@ class TaskRepository extends BaseRepository {
         'finalizedAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       }),
-      AppErrorCodes.saveFailed,
+      AppErrorCodes.settlementFailed,
     );
   }
 

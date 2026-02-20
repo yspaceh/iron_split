@@ -1,5 +1,6 @@
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/onboarding/data/pending_invite_local_store.dart';
@@ -19,37 +20,35 @@ class OnboardingService {
 
   /// 驗證名字格式 (業務規則)
   /// 回傳錯誤訊息，若為 null 代表驗證通過
-  AppErrorCodes? validateName(String name) {
-    final trimmed = name.trim();
+  void validateName(String name) {
+    try {
+      final trimmed = name.trim();
 
-    if (trimmed.isEmpty) {
-      return null; // 空值不回傳錯誤，只是未完成
+      if (trimmed.isEmpty) throw AppErrorCodes.fieldRequired;
+
+      if (trimmed.length > 10) throw AppErrorCodes.nameLengthExceeded;
+
+      // 禁止控制字元 (Regex 規則從原本 UI 搬過來)
+      final hasControlChars = trimmed.contains(RegExp(r'[\x00-\x1F\x7F]'));
+      if (hasControlChars) throw AppErrorCodes.invalidChar;
+    } on AppErrorCodes {
+      rethrow;
+    } catch (e) {
+      throw ErrorMapper.parseErrorCode(e);
     }
-
-    if (trimmed.length > 10) {
-      return AppErrorCodes.nameLengthExceeded; // 雖然 UI 有擋，後端邏輯也要擋
-    }
-
-    // 禁止控制字元 (Regex 規則從原本 UI 搬過來)
-    final hasControlChars = trimmed.contains(RegExp(r'[\x00-\x1F\x7F]'));
-    if (hasControlChars) {
-      return AppErrorCodes.invalidChar;
-    }
-
-    return null; // Valid
   }
 
   /// 提交名字
   Future<void> submitName(String name) async {
-    final trimmed = name.trim();
-    if (trimmed.isEmpty) {
-      throw AppErrorCodes.fieldRequired;
+    try {
+      final trimmed = name.trim();
+      validateName(trimmed);
+      await _authRepo.updateDisplayName(name.trim());
+    } on AppErrorCodes {
+      rethrow;
+    } catch (e) {
+      throw ErrorMapper.parseErrorCode(e);
     }
-    final error = validateName(trimmed);
-    if (error != null) {
-      throw error;
-    }
-    await _authRepo.updateDisplayName(name.trim());
   }
 
   /// 執行預覽並分析 Ghost 狀態 (邏輯搬家)

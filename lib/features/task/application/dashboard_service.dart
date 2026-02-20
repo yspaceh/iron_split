@@ -80,7 +80,7 @@ class DashboardService {
         expenseFlex: expenseFlex,
         incomeFlex: incomeFlex,
         ruleKey: task.remainderRule,
-        isLocked: task.status != 'ongoing',
+        isLocked: task.status != TaskStatus.ongoing,
         expenseDetail: expenseDetail,
         incomeDetail: incomeDetail,
         poolDetail: poolDetail,

@@ -298,8 +298,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   void _onAmountChanged() {
     final currentAmount = totalAmount;
+    bool changed = false;
     if ((currentAmount - _lastKnownAmount).abs() > 0.001) {
       _lastKnownAmount = currentAmount;
+      changed = true;
       // Reset Logic
       if (_details.isNotEmpty || _baseSplitMethod != SplitMethodConstant.even) {
         _details.clear();
@@ -309,9 +311,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
         }
         _baseRawDetails.clear();
       }
+    }
+    if (changed) {
       notifyListeners();
-    } else {
-      notifyListeners(); // Update UI validation
     }
   }
 
@@ -336,7 +338,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
     _selectedCurrencyConstants = CurrencyConstants.getCurrencyConstants(code);
     await _prefsService.saveLastCurrency(code);
     await fetchExchangeRate(); // 呼叫下方的公開方法
-    notifyListeners();
   }
 
   Future<void> fetchExchangeRate() async {

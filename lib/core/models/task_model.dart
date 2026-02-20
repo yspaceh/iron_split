@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 
 class TaskModel {
   final String id;
@@ -8,7 +9,7 @@ class TaskModel {
   final String baseCurrency;
   final Map<String, TaskMember> members;
   final List<String> memberIds;
-  final String status; // Was 'mode'/'state', now 'ongoing' etc.
+  final TaskStatus status; // Was 'mode'/'state', now 'ongoing' etc.
   final String createdBy; // Was 'ownerId'
   final String remainderRule; // Added to match S14
   final String? remainderAbsorberId;
@@ -50,7 +51,7 @@ class TaskModel {
         baseCurrency: CurrencyConstants.defaultCode,
         members: {},
         memberIds: [],
-        status: 'unknown',
+        status: TaskStatus.ongoing,
         createdBy: '',
         remainderRule: RemainderRuleConstants.defaultRule,
         remainderAbsorberId: null,
@@ -114,7 +115,7 @@ class TaskModel {
           data['baseCurrency'] as String? ?? CurrencyConstants.defaultCode,
       members: sortMembers(parsedMembers),
       memberIds: parsedMemberIds,
-      status: data['status'] as String? ?? 'ongoing',
+      status: _parseStatus(data['status'] as String?),
       createdBy: data['createdBy'] as String? ?? '',
       remainderRule: data['remainderRule'] as String? ??
           RemainderRuleConstants.defaultRule,
@@ -140,7 +141,7 @@ class TaskModel {
       'baseCurrency': baseCurrency,
       'members': members.map((key, value) => MapEntry(key, value.toMap())),
       'memberIds': members.keys.toList(),
-      'status': status,
+      'status': status.name,
       'createdBy': createdBy,
       'remainderRule': remainderRule,
       'remainderAbsorberId': remainderAbsorberId,
@@ -180,6 +181,14 @@ class TaskModel {
     final list = members.values.toList();
     list.sort(TaskModel.compareMembers);
     return list;
+  }
+
+  static TaskStatus _parseStatus(String? statusStr) {
+    // 從 Enum 中找出名字相符的，如果找不到就預設回傳 ongoing
+    return TaskStatus.values.firstWhere(
+      (e) => e.name == statusStr,
+      orElse: () => TaskStatus.ongoing,
+    );
   }
 }
 

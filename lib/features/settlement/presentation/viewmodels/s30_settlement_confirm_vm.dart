@@ -89,12 +89,16 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
             m.subMembers.fold(0.0, (sum, child) => sum + child.finalAmount);
         final double headIndividualAmount = m.finalAmount - childrenSum;
 
-        // 創建一個暫時的 Head 個人物件 (僅用於列表顯示與 B04 候選)
-        // 這裡我們手動複製 m 的屬性，但金額改為個人金額
+        final double childrenBaseSum =
+            m.subMembers.fold(0.0, (sum, child) => sum + child.baseAmount);
+        final double headIndividualBaseAmount = m.baseAmount - childrenBaseSum;
+
+        // 💡 註解：合併後的零頭計算統一交由群組層級 (MergedGroup) 處理，
+        // 因此這裡單獨拆解出的 Head 個人部分，不重複計算 remainderAmount。
         flattened.add(SettlementMember(
           memberData: m.memberData,
           finalAmount: headIndividualAmount, // <--- 關鍵修改
-          baseAmount: m.baseAmount, // 這裡視需求可能也要扣除，但顯示上主要看 finalAmount
+          baseAmount: headIndividualBaseAmount,
           remainderAmount: 0, // 簡化處理
           isRemainderAbsorber: m.isRemainderAbsorber,
           isMergedHead: false, // 還原為個人，所以不是 Head

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
@@ -67,7 +68,20 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
   DateTime _parseDate(dynamic val) {
     if (val is int) return DateTime.fromMillisecondsSinceEpoch(val);
-    if (val is String) return DateTime.tryParse(val) ?? DateTime.now();
+    if (val is String) {
+      final parsed = DateTime.tryParse(val);
+      if (parsed == null) {
+        // 🚀 使用 Crashlytics 紀錄非致命錯誤 (Non-fatal)
+        FirebaseCrashlytics.instance.recordError(
+          Exception('Invalid date string: $val'), // 錯誤主體
+          StackTrace.current, // 附上錯誤發生時的呼叫堆疊
+          reason: '[S11] _parseDate 解析失敗，已退回使用 DateTime.now()', // 給自己看的備註
+          fatal: false, // ⚠️ 關鍵：標記為 false 就不會讓 App 閃退
+        );
+        return DateTime.now();
+      }
+      return parsed;
+    }
     return DateTime.now();
   }
 

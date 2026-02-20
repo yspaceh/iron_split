@@ -98,14 +98,12 @@ class S10TaskListViewModel extends ChangeNotifier {
   ({String routeName, Map<String, String> params})? getNavigationInfo(
       TaskModel task) {
     switch (task.status) {
-      case 'ongoing':
-      case 'pending':
+      case TaskStatus.ongoing:
+      case TaskStatus.pending:
         return (routeName: 'S13', params: {'taskId': task.id});
-      case 'settled':
-      case 'close':
+      case TaskStatus.settled:
+      case TaskStatus.closed:
         return (routeName: 'S17', params: {'taskId': task.id});
-      default:
-        return null;
     }
   }
 

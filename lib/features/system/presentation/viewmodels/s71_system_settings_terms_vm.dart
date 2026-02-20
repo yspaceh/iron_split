@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -48,10 +49,8 @@ class S71SystemSettingsTermsViewModel extends ChangeNotifier {
       }
 
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-      // TODO: Project ID 建議統一放在 Constants
-      const projectId = 'iron-split';
       _targetUrl =
-          'https://$projectId.web.app/legal/$folder/$filename.html?v=$timestamp';
+          'https://${AppConstants.projectId}.web.app/legal/$folder/$filename.html?v=$timestamp';
 
       _initStatus = LoadStatus.success;
       notifyListeners();

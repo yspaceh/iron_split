@@ -138,8 +138,11 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
   // --- Actions ---
 
   void toggleSync(bool? val) {
-    _isSyncChecked = val ?? false;
-    notifyListeners();
+    final newSyncChecked = val ?? false;
+    if (_isSyncChecked != newSyncChecked) {
+      _isSyncChecked = newSyncChecked;
+      notifyListeners();
+    }
   }
 
   // --- Final Execution Logic ---

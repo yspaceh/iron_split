@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:http/http.dart' as http;
 import 'package:iron_split/core/enums/app_error_codes.dart';
 
@@ -34,7 +35,12 @@ class CurrencyService {
       }
     } on AppErrorCodes {
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '取得匯率失敗 (CurrencyService fetchRate)',
+      );
       throw AppErrorCodes.rateFetchFailed; // 其他系統錯誤轉化後拋出
     }
   }

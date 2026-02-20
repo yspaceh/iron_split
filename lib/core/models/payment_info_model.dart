@@ -22,17 +22,14 @@ class PaymentInfoModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
+
+    // 使用最簡單安全的 JSON 字串比對法，確保所有深層資料都一模一樣
     return other is PaymentInfoModel &&
-        other.mode == mode &&
-        other.acceptCash == acceptCash &&
-        other.bankName == bankName &&
-        other.bankAccount == bankAccount &&
-        _listEquals(other.paymentApps, paymentApps);
+        jsonEncode(toMap()) == jsonEncode(other.toMap());
   }
 
   @override
-  int get hashCode =>
-      Object.hash(mode, acceptCash, bankName, bankAccount, paymentApps);
+  int get hashCode => jsonEncode(toMap()).hashCode;
 
   // 用於序列化存入 SecureStorage / Firestore
   Map<String, dynamic> toMap() {
@@ -64,16 +61,6 @@ class PaymentInfoModel {
   String toJson() => json.encode(toMap());
   factory PaymentInfoModel.fromJson(String source) =>
       PaymentInfoModel.fromMap(json.decode(source));
-
-  // Helper
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) return b == null;
-    if (b == null || a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
-  }
 }
 
 class PaymentAppInfo {

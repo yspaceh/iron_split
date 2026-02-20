@@ -63,7 +63,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId;
 
-  bool get shouldNavigateToS17 => _task?.status == 'settled';
+  bool get shouldNavigateToS17 => _task?.status == TaskStatus.settled;
 
   // Getters
   LoadStatus get initStatus => _initStatus;

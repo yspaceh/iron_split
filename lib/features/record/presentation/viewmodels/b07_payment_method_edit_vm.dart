@@ -136,37 +136,70 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
   }
 
   void onPrepayToggle() {
+    bool changed = false;
+    final oldUsePrepay = usePrepay;
     usePrepay = !usePrepay;
+    if (oldUsePrepay != usePrepay) changed = true;
     if (usePrepay) {
+      final oldPrepayAmount = prepayAmount;
       prepayAmount = _calculateAutoPrepay(currentAdvanceTotal);
-      prepayController.text = prepayAmount == 0
+      if (oldPrepayAmount != prepayAmount) changed = true;
+      String newText = prepayAmount == 0
           ? ''
           : CurrencyConstants.formatAmount(prepayAmount, selectedCurrency.code);
+      if (prepayController.text != newText) {
+        prepayController.text = newText;
+        changed = true;
+      }
     } else {
-      prepayAmount = 0.0;
-      prepayController.text = '';
+      if (prepayAmount != 0.0) {
+        prepayAmount = 0.0;
+        changed = true;
+      }
+      if (prepayController.text != '') {
+        prepayController.text = '';
+        changed = true;
+      }
       if (!useAdvance) {
         useAdvance = true;
+        changed = true;
       }
     }
-    notifyListeners();
+    if (changed) {
+      notifyListeners();
+    }
   }
 
   void onAdvanceToggle() {
+    bool changed = false;
+    final oldUseAdvance = useAdvance;
     useAdvance = !useAdvance;
+    if (oldUseAdvance != useAdvance) changed = true;
     if (!useAdvance) {
       for (var key in memberAdvance.keys) {
-        memberAdvance[key] = 0.0;
-        memberControllers[key]?.text = '';
+        if (memberAdvance[key] != 0.0) {
+          memberAdvance[key] = 0.0;
+          memberControllers[key]?.text = '';
+          changed = true;
+        }
       }
       if (!usePrepay) {
         usePrepay = true;
+        changed = true;
+        final oldPrepayAmount = prepayAmount;
         prepayAmount = _calculateAutoPrepay(0);
-        prepayController.text =
+        if (oldPrepayAmount != prepayAmount) changed = true;
+        String newText =
             CurrencyConstants.formatAmount(prepayAmount, selectedCurrency.code);
+        if (prepayController.text != newText) {
+          prepayController.text = newText;
+          changed = true;
+        }
       }
     }
-    notifyListeners();
+    if (changed) {
+      notifyListeners();
+    }
   }
 
   void onPrepayAmountChanged(String val) {

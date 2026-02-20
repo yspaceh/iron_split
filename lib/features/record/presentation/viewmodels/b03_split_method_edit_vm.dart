@@ -55,6 +55,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
 
   // 對照原始 initState 邏輯
   void init() {
+    if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     notifyListeners();
 
@@ -123,44 +124,65 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
 
   // 對照原始各 Section 的 onTap 邏輯
   void toggleMember(String id) {
+    bool changed = false;
     final isSelected = _selectedMemberIds.contains(id);
 
     if (_splitMethod == SplitMethodConstant.exact) {
       if (!isSelected) {
         _selectedMemberIds.add(id);
+        changed = true;
         final currentSum = _details.values.fold(0.0, (sum, v) => sum + v);
         final remaining = totalAmount - currentSum;
         if (remaining > 0) {
-          _details[id] = remaining;
-          _amountControllers[id]?.text =
-              CurrencyConstants.formatAmount(remaining, selectedCurrency.code);
+          if ((_details[id] ?? 0.0) != remaining) {
+            _details[id] = remaining;
+            _amountControllers[id]?.text = CurrencyConstants.formatAmount(
+                remaining, selectedCurrency.code);
+            changed = true;
+          }
         }
       } else {
         _selectedMemberIds.remove(id);
-        _details.remove(id);
-        _amountControllers[id]?.clear();
+        changed = true;
+        if (_details.containsKey(id)) {
+          _details.remove(id);
+          _amountControllers[id]?.clear();
+          changed = true;
+        }
       }
     } else if (_splitMethod == SplitMethodConstant.percent) {
       final weight = _details[id] ?? 0.0;
       final isActuallySelected = weight > 0;
       if (!isActuallySelected) {
-        _details[id] = defaultMemberWeights[id] ?? 1.0;
+        if ((_details[id] ?? 0.0) != (defaultMemberWeights[id] ?? 1.0)) {
+          _details[id] = defaultMemberWeights[id] ?? 1.0;
+          changed = true;
+        }
         if (!_selectedMemberIds.contains(id)) {
           _selectedMemberIds.add(id);
+          changed = true;
         }
       } else {
-        _details[id] = 0.0;
+        if (_details[id] != 0.0) {
+          _details[id] = 0.0;
+          changed = true;
+        }
         _selectedMemberIds.remove(id);
+        changed = true;
       }
     } else {
       // Even
       if (isSelected) {
         _selectedMemberIds.remove(id);
+        changed = true;
       } else {
         _selectedMemberIds.add(id);
+        changed = true;
       }
     }
-    notifyListeners();
+    if (changed) {
+      notifyListeners();
+    }
   }
 
   // 對照原始 Exact 模式 onChanged 邏輯

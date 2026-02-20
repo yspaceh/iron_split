@@ -10,6 +10,8 @@ enum UpdateType {
 // 用於 CustomSlidingSegment 的 Key
 enum LegalTab { terms, privacy }
 
+enum TaskStatus { ongoing, pending, settled, closed }
+
 enum BootstrapDestination {
   onboarding, // 去 S50 (同意條款)
   setupName, // 去 S51 (取名)

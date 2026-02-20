@@ -70,12 +70,15 @@ class B04PaymentMergeViewModel extends ChangeNotifier {
 
   // 邏輯 1: 切換選取狀態
   void toggleSelection(String id) {
+    bool changed = false;
     if (_selectedIds.contains(id)) {
-      _selectedIds.remove(id);
+      changed = _selectedIds.remove(id);
     } else {
-      _selectedIds.add(id);
+      changed = _selectedIds.add(id);
     }
-    notifyListeners();
+    if (changed) {
+      notifyListeners();
+    }
   }
 
   // 返回結果

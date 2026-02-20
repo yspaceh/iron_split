@@ -16,8 +16,8 @@ class SettlementService {
   SettlementService(this._taskRepo);
 
   /// 隨機選出一位餘額得主 (用於 S32 初始化時)
-  String pickRandomRemainderWinner(List<String> memberIds) {
-    if (memberIds.isEmpty) return '';
+  String? pickRandomRemainderWinner(List<String> memberIds) {
+    if (memberIds.isEmpty) return null;
     final random = Random();
     return memberIds[random.nextInt(memberIds.length)];
   }
@@ -248,7 +248,7 @@ class SettlementService {
     required double checkPointPoolBalance,
   }) async {
     // 0. 狀態檢查
-    if (task.status == 'settled' || task.status == 'closed') {
+    if (task.status == TaskStatus.settled || task.status == TaskStatus.closed) {
       throw AppErrorCodes.taskStatusError;
     }
 
@@ -260,87 +260,80 @@ class SettlementService {
       throw AppErrorCodes.dataConflict;
     }
 
-    try {
-      // 2. 準備計算資料 (需用到 task.baseCurrency)
-      final baseBalances = _calculateBaseNetBalancesFromRecords(task, records);
-      final double currentTotalRemainder =
-          BalanceCalculator.calculateRemainderBuffer(records);
+    // 2. 準備計算資料 (需用到 task.baseCurrency)
+    final baseBalances = _calculateBaseNetBalancesFromRecords(task, records);
+    final double currentTotalRemainder =
+        BalanceCalculator.calculateRemainderBuffer(records);
 
-      // 3. 決定得主 (Random 模式邏輯)
-      String? finalWinnerId = task.remainderAbsorberId;
+    // 3. 決定得主 (Random 模式邏輯)
+    String? finalWinnerId = task.remainderAbsorberId;
 
-      if (task.remainderRule == RemainderRuleConstants.random) {
-        final Set<String> childIds = mergeMap.values.expand((e) => e).toSet();
-        final candidateIds =
-            baseBalances.keys.where((id) => !childIds.contains(id)).toList();
+    if (task.remainderRule == RemainderRuleConstants.random) {
+      final Set<String> childIds = mergeMap.values.expand((e) => e).toSet();
+      final candidateIds =
+          baseBalances.keys.where((id) => !childIds.contains(id)).toList();
 
-        if (candidateIds.isNotEmpty) {
-          finalWinnerId = pickRandomRemainderWinner(candidateIds);
-        }
+      if (candidateIds.isNotEmpty) {
+        finalWinnerId = pickRandomRemainderWinner(candidateIds);
       }
-
-      // 4. 執行歸戶 (使用共用的分配邏輯)
-      // 這裡需用到 task.remainderRule
-      String ruleToApply = task.remainderRule;
-      String? absorberToApply = task.remainderAbsorberId;
-
-      if (task.remainderRule == RemainderRuleConstants.random) {
-        ruleToApply = RemainderRuleConstants.member;
-        absorberToApply = finalWinnerId;
-      }
-
-      final Map<String, SettlementMember> finalRawMap =
-          _applyRemainderAllocation(
-        task: task,
-        baseBalances: baseBalances,
-        remainderRule: ruleToApply,
-        remainderAbsorberId: absorberToApply,
-        totalRemainder: currentTotalRemainder,
-      );
-
-      // 5. 處理合併
-      final finalMergedList =
-          _processMerging(rawMembers: finalRawMap, mergeMap: mergeMap);
-
-      // 6. 準備存檔資料
-      final Map<String, double> allocations = {};
-      final Map<String, bool> memberStatus = {};
-      final Map<String, bool> viewStatus = {};
-
-      for (var m in finalMergedList) {
-        allocations[m.memberData.id] = m.finalAmount;
-        memberStatus[m.memberData.id] = false;
-        viewStatus[m.memberData.id] = false;
-      }
-
-      // 7.  產生 Dashboard 快照
-      // 使用與 DashboardService 完全相同的邏輯計算
-      final snapshotState = _generateDashboardSnapshot(
-        task: task,
-        records: records,
-        finalWinnerId: finalWinnerId,
-      );
-
-      // 8. 寫入 Firestore
-      await _taskRepo.settleTask(
-        taskId: task.id,
-        settlementData: {
-          "baseCurrency": task.baseCurrency, // 這裡用到了 task
-          "remainderWinnerId": finalWinnerId,
-          "allocations": allocations,
-          "memberStatus": memberStatus,
-          "viewStatus": viewStatus,
-          "receiverInfos": captainPaymentInfoJson,
-          "dashboardSnapshot": snapshotState.toMap(),
-        },
-      );
-
-      return finalWinnerId;
-    } on AppErrorCodes {
-      rethrow;
-    } catch (e) {
-      throw AppErrorCodes.settlementFailed;
     }
+
+    // 4. 執行歸戶 (使用共用的分配邏輯)
+    // 這裡需用到 task.remainderRule
+    String ruleToApply = task.remainderRule;
+    String? absorberToApply = task.remainderAbsorberId;
+
+    if (task.remainderRule == RemainderRuleConstants.random) {
+      ruleToApply = RemainderRuleConstants.member;
+      absorberToApply = finalWinnerId;
+    }
+
+    final Map<String, SettlementMember> finalRawMap = _applyRemainderAllocation(
+      task: task,
+      baseBalances: baseBalances,
+      remainderRule: ruleToApply,
+      remainderAbsorberId: absorberToApply,
+      totalRemainder: currentTotalRemainder,
+    );
+
+    // 5. 處理合併
+    final finalMergedList =
+        _processMerging(rawMembers: finalRawMap, mergeMap: mergeMap);
+
+    // 6. 準備存檔資料
+    final Map<String, double> allocations = {};
+    final Map<String, bool> memberStatus = {};
+    final Map<String, bool> viewStatus = {};
+
+    for (var m in finalMergedList) {
+      allocations[m.memberData.id] = m.finalAmount;
+      memberStatus[m.memberData.id] = false;
+      viewStatus[m.memberData.id] = false;
+    }
+
+    // 7.  產生 Dashboard 快照
+    // 使用與 DashboardService 完全相同的邏輯計算
+    final snapshotState = _generateDashboardSnapshot(
+      task: task,
+      records: records,
+      finalWinnerId: finalWinnerId,
+    );
+
+    // 8. 寫入 Firestore
+    await _taskRepo.settleTask(
+      taskId: task.id,
+      settlementData: {
+        "baseCurrency": task.baseCurrency, // 這裡用到了 task
+        "remainderWinnerId": finalWinnerId,
+        "allocations": allocations,
+        "memberStatus": memberStatus,
+        "viewStatus": viewStatus,
+        "receiverInfos": captainPaymentInfoJson,
+        "dashboardSnapshot": snapshotState.toMap(),
+      },
+    );
+
+    return finalWinnerId;
   }
 
   // ==========================================

@@ -79,10 +79,10 @@ class S70SystemSettingsViewModel extends ChangeNotifier {
     if (newName.isEmpty) throw AppErrorCodes.fieldRequired;
 
     try {
-      final error = _onboardingService.validateName(newName);
-      if (error == null) {
-        await _onboardingService.submitName(newName);
-      }
+      _onboardingService.validateName(newName);
+      await _onboardingService.submitName(newName);
+      _updateStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
       _updateStatus = LoadStatus.error;
       notifyListeners();

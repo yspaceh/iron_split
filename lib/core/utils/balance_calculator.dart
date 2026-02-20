@@ -143,17 +143,21 @@ class BalanceCalculator {
           // 如果是多人代墊 (Mixed 或 Member 多人)，則要從 paymentDetails 裡面抓
           else if (record.paymentDetails != null &&
               record.paymentDetails!['memberAdvance'] != null) {
-            final advances = record.paymentDetails!['memberAdvance'] as Map;
-            rawAmount += (advances[uid] ?? 0.0).toDouble();
+            final advancesRaw = record.paymentDetails!['memberAdvance'];
+            if (advancesRaw is Map) {
+              rawAmount += (advancesRaw[uid] as num?)?.toDouble() ?? 0.0;
+            }
           }
         }
       }
       // 情況 B: 混合支付 (Mixed) 中的成員代墊部分
       else if (record.payerType == PayerType.mixed &&
           record.paymentDetails != null) {
-        final advances = record.paymentDetails!['memberAdvance'];
-        if (advances is Map && advances.containsKey(uid)) {
-          rawAmount = (advances[uid] as num).toDouble();
+        final advancesRaw = record.paymentDetails!['memberAdvance'];
+        if (advancesRaw is Map) {
+          if (advancesRaw.containsKey(uid)) {
+            rawAmount = (advancesRaw[uid] as num?)?.toDouble() ?? 0.0;
+          }
         }
       }
       // 情況 C: 公款支付 (Prepay) -> 個人貢獻為 0

@@ -166,8 +166,10 @@ class RecordService {
     // 混合付款裡的代墊人
     if (record.paymentDetails != null &&
         record.paymentDetails!['memberAdvance'] != null) {
-      final advances = record.paymentDetails!['memberAdvance'] as Map;
-      uids.addAll(advances.keys.map((k) => k.toString()));
+      final advances = record.paymentDetails!['memberAdvance'];
+      if (advances is Map) {
+        uids.addAll(advances.keys.map((k) => k.toString()));
+      }
     }
 
     // 子明細 (Items) 裡的分擔人

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +22,12 @@ class PreferencesService {
 
       // 2. 清除敏感資料 (SecureStorage)
       await _secureStorage.deleteAll();
-    } catch (e) {
-      // 清除失敗通常不阻擋流程，但可以記錄 Log
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '清除資料失敗 (PreferencesService clearAll)',
+      );
       throw AppErrorCodes.unknown;
     }
   }
@@ -32,7 +37,14 @@ class PreferencesService {
     try {
       final success = await _prefs.setString(_keyLastCurrency, currencyCode);
       if (!success) throw AppErrorCodes.saveFailed;
-    } catch (e) {
+    } on AppErrorCodes {
+      rethrow;
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '儲存使用者最後使用的幣別失敗 (PreferencesService saveLastCurrency)',
+      );
       throw AppErrorCodes.saveFailed;
     }
   }
@@ -42,7 +54,12 @@ class PreferencesService {
     // 因為 _prefs 已經在 main 初始化過，這裡可以直接同步讀取，不需要 Future
     try {
       return _prefs.getString(_keyLastCurrency);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '取得上次幣別失敗 (PreferencesService getLastCurrency)',
+      );
       return null;
     }
   }
@@ -52,8 +69,12 @@ class PreferencesService {
     try {
       await _secureStorage.write(
           key: _keyDefaultPaymentInfo, value: jsonString);
-    } catch (e) {
-      // 這裡可以考慮拋出 AppErrorCodes.storageWriteFailed
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '儲存預設收款資訊失敗 (PreferencesService saveDefaultPaymentInfo)',
+      );
       throw AppErrorCodes.saveFailed;
     }
   }
@@ -62,8 +83,12 @@ class PreferencesService {
   Future<String?> getDefaultPaymentInfo() async {
     try {
       return await _secureStorage.read(key: _keyDefaultPaymentInfo);
-    } catch (e) {
-      // 讀取失敗視為無資料
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '讀取預設收款資訊失敗 (PreferencesService saveDefaultPaymentInfo)',
+      );
       return null;
     }
   }

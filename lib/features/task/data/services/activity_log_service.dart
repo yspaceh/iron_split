@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 
 class ActivityLogService {
@@ -27,8 +28,12 @@ class ActivityLogService {
       };
 
       await logRef.set(logData);
-    } catch (e) {
-      // TODO: handle error
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '紀錄活動記錄失敗 (ActivityLogService log)',
+      );
     }
   }
 

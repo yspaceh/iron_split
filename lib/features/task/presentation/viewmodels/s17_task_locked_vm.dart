@@ -130,8 +130,8 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   }
 
   void _determineStatusAndParseData(TaskModel task) {
-    final isClosed = _task!.status == 'closed';
-    final isSettled = _task!.status == 'settled';
+    final isClosed = _task!.status == TaskStatus.closed;
+    final isSettled = _task!.status == TaskStatus.settled;
 
     if (!isClosed && !isSettled) {
       throw AppErrorCodes.taskStatusError;

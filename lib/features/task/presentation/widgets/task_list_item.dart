@@ -42,8 +42,6 @@ class TaskListItem extends StatelessWidget {
           '${dateFormat.format(task.startDate!)} - ${dateFormat.format(task.endDate!)}';
     }
 
-    // final bool isSettled = task.status == 'settled';
-
     // 3. 卡片本體
     return Container(
       margin: const EdgeInsets.only(bottom: 8),

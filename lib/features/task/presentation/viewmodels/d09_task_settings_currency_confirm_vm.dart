@@ -55,17 +55,21 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
             .toSet();
 
         final Map<String, double> rateMap = {};
+        final List<Future<void>> rateFutures = []; // 準備一個清單裝任務
 
-        // 呼叫 API 準備匯率表
         for (final currencyCode in uniqueRecordCurrencies) {
           if (currencyCode == newBaseCode) {
             rateMap[currencyCode] = 1.0;
           } else {
-            final rate = await CurrencyService.fetchRate(
-                from: currencyCode, to: newBaseCode);
-            rateMap[currencyCode] = rate;
+            // 把任務丟進清單，讓它們同時跑
+            rateFutures.add(() async {
+              final rate = await CurrencyService.fetchRate(
+                  from: currencyCode, to: newBaseCode);
+              rateMap[currencyCode] = rate;
+            }());
           }
         }
+        await Future.wait(rateFutures);
 
         // Service 會負責：更新匯率 + 重新計算 Remainder + 批次存檔
         await _recordService.updateTaskExchangeRates(
@@ -81,6 +85,9 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
           'newValue': newCurrency.code,
         },
       );
+
+      _confirmStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
       _confirmStatus = LoadStatus.error;
       notifyListeners();

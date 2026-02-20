@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 
 // 保持 Sealed class 定義，確保對應 AppRouter 的 Intent 解析
@@ -37,7 +39,12 @@ class DeepLinkService {
       if (initialUri != null) {
         _onNewUri(initialUri);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: '設定 DeepLinkService 失敗 (DeepLinkService initialize)',
+      );
       throw AppErrorCodes.initFailed;
     }
 
@@ -46,7 +53,12 @@ class DeepLinkService {
       (uri) {
         _onNewUri(uri);
       },
-      onError: (err) {
+      onError: (e, stackTrace) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: '設定 DeepLinkService 失敗 (DeepLinkService uriLinkStream)',
+        );
         _controller.addError(AppErrorCodes.initFailed);
       },
     );
@@ -76,7 +88,7 @@ class DeepLinkService {
     final query = uri.queryParameters;
 
     // --- Custom Scheme 處理 (iron-split://) ---
-    if (uri.scheme == 'iron-split') {
+    if (uri.scheme == AppConstants.scheme) {
       // Case 1: Join Task
       if (uri.host == 'join') {
         final code = query['code'];

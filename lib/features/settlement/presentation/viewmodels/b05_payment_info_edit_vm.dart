@@ -82,8 +82,11 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
   }
 
   void toggleSync(bool? val) {
-    _isSyncChecked = val ?? false;
-    notifyListeners();
+    final newSyncChecked = val ?? false;
+    if (_isSyncChecked != newSyncChecked) {
+      _isSyncChecked = newSyncChecked;
+      notifyListeners();
+    }
   }
 
   Future<void> save() async {

@@ -18,7 +18,7 @@ class MemberService {
   }
 
   /// 統一 ID 產生規則
-  static String generateVirtualId() {
-    return 'virtual_${DateTime.now().microsecondsSinceEpoch}';
+  static String generateVirtualId({int index = 0}) {
+    return 'virtual_${DateTime.now().microsecondsSinceEpoch}_$index';
   }
 }

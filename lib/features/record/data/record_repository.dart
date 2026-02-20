@@ -27,7 +27,9 @@ class RecordRepository extends BaseRepository {
       return snapshot.docs
           .map((doc) => RecordModel.fromFirestore(doc))
           .toList();
-    }).handleError((e, stack) {
+    }).handleError((e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+          reason: 'Record repository streamRecords failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||
           errorStr.contains('permission_denied') ||
@@ -38,8 +40,6 @@ class RecordRepository extends BaseRepository {
       }
 
       // 其他錯誤才拋出
-      FirebaseCrashlytics.instance
-          .recordError(e, stack, reason: 'streamTask failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }

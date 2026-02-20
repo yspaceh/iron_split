@@ -56,16 +56,20 @@ class S51OnboardingNameViewModel extends ChangeNotifier {
   /// 處理文字輸入變更
   void onNameChanged(String value) {
     _currentName = value;
+    bool newIsValid;
 
     // 呼叫 Service 驗證規則
     // 只有當 Service 說沒問題，且長度 > 0 時，才算 Valid
-    final validationError = _service.validateName(value);
-    final isValidFormat = validationError == null;
-    final isNotEmpty = value.trim().isNotEmpty;
-
-    _isValid = isNotEmpty && isValidFormat;
-
-    notifyListeners();
+    try {
+      _service.validateName(value);
+      newIsValid = true;
+    } catch (e) {
+      newIsValid = false;
+    }
+    if (_isValid != newIsValid) {
+      _isValid = newIsValid;
+      notifyListeners();
+    }
   }
 
   /// 處理儲存動作

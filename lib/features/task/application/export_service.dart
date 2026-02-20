@@ -26,14 +26,15 @@ class ExportService {
   }) {
     final buffer = StringBuffer();
     final baseSymbol = baseCurrency.code;
+    final String exportTime =
+        DateFormat('yyyy/MM/dd HH:mm:ss').format(DateTime.now());
 
     // ==========================================
     // Section 1: 報表概況 (Report Info)
     // ==========================================
     buffer.writeln('[${labels['reportInfo']}]');
     buffer.writeln('${labels['taskName']},$taskName');
-    buffer.writeln(
-        '${labels['exportTime']},${DateTime.now().toString().split('.')[0]}');
+    buffer.writeln('${labels['exportTime']},$exportTime');
     buffer.writeln('${labels['baseCurrency']},$baseSymbol');
     buffer.writeln('');
 

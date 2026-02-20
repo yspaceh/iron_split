@@ -1,6 +1,6 @@
 // features/task/application/task_service.dart
 
-import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 
@@ -17,10 +17,12 @@ class TaskService {
     final filtered = tasks.where((task) {
       if (filterIndex == 0) {
         // 進行中
-        return task.status == 'ongoing' || task.status == 'pending';
+        return task.status == TaskStatus.ongoing ||
+            task.status == TaskStatus.pending;
       } else {
         // 已完成
-        return task.status == 'settled' || task.status == 'closed';
+        return task.status == TaskStatus.settled ||
+            task.status == TaskStatus.closed;
       }
     }).toList();
 
@@ -32,24 +34,12 @@ class TaskService {
 
   /// S12: 執行結束任務的完整業務流程
   Future<void> closeTaskWithRetention(String taskId) async {
-    try {
-      await _taskRepo.closeTaskWithRetention(taskId);
-    } on AppErrorCodes {
-      rethrow;
-    } catch (e) {
-      throw AppErrorCodes.taskCloseFailed;
-    }
+    await _taskRepo.closeTaskWithRetention(taskId);
   }
 
   /// S12: 執行刪除任務 (物理刪除)
   /// 適用於：任務內完全沒有記帳資料，直接清除
   Future<void> deleteTask(String taskId) async {
-    try {
-      await _taskRepo.deleteTask(taskId);
-    } on AppErrorCodes {
-      rethrow;
-    } catch (e) {
-      throw AppErrorCodes.deleteFailed; // 請確認 ErrorCode
-    }
+    await _taskRepo.deleteTask(taskId);
   }
 }
