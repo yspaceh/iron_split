@@ -108,27 +108,33 @@ class _S51ContentState extends State<_S51Content> {
             ),
           ],
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  t.S51_Onboarding_Name.description,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        body: CustomScrollView(
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.S51_Onboarding_Name.description,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                    ),
+                    const SizedBox(height: 24),
+                    TaskNameInput(
+                      controller: _controller,
+                      maxLength: 10,
+                      label: t.S51_Onboarding_Name.title,
+                      hint: t.S51_Onboarding_Name.hint, // "例如：Iron Man"
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                TaskNameInput(
-                  controller: _controller,
-                  maxLength: 10,
-                  label: t.S51_Onboarding_Name.title,
-                  hint: t.S51_Onboarding_Name.hint, // "例如：Iron Man"
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

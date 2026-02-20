@@ -23,29 +23,44 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
       // 1. 設定全域通用的樣式
       config: KeyboardActionsConfig(
         keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-        keyboardBarColor: theme.brightness == Brightness.dark
-            ? const Color(0xFF1E1E1E) // 深色模式鍵盤色
-            : const Color(0xFFF8F8F8),
+        keyboardBarColor: Colors.transparent,
         keyboardBarElevation: 0,
         nextFocus: nextFocus,
         actions: focusNodes.map((node) {
           return KeyboardActionsItem(
             focusNode: node,
             toolbarAlignment: MainAxisAlignment.end,
+            displayArrows: false,
+            displayDoneButton: false,
             toolbarButtons: [
               // 2. 統一的「完成」按鈕
               (node) {
-                return GestureDetector(
-                  onTap: () => node.unfocus(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: Text(
-                      t.common.buttons.done, // "完成"
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                        fontSize: 16,
+                return Padding(
+                  // 使用 Padding 把膠囊往左上方推一點，讓它不要死貼著鍵盤和螢幕邊緣
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                  child: Material(
+                    // 加上 Material 來產生優雅的陰影和背景色
+                    elevation: 4.0,
+                    shadowColor: Colors.black45,
+                    borderRadius: BorderRadius.circular(24.0), // 圓角膠囊形狀
+                    color: theme.colorScheme.primary,
+
+                    child: InkWell(
+                      // 加上水波紋點擊效果
+                      borderRadius: BorderRadius.circular(24.0),
+                      onTap: () => node.unfocus(),
+                      child: Padding(
+                        // 膠囊內部的文字留白
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8.0),
+                        child: Text(
+                          t.common.buttons.done, // "完成"
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
                   ),

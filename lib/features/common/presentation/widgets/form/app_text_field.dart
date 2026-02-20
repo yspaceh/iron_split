@@ -14,6 +14,7 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final EdgeInsets scrollPadding;
 
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
@@ -48,6 +49,7 @@ class AppTextField extends StatelessWidget {
     this.focusNode,
     this.prefixText,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.scrollPadding = const EdgeInsets.all(20.0),
   });
 
   @override
@@ -102,6 +104,7 @@ class AppTextField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           obscureText: obscureText,
+          scrollPadding: scrollPadding,
           keyboardType: keyboardType,
           onChanged: onChanged,
           validator: effectiveValidator,

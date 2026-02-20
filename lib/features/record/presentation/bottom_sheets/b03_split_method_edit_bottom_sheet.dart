@@ -167,6 +167,7 @@ class _B03ContentState extends State<_B03Content> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: CustomSlidingSegment<int>(
                   selectedValue: selectedIndex,
+                  isSheetMode: true,
                   onValueChanged: (val) {
                     vm.switchMethod(SplitMethodConstant.allRules[val]);
                   },

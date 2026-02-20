@@ -34,6 +34,7 @@ class AppTheme {
   static const Color incomeDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
   static const Color expenseLight = Color(0xFFE57373);
   static const Color incomeLight = Color(0xFF81C784);
+  static const Color darkGray = Color(0xFF2C2C2C);
   static const Color starGold = Color(0xFFFBC02D);
 
   // --- Dark Mode 專用調色盤 ---

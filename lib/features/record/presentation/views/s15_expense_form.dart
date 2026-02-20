@@ -166,6 +166,8 @@ class S15ExpenseForm extends StatelessWidget {
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
+    final keyboardHeight =
+        MediaQueryData.fromView(View.of(context)).viewInsets.bottom;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -177,14 +179,12 @@ class S15ExpenseForm extends StatelessWidget {
           onDateChanged: onDateChanged,
         ),
         const SizedBox(height: 8),
-        // 2. 支付方式 (保留外部邏輯，因為邏輯太複雜不適合封裝)
-        AppSelectField(
-          labelText: t.S15_Record_Edit.label.payment_method,
-          text: _getPayerDisplayName(t, payerType, payersId),
-          onTap: onPaymentMethodTap,
-          errorText: hasPaymentError
-              ? t.B07_PaymentMethod_Edit.err_balance_not_enough
-              : null,
+        TaskAmountInput(
+          onCurrencyChanged: onCurrencyChanged,
+          amountController: amountController,
+          focusNode: amountFocusNode,
+          selectedCurrencyConstants: selectedCurrencyConstants,
+          isIncome: false,
         ),
         const SizedBox(height: 8),
         TaskItemInput(
@@ -193,12 +193,13 @@ class S15ExpenseForm extends StatelessWidget {
             focusNode: titleFocusNode,
             selectedCategoryId: selectedCategoryId),
         const SizedBox(height: 8),
-        TaskAmountInput(
-          onCurrencyChanged: onCurrencyChanged,
-          amountController: amountController,
-          focusNode: amountFocusNode,
-          selectedCurrencyConstants: selectedCurrencyConstants,
-          isIncome: false,
+        AppSelectField(
+          labelText: t.S15_Record_Edit.label.payment_method,
+          text: _getPayerDisplayName(t, payerType, payersId),
+          onTap: onPaymentMethodTap,
+          errorText: hasPaymentError
+              ? t.B07_PaymentMethod_Edit.err_balance_not_enough
+              : null,
         ),
         if (isForeign) ...[
           const SizedBox(height: 8),
@@ -256,15 +257,9 @@ class S15ExpenseForm extends StatelessWidget {
         TaskMemoInput(
           memoController: memoController,
           focusNode: memoFocusNode,
+          scrollPadding: const EdgeInsets.only(bottom: 120.0),
         ),
-        AnimatedBuilder(
-          animation: memoFocusNode,
-          builder: (context, child) {
-            return SizedBox(
-              height: memoFocusNode.hasFocus ? 400.0 : 0,
-            );
-          },
-        ),
+        SizedBox(height: keyboardHeight > 0 ? 150 : 48),
       ],
     );
   }

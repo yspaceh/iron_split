@@ -310,14 +310,6 @@ class _B02ContentState extends State<_B02Content> {
                     focusNode: _memoNode,
                     fillColor: theme.colorScheme.surfaceContainerLow,
                   ),
-                  AnimatedBuilder(
-                    animation: _memoNode,
-                    builder: (context, child) {
-                      return SizedBox(
-                        height: _memoNode.hasFocus ? 400.0 : 80.0,
-                      );
-                    },
-                  ),
                 ],
               ),
             ),

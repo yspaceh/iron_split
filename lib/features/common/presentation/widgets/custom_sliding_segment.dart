@@ -1,12 +1,14 @@
 // lib/features/common/presentation/widgets/custom_sliding_segment.dart
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
 
 class CustomSlidingSegment<T> extends StatelessWidget {
   final Map<T, String> segments; // Key: Value (e.g., 0: "進行中")
   final Map<T, IconData>? icons; // Key: Icon
   final T selectedValue;
   final ValueChanged<T> onValueChanged;
+  final bool isSheetMode;
 
   const CustomSlidingSegment({
     super.key,
@@ -14,6 +16,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
     this.icons,
     required this.selectedValue,
     required this.onValueChanged,
+    this.isSheetMode = false,
   });
 
   @override
@@ -24,15 +27,21 @@ class CustomSlidingSegment<T> extends StatelessWidget {
     // 將 Map 轉為 List 以便透過 Index 操作
     final keys = segments.keys.toList();
     final selectedIndex = keys.indexOf(selectedValue);
+    final isDark = theme.brightness == Brightness.dark;
 
-    final backgroundColor =
-        colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
+    final trackColor = isDark
+        ? isSheetMode
+            ? colorScheme.surfaceContainerLow
+            : colorScheme.surface.withValues(alpha: 0.5)
+        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
+    final thumbColor =
+        isDark ? AppTheme.darkGray.withValues(alpha: 0.5) : colorScheme.surface;
 
     return Container(
       height: 46, // 固定高度，符合手指點擊範圍
       padding: const EdgeInsets.all(4), // 內縮，讓白色卡片有懸浮感
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: trackColor,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Stack(
@@ -51,7 +60,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
               heightFactor: 1.0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surface, // 純白
+                  color: thumbColor, // 純白
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(

@@ -105,6 +105,8 @@ class S15IncomeForm extends StatelessWidget {
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
+    final keyboardHeight =
+        MediaQueryData.fromView(View.of(context)).viewInsets.bottom;
 
     // 2. 貼上你原本的 ListView
     return ListView(
@@ -163,15 +165,9 @@ class S15IncomeForm extends StatelessWidget {
         TaskMemoInput(
           memoController: memoController,
           focusNode: memoFocusNode,
+          scrollPadding: const EdgeInsets.only(bottom: 120.0),
         ),
-        AnimatedBuilder(
-          animation: memoFocusNode,
-          builder: (context, child) {
-            return SizedBox(
-              height: memoFocusNode.hasFocus ? 400.0 : 0,
-            );
-          },
-        ),
+        SizedBox(height: keyboardHeight > 0 ? 150 : 48),
       ],
     );
   }

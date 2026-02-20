@@ -373,7 +373,6 @@ class _S15ContentState extends State<_S15Content> {
               AppButton(
                 text: t.common.buttons.save,
                 type: AppButtonType.primary,
-                icon: Icons.add,
                 isLoading: vm.saveStatus == LoadStatus.loading,
                 onPressed: () => _onSave(vm),
               ),

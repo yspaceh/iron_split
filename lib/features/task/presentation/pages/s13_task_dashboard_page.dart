@@ -172,7 +172,6 @@ class _S13ContentState extends State<_S13Content> {
             AppButton(
               text: t.S13_Task_Dashboard.buttons.record,
               type: AppButtonType.primary,
-              icon: Icons.add,
               onPressed: () => context.pushNamed(
                 'S15',
                 pathParameters: {'taskId': vm.taskId},

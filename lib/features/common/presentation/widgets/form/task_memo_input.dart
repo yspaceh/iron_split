@@ -8,16 +8,19 @@ class TaskMemoInput extends StatelessWidget {
     required this.memoController,
     this.fillColor,
     this.focusNode,
+    this.scrollPadding = const EdgeInsets.all(20.0),
   });
   final TextEditingController memoController;
   final Color? fillColor;
   final FocusNode? focusNode;
+  final EdgeInsets scrollPadding;
 
   @override
   Widget build(BuildContext context) {
     // 直接替換為 AppTextField
     return AppTextField(
       controller: memoController,
+      scrollPadding: scrollPadding,
       fillColor: fillColor,
       labelText: t.S15_Record_Edit.label.memo, // 標題
       hintText: t.S15_Record_Edit.hint.memo, // 增加一點提示 (Optional)
