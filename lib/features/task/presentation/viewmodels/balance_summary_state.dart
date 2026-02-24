@@ -13,12 +13,12 @@ class BalanceSummaryState extends Equatable {
   // 2. 核心金額 (原始數值，UI 負責格式化)
   final double poolBalance; // 公款餘額 (大字)
   final double totalExpense; // 總支出 (紅點)
-  final double totalIncome; // 總預收 (綠點)
+  final double totalPrepay; // 總預收 (綠點)
   final double remainder; // 餘額罐
 
   // 3. 圖表比例 (0~1000) - Service 已經算好，UI 直接用
   final int expenseFlex;
-  final int incomeFlex;
+  final int prepayFlex;
 
   // 4. UI 狀態旗標
   final String ruleKey; // 'random', 'order', 'member' (UI 負責翻譯)
@@ -26,7 +26,7 @@ class BalanceSummaryState extends Equatable {
 
   // 5. 彈窗所需的明細資料 (Map<幣別代碼, 金額>)
   final Map<String, double> expenseDetail;
-  final Map<String, double> incomeDetail;
+  final Map<String, double> prepayDetail;
   final Map<String, double> poolDetail;
 
   // 6. 鎖定模式專用資訊 (S17)
@@ -38,14 +38,14 @@ class BalanceSummaryState extends Equatable {
     required this.currencySymbol,
     required this.poolBalance,
     required this.totalExpense,
-    required this.totalIncome,
+    required this.totalPrepay,
     required this.remainder,
     required this.expenseFlex,
-    required this.incomeFlex,
+    required this.prepayFlex,
     required this.ruleKey,
     required this.isLocked,
     required this.expenseDetail,
-    required this.incomeDetail,
+    required this.prepayDetail,
     required this.poolDetail,
     this.absorbedBy,
     this.absorbedAmount,
@@ -58,14 +58,14 @@ class BalanceSummaryState extends Equatable {
       currencySymbol: CurrencyConstants.defaultSymbol,
       poolBalance: 0,
       totalExpense: 0,
-      totalIncome: 0,
+      totalPrepay: 0,
       remainder: 0,
       expenseFlex: 0,
-      incomeFlex: 0,
+      prepayFlex: 0,
       ruleKey: RemainderRuleConstants.defaultRule,
       isLocked: false,
       expenseDetail: {},
-      incomeDetail: {},
+      prepayDetail: {},
       poolDetail: {},
     );
   }
@@ -75,14 +75,14 @@ class BalanceSummaryState extends Equatable {
     String? currencySymbol,
     double? poolBalance,
     double? totalExpense,
-    double? totalIncome,
+    double? totalPrepay,
     double? remainder,
     int? expenseFlex,
-    int? incomeFlex,
+    int? prepayFlex,
     String? ruleKey,
     bool? isLocked,
     Map<String, double>? expenseDetail,
-    Map<String, double>? incomeDetail,
+    Map<String, double>? prepayDetail,
     Map<String, double>? poolDetail,
     String? absorbedBy,
     double? absorbedAmount,
@@ -92,14 +92,14 @@ class BalanceSummaryState extends Equatable {
       currencySymbol: currencySymbol ?? this.currencySymbol,
       poolBalance: poolBalance ?? this.poolBalance,
       totalExpense: totalExpense ?? this.totalExpense,
-      totalIncome: totalIncome ?? this.totalIncome,
+      totalPrepay: totalPrepay ?? this.totalPrepay,
       remainder: remainder ?? this.remainder,
       expenseFlex: expenseFlex ?? this.expenseFlex,
-      incomeFlex: incomeFlex ?? this.incomeFlex,
+      prepayFlex: prepayFlex ?? this.prepayFlex,
       ruleKey: ruleKey ?? this.ruleKey,
       isLocked: isLocked ?? this.isLocked,
       expenseDetail: expenseDetail ?? this.expenseDetail,
-      incomeDetail: incomeDetail ?? this.incomeDetail,
+      prepayDetail: prepayDetail ?? this.prepayDetail,
       poolDetail: poolDetail ?? this.poolDetail,
       absorbedBy: absorbedBy ?? this.absorbedBy,
       absorbedAmount: absorbedAmount ?? this.absorbedAmount,
@@ -113,14 +113,14 @@ class BalanceSummaryState extends Equatable {
       'currencySymbol': currencySymbol,
       'poolBalance': poolBalance,
       'totalExpense': totalExpense,
-      'totalIncome': totalIncome,
+      'totalPrepay': totalPrepay,
       'remainder': remainder,
       'expenseFlex': expenseFlex,
-      'incomeFlex': incomeFlex,
+      'prepayFlex': prepayFlex,
       'ruleKey': ruleKey,
       'isLocked': isLocked,
       'expenseDetail': expenseDetail,
-      'incomeDetail': incomeDetail,
+      'prepayDetail': prepayDetail,
       'poolDetail': poolDetail,
       'absorbedBy': absorbedBy,
       'absorbedAmount': absorbedAmount,
@@ -145,14 +145,14 @@ class BalanceSummaryState extends Equatable {
       currencySymbol: map['currencySymbol'] ?? CurrencyConstants.defaultSymbol,
       poolBalance: toDouble(map['poolBalance']),
       totalExpense: toDouble(map['totalExpense']),
-      totalIncome: toDouble(map['totalIncome']),
+      totalPrepay: toDouble(map['totalPrepay']),
       remainder: toDouble(map['remainder']),
       expenseFlex: map['expenseFlex'] as int? ?? 0,
-      incomeFlex: map['incomeFlex'] as int? ?? 0,
+      prepayFlex: map['prepayFlex'] as int? ?? 0,
       ruleKey: map['ruleKey'] ?? '',
       isLocked: map['isLocked'] ?? false,
       expenseDetail: toMapDouble(map['expenseDetail']),
-      incomeDetail: toMapDouble(map['incomeDetail']),
+      prepayDetail: toMapDouble(map['prepayDetail']),
       poolDetail: toMapDouble(map['poolDetail']),
       absorbedBy: map['absorbedBy'] as String?,
       absorbedAmount: (map['absorbedAmount'] as num?)?.toDouble(),
@@ -164,14 +164,14 @@ class BalanceSummaryState extends Equatable {
         currencyCode,
         poolBalance,
         totalExpense,
-        totalIncome,
+        totalPrepay,
         remainder,
         expenseFlex,
-        incomeFlex,
+        prepayFlex,
         ruleKey,
         isLocked,
         expenseDetail,
-        incomeDetail,
+        prepayDetail,
         poolDetail,
         absorbedBy,
         absorbedAmount,

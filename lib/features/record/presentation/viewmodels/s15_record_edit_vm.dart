@@ -35,7 +35,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   late DateTime _selectedDate;
   late CurrencyConstants _selectedCurrencyConstants;
   String _selectedCategoryId = CategoryConstant.defaultCategory;
-  int _recordTypeIndex = 0; // 0: expense, 1: income
+  int _segmentedIndex = 0; // 0: expense, 1: prepay
 
   // Loading State
   LoadStatus _rateLoadStatus = LoadStatus.initial;
@@ -73,7 +73,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
   CurrencyConstants get selectedCurrencyConstants => _selectedCurrencyConstants;
   String get selectedCategoryId => _selectedCategoryId;
-  int get recordTypeIndex => _recordTypeIndex;
+  int get segmentedIndex => _segmentedIndex;
 
   LoadStatus get rateLoadStatus => _rateLoadStatus;
   LoadStatus get saveStatus => _saveStatus;
@@ -98,7 +98,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       double.tryParse(exchangeRateController.text) ?? 1.0;
 
   double get amountToSplit =>
-      _recordTypeIndex == 1 ? totalAmount : baseRemainingAmount;
+      _segmentedIndex == 1 ? totalAmount : baseRemainingAmount;
 
   double get baseRemainingAmount {
     final subTotal = _details.fold(0.0, (prev, curr) => prev + curr.amount);
@@ -141,20 +141,20 @@ class S15RecordEditViewModel extends ChangeNotifier {
   RecordModel _buildDraftRecord() {
     final double exchangeRate =
         double.tryParse(exchangeRateController.text) ?? 1.0;
-    final isIncome = _recordTypeIndex == 1;
+    final isPrepay = _segmentedIndex == 1;
 
     return RecordModel(
       id: recordId, // 新增時為 null
       date: _selectedDate,
-      title: isIncome ? '' : titleController.text, // 標題由外部決定或這裡暫空
-      type: isIncome ? RecordType.income : RecordType.expense,
+      title: isPrepay ? '' : titleController.text, // 標題由外部決定或這裡暫空
+      type: isPrepay ? RecordType.prepay : RecordType.expense,
       categoryIndex: 0, // 簡化，以 ID 為準
       categoryId: _selectedCategoryId,
 
       // 付款資訊
-      payerType: isIncome ? PayerType.prepay : _payerType,
-      payersId: (!isIncome && _payerType == PayerType.member) ? _payersId : [],
-      paymentDetails: isIncome ? null : _complexPaymentData,
+      payerType: isPrepay ? PayerType.prepay : _payerType,
+      payersId: (!isPrepay && _payerType == PayerType.member) ? _payersId : [],
+      paymentDetails: isPrepay ? null : _complexPaymentData,
 
       // 金額
       amount: totalAmount,
@@ -166,7 +166,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       splitMethod: _baseSplitMethod,
       splitMemberIds: _baseMemberIds,
       splitDetails: _baseRawDetails,
-      details: isIncome ? [] : _details,
+      details: isPrepay ? [] : _details,
 
       memo: memoController.text,
       createdAt: _originalRecord?.createdAt ?? DateTime.now(),
@@ -206,7 +206,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // 1. 同步設定區 (Safe Zone) - 絕對不加 listener
     if (_originalRecord != null) {
       final r = _originalRecord!;
-      _recordTypeIndex = r.type == RecordType.income ? 1 : 0;
+      _segmentedIndex = r.type == RecordType.prepay ? 1 : 0;
 
       // 直接賦值，不觸發 listener
       amountController.text =
@@ -319,8 +319,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   // --- UI Action Updates ---
 
-  void setRecordType(int index) {
-    _recordTypeIndex = index;
+  void setSegmentedIndex(int index) {
+    _segmentedIndex = index;
     notifyListeners();
   }
 
@@ -369,9 +369,26 @@ class S15RecordEditViewModel extends ChangeNotifier {
   // Split & Payment Data Updates (Called after bottom sheets)
 
   void updateBaseSplit(Map<String, dynamic> result) {
-    _baseSplitMethod = result['splitMethod'];
-    _baseMemberIds = List<String>.from(result['memberIds']);
-    _baseRawDetails = Map<String, double>.from(result['details']);
+    // 1. 安全解析 memberIds
+    final rawMemberIds = result['memberIds'];
+    final safeMemberIds = rawMemberIds is List
+        ? rawMemberIds.whereType<String>().toList()
+        : <String>[];
+
+    // 2. 安全解析 details (Map<String, double>)
+    final rawDetails = result['details'];
+    final safeDetails = rawDetails is Map
+        ? rawDetails.map((key, value) => MapEntry(
+              key.toString(), // 確保 key 一定是 String
+              (value is num)
+                  ? value.toDouble()
+                  : 0.0, // 容錯：把 int 轉成 double，如果是怪異型別就給 0.0
+            ))
+        : <String, double>{};
+    _baseSplitMethod =
+        result['splitMethod'] ?? SplitMethodConstant.defaultMethod;
+    _baseMemberIds = safeMemberIds;
+    _baseRawDetails = safeDetails;
     notifyListeners();
   }
 
@@ -427,19 +444,19 @@ class S15RecordEditViewModel extends ChangeNotifier {
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
 
-      final isIncome = _recordTypeIndex == 1;
+      final isPrepay = _segmentedIndex == 1;
 
       var draftRecord = _buildDraftRecord();
 
       draftRecord = draftRecord.copyWith(
-        title: _recordTypeIndex == 1
-            ? t.S15_Record_Edit.type_income_title
+        title: _segmentedIndex == 1
+            ? t.S15_Record_Edit.type_prepay
             : titleController.text,
         createdBy: _originalRecord?.createdBy ?? user.uid,
       );
 
       // 3. 準備 Log 資料 (這是輔助顯示用的，邏輯不變)
-      final logDetails = _buildLogDetails(t, isIncome);
+      final logDetails = _buildLogDetails(t, isPrepay);
 
       // 4. 呼叫 Repository
       if (recordId == null) {
@@ -483,12 +500,12 @@ class S15RecordEditViewModel extends ChangeNotifier {
   }
 
   /// 私有 Helper: 組裝 Activity Log 的詳細資料
-  Map<String, dynamic> _buildLogDetails(Translations t, bool isIncome) {
+  Map<String, dynamic> _buildLogDetails(Translations t, bool isPrepay) {
     // A. 建構 Payment Log Info
     Map<String, dynamic> paymentLogData = {};
 
-    if (isIncome) {
-      paymentLogData = {'type': 'income', 'contributors': []};
+    if (isPrepay) {
+      paymentLogData = {'type': 'prepay', 'contributors': []};
     } else {
       switch (_payerType) {
         case PayerType.prepay:
@@ -547,10 +564,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
     return {
       'recordName':
-          isIncome ? t.S15_Record_Edit.type_income_title : titleController.text,
+          isPrepay ? t.S15_Record_Edit.type_prepay : titleController.text,
       'amount': totalAmount,
       'currency': _selectedCurrencyConstants.code,
-      'recordType': isIncome ? 'income' : 'expense',
+      'recordType': isPrepay ? 'prepay' : 'expense',
       'payment': paymentLogData,
       'allocation': allocationLogData,
     };
@@ -570,9 +587,9 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
       //  [修正] 核心邏輯：委派給 Service，與 S13 保持 100% 一致
       // Service 內部會自動處理：
-      //   a. 檢查是否為收入 (Income)
+      //   a. 檢查是否為收入 (Prepay)
       //   b. 檢查是否被其他紀錄引用 (checkRecordReferenced)
-      //   c. 檢查公款餘額是否足夠 (incomeIsUsed)
+      //   c. 檢查公款餘額是否足夠 (prepayIsUsed)
       //   d. 執行刪除與餘額撤銷 (undo)
       await _recordService.validateAndDelete(
         taskId,
@@ -608,7 +625,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if (_originalRecord == null) {
       if (totalAmount > 0) return true;
       // 只有在支出模式下，才檢查標題是否有字
-      if (_recordTypeIndex == 0) {
+      if (_segmentedIndex == 0) {
         return titleController.text.trim().isNotEmpty;
       }
       return false;
@@ -617,7 +634,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     // 2. 編輯模式 (Edit Mode)
     final r = _originalRecord!;
     final currentType =
-        _recordTypeIndex == 0 ? RecordType.expense : RecordType.income;
+        _segmentedIndex == 0 ? RecordType.expense : RecordType.prepay;
 
     // 檢查類型變更
     if (currentType != r.type) return true;
@@ -627,8 +644,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
     // 檢查標題變更 ( 修正重點)
     // 只有當「現在是支出」且「資料庫原本也是支出」時，才比對標題
-    // 因為 Income 的 Controller 通常是空的，比對會出錯
-    if (_recordTypeIndex == 0 && r.type == RecordType.expense) {
+    // 因為 Prepay 的 Controller 通常是空的，比對會出錯
+    if (_segmentedIndex == 0 && r.type == RecordType.expense) {
       if (titleController.text != r.title) return true;
     }
 
@@ -636,7 +653,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     if (!_isSameDay(_selectedDate, r.date)) return true;
 
     // (建議) 檢查分類是否變更 (防止改了分類卻沒警告)
-    if (_recordTypeIndex == 0 && _selectedCategoryId != r.categoryId) {
+    if (_segmentedIndex == 0 && _selectedCategoryId != r.categoryId) {
       return true;
     }
 

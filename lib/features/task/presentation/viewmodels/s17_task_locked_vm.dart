@@ -47,6 +47,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   List<SettlementMember> _clearedMembers = [];
   int? _remainingDays;
   LoadStatus _exportStatus = LoadStatus.initial;
+  LoadStatus _shareStatus = LoadStatus.initial;
 
   // Getters
   LockedPageType get pageType => _pageType;
@@ -64,6 +65,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   bool get hasSeen =>
       _task?.settlement?['viewStatus']?[_currentUserId] ?? false;
   LoadStatus get exportStatus => _exportStatus;
+  LoadStatus get shareStatus => _shareStatus;
   String get link => _deepLinkService.generateTaskLink(taskId);
 
   S17TaskLockedViewModel({
@@ -266,7 +268,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         allMembers: [..._pendingMembers, ..._clearedMembers],
         clearedMembers: _clearedMembers,
         totalExpense: _balanceState!.totalExpense,
-        totalIncome: _balanceState!.totalIncome,
+        totalPrepay: _balanceState!.totalPrepay,
         remainderBuffer: BalanceCalculator.calculateRemainderBuffer(records),
         absorbedBy: _balanceState!.absorbedBy,
         labels: labels,
@@ -281,21 +283,37 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       );
 
       _exportStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
       _exportStatus = LoadStatus.error;
+      notifyListeners();
       rethrow;
     } catch (e) {
       _exportStatus = LoadStatus.error;
-      throw ErrorMapper.parseErrorCode(e);
-    } finally {
       notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
     }
   }
 
   /// 通知成員 (純文字分享)
   Future<void> notifyMembers(
       {required String message, required String subject}) async {
-    await _shareService.shareText(message, subject: subject);
+    if (_shareStatus == LoadStatus.loading) return;
+    _shareStatus = LoadStatus.loading;
+    notifyListeners();
+    try {
+      await _shareService.shareText(message, subject: subject);
+      _shareStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
+    }
   }
 
   @override

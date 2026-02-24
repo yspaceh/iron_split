@@ -18,7 +18,7 @@ class ActivityLogItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
+    final textTheme = theme.textTheme;
     // 1. 獲取三段式顯示資料
     final info = log.getDisplayInfo(context);
 
@@ -59,7 +59,7 @@ class ActivityLogItem extends StatelessWidget {
                 // 1. 標題 (Title) - 例如 "新增記帳：[支出]"
                 Text(
                   info.title,
-                  style: theme.textTheme.titleSmall?.copyWith(
+                  style: textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
                   ),
@@ -69,7 +69,7 @@ class ActivityLogItem extends StatelessWidget {
                 // 2. 主要內容 (Main Line) - 例如 "晚餐 (3000) • 支付..."
                 Text(
                   info.mainLine,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     height: 1.4,
                   ),
@@ -91,7 +91,7 @@ class ActivityLogItem extends StatelessWidget {
                     ),
                     child: Text(
                       info.subLine!,
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant
                             .withValues(alpha: 0.8), // 稍微淡一點
                         height: 1.5, // 增加行距讓多行好讀
@@ -106,7 +106,7 @@ class ActivityLogItem extends StatelessWidget {
                 // 4. 時間與操作者 (Footer)
                 Text(
                   "${member.displayName} • $timeStr",
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),

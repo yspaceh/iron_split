@@ -104,7 +104,7 @@ class B03SplitMethodEditViewModel extends ChangeNotifier {
   }
 
   // 對照原始 _switchMethod 邏輯 (使用 percent 與 exact)
-  void switchMethod(String newMethod) {
+  void setSegmentedIndex(String newMethod) {
     if (_splitMethod == newMethod) return;
     _splitMethod = newMethod;
 

@@ -30,25 +30,26 @@ class RecordItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
-    final isIncome = record.type == RecordType.income;
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final isPrepay = record.type == RecordType.prepay;
     final originalCurrencyConstants = CurrencyConstants.getCurrencyConstants(
         record.currencyCode); // 注意這裡用 currencyCode
     final themeVm = context.watch<ThemeViewModel>();
     final expenseColor = themeVm.themeMode == ThemeMode.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
-    final incomeColor = themeVm.themeMode == ThemeMode.dark
-        ? AppTheme.incomeLight
-        : AppTheme.incomeDeep;
+    final prepayColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.prepayLight
+        : AppTheme.prepayDeep;
 
     // UI 顯示邏輯 (Icon, Color, Title) 可以保留在 View 層
     final category = CategoryConstant.getCategoryById(record.categoryId);
     final title =
         (record.title.isNotEmpty) ? record.title : category.getName(t);
-    final icon = isIncome ? Icons.savings_outlined : category.icon;
-    final iconColor = isIncome ? incomeColor : expenseColor;
-    final amountColor =
-        isIncome ? theme.colorScheme.tertiary : theme.colorScheme.primary;
+    final icon = isPrepay ? Icons.savings_outlined : category.icon;
+    final iconColor = isPrepay ? prepayColor : expenseColor;
+    final amountColor = isPrepay ? colorScheme.tertiary : colorScheme.primary;
 
     final amountText =
         "${originalCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(amount.original, originalCurrencyConstants.code)}";
@@ -59,7 +60,7 @@ class RecordItem extends StatelessWidget {
         alignment: Alignment.centerRight,
         margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: theme.colorScheme.error,
+          color: colorScheme.error,
           borderRadius: BorderRadius.circular(16), // 圓角要跟卡片一樣
         ),
         padding: const EdgeInsets.only(right: 20),
@@ -81,7 +82,7 @@ class RecordItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8), // 上下留白，讓背景透出來
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface, // 純白背景
+          color: colorScheme.surface, // 純白背景
           borderRadius: BorderRadius.circular(16), // 精緻圓角
           boxShadow: [
             BoxShadow(
@@ -112,9 +113,9 @@ class RecordItem extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: theme.textTheme.bodyLarge?.copyWith(
+                      style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface, // 深黑色
+                        color: colorScheme.onSurface, // 深黑色
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -128,7 +129,7 @@ class RecordItem extends StatelessWidget {
                     children: [
                       Text(
                         amountText,
-                        style: theme.textTheme.titleMedium?.copyWith(
+                        style: textTheme.titleMedium?.copyWith(
                             color: amountColor, // 深紅/深綠
                             fontWeight: FontWeight.w700, // 加粗
                             fontFamily: 'RobotoMono', // 等寬字體
@@ -138,8 +139,8 @@ class RecordItem extends StatelessWidget {
                       if (originalCurrencyConstants != baseCurrency)
                         Text(
                           "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(amount.base, baseCurrency.code)}",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant, // 灰色
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant, // 灰色
                             fontFamily: 'RobotoMono',
                             fontSize: 10,
                           ),

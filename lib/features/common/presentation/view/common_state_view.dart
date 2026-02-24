@@ -6,7 +6,7 @@ import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -41,16 +41,18 @@ class CommonStateView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     switch (status) {
       case LoadStatus.initial:
       case LoadStatus.loading:
         return Scaffold(
           backgroundColor:
-              loadingBackgroundColor ?? theme.colorScheme.surfaceContainerLow,
+              loadingBackgroundColor ?? colorScheme.surfaceContainerLow,
           body: Center(
             child: CircularProgressIndicator(
-                color: loadingForegroundColor ?? theme.colorScheme.primary),
+                color: loadingForegroundColor ?? colorScheme.primary),
           ),
         );
       case LoadStatus.success:
@@ -88,7 +90,7 @@ class CommonStateView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 ErrorMapper.map(context, code: errorCode),
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                style: textTheme.bodyMedium?.copyWith(height: 1.5),
               ),
             ),
           );
@@ -117,7 +119,7 @@ class CommonStateView extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   ErrorMapper.map(context, code: errorCode),
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ),
             ),

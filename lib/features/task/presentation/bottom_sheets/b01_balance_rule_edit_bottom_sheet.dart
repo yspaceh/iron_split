@@ -5,7 +5,7 @@ import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_card.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -96,6 +96,8 @@ class _B01BalanceRuleEditBottomSheetState
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return CommonBottomSheet(
       title: t.common.remainder_rule.title, // "零頭處理"
@@ -120,7 +122,7 @@ class _B01BalanceRuleEditBottomSheetState
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           Text(
-            t.common.remainder_rule.description.remainder(
+            t.common.remainder_rule.content.remainder(
               amount:
                   "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(widget.currentRemainder, widget.baseCurrency.code)}",
             ),
@@ -133,9 +135,9 @@ class _B01BalanceRuleEditBottomSheetState
             isRadio: true, // [Radio 樣式]
             onToggle: () => _onToggleRule(RemainderRuleConstants.random),
             child: Text(
-              t.common.remainder_rule.description.random,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              t.common.remainder_rule.content.random,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -147,9 +149,9 @@ class _B01BalanceRuleEditBottomSheetState
             isRadio: true, // [Radio 樣式]
             onToggle: () => _onToggleRule(RemainderRuleConstants.order),
             child: Text(
-              t.common.remainder_rule.description.order,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              t.common.remainder_rule.content.order,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -162,9 +164,9 @@ class _B01BalanceRuleEditBottomSheetState
             onToggle: () => _onToggleRule(RemainderRuleConstants.member),
             child: Column(children: [
               Text(
-                t.common.remainder_rule.description.member,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                t.common.remainder_rule.content.member,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 12),
@@ -176,8 +178,8 @@ class _B01BalanceRuleEditBottomSheetState
                   title: m.displayName,
                   isSelected: isMe,
                   isRadio: true,
-                  isSelectedBackgroundColor: theme.colorScheme.surface,
-                  backgroundColor: theme.colorScheme.surfaceContainerLow,
+                  isSelectedBackgroundColor: colorScheme.surface,
+                  backgroundColor: colorScheme.surfaceContainerLow,
                   onTap: () {
                     setState(() => _selectedMemberId = id);
                   },

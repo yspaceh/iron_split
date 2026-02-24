@@ -39,16 +39,14 @@ class _S74Content extends StatelessWidget {
       if (!context.mounted) return;
       context.goNamed('S00');
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
   }
 
-  void _showConfirmDialog(
-      BuildContext context, S74DeleteAccountNoticeViewModel vm) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
+  void _showConfirmDialog(BuildContext context,
+      S74DeleteAccountNoticeViewModel vm, Translations t, ThemeData theme) {
     CommonAlertDialog.show(
       context,
       title: t.D13_DeleteAccount_Confirm.title,
@@ -63,7 +61,7 @@ class _S74Content extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         AppButton(
-          text: t.D13_DeleteAccount_Confirm.buttons.confirm,
+          text: t.common.buttons.confirm,
           type: AppButtonType.primary,
           onPressed: () {
             context.pop(); // 關閉 Dialog
@@ -93,10 +91,10 @@ class _S74Content extends StatelessWidget {
             onPressed: () => context.pop(),
           ),
           AppButton(
-            text: t.S74_DeleteAccount_Notice.buttons.delete,
+            text: t.S74_DeleteAccount_Notice.buttons.delete_account,
             type: AppButtonType.primary,
             isLoading: vm.deleteStatus == LoadStatus.loading,
-            onPressed: () => _showConfirmDialog(context, vm),
+            onPressed: () => _showConfirmDialog(context, vm, t, theme),
           ),
         ],
       ),

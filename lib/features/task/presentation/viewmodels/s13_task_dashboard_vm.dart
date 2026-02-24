@@ -50,15 +50,15 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   bool _hasScrolledPersonal = false;
 
 // 新增：當前 Tab 索引 (0: Group, 1: Personal)
-  int _currentTabIndex = 0;
-  int get currentTabIndex => _currentTabIndex;
+  int _segmentedIndex = 0;
+  int get segmentedIndex => _segmentedIndex;
 
   // Personal View 專用 State
   List<RecordModel> _personalRecords = [];
   Map<DateTime, List<RecordModel>> _personalGroupedRecords = {};
   DualAmount _personalNetBalance = DualAmount.zero;
   DualAmount _personalTotalExpense = DualAmount.zero;
-  DualAmount _personalTotalIncome = DualAmount.zero;
+  DualAmount _personalTotalPrepay = DualAmount.zero;
 
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId;
@@ -79,9 +79,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       _personalGroupedRecords;
   DualAmount get personalNetBalance => _personalNetBalance;
   DualAmount get personalTotalExpense => _personalTotalExpense;
-  DualAmount get personalTotalIncome => _personalTotalIncome;
+  DualAmount get personalTotalPrepay => _personalTotalPrepay;
   ScrollController get activeScrollController =>
-      _currentTabIndex == 0 ? groupScrollController : personalScrollController;
+      _segmentedIndex == 0 ? groupScrollController : personalScrollController;
   String get remainderRule => _remainderRule;
   String? get remainderAbsorberId => _remainderAbsorberId;
   Map<String, TaskMember> get membersData => _task?.members ?? {};
@@ -190,7 +190,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     );
 
     _personalTotalExpense = personalStats.expense;
-    _personalTotalIncome = personalStats.income;
+    _personalTotalPrepay = personalStats.prepay;
     _personalNetBalance = personalStats.netBalance;
 
     // --- Part 3: Date Generation (共用) ---日期處理：處理空值
@@ -235,9 +235,9 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   // 切換 Tab 時，強制 Reset 到「今天」
-  void setTabIndex(int index) {
-    if (_currentTabIndex == index) return;
-    _currentTabIndex = index;
+  void setSegmentedIndex(int index) {
+    if (_segmentedIndex == index) return;
+    _segmentedIndex = index;
     notifyListeners();
 
     // 使用 addPostFrameCallback 確保 UI 已經切換完成
@@ -259,11 +259,11 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
         _dashboardService.calculateInitialTargetDate(startDate, endDate);
 
     // 標記該 Tab 已捲動過 (避免之後 _recalculate 重複觸發)
-    if (_currentTabIndex == 0) _hasScrolledGroup = true;
-    if (_currentTabIndex == 1) _hasScrolledPersonal = true;
+    if (_segmentedIndex == 0) _hasScrolledGroup = true;
+    if (_segmentedIndex == 1) _hasScrolledPersonal = true;
 
     // 執行跳轉
-    handleDateJump(targetDate);
+    scrollRecord(targetDate);
   }
 
   // 新增：檢查並執行自動捲動
@@ -276,21 +276,21 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     final targetDate =
         _dashboardService.calculateInitialTargetDate(startDate, endDate);
 
-    if (_currentTabIndex == 0 && !_hasScrolledGroup) {
+    if (_segmentedIndex == 0 && !_hasScrolledGroup) {
       _hasScrolledGroup = true;
       // 延遲一點點確保 Key 已經掛載到 Widget Tree
       Future.delayed(const Duration(milliseconds: 100), () {
-        handleDateJump(targetDate);
+        scrollRecord(targetDate);
       });
-    } else if (_currentTabIndex == 1 && !_hasScrolledPersonal) {
+    } else if (_segmentedIndex == 1 && !_hasScrolledPersonal) {
       _hasScrolledPersonal = true;
       Future.delayed(const Duration(milliseconds: 100), () {
-        handleDateJump(targetDate);
+        scrollRecord(targetDate);
       });
     }
   }
 
-  Future<void> handleDateJump(DateTime date, {VoidCallback? onNoResult}) async {
+  Future<void> scrollRecord(DateTime date, {VoidCallback? onNoResult}) async {
     _selectedDateInStrip = date;
     notifyListeners();
 
@@ -406,7 +406,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   DualAmount getPersonalRecordDisplayAmount(RecordModel record) {
-    if (record.type == RecordType.income) {
+    if (record.type == RecordType.prepay) {
       return BalanceCalculator.calculatePersonalCredit(
           record, _currentUserId, baseCurrency);
     } else {

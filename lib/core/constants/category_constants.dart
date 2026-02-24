@@ -29,7 +29,7 @@ class CategoryConstant {
         return t.common.category.transport;
       case 'shopping_bag':
         return t.common.category.shopping;
-      case 'movie':
+      case 'entertainment':
         return t.common.category.entertainment;
       case 'hotel':
         return t.common.category.accommodation;
@@ -47,7 +47,7 @@ class CategoryConstant {
         return t.S15_Record_Edit.hint.category.transport;
       case 'shopping_bag':
         return t.S15_Record_Edit.hint.category.shopping;
-      case 'movie':
+      case 'entertainment':
         return t.S15_Record_Edit.hint.category.entertainment;
       case 'hotel':
         return t.S15_Record_Edit.hint.category.accommodation;
@@ -72,9 +72,9 @@ const List<CategoryConstant> kAppCategories = [
       labelKey: 't.common.category.shopping',
       icon: Icons.shopping_bag_outlined),
   CategoryConstant(
-      id: 'movie',
+      id: 'entertainment',
       labelKey: 't.common.category.entertainment',
-      icon: Icons.movie_outlined),
+      icon: Icons.attractions_outlined),
   CategoryConstant(
       id: 'hotel',
       labelKey: 't.common.category.accommodation',
@@ -82,5 +82,5 @@ const List<CategoryConstant> kAppCategories = [
   CategoryConstant(
       id: 'more_horiz',
       labelKey: 't.common.category.others',
-      icon: Icons.more_horiz),
+      icon: Icons.grid_view_outlined),
 ];

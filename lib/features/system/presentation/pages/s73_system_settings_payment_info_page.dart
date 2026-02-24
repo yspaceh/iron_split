@@ -78,11 +78,11 @@ class _S73ContentState extends State<_S73Content> {
     FocusManager.instance.primaryFocus?.unfocus();
     try {
       vm.save();
-
       if (!context.mounted) return;
       AppToast.showSuccess(context, t.success.saved);
       context.pop();
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }

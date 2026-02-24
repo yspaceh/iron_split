@@ -13,7 +13,6 @@ import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/widgets/activity_log_item.dart';
 import 'package:provider/provider.dart';
-import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s52_task_settings_log_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -46,9 +45,31 @@ class S52TaskSettingsLogPage extends StatelessWidget {
 class _S52Content extends StatelessWidget {
   const _S52Content();
 
+  Future<void> _handleExport(BuildContext context,
+      S52TaskSettingsLogViewModel vm, Translations t) async {
+    try {
+      await vm.exportCsv(
+        subject: t.S52_TaskSettings_Log.title,
+        fileName: t.S52_TaskSettings_Log.export_file_prefix,
+        header: '${t.S52_TaskSettings_Log.csv_header.time},'
+            '${t.S52_TaskSettings_Log.csv_header.user},'
+            '${t.S52_TaskSettings_Log.csv_header.action},'
+            '${t.S52_TaskSettings_Log.csv_header.details}',
+        getAction: (log) => log.getLocalizedAction(context),
+        getDetails: (log) => log.getFormattedDetails(context),
+        defaultMemberName: t.S53_TaskSettings_Members.member_default_name,
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
     final vm = context.watch<S52TaskSettingsLogViewModel>();
     final title = t.S52_TaskSettings_Log.title;
@@ -65,53 +86,18 @@ class _S52Content extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              child: StreamBuilder<List<ActivityLogModel>>(
-                stream: vm.logsStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                        child: Text(t.common
-                            .error_prefix(message: snapshot.error.toString())));
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  final logs = snapshot.data ?? [];
-
-                  if (logs.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            t.S52_TaskSettings_Log.empty_log,
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: logs.length,
-                    separatorBuilder: (context, index) => Divider(
-                      height: 1,
-                      color: theme.colorScheme.onSurfaceVariant
-                          .withValues(alpha: 0.2),
-                    ),
-                    itemBuilder: (context, index) {
-                      final log = logs[index];
-
-                      return ActivityLogItem(
-                        log: log,
-                        members: vm.membersData, // Use data from VM
-                      );
-                    },
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: vm.logs.length,
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                ),
+                itemBuilder: (context, index) {
+                  final log = vm.logs[index];
+                  return ActivityLogItem(
+                    log: log,
+                    members: vm.membersData, // Use data from VM
                   );
                 },
               ),
@@ -126,26 +112,7 @@ class _S52Content extends StatelessWidget {
               text: t.S52_TaskSettings_Log.buttons.export_csv,
               type: AppButtonType.secondary,
               isLoading: vm.exportStatus == LoadStatus.loading,
-              onPressed: () async {
-                try {
-                  await vm.exportCsv(
-                    subject: t.S52_TaskSettings_Log.title,
-                    fileName: t.S52_TaskSettings_Log.export_file_prefix,
-                    header: '${t.S52_TaskSettings_Log.csv_header.time},'
-                        '${t.S52_TaskSettings_Log.csv_header.user},'
-                        '${t.S52_TaskSettings_Log.csv_header.action},'
-                        '${t.S52_TaskSettings_Log.csv_header.details}',
-                    getAction: (log) => log.getLocalizedAction(context),
-                    getDetails: (log) => log.getFormattedDetails(context),
-                    defaultMemberName:
-                        t.S53_TaskSettings_Members.member_default_name,
-                  );
-                } on AppErrorCodes catch (code) {
-                  if (!context.mounted) return;
-                  final msg = ErrorMapper.map(context, code: code);
-                  AppToast.showError(context, msg);
-                }
-              },
+              onPressed: () => _handleExport(context, vm, t),
             ),
           ],
         ),

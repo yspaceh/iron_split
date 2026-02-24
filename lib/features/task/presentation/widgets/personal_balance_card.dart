@@ -11,7 +11,7 @@ class PersonalBalanceCard extends StatelessWidget {
   final CurrencyConstants baseCurrency;
   final DualAmount netBalance; // 直接接收計算結果
   final DualAmount totalExpense; // 個人總支出
-  final DualAmount totalIncome; // 個人總預收
+  final DualAmount totalPrepay; // 個人總預收
   final String uid;
   final TaskMember? memberData;
   final double? fixedHeight;
@@ -24,33 +24,34 @@ class PersonalBalanceCard extends StatelessWidget {
     required this.memberData,
     this.fixedHeight,
     required this.totalExpense,
-    required this.totalIncome,
+    required this.totalPrepay,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final t = Translations.of(context);
 
     final isPositive = netBalance.base >= 0;
     // 支出使用主色 (Iron Wine)
-    final Color expenseColor = theme.colorScheme.primary;
+    final Color expenseColor = colorScheme.primary;
     // 收入使用第三色 (我們在 AppTheme 定義為 Forest Green)
-    final Color incomeColor = theme.colorScheme.tertiary;
-    final Color neutralColor = theme.colorScheme.outline;
+    final Color prepayColor = colorScheme.tertiary;
+    final Color neutralColor = colorScheme.outline;
     // Footer 背景色 (使用極淡的表面色變體)
     final Color footerBgColor =
-        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
     // 邊框色
-    final Color borderColor =
-        theme.colorScheme.outlineVariant.withValues(alpha: 0.5);
+    final Color borderColor = colorScheme.outlineVariant.withValues(alpha: 0.5);
     final displayName = memberData?.displayName ??
         t.S53_TaskSettings_Members.member_default_name;
 
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface, // [修改] 純白
+        color: colorScheme.surface, // [修改] 純白
         borderRadius: BorderRadius.circular(20), // [修改] 圓角 20
         // [修改] 統一陰影
         boxShadow: [
@@ -82,8 +83,8 @@ class PersonalBalanceCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         displayName,
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: theme.colorScheme.onSurface),
+                        style: textTheme.bodyMedium
+                            ?.copyWith(color: colorScheme.onSurface),
                       ),
                     ],
                   ),
@@ -92,7 +93,7 @@ class PersonalBalanceCard extends StatelessWidget {
               Divider(
                 height: double.infinity,
                 thickness: 1, // 線條厚度
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.4),
               ),
               Expanded(
                 child: Column(
@@ -115,9 +116,9 @@ class PersonalBalanceCard extends StatelessWidget {
                         children: [
                           Text(
                             baseCurrency.code,
-                            style: theme.textTheme.labelMedium?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ],
@@ -130,10 +131,10 @@ class PersonalBalanceCard extends StatelessWidget {
                         children: [
                           Text(
                             isPositive
-                                ? t.common.payment_status.receivable
+                                ? t.common.payment_status.refund
                                 : t.common.payment_status.payable,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           Text.rich(
@@ -141,12 +142,12 @@ class PersonalBalanceCard extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text: baseCurrency.symbol,
-                                  style: theme.textTheme.titleLarge?.copyWith(
+                                  style: textTheme.titleLarge?.copyWith(
                                     // 使用變數判斷顏色
                                     color: netBalance.base < 0
                                         ? expenseColor
                                         : (netBalance.base > 0
-                                            ? incomeColor
+                                            ? prepayColor
                                             : neutralColor),
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -163,7 +164,7 @@ class PersonalBalanceCard extends StatelessWidget {
                                     color: netBalance.base < 0
                                         ? expenseColor
                                         : (netBalance.base > 0
-                                            ? incomeColor
+                                            ? prepayColor
                                             : neutralColor),
                                     letterSpacing: -1.0,
                                   ),
@@ -171,39 +172,37 @@ class PersonalBalanceCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 4),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
                                 "${t.S13_Task_Dashboard.label.total_expense} ",
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               Text(
                                 "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalExpense.base.abs(), baseCurrency.code)}",
-                                style: theme.textTheme.bodySmall?.copyWith(
+                                style: textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                              Text(
-                                "|",
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
                               Text(
                                 "${t.S13_Task_Dashboard.label.total_prepay} ",
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               Text(
-                                "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalIncome.base.abs(), baseCurrency.code)}",
-                                style: theme.textTheme.bodySmall?.copyWith(
+                                "${baseCurrency.symbol}${CurrencyConstants.formatAmount(totalPrepay.base.abs(), baseCurrency.code)}",
+                                style: textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -212,25 +211,6 @@ class PersonalBalanceCard extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    // Row(
-                    //   children: [
-                    //     const SizedBox(width: 16),
-                    //     Expanded(
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         mainAxisSize: MainAxisSize.min,
-                    //         children: [
-                    //           Text(
-                    //             displayName,
-                    //             style: theme.textTheme.titleMedium
-                    //                 ?.copyWith(fontWeight: FontWeight.bold),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

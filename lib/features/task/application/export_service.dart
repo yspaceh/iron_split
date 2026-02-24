@@ -18,7 +18,7 @@ class ExportService {
     required List<SettlementMember> allMembers,
     required List<SettlementMember> clearedMembers,
     required double totalExpense,
-    required double totalIncome,
+    required double totalPrepay,
     required double remainderBuffer,
     required String? absorbedBy,
     required Map<String, String> labels, // 由 Page 傳入翻譯好的標籤
@@ -65,7 +65,7 @@ class ExportService {
     buffer.writeln(
         '${labels['totalExpense']} ($baseSymbol),${BalanceCalculator.roundToPrecision(totalExpense, baseCurrency)}');
     buffer.writeln(
-        '${labels['totalIncome']} ($baseSymbol),${BalanceCalculator.roundToPrecision(totalIncome, baseCurrency)}');
+        '${labels['totalPrepay']} ($baseSymbol),${BalanceCalculator.roundToPrecision(totalPrepay, baseCurrency)}');
     buffer
         .writeln('${labels['remainderBuffer']} ($baseSymbol),$remainderBuffer');
     if (absorbedBy != null) {

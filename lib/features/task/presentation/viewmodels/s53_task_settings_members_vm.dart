@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -21,25 +23,27 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
   LoadStatus _addMemberStatus = LoadStatus.initial;
   LoadStatus _deleteMemberStatus = LoadStatus.initial;
   LoadStatus _updateStatus = LoadStatus.initial;
-  Stream<TaskModel?>? _taskStream;
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
   String _currentUserId = '';
-
+  TaskModel? _task;
+  String _createdBy = '';
+  Map<String, TaskMember> _membersMap = {};
+  List<MapEntry<String, TaskMember>> _membersList = [];
   // Getters
 
   LoadStatus get addMemberStatus => _addMemberStatus;
   LoadStatus get deleteMemberStatus => _deleteMemberStatus;
   LoadStatus get updateStatus => _updateStatus;
   String get currentUserId => _currentUserId;
-
+  TaskModel? get task => _task;
+  String get createdBy => _createdBy;
+  Map<String, TaskMember> get membersMap => _membersMap;
+  List<MapEntry<String, TaskMember>> get membersList => _membersList;
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
-  // 直接暴露 Firestore Stream 給 UI 使用 (也可以在 VM 內 listen)
-  Stream<TaskModel?> get taskStream {
-    _taskStream ??= _taskRepo.streamTask(taskId);
-    return _taskStream!;
-  }
+
+  StreamSubscription? _taskSubscription;
 
   S53TaskSettingsMembersViewModel(
       {required TaskRepository taskRepo,
@@ -61,8 +65,24 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       if (user == null) throw AppErrorCodes.unauthorized;
       _currentUserId = user.uid;
 
-      _initStatus = LoadStatus.success;
-      notifyListeners();
+      _taskSubscription = _taskRepo.streamTask(taskId).listen(
+        (taskData) {
+          if (taskData != null) {
+            _task = taskData;
+            _createdBy = _task?.createdBy ?? '';
+            _membersMap = _task?.members ?? {};
+            _membersList = _task?.sortedMembers ?? [];
+            _initStatus = LoadStatus.success;
+            notifyListeners();
+          }
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;
@@ -74,20 +94,15 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     }
   }
 
-  void retryLoad() {
-    _taskStream = _taskRepo.streamTask(taskId);
-
-    notifyListeners();
-  }
-
 // 徹底重寫 addMember 方法，移除 temp_id, status, createdAt 等垃圾
-  Future<void> addMember(TaskModel task) async {
+  Future<void> addMember() async {
     if (_addMemberStatus == LoadStatus.loading) return;
     _addMemberStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
-      final nextNumber = (task.memberCount) + 1;
+      if (_task == null) throw AppErrorCodes.dataNotFound;
+      final nextNumber = (_task?.memberCount ?? 0) + 1;
       final virtualId = MemberService.generateVirtualId();
       final displayName = "${t.common.member_prefix} $nextNumber";
       final newMember = MemberService.createGhost(displayName: displayName);
@@ -112,12 +127,11 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> renameMember(Map<String, TaskMember> currentMembersMap,
-      String memberId, String newName) async {
+  Future<void> renameMember(String memberId, String newName) async {
     final trimmedName = newName.trim();
     if (trimmedName.isEmpty) return;
 
-    final oldData = currentMembersMap[memberId];
+    final oldData = _membersMap[memberId];
     if (oldData == null) return;
     if (oldData.displayName == trimmedName) return;
 
@@ -131,8 +145,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateRatio(Map<String, TaskMember> currentMembersMap,
-      String memberId, double newRatio) async {
+  Future<void> updateRatio(String memberId, double newRatio) async {
     if (_updateStatus == LoadStatus.loading) return;
     _updateStatus = LoadStatus.loading;
     notifyListeners();
@@ -155,15 +168,15 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
   /// 嘗試刪除成員
   /// Returns: true if deleted, false if blocked (has data)
-  Future<void> deleteMember(
-      Map<String, TaskMember> currentMembersMap, String memberId) async {
-    final memberToDelete = currentMembersMap[memberId];
-    if (memberToDelete == null) throw AppErrorCodes.dataNotFound;
+  Future<void> deleteMember(String memberId) async {
     if (_deleteMemberStatus == LoadStatus.loading) return;
     _deleteMemberStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
+      if (_membersMap.isEmpty) throw AppErrorCodes.dataNotFound;
+      final memberToDelete = _membersMap[memberId];
+      if (memberToDelete == null) throw AppErrorCodes.dataNotFound;
       // 1. 髒檢查
       final hasData = await _recordRepo.hasMemberRecords(taskId, memberId);
 
@@ -171,7 +184,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
       // 2. 執行刪除
       final updatedMap =
-          currentMembersMap.map((key, value) => MapEntry(key, value.toMap()));
+          _membersMap.map((key, value) => MapEntry(key, value.toMap()));
       updatedMap.remove(memberId);
 
       await _taskRepo.replaceMembersMap(taskId, updatedMap);
@@ -193,5 +206,11 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _taskSubscription?.cancel();
+    super.dispose();
   }
 }

@@ -107,7 +107,7 @@ class S13GroupView extends StatelessWidget {
                 endDate: task.endDate ?? DateTime.now(),
                 selectedDate: vm.selectedDateInStrip,
                 onDateSelected: (date) {
-                  vm.handleDateJump(date, onNoResult: () {
+                  vm.scrollRecord(date, onNoResult: () {
                     D05DateJumpNoResultDialog.show(context,
                         targetDate: date, taskId: task.id);
                   });
@@ -166,22 +166,19 @@ class S13GroupView extends StatelessWidget {
                               try {
                                 await vm.deleteRecord(record.id!);
                                 if (ctx.mounted) {
-                                  AppToast.showSuccess(
-                                      ctx,
-                                      t.D10_RecordDelete_Confirm
-                                          .deleted_success);
+                                  AppToast.showSuccess(ctx, t.success.deleted);
                                 }
                               } on AppErrorCodes catch (code) {
                                 if (!ctx.mounted) return;
 
                                 final msg = ErrorMapper.map(ctx, code: code);
                                 switch (code) {
-                                  case AppErrorCodes.incomeIsUsed:
+                                  case AppErrorCodes.prepayIsUsed:
                                     CommonInfoDialog.show(ctx,
                                         title:
                                             t.error.dialog.delete_failed.title,
                                         content: t.error.dialog.delete_failed
-                                            .message);
+                                            .content);
                                     break;
                                   case AppErrorCodes.dataNotFound:
                                     CommonInfoDialog.show(ctx,

@@ -26,7 +26,8 @@ class MemberItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
-
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final isLinked = member.isLinked;
     final avatarId = member.avatar;
     final ratio = member.defaultSplitRatio;
@@ -36,10 +37,10 @@ class MemberItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -62,12 +63,12 @@ class MemberItem extends StatelessWidget {
                       Flexible(
                         child: Text(
                           displayLabel,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             decoration:
                                 (!isLinked) ? TextDecoration.underline : null,
                             decorationStyle: TextDecorationStyle.dotted,
-                            decorationColor: theme.colorScheme.outline,
+                            decorationColor: colorScheme.outline,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -76,13 +77,12 @@ class MemberItem extends StatelessWidget {
                       if (isOwner) ...[
                         const SizedBox(width: 8),
                         Icon(Icons.star_rounded,
-                            size: 14, color: theme.colorScheme.primary),
+                            size: 14, color: colorScheme.primary),
                       ] else if (!isLinked) ...[
                         const SizedBox(width: 8),
                         Icon(Icons.edit_rounded,
                             size: 14,
-                            color: theme.colorScheme.primary
-                                .withValues(alpha: 0.7)),
+                            color: colorScheme.primary.withValues(alpha: 0.7)),
                       ],
                     ],
                   ),
@@ -94,8 +94,8 @@ class MemberItem extends StatelessWidget {
             children: [
               Text(
                 "${ratio.toStringAsFixed(1)}x",
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: theme.colorScheme.primary,
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -115,7 +115,7 @@ class MemberItem extends StatelessWidget {
               onPressed: isProcessing ? null : onDelete,
               icon: Icon(
                 Icons.delete_outline,
-                color: theme.colorScheme.error,
+                color: colorScheme.error,
                 size: 20,
               ),
               tooltip: t.common.buttons.delete,

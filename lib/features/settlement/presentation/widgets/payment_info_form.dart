@@ -32,6 +32,7 @@ class PaymentInfoForm extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return ListenableBuilder(
       listenable: controller,
@@ -51,8 +52,8 @@ class PaymentInfoForm extends StatelessWidget {
                 isRadio: true,
                 onToggle: () => controller.setMode(PaymentMode.private),
                 child: Text(
-                  t.common.payment_info.description.private,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  t.common.payment_info.content.private,
+                  style: textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -71,8 +72,8 @@ class PaymentInfoForm extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.common.payment_info.description.public,
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      t.common.payment_info.content.public,
+                      style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -204,9 +205,8 @@ class PaymentInfoForm extends StatelessWidget {
                             child: FilledButton(
                               onPressed: controller.addApp,
                               style: FilledButton.styleFrom(
-                                backgroundColor: theme.colorScheme.surface,
-                                foregroundColor:
-                                    theme.colorScheme.onSurfaceVariant,
+                                backgroundColor: colorScheme.surface,
+                                foregroundColor: colorScheme.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),

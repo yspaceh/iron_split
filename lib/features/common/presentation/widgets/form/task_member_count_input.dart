@@ -23,12 +23,13 @@ class TaskMemberCountInput extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // [風格統一]：使用與 AppTextField/AppSelectField 一致的高度與外觀
     return Container(
       padding: const EdgeInsets.all(16), // 右邊 padding 稍微小一點，因為按鈕本身有 padding
       decoration: BoxDecoration(
-        color: fillColor ?? theme.colorScheme.surface,
+        color: fillColor ?? colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -36,8 +37,8 @@ class TaskMemberCountInput extends StatelessWidget {
           // 2. 標題文字
           Expanded(
             child: Text(
-              t.S16_TaskCreate_Edit.label.member_count,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              t.common.label.member_count,
+              style: textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: colorScheme.onSurface,
               ),

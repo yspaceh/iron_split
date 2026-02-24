@@ -22,7 +22,7 @@ class TaskMemoInput extends StatelessWidget {
       controller: memoController,
       scrollPadding: scrollPadding,
       fillColor: fillColor,
-      labelText: t.S15_Record_Edit.label.memo, // 標題
+      labelText: t.common.label.memo, // 標題
       hintText: t.S15_Record_Edit.hint.memo, // 增加一點提示 (Optional)
       keyboardType: TextInputType.multiline,
       maxLines: 3,

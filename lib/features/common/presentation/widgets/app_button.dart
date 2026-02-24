@@ -23,6 +23,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // M3 標準高度: 40
     // Flutter 的 FilledButton 預設就是 40，但我們明確指定以防萬一
@@ -78,7 +79,7 @@ class AppButton extends StatelessWidget {
         if (text != null && isLoading == false) ...[
           Text(
             text ?? '',
-            style: theme.textTheme.labelLarge?.copyWith(
+            style: textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w500, // M3 Label Large
               // 確保顏色跟隨 Button 樣式
               color: type == AppButtonType.primary

@@ -27,6 +27,7 @@ class CompactAmountInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final borderRadius = BorderRadius.circular(12); // 稍微小一點的圓角
 
     // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
@@ -56,7 +57,7 @@ class CompactAmountInput extends StatelessWidget {
             ? FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))
             : FilteringTextInputFormatter.digitsOnly,
       ],
-      style: theme.textTheme.bodyLarge?.copyWith(
+      style: textTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
         height: 1.5,
@@ -74,16 +75,11 @@ class CompactAmountInput extends StatelessWidget {
         filled: true,
         fillColor: fillColor ?? colorScheme.surface,
         prefixText: '${currencyConstants.symbol} ',
-        prefixStyle: theme.textTheme.bodyLarge?.copyWith(
+        prefixStyle: textTheme.bodyLarge?.copyWith(
           fontWeight: FontWeight.w500,
           color: colorScheme.onSurface,
           height: 1.5,
         ),
-        // suffixText: currencyConstants.code,
-        // suffixStyle: theme.textTheme.labelMedium?.copyWith(
-        //   color: colorScheme.onSurfaceVariant,
-        //   fontWeight: FontWeight.bold,
-        // ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
         // 邊框設定
         border: normalBorderStyle,

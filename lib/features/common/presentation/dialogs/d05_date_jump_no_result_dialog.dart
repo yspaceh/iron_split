@@ -37,12 +37,12 @@ class D05DateJumpNoResultDialog extends StatelessWidget {
       ),
       actions: [
         AppButton(
-          text: t.D05_DateJump_NoResult.buttons.cancel,
+          text: t.common.buttons.back,
           type: AppButtonType.secondary,
           onPressed: () => context.pop(),
         ),
         AppButton(
-          text: t.D05_DateJump_NoResult.buttons.add,
+          text: t.common.buttons.add_record,
           type: AppButtonType.primary,
           onPressed: () {
             context.pop(); // Close dialog first

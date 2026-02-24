@@ -9,23 +9,16 @@ class StateVisual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return AspectRatio(
       aspectRatio: 1.0,
       child: Container(
         decoration: BoxDecoration(
           // 統一的底色 (圖片載入前或透明圖的背景)
-          color: theme.colorScheme.surfaceContainerLow,
+          color: colorScheme.surfaceContainerLow,
           // 統一的圓角 (例如 24)
           borderRadius: BorderRadius.circular(24),
-          // 統一的陰影 (增加立體感，選用)
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withValues(alpha: 0.05),
-          //     blurRadius: 10,
-          //     offset: const Offset(0, 4),
-          //   ),
-          // ],
         ),
         // 裁切圖片以符合圓角
         clipBehavior: Clip.antiAlias,
@@ -43,7 +36,7 @@ class StateVisual extends StatelessWidget {
                 child: Icon(
                   Icons.image,
                   size: 48,
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
       ),

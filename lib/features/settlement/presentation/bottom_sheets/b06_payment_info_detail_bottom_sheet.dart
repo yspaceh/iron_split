@@ -6,7 +6,7 @@ import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/presentation/bottom_sheets/b05_payment_info_edit_bottom_sheet.dart';
@@ -55,7 +55,7 @@ class _B06Content extends StatelessWidget {
   void _copyToClipboard(BuildContext context, String text) {
     final t = Translations.of(context);
     Clipboard.setData(ClipboardData(text: text));
-    AppToast.showSuccess(context, t.B06_payment_info_detail.label_copied);
+    AppToast.showSuccess(context, t.success.copied);
   }
 
   @override

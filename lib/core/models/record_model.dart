@@ -61,7 +61,7 @@ class RecordModel {
   final DateTime date;
   final String? dateString;
   final String title;
-  final RecordType type; // 'expense' or 'income'
+  final RecordType type; // 'expense' or 'prepay'
   final int categoryIndex;
   final String categoryId;
   final PayerType payerType; // 'member', 'prepay'
@@ -269,7 +269,7 @@ class RecordModel {
       case 3:
         return 'shopping_bag';
       case 4:
-        return 'movie';
+        return 'attractions';
       case 5:
         return 'directions_bus';
       case 6:

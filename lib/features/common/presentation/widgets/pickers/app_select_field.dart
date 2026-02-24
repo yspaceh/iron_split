@@ -28,6 +28,7 @@ class AppSelectField extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final bool isEmpty = text.isEmpty;
 
     final borderRadius = BorderRadius.circular(16);
@@ -63,7 +64,7 @@ class AppSelectField extends StatelessWidget {
               readOnly: true,
               autovalidateMode: autovalidateMode,
               textAlignVertical: TextAlignVertical.bottom,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              style: textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: colorScheme.onSurface,
                 height: 1.5,
@@ -126,7 +127,7 @@ class AppSelectField extends StatelessWidget {
               left: (prefixIcon != null) ? 48 : 20,
               child: Text(
                 labelText!,
-                style: theme.textTheme.labelMedium?.copyWith(
+                style: textTheme.labelMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
                   fontSize: 10,

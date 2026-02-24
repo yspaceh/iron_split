@@ -25,11 +25,13 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final monthNum = DateFormat('MM').format(selectedDate);
 
     return Container(
       height: height,
-      color: theme.colorScheme.surfaceContainerLow,
+      color: colorScheme.surfaceContainerLow,
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
@@ -57,8 +59,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
                   lastDate: endDate.add(const Duration(days: 365)),
                   locale: activeLocale,
                   builder: (context, child) => Theme(
-                    data: Theme.of(context)
-                        .copyWith(colorScheme: Theme.of(context).colorScheme),
+                    data: theme.copyWith(colorScheme: colorScheme),
                     child: child!,
                   ),
                 );
@@ -72,9 +73,9 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
                     // 月份數字 (02)
                     Text(
                       monthNum,
-                      style: theme.textTheme.titleLarge?.copyWith(
+                      style: textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900, // 特粗
-                        color: theme.colorScheme.primary, // 酒紅色
+                        color: colorScheme.primary, // 酒紅色
                         height: 1.0,
                         letterSpacing: -0.5,
                       ),
@@ -89,7 +90,7 @@ class CommonDateStripDelegate extends SliverPersistentHeaderDelegate {
           Container(
             width: 1,
             height: 32,
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3),
             margin: const EdgeInsets.only(right: 4),
           ),
 

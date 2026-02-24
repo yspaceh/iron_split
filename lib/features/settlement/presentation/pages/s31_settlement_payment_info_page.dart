@@ -103,11 +103,13 @@ class _S31ContentState extends State<_S31Content> {
   }
 
   Future<void> _handleSettlement(
-      BuildContext context, S31SettlementPaymentInfoViewModel vm) async {
-    final theme = Theme.of(context);
+      BuildContext context,
+      S31SettlementPaymentInfoViewModel vm,
+      Translations t,
+      TextTheme textTheme) async {
     try {
       // 執行結算
-      await vm.handleExecuteSettlement();
+      await vm.executeSettlement();
       if (!context.mounted) return;
       context.goNamed('S32', pathParameters: {'taskId': vm.taskId});
     } on AppErrorCodes catch (code) {
@@ -119,8 +121,8 @@ class _S31ContentState extends State<_S31Content> {
             context,
             title: t.error.dialog.data_conflict.title,
             content: Text(
-              t.error.dialog.data_conflict.message,
-              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              t.error.dialog.data_conflict.content,
+              style: textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
             actions: [
               AppButton(
@@ -139,7 +141,7 @@ class _S31ContentState extends State<_S31Content> {
           if (!context.mounted) return;
           CommonAlertDialog.show(
             context,
-            title: t.common.error.title,
+            title: t.error.title,
             content: Text(t.error.message.task_status_error),
             actions: [
               AppButton(
@@ -159,16 +161,16 @@ class _S31ContentState extends State<_S31Content> {
   }
 
   Future<void> _showRateInfoDialog(
-      BuildContext context, S31SettlementPaymentInfoViewModel vm) async {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+      BuildContext context,
+      S31SettlementPaymentInfoViewModel vm,
+      Translations t,
+      TextTheme textTheme) async {
     await CommonAlertDialog.show(
           context,
           title: t.D06_settlement_confirm.title, // "結算確認"
           // 直接顯示純文字警告，不用再包 Column 或顯示金額
           content: Text(
-            t.D06_settlement_confirm.warning_text,
+            t.D06_settlement_confirm.content,
             style: textTheme.bodyMedium,
           ),
           actions: [
@@ -180,9 +182,9 @@ class _S31ContentState extends State<_S31Content> {
             ),
             // 確定結算按鈕
             AppButton(
-              text: t.D06_settlement_confirm.buttons.confirm, // "確定結算"
+              text: t.common.buttons.settlement, // "確定結算"
               type: AppButtonType.primary,
-              onPressed: () => _handleSettlement(context, vm),
+              onPressed: () => _handleSettlement(context, vm, t, textTheme),
             ),
           ],
         ) ??
@@ -194,6 +196,7 @@ class _S31ContentState extends State<_S31Content> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     final vm = context.watch<S31SettlementPaymentInfoViewModel>();
 
@@ -256,10 +259,11 @@ class _S31ContentState extends State<_S31Content> {
                     onPressed: () => context.pop(),
                   ),
                   AppButton(
-                    text: t.S31_settlement_payment_info.buttons.settle, // "結算"
+                    text: t.common.buttons.settlement, // "結算"
                     type: AppButtonType.primary,
                     isLoading: vm.settlementStatus == LoadStatus.loading,
-                    onPressed: () => _showRateInfoDialog(context, vm),
+                    onPressed: () =>
+                        _showRateInfoDialog(context, vm, t, textTheme),
                   ),
                 ],
               ),

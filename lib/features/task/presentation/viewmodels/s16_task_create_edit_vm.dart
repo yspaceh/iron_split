@@ -30,6 +30,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
   LoadStatus _createStatus = LoadStatus.initial; // 按鈕狀態
+  LoadStatus _shareStatus = LoadStatus.initial; // 分享狀態
 
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
@@ -42,6 +43,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   int get memberCount => _memberCount;
   bool get isCurrencyEnabled => true; // 保留原始邏輯
   LoadStatus get createStatus => _createStatus;
+  LoadStatus get shareStatus => _shareStatus;
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
   String get link => _deepLinkService.generateJoinLink(inviteCode);
@@ -235,6 +237,21 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   /// 通知成員 (純文字分享)
   Future<void> notifyMembers(
       {required String message, required String subject}) async {
-    await _shareService.shareText(message, subject: subject);
+    if (_shareStatus == LoadStatus.loading) return;
+    _shareStatus = LoadStatus.loading;
+    notifyListeners();
+    try {
+      await _shareService.shareText(message, subject: subject);
+      _shareStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
+    }
   }
 }

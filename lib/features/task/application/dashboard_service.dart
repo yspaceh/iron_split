@@ -20,8 +20,8 @@ class DashboardService {
           BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
 
       // 2. [Chart Stats] 圖表用的總收入與總支出 (歷史總量)
-      final double totalIncome =
-          BalanceCalculator.calculateIncomeTotal(records);
+      final double totalPrepay =
+          BalanceCalculator.calculatePrepayTotal(records);
 
       final double totalExpense =
           BalanceCalculator.calculateExpenseTotal(records);
@@ -39,11 +39,11 @@ class DashboardService {
       // 或者如果您希望連這個都封裝進 Calculator，我可以再加，
       // 但目前為了不改動 Calculator，我們在這裡做簡單的分類。
       final Map<String, double> expenseDetail = {};
-      final Map<String, double> incomeDetail = {};
+      final Map<String, double> prepayDetail = {};
 
       for (var r in records) {
-        if (r.type == RecordType.income) {
-          incomeDetail.update(
+        if (r.type == RecordType.prepay) {
+          prepayDetail.update(
               r.originalCurrencyCode, (v) => v + r.originalAmount,
               ifAbsent: () => r.originalAmount);
         } else {
@@ -55,16 +55,16 @@ class DashboardService {
 
       // 6. [Flex] 計算圖表比例
       int expenseFlex = 0;
-      int incomeFlex = 0;
+      int prepayFlex = 0;
 
       // 分母為兩者絕對值之和
-      final totalVolume = totalExpense.abs() + totalIncome.abs();
+      final totalVolume = totalExpense.abs() + totalPrepay.abs();
 
       if (totalVolume > 0) {
         // 計算支出佔的比例 (乘 1000 轉整數)
         expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
         // 收入佔剩餘比例 (確保加起來是 1000)
-        incomeFlex = 1000 - expenseFlex;
+        prepayFlex = 1000 - expenseFlex;
       }
 
       final baseCurrency =
@@ -75,14 +75,14 @@ class DashboardService {
         currencySymbol: baseCurrency.symbol,
         poolBalance: poolBalance,
         totalExpense: totalExpense,
-        totalIncome: totalIncome,
+        totalPrepay: totalPrepay,
         remainder: remainder,
         expenseFlex: expenseFlex,
-        incomeFlex: incomeFlex,
+        prepayFlex: prepayFlex,
         ruleKey: task.remainderRule,
         isLocked: task.status != TaskStatus.ongoing,
         expenseDetail: expenseDetail,
-        incomeDetail: incomeDetail,
+        prepayDetail: prepayDetail,
         poolDetail: poolDetail,
         absorbedBy: null,
         absorbedAmount: null,
@@ -182,14 +182,14 @@ class DashboardService {
     return totalPaid;
   }
 
-  ({DualAmount expense, DualAmount income, DualAmount netBalance})
+  ({DualAmount expense, DualAmount prepay, DualAmount netBalance})
       calculatePersonalStats(TaskMember? memberData) {
     final double expense = memberData?.expense ?? 0.0;
     final double prepaid = memberData?.prepaid ?? 0.0;
 
     final totalExpense = DualAmount(original: 0, base: expense);
-    final totalIncome = DualAmount(original: 0, base: prepaid);
+    final totalPrepay = DualAmount(original: 0, base: prepaid);
     final netBalance = DualAmount(original: 0, base: prepaid - expense);
-    return (expense: totalExpense, income: totalIncome, netBalance: netBalance);
+    return (expense: totalExpense, prepay: totalPrepay, netBalance: netBalance);
   }
 }

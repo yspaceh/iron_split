@@ -46,14 +46,18 @@ class _S72ContentState extends State<_S72Content> {
     super.dispose();
   }
 
+  void _handleSetTab(S72TermsUpdateViewModel vm, LegalTab tab) {
+    vm.setTab(tab);
+  }
+
   Future<void> _handleAgree(
       BuildContext context, S72TermsUpdateViewModel vm) async {
     try {
       await vm.agreeLatestTerms();
-
       if (!context.mounted) return;
       context.goNamed('S00');
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
@@ -68,6 +72,7 @@ class _S72ContentState extends State<_S72Content> {
       context.pop();
       context.goNamed('S50');
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
@@ -81,7 +86,7 @@ class _S72ContentState extends State<_S72Content> {
       context,
       title: t.D12_logout_confirm.title,
       content: Text(
-        t.D12_logout_confirm.description,
+        t.D12_logout_confirm.content,
         style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
       ),
       actions: [
@@ -97,6 +102,13 @@ class _S72ContentState extends State<_S72Content> {
         ),
       ],
     );
+  }
+
+  bool _isTermsVisible(S72TermsUpdateViewModel vm) {
+    if (vm.type == UpdateType.both) {
+      return vm.currentTab == LegalTab.terms;
+    }
+    return vm.type == UpdateType.tosOnly;
   }
 
   @override
@@ -128,7 +140,7 @@ class _S72ContentState extends State<_S72Content> {
 
     String title = t.S72_TermsUpdate.title(type: getTitleTypeLabel(vm));
     String description =
-        t.S72_TermsUpdate.description(type: getDescriptionTypeLabel(vm));
+        t.S72_TermsUpdate.content(type: getDescriptionTypeLabel(vm));
 
     return CommonStateView(
       status: vm.initStatus,
@@ -144,13 +156,13 @@ class _S72ContentState extends State<_S72Content> {
           children: [
             // 不同意並登出
             AppButton(
-              text: t.S72_TermsUpdate.buttons.decline,
+              text: t.common.buttons.decline,
               type: AppButtonType.secondary,
               onPressed: () => _showDeclineDialog(context, vm),
             ),
             // 同意
             AppButton(
-              text: t.S72_TermsUpdate.buttons.agree,
+              text: t.common.buttons.agree,
               type: AppButtonType.primary,
               isLoading: vm.agreeStatus == LoadStatus.loading,
               onPressed: () => _handleAgree(context, vm),
@@ -171,9 +183,7 @@ class _S72ContentState extends State<_S72Content> {
                       LegalTab.terms: t.common.terms.label.terms,
                       LegalTab.privacy: t.common.terms.label.privacy,
                     },
-                    onValueChanged: (tab) {
-                      vm.setTab(tab);
-                    },
+                    onValueChanged: (tab) => _handleSetTab(vm, tab),
                   ),
                 ],
                 const SizedBox(height: 8),
@@ -189,12 +199,5 @@ class _S72ContentState extends State<_S72Content> {
         ),
       ),
     );
-  }
-
-  bool _isTermsVisible(S72TermsUpdateViewModel vm) {
-    if (vm.type == UpdateType.both) {
-      return vm.currentTab == LegalTab.terms;
-    }
-    return vm.type == UpdateType.tosOnly;
   }
 }

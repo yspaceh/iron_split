@@ -74,8 +74,42 @@ class _S16ContentState extends State<_S16Content> {
     super.dispose();
   }
 
-  Future<void> _onSave(
-      BuildContext context, S16TaskCreateEditViewModel vm) async {
+  Future<void> _handleCreate(BuildContext context,
+      S16TaskCreateEditViewModel vm, Translations t) async {
+    try {
+      // 呼叫 VM 執行建立流程
+      final result = await vm.createTask(_nameController.text.trim());
+
+      if (result != null && mounted) {
+        // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
+        if (!context.mounted) return;
+        if (result.inviteCode == null) throw AppErrorCodes.initFailed;
+        final message = t.common.share.invite.content(
+          taskName: _nameController.text.trim(),
+          code: result.inviteCode!,
+          link: vm.link,
+        );
+
+        await vm.notifyMembers(
+          message: message,
+          subject: t.common.share.invite.subject,
+        );
+        // 3. 導航到任務 Dashboard
+        if (!context.mounted) return;
+        context.goNamed(
+          'S13',
+          pathParameters: {'taskId': result.taskId},
+        );
+      }
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _showConfirmDialog(BuildContext context,
+      S16TaskCreateEditViewModel vm, Translations t) async {
     if (!_formKey.currentState!.validate()) return;
     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -88,47 +122,15 @@ class _S16ContentState extends State<_S16Content> {
       baseCurrency: vm.baseCurrency,
       memberCount: vm.memberCount,
     );
-
-    // 2. 如果使用者確認
-    if (confirmed == true && mounted) {
-      try {
-        // 呼叫 VM 執行建立流程
-        final result = await vm.createTask(_nameController.text.trim());
-
-        if (result != null && mounted) {
-          // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
-          if (!context.mounted) return;
-          if (result.inviteCode == null) throw AppErrorCodes.initFailed;
-          final message = t.common.share.invite.message(
-            taskName: _nameController.text.trim(),
-            code: result.inviteCode!,
-            link: vm.link,
-          );
-
-          await vm.notifyMembers(
-            message: message,
-            subject: t.common.share.invite.subject,
-          );
-          // 3. 導航到任務 Dashboard
-          if (!context.mounted) return;
-          context.goNamed(
-            'S13', // 請確認您的 Router name (例如 S13)
-            pathParameters: {'taskId': result.taskId},
-          );
-        }
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
+    if (confirmed == true && context.mounted) {
+      await _handleCreate(context, vm, t);
     }
   }
 
   // 判斷是否需要攔截
-  Future<void> _handleClose() async {
+  Future<void> _handleClose(BuildContext context) async {
     final confirm = await D04CommonUnsavedConfirmDialog.show<bool>(context);
-
-    if (confirm == true && mounted) {
+    if (confirm == true && context.mounted) {
       context.pop();
     }
   }
@@ -139,7 +141,7 @@ class _S16ContentState extends State<_S16Content> {
     final title = t.S16_TaskCreate_Edit.title;
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back),
-      onPressed: _handleClose,
+      onPressed: () => _handleClose(context),
     );
 
     return CommonStateView(
@@ -154,7 +156,11 @@ class _S16ContentState extends State<_S16Content> {
             canPop: false, // 設為 false 表示手動控制返回邏輯
             onPopInvokedWithResult: (didPop, result) async {
               if (didPop) return;
-              await _handleClose();
+              if (vm.createStatus == LoadStatus.loading ||
+                  vm.shareStatus == LoadStatus.loading) {
+                return; // Do nothing, ignore the back button
+              }
+              await _handleClose(context);
             },
             child: AppKeyboardActionsWrapper(
               focusNodes: [_nameFocusNode],
@@ -177,7 +183,7 @@ class _S16ContentState extends State<_S16Content> {
                               TaskNameInput(
                                 controller: _nameController,
                                 focusNode: _nameFocusNode,
-                                label: t.S16_TaskCreate_Edit.label.name,
+                                label: t.common.label.task_name,
                                 hint: t.S16_TaskCreate_Edit.hint.name,
                                 maxLength: 20,
                               )
@@ -186,7 +192,7 @@ class _S16ContentState extends State<_S16Content> {
                             title: t.S16_TaskCreate_Edit.section.task_period,
                             children: [
                               TaskDateInput(
-                                label: t.S16_TaskCreate_Edit.label.start_date,
+                                label: t.common.label.start_date,
                                 date: vm.startDate,
                                 onDateChanged: (val) {
                                   try {
@@ -200,7 +206,7 @@ class _S16ContentState extends State<_S16Content> {
                               ),
                               const SizedBox(height: 8),
                               TaskDateInput(
-                                label: t.S16_TaskCreate_Edit.label.end_date,
+                                label: t.common.label.end_date,
                                 date: vm.endDate,
                                 onDateChanged: (val) {
                                   try {
@@ -235,9 +241,9 @@ class _S16ContentState extends State<_S16Content> {
                   isSheetMode: false,
                   children: [
                     AppButton(
-                      text: t.S16_TaskCreate_Edit.buttons.save,
+                      text: t.common.buttons.save,
                       type: AppButtonType.primary,
-                      onPressed: () => _onSave(context, vm),
+                      onPressed: () => _showConfirmDialog(context, vm, t),
                     ),
                   ],
                 ),
@@ -245,7 +251,9 @@ class _S16ContentState extends State<_S16Content> {
             ),
           ),
           // 全局 Loading Overlay
-          if (vm.createStatus == LoadStatus.loading) SharePreparing(),
+          if (vm.createStatus == LoadStatus.loading ||
+              vm.shareStatus == LoadStatus.loading)
+            SharePreparing(),
         ],
       ),
     );

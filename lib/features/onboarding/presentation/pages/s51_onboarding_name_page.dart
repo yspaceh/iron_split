@@ -60,13 +60,14 @@ class _S51ContentState extends State<_S51Content> {
     context.read<S51OnboardingNameViewModel>().onNameChanged(_controller.text);
   }
 
-  Future<void> _submit(
+  Future<void> _handleSubmit(
       BuildContext context, S51OnboardingNameViewModel vm) async {
     try {
       await vm.saveName();
       if (!context.mounted) return;
       context.goNamed('S10');
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
@@ -98,12 +99,12 @@ class _S51ContentState extends State<_S51Content> {
               onPressed: () => context.pop(),
             ),
             AppButton(
-              text: t.S51_Onboarding_Name.buttons.next,
+              text: t.common.buttons.done,
               type: AppButtonType.primary,
               isLoading: vm.submitStatus == LoadStatus.loading,
               onPressed: () =>
                   (vm.isValid && vm.submitStatus != LoadStatus.loading)
-                      ? _submit(context, vm)
+                      ? _handleSubmit(context, vm)
                       : null,
             ),
           ],
@@ -120,7 +121,7 @@ class _S51ContentState extends State<_S51Content> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.S51_Onboarding_Name.description,
+                      t.S51_Onboarding_Name.content,
                       style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                     ),
                     const SizedBox(height: 24),

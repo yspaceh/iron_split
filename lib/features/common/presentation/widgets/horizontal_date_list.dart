@@ -85,6 +85,8 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final days = widget.endDate.difference(widget.startDate).inDays + 1;
     final dates = List.generate(days > 0 ? days : 1,
         (index) => widget.startDate.add(Duration(days: index)));
@@ -118,7 +120,7 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                     width: 32, // 寬度
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? theme.colorScheme.primary // 選中：酒紅底
+                          ? colorScheme.primary // 選中：酒紅底
                           : Colors.transparent, // 未選：透明
                       borderRadius: BorderRadius.circular(10), // 圓角矩形
                       // 如果是今天但未選中，可以加個外框？(可選)
@@ -132,11 +134,11 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                         children: [
                           Text(
                             dayStr,
-                            style: theme.textTheme.titleMedium?.copyWith(
+                            style: textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: isSelected
-                                  ? theme.colorScheme.onPrimary // 選中：白字
-                                  : theme.colorScheme.onSurface, // 未選：深灰字
+                                  ? colorScheme.onPrimary // 選中：白字
+                                  : colorScheme.onSurface, // 未選：深灰字
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -152,10 +154,10 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                   child: Center(
                     child: Text(
                       weekStr,
-                      style: theme.textTheme.labelSmall?.copyWith(
+                      style: textTheme.labelSmall?.copyWith(
                         color: isSelected
-                            ? theme.colorScheme.onPrimary // 選中時星期也變紅？還是維持灰？
-                            : theme.colorScheme.onSurfaceVariant, // 灰色
+                            ? colorScheme.onPrimary // 選中時星期也變紅？還是維持灰？
+                            : colorScheme.onSurfaceVariant, // 灰色
                         fontSize: 8,
                         fontWeight: FontWeight.w600,
                       ),
@@ -173,9 +175,8 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                         height: 4,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.onPrimary
-                                  .withValues(alpha: 0.9)
-                              : theme.colorScheme.primary,
+                              ? colorScheme.onPrimary.withValues(alpha: 0.9)
+                              : colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
                       ),

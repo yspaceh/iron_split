@@ -27,13 +27,13 @@ class AppTheme {
   static const _darkGrey = Color(0xFF333333);
 
   // 收入色
-  static const _incomeGreen = Color(0xFF2E7D32);
-  static const _incomeBg = Color(0xFFE8F5E9);
+  static const _prepayGreen = Color(0xFF2E7D32);
+  static const _prepayBg = Color(0xFFE8F5E9);
 
   static const Color expenseDeep = Color(0xFF5D2226); // 深栗色 (Dark Maroon)
-  static const Color incomeDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
+  static const Color prepayDeep = Color(0xFF1B4E22); // 深松綠 (Deep Pine)
   static const Color expenseLight = Color(0xFFE57373);
-  static const Color incomeLight = Color(0xFF81C784);
+  static const Color prepayLight = Color(0xFF81C784);
   static const Color darkGray = Color(0xFF2C2C2C);
   static const Color starGold = Color(0xFFFBC02D);
 
@@ -82,9 +82,9 @@ class AppTheme {
         primary: _ironWine,
         onPrimary: Colors.white,
 
-        tertiary: _incomeGreen,
-        tertiaryContainer: _incomeBg,
-        onTertiaryContainer: _incomeGreen,
+        tertiary: _prepayGreen,
+        tertiaryContainer: _prepayBg,
+        onTertiaryContainer: _prepayGreen,
 
         inverseSurface: _darkGrey,
         onInverseSurface: Colors.white,

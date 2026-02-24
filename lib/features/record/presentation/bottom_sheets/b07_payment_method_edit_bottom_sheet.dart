@@ -4,7 +4,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
@@ -122,6 +122,8 @@ class _B07ContentState extends State<_B07Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final vm = context.watch<B07PaymentMethodEditViewModel>();
     final allNodes = [
       _prepayFocusNode,
@@ -155,20 +157,20 @@ class _B07ContentState extends State<_B07Content> {
               child: Column(
                 children: [
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.total_label,
+                    label: t.B07_PaymentMethod_Edit.label.amount,
                     amount: vm.totalAmount,
                     currencyConstants: vm.selectedCurrency,
                   ),
                   const SizedBox(height: 8),
                   // 即使金額為0也顯示，保持高度穩定
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.total_prepay,
+                    label: t.B07_PaymentMethod_Edit.label.prepay,
                     amount: vm.usePrepay ? vm.prepayAmount : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
                   const SizedBox(height: 4),
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.total_advance,
+                    label: t.B07_PaymentMethod_Edit.label.total_advance,
                     amount: vm.useAdvance ? vm.currentAdvanceTotal : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
@@ -176,22 +178,21 @@ class _B07ContentState extends State<_B07Content> {
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Divider(
                       height: 1,
-                      color: theme.colorScheme.onSurfaceVariant
-                          .withValues(alpha: 0.2),
+                      color:
+                          colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     ),
                   ),
                   SummaryRow(
                     label: vm.isValid
-                        ? t.B07_PaymentMethod_Edit.status_balanced
-                        : t.B07_PaymentMethod_Edit.status_remaining(
+                        ? t.B07_PaymentMethod_Edit.status.balanced
+                        : t.B07_PaymentMethod_Edit.status.remaining(
                             amount: CurrencyConstants.formatAmount(
                                 vm.remaining.abs(), vm.selectedCurrency.code)),
                     amount: vm.remaining,
                     currencyConstants: vm.selectedCurrency,
                     hideAmount: true,
-                    valueColor: vm.isValid
-                        ? theme.colorScheme.tertiary
-                        : theme.colorScheme.error,
+                    valueColor:
+                        vm.isValid ? colorScheme.tertiary : colorScheme.error,
                     customValueText: vm.isValid ? "OK" : null,
                   ),
                 ],
@@ -206,7 +207,7 @@ class _B07ContentState extends State<_B07Content> {
                 children: [
                   // A. 公款支付卡片
                   SelectionCard(
-                    title: t.B07_PaymentMethod_Edit.type_prepay,
+                    title: t.common.payment_method.prepay,
                     isSelected: vm.usePrepay,
                     isRadio: false,
                     onToggle: vm.onPrepayToggle,
@@ -223,8 +224,8 @@ class _B07ContentState extends State<_B07Content> {
                             color: vm.currentCurrencyPoolBalance <
                                         vm.totalAmount &&
                                     vm.usePrepay
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.onSurfaceVariant,
+                                ? colorScheme.error
+                                : colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -236,8 +237,7 @@ class _B07ContentState extends State<_B07Content> {
                           showCurrencyPicker: false, // 隱藏幣別選擇器
                           externalValidator: (val) {
                             if (val > vm.currentCurrencyPoolBalance) {
-                              return t.B07_PaymentMethod_Edit
-                                  .err_balance_not_enough;
+                              return t.B07_PaymentMethod_Edit.status.not_enough;
                             }
                             return null;
                           },
@@ -250,7 +250,7 @@ class _B07ContentState extends State<_B07Content> {
 
                   // B. 成員墊付卡片
                   SelectionCard(
-                    title: t.B07_PaymentMethod_Edit.type_member,
+                    title: t.common.payment_method.member,
                     isSelected: vm.useAdvance,
                     isRadio: false,
                     onToggle: vm.onAdvanceToggle,
@@ -271,7 +271,7 @@ class _B07ContentState extends State<_B07Content> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(m.displayName,
-                                    style: theme.textTheme.bodyLarge),
+                                    style: textTheme.bodyLarge),
                               ),
                               const SizedBox(width: 8),
                               // 使用 Compact Input

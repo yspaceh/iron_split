@@ -71,12 +71,6 @@ class _S13ContentState extends State<_S13Content> {
   void _onStateChanged() {
     if (!mounted) return;
 
-    // 自動轉向 S00 (未登入)
-    if (_vm.initErrorCode == AppErrorCodes.unauthorized) {
-      context.goNamed('S00');
-      return;
-    }
-
     // 處理結算自動跳轉
     if (_vm.shouldNavigateToS17) {
       context
@@ -102,29 +96,59 @@ class _S13ContentState extends State<_S13Content> {
     }
   }
 
+  void _handleSwitchSegmentedIndex(S13TaskDashboardViewModel vm, int index) {
+    vm.setSegmentedIndex(index);
+  }
+
+  Future<void> _handleStartSettlement(
+      BuildContext context, S13TaskDashboardViewModel vm) async {
+    try {
+      await vm.lockTaskAndStartSettlement();
+      if (!context.mounted) return;
+      context.pushNamed(
+        'S30',
+        pathParameters: {'taskId': vm.taskId},
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  void _redirectToRecord(BuildContext context, S13TaskDashboardViewModel vm) {
+    context.pushNamed(
+      'S15',
+      pathParameters: {'taskId': vm.taskId},
+      extra: {
+        'poolBalancesByCurrency': vm.poolBalances,
+        'baseCurrency': vm.baseCurrency,
+      },
+    );
+  }
+
+  void _redirectToTaskList(BuildContext context) {
+    context.goNamed('S10');
+  }
+
+  void _redirectToTaskSettings(
+      BuildContext context, S13TaskDashboardViewModel vm) {
+    context.pushNamed('S14', pathParameters: {'taskId': vm.taskId});
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-
-    // 監聽 ViewModel
     final vm = context.watch<S13TaskDashboardViewModel>();
-
-    // 3. Data Preparation (從 VM 獲取)
     final isCaptain = vm.isCaptain;
-    final poolBalances = vm.poolBalances;
-    final baseCurrency = vm.baseCurrency;
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back), // 沒有上一頁時，顯示「回首頁」
-      onPressed: () {
-        context.goNamed('S10');
-      },
+      onPressed: () => _redirectToTaskList(context),
     );
     final actions = [
       IconButton(
         icon: const Icon(Icons.settings_outlined),
-        onPressed: () {
-          context.pushNamed('S14', pathParameters: {'taskId': vm.taskId});
-        },
+        onPressed: () => _redirectToTaskSettings(context, vm),
       ),
     ];
 
@@ -147,39 +171,15 @@ class _S13ContentState extends State<_S13Content> {
           children: [
             if (isCaptain) ...[
               AppButton(
-                  text: t.S13_Task_Dashboard.buttons.settlement,
-                  type: AppButtonType.secondary,
-                  onPressed: () async {
-                    try {
-                      await vm.lockTaskAndStartSettlement();
-                      if (context.mounted) {
-                        // 2. 成功後才跳轉 S30
-                        context.pushNamed(
-                          'S30',
-                          pathParameters: {'taskId': vm.taskId},
-                        );
-                      }
-                    } on AppErrorCodes catch (code) {
-                      if (!context.mounted) return;
-
-                      final msg = ErrorMapper.map(context, code: code);
-
-                      AppToast.showError(context, msg);
-                    }
-                    // 1. 先鎖定
-                  }),
+                text: t.common.buttons.settlement,
+                type: AppButtonType.secondary,
+                onPressed: () => _handleStartSettlement(context, vm),
+              ),
             ],
             AppButton(
-              text: t.S13_Task_Dashboard.buttons.record,
+              text: t.common.buttons.add_record,
               type: AppButtonType.primary,
-              onPressed: () => context.pushNamed(
-                'S15',
-                pathParameters: {'taskId': vm.taskId},
-                extra: {
-                  'poolBalancesByCurrency': poolBalances,
-                  'baseCurrency': baseCurrency,
-                },
-              ),
+              onPressed: () => _redirectToRecord(context, vm),
             ),
           ],
         ),
@@ -190,8 +190,8 @@ class _S13ContentState extends State<_S13Content> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               // [修正] 改用 CustomSlidingSegment
               child: CustomSlidingSegment<int>(
-                selectedValue: vm.currentTabIndex,
-                onValueChanged: (val) => vm.setTabIndex(val),
+                selectedValue: vm.segmentedIndex,
+                onValueChanged: (val) => _handleSwitchSegmentedIndex(vm, val),
                 segments: {
                   0: t.S13_Task_Dashboard.tab.group,
                   1: t.S13_Task_Dashboard.tab.personal,
@@ -201,7 +201,7 @@ class _S13ContentState extends State<_S13Content> {
 
             // Content Switcher
             Expanded(
-              child: vm.currentTabIndex == 0
+              child: vm.segmentedIndex == 0
                   // S13GroupView (重構後不需傳參數，直接吃 Provider)
                   ? const S13GroupView()
                   // S13PersonalView (重構後不需傳參數，直接吃 Provider)

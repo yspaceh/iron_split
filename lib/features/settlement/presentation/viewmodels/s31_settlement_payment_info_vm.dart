@@ -147,7 +147,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
   // --- Final Execution Logic ---
 
-  Future<void> handleExecuteSettlement() async {
+  Future<void> executeSettlement() async {
     if (_settlementStatus == LoadStatus.loading) return;
     _settlementStatus = LoadStatus.loading;
     notifyListeners();

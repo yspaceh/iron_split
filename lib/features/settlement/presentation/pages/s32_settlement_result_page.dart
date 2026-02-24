@@ -8,6 +8,7 @@ import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
@@ -66,8 +67,7 @@ class _S32ContentState extends State<_S32Content> {
     // 預設先不揭曉，等待 VM 資料載入後決定
   }
 
-  void _onBackToTask(S32SettlementResultViewModel vm) {
-    // 清除 Stack，回到 S17 並帶上 taskId
+  void _redirectToTask(BuildContext context, S32SettlementResultViewModel vm) {
     context.goNamed('S17', pathParameters: {'taskId': vm.taskId});
   }
 
@@ -75,7 +75,7 @@ class _S32ContentState extends State<_S32Content> {
       BuildContext context, S32SettlementResultViewModel vm) async {
     final t = Translations.of(context);
     // 1. UI 負責組裝字串 (包含 DeepLink)
-    final message = t.common.share.settlement.message(
+    final message = t.common.share.settlement.content(
       taskName: vm.task!.name,
       link: vm.link,
     );
@@ -147,8 +147,8 @@ class _S32ContentState extends State<_S32Content> {
     if (winner != null) {
       final double amount = winner.finalAmount;
       final String prefix = amount >= 0
-          ? t.S30_settlement_confirm.label_refund
-          : t.S30_settlement_confirm.label_payable;
+          ? t.common.payment_status.refund
+          : t.common.payment_status.payable;
       final String total =
           '${currency.code} ${currency.symbol}${CurrencyConstants.formatAmount(amount, currency.code)}';
 
@@ -161,7 +161,7 @@ class _S32ContentState extends State<_S32Content> {
     final title = t.S32_settlement_result.title;
     final leading = IconButton(
       icon: const Icon(Icons.close),
-      onPressed: () => _onBackToTask(vm),
+      onPressed: () => _redirectToTask(context, vm),
     );
 
     return CommonStateView(
@@ -169,92 +169,101 @@ class _S32ContentState extends State<_S32Content> {
       errorCode: vm.initErrorCode,
       title: title,
       leading: leading,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: leading,
-          title: Text(t.S32_settlement_result.title),
-          centerTitle: true,
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                const StateVisual(
-                  assetPath: 'assets/images/iron/iron_image_settlement.png',
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Text(t.S32_settlement_result.content),
-                        ),
-                        if (vm.shouldShowRoulette)
-                          Visibility(
-                            visible: showWinnerCard,
-                            replacement: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child:
-                                  Text(t.S32_settlement_result.waiting_reveal),
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: AppBar(
+              leading: leading,
+              title: Text(t.S32_settlement_result.title),
+              centerTitle: true,
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    const StateVisual(
+                      assetPath: 'assets/images/iron/iron_image_settlement.png',
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Text(t.S32_settlement_result.content),
                             ),
-                            child: InfoCard(
-                              icon: Icons.info_outline,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                            if (vm.shouldShowRoulette)
+                              Visibility(
+                                visible: showWinnerCard,
+                                replacement: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                      t.S32_settlement_result.waiting_reveal),
+                                ),
+                                child: InfoCard(
+                                  icon: Icons.info_outline,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(t.S32_settlement_result
-                                          .remainder_winner_prefix),
-                                      const SizedBox(width: 8),
-                                      if (winner != null)
-                                        CommonAvatar(
-                                          avatarId: winner.memberData.avatar,
-                                          name: winner.memberData.displayName,
-                                          isLinked: winner.memberData.isLinked,
-                                          radius: 12,
-                                        ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        winner?.memberData.displayName ??
-                                            'UnKnown Member',
-                                        style: theme.textTheme.titleMedium
-                                            ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text(t.S32_settlement_result
+                                              .remainder_winner_prefix),
+                                          const SizedBox(width: 8),
+                                          if (winner != null)
+                                            CommonAvatar(
+                                              avatarId:
+                                                  winner.memberData.avatar,
+                                              name:
+                                                  winner.memberData.displayName,
+                                              isLinked:
+                                                  winner.memberData.isLinked,
+                                              radius: 12,
+                                            ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            winner?.memberData.displayName ??
+                                                'UnKnown Member',
+                                            style: theme.textTheme.titleMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                      const SizedBox(height: 8),
+                                      Text(winnerTotalText),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(winnerTotalText),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                      ],
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: StickyBottomActionBar(
+              children: [
+                AppButton(
+                  text: t.S32_settlement_result.buttons.share,
+                  type: AppButtonType.secondary,
+                  onPressed: () => _handleShare(context, vm),
+                ),
+                AppButton(
+                  text: t.S32_settlement_result.buttons.back_task_dashboard,
+                  type: AppButtonType.primary,
+                  onPressed: () => _redirectToTask(context, vm),
                 ),
               ],
             ),
           ),
-        ),
-        bottomNavigationBar: StickyBottomActionBar(
-          children: [
-            AppButton(
-              text: t.S32_settlement_result.buttons.share,
-              type: AppButtonType.secondary,
-              onPressed: () => _handleShare(context, vm),
-            ),
-            AppButton(
-              text: t.S32_settlement_result.buttons.back,
-              type: AppButtonType.primary,
-              onPressed: () => _onBackToTask(vm),
-            ),
-          ],
-        ),
+          if (vm.shareStatus == LoadStatus.loading) SharePreparing(),
+        ],
       ),
     );
   }

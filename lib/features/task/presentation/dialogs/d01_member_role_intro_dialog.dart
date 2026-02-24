@@ -106,8 +106,6 @@ class _D01DialogContentState extends State<_D01DialogContent>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = Translations.of(context);
-
-    // 監聽 VM
     final vm = context.watch<D01MemberRoleIntroViewModel>();
 
     return PopScope(
@@ -130,7 +128,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
             const SizedBox(height: 16),
 
             Text(
-              t.D01_MemberRole_Intro.description.content(
+              t.D01_MemberRole_Intro.content(
                 avatar: AvatarConstants.getName(t, vm.currentAvatar),
               ),
               textAlign: TextAlign.center,
@@ -149,7 +147,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
                   : const Icon(Icons.refresh),
               label: Text(vm.canReroll
                   ? t.D01_MemberRole_Intro.buttons.reroll
-                  : t.D01_MemberRole_Intro.description.reroll_empty),
+                  : t.D01_MemberRole_Intro.reroll.empty),
             ),
           ],
         ),

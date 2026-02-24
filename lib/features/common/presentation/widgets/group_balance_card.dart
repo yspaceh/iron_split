@@ -30,30 +30,31 @@ class GroupBalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
     final bool isCurrencyTapLocked = onCurrencyTap == null;
     final bool isRuleTapLocked = onRuleTap == null;
     final CurrencyConstants currencyConstants =
         CurrencyConstants.getCurrencyConstants(state.currencyCode);
-    final totalIncome = BalanceCalculator.roundToPrecision(
-        state.totalIncome, currencyConstants);
+    final totalPrepay = BalanceCalculator.roundToPrecision(
+        state.totalPrepay, currencyConstants);
     final totalExpense = BalanceCalculator.roundToPrecision(
         state.totalExpense, currencyConstants);
-    final double netBalance = totalIncome - totalExpense;
+    final double netBalance = totalPrepay - totalExpense;
     // --- 1. 統一管理顏色變數 (從 Theme 取得) ---
     // 支出使用主色 (Iron Wine)
-    final Color expenseColor = theme.colorScheme.primary;
+    final Color expenseColor = colorScheme.primary;
     // 收入使用第三色 (我們在 AppTheme 定義為 Forest Green)
-    final Color incomeColor = theme.colorScheme.tertiary;
+    final Color prepayColor = colorScheme.tertiary;
     // 中性色/零值
-    final Color neutralColor = theme.colorScheme.outline;
+    final Color neutralColor = colorScheme.outline;
     // Footer 背景色 (使用極淡的表面色變體)
     final Color footerBgColor =
-        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
     // 邊框色
-    final Color borderColor =
-        theme.colorScheme.outlineVariant.withValues(alpha: 0.5);
+    final Color borderColor = colorScheme.outlineVariant.withValues(alpha: 0.5);
 
     String getAmountWithSymbol(double amount, String currencyCode) {
       final currencyConstants =
@@ -79,18 +80,17 @@ class GroupBalanceCard extends StatelessWidget {
             children: [
               // 支出區塊
               Text(t.S13_Task_Dashboard.section.expense,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: expenseColor)),
+                  style: textTheme.titleSmall?.copyWith(color: expenseColor)),
               if (state.expenseDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
                 ...state.expenseDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -98,19 +98,18 @@ class GroupBalanceCard extends StatelessWidget {
               const Divider(),
 
               // 收入區塊
-              Text(t.S13_Task_Dashboard.section.income,
-                  style:
-                      theme.textTheme.titleSmall?.copyWith(color: incomeColor)),
-              if (state.incomeDetail.entries.isEmpty) ...[
+              Text(t.S13_Task_Dashboard.section.prepay,
+                  style: textTheme.titleSmall?.copyWith(color: prepayColor)),
+              if (state.prepayDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
-                ...state.incomeDetail.entries.map(
+                ...state.prepayDetail.entries.map(
                   (e) => Text(
-                    "${e.key} ${getAmountWithSymbol(state.incomeDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                    "${e.key} ${getAmountWithSymbol(state.prepayDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
+                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -119,17 +118,17 @@ class GroupBalanceCard extends StatelessWidget {
               // 預收款餘額 (庫存)
               Text(
                   t.S13_Task_Dashboard.section.prepay_balance, // 使用 "餘額" 或類似的標題
-                  style: theme.textTheme.titleSmall),
+                  style: textTheme.titleSmall),
               if (state.poolDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ] else ...[
                 ...state.poolDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ],
@@ -140,7 +139,7 @@ class GroupBalanceCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface, // [修改] 統一使用純白
+        color: colorScheme.surface, // [修改] 統一使用純白
         borderRadius: BorderRadius.circular(20), // 大卡片維持 20 的圓角，比較大氣
         // [修改] 加入與 MemberItem 一致的極淡陰影
         boxShadow: [
@@ -189,17 +188,15 @@ class GroupBalanceCard extends StatelessWidget {
                                 children: [
                                   Text(
                                     state.currencyCode,
-                                    style:
-                                        theme.textTheme.labelMedium?.copyWith(
+                                    style: textTheme.labelMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurface,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
                                   if (!isCurrencyTapLocked) ...[
                                     const SizedBox(width: 4),
                                     Icon(Icons.keyboard_arrow_down,
-                                        size: 14,
-                                        color: theme.colorScheme.onSurface),
+                                        size: 14, color: colorScheme.onSurface),
                                   ],
                                 ],
                               ),
@@ -215,12 +212,12 @@ class GroupBalanceCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: state.currencySymbol,
-                                style: theme.textTheme.titleLarge?.copyWith(
+                                style: textTheme.titleLarge?.copyWith(
                                   // 使用變數判斷顏色
                                   color: netBalance < 0
                                       ? expenseColor
                                       : (netBalance > 0
-                                          ? incomeColor
+                                          ? prepayColor
                                           : neutralColor),
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -237,7 +234,7 @@ class GroupBalanceCard extends StatelessWidget {
                                   color: netBalance < 0
                                       ? expenseColor
                                       : (netBalance > 0
-                                          ? incomeColor
+                                          ? prepayColor
                                           : neutralColor),
                                   letterSpacing: -1.0,
                                 ),
@@ -252,33 +249,33 @@ class GroupBalanceCard extends StatelessWidget {
                         children: [
                           Text(
                             "${t.S13_Task_Dashboard.label.total_expense} ",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           Text(
                             "${state.currencySymbol}${CurrencyConstants.formatAmount(totalExpense.abs(), state.currencyCode)}",
-                            style: theme.textTheme.bodySmall?.copyWith(
+                            style: textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             "|",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             "${t.S13_Task_Dashboard.label.total_prepay} ",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           Text(
-                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalIncome.abs(), state.currencyCode)}",
-                            style: theme.textTheme.bodySmall?.copyWith(
+                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalPrepay.abs(), state.currencyCode)}",
+                            style: textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -303,7 +300,7 @@ class GroupBalanceCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surface, // 使用變數
+                      color: colorScheme.surface, // 使用變數
                       border: Border(
                         top: BorderSide(
                           color: borderColor, // 使用變數
@@ -316,14 +313,13 @@ class GroupBalanceCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(Icons.savings_outlined,
-                            size: 18,
-                            color: theme.colorScheme.onSurfaceVariant),
+                            size: 18, color: colorScheme.onSurfaceVariant),
                         const SizedBox(width: 8),
                         Text(
                           "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
-                          style: theme.textTheme.bodySmall?.copyWith(
+                          style: textTheme.bodySmall?.copyWith(
                             fontFamily: 'RobotoMono',
-                            color: theme.colorScheme.onSurface,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                         const Spacer(),
@@ -332,8 +328,8 @@ class GroupBalanceCard extends StatelessWidget {
                             Text(
                               t.S17_Task_Locked.remainder_absorbed_by(
                                   name: state.absorbedBy ?? ""),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
                                 fontWeight: FontWeight.w500,
                               ),
                             )
@@ -341,16 +337,15 @@ class GroupBalanceCard extends StatelessWidget {
                             Text(
                               RemainderRuleConstants.getLabel(
                                   context, state.ruleKey),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           if (!isRuleTapLocked) ...[
                             const SizedBox(width: 4),
                             Icon(Icons.chevron_right,
-                                size: 16,
-                                color: theme.colorScheme.onSurfaceVariant),
+                                size: 16, color: colorScheme.onSurfaceVariant),
                           ],
                         ],
                       ],

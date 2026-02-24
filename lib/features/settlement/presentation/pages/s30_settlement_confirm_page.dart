@@ -80,24 +80,25 @@ class _S30Content extends StatelessWidget {
     );
   }
 
-  Future<void> _handleRemainderRuleChange(
+  Future<void> _showRemainderRuleChangeBottomSheet(
       BuildContext context, S30SettlementConfirmViewModel vm) async {
     final task = vm.task;
     if (task == null) return;
-
-    final membersList = task.sortedMembersList;
-
     final result = await B01BalanceRuleEditBottomSheet.show(
       context,
       initialRule: task.remainderRule,
       initialMemberId: task.remainderAbsorberId,
-      members: membersList,
+      members: task.sortedMembersList,
       currentRemainder: vm.balanceState.remainder,
       baseCurrency: vm.baseCurrency,
     );
+    if (result != null && context.mounted) {
+      await _handleRemainderRuleChange(context, vm, result);
+    }
+  }
 
-    if (result == null || !context.mounted) return;
-
+  Future<void> _handleRemainderRuleChange(BuildContext context,
+      S30SettlementConfirmViewModel vm, Map<String, dynamic> result) async {
     try {
       await vm.updateRemainderRule(result['rule'], result['memberId']);
     } on AppErrorCodes catch (code) {
@@ -113,6 +114,31 @@ class _S30Content extends StatelessWidget {
       await vm.unlockTask();
       if (!context.mounted) return;
       context.pop();
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleMergeMembers(
+      BuildContext context,
+      S30SettlementConfirmViewModel vm,
+      SettlementMember head,
+      List<String> result) async {
+    try {
+      vm.mergeMembers(head.memberData.id, result);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleUnmergeMembers(BuildContext context,
+      S30SettlementConfirmViewModel vm, SettlementMember head) async {
+    try {
+      vm.unmergeMembers(head.memberData.id);
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
@@ -144,22 +170,22 @@ class _S30Content extends StatelessWidget {
     // 4. 處理回傳結果
     if (result == null || !context.mounted) return;
     if (result.isEmpty) {
-      try {
-        vm.unmergeMembers(head.memberData.id);
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
-      return;
+      _handleUnmergeMembers(context, vm, head);
+    } else {
+      _handleMergeMembers(context, vm, head, result);
     }
-    try {
-      vm.mergeMembers(head.memberData.id, result);
-    } on AppErrorCodes catch (code) {
-      if (!context.mounted) return;
-      final msg = ErrorMapper.map(context, code: code);
-      AppToast.showError(context, msg);
-    }
+  }
+
+  void _redirectToPaymentInfo(
+      BuildContext context, S30SettlementConfirmViewModel vm) {
+    context.pushNamed(
+      'S31',
+      pathParameters: {'taskId': vm.taskId},
+      extra: {
+        "checkPointPoolBalance": vm.checkPointPoolBalance,
+        "mergeMap": vm.currentMergeMap,
+      },
+    );
   }
 
   @override
@@ -197,7 +223,7 @@ class _S30Content extends StatelessWidget {
                   state: vm.balanceState,
                   onCurrencyTap: () => _showCurrencyPicker(context, vm),
                   onRuleTap: vm.balanceState.remainder > 0
-                      ? () => _handleRemainderRuleChange(context, vm)
+                      ? () => _showRemainderRuleChangeBottomSheet(context, vm)
                       : null,
                 ),
 
@@ -268,16 +294,9 @@ class _S30Content extends StatelessWidget {
 
               // 右邊：下一步 (主要按鈕)
               AppButton(
-                text: t.S30_settlement_confirm.buttons.next,
+                text: t.S30_settlement_confirm.buttons.set_payment_info,
                 type: AppButtonType.primary,
-                onPressed: () => context.pushNamed(
-                  'S31',
-                  pathParameters: {'taskId': vm.taskId},
-                  extra: {
-                    "checkPointPoolBalance": vm.checkPointPoolBalance,
-                    "mergeMap": vm.currentMergeMap,
-                  },
-                ),
+                onPressed: () => _redirectToPaymentInfo(context, vm),
               ),
             ],
           ),

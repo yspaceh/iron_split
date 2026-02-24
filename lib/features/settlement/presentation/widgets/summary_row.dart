@@ -24,6 +24,8 @@ class SummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -32,16 +34,16 @@ class SummaryRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: labelColor ?? theme.colorScheme.onSurface,
+            style: textTheme.bodyMedium?.copyWith(
+              color: labelColor ?? colorScheme.onSurface,
             ),
           ),
           Text(
             customValueText ??
                 CurrencyConstants.formatAmount(amount, currencyConstants.code),
-            style: theme.textTheme.titleMedium?.copyWith(
+            style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
-              color: valueColor ?? theme.colorScheme.onSurface,
+              color: valueColor ?? colorScheme.onSurface,
               height: 1.2,
             ),
           ),

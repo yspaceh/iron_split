@@ -8,16 +8,33 @@
       "save": "保存",
       "edit": "編集",
       "close": "閉じる",
+      "download": "ダウンロード",
+      "settlement": "精算",
       "discard": "破棄",
       "keep_editing": "編集を続行",
       "refresh": "更新",
       "ok": "OK",
       "retry": "リトライ",
-      "done": "完成"
+      "done": "完了",
+      "agree": "同意",
+      "decline": "拒否",
+      "add_record": "追加"
     },
-    "error": {
-      "title": "エラー",
-      "unknown": "不明なエラー: {error}"
+    "label": {
+      "task_name": "タスク名",
+      "item_name": "項目名",
+      "sub_item": "子項目名",
+      "amount": "金額",
+      "date": "日付",
+      "currency": "通貨",
+      "split_method": "負担設定",
+      "start_date": "開始日",
+      "end_date": "終了日",
+      "member_count": "参加人数",
+      "period": "期間",
+      "payment_method": "支払方法",
+      "rate": "為替レート",
+      "memo": "メモ"
     },
     "category": {
       "food": "食事",
@@ -86,19 +103,24 @@
         "order": "順番",
         "member": "指定"
       },
-      "description": {
+      "content": {
         "remainder": "端数 {amount} は、為替レートの換算や割り勘の計算で生じる差額です。",
-        "random": "割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。",
+        "random": "端数を負担する一人を、システムがランダムに選びます。",
         "order": "メンバーの参加順に、端数がなくなるまで順番に配分します。",
         "member": "特定のメンバーを指定し、常にその人が端数を負担するようにします。"
       },
-      "message_remainder": "残額 {amount} は残高ポットに保存され、精算時に分配されます",
-      "message_zero_balance": "残額 {amount} は支払い差額と自動的に相殺されました"
+      "message_remainder": "端数 {amount} は一時的に保存され、精算時に分配されます",
+      "message_zero_balance": "端数 {amount} は支払い差額と自動的に相殺されました"
     },
     "split_method": {
       "even": "均等",
       "percent": "割合",
       "exact": "金額指定"
+    },
+    "payment_method": {
+      "member": "メンバー立替",
+      "prepay": "前受金払い",
+      "mixed": "混合支払"
     },
     "language": {
       "title": "言語設定",
@@ -114,10 +136,10 @@
     },
     "payment_info": {
       "mode": {
-        "private": "直接連絡してください",
+        "private": "個別連絡",
         "public": "支払い情報を共有"
       },
-      "description": {
+      "content": {
         "private": "詳細は表示されません。メンバーから直接連絡してもらいます",
         "public": "支払い情報をメンバーに表示します"
       },
@@ -141,7 +163,7 @@
     },
     "payment_status":{
       "payable": "支払",
-      "receivable": "受取"
+      "refund": "返金"
     },
     "terms": {
       "label": {
@@ -154,22 +176,19 @@
     "share":{
       "invite": {
         "subject": "Iron Split タスク招待",
-        "message": "Iron Split タスク「{taskName}」に参加しよう！\n招待コード：{code}\n連結：{link}"
+        "content": "Iron Split タスク「{taskName}」への招待です。\n招待コード：{code}\nリンク：{link}"
       },
       "settlement": {
         "subject": "Iron Split タスク精算通知",
-        "message": "精算が完了しました！\nIton Splitアプリを開いて「{taskName}」支払い金額をご確認ください。\nリンク：{link}"
+        "content": "精算が完了しました。\nIron Split アプリを開き、「{taskName}」の支払金額をご確認ください。\nリンク：{link}"
       }
     },
-    "error_prefix": "エラー: {message}",
-    "please_login": "ログインしてください",
     "preparing": "準備中...",
     "me": "自分",
     "required": "必須",
     "member_prefix": "メンバー",
     "no_record": "記録なし",
-    "today": "今日",
-    "untitled": "無題"
+    "today": "今日"
   },
   "log_action": {
     "create_task": "タスク作成",
@@ -184,47 +203,39 @@
     "close_task": "タスク終了"
   },
   "S10_Home_TaskList": {
-    "title": "マイタスク",
+    "title": "タスク一覧",
     "tab_in_progress": "進行中",
     "tab_completed": "完了済",
     "empty_in_progress": "進行中のタスクはありません",
     "empty_completed": "完了したタスクはありません",
     "date_tbd": "日付未定",
-    "delete_confirm_title": "削除の確認",
-    "delete_confirm_content": "このタスクを削除してもよろしいですか？",
-    "label_settlement": "精算済み"
+    "label": {
+      "settlement": "精算済み"
+    }
   },
   "S11_Invite_Confirm": {
     "title": "タスクに参加",
-    "subtitle": "以下のタスクに招待されました：",
+    "subtitle": "以下のタスクへの招待",
     "buttons": {
-      "confirm": "参加",
-      "cancel": "キャンセル",
-      "home": "ホームへ"
+      "join": "参加",
+      "back_task_list": "タスク一覧へ"
     },
-    "loading_invite": "招待状を読み込み中...",
-    "join_failed_title": "タスクに参加できません",
-    "identity_match_title": "あなたは以下のメンバーですか？",
-    "identity_match_desc": "このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。",
-    "status_linking": "「アカウント連携」で参加します",
-    "status_new_member": "「新規メンバー」として参加します",
-    "label_select_ghost": "引き継ぐメンバーを選択",
-    "label_prepaid": "立替",
-    "label_expense": "支出"
+    "label": {
+      "select_ghost": "引き継ぐメンバーを選択",
+      "prepaid": "前受金",
+      "expense": "支出"
+    }
   },
   "S12_TaskClose_Notice": {
     "title": "タスク終了",
     "buttons": {
-      "close": "タスク終了"
+      "close_task": "タスク終了"
     },
-    "content": "このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。"
+    "content": "このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。"
   },
   "S13_Task_Dashboard": {
     "title": "ダッシュボード",
     "buttons": {
-      "record": "記録を追加",
-      "settlement": "精算",
-      "download": "記録ダウンロード",
       "add":"追加"
     },
     "tab": {
@@ -233,20 +244,20 @@
     },
     "label": {
       "total_expense": "総費用",
-      "total_prepay": "総預り金",
+      "total_prepay": "総前受金",
       "total_expense_personal": "総費用",
-      "total_prepay_personal": "総預り金(立替含)"
+      "total_prepay_personal": "総前受金（立替含）"
     },
     "empty": {
       "records": "記録がありません",
-      "personal_records": "この日のあなたに関連する記録はありません"
+      "personal_records": "関連する記録はありません"
     },
     "daily_expense_label": "支出",
-    "dialog_balance_detail": "收支幣別明細",
+    "dialog_balance_detail": "通貨別収支明細",
     "section": {
       "expense": "支払い通貨",
-      "income": "預り金通貨",
-      "prepay_balance": "預り金残高",
+      "prepay": "前受金通貨",
+      "prepay_balance": "前受金残高",
       "no_data": "データなし"
     }
   },
@@ -267,12 +278,10 @@
   },
   "S15_Record_Edit": {
     "title": {
-      "add": "記録を追加",
-      "edit": "記録を編集"
+      "add": "記録追加",
+      "edit": "記録編集"
     },
     "buttons": {
-      "save": "記録を保存",
-      "close": "閉じる",
       "add_item": "内訳を追加"
     },
     "section": {
@@ -280,7 +289,7 @@
       "items": "内訳分割"
     },
     "val": {
-      "prepay": "前受",
+      "prepay": "前受金",
       "member_paid": "{name} が立替",
       "split_details": "内訳分割",
       "split_summary": "合計 {amount} を {method} で分担",
@@ -290,32 +299,24 @@
     },
     "tab": {
       "expense": "費用",
-      "income": "前受"
+      "prepay": "前受金"
     },
-    "base_card_title": "残額（Base）",
-    "type_income_title": "前受金",
-    "base_card_title_expense": "残額（Base）",
-    "base_card_title_income": "資金元（入金者）",
+    "base_card": "残額",
+    "type_prepay": "前受金",
     "payer_multiple": "複数人",
     "rate_dialog": {
       "title": "為替レートの出典",
-      "message": "為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。"
+      "content": "為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。"
     },
     "label": {
-      "date": "日付",
-      "title": "項目名",
-      "payment_method": "支払方法",
-      "amount": "金額",
-      "rate_with_base": "為替レート（1 {base} = ? {target}）",
-      "rate": "為替レート",
-      "memo": "メモ"
+      "rate_with_base": "為替レート（1 {base} = ? {target}）"
     },
     "hint": {
       "category": {
         "food": "夕食",
         "transport": "交通費",
         "shopping": "お土産",
-        "entertainment": "映画チケット",
+        "entertainment": "チケット",
         "accommodation": "宿泊費",
         "others": "その他費用"
       },
@@ -325,23 +326,13 @@
   },
   "S16_TaskCreate_Edit": {
     "title": "タスク作成",
-    "buttons": {
-      "save": "保存",
-      "done": "完了"
-    },
     "section": {
       "task_name": "タスク名",
       "task_period": "タスク期間",
       "settlement": "精算設定"
     },
     "label": {
-      "name": "タスク名",
-      "name_counter": "{current}/{max}",
-      "start_date": "開始日",
-      "end_date": "終了日",
-      "currency": "通貨",
-      "member_count": "参加人数",
-      "date": "日付"
+      "name_counter": "{current}/{max}"
     },
     "hint" : {
       "name": "例：東京5日間の旅"
@@ -349,16 +340,15 @@
   },
   "S17_Task_Locked": {
     "buttons": {
-      "download": "記録をダウンロード",
       "notify_members": "メンバーに通知",
-      "view_payment_details": "支払/受取口座を確認"
+      "view_payment_info": "受取口座確認"
     },
     "section": {
       "pending": "未完了",
       "cleared": "完了"
     },    
     "retention_notice": "{days} 日後にデータは自動削除されます。期間内にダウンロードしてください。",
-   "remainder_absorbed_by": "は {name} が負担",
+   "remainder_absorbed_by": "{name} が負担",
     "export": {
       "report_info": "レポート情報",
       "task_name": "タスク名",
@@ -375,7 +365,7 @@
       "pending": "未処理",
       "fund_analysis": "資金および端数",
       "total_expense": "総支出",
-      "total_income": "総預かり金",
+      "total_prepay": "総前受金",
       "remainder_buffer": "端数合計",
       "remainder_absorbed_by": "端数受取人",
       "transaction_details": "取引明細",
@@ -387,24 +377,22 @@
       "rate": "為替レート",
       "base_amount": "基準通貨金額",
       "net_remainder": "端数",
-      "pool": "預かり金",
+      "pool": "前受金",
       "mixed": "混合支払い"
     }
   },
   "S30_settlement_confirm": {
     "title": "精算確認",
     "buttons": {
-      "next": "受取設定"
+      "set_payment_info": "受取設定"
     },
     "steps": {
       "confirm_amount": "金額確認",
       "payment_info": "受取設定"
     },
     "warning": {
-      "random_reveal": "端数は決済確定後に公開されます！"
+      "random_reveal": "端数は決済確定後に公開されます。"
     },
-    "label_payable": "支払",
-    "label_refund": "返金",
     "list_item": {
       "merged_label": "代表メンバー",
       "includes": "内訳：",
@@ -417,47 +405,43 @@
     "title": "受取情報",
     "setup_instruction": "今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。",
     "sync_save": "デフォルトの受取情報として保存（端末内）",
-    "sync_update": "自分のデフォルト受取情報を同期更新",
+    "sync_update": "デフォルト受取情報を更新",
     "buttons": {
-      "settle": "精算する",
-      "prev_step": "前のステップに戻る"
+      "prev_step": "前へ戻る"
     }
   },
   "S32_settlement_result": {
     "title": "精算完了",
     "content": "すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。",
     "waiting_reveal": "結果を確認中...",
-    "remainder_winner_prefix": "残額の受取先：",
-    "remainder_winner_total": "${winnerName}さんは${prefix} ${total}になります。",
+    "remainder_winner_prefix": "端数の受取先：",
+    "remainder_winner_total": "{winnerName} の最終金額 {prefix}{total}",
     "total_label": "今回の精算合計額",
     "buttons": {
-      "share": "精算通知を送信",
-      "back": "タスクに戻る"
+      "share": "通知送信",
+      "back_task_dashboard": "タスクに戻る"
     }
   },
   "S50_Onboarding_Consent": {
     "title": "Iron Split へようこそ",
     "buttons": {
-      "agree": "はじめる"
+      "start": "はじめる"
     },
     "content": {
-      "prefix": "分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、",
+      "prefix": "分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、",
       "suffix": " に同意したものとみなされます。"
     }
   },
   "S51_Onboarding_Name": {
     "title": "名前設定",
-    "buttons": {
-      "next": "設定"
-    },
-    "description": "アプリ内で表示する名前を入力してください（1-10文字）。",
+    "content": "アプリ内で表示する名前を入力（1–10文字）",
     "hint": "ニックネームを入力",
     "counter": "{current}/{max}"
   },
   "S52_TaskSettings_Log": {
     "title": "活動履歴",
     "buttons": {
-      "export_csv": "CSVエクスポート"
+      "export_csv": "CSV出力"
     },
     "empty_log": "活動履歴はありません",
     "export_file_prefix": "活動履歴",
@@ -484,9 +468,11 @@
   "S53_TaskSettings_Members": {
     "title": "メンバー管理",
     "buttons": {
-      "add": "メンバー追加"
+      "add_member": "メンバー追加"
     },
-    "label_default_ratio": "デフォルト比率",
+    "label": {
+      "default_ratio": "デフォルト比率"
+    },
     "member_default_name": "メンバー",
     "member_name": "メンバー名"
   },
@@ -504,34 +490,29 @@
       "terms": "利用規約",
       "privacy": "プライバシーポリシー",
       "payment_info": "支払/受取口座設定",
-      "delete_account": "アカウントを削除"
+      "delete_account": "アカウント削除"
     }
   },
   "S72_TermsUpdate": {
     "title": "{type}更新",
-    "description": "{type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。",
-    "buttons": {
-      "agree": "同意する",
-      "decline": "同意しない"
-    }
+    "content": "{type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。"
   },
   "S74_DeleteAccount_Notice": {
-    "title": "アカウント削除の確認",
+    "title": "アカウント削除確認",
     "content": "この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。",
     "buttons": {
-      "delete": "アカウントを削除"
+      "delete_account": "アカウント削除"
     }
   },
   "D01_MemberRole_Intro": {
-    "title": "あなたのキャラクター",
+    "title": "今回のキャラクター",
     "buttons": {
       "reroll": "動物を変える",
       "enter": "タスクへ進む"
     },
-    "description": {
-      "content": "これが今回のタスクでのあなたのアイコン{avatar}です。\n割り勘の記録には{avatar}が表示されますよ！",
-      "reroll_left": "あと1回変更可",
-      "reroll_empty": "変更不可"
+    "content": "今回のタスクでのアイコン{avatar}です。\n記録には{avatar}が表示されます。",
+    "reroll": {
+      "empty": "変更不可"
     }
   },
   "D02_Invite_Result": {
@@ -540,14 +521,8 @@
   "D03_TaskCreate_Confirm": {
     "title": "設定の確認",
     "buttons": {
-      "confirm": "確認",
-      "back": "編集に戻る"
-    },
-    "label_name": "タスク名",
-    "label_period": "期間",
-    "label_currency": "通貨",
-    "label_members": "人数",
-    "creating_task": "作成中..."
+      "back_edit": "編集に戻る"
+    }
   },
   "D04_CommonUnsaved_Confirm": {
     "title": "未保存の変更",
@@ -555,75 +530,53 @@
   },
   "D05_DateJump_NoResult": {
     "title": "記録なし",
-    "buttons": {
-      "cancel": "戻る",
-      "add": "記録を追加"
-    },
     "content": "この日付の記録は見つかりませんでした。追加しますか？"
   },
   "D06_settlement_confirm": {
-    "title": "清算の確認",
-    "warning_text": "清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。",
-    "buttons": {
-      "confirm": "清算する"
-    }
+    "title": "精算確認",
+    "content": "精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。"
   },
   "D08_TaskClosed_Confirm": {
     "title": "タスク終了確認",
-    "buttons": {
-      "confirm": "確認"
-    },
     "content": "この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？"
   },
   "D09_TaskSettings_CurrencyConfirm": {
-    "title": "決済通貨を変更しますか？",
+    "title": "決済通貨変更",
     "content": "通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？"
   },
   "D10_RecordDelete_Confirm": {
-    "delete_record_title": "記録を削除？",
-    "delete_record_content": "{title} ({amount}) を削除してもよろしいですか？",
-    "deleted_success": "記録を削除しました"
+    "title": "記録削除確認",
+    "content": "{title} （{amount}）を削除してもよろしいですか？"
   },
   "D11_random_result": {
-    "title": "残額ルーレット当選者",
-    "skip": "スキップ",
-    "winner_reveal": "あなたです！",
-    "buttons": {
-      "close": "OK"
-    }
+    "title": "当選者",
+    "skip": "スキップ"
   },
   "D12_logout_confirm": {
-    "title": "ログアウトの確認",
-    "description": "更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。",
+    "title": "ログアウト確認",
+    "content": "更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。",
     "buttons": {
-      "logout": "ログアウトする"
+      "logout": "ログアウト"
     }
   },
   "D13_DeleteAccount_Confirm": {
-    "title": "アカウントの削除確認",
-    "buttons": {
-      "confirm": "確認"
-    },
+    "title": "アカウント削除確認",
     "content": "この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？"
   },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",
     "buttons": {
-      "save": "決定"
+      "confirm_split": "決定"
     },
-    "label": {
-      "sub_item": "子項目名",
-      "split_method": "負担設定"
-    },
-    "item_name_empty" : "親項目名を入力してない",
+    "item_name_empty" : "親項目名を入力してください",
     "hint" : {
       "sub_item": "例：内訳"
     }
   },
   "B03_SplitMethod_Edit": {
-    "title": "割り勘方法を選択",
+    "title": "割り勘方法",
     "buttons": {
-      "adjust_weight": "比率を調整"
+      "adjust_weight": "比率調整"
     },
     "label": {
       "total": "{current} / {target}"
@@ -631,78 +584,77 @@
     "mismatch": "一致しません"
   },
   "B04_payment_merge": {
-    "title": "メンバー支払いの統合",
+    "title": "支払い統合",
     "label": {
       "head_member": "代表メンバー",
       "merge_amount": "統合金額"
-    },
-    "buttons": {
-      "cancel": "キャンセル",
-      "confirm": "統合"
     }
   },
   "B06_payment_info_detail": {
-    "label_copied": "コピーしました",
     "buttons": {
       "copy": "コピー"
     }
   },
   "B07_PaymentMethod_Edit": {
     "title": "資金源を選択",
-    "type_member": "メンバー立替",
-    "type_prepay": "公費払い",
-    "type_mixed": "混合支払",
-    "prepay_balance": "公費残高: {amount}",
-    "err_balance_not_enough": "残高不足",
-    "section_payer": "支払者",
-    "label_amount": "支払金額",
-    "total_label": "合計金額",
-    "total_prepay": "公費払い",
-    "total_advance": "立替合計",
-    "status_balanced": "一致",
-    "status_remaining": "残り: {amount}",
-    "msg_auto_fill_prepay": "公費残高を自動入力しました"
+    "prepay_balance": "前受金残高：{amount}",
+    "payer_member": "支払者",
+    "label": {
+      "amount": "支払金額",
+      "total_expense": "合計金額",
+      "prepay": "前受金払い",
+      "total_advance": "立替合計"
+    },
+    "status": {
+      "not_enough": "残高不足",
+      "balanced": "一致",
+      "remaining": "残り {amount}"
+    }
   },
   "success": {
-    "saved": "保存しました"
+    "saved": "保存しました。",
+    "deleted": "削除しました。",
+    "copied": "コピーしました"
   },
   "error": {
+    "title": "エラー",
+    "unknown": "不明なエラー：{error}",
     "dialog": {
       "task_full": {
         "title": "タスク満員",
-        "message": "メンバー数が上限 {limit} 人に達しています。隊長に連絡してください。"
+        "content": "メンバー数が上限 {limit} 人に達しています。リーダーへ連絡してください。"
       },
       "expired_code": {
         "title": "招待コード期限切れ",
-        "message": "この招待リンクは無効です（期限 {minutes} 分）。隊長に再発行を依頼してください。"
+        "content": "この招待リンクは無効です（期限 {minutes} 分）。リーダーに再発行を依頼してください。"
       },
       "invalid_code": {
         "title": "無効な招待リンク",
-        "message": "無効な招待リンクです。"
+        "content": "無効な招待リンクです。"
       },
       "auth_required": {
         "title": "ログインが必要",
-        "message": "タスクに参加するにはログインしてください。"
+        "content": "タスク参加にはログインが必要です。"
       },
       "already_in_task": {
         "title": "既に参加済",
-        "message": "既にこのタスクのメンバーです。"
+        "content": "既にこのタスクのメンバーです。"
       },
       "unknown": {
         "title": "エラー",
-        "message": "予期せぬエラーが発生しました。"
+        "content": "予期せぬエラーが発生しました。"
       },
       "delete_failed": {
         "title": "削除失敗",
-        "message": "削除に失敗しました。後でもう一度お試しください。"
+        "content": "削除に失敗しました。後でもう一度お試しください。"
       },
       "member_delete_failed": {
         "title": "メンバー削除エラー",
-        "message": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。"
+        "content": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。"
       },
       "data_conflict": {
         "title": "データ更新あり",
-        "message": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。"
+        "content": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。"
       }
     },
     "message": {
@@ -714,10 +666,10 @@
       "zero": "{key}は0にできません。",
       "amount_not_enough": "残額が不足しています。",
       "amount_mismatch": "金額が一致しません。",
-      "income_is_used": "この金額は既に使用されているか、残高が不足しています。",
+      "prepay_is_used": "この金額は既に使用されているか、残高が不足しています。",
       "data_is_used": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。",
       "permission_denied": "権限がありません。",
-      "network_error": "ネットワーク接続に失敗しました。接続を確認してください。",
+      "network_error": "ネットワーク接続に失敗しました。通信状況をご確認ください。",
       "data_not_found" : "データが見つかりませんでした。もう一度お試しください。",
       "enter_first": "{key}を先に入力してください。",
       "export_failed": "レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。",
@@ -729,14 +681,14 @@
       "invalid_char": "無効な文字が含まれています。",
       "invalid_code": "招待コードが無効です。リンクが正しいか確認してください。",
       "expired_code": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
-      "task_full": "定員オーバーです（上限15名）。参加できません",
+      "task_full": "定員オーバーです（上限15名）。参加できません。",
       "auth_required": "認証に失敗しました。アプリを再起動してください。",
       "init_failed": "読み込みに失敗しました。もう一度お試しください。",
       "unauthorized": "ログインしていません。再度ログインしてください。",
-      "task_locked": "精算済みのた​​め、データを変更できません。",
+      "task_locked": "精算済みのため、データを変更できません。",
       "timeout": "タイムアウトしました。後でもう一度お試しください。",
       "quota_exceeded": "利用制限に達しました。しばらく経ってからお試しください。",
-      "join_failed": "タスクに参加できませんでした。，しばらく経ってからお試しください。",
+      "join_failed": "タスクに参加できませんでした。しばらく経ってからお試しください。",
       "invite_create_failed": "招待コードを作成できませんでした。しばらく経ってからお試しください。",
       "data_conflict": "閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。",
       "task_status_error": "タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。",

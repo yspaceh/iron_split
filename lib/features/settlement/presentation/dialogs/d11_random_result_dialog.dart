@@ -279,7 +279,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
       // Actions 只保留關閉按鈕 (動畫結束後顯示)
       actions: [
         AppButton(
-          text: t.D11_random_result.buttons.close,
+          text: t.common.buttons.ok,
           type: AppButtonType.primary,
           onPressed: !_isSpinning ? () => context.pop() : null,
         ),

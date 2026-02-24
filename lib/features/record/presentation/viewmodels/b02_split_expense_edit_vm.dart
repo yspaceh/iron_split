@@ -91,14 +91,25 @@ class B02SplitExpenseEditViewModel extends ChangeNotifier {
   }
 
   /// 5. 處理分帳細節更新 (Rule 1: 當從 B03 返回時由 VM 更新資料)
-  void updateSplitConfig({
-    required String method,
-    required List<String> memberIds,
-    required Map<String, double> details,
-  }) {
-    splitMethod = method;
-    splitMemberIds = memberIds;
-    splitDetails = details;
+  void updateSplitConfig(Map<String, dynamic> result) {
+    final rawMemberIds = result['memberIds'];
+    final safeMemberIds = rawMemberIds is List
+        ? rawMemberIds.whereType<String>().toList()
+        : <String>[];
+
+    // 2. 安全解析 details (Map<String, double>)
+    final rawDetails = result['details'];
+    final safeDetails = rawDetails is Map
+        ? rawDetails.map((key, value) => MapEntry(
+              key.toString(), // 確保 key 一定是 String
+              (value is num)
+                  ? value.toDouble()
+                  : 0.0, // 容錯：把 int 轉成 double，如果是怪異型別就給 0.0
+            ))
+        : <String, double>{};
+    splitMethod = result['splitMethod'] ?? SplitMethodConstant.defaultMethod;
+    splitMemberIds = safeMemberIds;
+    splitDetails = safeDetails;
     notifyListeners();
   }
 

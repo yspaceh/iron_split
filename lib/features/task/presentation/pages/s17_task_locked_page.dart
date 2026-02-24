@@ -82,82 +82,84 @@ class _S17ContentState extends State<_S17Content> {
     }
   }
 
+  Future<void> _handleExport(
+      BuildContext context, S17TaskLockedViewModel vm, Translations t) async {
+    final l = t.S17_Task_Locked.export;
+
+    try {
+      await vm.exportSettlementRecord(
+        fileName:
+            "${vm.taskName}_Settlement_Report_${DateTime.now().toIso8601String().split('T').first}.csv",
+        subject: '${vm.taskName} Settlement Report',
+        labels: {
+          'reportInfo': l.report_info,
+          'taskName': l.task_name,
+          'exportTime': l.export_time,
+          'baseCurrency': l.base_currency,
+          'settlementSummary': l.settlement_summary,
+          'member': l.member,
+          'role': l.role,
+          'netAmount': l.net_amount,
+          'status': l.status,
+          'receiver': l.receiver,
+          'payer': l.payer,
+          'cleared': l.cleared,
+          'pending': l.pending,
+          'fundAnalysis': l.fund_analysis,
+          'totalExpense': l.total_expense,
+          'totalPrepay': l.total_prepay,
+          'remainderBuffer': l.remainder_buffer,
+          'remainderAbsorbedBy': l.remainder_absorbed_by,
+          'transactionDetails': l.transaction_details,
+          'date': l.date,
+          'title': l.title,
+          'type': l.type,
+          'origAmt': l.original_amount,
+          'currency': l.currency,
+          'rate': l.rate,
+          'baseAmt': l.base_amount,
+          'netRemainder': l.net_remainder,
+          'pool': l.pool,
+          'mixed': l.mixed,
+        },
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleShare(
+      BuildContext context, S17TaskLockedViewModel vm, Translations t) async {
+    // 1. UI 負責組裝字串 (包含 DeepLink)
+    final message = t.common.share.settlement.content(
+      taskName: vm.taskName,
+      link: vm.link,
+    );
+
+    try {
+      // 2. 委派 VM 執行
+      await vm.notifyMembers(
+        message: message,
+        subject: t.common.share.settlement.subject,
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  void _redirectToTaskList(BuildContext context) {
+    context.goNamed('S10');
+  }
+
   @override
   Widget build(BuildContext context) {
     // 監聽 VM 狀態
     final vm = context.watch<S17TaskLockedViewModel>();
     final t = Translations.of(context);
-
-    Future<void> handleExport(
-        BuildContext context, S17TaskLockedViewModel vm) async {
-      final t = Translations.of(context);
-      final l = t.S17_Task_Locked.export;
-
-      try {
-        await vm.exportSettlementRecord(
-          fileName:
-              "${vm.taskName}_Settlement_Report_${DateTime.now().toIso8601String().split('T').first}.csv",
-          subject: '${vm.taskName} Settlement Report',
-          labels: {
-            'reportInfo': l.report_info,
-            'taskName': l.task_name,
-            'exportTime': l.export_time,
-            'baseCurrency': l.base_currency,
-            'settlementSummary': l.settlement_summary,
-            'member': l.member,
-            'role': l.role,
-            'netAmount': l.net_amount,
-            'status': l.status,
-            'receiver': l.receiver,
-            'payer': l.payer,
-            'cleared': l.cleared,
-            'pending': l.pending,
-            'fundAnalysis': l.fund_analysis,
-            'totalExpense': l.total_expense,
-            'totalIncome': l.total_income,
-            'remainderBuffer': l.remainder_buffer,
-            'remainderAbsorbedBy': l.remainder_absorbed_by,
-            'transactionDetails': l.transaction_details,
-            'date': l.date,
-            'title': l.title,
-            'type': l.type,
-            'origAmt': l.original_amount,
-            'currency': l.currency,
-            'rate': l.rate,
-            'baseAmt': l.base_amount,
-            'netRemainder': l.net_remainder,
-            'pool': l.pool,
-            'mixed': l.mixed,
-          },
-        );
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
-    }
-
-    Future<void> handleShare(
-        BuildContext context, S17TaskLockedViewModel vm) async {
-      final t = Translations.of(context);
-      // 1. UI 負責組裝字串 (包含 DeepLink)
-      final message = t.common.share.settlement.message(
-        taskName: vm.taskName,
-        link: vm.link,
-      );
-
-      try {
-        // 2. 委派 VM 執行
-        await vm.notifyMembers(
-          message: message,
-          subject: t.common.share.settlement.subject,
-        );
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
-    }
 
     Widget? content;
     if (vm.initStatus == LoadStatus.success) {
@@ -177,7 +179,7 @@ class _S17ContentState extends State<_S17Content> {
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back),
       // S10 為 Dashboard，這是此流程的唯一出口
-      onPressed: () => context.goNamed('S10'),
+      onPressed: () => _redirectToTaskList(context),
     );
 
     return CommonStateView(
@@ -207,13 +209,15 @@ class _S17ContentState extends State<_S17Content> {
                       AppButton(
                         text: t.S17_Task_Locked.buttons.notify_members,
                         type: AppButtonType.secondary,
-                        onPressed: () => handleShare(context, vm),
+                        isLoading: vm.shareStatus == LoadStatus.loading,
+                        onPressed: () => _handleShare(context, vm, t),
                       ),
                       // 下載帳單
                       AppButton(
-                        text: t.S17_Task_Locked.buttons.download,
+                        text: t.common.buttons.download,
                         type: AppButtonType.primary,
-                        onPressed: () => handleExport(context, vm),
+                        isLoading: vm.exportStatus == LoadStatus.loading,
+                        onPressed: () => _handleExport(context, vm, t),
                       ),
                     ],
                   ),

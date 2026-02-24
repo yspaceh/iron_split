@@ -23,6 +23,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // 將 Map 轉為 List 以便透過 Index 操作
     final keys = segments.keys.toList();
@@ -87,7 +88,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
                     alignment: Alignment.center,
                     child: AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
-                      style: theme.textTheme.labelLarge!.copyWith(
+                      style: textTheme.labelLarge!.copyWith(
                         // [視覺優化]
                         // 選中時：用深灰色 (比酒紅更沈穩，因為白色底已經夠亮了)
                         // 未選時：用冷灰色

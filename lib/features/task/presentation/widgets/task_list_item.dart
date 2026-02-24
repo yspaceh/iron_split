@@ -22,6 +22,7 @@ class TaskListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final t = Translations.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd');
 
@@ -47,7 +48,7 @@ class TaskListItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       constraints: const BoxConstraints(minHeight: 64), // 上下留白，讓背景透出來
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface, // 純白背景
+        color: colorScheme.surface, // 純白背景
         borderRadius: BorderRadius.circular(16), // 精緻圓角
         boxShadow: [
           BoxShadow(
@@ -81,7 +82,7 @@ class TaskListItem extends StatelessWidget {
                         children: [
                           Text(
                             task.name,
-                            style: theme.textTheme.titleMedium?.copyWith(
+                            style: textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: colorScheme.onSurface,
                             ),
@@ -92,7 +93,7 @@ class TaskListItem extends StatelessWidget {
                           // 日期顯示
                           Text(
                             periodText,
-                            style: theme.textTheme.bodyMedium?.copyWith(
+                            style: textTheme.bodyMedium?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),

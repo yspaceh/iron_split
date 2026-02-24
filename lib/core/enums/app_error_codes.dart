@@ -14,7 +14,7 @@ enum AppErrorCodes {
   timeout, // 請求逾時 (deadline-exceeded)
   networkError, // 網路連線失敗 (network-request-failed)
 
-  incomeIsUsed, // 業務邏輯：款項已使用
+  prepayIsUsed, // 業務邏輯：款項已使用
   dataIsUsed,
   taskLocked, // 業務邏輯：房間已鎖定
 

@@ -113,7 +113,7 @@ class ActivityLogModel {
     }
 
     String getRecordTypeTag(String type) {
-      if (type == 'income') {
+      if (type == 'prepay') {
         return "[${t.S52_TaskSettings_Log.type.prepay}]"; // 使用 S52 Key
       }
       if (type == 'expense') {
@@ -130,11 +130,11 @@ class ActivityLogModel {
 
       switch (type) {
         case 'task_name':
-          return "${t.S16_TaskCreate_Edit.label.name}: $val";
+          return "${t.common.label.task_name}: $val";
         case 'date_range':
-          return "${t.S16_TaskCreate_Edit.label.date}: $val";
+          return "${t.common.label.date}: $val";
         case 'currency':
-          return "${t.S16_TaskCreate_Edit.label.currency}: $val";
+          return "${t.common.label.currency}: $val";
         case 'remainder_rule':
           String ruleName = RemainderRuleConstants.getLabel(context, val);
           return "${t.common.remainder_rule.title}: $ruleName";
@@ -190,7 +190,7 @@ class ActivityLogModel {
 
       if (details.containsKey('splitMethod')) {
         final method =
-            SplitMethodConstant.getLabel(context, details['splitMethod']);
+            SplitMethodConstant.getLabel(context, details['splitMethod'], t);
         buffer.write(details['splitMethod']);
         buffer.write(" ($method)");
       }
@@ -221,7 +221,7 @@ class ActivityLogModel {
     // 格式: "新增記帳：[支出]"
     String title = getLocalizedAction(context);
     if (details.containsKey('recordType')) {
-      final typeStr = details['recordType'] == 'income'
+      final typeStr = details['recordType'] == 'prepay'
           ? t.S52_TaskSettings_Log.type.prepay // "預收"
           : t.S52_TaskSettings_Log.type.expense; // "支出"
       title += "：[$typeStr]";
@@ -258,7 +258,7 @@ class ActivityLogModel {
       // 基本模式顯示簡略分帳
       if (mode == 'basic' && groups.isNotEmpty) {
         final g = groups.first;
-        final method = SplitMethodConstant.getLabel(context, g['method']);
+        final method = SplitMethodConstant.getLabel(context, g['method'], t);
         final unit = t.S52_TaskSettings_Log.unit.members;
         bufferMain.write(" / ${g['count']}$unit $method");
       }
@@ -311,7 +311,7 @@ class ActivityLogModel {
           final label = g['label'];
           final amt = CurrencyConstants.formatAmount(g['amount'], currency);
           final count = g['count'];
-          final method = SplitMethodConstant.getLabel(context, g['method']);
+          final method = SplitMethodConstant.getLabel(context, g['method'], t);
           final unit = t.S52_TaskSettings_Log.unit.members;
           // 格式: "- drink (JPY 1,000 / 2人 平分)"
           return "- $label ($currency $amt / $count$unit $method)";

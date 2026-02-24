@@ -56,28 +56,25 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildColumn(
-                context, t.D03_TaskCreate_Confirm.label_name, taskName),
+            _buildColumn(context, t.common.label.task_name, taskName),
             const SizedBox(height: 16),
-            _buildColumn(context, t.D03_TaskCreate_Confirm.label_period,
+            _buildColumn(context, t.common.label.period,
                 '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
             const SizedBox(height: 16),
-            _buildColumn(context, t.D03_TaskCreate_Confirm.label_currency,
-                baseCurrency.code),
+            _buildColumn(context, t.common.label.currency, baseCurrency.code),
             const SizedBox(height: 16),
-            _buildColumn(context, t.D03_TaskCreate_Confirm.label_members,
-                '$memberCount'),
+            _buildColumn(context, t.common.label.member_count, '$memberCount'),
           ],
         ),
       ),
       actions: [
         AppButton(
-          text: t.D03_TaskCreate_Confirm.buttons.back,
+          text: t.D03_TaskCreate_Confirm.buttons.back_edit,
           type: AppButtonType.secondary,
           onPressed: () => Navigator.pop(context, false),
         ),
         AppButton(
-          text: t.D03_TaskCreate_Confirm.buttons.confirm,
+          text: t.common.buttons.confirm,
           type: AppButtonType.primary,
           onPressed: () => Navigator.pop(context, true),
         ),
@@ -87,21 +84,22 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
 
   Widget _buildColumn(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: textTheme.bodyMedium
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+          style: textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold, color: colorScheme.onSurface),
         ),
       ],
     );

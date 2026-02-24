@@ -62,7 +62,7 @@ class ErrorMapper {
     if (eStr.contains("INVALID")) return AppErrorCodes.inviteInvalid;
 
     // 4. 業務與初始化收斂
-    if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.incomeIsUsed;
+    if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.prepayIsUsed;
     if (eStr.contains('TASK_LOCKED')) return AppErrorCodes.taskLocked;
     if (eStr.contains('INIT') ||
         eStr.contains('LOAD') ||
@@ -105,8 +105,8 @@ class ErrorMapper {
       case AppErrorCodes.networkError:
         return t.error.message.network_error; // 顯示為「網路連線失敗」
 
-      case AppErrorCodes.incomeIsUsed:
-        return t.error.message.income_is_used;
+      case AppErrorCodes.prepayIsUsed:
+        return t.error.message.prepay_is_used;
       case AppErrorCodes.dataIsUsed:
         return t.error.message.data_is_used;
       case AppErrorCodes.taskLocked:
@@ -114,11 +114,11 @@ class ErrorMapper {
 
       // 邀請流程
       case AppErrorCodes.inviteTaskFull:
-        return t.error.dialog.task_full.message(limit: '15');
+        return t.error.dialog.task_full.content(limit: '15');
       case AppErrorCodes.inviteExpired:
-        return t.error.dialog.expired_code.message(minutes: '30');
+        return t.error.dialog.expired_code.content(minutes: '30');
       case AppErrorCodes.inviteInvalid:
-        return t.error.dialog.invalid_code.message;
+        return t.error.dialog.invalid_code.content;
       case AppErrorCodes.joinFailed:
         return t.error.message.join_failed;
       case AppErrorCodes.inviteCreateFailed:

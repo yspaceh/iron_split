@@ -46,7 +46,7 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
     super.dispose();
   }
 
-  void _submit() {
+  void _handleConfirm(BuildContext context) {
     final newName = _controller.text.trim();
     if (newName.isEmpty) return;
     context.pop();
@@ -57,6 +57,7 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return CommonAlertDialog(
       title: t.S53_TaskSettings_Members.title,
       content: SizedBox(
@@ -64,7 +65,7 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
         child: TaskNameInput(
           controller: _controller,
           maxLength: 10,
-          fillColor: theme.colorScheme.surfaceContainerLow,
+          fillColor: colorScheme.surfaceContainerLow,
           label: t.S53_TaskSettings_Members.member_name,
           hint: t.S53_TaskSettings_Members.member_name,
         ),
@@ -82,7 +83,7 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
             return AppButton(
               text: t.common.buttons.confirm,
               type: AppButtonType.primary,
-              onPressed: isValid ? _submit : null,
+              onPressed: isValid ? () => _handleConfirm(context) : null,
             );
           },
         ),

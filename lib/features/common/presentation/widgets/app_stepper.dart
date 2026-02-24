@@ -24,13 +24,14 @@ class AppStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final disableColor = colorScheme.onSurface.withValues(alpha: 0.3);
     final dividerColor = colorScheme.outlineVariant;
 
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: dividerColor),
       ),
@@ -57,7 +58,7 @@ class AppStepper extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 text!,
-                style: theme.textTheme.labelLarge?.copyWith(
+                style: textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.primary,
                 ),

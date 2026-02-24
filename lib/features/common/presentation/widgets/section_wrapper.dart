@@ -14,6 +14,7 @@ class SectionWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -23,7 +24,7 @@ class SectionWrapper extends StatelessWidget {
           if (title != null || title != '') ...[
             Text(
               title ?? '',
-              style: theme.textTheme.bodySmall?.copyWith(
+              style: textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurface, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),

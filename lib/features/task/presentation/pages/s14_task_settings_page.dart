@@ -78,16 +78,21 @@ class _S14ContentState extends State<_S14Content> {
     super.dispose();
   }
 
-  Future<void> _onCurrencyChange(BuildContext context,
-      S14TaskSettingsViewModel vm, CurrencyConstants selectedOption) async {
+  Future<void> _handleUpdateDateRange(
+      BuildContext context, S14TaskSettingsViewModel vm,
+      {required DateTime start, required DateTime end}) async {
     // 髒檢查
-    if (selectedOption.code == vm.currency?.code) return;
+    try {
+      await vm.updateDateRange(start, end);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
 
-    // 等待 BottomSheet 關閉動畫
-    await Future.delayed(const Duration(milliseconds: 300));
-    if (!context.mounted) return;
-
-    // 呼叫 D09 Dialog
+  Future<void> _showCurrencyChangeConfirmDialog(BuildContext context,
+      S14TaskSettingsViewModel vm, CurrencyConstants selectedOption) async {
     final bool? success = await showDialog<bool>(
       context: context,
       builder: (context) => D09TaskSettingsCurrencyConfirmDialog(
@@ -95,37 +100,50 @@ class _S14ContentState extends State<_S14Content> {
         newCurrency: selectedOption,
       ),
     );
-
-    // 成功後更新 VM 狀態
-    if (success == true && mounted) {
-      vm.updateCurrency(selectedOption);
+    if (success == true && context.mounted) {
+      _handleCurrencyChange(context, vm, selectedOption);
     }
   }
 
-  Future<void> _onRemainderRuleChange(
-      BuildContext context, S14TaskSettingsViewModel vm) async {
-    // 1. 準備成員資料 (Map 轉 List)
+  void _handleCurrencyChange(BuildContext context, S14TaskSettingsViewModel vm,
+      CurrencyConstants selectedOption) {
+    try {
+      vm.updateCurrency(selectedOption);
+    } on AppErrorCodes catch (code) {
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
 
-    // 2. 呼叫 B01
+  Future<void> _showRemainderRuleChangeBottomSheet(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
     final result = await B01BalanceRuleEditBottomSheet.show(context,
         initialRule: vm.remainderRule,
         initialMemberId: vm.remainderAbsorberId,
         members: vm.membersList,
         currentRemainder: vm.currentRemainder, // 從 VM 拿
         baseCurrency: vm.currency!);
-
-    // 3. 處理回傳
-    if (result != null && mounted) {
-      await vm.updateRemainderRule(result['rule'], result['memberId']);
+    if (result != null && context.mounted) {
+      await _handleRemainderRuleChange(context, vm, result);
     }
   }
 
-  Future<void> _handleShare(
-      BuildContext context, S14TaskSettingsViewModel vm) async {
-    final t = Translations.of(context);
+  Future<void> _handleRemainderRuleChange(BuildContext context,
+      S14TaskSettingsViewModel vm, Map<String, dynamic> result) async {
+    try {
+      await vm.updateRemainderRule(result['rule'], result['memberId']);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleInviteMember(
+      BuildContext context, S14TaskSettingsViewModel vm, Translations t) async {
     try {
       final inviteCode = await vm.inviteMember();
-      final message = t.common.share.invite.message(
+      final message = t.common.share.invite.content(
         taskName: vm.nameController.value.text,
         code: inviteCode,
         link: vm.link,
@@ -140,6 +158,28 @@ class _S14ContentState extends State<_S14Content> {
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
+  }
+
+  void _redirectToMemberSettings(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    context.pushNamed(
+      'S53',
+      pathParameters: {'taskId': vm.taskId},
+    );
+  }
+
+  void _redirectToHistory(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    context.pushNamed(
+      'S52',
+      pathParameters: {'taskId': vm.taskId},
+      extra: vm.membersData,
+    );
+  }
+
+  void _redirectToCloseTask(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    context.pushNamed('S12', pathParameters: {'taskId': vm.taskId});
   }
 
   @override
@@ -171,14 +211,14 @@ class _S14ContentState extends State<_S14Content> {
                         TaskNameInput(
                           controller: vm.nameController,
                           focusNode: _nameFocusNode,
-                          label: t.S16_TaskCreate_Edit.label.name,
+                          label: t.common.label.task_name,
                           hint: t.S16_TaskCreate_Edit.hint.name,
                           maxLength: 20,
                         ),
                         const SizedBox(height: 8),
                         NavTile(
                           title: t.S14_Task_Settings.menu.invite,
-                          onTap: () => _handleShare(context, vm),
+                          onTap: () => _handleInviteMember(context, vm, t),
                         ),
                       ]),
                   SectionWrapper(
@@ -186,30 +226,19 @@ class _S14ContentState extends State<_S14Content> {
                       children: [
                         if (vm.startDate != null && vm.endDate != null) ...[
                           TaskDateInput(
-                              label: t.S16_TaskCreate_Edit.label.start_date,
-                              date: vm.startDate!,
-                              onDateChanged: (val) {
-                                try {
-                                  vm.updateDateRange(val, vm.endDate!);
-                                } on AppErrorCodes catch (code) {
-                                  final msg =
-                                      ErrorMapper.map(context, code: code);
-                                  AppToast.showError(context, msg);
-                                }
-                              }),
+                            label: t.common.label.start_date,
+                            date: vm.startDate!,
+                            onDateChanged: (val) => _handleUpdateDateRange(
+                                context, vm,
+                                start: val, end: vm.endDate!),
+                          ),
                           const SizedBox(height: 8),
                           TaskDateInput(
-                            label: t.S16_TaskCreate_Edit.label.end_date,
+                            label: t.common.label.end_date,
                             date: vm.endDate!,
-                            onDateChanged: (val) {
-                              try {
-                                vm.updateDateRange(vm.startDate!, val);
-                              } on AppErrorCodes catch (code) {
-                                final msg =
-                                    ErrorMapper.map(context, code: code);
-                                AppToast.showError(context, msg);
-                              }
-                            },
+                            onDateChanged: (val) => _handleUpdateDateRange(
+                                context, vm,
+                                start: vm.startDate!, end: val),
                           ),
                         ],
                       ]),
@@ -219,15 +248,9 @@ class _S14ContentState extends State<_S14Content> {
                         if (vm.currency != null) ...[
                           TaskCurrencyInput(
                             currency: vm.currency!,
-                            onCurrencyChanged: (val) {
-                              try {
-                                _onCurrencyChange(context, vm, val);
-                              } on AppErrorCodes catch (code) {
-                                final msg =
-                                    ErrorMapper.map(context, code: code);
-                                AppToast.showError(context, msg);
-                              }
-                            },
+                            onCurrencyChanged: (val) =>
+                                _showCurrencyChangeConfirmDialog(
+                                    context, vm, val),
                             enabled: true,
                           ),
                           const SizedBox(height: 8),
@@ -235,14 +258,8 @@ class _S14ContentState extends State<_S14Content> {
                         TaskRemainderRuleInput(
                           rule: RemainderRuleConstants.getLabel(
                               context, vm.remainderRule),
-                          onTap: () {
-                            try {
-                              _onRemainderRuleChange(context, vm);
-                            } on AppErrorCodes catch (code) {
-                              final msg = ErrorMapper.map(context, code: code);
-                              AppToast.showError(context, msg);
-                            }
-                          },
+                          onTap: () =>
+                              _showRemainderRuleChangeBottomSheet(context, vm),
                         ),
                       ]),
                   SectionWrapper(
@@ -250,24 +267,12 @@ class _S14ContentState extends State<_S14Content> {
                     children: [
                       NavTile(
                         title: t.S14_Task_Settings.menu.member_settings,
-                        onTap: () {
-                          context.pushNamed(
-                            'S53',
-                            pathParameters: {'taskId': vm.taskId},
-                          );
-                        },
+                        onTap: () => _redirectToMemberSettings(context, vm),
                       ),
                       const SizedBox(height: 8),
                       NavTile(
-                        title: t.S14_Task_Settings.menu.history,
-                        onTap: () {
-                          context.pushNamed(
-                            'S52',
-                            pathParameters: {'taskId': vm.taskId},
-                            extra: vm.membersData,
-                          );
-                        },
-                      ),
+                          title: t.S14_Task_Settings.menu.history,
+                          onTap: () => _redirectToHistory(context, vm)),
                     ],
                   ),
                   // Settings Navigation
@@ -277,10 +282,7 @@ class _S14ContentState extends State<_S14Content> {
                     NavTile(
                       title: t.S14_Task_Settings.menu.close_task,
                       isDestructive: true,
-                      onTap: () {
-                        context.pushNamed('S12',
-                            pathParameters: {'taskId': vm.taskId});
-                      },
+                      onTap: () => _redirectToCloseTask(context, vm),
                     ),
                   ],
 

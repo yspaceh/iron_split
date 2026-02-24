@@ -16,7 +16,7 @@ class TaskExchangeRateInput extends StatelessWidget {
     required this.isRateLoading,
     required this.onFetchRate,
     required this.onShowRateInfo,
-    this.isIncome = false,
+    this.isPrepay = false,
     this.focusNode,
   });
 
@@ -27,7 +27,7 @@ class TaskExchangeRateInput extends StatelessWidget {
   final bool isRateLoading;
   final VoidCallback onFetchRate;
   final VoidCallback onShowRateInfo;
-  final bool isIncome;
+  final bool isPrepay;
   final FocusNode? focusNode;
 
   @override
@@ -36,12 +36,13 @@ class TaskExchangeRateInput extends StatelessWidget {
     final themeVm = context.watch<ThemeViewModel>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final expenseColor = themeVm.themeMode == ThemeMode.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
-    final incomeColor = themeVm.themeMode == ThemeMode.dark
-        ? AppTheme.incomeLight
-        : AppTheme.incomeDeep;
+    final prepayColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.prepayLight
+        : AppTheme.prepayDeep;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -74,13 +75,13 @@ class TaskExchangeRateInput extends StatelessWidget {
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
                               color:
-                                  isIncome == true ? incomeColor : expenseColor,
+                                  isPrepay == true ? prepayColor : expenseColor,
                             ),
                           )
                         : Icon(
                             Icons.currency_exchange_outlined, // 更新/交換圖示
                             color:
-                                isIncome == true ? incomeColor : expenseColor,
+                                isPrepay == true ? prepayColor : expenseColor,
                             size: 24,
                           ),
                   ),
@@ -112,8 +113,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                   // [關鍵]：禁止輸入 0 或 負數
                   if (rate <= 0) {
                     // 建議新增翻譯: "匯率必須大於 0"
-                    return t.error.message
-                        .zero(key: t.S15_Record_Edit.label.rate);
+                    return t.error.message.zero(key: t.common.label.rate);
                   }
                   return null;
                 },
@@ -156,7 +156,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                           base: baseCurrency.code,
                           symbol: baseCurrency.symbol,
                           amount: formattedAmount),
-                      style: theme.textTheme.labelSmall
+                      style: textTheme.labelSmall
                           ?.copyWith(color: colorScheme.onSurfaceVariant),
                     );
                   },

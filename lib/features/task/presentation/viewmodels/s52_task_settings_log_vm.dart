@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -22,10 +24,14 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
   AppErrorCodes? _initErrorCode;
 
   LoadStatus _exportStatus = LoadStatus.initial;
+  List<ActivityLogModel> _logs = [];
 
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
   LoadStatus get exportStatus => _exportStatus;
+  List<ActivityLogModel> get logs => _logs;
+
+  StreamSubscription? _activityLogSubscription;
 
   S52TaskSettingsLogViewModel({
     required this.taskId,
@@ -49,9 +55,19 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
 
-      // 3. 成功 (此頁面不需要撈資料，確認有人就好)
-      _initStatus = LoadStatus.success;
-      notifyListeners();
+      _activityLogSubscription = _taskRepo.streamActivityLogs(taskId).listen(
+        (logData) {
+          _logs = logData;
+          _initStatus = LoadStatus.success;
+          notifyListeners();
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;
@@ -62,10 +78,6 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // Logs Stream Getter
-  Stream<List<ActivityLogModel>> get logsStream =>
-      _taskRepo.streamActivityLogs(taskId);
 
   Future<void> exportCsv({
     required String header,
@@ -115,5 +127,11 @@ class S52TaskSettingsLogViewModel extends ChangeNotifier {
       notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _activityLogSubscription?.cancel();
+    super.dispose();
   }
 }

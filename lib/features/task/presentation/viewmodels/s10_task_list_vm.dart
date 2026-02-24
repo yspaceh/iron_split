@@ -19,7 +19,7 @@ class S10TaskListViewModel extends ChangeNotifier {
   // UI State
   List<TaskModel> _allTasks = [];
   List<TaskModel> _displayTasks = [];
-  int _filterIndex = 0; // 0: 進行中, 1: 已完成
+  int _segmentedIndex = 0; // 0: 進行中, 1: 已完成
 
   String _currentUserId = '';
   StreamSubscription? _subscription;
@@ -28,7 +28,7 @@ class S10TaskListViewModel extends ChangeNotifier {
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
   List<TaskModel> get displayTasks => _displayTasks;
-  int get filterIndex => _filterIndex;
+  int get segmentedIndex => _segmentedIndex;
   String get currentUserId => _currentUserId;
 
   S10TaskListViewModel({
@@ -78,15 +78,15 @@ class S10TaskListViewModel extends ChangeNotifier {
     }
   }
 
-  void setFilter(int index) {
-    if (_filterIndex == index) return;
-    _filterIndex = index;
+  void setSegmentedIndex(int index) {
+    if (_segmentedIndex == index) return;
+    _segmentedIndex = index;
     _recalculate();
     notifyListeners();
   }
 
   void _recalculate() {
-    _displayTasks = _service.filterAndSortTasks(_allTasks, _filterIndex);
+    _displayTasks = _service.filterAndSortTasks(_allTasks, _segmentedIndex);
   }
 
   // 判斷是否為建立者 (權限檢查)
@@ -95,7 +95,7 @@ class S10TaskListViewModel extends ChangeNotifier {
     return task.createdBy == currentUserId;
   }
 
-  ({String routeName, Map<String, String> params})? getNavigationInfo(
+  ({String routeName, Map<String, String> params}) getNavigationInfo(
       TaskModel task) {
     switch (task.status) {
       case TaskStatus.ongoing:

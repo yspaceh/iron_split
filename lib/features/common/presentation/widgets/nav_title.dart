@@ -20,6 +20,7 @@ class NavTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return InkWell(
       onTap: onTap,
@@ -30,19 +31,19 @@ class NavTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: isDestructive
               ? colorScheme.error.withValues(alpha: 0.1)
-              : fillColor ?? theme.colorScheme.surface,
+              : fillColor ?? colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
             Expanded(
                 child: Text(title,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: isDestructive ? theme.colorScheme.error : null,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: isDestructive ? colorScheme.error : null,
                     ))),
             Icon(Icons.keyboard_arrow_right_outlined,
                 color: isDestructive
-                    ? theme.colorScheme.error
+                    ? colorScheme.error
                     : colorScheme.onSurfaceVariant),
           ],
         ),

@@ -19,8 +19,7 @@ class SplitMethodConstant {
   ];
 
   // Helper: 取得顯示名稱 (集中管理翻譯邏輯)
-  static String getLabel(BuildContext context, String method) {
-    final t = Translations.of(context);
+  static String getLabel(BuildContext context, String method, Translations t) {
     switch (method) {
       case even:
         return t.common.split_method.even;

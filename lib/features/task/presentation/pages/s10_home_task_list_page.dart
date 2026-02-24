@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -29,6 +30,24 @@ class S10HomeTaskListPage extends StatelessWidget {
 class _S10Content extends StatelessWidget {
   const _S10Content();
 
+  void _handleSwitchSegmentedIndex(S10TaskListViewModel vm, int index) {
+    vm.setSegmentedIndex(index);
+  }
+
+  void _redirectToTask(
+      BuildContext context, S10TaskListViewModel vm, TaskModel task) {
+    final nav = vm.getNavigationInfo(task);
+    context.pushNamed(nav.routeName, pathParameters: nav.params);
+  }
+
+  void _redirectToCreateTask(BuildContext context) {
+    context.pushNamed('S16');
+  }
+
+  void _redirectToSystemSettings(BuildContext context) {
+    context.pushNamed('S70');
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -39,7 +58,7 @@ class _S10Content extends StatelessWidget {
     final actions = [
       IconButton(
         icon: const Icon(Icons.settings_outlined),
-        onPressed: () => context.pushNamed('S70'),
+        onPressed: () => _redirectToSystemSettings(context),
       ),
     ];
 
@@ -56,9 +75,9 @@ class _S10Content extends StatelessWidget {
         ),
         // 還原 FAB
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => context.pushNamed('S16'),
+          onPressed: () => _redirectToCreateTask(context),
           icon: const Icon(Icons.add),
-          label: Text(t.S16_TaskCreate_Edit.title), // 使用 S16 的標題 '建立任務'
+          label: Text(t.S16_TaskCreate_Edit.title),
           shape: const StadiumBorder(),
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
@@ -73,8 +92,9 @@ class _S10Content extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   // [修正] 改用 CustomSlidingSegment
                   child: CustomSlidingSegment<int>(
-                    selectedValue: vm.filterIndex,
-                    onValueChanged: (val) => vm.setFilter(val),
+                    selectedValue: vm.segmentedIndex,
+                    onValueChanged: (val) =>
+                        _handleSwitchSegmentedIndex(vm, val),
                     segments: {
                       0: t.S10_Home_TaskList.tab_in_progress,
                       1: t.S10_Home_TaskList.tab_completed,
@@ -87,7 +107,7 @@ class _S10Content extends StatelessWidget {
                   child: vm.displayTasks.isEmpty
                       ? Center(
                           child: Text(
-                            vm.filterIndex == 0
+                            vm.segmentedIndex == 0
                                 ? t.S10_Home_TaskList.empty_in_progress
                                 : t.S10_Home_TaskList.empty_completed,
                           ),
@@ -100,19 +120,11 @@ class _S10Content extends StatelessWidget {
                               const SizedBox(height: 4),
                           itemBuilder: (context, index) {
                             final task = vm.displayTasks[index];
-                            // 使用 TaskListItem (已修正邏輯)
                             return TaskListItem(
                               task: task,
                               currentUserId: vm.currentUserId, // 傳入 uid 找頭像
                               isCaptain: vm.isCaptain(task),
-                              onTap: () {
-                                final nav = vm.getNavigationInfo(task);
-
-                                if (nav != null) {
-                                  context.pushNamed(nav.routeName,
-                                      pathParameters: nav.params);
-                                }
-                              },
+                              onTap: () => _redirectToTask(context, vm, task),
                             );
                           },
                         ),

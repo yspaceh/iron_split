@@ -53,7 +53,7 @@ class S13PersonalView extends StatelessWidget {
                       baseCurrency: vm.baseCurrency,
                       netBalance: vm.personalNetBalance,
                       totalExpense: vm.personalTotalExpense,
-                      totalIncome: vm.personalTotalIncome,
+                      totalPrepay: vm.personalTotalPrepay,
                       uid: vm.currentUserId,
                       memberData: memberData,
                       fixedHeight: _kCardHeight, // 傳入 Map
@@ -72,7 +72,7 @@ class S13PersonalView extends StatelessWidget {
                 endDate: task.endDate ?? DateTime.now(),
                 selectedDate: vm.selectedDateInStrip,
                 onDateSelected: (date) {
-                  vm.handleDateJump(date, onNoResult: () {
+                  vm.scrollRecord(date, onNoResult: () {
                     D05DateJumpNoResultDialog.show(context,
                         targetDate: date, taskId: task.id);
                   });
@@ -126,22 +126,19 @@ class S13PersonalView extends StatelessWidget {
                                 await vm.deleteRecord(record.id!);
                                 // 顯示 SnackBar
                                 if (ctx.mounted) {
-                                  AppToast.showSuccess(
-                                      ctx,
-                                      t.D10_RecordDelete_Confirm
-                                          .deleted_success);
+                                  AppToast.showSuccess(ctx, t.success.deleted);
                                 }
                               } on AppErrorCodes catch (code) {
                                 if (!ctx.mounted) return;
 
                                 final msg = ErrorMapper.map(ctx, code: code);
                                 switch (code) {
-                                  case AppErrorCodes.incomeIsUsed:
+                                  case AppErrorCodes.prepayIsUsed:
                                     CommonInfoDialog.show(ctx,
                                         title:
                                             t.error.dialog.delete_failed.title,
                                         content: t.error.dialog.delete_failed
-                                            .message);
+                                            .content);
                                     break;
                                   case AppErrorCodes.dataNotFound:
                                     CommonInfoDialog.show(ctx,

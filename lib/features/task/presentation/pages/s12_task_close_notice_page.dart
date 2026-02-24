@@ -47,6 +47,7 @@ class _S12Content extends StatelessWidget {
       context.pop();
       context.goNamed('S00');
     } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     }
@@ -71,7 +72,7 @@ class _S12Content extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         AppButton(
-          text: t.D08_TaskClosed_Confirm.buttons.confirm,
+          text: t.common.buttons.confirm,
           type: AppButtonType.primary,
           onPressed: () => _handleClose(context, vm),
         ),
@@ -103,7 +104,7 @@ class _S12Content extends StatelessWidget {
               onPressed: () => context.pop(),
             ),
             AppButton(
-              text: t.S12_TaskClose_Notice.buttons.close,
+              text: t.S12_TaskClose_Notice.buttons.close_task,
               type: AppButtonType.primary,
               isLoading: vm.closeStatus == LoadStatus.loading,
               onPressed: () => _showConfirmDialog(context, vm),

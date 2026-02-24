@@ -74,7 +74,7 @@ class TaskItemInput extends StatelessWidget {
         Expanded(
           child: AppTextField(
             controller: titleController,
-            labelText: t.S15_Record_Edit.label.title,
+            labelText: t.common.label.item_name,
             hintText: t.S15_Record_Edit.hint.item(
                 category: CategoryConstant.getHint(t, selectedCategoryId)),
             validator: (v) =>

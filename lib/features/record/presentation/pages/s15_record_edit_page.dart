@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/features/record/presentation/views/s15_expense_form.dart';
-import 'package:iron_split/features/record/presentation/views/s15_income_form.dart';
+import 'package:iron_split/features/record/presentation/views/s15_prepay_form.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b02_split_expense_edit_bottom_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b03_split_method_edit_bottom_sheet.dart';
 import 'package:iron_split/features/record/presentation/bottom_sheets/b07_payment_method_edit_bottom_sheet.dart';
@@ -114,37 +114,39 @@ class _S15ContentState extends State<_S15Content> {
     super.dispose();
   }
 
-  Future<void> _onUpdateCurrency(S15RecordEditViewModel vm, String code) async {
+  Future<void> _handleUpdateCurrency(
+      BuildContext context, S15RecordEditViewModel vm, String code) async {
     try {
       await vm.updateCurrency(code);
     } on AppErrorCodes catch (code) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, error: e.toString());
       AppToast.showError(context, msg);
     }
   }
 
-  Future<void> _onFetchExchangeRate(S15RecordEditViewModel vm) async {
+  Future<void> _handleFetchExchangeRate(
+      BuildContext context, S15RecordEditViewModel vm) async {
     try {
       await vm.fetchExchangeRate();
     } on AppErrorCodes catch (code) {
-      if (!mounted) return;
-      // [攔截錯誤] 顯示 Toast
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
       AppToast.showError(context, msg);
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, error: e.toString());
       AppToast.showError(context, msg);
     }
   }
 
   // Show B03
-  Future<void> _onBaseSplitConfigTap(S15RecordEditViewModel vm) async {
+  Future<void> _handleBaseSplitConfig(
+      BuildContext context, S15RecordEditViewModel vm) async {
     final result = await B03SplitMethodEditBottomSheet.show(
       context,
       totalAmount: vm.amountToSplit,
@@ -161,45 +163,27 @@ class _S15ContentState extends State<_S15Content> {
     if (result != null) vm.updateBaseSplit(result);
   }
 
-  // Show B02 (Create)
-  Future<void> _onAddItemTap(S15RecordEditViewModel vm) async {
+  Future<void> _showSplitExpenseEditBottomSheet(BuildContext context,
+      S15RecordEditViewModel vm, RecordDetail? detail) async {
     if (vm.baseRemainingAmount <= 0) {
       AppToast.showError(
         context,
-        t.error.message.enter_first(key: t.S15_Record_Edit.label.amount),
+        t.error.message.enter_first(key: t.common.label.amount),
       );
       return;
     }
 
-    // 🛠️ 修正點 2：明確轉型為 Map<String, double>
+    final rate = detail == null
+        ? vm.exchangeRateValue
+        : double.tryParse(vm.exchangeRateController.text) ?? 1.0;
+
+    final availableAmount = detail == null
+        ? vm.baseRemainingAmount
+        : vm.baseRemainingAmount + detail.amount;
+
     final Map<String, double> defaultWeights = {
       for (var m in vm.taskMembers) (m.id): 1.0
     };
-
-    final result = await B02SplitExpenseEditBottomSheet.show(
-      context,
-      detail: null,
-      allMembers: vm.taskMembers,
-      defaultWeights: defaultWeights,
-      selectedCurrency: vm.selectedCurrencyConstants,
-      parentTitle: vm.titleController.text,
-      availableAmount: vm.baseRemainingAmount,
-      exchangeRate: vm.exchangeRateValue,
-      baseCurrency: vm.baseCurrency,
-    );
-
-    if (result != null) vm.addItem(result);
-  }
-
-  // Show B02 (Edit)
-  Future<void> _onDetailEditTap(
-      S15RecordEditViewModel vm, RecordDetail detail) async {
-    // 🛠️ 修正點 3：明確轉型為 Map<String, double>
-    final Map<String, double> defaultWeights = {
-      for (var m in vm.taskMembers) (m.id): 1.0
-    };
-
-    final rate = double.tryParse(vm.exchangeRateController.text) ?? 1.0;
 
     final result = await B02SplitExpenseEditBottomSheet.show(
       context,
@@ -208,33 +192,55 @@ class _S15ContentState extends State<_S15Content> {
       defaultWeights: defaultWeights,
       selectedCurrency: vm.selectedCurrencyConstants,
       parentTitle: vm.titleController.text,
-      availableAmount: vm.baseRemainingAmount + detail.amount,
+      availableAmount: availableAmount,
       exchangeRate: rate,
       baseCurrency: vm.baseCurrency,
     );
-
-    if (result == 'DELETE') {
-      vm.deleteItem(detail.id);
-    } else if (result is RecordDetail) {
-      vm.updateItem(result);
+    if (!context.mounted) return;
+    if (detail == null) {
+      if (result is RecordDetail) {
+        _handleAddItem(vm, result);
+      }
+    } else {
+      if (result == 'DELETE') {
+        _handleDeleteItem(vm, detail.id);
+      } else if (result is RecordDetail) {
+        _handleUpdateItem(vm, result);
+      }
     }
   }
 
-  void _showRateInfoDialog() {
-    final t = Translations.of(context);
+  void _handleAddItem(S15RecordEditViewModel vm, RecordDetail item) {
+    vm.addItem(item);
+  }
+
+  void _handleUpdateItem(S15RecordEditViewModel vm, RecordDetail item) {
+    vm.updateItem(item);
+  }
+
+  void _handleDeleteItem(S15RecordEditViewModel vm, String itemId) {
+    vm.deleteItem(itemId);
+  }
+
+  void _showRateInfoDialog(BuildContext context, Translations t) {
     CommonInfoDialog.show(
       context,
       title: t.S15_Record_Edit.rate_dialog.title,
-      content: t.S15_Record_Edit.rate_dialog.message,
+      content: t.S15_Record_Edit.rate_dialog.content,
     );
   }
 
+  void _handleSwitchSegmentedIndex(S15RecordEditViewModel vm, int index) {
+    vm.setSegmentedIndex(index);
+  }
+
   // Show B07
-  Future<void> _onPaymentMethodTap(S15RecordEditViewModel vm) async {
+  Future<void> _handleUpdatePaymentMethod(
+      BuildContext context, S15RecordEditViewModel vm) async {
     if (vm.totalAmount <= 0) {
       AppToast.showError(
         context,
-        t.error.message.enter_first(key: t.S15_Record_Edit.label.amount),
+        t.error.message.enter_first(key: t.common.label.amount),
       );
       return;
     }
@@ -256,21 +262,22 @@ class _S15ContentState extends State<_S15Content> {
     if (result != null) vm.updatePaymentMethod(result);
   }
 
-  Future<void> _onSave(S15RecordEditViewModel vm) async {
+  Future<void> _handleSave(
+      BuildContext context, S15RecordEditViewModel vm) async {
     if (!_formKey.currentState!.validate()) return;
     final t = Translations.of(context);
 
-    if (vm.recordTypeIndex == 0 && vm.hasPaymentError) {
-      AppToast.showError(
-          context, t.B07_PaymentMethod_Edit.err_balance_not_enough);
+    if (vm.segmentedIndex == 0 && vm.hasPaymentError) {
+      AppToast.showError(context, t.B07_PaymentMethod_Edit.status.not_enough);
       return;
     }
 
     try {
       await vm.saveRecord(t);
-      if (mounted) context.pop();
+      if (!context.mounted) return;
+      context.pop();
     } on AppErrorCodes catch (code) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final String msg = ErrorMapper.map(context, code: code);
 
       if (code == AppErrorCodes.saveFailed) {
@@ -280,25 +287,25 @@ class _S15ContentState extends State<_S15Content> {
         AppToast.showError(context, msg);
       }
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final msg = ErrorMapper.map(context, error: e.toString());
       AppToast.showError(context, msg);
     }
   }
 
-  Future<void> _onClose(S15RecordEditViewModel vm) async {
+  Future<void> _handleClose(
+      BuildContext context, S15RecordEditViewModel vm) async {
     if (!vm.hasUnsavedChanges()) {
       context.pop();
       return;
     }
     final confirm = await D04CommonUnsavedConfirmDialog.show<bool>(context);
 
-    if (confirm == true && mounted) context.pop();
+    if (confirm == true && context.mounted) context.pop();
   }
 
-  Future<void> _onDelete(S15RecordEditViewModel vm) async {
-    final t = Translations.of(context);
-
+  Future<void> _handleDelete(
+      BuildContext context, S15RecordEditViewModel vm, Translations t) async {
     final confirm = await D10RecordDeleteConfirmDialog.show<bool>(context,
         recordTitle: vm.titleController.text,
         currency: vm.selectedCurrencyConstants,
@@ -307,14 +314,13 @@ class _S15ContentState extends State<_S15Content> {
     if (confirm == true && context.mounted) {
       try {
         await vm.deleteRecord(t);
-        if (!mounted) return;
+        if (!context.mounted) return;
         // A. 刪除成功
-        AppToast.showSuccess(
-            context, t.D10_RecordDelete_Confirm.deleted_success);
+        AppToast.showSuccess(context, t.success.deleted);
 
         context.pop();
       } on AppErrorCodes catch (code) {
-        if (!mounted) return;
+        if (!context.mounted) return;
 
         final msg = ErrorMapper.map(context, code: code);
 
@@ -325,7 +331,7 @@ class _S15ContentState extends State<_S15Content> {
           AppToast.showError(context, msg);
         }
       } catch (e) {
-        if (!mounted) return;
+        if (!context.mounted) return;
         final msg = ErrorMapper.map(context, error: e.toString());
         AppToast.showError(context, msg);
       }
@@ -335,19 +341,20 @@ class _S15ContentState extends State<_S15Content> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final vm = context.watch<S15RecordEditViewModel>();
     final title = vm.recordId == null
         ? t.S15_Record_Edit.title.add
         : t.S15_Record_Edit.title.edit;
     final leading = IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: () => _onClose(vm));
+        onPressed: () => _handleClose(context, vm));
     final actions = [
       if (vm.recordId != null)
         IconButton(
           icon: const Icon(Icons.delete_outline),
-          color: Theme.of(context).colorScheme.error,
-          onPressed: () => _onDelete(vm),
+          color: theme.colorScheme.error,
+          onPressed: () => _handleDelete(context, vm, t),
         ),
     ];
     return CommonStateView(
@@ -374,7 +381,7 @@ class _S15ContentState extends State<_S15Content> {
                 text: t.common.buttons.save,
                 type: AppButtonType.primary,
                 isLoading: vm.saveStatus == LoadStatus.loading,
-                onPressed: () => _onSave(vm),
+                onPressed: () => _handleSave(context, vm),
               ),
             ],
           ),
@@ -386,18 +393,19 @@ class _S15ContentState extends State<_S15Content> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   // [修正] 改用 CustomSlidingSegment
                   child: CustomSlidingSegment<int>(
-                    selectedValue: vm.recordTypeIndex,
-                    onValueChanged: (val) => vm.setRecordType(val),
+                    selectedValue: vm.segmentedIndex,
+                    onValueChanged: (val) =>
+                        _handleSwitchSegmentedIndex(vm, val),
                     segments: {
                       0: t.S15_Record_Edit.tab.expense,
-                      1: t.S15_Record_Edit.tab.income,
+                      1: t.S15_Record_Edit.tab.prepay,
                     },
                   ),
                 ),
                 Expanded(
                   child: Form(
                     key: _formKey,
-                    child: vm.recordTypeIndex == 0
+                    child: vm.segmentedIndex == 0
                         ? S15ExpenseForm(
                             amountController: vm.amountController,
                             titleController: vm.titleController,
@@ -425,20 +433,26 @@ class _S15ContentState extends State<_S15Content> {
                             rateFocusNode: _rateNode,
                             titleFocusNode: _titleNode,
                             memoFocusNode: _memoNode,
-                            onPaymentMethodTap: () => _onPaymentMethodTap(vm),
+                            onPaymentMethodTap: () =>
+                                _handleUpdatePaymentMethod(context, vm),
                             onDateChanged: vm.updateDate,
                             onCategoryChanged: vm.updateCategory,
                             onCurrencyChanged: (code) =>
-                                _onUpdateCurrency(vm, code),
-                            onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                            onShowRateInfo: () => _showRateInfoDialog(),
+                                _handleUpdateCurrency(context, vm, code),
+                            onFetchExchangeRate: () =>
+                                _handleFetchExchangeRate(context, vm),
+                            onShowRateInfo: () =>
+                                _showRateInfoDialog(context, t),
                             onBaseSplitConfigTap: () =>
-                                _onBaseSplitConfigTap(vm),
-                            onAddItemTap: () => _onAddItemTap(vm),
+                                _handleBaseSplitConfig(context, vm),
+                            onAddItemTap: () =>
+                                _showSplitExpenseEditBottomSheet(
+                                    context, vm, null),
                             onDetailEditTap: (detail) =>
-                                _onDetailEditTap(vm, detail),
+                                _showSplitExpenseEditBottomSheet(
+                                    context, vm, detail),
                           )
-                        : S15IncomeForm(
+                        : S15PrepayForm(
                             amountController: vm.amountController,
                             memoController: vm.memoController,
                             exchangeRateController: vm.exchangeRateController,
@@ -459,11 +473,13 @@ class _S15ContentState extends State<_S15Content> {
                             memoFocusNode: _memoNode,
                             onDateChanged: vm.updateDate,
                             onCurrencyChanged: (code) =>
-                                _onUpdateCurrency(vm, code),
-                            onFetchExchangeRate: () => _onFetchExchangeRate(vm),
-                            onShowRateInfo: () => _showRateInfoDialog(),
+                                _handleUpdateCurrency(context, vm, code),
+                            onFetchExchangeRate: () =>
+                                _handleFetchExchangeRate(context, vm),
+                            onShowRateInfo: () =>
+                                _showRateInfoDialog(context, t),
                             onBaseSplitConfigTap: () =>
-                                _onBaseSplitConfigTap(vm),
+                                _handleBaseSplitConfig(context, vm),
                           ),
                   ),
                 ),

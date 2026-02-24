@@ -348,7 +348,7 @@ class SettlementService {
     // 1. 核心數值 (使用 Calculator)
     final double poolBalance =
         BalanceCalculator.calculatePoolBalanceByBaseCurrency(records);
-    final double totalIncome = BalanceCalculator.calculateIncomeTotal(records);
+    final double totalPrepay = BalanceCalculator.calculatePrepayTotal(records);
     final double totalExpense =
         BalanceCalculator.calculateExpenseTotal(records);
     final double remainder =
@@ -358,11 +358,11 @@ class SettlementService {
 
     // 2. 詳細分類 (同 DashboardService)
     final Map<String, double> expenseDetail = {};
-    final Map<String, double> incomeDetail = {};
+    final Map<String, double> prepayDetail = {};
 
     for (var r in records) {
-      if (r.type == RecordType.income) {
-        incomeDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
+      if (r.type == RecordType.prepay) {
+        prepayDetail.update(r.originalCurrencyCode, (v) => v + r.originalAmount,
             ifAbsent: () => r.originalAmount);
       } else {
         expenseDetail.update(
@@ -373,12 +373,12 @@ class SettlementService {
 
     // 3. Flex 計算 (同 DashboardService)
     int expenseFlex = 0;
-    int incomeFlex = 0;
-    final totalVolume = totalExpense.abs() + totalIncome.abs();
+    int prepayFlex = 0;
+    final totalVolume = totalExpense.abs() + totalPrepay.abs();
 
     if (totalVolume > 0) {
       expenseFlex = ((totalExpense.abs() / totalVolume) * 1000).toInt();
-      incomeFlex = 1000 - expenseFlex;
+      prepayFlex = 1000 - expenseFlex;
     }
 
     // 4. 取得得主名稱 (用於 S17 顯示 Absorbed By)
@@ -395,14 +395,14 @@ class SettlementService {
       currencySymbol: '\$', // 如果需要動態符號，可引入 CurrencyConstants
       poolBalance: poolBalance,
       totalExpense: totalExpense,
-      totalIncome: totalIncome,
+      totalPrepay: totalPrepay,
       remainder: remainder,
       expenseFlex: expenseFlex,
-      incomeFlex: incomeFlex,
+      prepayFlex: prepayFlex,
       ruleKey: task.remainderRule,
       isLocked: true, // 快照永遠是鎖定狀態
       expenseDetail: expenseDetail,
-      incomeDetail: incomeDetail,
+      prepayDetail: prepayDetail,
       poolDetail: poolDetail,
       absorbedBy: winnerName,
       absorbedAmount: null, // S17 通常不顯示具體吸收金額，只顯示人名，如有需要可在此計算

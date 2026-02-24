@@ -10,7 +10,7 @@ import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
-class S15IncomeForm extends StatelessWidget {
+class S15PrepayForm extends StatelessWidget {
   // 1. Controllers (接收外部控制器)
   final TextEditingController amountController;
   final TextEditingController memoController;
@@ -22,7 +22,7 @@ class S15IncomeForm extends StatelessWidget {
   final CurrencyConstants baseCurrency;
   final bool isRateLoading;
 
-  // 3. Income Specific State (收入相關)
+  // 3. Prepay Specific State (收入相關)
   final double baseRemainingAmount; // 這裡通常指總金額 (Total Amount)
   final String baseSplitMethod; // 分配方式
   final List<String> baseMemberIds; // 分配對象
@@ -41,7 +41,7 @@ class S15IncomeForm extends StatelessWidget {
   final FocusNode rateFocusNode;
   final FocusNode memoFocusNode;
 
-  const S15IncomeForm({
+  const S15PrepayForm({
     super.key,
     required this.amountController,
     required this.memoController,
@@ -113,7 +113,7 @@ class S15IncomeForm extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         TaskDateInput(
-          label: t.S15_Record_Edit.label.date,
+          label: t.common.label.date,
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
@@ -123,7 +123,7 @@ class S15IncomeForm extends StatelessWidget {
           amountController: amountController,
           selectedCurrencyConstants: selectedCurrencyConstants,
           focusNode: amountFocusNode,
-          isIncome: true,
+          isPrepay: true,
         ),
         if (isForeign) ...[
           const SizedBox(height: 8),
@@ -136,7 +136,7 @@ class S15IncomeForm extends StatelessWidget {
             isRateLoading: isRateLoading,
             onFetchRate: onFetchExchangeRate,
             onShowRateInfo: onShowRateInfo,
-            isIncome: true,
+            isPrepay: true,
           ),
         ],
         const SizedBox(height: 8),
@@ -148,12 +148,12 @@ class S15IncomeForm extends StatelessWidget {
             amount: baseRemainingAmount,
             methodLabel: baseSplitMethod,
             memberIds: baseMemberIds,
-            note: t.S15_Record_Edit.base_card_title_income,
+            note: t.S15_Record_Edit.type_prepay,
             isBaseCard: true,
             onTap: onBaseSplitConfigTap,
             showSplitAction: false,
             onSplitTap: null,
-            isIncome: true,
+            isPrepay: true,
           ),
           Builder(
             builder: (context) {

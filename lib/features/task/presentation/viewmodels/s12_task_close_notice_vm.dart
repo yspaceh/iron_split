@@ -11,7 +11,7 @@ import 'package:iron_split/features/task/data/services/activity_log_service.dart
 class S12TaskCloseNoticeViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final TaskService _taskService;
-  final RecordRepository _recordRepo; // ✅ 新增：用來檢查是否有紀錄
+  final RecordRepository _recordRepo; // 用來檢查是否有紀錄
   final String taskId;
 
   // State

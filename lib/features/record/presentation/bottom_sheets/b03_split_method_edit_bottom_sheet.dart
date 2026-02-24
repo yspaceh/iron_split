@@ -11,7 +11,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/app_keyboar
 import 'package:iron_split/features/common/presentation/widgets/form/compact_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
@@ -121,12 +121,17 @@ class _B03ContentState extends State<_B03Content> {
     return _focusNodes[memberId]!;
   }
 
+  void _handleSwitchSegmentedIndex(B03SplitMethodEditViewModel vm, int index) {
+    vm.setSegmentedIndex(SplitMethodConstant.allRules[index]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<B03SplitMethodEditViewModel>();
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final result = vm.getSplitResult();
     final int selectedIndex =
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
@@ -168,16 +173,14 @@ class _B03ContentState extends State<_B03Content> {
                 child: CustomSlidingSegment<int>(
                   selectedValue: selectedIndex,
                   isSheetMode: true,
-                  onValueChanged: (val) {
-                    vm.switchMethod(SplitMethodConstant.allRules[val]);
-                  },
+                  onValueChanged: (val) => _handleSwitchSegmentedIndex(vm, val),
                   segments: {
                     0: SplitMethodConstant.getLabel(
-                        context, SplitMethodConstant.even),
+                        context, SplitMethodConstant.even, t),
                     1: SplitMethodConstant.getLabel(
-                        context, SplitMethodConstant.exact),
+                        context, SplitMethodConstant.exact, t),
                     2: SplitMethodConstant.getLabel(
-                        context, SplitMethodConstant.percent),
+                        context, SplitMethodConstant.percent, t),
                   },
                 ),
               ),
@@ -188,7 +191,7 @@ class _B03ContentState extends State<_B03Content> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SummaryRow(
-                        label: t.S15_Record_Edit.label.amount,
+                        label: t.common.label.amount,
                         amount: vm.totalAmount,
                         currencyConstants: vm.selectedCurrency),
                     if (vm.exchangeRate != 1.0) ...[
@@ -197,8 +200,8 @@ class _B03ContentState extends State<_B03Content> {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, vm.baseCurrency.code)}",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                             fontSize: 12,
                           ),
                         ),
@@ -232,11 +235,11 @@ class _B03ContentState extends State<_B03Content> {
                     // 注意：這裡假設您的原始檔案中有定義 _buildEvenSection 等方法
                     // 否則這裡會報錯。如果您需要我補上這些方法的空殼或實作，請告知。
                     if (vm.splitMethod == SplitMethodConstant.even)
-                      _buildEvenSection(vm, theme),
+                      _buildEvenSection(vm, colorScheme, textTheme),
                     if (vm.splitMethod == SplitMethodConstant.percent)
-                      _buildPercentSection(vm, theme),
+                      _buildPercentSection(vm, colorScheme, textTheme),
                     if (vm.splitMethod == SplitMethodConstant.exact)
-                      _buildExactSection(vm, theme, t),
+                      _buildExactSection(vm, t, colorScheme, textTheme),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -249,7 +252,8 @@ class _B03ContentState extends State<_B03Content> {
   }
 
   // --- Method 1: Even (平分) ---
-  Widget _buildEvenSection(B03SplitMethodEditViewModel vm, ThemeData theme) {
+  Widget _buildEvenSection(B03SplitMethodEditViewModel vm,
+      ColorScheme colorScheme, TextTheme textTheme) {
     // 使用新的計算邏輯
     final result = vm.getSplitResult();
     final memberAmounts = result.memberAmounts;
@@ -277,7 +281,7 @@ class _B03ContentState extends State<_B03Content> {
                 children: [
                   Text(
                     "${vm.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, vm.selectedCurrency.code)}",
-                    style: theme.textTheme.bodyLarge
+                    style: textTheme.bodyLarge
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   if (vm.exchangeRate != 1.0)
@@ -287,8 +291,8 @@ class _B03ContentState extends State<_B03Content> {
                               vm.baseCurrency.code);
                       return Text(
                         "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant),
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.onSurfaceVariant),
                       );
                     }),
                 ],
@@ -301,7 +305,8 @@ class _B03ContentState extends State<_B03Content> {
   }
 
   // --- Method 2: Percent (比例) ---
-  Widget _buildPercentSection(B03SplitMethodEditViewModel vm, ThemeData theme) {
+  Widget _buildPercentSection(B03SplitMethodEditViewModel vm,
+      ColorScheme colorScheme, TextTheme textTheme) {
     final result = vm.getSplitResult();
     final memberAmounts = result.memberAmounts;
 
@@ -333,7 +338,7 @@ class _B03ContentState extends State<_B03Content> {
                         children: [
                           Text(
                             "${vm.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(amount, vm.selectedCurrency.code)}",
-                            style: theme.textTheme.bodyLarge
+                            style: textTheme.bodyLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           if (vm.exchangeRate != 1.0)
@@ -343,8 +348,8 @@ class _B03ContentState extends State<_B03Content> {
                                       vm.baseCurrency.code);
                               return Text(
                                 "≈ ${baseCurrency.code}${baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, baseCurrency.code)}",
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant),
+                                style: textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.onSurfaceVariant),
                               );
                             }),
                         ],
@@ -367,8 +372,8 @@ class _B03ContentState extends State<_B03Content> {
   }
 
   // --- Method 3: Exact (金額) ---
-  Widget _buildExactSection(
-      B03SplitMethodEditViewModel vm, ThemeData theme, Translations t) {
+  Widget _buildExactSection(B03SplitMethodEditViewModel vm, Translations t,
+      ColorScheme colorScheme, TextTheme textTheme) {
     final currentSum = vm.details.values.fold(0.0, (sum, v) => sum + v);
     final isMatched = (vm.totalAmount - currentSum).abs() < 0.1;
     final result = vm.getSplitResult();
@@ -386,8 +391,7 @@ class _B03ContentState extends State<_B03Content> {
           amount: 0,
           currencyConstants: vm.selectedCurrency,
           customValueText: isMatched ? "OK" : t.B03_SplitMethod_Edit.mismatch,
-          valueColor:
-              isMatched ? theme.colorScheme.tertiary : theme.colorScheme.error,
+          valueColor: isMatched ? colorScheme.tertiary : colorScheme.error,
         ),
         const SizedBox(height: 8),
         ...vm.allMembers.map((m) {
@@ -421,8 +425,8 @@ class _B03ContentState extends State<_B03Content> {
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
                             "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, vm.baseCurrency.code)}",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant),
+                            style: textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         );
                       },

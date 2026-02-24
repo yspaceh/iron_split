@@ -17,7 +17,7 @@ class RecordCard extends StatelessWidget {
   final VoidCallback? onSplitTap;
   final CurrencyConstants selectedCurrencyConstants;
   final List<TaskMember> members;
-  final bool isIncome;
+  final bool isPrepay;
 
   const RecordCard({
     super.key,
@@ -32,24 +32,26 @@ class RecordCard extends StatelessWidget {
     required this.members,
     this.isBaseCard = false,
     this.showSplitAction = false,
-    this.isIncome = false,
+    this.isPrepay = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // [風格調整]：Blueprint / Outlined Style
     // 背景純白，搭配細灰色邊框，強調這是「計算結果/容器」而非輸入框
     return Card(
       clipBehavior: Clip.antiAlias,
-      color: theme.colorScheme.surface, // 純白背景
+      color: colorScheme.surface, // 純白背景
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         // 加上淡灰色邊框 (Outline)
         side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
           width: 1,
         ),
       ),
@@ -70,11 +72,11 @@ class RecordCard extends StatelessWidget {
                       // 金額顯示
                       Text(
                         "${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(amount, selectedCurrencyConstants.code)}",
-                        style: theme.textTheme.titleLarge?.copyWith(
+                        style: textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isIncome
-                              ? theme.colorScheme.tertiary
-                              : theme.colorScheme.primary,
+                          color: isPrepay
+                              ? colorScheme.tertiary
+                              : colorScheme.primary,
                           letterSpacing: -0.5, // 稍微緊湊一點的數字感
                         ),
                       ),
@@ -85,14 +87,14 @@ class RecordCard extends StatelessWidget {
                             horizontal: 10, vertical: 4), // 稍微寬一點
                         decoration: BoxDecoration(
                           // 使用淡色背景 (SecondaryContainer 或 PrimaryContainer)
-                          color: theme.colorScheme.surfaceContainerHighest,
+                          color: colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          SplitMethodConstant.getLabel(context, methodLabel),
-                          style: theme.textTheme.labelSmall?.copyWith(
+                          SplitMethodConstant.getLabel(context, methodLabel, t),
+                          style: textTheme.labelSmall?.copyWith(
                             // 使用深色文字
-                            color: theme.colorScheme.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -113,8 +115,8 @@ class RecordCard extends StatelessWidget {
                         child: note != null
                             ? Text(
                                 note!,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurface,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                                 maxLines: 1,
@@ -122,9 +124,9 @@ class RecordCard extends StatelessWidget {
                               )
                             : (isBaseCard
                                 ? Text(
-                                    t.S15_Record_Edit.base_card_title,
+                                    t.S15_Record_Edit.base_card,
                                     style: TextStyle(
-                                      color: theme.colorScheme.onSurfaceVariant,
+                                      color: colorScheme.onSurfaceVariant,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   )
@@ -158,13 +160,13 @@ class RecordCard extends StatelessWidget {
             // 分隔線改淡一點
             Divider(
               height: 1,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+              color: colorScheme.outlineVariant.withValues(alpha: 0.4),
             ),
             InkWell(
               onTap: onSplitTap,
               // 增加按壓回饋顏色
               overlayColor: WidgetStateProperty.all(
-                  theme.colorScheme.primary.withValues(alpha: 0.05)),
+                  colorScheme.primary.withValues(alpha: 0.05)),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14), // 增加點擊高度
@@ -175,13 +177,13 @@ class RecordCard extends StatelessWidget {
                     Icon(
                       Icons.add, // 改用圓框加號，更有按鈕感
                       size: 16,
-                      color: theme.colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       t.S15_Record_Edit.buttons.add_item,
                       style: TextStyle(
-                        color: theme.colorScheme.primary,
+                        color: colorScheme.primary,
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
                       ),

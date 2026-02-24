@@ -73,6 +73,50 @@ class _S70ContentState extends State<_S70Content> {
     super.dispose();
   }
 
+  Future<void> _handleUpdateLanguage(BuildContext context,
+      LocaleViewModel localeVm, AppLocale newLocale) async {
+    try {
+      await localeVm.updateLanguage(newLocale);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleUpdateTheme(
+      BuildContext context, ThemeViewModel themeVm, ThemeMode newTheme) async {
+    try {
+      await themeVm.setThemeMode(newTheme);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  void _redirectToPaymentInfo(BuildContext context) {
+    context.pushNamed('S73');
+  }
+
+  void _redirectToDeleteAccount(BuildContext context) {
+    context.pushNamed('S74');
+  }
+
+  void _redirectToPrivacy(BuildContext context) {
+    context.pushNamed(
+      'S71',
+      extra: {'isTerms': false},
+    );
+  }
+
+  void _redirectToTerms(BuildContext context) {
+    context.pushNamed(
+      'S71',
+      extra: {'isTerms': false},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -111,21 +155,21 @@ class _S70ContentState extends State<_S70Content> {
                   // 收款資料
                   NavTile(
                     title: t.S70_System_Settings.menu.payment_info,
-                    onTap: () => context.pushNamed('S73'),
+                    onTap: () => _redirectToPaymentInfo(context),
                   ),
                   const SizedBox(height: 8),
                   // 語言設定
                   TaskLanguageInput(
                     language: localeVm.currentLocale,
                     onLanguageChanged: (newLocale) =>
-                        localeVm.updateLanguage(newLocale),
+                        _handleUpdateLanguage(context, localeVm, newLocale),
                   ),
                   const SizedBox(height: 8),
                   // 深淺模式
                   TaskThemeInput(
                     theme: themeVm.themeMode,
                     onThemeChanged: (newTheme) =>
-                        themeVm.setThemeMode(newTheme),
+                        _handleUpdateTheme(context, themeVm, newTheme),
                   ),
                 ],
               ),
@@ -135,18 +179,12 @@ class _S70ContentState extends State<_S70Content> {
                   children: [
                     NavTile(
                       title: t.S70_System_Settings.menu.terms,
-                      onTap: () => context.pushNamed(
-                        'S71',
-                        extra: {'isTerms': true},
-                      ),
+                      onTap: () => _redirectToTerms(context),
                     ),
                     const SizedBox(height: 8),
                     NavTile(
                       title: t.S70_System_Settings.menu.privacy,
-                      onTap: () => context.pushNamed(
-                        'S71',
-                        extra: {'isTerms': false},
-                      ),
+                      onTap: () => _redirectToPrivacy(context),
                     ),
                   ]),
               const SizedBox(height: 16),
@@ -156,7 +194,7 @@ class _S70ContentState extends State<_S70Content> {
                     NavTile(
                       title: t.S70_System_Settings.menu.delete_account,
                       isDestructive: true,
-                      onTap: () => context.pushNamed('S74'),
+                      onTap: () => _redirectToDeleteAccount(context),
                     ),
                   ]),
               const SizedBox(height: 32),

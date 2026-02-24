@@ -43,10 +43,8 @@ class S11InviteConfirmPage extends StatelessWidget {
 class _S11Content extends StatelessWidget {
   const _S11Content();
 
-  Future<void> handleConfirm(
-      BuildContext context, S11InviteConfirmViewModel vm) async {
-    final theme = Theme.of(context);
-    final t = Translations.of(context);
+  Future<void> _handleJoin(BuildContext context, S11InviteConfirmViewModel vm,
+      Translations t, ThemeData theme) async {
     try {
       final taskId = await vm.confirmJoin();
       if (taskId == null) return;
@@ -77,29 +75,32 @@ class _S11Content extends StatelessWidget {
     }
   }
 
+  void _handleCancel(BuildContext context, S11InviteConfirmViewModel vm) {
+    vm.clearInvite();
+    context.goNamed('S00');
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final vm = context.watch<S11InviteConfirmViewModel>();
     final dateFormat = DateFormat('yyyy/MM/dd');
-    void onCancel() {
-      vm.clearInvite();
-      context.goNamed('S00');
-    }
 
     final title = t.S11_Invite_Confirm.title;
     final leading = IconButton(
       icon: const Icon(Icons.close),
-      onPressed: () => onCancel(), // 取消
+      onPressed: () => _handleCancel(context, vm),
+      // 取消
     );
 
     return CommonStateView(
       status: vm.initStatus,
       errorCode: vm.initErrorCode,
       errorActionText: t.common.buttons.back,
-      onErrorAction: () => onCancel(),
+      onErrorAction: () => _handleCancel(context, vm),
       title: title,
       leading: leading,
       child: Scaffold(
@@ -111,17 +112,18 @@ class _S11Content extends StatelessWidget {
         bottomNavigationBar: StickyBottomActionBar(
           children: [
             AppButton(
-              text: t.S11_Invite_Confirm.buttons.cancel,
+              text: t.common.buttons.cancel,
               type: AppButtonType.secondary,
-              onPressed: () => onCancel(),
+              onPressed: () => _handleCancel(context, vm),
             ),
             AppButton(
-              text: t.S11_Invite_Confirm.buttons.confirm,
+              text: t.common.buttons.confirm,
               type: AppButtonType.primary,
               isLoading: vm.joinStatus == LoadStatus.loading,
               // 按鈕狀態由 VM 決定 (是否已選 Ghost)
-              onPressed:
-                  vm.canConfirm ? () => handleConfirm(context, vm) : null,
+              onPressed: vm.canConfirm
+                  ? () => _handleJoin(context, vm, t, theme)
+                  : null,
             ),
           ],
         ),
@@ -135,7 +137,7 @@ class _S11Content extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surface, // 純白背景
+                    color: colorScheme.surface, // 純白背景
                     borderRadius: BorderRadius.circular(16), // 精緻圓角
                     boxShadow: [
                       BoxShadow(
@@ -148,13 +150,15 @@ class _S11Content extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildColumn(context, t.D03_TaskCreate_Confirm.label_name,
-                          vm.taskName),
+                      _buildColumn(context, t.common.label.task_name,
+                          vm.taskName, colorScheme, textTheme),
                       const SizedBox(height: 8),
                       _buildColumn(
                           context,
-                          t.D03_TaskCreate_Confirm.label_period,
-                          '${dateFormat.format(vm.startDate)} - ${dateFormat.format(vm.endDate)}'),
+                          t.common.label.period,
+                          '${dateFormat.format(vm.startDate)} - ${dateFormat.format(vm.endDate)}',
+                          colorScheme,
+                          textTheme),
                     ],
                   ),
                 ),
@@ -164,7 +168,7 @@ class _S11Content extends StatelessWidget {
                 // --- B. Ghost Selection (如果需要) ---
                 if (vm.showGhostSelection) ...[
                   SectionWrapper(
-                      title: t.S11_Invite_Confirm.label_select_ghost,
+                      title: t.S11_Invite_Confirm.label.select_ghost,
                       children: [
                         ...vm.ghosts.map((ghost) {
                           final id = ghost.id;
@@ -174,10 +178,8 @@ class _S11Content extends StatelessWidget {
                           final isSelected = vm.selectedGhostId == id;
 
                           return SelectionTile(
-                            backgroundColor:
-                                theme.colorScheme.surfaceContainerLow,
-                            isSelectedBackgroundColor:
-                                theme.colorScheme.surface,
+                            backgroundColor: colorScheme.surfaceContainerLow,
+                            isSelectedBackgroundColor: colorScheme.surface,
                             isSelected: isSelected,
                             isRadio: true, // 這是單選列表
                             onTap: () => vm.selectGhost(id),
@@ -194,14 +196,14 @@ class _S11Content extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "${t.S11_Invite_Confirm.label_prepaid}: ${CurrencyConstants.formatAmount(prepaid, vm.baseCurrency.code)}",
-                                  style: theme.textTheme.bodySmall?.copyWith(
+                                  "${t.S11_Invite_Confirm.label.prepaid}: ${CurrencyConstants.formatAmount(prepaid, vm.baseCurrency.code)}",
+                                  style: textTheme.bodySmall?.copyWith(
                                     color: colorScheme.tertiary,
                                   ),
                                 ),
                                 Text(
-                                  "${t.S11_Invite_Confirm.label_expense}: ${CurrencyConstants.formatAmount(expense, vm.baseCurrency.code)}",
-                                  style: theme.textTheme.bodySmall?.copyWith(
+                                  "${t.S11_Invite_Confirm.label.expense}: ${CurrencyConstants.formatAmount(expense, vm.baseCurrency.code)}",
+                                  style: textTheme.bodySmall?.copyWith(
                                     color: colorScheme.primary,
                                   ),
                                 ),
@@ -219,23 +221,21 @@ class _S11Content extends StatelessWidget {
     );
   }
 
-  Widget _buildColumn(BuildContext context, String label, String value) {
-    final theme = Theme.of(context);
+  Widget _buildColumn(BuildContext context, String label, String value,
+      ColorScheme colorScheme, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: textTheme.bodyMedium
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+          style: textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.bold, color: colorScheme.onSurface),
         ),
       ],
     );

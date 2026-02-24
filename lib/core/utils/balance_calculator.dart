@@ -79,7 +79,7 @@ class BalanceCalculator {
   static DualAmount calculatePersonalDebit(
       RecordModel record, String uid, CurrencyConstants baseCurrency) {
     // 收入不產生 Debit
-    if (record.type == RecordType.income) return DualAmount.zero;
+    if (record.type == RecordType.prepay) return DualAmount.zero;
 
     DualAmount totalDebit = DualAmount.zero;
 
@@ -182,9 +182,9 @@ class BalanceCalculator {
       return DualAmount.zero;
     }
 
-    // --- 處理收入 (Income) 的入金貢獻 ---
-    if (record.type == RecordType.income) {
-      // Income 的邏輯是：將錢「分」給出資者
+    // --- 處理收入 (Prepay) 的入金貢獻 ---
+    if (record.type == RecordType.prepay) {
+      // Prepay 的邏輯是：將錢「分」給出資者
       final splitResult = calculateSplit(
         totalAmount: record.originalAmount,
         exchangeRate: record.exchangeRate,
@@ -205,7 +205,7 @@ class BalanceCalculator {
   static double calculateRemainderBuffer(List<RecordModel> records) {
     double totalBuffer = 0.0;
     for (var r in records) {
-      if (r.type == RecordType.income) {
+      if (r.type == RecordType.prepay) {
         // 預收：加項
         totalBuffer += r.remainder;
       } else if (r.type == RecordType.expense) {
@@ -221,16 +221,16 @@ class BalanceCalculator {
   /// 邏輯：所有預收 - 公款支付 (含混合支付中的公款部分)，全部換算回 Base
   static double calculatePoolBalanceByBaseCurrency(
       List<RecordModel> allRecords) {
-    double totalPoolIncomeBase = 0.0;
+    double totalPoolPrepayBase = 0.0;
     double totalPoolExpenseBase = 0.0;
 
     for (var r in allRecords) {
       final CurrencyConstants currency =
           CurrencyConstants.getCurrencyConstants(r.currencyCode);
       // 1. 收入：全部視為公款增加
-      if (r.type == RecordType.income) {
+      if (r.type == RecordType.prepay) {
         // originalAmount * exchangeRate
-        totalPoolIncomeBase +=
+        totalPoolPrepayBase +=
             roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
       // 2. 支出：檢查是否有用到公款
@@ -260,21 +260,21 @@ class BalanceCalculator {
       }
     }
 
-    return totalPoolIncomeBase - totalPoolExpenseBase;
+    return totalPoolPrepayBase - totalPoolExpenseBase;
   }
 
   /// 通用方法：計算單據列表在「結算幣別」下的總收支
   /// 適用於：Group View, Personal View (篩選後), Settlement
   /// 回傳：(總收入, 總支出, 淨餘額)
-  static ({double totalIncome, double totalExpense, double netBalance})
+  static ({double totalPrepay, double totalExpense, double netBalance})
       calculateBaseTotals(List<RecordModel> records) {
-    double totalIncome = calculateIncomeTotal(records);
+    double totalPrepay = calculatePrepayTotal(records);
     double totalExpense = calculateExpenseTotal(records);
 
     return (
-      totalIncome: totalIncome,
+      totalPrepay: totalPrepay,
       totalExpense: totalExpense,
-      netBalance: totalIncome - totalExpense
+      netBalance: totalPrepay - totalExpense
     );
   }
 
@@ -289,10 +289,10 @@ class BalanceCalculator {
     return total;
   }
 
-  static double calculateIncomeTotal(List<RecordModel> records) {
+  static double calculatePrepayTotal(List<RecordModel> records) {
     double total = 0.0;
     for (var r in records) {
-      if (r.type == RecordType.income) {
+      if (r.type == RecordType.prepay) {
         final currency = CurrencyConstants.getCurrencyConstants(r.currencyCode);
         total += roundToPrecision(r.originalAmount * r.exchangeRate, currency);
       }
@@ -311,7 +311,7 @@ class BalanceCalculator {
       final currency = r.originalCurrencyCode;
       final amount = r.originalAmount;
 
-      if (r.type == RecordType.income) {
+      if (r.type == RecordType.prepay) {
         // 收入：增加庫存
         balances.update(currency, (val) => val + amount,
             ifAbsent: () => amount);
@@ -442,8 +442,8 @@ class BalanceCalculator {
     final currency =
         CurrencyConstants.getCurrencyConstants(record.currencyCode);
 
-    // 1. Income (通常只有分攤餘數)
-    if (record.type == RecordType.income) {
+    // 1. Prepay (通常只有分攤餘數)
+    if (record.type == RecordType.prepay) {
       final splitRes = calculateSplit(
           totalAmount: record.originalAmount,
           exchangeRate: record.exchangeRate,

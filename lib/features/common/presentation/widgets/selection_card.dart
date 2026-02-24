@@ -26,6 +26,7 @@ class SelectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -52,7 +53,7 @@ class SelectionCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     title,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: textTheme.titleMedium?.copyWith(
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
                       color: colorScheme.onSurface,

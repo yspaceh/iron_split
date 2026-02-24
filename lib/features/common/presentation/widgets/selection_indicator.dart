@@ -40,7 +40,7 @@ class SelectionIndicator extends StatelessWidget {
           ? Center(
               child: isRadio
                   ? _buildRadioDot(colorScheme.primary)
-                  : _buildCheckIcon(theme.colorScheme.onPrimary),
+                  : _buildCheckIcon(colorScheme.onPrimary),
             )
           : null,
     );

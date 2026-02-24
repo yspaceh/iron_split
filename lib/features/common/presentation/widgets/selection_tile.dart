@@ -29,6 +29,7 @@ class SelectionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final bool isDisabled = onTap == null;
     final Color effectiveBackgroundColor = isSelected && !isDisabled
         ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
@@ -64,7 +65,7 @@ class SelectionTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: textTheme.titleMedium?.copyWith(
                       // [修改] 使用 titleMedium 讓文字更有份量
                       // [修改] 選中時變色 (Primary Color)，與 SelectionCard 一致
                       color: colorScheme.onSurface,

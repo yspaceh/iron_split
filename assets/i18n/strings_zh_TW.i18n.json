@@ -5,19 +5,36 @@
       "delete": "刪除",
       "confirm": "確認",
       "back": "返回",
-      "save": "保存",
+      "save": "儲存",
       "edit": "編輯",
       "close": "關閉",
+      "download": "下載紀錄",
+      "settlement": "結算",
       "discard": "放棄變更",
       "keep_editing": "繼續編輯",
       "ok": "確定",
       "refresh": "重新整理",
       "retry": "重試",
-      "done": "完成"
+      "done": "完成",
+      "agree": "同意",
+      "decline": "不同意",
+      "add_record": "新增紀錄"
     },
-    "error": {
-      "title": "錯誤",
-      "unknown": "發生未知錯誤: {error}"
+    "label": {
+      "task_name": "任務名稱",
+      "item_name": "項目名稱",
+      "sub_item": "細項名稱",
+      "amount": "金額",
+      "date": "日期",
+      "currency": "結算幣別",
+      "split_method": "分攤設定",
+      "start_date": "開始日期",
+      "end_date": "結束日期",
+      "member_count": "參加人數",
+      "period": "期間",
+      "payment_method": "支付方式",
+      "rate": "匯率",
+      "memo": "備註"
     },
     "category": {
       "food": "飲食",
@@ -86,19 +103,24 @@
         "order": "順序輪替",
         "member": "指定成員"
       },
-      "description": {
+      "content": {
         "remainder": "零頭 {amount} 源自於匯率換算或分攤計算時產生的微小差額。",
-        "random": "系統將在每次結算時，隨機挑選一位幸運兒來吸收所有零頭。",
+        "random": "系統將於每次結算時，隨機指定一位成員承擔零頭差額。",
         "order": "依照成員加入的順序，將零頭依序分配，直到分完為止。",
-        "member": "指定一位特定的成員，固定由他/她來吸收所有的零頭。"
+        "member": "指定一位成員固定承擔所有零頭差額。"
       },
-      "message_remainder": "零頭 {amount} 將存入零頭罐,結算時分配",
-      "message_zero_balance": "零頭 {amount} 已與支付匯差自動抵銷"
+      "message_remainder": "零頭 {amount} 將暫存，於結算時分配。",
+      "message_zero_balance": "零頭 {amount} 已與支付匯差自動抵銷。"
     },
     "split_method": {
       "even": "平均分攤",
       "percent": "比例分攤",
       "exact": "指定金額"
+    },
+    "payment_method": {
+      "member": "成員代墊",
+      "prepay": "預收款支付",
+      "mixed": "混合支付"
     },
     "language": {
       "title": "語言設定",
@@ -117,8 +139,8 @@
         "private": "請直接私訊聯絡",
         "public": "提供收款資訊"
       },
-      "description": {
-        "private": "不顯示詳細資訊，請成員直接找你",
+      "content": {
+        "private": "不顯示詳細資訊，請成員直接聯繫",
         "public": "顯示收款資訊給成員"
       },
       "type": {
@@ -141,7 +163,7 @@
     },
     "payment_status":{
       "payable": "應付",
-      "receivable": "可退"
+      "refund": "可退"
     },
     "terms": {
       "label": {
@@ -154,22 +176,19 @@
     "share":{
       "invite": {
         "subject": "邀請加入 Iron Split 任務",
-        "message": "快來加入我的 Iron Split 任務「{taskName}」！\n邀請碼：{code}\n連結：{link}"
+        "content": "邀請加入 Iron Split 任務「{taskName}」。\n邀請碼：{code}\n連結：{link}"
       },
       "settlement": {
         "subject": "Iron Split 任務結算通知",
-        "message": "結算已完成！\n請開啟 Iron Split App 確認「{taskName}」您的支付金額。\n連結：{link}"
+        "content": "結算已完成。\n請開啟 Iron Split App 確認「{taskName}」的支付金額。\n連結：{link}"
       }
     },
-    "error_prefix": "錯誤: {message}",
-    "please_login": "請先登入",
     "preparing": "準備中...",
     "me": "我",
     "required": "必填",
     "member_prefix": "成員",
-    "no_record": "無紀錄",
-    "today": "今天",
-    "untitled": "未命名"
+    "no_record": "尚無紀錄",
+    "today": "今天"
   },
   "log_action": {
     "create_task": "建立任務",
@@ -184,47 +203,39 @@
     "close_task": "結束任務"
   },
   "S10_Home_TaskList": {
-    "title": "我的任務",
+    "title": "任務列表",
     "tab_in_progress": "進行中",
     "tab_completed": "已完成",
     "empty_in_progress": "目前沒有進行中的任務",
     "empty_completed": "沒有已完成的任務",
     "date_tbd": "日期未定",
-    "delete_confirm_title": "確認刪除",
-    "delete_confirm_content": "確定要刪除這個任務嗎？",
-    "label_settlement": "已結算"
+    "label": {
+      "settlement": "已結算"
+    }
   },
   "S11_Invite_Confirm": {
     "title": "加入任務",
-    "subtitle": "您受邀加入以下任務：",
+    "subtitle": "受邀加入以下任務",
     "buttons": {
-      "confirm": "加入",
-      "cancel": "取消",
-      "home": "回首頁"
+      "join": "加入",
+      "back_task_list": "回任務列表"
     },
-    "loading_invite": "正在讀取邀請函...",
-    "join_failed_title": "哎呀！無法加入任務",
-    "identity_match_title": "請問您是以下成員嗎？",
-    "identity_match_desc": "此任務已預先建立了部分成員名單。若您是其中一位，請點選該名字以連結帳號；若都不是，請直接加入。",
-    "status_linking": "將以「連結帳號」方式加入",
-    "status_new_member": "將以「新成員」身分加入",
-    "label_select_ghost": "選擇要繼承的成員",
-    "label_prepaid": "已墊付",
-    "label_expense": "應分攤"
+    "label": {
+      "select_ghost": "選擇要繼承的成員",
+      "prepaid": "已代墊",
+      "expense": "應分攤"
+    }
   },
   "S12_TaskClose_Notice": {
     "title": "結束任務確認",
-    "content": "關閉此任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，您將無法新增或編輯任何資料。",
+    "content": "結束任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，將無法新增或編輯任何資料。",
     "buttons": {
-      "close": "結束任務"
+      "close_task": "結束任務"
     }
   },
   "S13_Task_Dashboard": {
-    "title": "任務主頁",
+    "title": "任務總覽",
     "buttons": {
-      "record": "新增紀錄",
-      "settlement": "結算",
-      "download": "下載記錄",
       "add":"新增"
     },
     "tab": {
@@ -239,13 +250,13 @@
     },
     "empty": {
       "records": "尚無收支紀錄",
-      "personal_records": "無有關紀錄"
+      "personal_records": "沒有相關紀錄"
     },
     "daily_expense_label": "支出",
     "dialog_balance_detail": "收支幣別明細",
     "section": {
       "expense": "支出明細",
-      "income": "預收明細",
+      "prepay": "預收明細",
       "prepay_balance": "預收餘額",
       "no_data": "無資料"
     }
@@ -271,8 +282,6 @@
       "edit": "編輯紀錄"
     },
     "buttons": {
-      "save": "儲存紀錄",
-      "close": "關閉",
       "add_item": "新增細項"
     },
     "section": {
@@ -281,7 +290,7 @@
     },
     "val": {
       "prepay": "預收",
-      "member_paid": "{name} 先付",
+      "member_paid": "{name} 代墊",
       "split_details": "細項分拆",
       "split_summary": "總計 {amount} 由 {method} 分攤",
       "converted_amount": "≈ {base}{symbol} {amount}",
@@ -290,32 +299,24 @@
     },
     "tab": {
       "expense": "費用",
-      "income": "預收"
+      "prepay": "預收"
     },
-    "base_card_title": "剩餘金額 (Base)",
-    "type_income_title": "預收款",
-    "base_card_title_expense": "剩餘金額 (Base)",
-    "base_card_title_income": "資金來源 (入金者)",
+    "base_card": "剩餘金額",
+    "type_prepay": "預收款",
     "payer_multiple": "多人",
     "rate_dialog" : {
       "title": "匯率來源",
-      "message": "匯率資料來自 Open Exchange Rates (免費版)，僅供參考。實際匯率請依您的換匯水單為準。"
+      "content": "匯率資料來自 Open Exchange Rates（免費版），僅供參考。實際匯率請依換匯水單為準。"
     },
     "label" : {
-      "date": "日期",
-      "title": "項目名稱",
-      "payment_method": "支付方式",
-      "amount": "金額",
-      "rate_with_base": "匯率 (1 {base} = ? {target})",
-      "rate": "匯率",
-      "memo": "備註"
+      "rate_with_base": "匯率（1 {base} = ? {target}）"
     },
     "hint" : {
       "category" : {
         "food": "晚餐",
         "transport": "車費",
         "shopping": "紀念品",
-        "entertainment": "電影票",
+        "entertainment": "門票",
         "accommodation": "住宿費",
         "others": "其他費用"
       },
@@ -325,23 +326,13 @@
   },
   "S16_TaskCreate_Edit": {
     "title": "新增任務",
-    "buttons": {
-      "save": "保存",
-      "done": "確定"
-    },
     "section":{
       "task_name": "任務名稱",
       "task_period": "任務期間",
       "settlement": "結算設定"
     },
     "label" : {
-      "name": "任務名稱",
-      "name_counter": "{current}/{max}",
-      "start_date": "開始日期",
-      "end_date": "結束日期",
-      "currency": "結算幣別",
-      "member_count": "參加人數",
-      "date": "日期"
+      "name_counter": "{current}/{max}"
     },
     "hint" : {
       "name": "例：東京五日遊"
@@ -349,16 +340,15 @@
   },
   "S17_Task_Locked": {
     "buttons": {
-      "download": "下載紀錄",
       "notify_members": "通知成員",
-      "view_payment_details": "隊長收退款帳戶"
+      "view_payment_info": "隊長收退款帳戶"
     },
     "section": {
       "pending": "待處理",
       "cleared": "已處理"
     },    
-    "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載您的紀錄",
-    "remainder_absorbed_by": "由 {name} 吸收",
+    "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載任務紀錄",
+    "remainder_absorbed_by": "由 {name} 承擔",
     "export": {
       "report_info": "報表資訊",
       "task_name": "任務名稱",
@@ -375,7 +365,7 @@
       "pending": "未處理",
       "fund_analysis": "資金與零頭",
       "total_expense": "總費用",
-      "total_income": "總預收",
+      "total_prepay": "總預收",
       "remainder_buffer": "零頭總額",
       "remainder_absorbed_by": "零頭得主",
       "transaction_details": "交易流水帳",
@@ -388,23 +378,21 @@
       "base_amount": "結算幣別金額",
       "net_remainder": "零頭",
       "pool": "預收款",
-      "mixed": "混和支付"
+      "mixed": "混合支付"
     }
   },
   "S30_settlement_confirm": {
     "title": "結算確認",
     "buttons": {
-      "next": "收款設定"
+      "set_payment_info": "收款設定"
     },
     "steps": {
       "confirm_amount": "確認金額",
       "payment_info": "收款設定"
     },
     "warning": {
-      "random_reveal": "零頭歸屬將於下一步結算完成後揭曉！"
+      "random_reveal": "零頭歸屬將於下一步結算完成後揭曉。"
     },
-    "label_payable": "應付",
-    "label_refund": "可退",
     "list_item": {
       "merged_label": "合併",
       "includes": "包含：",
@@ -416,41 +404,37 @@
   "S31_settlement_payment_info": {
     "title": "收款資訊",
     "setup_instruction": "收款資訊僅供本次結算使用。預設資料加密儲存於本機。",
-    "sync_save": "儲存為預設收款資訊 (存在手機)",
-    "sync_update": "同步更新我的預設收款資訊",
+    "sync_save": "設為預設收款資訊（僅儲存於本機）",
+    "sync_update": "同步更新預設收款資訊",
     "buttons": {
-      "settle": "結算",
       "prev_step": "上一步"
     }
   },
   "S32_settlement_result": {
     "title": "結算成功",
-    "content": "所有帳目已核對無誤。請將結果分享給成員以進行付款。",
+    "content": "帳目已確認。請通知成員完成付款。",
     "waiting_reveal": "等待揭曉...",
     "remainder_winner_prefix": "零頭歸屬：",
-    "remainder_winner_total": "{winnerName}總金額變更至{prefix} {total}",
+    "remainder_winner_total": "{winnerName}總金額為：{prefix}{total}",
     "total_label": "本次結算總額",
     "buttons": {
       "share": "發送結算通知",
-      "back": "返回任務首頁"
+      "back_task_dashboard": "返回任務"
     }
   },
   "S50_Onboarding_Consent": {
     "title": "歡迎使用 Iron Split",
     "buttons": {
-      "agree": "開始"
+      "start": "開始"
     },
     "content": {
-      "prefix": "讓分帳變得簡單。\n\n我是艾隆・魯斯特。這裡負責記帳與分攤。\n無論是旅行、聚餐、共同生活,每一筆支出都會被清楚記錄,每一種分攤方式都有明確規則。\n\n分帳,本該清楚。\n\n點擊開始即代表您同意我們的 ",
+      "prefix": "讓分帳變得簡單。\n\n我是艾隆・魯斯特，負責記帳與分攤。\n無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。\n\n分帳，本該清楚。\n\n點擊「開始」即表示同意我們的 ",
       "suffix": "。"
     }
   },
   "S51_Onboarding_Name": {
     "title": "名稱設定",
-    "buttons": {
-      "next": "設定完成"
-    },
-    "description": "請輸入您在 Iron Split 內的顯示名稱。",
+    "content": "請輸入顯示名稱。",
     "label": "顯示名稱",
     "hint": "輸入暱稱",
     "counter": "{current}/{max}"
@@ -473,7 +457,7 @@
       "expense": "支出"
     },
     "payment_type": {
-      "prepay": "公款支付",
+      "prepay": "預收款支付",
       "single_suffix": "代墊",
       "multiple": "多人代墊"
     },
@@ -485,9 +469,11 @@
   "S53_TaskSettings_Members": {
     "title": "成員管理",
     "buttons": {
-      "add": "新增成員"
+      "add_member": "新增成員"
     },
-    "label_default_ratio": "預設比例",
+    "label": {
+      "default_ratio": "預設比例"
+    },
     "member_default_name": "成員",
     "member_name": "成員名稱"
   },
@@ -510,45 +496,34 @@
   },
   "S72_TermsUpdate": {
     "title": "{type}更新",
-    "description": "我們更新了{type}，請閱讀並同意以繼續使用。",
-    "buttons": {
-      "agree": "同意",
-      "decline": "不同意"
-    }
+    "content": "我們更新了{type}，請閱讀並同意以繼續使用。"
   },
   "S74_DeleteAccount_Notice": {
     "title": "刪除帳號確認",
-    "content": "此動作無法復原，您的個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。",
+    "content": "此動作無法復原，個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。",
     "buttons": {
-      "delete": "刪除帳號"
+      "delete_account": "刪除帳號"
     }
   },
   "D01_MemberRole_Intro": {
-    "title": "你的角色是...",
+    "title": "本次角色",
     "buttons": {
       "reroll": "換個動物",
       "enter": "進入任務"
     },
-    "description": {
-      "content": "這是你在本次任務中的專屬頭像{avatar}。\n所有分帳紀錄都會使用{avatar}代表你喔！",
-      "reroll_left": "還有 1 次機會",
-      "reroll_empty": "機會已用完"
+    "content": "本次任務的專屬頭像{avatar}。\n分帳紀錄將以 {avatar} 代表。",
+    "reroll": {
+      "empty": "機會已用完"
     }
   },
   "D02_Invite_Result": {
     "title": "加入失敗"
   },
   "D03_TaskCreate_Confirm": {
-    "title": "確認任務設定",
+    "title": "任務設定確認",
     "buttons": {
-      "confirm": "確認",
-      "back": "返回編輯"
-    },
-    "label_name": "任務名稱",
-    "label_period": "期間",
-    "label_currency": "幣別",
-    "label_members": "人數",
-    "creating_task": "正在建立任務..."
+      "back_edit": "返回編輯"
+    }
   },
   "D04_CommonUnsaved_Confirm": {
     "title": "尚未儲存",
@@ -556,65 +531,43 @@
   },
   "D05_DateJump_NoResult": {
     "title": "無紀錄",
-    "buttons": {
-      "cancel": "返回",
-      "add": "新增紀錄"
-    },
-    "content": "找不到此日期的紀錄，要新增一筆嗎？"
+    "content": "此日期無紀錄。是否新增？"
   },
   "D06_settlement_confirm": {
     "title": "結算確認",
-    "warning_text": "結算後任務將立即鎖定，無法再新增、刪除或編輯任何紀錄。\n請確認所有帳目皆已核對無誤。",
-    "buttons": {
-      "confirm": "確定結算"
-    }
+    "content": "結算後任務將立即鎖定，無法新增、刪除或編輯紀錄。\n請確認帳目已核對無誤。"
   },
   "D08_TaskClosed_Confirm": {
-    "title": "確認結束任務",
-    "buttons": {
-      "confirm": "確認"
-    },
+    "title": "結束任務確認",
     "content": "此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？"
   },
   "D09_TaskSettings_CurrencyConfirm": {
-    "title": "變更結算幣別？",
+    "title": "變更結算幣別",
     "content": "變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？"
   },
   "D10_RecordDelete_Confirm": {
-    "delete_record_title": "刪除紀錄？",
-    "delete_record_content": "確定要刪除 {title} ({amount}) 嗎？",
-    "deleted_success": "紀錄已刪除"
+    "title": "刪除紀錄確認",
+    "content": "確定要刪除 {title}（{amount}）嗎？"
   },
   "D11_random_result": {
     "title": "零頭得主",
-    "skip": "略過",
-    "winner_reveal": "就是你了！",
-    "buttons": {
-      "close": "確定"
-    }
+    "skip": "略過"
   },
   "D12_logout_confirm": {
     "title": "登出確認",
-    "description": "若您不同意更新後的條款，將無法繼續使用本服務。\n您的帳號將會登出。若您使用的是匿名帳號。登出後資料可能無法復原。",
+    "content": "若不同意更新後的條款，將無法繼續使用本服務。\n帳號將會登出。",
     "buttons": {
       "logout": "確認登出"
     }
   },
   "D13_DeleteAccount_Confirm": {
-    "title": "確認刪除帳號",
-    "buttons": {
-      "confirm": "確認"
-    },
+    "title": "刪除帳號確認",
     "content": "此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？"
   },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",
     "buttons": {
-      "save": "確認分拆"
-    },
-    "label": {
-      "sub_item": "細項名稱",
-      "split_method": "分攤設定"
+      "confirm_split": "確認分拆"
     },
     "item_name_empty" : "項目名稱尚未輸入",
     "hint" : {
@@ -622,7 +575,7 @@
     }
   },
   "B03_SplitMethod_Edit": {
-    "title": "選擇分攤方式",
+    "title": "分攤方式設定",
     "buttons": {
       "adjust_weight": "調整權重"
     },
@@ -636,74 +589,73 @@
     "label": {
       "head_member": "代表",
       "merge_amount": "合併總額"
-    },
-    "buttons": {
-      "cancel": "取消",
-      "confirm": "合併"
     }
   },
   "B06_payment_info_detail": {
-    "label_copied": "已複製到剪貼簿",
     "buttons": {
       "copy": "複製"
     }
   },
   "B07_PaymentMethod_Edit": {
-    "title": "選擇資金來源",
-    "type_member": "成員墊付",
-    "type_prepay": "公款支付",
-    "type_mixed": "混合支付",
-    "prepay_balance": "公款餘額: {amount}",
-    "err_balance_not_enough": "餘額不足",
-    "section_payer": "墊付成員",
-    "label_amount": "支付金額",
-    "total_label": "費用總額",
-    "total_prepay": "公款支付",
-    "total_advance": "墊付總計",
-    "status_balanced": "金額吻合",
-    "status_remaining": "尚差 {amount}",
-    "msg_auto_fill_prepay": "已自動填入公款餘額"
+    "title": "資金來源設定",
+    "prepay_balance": "預收款餘額：{amount}",
+    "payer_member": "代墊成員",
+    "label": {
+      "amount": "支付金額",
+      "total_expense": "費用總額",
+      "prepay": "預收款支付",
+      "total_advance": "代墊總計"
+    },
+    "status": {
+      "not_enough": "餘額不足",
+      "balanced": "金額吻合",
+      "remaining": "差額 {amount}"
+    }
   },
   "success": {
-    "saved": "已成功儲存"
+    "saved": "已成功儲存。",
+    "deleted": "已成功刪除。",
+    "copied": "已複製到剪貼簿"
   },
   "error": {
+    "title": "錯誤",
+    "unknown": "發生未知錯誤：{error}",
     "dialog" : {
       "task_full": {
         "title": "任務已滿",
-        "message": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
+        "content": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
       },
       "expired_code": {
         "title": "邀請碼已過期",
-        "message": "此邀請連結已失效（時限 {minutes} 分鐘）。請請隊長重新產生。"
+        "content": "此邀請連結已失效（有效時間 {minutes} 分鐘）。請隊長重新產生。"
       },
       "invalid_code": {
         "title": "連結無效",
-        "message": "無效的邀請連結，請確認是否正確或已被刪除。"
+        "content": "無效的邀請連結，請確認是否正確或已被刪除。"
       },
       "auth_required": {
         "title": "需要登入",
-        "message": "請先登入後再加入任務。"
+        "content": "請先登入後再加入任務。"
       },
       "already_in_task": {
-        "title": "您已是成員",
-        "message": "您已經在這個任務中了。"
+        "title": "已是成員",
+        "content": "已加入此任務。"
       },
       "unknown": {
         "title": "發生錯誤",
-        "message": "發生未預期的錯誤，請稍後再試。"
+        "content": "發生未預期的錯誤，請稍後再試。"
       },
       "delete_failed": {
         "title": "刪除失敗",
-        "message": "刪除失敗，請稍後再試。"
+        "content": "刪除失敗，請稍後再試。"
       },
       "member_delete_failed": {
         "title": "無法刪除成員",
-        "message": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。"
+        "content": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。"
       },
       "data_conflict": {
         "title": "帳目已變動",
-        "message": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。"
+        "content": "檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。"
       }
     },
     "message": {
@@ -715,7 +667,7 @@
       "zero": "{key}不可為 0。",
       "amount_not_enough": "剩餘金額不足。",
       "amount_mismatch": "金額不符。",
-      "income_is_used": "此筆款項已被使用或公款不足，無法更動。",
+      "prepay_is_used": "此筆款項已被使用或預收款不足，無法更動。",
       "data_is_used": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
       "permission_denied": "權限不足，無法執行此操作。",
       "network_error" : "網路連線失敗，請檢查網路連線。",
@@ -724,22 +676,22 @@
       "export_failed": "無法產生報表，請檢查儲存空間或稍後重試。",
       "save_failed": "儲存失敗，請稍後再試。",
       "delete_failed": "刪除失敗，請稍後再試。",
-      "task_close_failed": "任務關閉失敗，請稍後再試。",
+      "task_close_failed": "任務結束失敗，請稍後再試。",
       "rate_fetch_failed": "匯率取得失敗。",
       "length_exceeded": "最多 {max} 個字。",
       "invalid_char": "包含無效字元。",
       "invalid_code": "邀請碼無效，請確認連結是否正確。",
-      "expired_code": "邀請連結已過期 (超過 15 分鐘)，請請隊長重新分享。",
-      "task_full": "任務人數已滿 (上限 15 人)，無法加入。",
-      "auth_required": "身分驗證失敗，請重新啟動 App。",
+      "expired_code": "邀請連結已過期（超過 15 分鐘），請隊長重新分享。",
+      "task_full": "任務人數已滿（上限 15 人），無法加入。",
+      "auth_required": "登入狀態異常，請重新啟動 App。",
       "init_failed": "載入失敗，請稍後再試。",
       "unauthorized": "帳號未登入，請重新登入。",
-      "task_locked": "房間已進入結算狀態，無法修改資料。",
+      "task_locked": "任務已進入結算狀態，無法修改資料。",
       "timeout": "伺服器回應逾時，請稍後再試。",
       "quota_exceeded": "系統流量達到上限，請稍後再試。",
       "join_failed": "加入任務失敗，請稍後再試。",
       "invite_create_failed": "無法產生邀請碼，請稍後再試。",
-      "data_conflict": "在您檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。",
+      "data_conflict": "檢視期間，其他成員更新了帳目。為了確保結算正確，請返回上一頁重新整理。",
       "task_status_error": "此任務狀態異常（可能已被結算），請刷新頁面。",
       "settlement_failed": "系統錯誤，結算失敗，請稍後再試。",
       "share_failed": "分享失敗，請稍後再試。",

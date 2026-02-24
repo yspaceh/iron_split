@@ -86,6 +86,7 @@ class _S00ContentState extends State<_S00Content> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final vm = context.watch<S00SystemBootstrapViewModel>();
     // 這裡只需要顯示 Loading 與背景
     return CommonStateView(
@@ -93,9 +94,9 @@ class _S00ContentState extends State<_S00Content> {
       errorCode: vm.initErrorCode,
       title: '',
       child: Scaffold(
-        backgroundColor: theme.colorScheme.surface,
+        backgroundColor: colorScheme.surface,
         body: Center(
-          child: CircularProgressIndicator(color: theme.colorScheme.primary),
+          child: CircularProgressIndicator(color: colorScheme.primary),
         ),
       ),
     );

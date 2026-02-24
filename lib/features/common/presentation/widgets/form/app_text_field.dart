@@ -57,6 +57,7 @@ class AppTextField extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     final borderRadius = BorderRadius.circular(16);
 
@@ -114,7 +115,7 @@ class AppTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           autofocus: autofocus,
           textAlignVertical: TextAlignVertical.bottom,
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w500,
             color: colorScheme.onSurface,
             height: 1.5,
@@ -138,13 +139,13 @@ class AppTextField extends StatelessWidget {
             counterText: maxLength != null ? "" : null,
             suffixIcon: suffixIcon,
             suffixText: suffixText,
-            suffixStyle: theme.textTheme.labelMedium?.copyWith(
+            suffixStyle: textTheme.labelMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.bold,
             ),
             prefixText: prefixText,
             prefixIcon: buildPrefix(),
-            prefixStyle: theme.textTheme.bodyLarge?.copyWith(
+            prefixStyle: textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
               color: colorScheme.onSurface,
               height: 1.5,
@@ -175,7 +176,7 @@ class AppTextField extends StatelessWidget {
               // 讓點擊穿透 Label，直接點到輸入框
               child: Text(
                 labelText!,
-                style: theme.textTheme.labelMedium?.copyWith(
+                style: textTheme.labelMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
                   fontSize: 10, // 小字體

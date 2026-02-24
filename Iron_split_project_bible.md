@@ -205,14 +205,14 @@
 1.  **分幣別物理庫存 (Physical Inventory)**：
     - **定義**：計算公款包中實際持有的各國貨幣現金。
     - **用途**：S15 記帳時的支付能力檢查 (Smart Picker)、S13 餘額明細 Dialog。
-    - **公式**：`Sum(Income Original Amount) - Sum(Expense Prepay Portion Original Amount)` (依幣別分組)。
+    - **公式**：`Sum(Prepay Original Amount) - Sum(Expense Prepay Portion Original Amount)` (依幣別分組)。
     - **混合支付處理**：若 `payerType == 'mixed'`，僅扣除 `paymentDetails['prepayAmount']` 指定的金額。
 
 2.  **總資產價值 (Total Value in Base)**：
     - **定義**：將所有外幣庫存按「該筆交易當下匯率」換算回結算幣別後的總價值。
     - **用途**：S13 Dashboard 主視覺餘額 (Big Number)。
     - **公式**：
-      - Income: `originalAmount * exchangeRate`
+      - Prepay: `originalAmount * exchangeRate`
       - Expense (Prepay): `originalAmount * exchangeRate`
       - Expense (Mixed): `paymentDetails['prepayAmount'] * exchangeRate`
     - **注意**：成員代墊 (`member` or `mixed.memberAdvance`) **不減少** 公款水位。
@@ -304,7 +304,7 @@
   // 統計數據快照 (供 S17 BalanceCard 直接顯示)
   "dashboardSnapshot": {
       "poolBalance": 100.0,
-      "totalIncome": 500.0,
+      "totalPrepay": 500.0,
       "totalExpense": 400.0,
       "expenseDetail": {...},
       ...

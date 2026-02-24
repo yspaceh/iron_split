@@ -14,7 +14,8 @@ class StepDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final primaryColor = activeColor ?? colorScheme.primary;
 
     return SizedBox(

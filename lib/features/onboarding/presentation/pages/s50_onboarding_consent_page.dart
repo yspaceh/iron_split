@@ -29,36 +29,52 @@ class S50OnboardingConsentPage extends StatelessWidget {
 class _S50Content extends StatelessWidget {
   const _S50Content();
 
+  Future<void> _handleAgree(
+      BuildContext context, S50OnboardingConsentViewModel vm) async {
+    try {
+      await vm.agreeAndContinue();
+      if (!context.mounted) return;
+      context.pushNamed('S51');
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  void _redirectToPrivacy(BuildContext context) {
+    context.pushNamed(
+      'S71',
+      extra: {'isTerms': false},
+    );
+  }
+
+  void _redirectToTerms(BuildContext context) {
+    context.pushNamed(
+      'S71',
+      extra: {'isTerms': false},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     final vm = context.watch<S50OnboardingConsentViewModel>();
 
     // 定義連結文字的樣式 (使用 Primary Color 讓它看起來像連結)
-    final linkStyle = theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.primary,
+    final linkStyle = textTheme.bodyMedium?.copyWith(
+        color: colorScheme.primary,
         fontWeight: FontWeight.bold,
         decoration: TextDecoration.underline, // 可選：加底線更像連結
-        decorationColor: theme.colorScheme.primary,
+        decorationColor: colorScheme.primary,
         height: 1.5);
 
     // 定義一般文字樣式
-    final normalStyle = theme.textTheme.bodyMedium?.copyWith(height: 1.5);
-
-    Future<void> handleAgree(
-        BuildContext context, S50OnboardingConsentViewModel vm) async {
-      try {
-        await vm.agreeAndContinue();
-        if (!context.mounted) return;
-        context.pushNamed('S51');
-      } on AppErrorCodes catch (code) {
-        if (!context.mounted) return;
-        final msg = ErrorMapper.map(context, code: code);
-        AppToast.showError(context, msg);
-      }
-    }
+    final normalStyle = textTheme.bodyMedium?.copyWith(height: 1.5);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,10 +84,10 @@ class _S50Content extends StatelessWidget {
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(
-            text: t.S50_Onboarding_Consent.buttons.agree,
+            text: t.S50_Onboarding_Consent.buttons.start,
             type: AppButtonType.primary,
             isLoading: vm.agreeStatus == LoadStatus.loading,
-            onPressed: () => handleAgree(context, vm),
+            onPressed: () => _handleAgree(context, vm),
           ),
         ],
       ),
@@ -103,12 +119,7 @@ class _S50Content extends StatelessWidget {
                           text: t.common.terms.label.terms,
                           style: linkStyle,
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              context.pushNamed(
-                                'S71',
-                                extra: {'isTerms': true},
-                              );
-                            },
+                            ..onTap = () => _redirectToTerms(context),
                         ),
 
                         // C. 中間: " and "
@@ -119,12 +130,7 @@ class _S50Content extends StatelessWidget {
                           text: t.common.terms.label.privacy,
                           style: linkStyle,
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              context.pushNamed(
-                                'S71',
-                                extra: {'isTerms': false},
-                              );
-                            },
+                            ..onTap = () => _redirectToPrivacy(context),
                         ),
 
                         // E. 後綴: ". Tap 'Agree' to accept."

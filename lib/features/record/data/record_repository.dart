@@ -205,7 +205,7 @@ class RecordRepository extends BaseRepository {
   }
 
   /// 檢查此紀錄是否被其他紀錄引用 (例如作為 payerId)
-  /// 主要用於防止刪除已被使用的預收款 (Income/Prepay)
+  /// 主要用於防止刪除已被使用的預收款 (Prepay/Prepay)
   Future<void> checkRecordReferenced(String taskId, String recordId) async {
     await safeRun(() async {
       // 1. 檢查是否有任何紀錄的 payerId 指向此 recordId
@@ -217,7 +217,7 @@ class RecordRepository extends BaseRepository {
           .limit(1)
           .get();
 
-      if (payerQuery.docs.isNotEmpty) throw AppErrorCodes.incomeIsUsed;
+      if (payerQuery.docs.isNotEmpty) throw AppErrorCodes.prepayIsUsed;
     }, AppErrorCodes.initFailed);
   }
 

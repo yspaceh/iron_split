@@ -8,7 +8,7 @@ import 'package:iron_split/features/common/presentation/view/common_state_view.d
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
@@ -156,15 +156,15 @@ class _B02ContentState extends State<_B02Content> {
     super.dispose();
   }
 
-  Future<void> _handleSplitConfig(B02SplitExpenseEditViewModel vm) async {
+  Future<void> _showSplitMethodBottomSheet(BuildContext context,
+      B02SplitExpenseEditViewModel vm, Translations t) async {
     final amountText = vm.amountController.text.replaceAll(',', '');
     final amount = double.tryParse(amountText) ?? 0.0;
-    final t = Translations.of(context);
 
     // 2. 檢查金額是否為 0
     if (amount <= 0) {
       AppToast.showError(
-          context, t.error.message.empty(key: t.S15_Record_Edit.label.amount));
+          context, t.error.message.empty(key: t.common.label.amount));
       return;
     }
 
@@ -180,17 +180,19 @@ class _B02ContentState extends State<_B02Content> {
       exchangeRate: widget.exchangeRate,
       baseCurrency: widget.baseCurrency,
     );
-
-    if (result != null && mounted) {
-      vm.updateSplitConfig(
-        method: result['splitMethod'],
-        memberIds: List<String>.from(result['memberIds']),
-        details: Map<String, double>.from(result['details']),
-      );
+    if (result is Map<String, dynamic> && context.mounted) {
+      _handleSplitConfig(context, vm, result);
     }
   }
 
-  void _onSave(B02SplitExpenseEditViewModel vm) {
+  Future<void> _handleSplitConfig(BuildContext context,
+      B02SplitExpenseEditViewModel vm, Map<String, dynamic> details) async {
+    vm.updateSplitConfig(
+      details,
+    );
+  }
+
+  void _handleSave(BuildContext context, B02SplitExpenseEditViewModel vm) {
     if (_formKey.currentState!.validate()) {
       final newItem = vm.prepareResult();
       context.pop(newItem);
@@ -201,13 +203,14 @@ class _B02ContentState extends State<_B02Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final vm = context.watch<B02SplitExpenseEditViewModel>();
     final title = t.B02_SplitExpense_Edit.title;
     final actions = [
       if (widget.isEditMode)
         IconButton(
           icon: const Icon(Icons.delete_outline),
-          color: theme.colorScheme.error,
+          color: colorScheme.error,
           onPressed: () => context.pop('DELETE'),
           tooltip: t.common.buttons.delete,
         ),
@@ -227,9 +230,9 @@ class _B02ContentState extends State<_B02Content> {
           bottomActionBar: StickyBottomActionBar.sheet(
             children: [
               AppButton(
-                text: t.B02_SplitExpense_Edit.buttons.save,
+                text: t.B02_SplitExpense_Edit.buttons.confirm_split,
                 type: AppButtonType.primary,
-                onPressed: () => _onSave(vm),
+                onPressed: () => _handleSave(context, vm),
               ),
             ],
           ),
@@ -247,16 +250,15 @@ class _B02ContentState extends State<_B02Content> {
                       amount: widget.availableAmount,
                       currencyConstants: vm.selectedCurrency,
                       labelColor: widget.parentTitle.isEmpty
-                          ? theme.colorScheme.outline
+                          ? colorScheme.outline
                           : null,
-                      valueColor: theme.colorScheme.primary,
+                      valueColor: colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Divider(
                     height: 1,
-                    color: theme.colorScheme.onSurfaceVariant
-                        .withValues(alpha: 0.2),
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                   ),
                   const SizedBox(height: 16),
 
@@ -264,8 +266,8 @@ class _B02ContentState extends State<_B02Content> {
                   AppTextField(
                     controller: vm.nameController,
                     focusNode: _nameNode,
-                    fillColor: theme.colorScheme.surfaceContainerLow,
-                    labelText: t.B02_SplitExpense_Edit.label.sub_item,
+                    fillColor: colorScheme.surfaceContainerLow,
+                    labelText: t.common.label.sub_item,
                     hintText: t.B02_SplitExpense_Edit.hint.sub_item,
                     validator: (v) =>
                         v?.isEmpty == true ? t.error.message.required : null,
@@ -276,9 +278,9 @@ class _B02ContentState extends State<_B02Content> {
                   TaskAmountInput(
                     amountController: vm.amountController,
                     focusNode: _amountNode,
-                    fillColor: theme.colorScheme.surfaceContainerLow,
+                    fillColor: colorScheme.surfaceContainerLow,
                     selectedCurrencyConstants: vm.selectedCurrency,
-                    isIncome: false,
+                    isPrepay: false,
                     showCurrencyPicker: false,
                     externalValidator: (val) {
                       if (val > widget.availableAmount) {
@@ -291,10 +293,11 @@ class _B02ContentState extends State<_B02Content> {
 
                   // 4. Split Config Button
                   AppSelectField(
-                    text: SplitMethodConstant.getLabel(context, vm.splitMethod),
-                    onTap: () => _handleSplitConfig(vm),
-                    fillColor: theme.colorScheme.surfaceContainerLow,
-                    labelText: t.B02_SplitExpense_Edit.label.split_method,
+                    text: SplitMethodConstant.getLabel(
+                        context, vm.splitMethod, t),
+                    onTap: () => _showSplitMethodBottomSheet(context, vm, t),
+                    fillColor: colorScheme.surfaceContainerLow,
+                    labelText: t.common.label.split_method,
                     trailing: CommonAvatarStack(
                       allMembers: vm.allMembers,
                       targetMemberIds: vm.splitMemberIds,
@@ -308,7 +311,7 @@ class _B02ContentState extends State<_B02Content> {
                   TaskMemoInput(
                     memoController: vm.memoController,
                     focusNode: _memoNode,
-                    fillColor: theme.colorScheme.surfaceContainerLow,
+                    fillColor: colorScheme.surfaceContainerLow,
                   ),
                 ],
               ),

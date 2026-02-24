@@ -88,27 +88,25 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 
 	// Translations
 	@override late final _TranslationsCommonButtonsJaJp buttons = _TranslationsCommonButtonsJaJp._(_root);
-	@override late final _TranslationsCommonErrorJaJp error = _TranslationsCommonErrorJaJp._(_root);
+	@override late final _TranslationsCommonLabelJaJp label = _TranslationsCommonLabelJaJp._(_root);
 	@override late final _TranslationsCommonCategoryJaJp category = _TranslationsCommonCategoryJaJp._(_root);
 	@override late final _TranslationsCommonCurrencyJaJp currency = _TranslationsCommonCurrencyJaJp._(_root);
 	@override late final _TranslationsCommonAvatarJaJp avatar = _TranslationsCommonAvatarJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleJaJp remainder_rule = _TranslationsCommonRemainderRuleJaJp._(_root);
 	@override late final _TranslationsCommonSplitMethodJaJp split_method = _TranslationsCommonSplitMethodJaJp._(_root);
+	@override late final _TranslationsCommonPaymentMethodJaJp payment_method = _TranslationsCommonPaymentMethodJaJp._(_root);
 	@override late final _TranslationsCommonLanguageJaJp language = _TranslationsCommonLanguageJaJp._(_root);
 	@override late final _TranslationsCommonThemeJaJp theme = _TranslationsCommonThemeJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override late final _TranslationsCommonPaymentStatusJaJp payment_status = _TranslationsCommonPaymentStatusJaJp._(_root);
 	@override late final _TranslationsCommonTermsJaJp terms = _TranslationsCommonTermsJaJp._(_root);
 	@override late final _TranslationsCommonShareJaJp share = _TranslationsCommonShareJaJp._(_root);
-	@override String error_prefix({required Object message}) => 'エラー: ${message}';
-	@override String get please_login => 'ログインしてください';
 	@override String get preparing => '準備中...';
 	@override String get me => '自分';
 	@override String get required => '必須';
 	@override String get member_prefix => 'メンバー';
 	@override String get no_record => '記録なし';
 	@override String get today => '今日';
-	@override String get untitled => '無題';
 }
 
 // Path: log_action
@@ -137,15 +135,13 @@ class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'マイタスク';
+	@override String get title => 'タスク一覧';
 	@override String get tab_in_progress => '進行中';
 	@override String get tab_completed => '完了済';
 	@override String get empty_in_progress => '進行中のタスクはありません';
 	@override String get empty_completed => '完了したタスクはありません';
 	@override String get date_tbd => '日付未定';
-	@override String get delete_confirm_title => '削除の確認';
-	@override String get delete_confirm_content => 'このタスクを削除してもよろしいですか？';
-	@override String get label_settlement => '精算済み';
+	@override late final _TranslationsS10HomeTaskListLabelJaJp label = _TranslationsS10HomeTaskListLabelJaJp._(_root);
 }
 
 // Path: S11_Invite_Confirm
@@ -156,17 +152,9 @@ class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw
 
 	// Translations
 	@override String get title => 'タスクに参加';
-	@override String get subtitle => '以下のタスクに招待されました：';
+	@override String get subtitle => '以下のタスクへの招待';
 	@override late final _TranslationsS11InviteConfirmButtonsJaJp buttons = _TranslationsS11InviteConfirmButtonsJaJp._(_root);
-	@override String get loading_invite => '招待状を読み込み中...';
-	@override String get join_failed_title => 'タスクに参加できません';
-	@override String get identity_match_title => 'あなたは以下のメンバーですか？';
-	@override String get identity_match_desc => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。';
-	@override String get status_linking => '「アカウント連携」で参加します';
-	@override String get status_new_member => '「新規メンバー」として参加します';
-	@override String get label_select_ghost => '引き継ぐメンバーを選択';
-	@override String get label_prepaid => '立替';
-	@override String get label_expense => '支出';
+	@override late final _TranslationsS11InviteConfirmLabelJaJp label = _TranslationsS11InviteConfirmLabelJaJp._(_root);
 }
 
 // Path: S12_TaskClose_Notice
@@ -178,7 +166,7 @@ class _TranslationsS12TaskCloseNoticeJaJp extends TranslationsS12TaskCloseNotice
 	// Translations
 	@override String get title => 'タスク終了';
 	@override late final _TranslationsS12TaskCloseNoticeButtonsJaJp buttons = _TranslationsS12TaskCloseNoticeButtonsJaJp._(_root);
-	@override String get content => 'このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。';
+	@override String get content => 'このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。';
 }
 
 // Path: S13_Task_Dashboard
@@ -194,7 +182,7 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override late final _TranslationsS13TaskDashboardLabelJaJp label = _TranslationsS13TaskDashboardLabelJaJp._(_root);
 	@override late final _TranslationsS13TaskDashboardEmptyJaJp empty = _TranslationsS13TaskDashboardEmptyJaJp._(_root);
 	@override String get daily_expense_label => '支出';
-	@override String get dialog_balance_detail => '收支幣別明細';
+	@override String get dialog_balance_detail => '通貨別収支明細';
 	@override late final _TranslationsS13TaskDashboardSectionJaJp section = _TranslationsS13TaskDashboardSectionJaJp._(_root);
 }
 
@@ -222,10 +210,8 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override late final _TranslationsS15RecordEditSectionJaJp section = _TranslationsS15RecordEditSectionJaJp._(_root);
 	@override late final _TranslationsS15RecordEditValJaJp val = _TranslationsS15RecordEditValJaJp._(_root);
 	@override late final _TranslationsS15RecordEditTabJaJp tab = _TranslationsS15RecordEditTabJaJp._(_root);
-	@override String get base_card_title => '残額（Base）';
-	@override String get type_income_title => '前受金';
-	@override String get base_card_title_expense => '残額（Base）';
-	@override String get base_card_title_income => '資金元（入金者）';
+	@override String get base_card => '残額';
+	@override String get type_prepay => '前受金';
 	@override String get payer_multiple => '複数人';
 	@override late final _TranslationsS15RecordEditRateDialogJaJp rate_dialog = _TranslationsS15RecordEditRateDialogJaJp._(_root);
 	@override late final _TranslationsS15RecordEditLabelJaJp label = _TranslationsS15RecordEditLabelJaJp._(_root);
@@ -240,7 +226,6 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 
 	// Translations
 	@override String get title => 'タスク作成';
-	@override late final _TranslationsS16TaskCreateEditButtonsJaJp buttons = _TranslationsS16TaskCreateEditButtonsJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditSectionJaJp section = _TranslationsS16TaskCreateEditSectionJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditLabelJaJp label = _TranslationsS16TaskCreateEditLabelJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditHintJaJp hint = _TranslationsS16TaskCreateEditHintJaJp._(_root);
@@ -256,7 +241,7 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	@override late final _TranslationsS17TaskLockedButtonsJaJp buttons = _TranslationsS17TaskLockedButtonsJaJp._(_root);
 	@override late final _TranslationsS17TaskLockedSectionJaJp section = _TranslationsS17TaskLockedSectionJaJp._(_root);
 	@override String retention_notice({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。';
-	@override String remainder_absorbed_by({required Object name}) => 'は ${name} が負担';
+	@override String remainder_absorbed_by({required Object name}) => '${name} が負担';
 	@override late final _TranslationsS17TaskLockedExportJaJp export = _TranslationsS17TaskLockedExportJaJp._(_root);
 }
 
@@ -271,8 +256,6 @@ class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementCon
 	@override late final _TranslationsS30SettlementConfirmButtonsJaJp buttons = _TranslationsS30SettlementConfirmButtonsJaJp._(_root);
 	@override late final _TranslationsS30SettlementConfirmStepsJaJp steps = _TranslationsS30SettlementConfirmStepsJaJp._(_root);
 	@override late final _TranslationsS30SettlementConfirmWarningJaJp warning = _TranslationsS30SettlementConfirmWarningJaJp._(_root);
-	@override String get label_payable => '支払';
-	@override String get label_refund => '返金';
 	@override late final _TranslationsS30SettlementConfirmListItemJaJp list_item = _TranslationsS30SettlementConfirmListItemJaJp._(_root);
 }
 
@@ -286,7 +269,7 @@ class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31Settlemen
 	@override String get title => '受取情報';
 	@override String get setup_instruction => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。';
 	@override String get sync_save => 'デフォルトの受取情報として保存（端末内）';
-	@override String get sync_update => '自分のデフォルト受取情報を同期更新';
+	@override String get sync_update => 'デフォルト受取情報を更新';
 	@override late final _TranslationsS31SettlementPaymentInfoButtonsJaJp buttons = _TranslationsS31SettlementPaymentInfoButtonsJaJp._(_root);
 }
 
@@ -300,8 +283,8 @@ class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResu
 	@override String get title => '精算完了';
 	@override String get content => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。';
 	@override String get waiting_reveal => '結果を確認中...';
-	@override String get remainder_winner_prefix => '残額の受取先：';
-	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。';
+	@override String get remainder_winner_prefix => '端数の受取先：';
+	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}';
 	@override String get total_label => '今回の精算合計額';
 	@override late final _TranslationsS32SettlementResultButtonsJaJp buttons = _TranslationsS32SettlementResultButtonsJaJp._(_root);
 }
@@ -326,8 +309,7 @@ class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZh
 
 	// Translations
 	@override String get title => '名前設定';
-	@override late final _TranslationsS51OnboardingNameButtonsJaJp buttons = _TranslationsS51OnboardingNameButtonsJaJp._(_root);
-	@override String get description => 'アプリ内で表示する名前を入力してください（1-10文字）。';
+	@override String get content => 'アプリ内で表示する名前を入力（1–10文字）';
 	@override String get hint => 'ニックネームを入力';
 	@override String counter({required Object current, required Object max}) => '${current}/${max}';
 }
@@ -358,7 +340,7 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	// Translations
 	@override String get title => 'メンバー管理';
 	@override late final _TranslationsS53TaskSettingsMembersButtonsJaJp buttons = _TranslationsS53TaskSettingsMembersButtonsJaJp._(_root);
-	@override String get label_default_ratio => 'デフォルト比率';
+	@override late final _TranslationsS53TaskSettingsMembersLabelJaJp label = _TranslationsS53TaskSettingsMembersLabelJaJp._(_root);
 	@override String get member_default_name => 'メンバー';
 	@override String get member_name => 'メンバー名';
 }
@@ -383,8 +365,7 @@ class _TranslationsS72TermsUpdateJaJp extends TranslationsS72TermsUpdateZhTw {
 
 	// Translations
 	@override String title({required Object type}) => '${type}更新';
-	@override String description({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。';
-	@override late final _TranslationsS72TermsUpdateButtonsJaJp buttons = _TranslationsS72TermsUpdateButtonsJaJp._(_root);
+	@override String content({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。';
 }
 
 // Path: S74_DeleteAccount_Notice
@@ -394,7 +375,7 @@ class _TranslationsS74DeleteAccountNoticeJaJp extends TranslationsS74DeleteAccou
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'アカウント削除の確認';
+	@override String get title => 'アカウント削除確認';
 	@override String get content => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。';
 	@override late final _TranslationsS74DeleteAccountNoticeButtonsJaJp buttons = _TranslationsS74DeleteAccountNoticeButtonsJaJp._(_root);
 }
@@ -406,9 +387,10 @@ class _TranslationsD01MemberRoleIntroJaJp extends TranslationsD01MemberRoleIntro
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'あなたのキャラクター';
+	@override String get title => '今回のキャラクター';
 	@override late final _TranslationsD01MemberRoleIntroButtonsJaJp buttons = _TranslationsD01MemberRoleIntroButtonsJaJp._(_root);
-	@override late final _TranslationsD01MemberRoleIntroDescriptionJaJp description = _TranslationsD01MemberRoleIntroDescriptionJaJp._(_root);
+	@override String content({required Object avatar}) => '今回のタスクでのアイコン${avatar}です。\n記録には${avatar}が表示されます。';
+	@override late final _TranslationsD01MemberRoleIntroRerollJaJp reroll = _TranslationsD01MemberRoleIntroRerollJaJp._(_root);
 }
 
 // Path: D02_Invite_Result
@@ -430,11 +412,6 @@ class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateCon
 	// Translations
 	@override String get title => '設定の確認';
 	@override late final _TranslationsD03TaskCreateConfirmButtonsJaJp buttons = _TranslationsD03TaskCreateConfirmButtonsJaJp._(_root);
-	@override String get label_name => 'タスク名';
-	@override String get label_period => '期間';
-	@override String get label_currency => '通貨';
-	@override String get label_members => '人数';
-	@override String get creating_task => '作成中...';
 }
 
 // Path: D04_CommonUnsaved_Confirm
@@ -456,7 +433,6 @@ class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResu
 
 	// Translations
 	@override String get title => '記録なし';
-	@override late final _TranslationsD05DateJumpNoResultButtonsJaJp buttons = _TranslationsD05DateJumpNoResultButtonsJaJp._(_root);
 	@override String get content => 'この日付の記録は見つかりませんでした。追加しますか？';
 }
 
@@ -467,9 +443,8 @@ class _TranslationsD06SettlementConfirmJaJp extends TranslationsD06SettlementCon
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '清算の確認';
-	@override String get warning_text => '清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。';
-	@override late final _TranslationsD06SettlementConfirmButtonsJaJp buttons = _TranslationsD06SettlementConfirmButtonsJaJp._(_root);
+	@override String get title => '精算確認';
+	@override String get content => '精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。';
 }
 
 // Path: D08_TaskClosed_Confirm
@@ -480,7 +455,6 @@ class _TranslationsD08TaskClosedConfirmJaJp extends TranslationsD08TaskClosedCon
 
 	// Translations
 	@override String get title => 'タスク終了確認';
-	@override late final _TranslationsD08TaskClosedConfirmButtonsJaJp buttons = _TranslationsD08TaskClosedConfirmButtonsJaJp._(_root);
 	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？';
 }
 
@@ -491,7 +465,7 @@ class _TranslationsD09TaskSettingsCurrencyConfirmJaJp extends TranslationsD09Tas
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '決済通貨を変更しますか？';
+	@override String get title => '決済通貨変更';
 	@override String get content => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？';
 }
 
@@ -502,9 +476,8 @@ class _TranslationsD10RecordDeleteConfirmJaJp extends TranslationsD10RecordDelet
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get delete_record_title => '記録を削除？';
-	@override String delete_record_content({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？';
-	@override String get deleted_success => '記録を削除しました';
+	@override String get title => '記録削除確認';
+	@override String content({required Object title, required Object amount}) => '${title} （${amount}）を削除してもよろしいですか？';
 }
 
 // Path: D11_random_result
@@ -514,10 +487,8 @@ class _TranslationsD11RandomResultJaJp extends TranslationsD11RandomResultZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '残額ルーレット当選者';
+	@override String get title => '当選者';
 	@override String get skip => 'スキップ';
-	@override String get winner_reveal => 'あなたです！';
-	@override late final _TranslationsD11RandomResultButtonsJaJp buttons = _TranslationsD11RandomResultButtonsJaJp._(_root);
 }
 
 // Path: D12_logout_confirm
@@ -527,8 +498,8 @@ class _TranslationsD12LogoutConfirmJaJp extends TranslationsD12LogoutConfirmZhTw
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'ログアウトの確認';
-	@override String get description => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。';
+	@override String get title => 'ログアウト確認';
+	@override String get content => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。';
 	@override late final _TranslationsD12LogoutConfirmButtonsJaJp buttons = _TranslationsD12LogoutConfirmButtonsJaJp._(_root);
 }
 
@@ -539,8 +510,7 @@ class _TranslationsD13DeleteAccountConfirmJaJp extends TranslationsD13DeleteAcco
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'アカウントの削除確認';
-	@override late final _TranslationsD13DeleteAccountConfirmButtonsJaJp buttons = _TranslationsD13DeleteAccountConfirmButtonsJaJp._(_root);
+	@override String get title => 'アカウント削除確認';
 	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？';
 }
 
@@ -553,8 +523,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	// Translations
 	@override String get title => '明細編集';
 	@override late final _TranslationsB02SplitExpenseEditButtonsJaJp buttons = _TranslationsB02SplitExpenseEditButtonsJaJp._(_root);
-	@override late final _TranslationsB02SplitExpenseEditLabelJaJp label = _TranslationsB02SplitExpenseEditLabelJaJp._(_root);
-	@override String get item_name_empty => '親項目名を入力してない';
+	@override String get item_name_empty => '親項目名を入力してください';
 	@override late final _TranslationsB02SplitExpenseEditHintJaJp hint = _TranslationsB02SplitExpenseEditHintJaJp._(_root);
 }
 
@@ -565,7 +534,7 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => '割り勘方法を選択';
+	@override String get title => '割り勘方法';
 	@override late final _TranslationsB03SplitMethodEditButtonsJaJp buttons = _TranslationsB03SplitMethodEditButtonsJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditLabelJaJp label = _TranslationsB03SplitMethodEditLabelJaJp._(_root);
 	@override String get mismatch => '一致しません';
@@ -578,9 +547,8 @@ class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'メンバー支払いの統合';
+	@override String get title => '支払い統合';
 	@override late final _TranslationsB04PaymentMergeLabelJaJp label = _TranslationsB04PaymentMergeLabelJaJp._(_root);
-	@override late final _TranslationsB04PaymentMergeButtonsJaJp buttons = _TranslationsB04PaymentMergeButtonsJaJp._(_root);
 }
 
 // Path: B06_payment_info_detail
@@ -590,7 +558,6 @@ class _TranslationsB06PaymentInfoDetailJaJp extends TranslationsB06PaymentInfoDe
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get label_copied => 'コピーしました';
 	@override late final _TranslationsB06PaymentInfoDetailButtonsJaJp buttons = _TranslationsB06PaymentInfoDetailButtonsJaJp._(_root);
 }
 
@@ -602,19 +569,10 @@ class _TranslationsB07PaymentMethodEditJaJp extends TranslationsB07PaymentMethod
 
 	// Translations
 	@override String get title => '資金源を選択';
-	@override String get type_member => 'メンバー立替';
-	@override String get type_prepay => '公費払い';
-	@override String get type_mixed => '混合支払';
-	@override String prepay_balance({required Object amount}) => '公費残高: ${amount}';
-	@override String get err_balance_not_enough => '残高不足';
-	@override String get section_payer => '支払者';
-	@override String get label_amount => '支払金額';
-	@override String get total_label => '合計金額';
-	@override String get total_prepay => '公費払い';
-	@override String get total_advance => '立替合計';
-	@override String get status_balanced => '一致';
-	@override String status_remaining({required Object amount}) => '残り: ${amount}';
-	@override String get msg_auto_fill_prepay => '公費残高を自動入力しました';
+	@override String prepay_balance({required Object amount}) => '前受金残高：${amount}';
+	@override String get payer_member => '支払者';
+	@override late final _TranslationsB07PaymentMethodEditLabelJaJp label = _TranslationsB07PaymentMethodEditLabelJaJp._(_root);
+	@override late final _TranslationsB07PaymentMethodEditStatusJaJp status = _TranslationsB07PaymentMethodEditStatusJaJp._(_root);
 }
 
 // Path: success
@@ -624,7 +582,9 @@ class _TranslationsSuccessJaJp extends TranslationsSuccessZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get saved => '保存しました';
+	@override String get saved => '保存しました。';
+	@override String get deleted => '削除しました。';
+	@override String get copied => 'コピーしました';
 }
 
 // Path: error
@@ -634,6 +594,8 @@ class _TranslationsErrorJaJp extends TranslationsErrorZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
+	@override String get title => 'エラー';
+	@override String unknown({required Object error}) => '不明なエラー：${error}';
 	@override late final _TranslationsErrorDialogJaJp dialog = _TranslationsErrorDialogJaJp._(_root);
 	@override late final _TranslationsErrorMessageJaJp message = _TranslationsErrorMessageJaJp._(_root);
 }
@@ -652,23 +614,40 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get save => '保存';
 	@override String get edit => '編集';
 	@override String get close => '閉じる';
+	@override String get download => 'ダウンロード';
+	@override String get settlement => '精算';
 	@override String get discard => '破棄';
 	@override String get keep_editing => '編集を続行';
 	@override String get refresh => '更新';
 	@override String get ok => 'OK';
 	@override String get retry => 'リトライ';
-	@override String get done => '完成';
+	@override String get done => '完了';
+	@override String get agree => '同意';
+	@override String get decline => '拒否';
+	@override String get add_record => '追加';
 }
 
-// Path: common.error
-class _TranslationsCommonErrorJaJp extends TranslationsCommonErrorZhTw {
-	_TranslationsCommonErrorJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: common.label
+class _TranslationsCommonLabelJaJp extends TranslationsCommonLabelZhTw {
+	_TranslationsCommonLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'エラー';
-	@override String unknown({required Object error}) => '不明なエラー: ${error}';
+	@override String get task_name => 'タスク名';
+	@override String get item_name => '項目名';
+	@override String get sub_item => '子項目名';
+	@override String get amount => '金額';
+	@override String get date => '日付';
+	@override String get currency => '通貨';
+	@override String get split_method => '負担設定';
+	@override String get start_date => '開始日';
+	@override String get end_date => '終了日';
+	@override String get member_count => '参加人数';
+	@override String get period => '期間';
+	@override String get payment_method => '支払方法';
+	@override String get rate => '為替レート';
+	@override String get memo => 'メモ';
 }
 
 // Path: common.category
@@ -761,9 +740,9 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 	// Translations
 	@override String get title => '端数処理';
 	@override late final _TranslationsCommonRemainderRuleRuleJaJp rule = _TranslationsCommonRemainderRuleRuleJaJp._(_root);
-	@override late final _TranslationsCommonRemainderRuleDescriptionJaJp description = _TranslationsCommonRemainderRuleDescriptionJaJp._(_root);
-	@override String message_remainder({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます';
-	@override String message_zero_balance({required Object amount}) => '残額 ${amount} は支払い差額と自動的に相殺されました';
+	@override late final _TranslationsCommonRemainderRuleContentJaJp content = _TranslationsCommonRemainderRuleContentJaJp._(_root);
+	@override String message_remainder({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます';
+	@override String message_zero_balance({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました';
 }
 
 // Path: common.split_method
@@ -776,6 +755,18 @@ class _TranslationsCommonSplitMethodJaJp extends TranslationsCommonSplitMethodZh
 	@override String get even => '均等';
 	@override String get percent => '割合';
 	@override String get exact => '金額指定';
+}
+
+// Path: common.payment_method
+class _TranslationsCommonPaymentMethodJaJp extends TranslationsCommonPaymentMethodZhTw {
+	_TranslationsCommonPaymentMethodJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get member => 'メンバー立替';
+	@override String get prepay => '前受金払い';
+	@override String get mixed => '混合支払';
 }
 
 // Path: common.language
@@ -812,7 +803,7 @@ class _TranslationsCommonPaymentInfoJaJp extends TranslationsCommonPaymentInfoZh
 
 	// Translations
 	@override late final _TranslationsCommonPaymentInfoModeJaJp mode = _TranslationsCommonPaymentInfoModeJaJp._(_root);
-	@override late final _TranslationsCommonPaymentInfoDescriptionJaJp description = _TranslationsCommonPaymentInfoDescriptionJaJp._(_root);
+	@override late final _TranslationsCommonPaymentInfoContentJaJp content = _TranslationsCommonPaymentInfoContentJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoTypeJaJp type = _TranslationsCommonPaymentInfoTypeJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoLabelJaJp label = _TranslationsCommonPaymentInfoLabelJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoHintJaJp hint = _TranslationsCommonPaymentInfoHintJaJp._(_root);
@@ -826,7 +817,7 @@ class _TranslationsCommonPaymentStatusJaJp extends TranslationsCommonPaymentStat
 
 	// Translations
 	@override String get payable => '支払';
-	@override String get receivable => '受取';
+	@override String get refund => '返金';
 }
 
 // Path: common.terms
@@ -851,6 +842,16 @@ class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
 	@override late final _TranslationsCommonShareSettlementJaJp settlement = _TranslationsCommonShareSettlementJaJp._(_root);
 }
 
+// Path: S10_Home_TaskList.label
+class _TranslationsS10HomeTaskListLabelJaJp extends TranslationsS10HomeTaskListLabelZhTw {
+	_TranslationsS10HomeTaskListLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get settlement => '精算済み';
+}
+
 // Path: S11_Invite_Confirm.buttons
 class _TranslationsS11InviteConfirmButtonsJaJp extends TranslationsS11InviteConfirmButtonsZhTw {
 	_TranslationsS11InviteConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -858,9 +859,20 @@ class _TranslationsS11InviteConfirmButtonsJaJp extends TranslationsS11InviteConf
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get confirm => '参加';
-	@override String get cancel => 'キャンセル';
-	@override String get home => 'ホームへ';
+	@override String get join => '参加';
+	@override String get back_task_list => 'タスク一覧へ';
+}
+
+// Path: S11_Invite_Confirm.label
+class _TranslationsS11InviteConfirmLabelJaJp extends TranslationsS11InviteConfirmLabelZhTw {
+	_TranslationsS11InviteConfirmLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get select_ghost => '引き継ぐメンバーを選択';
+	@override String get prepaid => '前受金';
+	@override String get expense => '支出';
 }
 
 // Path: S12_TaskClose_Notice.buttons
@@ -870,7 +882,7 @@ class _TranslationsS12TaskCloseNoticeButtonsJaJp extends TranslationsS12TaskClos
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get close => 'タスク終了';
+	@override String get close_task => 'タスク終了';
 }
 
 // Path: S13_Task_Dashboard.buttons
@@ -880,9 +892,6 @@ class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashbo
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get record => '記録を追加';
-	@override String get settlement => '精算';
-	@override String get download => '記録ダウンロード';
 	@override String get add => '追加';
 }
 
@@ -905,9 +914,9 @@ class _TranslationsS13TaskDashboardLabelJaJp extends TranslationsS13TaskDashboar
 
 	// Translations
 	@override String get total_expense => '総費用';
-	@override String get total_prepay => '総預り金';
+	@override String get total_prepay => '総前受金';
 	@override String get total_expense_personal => '総費用';
-	@override String get total_prepay_personal => '総預り金(立替含)';
+	@override String get total_prepay_personal => '総前受金（立替含）';
 }
 
 // Path: S13_Task_Dashboard.empty
@@ -918,7 +927,7 @@ class _TranslationsS13TaskDashboardEmptyJaJp extends TranslationsS13TaskDashboar
 
 	// Translations
 	@override String get records => '記録がありません';
-	@override String get personal_records => 'この日のあなたに関連する記録はありません';
+	@override String get personal_records => '関連する記録はありません';
 }
 
 // Path: S13_Task_Dashboard.section
@@ -929,8 +938,8 @@ class _TranslationsS13TaskDashboardSectionJaJp extends TranslationsS13TaskDashbo
 
 	// Translations
 	@override String get expense => '支払い通貨';
-	@override String get income => '預り金通貨';
-	@override String get prepay_balance => '預り金残高';
+	@override String get prepay => '前受金通貨';
+	@override String get prepay_balance => '前受金残高';
 	@override String get no_data => 'データなし';
 }
 
@@ -967,8 +976,8 @@ class _TranslationsS15RecordEditTitleJaJp extends TranslationsS15RecordEditTitle
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get add => '記録を追加';
-	@override String get edit => '記録を編集';
+	@override String get add => '記録追加';
+	@override String get edit => '記録編集';
 }
 
 // Path: S15_Record_Edit.buttons
@@ -978,8 +987,6 @@ class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditBut
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get save => '記録を保存';
-	@override String get close => '閉じる';
 	@override String get add_item => '内訳を追加';
 }
 
@@ -1001,7 +1008,7 @@ class _TranslationsS15RecordEditValJaJp extends TranslationsS15RecordEditValZhTw
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get prepay => '前受';
+	@override String get prepay => '前受金';
 	@override String member_paid({required Object name}) => '${name} が立替';
 	@override String get split_details => '内訳分割';
 	@override String split_summary({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担';
@@ -1018,7 +1025,7 @@ class _TranslationsS15RecordEditTabJaJp extends TranslationsS15RecordEditTabZhTw
 
 	// Translations
 	@override String get expense => '費用';
-	@override String get income => '前受';
+	@override String get prepay => '前受金';
 }
 
 // Path: S15_Record_Edit.rate_dialog
@@ -1029,7 +1036,7 @@ class _TranslationsS15RecordEditRateDialogJaJp extends TranslationsS15RecordEdit
 
 	// Translations
 	@override String get title => '為替レートの出典';
-	@override String get message => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。';
+	@override String get content => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。';
 }
 
 // Path: S15_Record_Edit.label
@@ -1039,13 +1046,7 @@ class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabel
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get date => '日付';
-	@override String get title => '項目名';
-	@override String get payment_method => '支払方法';
-	@override String get amount => '金額';
 	@override String rate_with_base({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
-	@override String get rate => '為替レート';
-	@override String get memo => 'メモ';
 }
 
 // Path: S15_Record_Edit.hint
@@ -1058,17 +1059,6 @@ class _TranslationsS15RecordEditHintJaJp extends TranslationsS15RecordEditHintZh
 	@override late final _TranslationsS15RecordEditHintCategoryJaJp category = _TranslationsS15RecordEditHintCategoryJaJp._(_root);
 	@override String item({required Object category}) => '例：${category}';
 	@override String get memo => '例：補足事項';
-}
-
-// Path: S16_TaskCreate_Edit.buttons
-class _TranslationsS16TaskCreateEditButtonsJaJp extends TranslationsS16TaskCreateEditButtonsZhTw {
-	_TranslationsS16TaskCreateEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get save => '保存';
-	@override String get done => '完了';
 }
 
 // Path: S16_TaskCreate_Edit.section
@@ -1090,13 +1080,7 @@ class _TranslationsS16TaskCreateEditLabelJaJp extends TranslationsS16TaskCreateE
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get name => 'タスク名';
 	@override String name_counter({required Object current, required Object max}) => '${current}/${max}';
-	@override String get start_date => '開始日';
-	@override String get end_date => '終了日';
-	@override String get currency => '通貨';
-	@override String get member_count => '参加人数';
-	@override String get date => '日付';
 }
 
 // Path: S16_TaskCreate_Edit.hint
@@ -1116,9 +1100,8 @@ class _TranslationsS17TaskLockedButtonsJaJp extends TranslationsS17TaskLockedBut
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get download => '記録をダウンロード';
 	@override String get notify_members => 'メンバーに通知';
-	@override String get view_payment_details => '支払/受取口座を確認';
+	@override String get view_payment_info => '受取口座確認';
 }
 
 // Path: S17_Task_Locked.section
@@ -1154,7 +1137,7 @@ class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExpo
 	@override String get pending => '未処理';
 	@override String get fund_analysis => '資金および端数';
 	@override String get total_expense => '総支出';
-	@override String get total_income => '総預かり金';
+	@override String get total_prepay => '総前受金';
 	@override String get remainder_buffer => '端数合計';
 	@override String get remainder_absorbed_by => '端数受取人';
 	@override String get transaction_details => '取引明細';
@@ -1166,7 +1149,7 @@ class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExpo
 	@override String get rate => '為替レート';
 	@override String get base_amount => '基準通貨金額';
 	@override String get net_remainder => '端数';
-	@override String get pool => '預かり金';
+	@override String get pool => '前受金';
 	@override String get mixed => '混合支払い';
 }
 
@@ -1177,7 +1160,7 @@ class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30Settle
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get next => '受取設定';
+	@override String get set_payment_info => '受取設定';
 }
 
 // Path: S30_settlement_confirm.steps
@@ -1198,7 +1181,7 @@ class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30Settle
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get random_reveal => '端数は決済確定後に公開されます！';
+	@override String get random_reveal => '端数は決済確定後に公開されます。';
 }
 
 // Path: S30_settlement_confirm.list_item
@@ -1222,8 +1205,7 @@ class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31Se
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get settle => '精算する';
-	@override String get prev_step => '前のステップに戻る';
+	@override String get prev_step => '前へ戻る';
 }
 
 // Path: S32_settlement_result.buttons
@@ -1233,8 +1215,8 @@ class _TranslationsS32SettlementResultButtonsJaJp extends TranslationsS32Settlem
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get share => '精算通知を送信';
-	@override String get back => 'タスクに戻る';
+	@override String get share => '通知送信';
+	@override String get back_task_dashboard => 'タスクに戻る';
 }
 
 // Path: S50_Onboarding_Consent.buttons
@@ -1244,7 +1226,7 @@ class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50Onboar
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get agree => 'はじめる';
+	@override String get start => 'はじめる';
 }
 
 // Path: S50_Onboarding_Consent.content
@@ -1254,18 +1236,8 @@ class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50Onboar
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => '分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、';
+	@override String get prefix => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、';
 	@override String get suffix => ' に同意したものとみなされます。';
-}
-
-// Path: S51_Onboarding_Name.buttons
-class _TranslationsS51OnboardingNameButtonsJaJp extends TranslationsS51OnboardingNameButtonsZhTw {
-	_TranslationsS51OnboardingNameButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get next => '設定';
 }
 
 // Path: S52_TaskSettings_Log.buttons
@@ -1275,7 +1247,7 @@ class _TranslationsS52TaskSettingsLogButtonsJaJp extends TranslationsS52TaskSett
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get export_csv => 'CSVエクスポート';
+	@override String get export_csv => 'CSV出力';
 }
 
 // Path: S52_TaskSettings_Log.csv_header
@@ -1332,7 +1304,17 @@ class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53Task
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get add => 'メンバー追加';
+	@override String get add_member => 'メンバー追加';
+}
+
+// Path: S53_TaskSettings_Members.label
+class _TranslationsS53TaskSettingsMembersLabelJaJp extends TranslationsS53TaskSettingsMembersLabelZhTw {
+	_TranslationsS53TaskSettingsMembersLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get default_ratio => 'デフォルト比率';
 }
 
 // Path: S70_System_Settings.section
@@ -1360,18 +1342,7 @@ class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettin
 	@override String get terms => '利用規約';
 	@override String get privacy => 'プライバシーポリシー';
 	@override String get payment_info => '支払/受取口座設定';
-	@override String get delete_account => 'アカウントを削除';
-}
-
-// Path: S72_TermsUpdate.buttons
-class _TranslationsS72TermsUpdateButtonsJaJp extends TranslationsS72TermsUpdateButtonsZhTw {
-	_TranslationsS72TermsUpdateButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get agree => '同意する';
-	@override String get decline => '同意しない';
+	@override String get delete_account => 'アカウント削除';
 }
 
 // Path: S74_DeleteAccount_Notice.buttons
@@ -1381,7 +1352,7 @@ class _TranslationsS74DeleteAccountNoticeButtonsJaJp extends TranslationsS74Dele
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get delete => 'アカウントを削除';
+	@override String get delete_account => 'アカウント削除';
 }
 
 // Path: D01_MemberRole_Intro.buttons
@@ -1395,16 +1366,14 @@ class _TranslationsD01MemberRoleIntroButtonsJaJp extends TranslationsD01MemberRo
 	@override String get enter => 'タスクへ進む';
 }
 
-// Path: D01_MemberRole_Intro.description
-class _TranslationsD01MemberRoleIntroDescriptionJaJp extends TranslationsD01MemberRoleIntroDescriptionZhTw {
-	_TranslationsD01MemberRoleIntroDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: D01_MemberRole_Intro.reroll
+class _TranslationsD01MemberRoleIntroRerollJaJp extends TranslationsD01MemberRoleIntroRerollZhTw {
+	_TranslationsD01MemberRoleIntroRerollJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String content({required Object avatar}) => 'これが今回のタスクでのあなたのアイコン${avatar}です。\n割り勘の記録には${avatar}が表示されますよ！';
-	@override String get reroll_left => 'あと1回変更可';
-	@override String get reroll_empty => '変更不可';
+	@override String get empty => '変更不可';
 }
 
 // Path: D03_TaskCreate_Confirm.buttons
@@ -1414,49 +1383,7 @@ class _TranslationsD03TaskCreateConfirmButtonsJaJp extends TranslationsD03TaskCr
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get confirm => '確認';
-	@override String get back => '編集に戻る';
-}
-
-// Path: D05_DateJump_NoResult.buttons
-class _TranslationsD05DateJumpNoResultButtonsJaJp extends TranslationsD05DateJumpNoResultButtonsZhTw {
-	_TranslationsD05DateJumpNoResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get cancel => '戻る';
-	@override String get add => '記録を追加';
-}
-
-// Path: D06_settlement_confirm.buttons
-class _TranslationsD06SettlementConfirmButtonsJaJp extends TranslationsD06SettlementConfirmButtonsZhTw {
-	_TranslationsD06SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get confirm => '清算する';
-}
-
-// Path: D08_TaskClosed_Confirm.buttons
-class _TranslationsD08TaskClosedConfirmButtonsJaJp extends TranslationsD08TaskClosedConfirmButtonsZhTw {
-	_TranslationsD08TaskClosedConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get confirm => '確認';
-}
-
-// Path: D11_random_result.buttons
-class _TranslationsD11RandomResultButtonsJaJp extends TranslationsD11RandomResultButtonsZhTw {
-	_TranslationsD11RandomResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get close => 'OK';
+	@override String get back_edit => '編集に戻る';
 }
 
 // Path: D12_logout_confirm.buttons
@@ -1466,17 +1393,7 @@ class _TranslationsD12LogoutConfirmButtonsJaJp extends TranslationsD12LogoutConf
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get logout => 'ログアウトする';
-}
-
-// Path: D13_DeleteAccount_Confirm.buttons
-class _TranslationsD13DeleteAccountConfirmButtonsJaJp extends TranslationsD13DeleteAccountConfirmButtonsZhTw {
-	_TranslationsD13DeleteAccountConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get confirm => '確認';
+	@override String get logout => 'ログアウト';
 }
 
 // Path: B02_SplitExpense_Edit.buttons
@@ -1486,18 +1403,7 @@ class _TranslationsB02SplitExpenseEditButtonsJaJp extends TranslationsB02SplitEx
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get save => '決定';
-}
-
-// Path: B02_SplitExpense_Edit.label
-class _TranslationsB02SplitExpenseEditLabelJaJp extends TranslationsB02SplitExpenseEditLabelZhTw {
-	_TranslationsB02SplitExpenseEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get sub_item => '子項目名';
-	@override String get split_method => '負担設定';
+	@override String get confirm_split => '決定';
 }
 
 // Path: B02_SplitExpense_Edit.hint
@@ -1517,7 +1423,7 @@ class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMet
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get adjust_weight => '比率を調整';
+	@override String get adjust_weight => '比率調整';
 }
 
 // Path: B03_SplitMethod_Edit.label
@@ -1541,17 +1447,6 @@ class _TranslationsB04PaymentMergeLabelJaJp extends TranslationsB04PaymentMergeL
 	@override String get merge_amount => '統合金額';
 }
 
-// Path: B04_payment_merge.buttons
-class _TranslationsB04PaymentMergeButtonsJaJp extends TranslationsB04PaymentMergeButtonsZhTw {
-	_TranslationsB04PaymentMergeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get cancel => 'キャンセル';
-	@override String get confirm => '統合';
-}
-
 // Path: B06_payment_info_detail.buttons
 class _TranslationsB06PaymentInfoDetailButtonsJaJp extends TranslationsB06PaymentInfoDetailButtonsZhTw {
 	_TranslationsB06PaymentInfoDetailButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1560,6 +1455,31 @@ class _TranslationsB06PaymentInfoDetailButtonsJaJp extends TranslationsB06Paymen
 
 	// Translations
 	@override String get copy => 'コピー';
+}
+
+// Path: B07_PaymentMethod_Edit.label
+class _TranslationsB07PaymentMethodEditLabelJaJp extends TranslationsB07PaymentMethodEditLabelZhTw {
+	_TranslationsB07PaymentMethodEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get amount => '支払金額';
+	@override String get total_expense => '合計金額';
+	@override String get prepay => '前受金払い';
+	@override String get total_advance => '立替合計';
+}
+
+// Path: B07_PaymentMethod_Edit.status
+class _TranslationsB07PaymentMethodEditStatusJaJp extends TranslationsB07PaymentMethodEditStatusZhTw {
+	_TranslationsB07PaymentMethodEditStatusJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get not_enough => '残高不足';
+	@override String get balanced => '一致';
+	@override String remaining({required Object amount}) => '残り ${amount}';
 }
 
 // Path: error.dialog
@@ -1595,10 +1515,10 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String zero({required Object key}) => '${key}は0にできません。';
 	@override String get amount_not_enough => '残額が不足しています。';
 	@override String get amount_mismatch => '金額が一致しません。';
-	@override String get income_is_used => 'この金額は既に使用されているか、残高が不足しています。';
+	@override String get prepay_is_used => 'この金額は既に使用されているか、残高が不足しています。';
 	@override String get data_is_used => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 	@override String get permission_denied => '権限がありません。';
-	@override String get network_error => 'ネットワーク接続に失敗しました。接続を確認してください。';
+	@override String get network_error => 'ネットワーク接続に失敗しました。通信状況をご確認ください。';
 	@override String get data_not_found => 'データが見つかりませんでした。もう一度お試しください。';
 	@override String enter_first({required Object key}) => '${key}を先に入力してください。';
 	@override String get export_failed => 'レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。';
@@ -1610,14 +1530,14 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get invalid_char => '無効な文字が含まれています。';
 	@override String get invalid_code => '招待コードが無効です。リンクが正しいか確認してください。';
 	@override String get expired_code => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
-	@override String get task_full => '定員オーバーです（上限15名）。参加できません';
+	@override String get task_full => '定員オーバーです（上限15名）。参加できません。';
 	@override String get auth_required => '認証に失敗しました。アプリを再起動してください。';
 	@override String get init_failed => '読み込みに失敗しました。もう一度お試しください。';
 	@override String get unauthorized => 'ログインしていません。再度ログインしてください。';
-	@override String get task_locked => '精算済みのた​​め、データを変更できません。';
+	@override String get task_locked => '精算済みのため、データを変更できません。';
 	@override String get timeout => 'タイムアウトしました。後でもう一度お試しください。';
 	@override String get quota_exceeded => '利用制限に達しました。しばらく経ってからお試しください。';
-	@override String get join_failed => 'タスクに参加できませんでした。，しばらく経ってからお試しください。';
+	@override String get join_failed => 'タスクに参加できませんでした。しばらく経ってからお試しください。';
 	@override String get invite_create_failed => '招待コードを作成できませんでした。しばらく経ってからお試しください。';
 	@override String get data_conflict => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
 	@override String get task_status_error => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。';
@@ -1639,15 +1559,15 @@ class _TranslationsCommonRemainderRuleRuleJaJp extends TranslationsCommonRemaind
 	@override String get member => '指定';
 }
 
-// Path: common.remainder_rule.description
-class _TranslationsCommonRemainderRuleDescriptionJaJp extends TranslationsCommonRemainderRuleDescriptionZhTw {
-	_TranslationsCommonRemainderRuleDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: common.remainder_rule.content
+class _TranslationsCommonRemainderRuleContentJaJp extends TranslationsCommonRemainderRuleContentZhTw {
+	_TranslationsCommonRemainderRuleContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
 	@override String remainder({required Object amount}) => '端数 ${amount} は、為替レートの換算や割り勘の計算で生じる差額です。';
-	@override String get random => '割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。';
+	@override String get random => '端数を負担する一人を、システムがランダムに選びます。';
 	@override String get order => 'メンバーの参加順に、端数がなくなるまで順番に配分します。';
 	@override String get member => '特定のメンバーを指定し、常にその人が端数を負担するようにします。';
 }
@@ -1659,13 +1579,13 @@ class _TranslationsCommonPaymentInfoModeJaJp extends TranslationsCommonPaymentIn
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get private => '直接連絡してください';
+	@override String get private => '個別連絡';
 	@override String get public => '支払い情報を共有';
 }
 
-// Path: common.payment_info.description
-class _TranslationsCommonPaymentInfoDescriptionJaJp extends TranslationsCommonPaymentInfoDescriptionZhTw {
-	_TranslationsCommonPaymentInfoDescriptionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: common.payment_info.content
+class _TranslationsCommonPaymentInfoContentJaJp extends TranslationsCommonPaymentInfoContentZhTw {
+	_TranslationsCommonPaymentInfoContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
@@ -1732,7 +1652,7 @@ class _TranslationsCommonShareInviteJaJp extends TranslationsCommonShareInviteZh
 
 	// Translations
 	@override String get subject => 'Iron Split タスク招待';
-	@override String message({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}';
+	@override String content({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」への招待です。\n招待コード：${code}\nリンク：${link}';
 }
 
 // Path: common.share.settlement
@@ -1743,7 +1663,7 @@ class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSett
 
 	// Translations
 	@override String get subject => 'Iron Split タスク精算通知';
-	@override String message({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}';
+	@override String content({required Object taskName, required Object link}) => '精算が完了しました。\nIron Split アプリを開き、「${taskName}」の支払金額をご確認ください。\nリンク：${link}';
 }
 
 // Path: S15_Record_Edit.hint.category
@@ -1756,7 +1676,7 @@ class _TranslationsS15RecordEditHintCategoryJaJp extends TranslationsS15RecordEd
 	@override String get food => '夕食';
 	@override String get transport => '交通費';
 	@override String get shopping => 'お土産';
-	@override String get entertainment => '映画チケット';
+	@override String get entertainment => 'チケット';
 	@override String get accommodation => '宿泊費';
 	@override String get others => 'その他費用';
 }
@@ -1769,7 +1689,7 @@ class _TranslationsErrorDialogTaskFullJaJp extends TranslationsErrorDialogTaskFu
 
 	// Translations
 	@override String get title => 'タスク満員';
-	@override String message({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。';
+	@override String content({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。リーダーへ連絡してください。';
 }
 
 // Path: error.dialog.expired_code
@@ -1780,7 +1700,7 @@ class _TranslationsErrorDialogExpiredCodeJaJp extends TranslationsErrorDialogExp
 
 	// Translations
 	@override String get title => '招待コード期限切れ';
-	@override String message({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。';
+	@override String content({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。リーダーに再発行を依頼してください。';
 }
 
 // Path: error.dialog.invalid_code
@@ -1791,7 +1711,7 @@ class _TranslationsErrorDialogInvalidCodeJaJp extends TranslationsErrorDialogInv
 
 	// Translations
 	@override String get title => '無効な招待リンク';
-	@override String get message => '無効な招待リンクです。';
+	@override String get content => '無効な招待リンクです。';
 }
 
 // Path: error.dialog.auth_required
@@ -1802,7 +1722,7 @@ class _TranslationsErrorDialogAuthRequiredJaJp extends TranslationsErrorDialogAu
 
 	// Translations
 	@override String get title => 'ログインが必要';
-	@override String get message => 'タスクに参加するにはログインしてください。';
+	@override String get content => 'タスク参加にはログインが必要です。';
 }
 
 // Path: error.dialog.already_in_task
@@ -1813,7 +1733,7 @@ class _TranslationsErrorDialogAlreadyInTaskJaJp extends TranslationsErrorDialogA
 
 	// Translations
 	@override String get title => '既に参加済';
-	@override String get message => '既にこのタスクのメンバーです。';
+	@override String get content => '既にこのタスクのメンバーです。';
 }
 
 // Path: error.dialog.unknown
@@ -1824,7 +1744,7 @@ class _TranslationsErrorDialogUnknownJaJp extends TranslationsErrorDialogUnknown
 
 	// Translations
 	@override String get title => 'エラー';
-	@override String get message => '予期せぬエラーが発生しました。';
+	@override String get content => '予期せぬエラーが発生しました。';
 }
 
 // Path: error.dialog.delete_failed
@@ -1835,7 +1755,7 @@ class _TranslationsErrorDialogDeleteFailedJaJp extends TranslationsErrorDialogDe
 
 	// Translations
 	@override String get title => '削除失敗';
-	@override String get message => '削除に失敗しました。後でもう一度お試しください。';
+	@override String get content => '削除に失敗しました。後でもう一度お試しください。';
 }
 
 // Path: error.dialog.member_delete_failed
@@ -1846,7 +1766,7 @@ class _TranslationsErrorDialogMemberDeleteFailedJaJp extends TranslationsErrorDi
 
 	// Translations
 	@override String get title => 'メンバー削除エラー';
-	@override String get message => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
+	@override String get content => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。';
 }
 
 // Path: error.dialog.data_conflict
@@ -1857,7 +1777,7 @@ class _TranslationsErrorDialogDataConflictJaJp extends TranslationsErrorDialogDa
 
 	// Translations
 	@override String get title => 'データ更新あり';
-	@override String get message => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
+	@override String get content => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。';
 }
 
 /// The flat map containing all translations for locale <ja-JP>.
@@ -1875,14 +1795,31 @@ extension on TranslationsJaJp {
 			'common.buttons.save' => '保存',
 			'common.buttons.edit' => '編集',
 			'common.buttons.close' => '閉じる',
+			'common.buttons.download' => 'ダウンロード',
+			'common.buttons.settlement' => '精算',
 			'common.buttons.discard' => '破棄',
 			'common.buttons.keep_editing' => '編集を続行',
 			'common.buttons.refresh' => '更新',
 			'common.buttons.ok' => 'OK',
 			'common.buttons.retry' => 'リトライ',
-			'common.buttons.done' => '完成',
-			'common.error.title' => 'エラー',
-			'common.error.unknown' => ({required Object error}) => '不明なエラー: ${error}',
+			'common.buttons.done' => '完了',
+			'common.buttons.agree' => '同意',
+			'common.buttons.decline' => '拒否',
+			'common.buttons.add_record' => '追加',
+			'common.label.task_name' => 'タスク名',
+			'common.label.item_name' => '項目名',
+			'common.label.sub_item' => '子項目名',
+			'common.label.amount' => '金額',
+			'common.label.date' => '日付',
+			'common.label.currency' => '通貨',
+			'common.label.split_method' => '負担設定',
+			'common.label.start_date' => '開始日',
+			'common.label.end_date' => '終了日',
+			'common.label.member_count' => '参加人数',
+			'common.label.period' => '期間',
+			'common.label.payment_method' => '支払方法',
+			'common.label.rate' => '為替レート',
+			'common.label.memo' => 'メモ',
 			'common.category.food' => '食事',
 			'common.category.transport' => '交通',
 			'common.category.shopping' => '買い物',
@@ -1941,15 +1878,18 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.rule.random' => 'ランダム',
 			'common.remainder_rule.rule.order' => '順番',
 			'common.remainder_rule.rule.member' => '指定',
-			'common.remainder_rule.description.remainder' => ({required Object amount}) => '端数 ${amount} は、為替レートの換算や割り勘の計算で生じる差額です。',
-			'common.remainder_rule.description.random' => '割り勘の端数を負担するラッキーな一人を、システムがランダムに選びます。',
-			'common.remainder_rule.description.order' => 'メンバーの参加順に、端数がなくなるまで順番に配分します。',
-			'common.remainder_rule.description.member' => '特定のメンバーを指定し、常にその人が端数を負担するようにします。',
-			'common.remainder_rule.message_remainder' => ({required Object amount}) => '残額 ${amount} は残高ポットに保存され、精算時に分配されます',
-			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '残額 ${amount} は支払い差額と自動的に相殺されました',
+			'common.remainder_rule.content.remainder' => ({required Object amount}) => '端数 ${amount} は、為替レートの換算や割り勘の計算で生じる差額です。',
+			'common.remainder_rule.content.random' => '端数を負担する一人を、システムがランダムに選びます。',
+			'common.remainder_rule.content.order' => 'メンバーの参加順に、端数がなくなるまで順番に配分します。',
+			'common.remainder_rule.content.member' => '特定のメンバーを指定し、常にその人が端数を負担するようにします。',
+			'common.remainder_rule.message_remainder' => ({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます',
+			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました',
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '割合',
 			'common.split_method.exact' => '金額指定',
+			'common.payment_method.member' => 'メンバー立替',
+			'common.payment_method.prepay' => '前受金払い',
+			'common.payment_method.mixed' => '混合支払',
 			'common.language.title' => '言語設定',
 			'common.language.zh_TW' => '繁体字中国語',
 			'common.language.en_US' => '英語',
@@ -1958,10 +1898,10 @@ extension on TranslationsJaJp {
 			'common.theme.system' => 'システム設定',
 			'common.theme.light' => 'ライトモード',
 			'common.theme.dark' => 'ダークモード',
-			'common.payment_info.mode.private' => '直接連絡してください',
+			'common.payment_info.mode.private' => '個別連絡',
 			'common.payment_info.mode.public' => '支払い情報を共有',
-			'common.payment_info.description.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
-			'common.payment_info.description.public' => '支払い情報をメンバーに表示します',
+			'common.payment_info.content.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
+			'common.payment_info.content.public' => '支払い情報をメンバーに表示します',
 			'common.payment_info.type.cash' => '現金',
 			'common.payment_info.type.bank' => '銀行振込',
 			'common.payment_info.type.apps' => '決済アプリ',
@@ -1974,24 +1914,21 @@ extension on TranslationsJaJp {
 			'common.payment_info.hint.app_name' => '例：PayPay',
 			'common.payment_info.hint.app_link' => '例：paypay-id-123',
 			'common.payment_status.payable' => '支払',
-			'common.payment_status.receivable' => '受取',
+			'common.payment_status.refund' => '返金',
 			'common.terms.label.terms' => '利用規約',
 			'common.terms.label.privacy' => 'プライバシーポリシー',
 			'common.terms.label.both' => '法的条項',
 			'common.terms.and' => 'と',
 			'common.share.invite.subject' => 'Iron Split タスク招待',
-			'common.share.invite.message' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」に参加しよう！\n招待コード：${code}\n連結：${link}',
+			'common.share.invite.content' => ({required Object taskName, required Object code, required Object link}) => 'Iron Split タスク「${taskName}」への招待です。\n招待コード：${code}\nリンク：${link}',
 			'common.share.settlement.subject' => 'Iron Split タスク精算通知',
-			'common.share.settlement.message' => ({required Object taskName, required Object link}) => '精算が完了しました！\nIton Splitアプリを開いて「${taskName}」支払い金額をご確認ください。\nリンク：${link}',
-			'common.error_prefix' => ({required Object message}) => 'エラー: ${message}',
-			'common.please_login' => 'ログインしてください',
+			'common.share.settlement.content' => ({required Object taskName, required Object link}) => '精算が完了しました。\nIron Split アプリを開き、「${taskName}」の支払金額をご確認ください。\nリンク：${link}',
 			'common.preparing' => '準備中...',
 			'common.me' => '自分',
 			'common.required' => '必須',
 			'common.member_prefix' => 'メンバー',
 			'common.no_record' => '記録なし',
 			'common.today' => '今日',
-			'common.untitled' => '無題',
 			'log_action.create_task' => 'タスク作成',
 			'log_action.update_settings' => '設定更新',
 			'log_action.add_member' => 'メンバー追加',
@@ -2002,50 +1939,38 @@ extension on TranslationsJaJp {
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
-			'S10_Home_TaskList.title' => 'マイタスク',
+			'S10_Home_TaskList.title' => 'タスク一覧',
 			'S10_Home_TaskList.tab_in_progress' => '進行中',
 			'S10_Home_TaskList.tab_completed' => '完了済',
 			'S10_Home_TaskList.empty_in_progress' => '進行中のタスクはありません',
 			'S10_Home_TaskList.empty_completed' => '完了したタスクはありません',
 			'S10_Home_TaskList.date_tbd' => '日付未定',
-			'S10_Home_TaskList.delete_confirm_title' => '削除の確認',
-			'S10_Home_TaskList.delete_confirm_content' => 'このタスクを削除してもよろしいですか？',
-			'S10_Home_TaskList.label_settlement' => '精算済み',
+			'S10_Home_TaskList.label.settlement' => '精算済み',
 			'S11_Invite_Confirm.title' => 'タスクに参加',
-			'S11_Invite_Confirm.subtitle' => '以下のタスクに招待されました：',
-			'S11_Invite_Confirm.buttons.confirm' => '参加',
-			'S11_Invite_Confirm.buttons.cancel' => 'キャンセル',
-			'S11_Invite_Confirm.buttons.home' => 'ホームへ',
-			'S11_Invite_Confirm.loading_invite' => '招待状を読み込み中...',
-			'S11_Invite_Confirm.join_failed_title' => 'タスクに参加できません',
-			'S11_Invite_Confirm.identity_match_title' => 'あなたは以下のメンバーですか？',
-			'S11_Invite_Confirm.identity_match_desc' => 'このタスクには事前に作成されたメンバーがいます。もしあなたがいれば、名前を選択してアカウントを連携してください。そうでなければ、新規に参加してください。',
-			'S11_Invite_Confirm.status_linking' => '「アカウント連携」で参加します',
-			'S11_Invite_Confirm.status_new_member' => '「新規メンバー」として参加します',
-			'S11_Invite_Confirm.label_select_ghost' => '引き継ぐメンバーを選択',
-			'S11_Invite_Confirm.label_prepaid' => '立替',
-			'S11_Invite_Confirm.label_expense' => '支出',
+			'S11_Invite_Confirm.subtitle' => '以下のタスクへの招待',
+			'S11_Invite_Confirm.buttons.join' => '参加',
+			'S11_Invite_Confirm.buttons.back_task_list' => 'タスク一覧へ',
+			'S11_Invite_Confirm.label.select_ghost' => '引き継ぐメンバーを選択',
+			'S11_Invite_Confirm.label.prepaid' => '前受金',
+			'S11_Invite_Confirm.label.expense' => '支出',
 			'S12_TaskClose_Notice.title' => 'タスク終了',
-			'S12_TaskClose_Notice.buttons.close' => 'タスク終了',
-			'S12_TaskClose_Notice.content' => 'このタスクをクローズすると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
+			'S12_TaskClose_Notice.buttons.close_task' => 'タスク終了',
+			'S12_TaskClose_Notice.content' => 'このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
 			'S13_Task_Dashboard.title' => 'ダッシュボード',
-			'S13_Task_Dashboard.buttons.record' => '記録を追加',
-			'S13_Task_Dashboard.buttons.settlement' => '精算',
-			'S13_Task_Dashboard.buttons.download' => '記録ダウンロード',
 			'S13_Task_Dashboard.buttons.add' => '追加',
 			'S13_Task_Dashboard.tab.group' => 'グループ',
 			'S13_Task_Dashboard.tab.personal' => '個人',
 			'S13_Task_Dashboard.label.total_expense' => '総費用',
-			'S13_Task_Dashboard.label.total_prepay' => '総預り金',
+			'S13_Task_Dashboard.label.total_prepay' => '総前受金',
 			'S13_Task_Dashboard.label.total_expense_personal' => '総費用',
-			'S13_Task_Dashboard.label.total_prepay_personal' => '総預り金(立替含)',
+			'S13_Task_Dashboard.label.total_prepay_personal' => '総前受金（立替含）',
 			'S13_Task_Dashboard.empty.records' => '記録がありません',
-			'S13_Task_Dashboard.empty.personal_records' => 'この日のあなたに関連する記録はありません',
+			'S13_Task_Dashboard.empty.personal_records' => '関連する記録はありません',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
-			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
+			'S13_Task_Dashboard.dialog_balance_detail' => '通貨別収支明細',
 			'S13_Task_Dashboard.section.expense' => '支払い通貨',
-			'S13_Task_Dashboard.section.income' => '預り金通貨',
-			'S13_Task_Dashboard.section.prepay_balance' => '預り金残高',
+			'S13_Task_Dashboard.section.prepay' => '前受金通貨',
+			'S13_Task_Dashboard.section.prepay_balance' => '前受金残高',
 			'S13_Task_Dashboard.section.no_data' => 'データなし',
 			'S14_Task_Settings.title' => 'タスク設定',
 			'S14_Task_Settings.section.task_name' => 'タスク名',
@@ -2056,14 +1981,12 @@ extension on TranslationsJaJp {
 			'S14_Task_Settings.menu.member_settings' => 'メンバー設定',
 			'S14_Task_Settings.menu.history' => '履歴',
 			'S14_Task_Settings.menu.close_task' => 'タスク終了',
-			'S15_Record_Edit.title.add' => '記録を追加',
-			'S15_Record_Edit.title.edit' => '記録を編集',
-			'S15_Record_Edit.buttons.save' => '記録を保存',
-			'S15_Record_Edit.buttons.close' => '閉じる',
+			'S15_Record_Edit.title.add' => '記録追加',
+			'S15_Record_Edit.title.edit' => '記録編集',
 			'S15_Record_Edit.buttons.add_item' => '内訳を追加',
 			'S15_Record_Edit.section.split' => '分担情報',
 			'S15_Record_Edit.section.items' => '内訳分割',
-			'S15_Record_Edit.val.prepay' => '前受',
+			'S15_Record_Edit.val.prepay' => '前受金',
 			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} が立替',
 			'S15_Record_Edit.val.split_details' => '内訳分割',
 			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担',
@@ -2071,50 +1994,33 @@ extension on TranslationsJaJp {
 			'S15_Record_Edit.val.split_remaining' => '残額',
 			'S15_Record_Edit.val.mock_note' => '内訳の説明',
 			'S15_Record_Edit.tab.expense' => '費用',
-			'S15_Record_Edit.tab.income' => '前受',
-			'S15_Record_Edit.base_card_title' => '残額（Base）',
-			'S15_Record_Edit.type_income_title' => '前受金',
-			'S15_Record_Edit.base_card_title_expense' => '残額（Base）',
-			'S15_Record_Edit.base_card_title_income' => '資金元（入金者）',
+			'S15_Record_Edit.tab.prepay' => '前受金',
+			'S15_Record_Edit.base_card' => '残額',
+			'S15_Record_Edit.type_prepay' => '前受金',
 			'S15_Record_Edit.payer_multiple' => '複数人',
 			'S15_Record_Edit.rate_dialog.title' => '為替レートの出典',
-			'S15_Record_Edit.rate_dialog.message' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
-			'S15_Record_Edit.label.date' => '日付',
-			'S15_Record_Edit.label.title' => '項目名',
-			'S15_Record_Edit.label.payment_method' => '支払方法',
-			'S15_Record_Edit.label.amount' => '金額',
+			'S15_Record_Edit.rate_dialog.content' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
 			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
-			'S15_Record_Edit.label.rate' => '為替レート',
-			'S15_Record_Edit.label.memo' => 'メモ',
 			'S15_Record_Edit.hint.category.food' => '夕食',
 			'S15_Record_Edit.hint.category.transport' => '交通費',
 			'S15_Record_Edit.hint.category.shopping' => 'お土産',
-			'S15_Record_Edit.hint.category.entertainment' => '映画チケット',
+			'S15_Record_Edit.hint.category.entertainment' => 'チケット',
 			'S15_Record_Edit.hint.category.accommodation' => '宿泊費',
 			'S15_Record_Edit.hint.category.others' => 'その他費用',
 			'S15_Record_Edit.hint.item' => ({required Object category}) => '例：${category}',
 			'S15_Record_Edit.hint.memo' => '例：補足事項',
 			'S16_TaskCreate_Edit.title' => 'タスク作成',
-			'S16_TaskCreate_Edit.buttons.save' => '保存',
-			'S16_TaskCreate_Edit.buttons.done' => '完了',
 			'S16_TaskCreate_Edit.section.task_name' => 'タスク名',
 			'S16_TaskCreate_Edit.section.task_period' => 'タスク期間',
 			'S16_TaskCreate_Edit.section.settlement' => '精算設定',
-			'S16_TaskCreate_Edit.label.name' => 'タスク名',
 			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S16_TaskCreate_Edit.label.start_date' => '開始日',
-			'S16_TaskCreate_Edit.label.end_date' => '終了日',
-			'S16_TaskCreate_Edit.label.currency' => '通貨',
-			'S16_TaskCreate_Edit.label.member_count' => '参加人数',
-			'S16_TaskCreate_Edit.label.date' => '日付',
 			'S16_TaskCreate_Edit.hint.name' => '例：東京5日間の旅',
-			'S17_Task_Locked.buttons.download' => '記録をダウンロード',
 			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
-			'S17_Task_Locked.buttons.view_payment_details' => '支払/受取口座を確認',
+			'S17_Task_Locked.buttons.view_payment_info' => '受取口座確認',
 			'S17_Task_Locked.section.pending' => '未完了',
 			'S17_Task_Locked.section.cleared' => '完了',
 			'S17_Task_Locked.retention_notice' => ({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。',
-			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => 'は ${name} が負担',
+			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => '${name} が負担',
 			'S17_Task_Locked.export.report_info' => 'レポート情報',
 			'S17_Task_Locked.export.task_name' => 'タスク名',
 			'S17_Task_Locked.export.export_time' => 'レポート作成日時',
@@ -2130,7 +2036,7 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.export.pending' => '未処理',
 			'S17_Task_Locked.export.fund_analysis' => '資金および端数',
 			'S17_Task_Locked.export.total_expense' => '総支出',
-			'S17_Task_Locked.export.total_income' => '総預かり金',
+			'S17_Task_Locked.export.total_prepay' => '総前受金',
 			'S17_Task_Locked.export.remainder_buffer' => '端数合計',
 			'S17_Task_Locked.export.remainder_absorbed_by' => '端数受取人',
 			'S17_Task_Locked.export.transaction_details' => '取引明細',
@@ -2142,15 +2048,13 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.export.rate' => '為替レート',
 			'S17_Task_Locked.export.base_amount' => '基準通貨金額',
 			'S17_Task_Locked.export.net_remainder' => '端数',
-			'S17_Task_Locked.export.pool' => '預かり金',
+			'S17_Task_Locked.export.pool' => '前受金',
 			'S17_Task_Locked.export.mixed' => '混合支払い',
 			'S30_settlement_confirm.title' => '精算確認',
-			'S30_settlement_confirm.buttons.next' => '受取設定',
+			'S30_settlement_confirm.buttons.set_payment_info' => '受取設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '金額確認',
 			'S30_settlement_confirm.steps.payment_info' => '受取設定',
-			'S30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます！',
-			'S30_settlement_confirm.label_payable' => '支払',
-			'S30_settlement_confirm.label_refund' => '返金',
+			'S30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます。',
 			'S30_settlement_confirm.list_item.merged_label' => '代表メンバー',
 			'S30_settlement_confirm.list_item.includes' => '内訳：',
 			'S30_settlement_confirm.list_item.principal' => '元金',
@@ -2159,28 +2063,26 @@ extension on TranslationsJaJp {
 			'S31_settlement_payment_info.title' => '受取情報',
 			'S31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
 			'S31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
-			'S31_settlement_payment_info.sync_update' => '自分のデフォルト受取情報を同期更新',
-			'S31_settlement_payment_info.buttons.settle' => '精算する',
-			'S31_settlement_payment_info.buttons.prev_step' => '前のステップに戻る',
+			'S31_settlement_payment_info.sync_update' => 'デフォルト受取情報を更新',
+			'S31_settlement_payment_info.buttons.prev_step' => '前へ戻る',
 			'S32_settlement_result.title' => '精算完了',
 			'S32_settlement_result.content' => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。',
 			'S32_settlement_result.waiting_reveal' => '結果を確認中...',
-			'S32_settlement_result.remainder_winner_prefix' => '残額の受取先：',
-			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '\$${winnerName}さんは\$${prefix} \$${total}になります。',
+			'S32_settlement_result.remainder_winner_prefix' => '端数の受取先：',
+			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}',
 			'S32_settlement_result.total_label' => '今回の精算合計額',
-			'S32_settlement_result.buttons.share' => '精算通知を送信',
-			'S32_settlement_result.buttons.back' => 'タスクに戻る',
+			'S32_settlement_result.buttons.share' => '通知送信',
+			'S32_settlement_result.buttons.back_task_dashboard' => 'タスクに戻る',
 			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
-			'S50_Onboarding_Consent.buttons.agree' => 'はじめる',
-			'S50_Onboarding_Consent.content.prefix' => '分帳を、もっとシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行でも、食事でも、共同生活でも、すべての支出は明確に記録され、すべての分担方法にはルールがあります。\n\n分帳は、本来わかりやすいものです。\n\nはじめることで、',
+			'S50_Onboarding_Consent.buttons.start' => 'はじめる',
+			'S50_Onboarding_Consent.content.prefix' => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、',
 			'S50_Onboarding_Consent.content.suffix' => ' に同意したものとみなされます。',
 			'S51_Onboarding_Name.title' => '名前設定',
-			'S51_Onboarding_Name.buttons.next' => '設定',
-			'S51_Onboarding_Name.description' => 'アプリ内で表示する名前を入力してください（1-10文字）。',
+			'S51_Onboarding_Name.content' => 'アプリ内で表示する名前を入力（1–10文字）',
 			'S51_Onboarding_Name.hint' => 'ニックネームを入力',
 			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
 			'S52_TaskSettings_Log.title' => '活動履歴',
-			'S52_TaskSettings_Log.buttons.export_csv' => 'CSVエクスポート',
+			'S52_TaskSettings_Log.buttons.export_csv' => 'CSV出力',
 			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
 			'S52_TaskSettings_Log.export_file_prefix' => '活動履歴',
 			'S52_TaskSettings_Log.csv_header.time' => '日時',
@@ -2195,8 +2097,8 @@ extension on TranslationsJaJp {
 			'S52_TaskSettings_Log.unit.members' => '名',
 			'S52_TaskSettings_Log.unit.items' => '項目',
 			'S53_TaskSettings_Members.title' => 'メンバー管理',
-			'S53_TaskSettings_Members.buttons.add' => 'メンバー追加',
-			'S53_TaskSettings_Members.label_default_ratio' => 'デフォルト比率',
+			'S53_TaskSettings_Members.buttons.add_member' => 'メンバー追加',
+			'S53_TaskSettings_Members.label.default_ratio' => 'デフォルト比率',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',
 			'S70_System_Settings.title' => 'システム設定',
@@ -2209,106 +2111,84 @@ extension on TranslationsJaJp {
 			'S70_System_Settings.menu.terms' => '利用規約',
 			'S70_System_Settings.menu.privacy' => 'プライバシーポリシー',
 			'S70_System_Settings.menu.payment_info' => '支払/受取口座設定',
-			'S70_System_Settings.menu.delete_account' => 'アカウントを削除',
+			'S70_System_Settings.menu.delete_account' => 'アカウント削除',
 			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
-			'S72_TermsUpdate.description' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
-			'S72_TermsUpdate.buttons.agree' => '同意する',
-			'S72_TermsUpdate.buttons.decline' => '同意しない',
-			'S74_DeleteAccount_Notice.title' => 'アカウント削除の確認',
+			'S72_TermsUpdate.content' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
+			'S74_DeleteAccount_Notice.title' => 'アカウント削除確認',
 			'S74_DeleteAccount_Notice.content' => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。',
-			'S74_DeleteAccount_Notice.buttons.delete' => 'アカウントを削除',
-			'D01_MemberRole_Intro.title' => 'あなたのキャラクター',
+			'S74_DeleteAccount_Notice.buttons.delete_account' => 'アカウント削除',
+			'D01_MemberRole_Intro.title' => '今回のキャラクター',
 			'D01_MemberRole_Intro.buttons.reroll' => '動物を変える',
 			'D01_MemberRole_Intro.buttons.enter' => 'タスクへ進む',
-			'D01_MemberRole_Intro.description.content' => ({required Object avatar}) => 'これが今回のタスクでのあなたのアイコン${avatar}です。\n割り勘の記録には${avatar}が表示されますよ！',
-			'D01_MemberRole_Intro.description.reroll_left' => 'あと1回変更可',
-			'D01_MemberRole_Intro.description.reroll_empty' => '変更不可',
+			'D01_MemberRole_Intro.content' => ({required Object avatar}) => '今回のタスクでのアイコン${avatar}です。\n記録には${avatar}が表示されます。',
+			'D01_MemberRole_Intro.reroll.empty' => '変更不可',
 			'D02_Invite_Result.title' => '参加失敗',
 			'D03_TaskCreate_Confirm.title' => '設定の確認',
-			'D03_TaskCreate_Confirm.buttons.confirm' => '確認',
-			'D03_TaskCreate_Confirm.buttons.back' => '編集に戻る',
-			'D03_TaskCreate_Confirm.label_name' => 'タスク名',
-			'D03_TaskCreate_Confirm.label_period' => '期間',
-			'D03_TaskCreate_Confirm.label_currency' => '通貨',
-			'D03_TaskCreate_Confirm.label_members' => '人数',
-			'D03_TaskCreate_Confirm.creating_task' => '作成中...',
+			'D03_TaskCreate_Confirm.buttons.back_edit' => '編集に戻る',
 			'D04_CommonUnsaved_Confirm.title' => '未保存の変更',
 			'D04_CommonUnsaved_Confirm.content' => '変更内容は保存されません。',
 			'D05_DateJump_NoResult.title' => '記録なし',
-			'D05_DateJump_NoResult.buttons.cancel' => '戻る',
-			'D05_DateJump_NoResult.buttons.add' => '記録を追加',
 			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
-			'D06_settlement_confirm.title' => '清算の確認',
-			'D06_settlement_confirm.warning_text' => '清算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\nすべての内容が正しいことを確認してください。',
-			'D06_settlement_confirm.buttons.confirm' => '清算する',
+			'D06_settlement_confirm.title' => '精算確認',
+			'D06_settlement_confirm.content' => '精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。',
 			'D08_TaskClosed_Confirm.title' => 'タスク終了確認',
-			'D08_TaskClosed_Confirm.buttons.confirm' => '確認',
 			'D08_TaskClosed_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？',
-			'D09_TaskSettings_CurrencyConfirm.title' => '決済通貨を変更しますか？',
+			'D09_TaskSettings_CurrencyConfirm.title' => '決済通貨変更',
 			'D09_TaskSettings_CurrencyConfirm.content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
-			'D10_RecordDelete_Confirm.delete_record_title' => '記録を削除？',
-			'D10_RecordDelete_Confirm.delete_record_content' => ({required Object title, required Object amount}) => '${title} (${amount}) を削除してもよろしいですか？',
-			'D10_RecordDelete_Confirm.deleted_success' => '記録を削除しました',
-			'D11_random_result.title' => '残額ルーレット当選者',
+			'D10_RecordDelete_Confirm.title' => '記録削除確認',
+			'D10_RecordDelete_Confirm.content' => ({required Object title, required Object amount}) => '${title} （${amount}）を削除してもよろしいですか？',
+			'D11_random_result.title' => '当選者',
 			'D11_random_result.skip' => 'スキップ',
-			'D11_random_result.winner_reveal' => 'あなたです！',
-			'D11_random_result.buttons.close' => 'OK',
-			'D12_logout_confirm.title' => 'ログアウトの確認',
-			'D12_logout_confirm.description' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nアカウントはログアウトされます。匿名アカウントをご利用の場合、ログアウト後にデータを復元できない可能性があります。',
-			'D12_logout_confirm.buttons.logout' => 'ログアウトする',
-			'D13_DeleteAccount_Confirm.title' => 'アカウントの削除確認',
-			'D13_DeleteAccount_Confirm.buttons.confirm' => '確認',
+			'D12_logout_confirm.title' => 'ログアウト確認',
+			'D12_logout_confirm.content' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。',
+			'D12_logout_confirm.buttons.logout' => 'ログアウト',
+			'D13_DeleteAccount_Confirm.title' => 'アカウント削除確認',
 			'D13_DeleteAccount_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？',
 			'B02_SplitExpense_Edit.title' => '明細編集',
-			'B02_SplitExpense_Edit.buttons.save' => '決定',
-			'B02_SplitExpense_Edit.label.sub_item' => '子項目名',
-			'B02_SplitExpense_Edit.label.split_method' => '負担設定',
-			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してない',
+			'B02_SplitExpense_Edit.buttons.confirm_split' => '決定',
+			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してください',
 			'B02_SplitExpense_Edit.hint.sub_item' => '例：内訳',
-			'B03_SplitMethod_Edit.title' => '割り勘方法を選択',
-			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率を調整',
+			'B03_SplitMethod_Edit.title' => '割り勘方法',
+			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率調整',
 			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
 			'B03_SplitMethod_Edit.mismatch' => '一致しません',
-			'B04_payment_merge.title' => 'メンバー支払いの統合',
+			'B04_payment_merge.title' => '支払い統合',
 			'B04_payment_merge.label.head_member' => '代表メンバー',
 			'B04_payment_merge.label.merge_amount' => '統合金額',
-			'B04_payment_merge.buttons.cancel' => 'キャンセル',
-			'B04_payment_merge.buttons.confirm' => '統合',
-			'B06_payment_info_detail.label_copied' => 'コピーしました',
 			'B06_payment_info_detail.buttons.copy' => 'コピー',
 			'B07_PaymentMethod_Edit.title' => '資金源を選択',
-			'B07_PaymentMethod_Edit.type_member' => 'メンバー立替',
-			'B07_PaymentMethod_Edit.type_prepay' => '公費払い',
-			'B07_PaymentMethod_Edit.type_mixed' => '混合支払',
-			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '公費残高: ${amount}',
-			'B07_PaymentMethod_Edit.err_balance_not_enough' => '残高不足',
-			'B07_PaymentMethod_Edit.section_payer' => '支払者',
-			'B07_PaymentMethod_Edit.label_amount' => '支払金額',
-			'B07_PaymentMethod_Edit.total_label' => '合計金額',
-			'B07_PaymentMethod_Edit.total_prepay' => '公費払い',
-			'B07_PaymentMethod_Edit.total_advance' => '立替合計',
-			'B07_PaymentMethod_Edit.status_balanced' => '一致',
-			'B07_PaymentMethod_Edit.status_remaining' => ({required Object amount}) => '残り: ${amount}',
-			'B07_PaymentMethod_Edit.msg_auto_fill_prepay' => '公費残高を自動入力しました',
-			'success.saved' => '保存しました',
+			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '前受金残高：${amount}',
+			'B07_PaymentMethod_Edit.payer_member' => '支払者',
+			'B07_PaymentMethod_Edit.label.amount' => '支払金額',
+			'B07_PaymentMethod_Edit.label.total_expense' => '合計金額',
+			'B07_PaymentMethod_Edit.label.prepay' => '前受金払い',
+			'B07_PaymentMethod_Edit.label.total_advance' => '立替合計',
+			'B07_PaymentMethod_Edit.status.not_enough' => '残高不足',
+			'B07_PaymentMethod_Edit.status.balanced' => '一致',
+			'B07_PaymentMethod_Edit.status.remaining' => ({required Object amount}) => '残り ${amount}',
+			'success.saved' => '保存しました。',
+			'success.deleted' => '削除しました。',
+			'success.copied' => 'コピーしました',
+			'error.title' => 'エラー',
+			'error.unknown' => ({required Object error}) => '不明なエラー：${error}',
 			'error.dialog.task_full.title' => 'タスク満員',
-			'error.dialog.task_full.message' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。隊長に連絡してください。',
+			'error.dialog.task_full.content' => ({required Object limit}) => 'メンバー数が上限 ${limit} 人に達しています。リーダーへ連絡してください。',
 			'error.dialog.expired_code.title' => '招待コード期限切れ',
-			'error.dialog.expired_code.message' => ({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。隊長に再発行を依頼してください。',
+			'error.dialog.expired_code.content' => ({required Object minutes}) => 'この招待リンクは無効です（期限 ${minutes} 分）。リーダーに再発行を依頼してください。',
 			'error.dialog.invalid_code.title' => '無効な招待リンク',
-			'error.dialog.invalid_code.message' => '無効な招待リンクです。',
+			'error.dialog.invalid_code.content' => '無効な招待リンクです。',
 			'error.dialog.auth_required.title' => 'ログインが必要',
-			'error.dialog.auth_required.message' => 'タスクに参加するにはログインしてください。',
+			'error.dialog.auth_required.content' => 'タスク参加にはログインが必要です。',
 			'error.dialog.already_in_task.title' => '既に参加済',
-			'error.dialog.already_in_task.message' => '既にこのタスクのメンバーです。',
+			'error.dialog.already_in_task.content' => '既にこのタスクのメンバーです。',
 			'error.dialog.unknown.title' => 'エラー',
-			'error.dialog.unknown.message' => '予期せぬエラーが発生しました。',
+			'error.dialog.unknown.content' => '予期せぬエラーが発生しました。',
 			'error.dialog.delete_failed.title' => '削除失敗',
-			'error.dialog.delete_failed.message' => '削除に失敗しました。後でもう一度お試しください。',
+			'error.dialog.delete_failed.content' => '削除に失敗しました。後でもう一度お試しください。',
 			'error.dialog.member_delete_failed.title' => 'メンバー削除エラー',
-			'error.dialog.member_delete_failed.message' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
+			'error.dialog.member_delete_failed.content' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'error.dialog.data_conflict.title' => 'データ更新あり',
-			'error.dialog.data_conflict.message' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
+			'error.dialog.data_conflict.content' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.message.unknown' => '予期せぬエラーが発生しました。',
 			'error.message.invalid_amount' => '金額が無効です。',
 			'error.message.required' => '必須項目です。',
@@ -2317,10 +2197,10 @@ extension on TranslationsJaJp {
 			'error.message.zero' => ({required Object key}) => '${key}は0にできません。',
 			'error.message.amount_not_enough' => '残額が不足しています。',
 			'error.message.amount_mismatch' => '金額が一致しません。',
-			'error.message.income_is_used' => 'この金額は既に使用されているか、残高が不足しています。',
+			'error.message.prepay_is_used' => 'この金額は既に使用されているか、残高が不足しています。',
 			'error.message.data_is_used' => 'このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。',
 			'error.message.permission_denied' => '権限がありません。',
-			'error.message.network_error' => 'ネットワーク接続に失敗しました。接続を確認してください。',
+			'error.message.network_error' => 'ネットワーク接続に失敗しました。通信状況をご確認ください。',
 			'error.message.data_not_found' => 'データが見つかりませんでした。もう一度お試しください。',
 			'error.message.enter_first' => ({required Object key}) => '${key}を先に入力してください。',
 			'error.message.export_failed' => 'レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。',
@@ -2332,14 +2212,14 @@ extension on TranslationsJaJp {
 			'error.message.invalid_char' => '無効な文字が含まれています。',
 			'error.message.invalid_code' => '招待コードが無効です。リンクが正しいか確認してください。',
 			'error.message.expired_code' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
-			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません',
+			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません。',
 			'error.message.auth_required' => '認証に失敗しました。アプリを再起動してください。',
 			'error.message.init_failed' => '読み込みに失敗しました。もう一度お試しください。',
 			'error.message.unauthorized' => 'ログインしていません。再度ログインしてください。',
-			'error.message.task_locked' => '精算済みのた​​め、データを変更できません。',
+			'error.message.task_locked' => '精算済みのため、データを変更できません。',
 			'error.message.timeout' => 'タイムアウトしました。後でもう一度お試しください。',
 			'error.message.quota_exceeded' => '利用制限に達しました。しばらく経ってからお試しください。',
-			'error.message.join_failed' => 'タスクに参加できませんでした。，しばらく経ってからお試しください。',
+			'error.message.join_failed' => 'タスクに参加できませんでした。しばらく経ってからお試しください。',
 			'error.message.invite_create_failed' => '招待コードを作成できませんでした。しばらく経ってからお試しください。',
 			'error.message.data_conflict' => '閲覧中に他のメンバーが記録を更新しました。正確性を保つため、前のページに戻って更新してください。',
 			'error.message.task_status_error' => 'タスクの状態が無効です（既に精算済みの可能性があります）。更新してください。',

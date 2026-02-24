@@ -191,14 +191,14 @@ class RecordService {
   Future<void> validateAndDelete(String taskId, RecordModel record,
       Map<String, double> poolBalances) async {
     // 1. 邏輯檢查：如果是收入，檢查是否可以刪除
-    if (record.type == RecordType.income) {
+    if (record.type == RecordType.prepay) {
       // 檢查此收入是否已被其他支出引用（原則 2：Service 調用 Repo）
       await _recordRepo.checkRecordReferenced(taskId, record.id ?? '');
 
       // 檢查公款餘額是否足以扣除這筆收入 (避免餘額變成負數)
       double currentBalance = poolBalances[record.currencyCode] ?? 0.0;
       if (currentBalance < (record.amount - 0.01)) {
-        throw AppErrorCodes.incomeIsUsed; // 語意上這也代表這筆錢已經被花掉了
+        throw AppErrorCodes.prepayIsUsed; // 語意上這也代表這筆錢已經被花掉了
       }
     }
 

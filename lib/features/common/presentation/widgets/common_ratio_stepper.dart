@@ -48,7 +48,8 @@ class CommonRatioStepper extends StatelessWidget {
         children: [
           // 減號按鈕
           _buildButton(
-            context: context,
+            context,
+            colorScheme,
             icon: Icons.remove,
             onTap: (enabled && !isMin) ? () => _updateValue(-0.5) : null,
             radius: const BorderRadius.horizontal(left: Radius.circular(7)),
@@ -63,7 +64,8 @@ class CommonRatioStepper extends StatelessWidget {
 
           // 加號按鈕
           _buildButton(
-            context: context,
+            context,
+            colorScheme,
             icon: Icons.add,
             onTap: (enabled && !isMax) ? () => _updateValue(0.5) : null,
             radius: const BorderRadius.horizontal(right: Radius.circular(7)),
@@ -73,13 +75,13 @@ class CommonRatioStepper extends StatelessWidget {
     );
   }
 
-  Widget _buildButton({
-    required BuildContext context,
+  Widget _buildButton(
+    BuildContext context,
+    ColorScheme colorScheme, {
     required IconData icon,
     required VoidCallback? onTap,
     required BorderRadius radius,
   }) {
-    final theme = Theme.of(context);
     final isDisabled = onTap == null;
 
     return Material(
@@ -93,8 +95,8 @@ class CommonRatioStepper extends StatelessWidget {
             icon,
             size: 18, // B03 size
             color: isDisabled
-                ? theme.colorScheme.outline.withValues(alpha: 0.3)
-                : theme.colorScheme.onSurface,
+                ? colorScheme.outline.withValues(alpha: 0.3)
+                : colorScheme.onSurface,
           ),
         ),
       ),

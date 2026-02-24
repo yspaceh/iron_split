@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
-import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
+import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -46,41 +45,69 @@ class _S53Content extends StatelessWidget {
   const _S53Content();
 
   // --- Logic Helpers ---
-  void _showRenameDialog(
-      BuildContext context,
-      S53TaskSettingsMembersViewModel vm,
-      Map<String, TaskMember> membersMap,
-      String memberId,
-      String currentName) {
+  void _showRenameDialog(BuildContext context,
+      S53TaskSettingsMembersViewModel vm, String memberId, String currentName) {
     D07RenameMemberDialog.show(context, initialName: currentName,
         onConfirm: (newName) {
-      vm.renameMember(membersMap, memberId, newName);
+      vm.renameMember(memberId, newName);
     });
   }
 
   Future<void> _handleDelete(
       BuildContext context,
       S53TaskSettingsMembersViewModel vm,
-      Map<String, TaskMember> membersMap,
+      Translations t,
       String memberId) async {
-    final t = Translations.of(context);
-
     try {
-      await vm.deleteMember(membersMap, memberId);
+      await vm.deleteMember(memberId);
     } on AppErrorCodes {
       if (!context.mounted) return;
       CommonInfoDialog.show(
         context,
         title: t.error.dialog.member_delete_failed.title,
-        content: t.error.dialog.member_delete_failed.message,
+        content: t.error.dialog.member_delete_failed.content,
       );
     }
   }
 
-  Future<void> _handleAdd(BuildContext context,
-      S53TaskSettingsMembersViewModel vm, TaskModel task) async {
+  Future<void> _handleAdd(
+      BuildContext context, S53TaskSettingsMembersViewModel vm) async {
     try {
-      await vm.addMember(task);
+      await vm.addMember();
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleIncreaseRatio(
+      BuildContext context,
+      S53TaskSettingsMembersViewModel vm,
+      String memberId,
+      double currentRatio) async {
+    try {
+      await vm.updateRatio(
+        memberId,
+        SplitRatioHelper.increase(currentRatio), // 這裡！
+      );
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
+  Future<void> _handleDecreaseRatio(
+      BuildContext context,
+      S53TaskSettingsMembersViewModel vm,
+      String memberId,
+      double currentRatio) async {
+    try {
+      await vm.updateRatio(
+        memberId,
+        SplitRatioHelper.decrease(currentRatio), // 這裡！
+      );
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;
       final msg = ErrorMapper.map(context, code: code);
@@ -93,237 +120,162 @@ class _S53Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final vm = context.watch<S53TaskSettingsMembersViewModel>();
+    final title = t.S53_TaskSettings_Members.title;
 
-    return StreamBuilder<TaskModel?>(
-      stream: vm.taskStream,
-      builder: (context, snapshot) {
-        // Error State
-        if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(t.S53_TaskSettings_Members.title),
-              centerTitle: true,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                ErrorMapper.map(context, error: snapshot.error.toString()),
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+    return CommonStateView(
+      status: vm.initStatus,
+      errorCode: vm.initErrorCode,
+      title: title,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text(title),
+          centerTitle: true,
+        ),
+        body: ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          itemCount: vm.membersList.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            final entry = vm.membersList[index];
+            final memberId = entry.key;
+            final memberData = entry.value;
+            final bool isOwner = (memberId == vm.createdBy);
+            final bool amICaptain = (vm.currentUserId == vm.createdBy);
+
+            final isLinked = memberData.isLinked;
+
+            // 取得目前權重，預設 1.0 (注意這裡要處理 dynamic -> double 的轉型安全)
+            // 舊資料的 defaultSplitRatio 可能不存在
+            final rawRatio = memberData.defaultSplitRatio;
+            final double currentRatio = (rawRatio as num).toDouble();
+
+            // [核心] 成員卡片
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: colorScheme.surface, // 白色卡片
+                borderRadius: BorderRadius.circular(16), // 圓角 16
+                // 可選：加上淡淡的陰影增加層次感，或者保持平面
               ),
-            ),
-            bottomNavigationBar: StickyBottomActionBar(
-              children: [
-                AppButton(
-                  text: t.common.buttons.retry,
-                  type: AppButtonType.primary,
-                  onPressed: () => context.pop(),
-                ),
-              ],
-            ),
-          );
-        }
-        // Loading State
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(t.S53_TaskSettings_Members.title),
-              centerTitle: true,
-            ),
-            body: const Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        // Empty/Null State
-        final task = snapshot.data;
-        if (task == null) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(t.S53_TaskSettings_Members.title),
-              centerTitle: true,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                t.error.message.data_not_found,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
-              ),
-            ),
-            bottomNavigationBar: StickyBottomActionBar(
-              children: [
-                AppButton(
-                  text: t.common.buttons.back,
-                  type: AppButtonType.primary,
-                  onPressed: () => context.pop(),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final createdBy = task.createdBy;
-        final membersMap = task.members;
-        final membersList = task.sortedMembers;
-
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: Text(t.S53_TaskSettings_Members.title),
-            centerTitle: true,
-          ),
-          body: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            itemCount: membersList.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final entry = membersList[index];
-              final memberId = entry.key;
-              final memberData = entry.value;
-              final bool isOwner = (memberId == createdBy);
-              final bool amICaptain = (vm.currentUserId == createdBy);
-
-              final isLinked = memberData.isLinked;
-
-              // 取得目前權重，預設 1.0 (注意這裡要處理 dynamic -> double 的轉型安全)
-              // 舊資料的 defaultSplitRatio 可能不存在
-              final rawRatio = memberData.defaultSplitRatio;
-              final double currentRatio = (rawRatio as num).toDouble();
-
-              // [核心] 成員卡片
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface, // 白色卡片
-                  borderRadius: BorderRadius.circular(16), // 圓角 16
-                  // 可選：加上淡淡的陰影增加層次感，或者保持平面
-                ),
-                child: Row(
-                  children: [
-                    CommonAvatar(
-                      avatarId: memberData.avatar,
-                      name: memberData.displayName,
-                      isLinked: memberData.isLinked,
-                      radius: 32,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 2),
-                            child: Row(
-                              children: [
-                                Text(
-                                  memberData.displayName,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (isOwner) ...[
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.star, // 或 star_rounded
-                                    size: 22,
-                                    color: AppTheme.starGold,
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                          Row(
+              child: Row(
+                children: [
+                  CommonAvatar(
+                    avatarId: memberData.avatar,
+                    name: memberData.displayName,
+                    isLinked: memberData.isLinked,
+                    radius: 32,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: Row(
                             children: [
-                              if (amICaptain && !isOwner) ...[
-                                InkWell(
-                                  onTap: () => _handleDelete(
-                                      context, vm, membersMap, memberId),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: Icon(
-                                      Icons.delete_outline,
-                                      color: theme.colorScheme.error,
-                                      size: 18,
-                                    ),
-                                  ),
+                              Text(
+                                memberData.displayName,
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
                                 ),
-                              ],
-                              if (!isLinked) ...[
-                                const SizedBox(width: 8),
-                                Container(
-                                  width: 1,
-                                  height: 20, // 不用撐滿，短一點比較精緻
-                                  color: theme.colorScheme.onSurfaceVariant
-                                      .withValues(alpha: 0.2), // 與頭像的距離
-                                ),
-                                const SizedBox(width: 8),
-                                InkWell(
-                                  onTap: () => _showRenameDialog(
-                                      context,
-                                      vm,
-                                      membersMap,
-                                      memberId,
-                                      memberData.displayName),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: theme.colorScheme.onSurface,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              const Spacer(),
-                              AppStepper(
-                                text: SplitRatioHelper.format(currentRatio),
-                                onDecrease:
-                                    vm.updateStatus == LoadStatus.loading
-                                        ? null
-                                        : () => vm.updateRatio(
-                                              membersMap,
-                                              memberId,
-                                              SplitRatioHelper.decrease(
-                                                  currentRatio), // 這裡！
-                                            ),
-                                onIncrease:
-                                    vm.updateStatus == LoadStatus.loading
-                                        ? null
-                                        : () => vm.updateRatio(
-                                              membersMap,
-                                              memberId,
-                                              SplitRatioHelper.increase(
-                                                  currentRatio), // 這裡！
-                                            ),
+                                overflow: TextOverflow.ellipsis,
                               ),
+                              if (isOwner) ...[
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.star, // 或 star_rounded
+                                  size: 22,
+                                  color: AppTheme.starGold,
+                                ),
+                              ],
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Row(
+                          children: [
+                            if (amICaptain && !isOwner) ...[
+                              InkWell(
+                                onTap: () =>
+                                    _handleDelete(context, vm, t, memberId),
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Icon(
+                                    Icons.delete_outline,
+                                    color: colorScheme.error,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            if (!isLinked) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 1,
+                                height: 20, // 不用撐滿，短一點比較精緻
+                                color: colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.2), // 與頭像的距離
+                              ),
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () => _showRenameDialog(context, vm,
+                                    memberId, memberData.displayName),
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: colorScheme.onSurface,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            const Spacer(),
+                            AppStepper(
+                              text: SplitRatioHelper.format(currentRatio),
+                              onDecrease: vm.updateStatus == LoadStatus.loading
+                                  ? null
+                                  : () => _handleDecreaseRatio(
+                                      context, vm, memberId, currentRatio),
+                              onIncrease: vm.updateStatus == LoadStatus.loading
+                                  ? null
+                                  : () => _handleIncreaseRatio(
+                                        context,
+                                        vm,
+                                        memberId,
+                                        currentRatio,
+                                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
-          extendBody: true,
-          bottomNavigationBar: StickyBottomActionBar(
-            isSheetMode: false,
-            children: [
-              AppButton(
-                text: t.S53_TaskSettings_Members.buttons.add,
-                type: AppButtonType.primary,
-                isLoading: vm.addMemberStatus == LoadStatus.loading,
-                onPressed: () => _handleAdd(context, vm, task),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+        extendBody: true,
+        bottomNavigationBar: StickyBottomActionBar(
+          isSheetMode: false,
+          children: [
+            AppButton(
+              text: t.S53_TaskSettings_Members.buttons.add_member,
+              type: AppButtonType.primary,
+              isLoading: vm.addMemberStatus == LoadStatus.loading,
+              onPressed: () => _handleAdd(context, vm),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

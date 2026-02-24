@@ -18,6 +18,7 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return KeyboardActions(
       // 1. 設定全域通用的樣式
@@ -43,7 +44,7 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
                     elevation: 4.0,
                     shadowColor: Colors.black45,
                     borderRadius: BorderRadius.circular(24.0), // 圓角膠囊形狀
-                    color: theme.colorScheme.primary,
+                    color: colorScheme.primary,
 
                     child: InkWell(
                       // 加上水波紋點擊效果

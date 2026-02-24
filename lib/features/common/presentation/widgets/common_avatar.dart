@@ -20,6 +20,7 @@ class CommonAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     // 1. 處理資料
     final String rawId = avatarId?.toString() ?? '';
@@ -36,7 +37,7 @@ class CommonAvatar extends StatelessWidget {
     } else if (showImage) {
       bgColor = Colors.grey.shade300;
     } else {
-      bgColor = theme.colorScheme.primary;
+      bgColor = colorScheme.primary;
     }
 
     // 2. 建構 UI

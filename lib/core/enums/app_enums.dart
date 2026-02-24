@@ -38,7 +38,7 @@ enum PayerType {
 }
 
 enum RecordType {
-  income('income'),
+  prepay('prepay'),
   expense('expense');
 
   final String code;

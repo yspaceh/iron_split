@@ -5,7 +5,7 @@ import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart'; //
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -71,6 +71,8 @@ class _B04Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final vm = context.watch<B04PaymentMergeViewModel>();
     final title = t.B04_payment_merge.title;
 
@@ -107,8 +109,8 @@ class _B04Content extends StatelessWidget {
                     amount: vm.totalAmount,
                     currencyConstants: vm.baseCurrency,
                     valueColor: vm.headMember.finalAmount > 0
-                        ? theme.colorScheme.tertiary
-                        : theme.colorScheme.error,
+                        ? colorScheme.tertiary
+                        : colorScheme.primary,
                   ),
                 ],
               ),
@@ -118,8 +120,7 @@ class _B04Content extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(
                 height: 1,
-                color:
-                    theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
               ),
             ),
 
@@ -145,10 +146,10 @@ class _B04Content extends StatelessWidget {
                 children: [
                   Text(
                     "${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(vm.headMember.finalAmount.abs(), vm.baseCurrency.code)}",
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: vm.headMember.finalAmount > 0
-                          ? theme.colorScheme.tertiary
-                          : theme.colorScheme.error,
+                          ? colorScheme.tertiary
+                          : colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'RobotoMono',
                     ),
@@ -185,10 +186,10 @@ class _B04Content extends StatelessWidget {
                     children: [
                       Text(
                         "${vm.baseCurrency.symbol} $amountStr",
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                        style: textTheme.bodyMedium?.copyWith(
                           color: member.finalAmount > 0
-                              ? theme.colorScheme.tertiary
-                              : theme.colorScheme.error,
+                              ? colorScheme.tertiary
+                              : colorScheme.primary,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'RobotoMono',
                         ),
@@ -198,7 +199,7 @@ class _B04Content extends StatelessWidget {
                 );
               }),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
           ],
         ),
       ),

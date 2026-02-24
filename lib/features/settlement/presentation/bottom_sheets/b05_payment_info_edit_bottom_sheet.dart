@@ -6,7 +6,7 @@ import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
-import 'package:iron_split/features/common/presentation/widgets/common_bottom_sheet.dart';
+import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -110,6 +110,7 @@ class _B05ContentState extends State<_B05Content> {
     final t = Translations.of(context);
     final vm = context.watch<B05PaymentInfoEditViewModel>();
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final title = t.S31_settlement_payment_info.title;
 
@@ -137,7 +138,7 @@ class _B05ContentState extends State<_B05Content> {
               // Sync Checkbox (Smart Display)
               if (vm.showSyncOption)
                 Container(
-                  color: theme.colorScheme.surfaceContainerLow,
+                  color: colorScheme.surfaceContainerLow,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: CheckboxListTile(
@@ -155,7 +156,7 @@ class _B05ContentState extends State<_B05Content> {
                     controlAffinity: ListTileControlAffinity.leading,
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    activeColor: theme.colorScheme.primary,
+                    activeColor: colorScheme.primary,
                   ),
                 ),
               StickyBottomActionBar.sheet(

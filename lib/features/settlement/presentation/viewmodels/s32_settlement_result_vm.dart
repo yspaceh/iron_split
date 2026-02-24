@@ -31,9 +31,11 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   bool _hasmarkedAsSeen = false;
   bool _isRevealed = false;
   bool get isRevealed => _isRevealed;
+  LoadStatus _shareStatus = LoadStatus.initial;
 
   // Getters
   LoadStatus get initStatus => _initStatus;
+  LoadStatus get shareStatus => _shareStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
   TaskModel? get task => _task;
 
@@ -212,7 +214,23 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   /// 通知成員 (純文字分享)
   Future<void> notifyMembers(
       {required String message, required String subject}) async {
-    await _shareService.shareText(message, subject: subject);
+    if (_shareStatus == LoadStatus.loading) return;
+    _shareStatus = LoadStatus.loading;
+    notifyListeners();
+
+    try {
+      await _shareService.shareText(message, subject: subject);
+      _shareStatus = LoadStatus.success;
+      notifyListeners();
+    } on AppErrorCodes {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      rethrow;
+    } catch (e) {
+      _shareStatus = LoadStatus.error;
+      notifyListeners();
+      throw ErrorMapper.parseErrorCode(e);
+    }
   }
 
   void setRevealed(bool value) {

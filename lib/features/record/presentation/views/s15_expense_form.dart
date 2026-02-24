@@ -108,12 +108,12 @@ class S15ExpenseForm extends StatelessWidget {
 
         // 2. 智慧顯示：直接顯示該幣別的餘額 (例如: JPY 30,000)
         // 不再強制換算回 Base Currency，這樣更符合物理錢包直覺
-        return "${selectedCurrencyConstants.code} ${t.B07_PaymentMethod_Edit.type_prepay} (${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(balance, currentCode)})";
+        return "${selectedCurrencyConstants.code} ${t.common.payment_method.prepay} (${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(balance, currentCode)})";
       case PayerType.mixed:
-        return t.B07_PaymentMethod_Edit.type_mixed;
+        return t.common.payment_method.mixed;
       case PayerType.member:
         if (payersId.isEmpty || payersId.length > 1) {
-          return t.B07_PaymentMethod_Edit.type_member;
+          return t.common.payment_method.member;
         }
         final member = members.where((m) => m.id == payersId.first).firstOrNull;
 
@@ -122,7 +122,7 @@ class S15ExpenseForm extends StatelessWidget {
           return t.S15_Record_Edit.val.member_paid(name: member.displayName);
         } else {
           // 如果找不到這個人，退回顯示泛型文字
-          return t.B07_PaymentMethod_Edit.type_member;
+          return t.common.payment_method.member;
         }
     }
   }
@@ -174,7 +174,7 @@ class S15ExpenseForm extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         TaskDateInput(
-          label: t.S15_Record_Edit.label.date,
+          label: t.common.label.date,
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
@@ -184,7 +184,7 @@ class S15ExpenseForm extends StatelessWidget {
           amountController: amountController,
           focusNode: amountFocusNode,
           selectedCurrencyConstants: selectedCurrencyConstants,
-          isIncome: false,
+          isPrepay: false,
         ),
         const SizedBox(height: 8),
         TaskItemInput(
@@ -194,11 +194,11 @@ class S15ExpenseForm extends StatelessWidget {
             selectedCategoryId: selectedCategoryId),
         const SizedBox(height: 8),
         AppSelectField(
-          labelText: t.S15_Record_Edit.label.payment_method,
+          labelText: t.common.label.payment_method,
           text: _getPayerDisplayName(t, payerType, payersId),
           onTap: onPaymentMethodTap,
           errorText: hasPaymentError
-              ? t.B07_PaymentMethod_Edit.err_balance_not_enough
+              ? t.B07_PaymentMethod_Edit.status.not_enough
               : null,
         ),
         if (isForeign) ...[
@@ -212,7 +212,7 @@ class S15ExpenseForm extends StatelessWidget {
             isRateLoading: isRateLoading,
             onFetchRate: onFetchExchangeRate,
             onShowRateInfo: onShowRateInfo,
-            isIncome: false,
+            isPrepay: false,
           ),
         ],
         const SizedBox(height: 8),
@@ -230,7 +230,7 @@ class S15ExpenseForm extends StatelessWidget {
                 note: detail.name,
                 isBaseCard: false,
                 onTap: () => onDetailEditTap(detail),
-                isIncome: false,
+                isPrepay: false,
               ),
             ),
           ),
@@ -249,7 +249,7 @@ class S15ExpenseForm extends StatelessWidget {
             onTap: () => onBaseSplitConfigTap(),
             showSplitAction: baseRemainingAmount > 0,
             onSplitTap: onAddItemTap,
-            isIncome: false,
+            isPrepay: false,
           ),
         ],
         buildRemainderInfo(),

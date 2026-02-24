@@ -32,7 +32,7 @@ class SettlementMemberItem extends StatelessWidget {
     return Container(
       // [關鍵] 1. 裝飾層：與 RecordItem 一致的白底、圓角 16、極淡陰影
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16), //  圓角 16
         boxShadow: [
           BoxShadow(
@@ -184,11 +184,12 @@ class SettlementMemberItem extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     final isReceiving = amount > 0;
-    final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
+    final amountColor =
+        isReceiving ? colorScheme.tertiary : colorScheme.primary;
 
     final statusText = isReceiving
-        ? t.S30_settlement_confirm.label_refund
-        : t.S30_settlement_confirm.label_payable;
+        ? t.common.payment_status.refund
+        : t.common.payment_status.payable;
 
     final displayAmount =
         CurrencyConstants.formatAmount(amount.abs(), baseCurrency.code);

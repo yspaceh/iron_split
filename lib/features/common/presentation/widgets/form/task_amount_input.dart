@@ -13,7 +13,7 @@ class TaskAmountInput extends StatelessWidget {
     this.onCurrencyChanged,
     required this.amountController,
     required this.selectedCurrencyConstants,
-    this.isIncome = false,
+    this.isPrepay = false,
     this.showCurrencyPicker = true,
     this.fillColor,
     this.externalValidator,
@@ -23,7 +23,7 @@ class TaskAmountInput extends StatelessWidget {
   final ValueChanged<String>? onCurrencyChanged;
   final TextEditingController amountController;
   final CurrencyConstants selectedCurrencyConstants;
-  final bool isIncome;
+  final bool isPrepay;
   final bool showCurrencyPicker;
   final Color? fillColor;
   final String? Function(double value)? externalValidator;
@@ -47,14 +47,15 @@ class TaskAmountInput extends StatelessWidget {
     final themeVm = context.watch<ThemeViewModel>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final expenseColor = themeVm.themeMode == ThemeMode.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
-    final incomeColor = themeVm.themeMode == ThemeMode.dark
-        ? AppTheme.incomeLight
-        : AppTheme.incomeDeep;
+    final prepayColor = themeVm.themeMode == ThemeMode.dark
+        ? AppTheme.prepayLight
+        : AppTheme.prepayDeep;
 
-    final amountColor = isIncome ? incomeColor : expenseColor;
+    final amountColor = isPrepay ? prepayColor : expenseColor;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +76,7 @@ class TaskAmountInput extends StatelessWidget {
                 children: [
                   Text(
                     selectedCurrencyConstants.symbol,
-                    style: theme.textTheme.titleLarge?.copyWith(
+                    style: textTheme.titleLarge?.copyWith(
                       color: amountColor,
                       fontWeight: FontWeight.w700,
                       height: 1.0,
@@ -84,7 +85,7 @@ class TaskAmountInput extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     selectedCurrencyConstants.code,
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style: textTheme.labelSmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -100,7 +101,7 @@ class TaskAmountInput extends StatelessWidget {
           child: AppTextField(
             controller: amountController,
             fillColor: fillColor,
-            labelText: t.S15_Record_Edit.label.amount,
+            labelText: t.common.label.amount,
             hintText: CurrencyConstants.formatAmount(
                 0, selectedCurrencyConstants.code),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -120,8 +121,7 @@ class TaskAmountInput extends StatelessWidget {
                 return t.error.message.format;
               }
               if (value == 0) {
-                return t.error.message
-                    .zero(key: t.S15_Record_Edit.label.amount);
+                return t.error.message.zero(key: t.common.label.amount);
               }
               if (value < 0) {
                 return t.error.message.invalid_amount;

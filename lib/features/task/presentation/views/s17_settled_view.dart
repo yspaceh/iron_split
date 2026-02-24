@@ -43,6 +43,8 @@ class _S17SettledViewState extends State<S17SettledView> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final settlementService = context.read<SettlementService>();
     final CurrencyConstants baseCurrency =
         CurrencyConstants.getCurrencyConstants(
@@ -101,11 +103,11 @@ class _S17SettledViewState extends State<S17SettledView> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest
+                      color: colorScheme.surfaceContainerHighest
                           .withValues(alpha: 0.3), // 使用變數
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: theme.colorScheme.outlineVariant
+                        color: colorScheme.outlineVariant
                             .withValues(alpha: 0.5), // 使用變數
                         width: 1,
                       ),
@@ -114,13 +116,13 @@ class _S17SettledViewState extends State<S17SettledView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          t.S17_Task_Locked.buttons.view_payment_details,
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.colorScheme.onSurface),
+                          t.S17_Task_Locked.buttons.view_payment_info,
+                          style: textTheme.bodyMedium
+                              ?.copyWith(color: colorScheme.onSurface),
                         ),
                         Icon(
                           Icons.keyboard_arrow_right_outlined,
-                          color: theme.colorScheme.onSurface,
+                          color: colorScheme.onSurface,
                         ),
                       ],
                     ),

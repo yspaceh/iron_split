@@ -11,6 +11,7 @@ class RetentionBanner extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final isUrgent = days <= 7;
     final color = isUrgent ? colorScheme.error : colorScheme.onSurfaceVariant;
 
@@ -26,7 +27,7 @@ class RetentionBanner extends StatelessWidget {
           Expanded(
             child: Text(
               t.S17_Task_Locked.retention_notice(days: days),
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: textTheme.bodyMedium?.copyWith(
                 color: color,
                 fontWeight: isUrgent ? FontWeight.bold : null,
               ),
