@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
@@ -54,9 +53,9 @@ class B06PaymentInfoDetailBottomSheet extends StatelessWidget {
 class _B06Content extends StatelessWidget {
   const _B06Content();
 
-  void _copyToClipboard(BuildContext context, String text) {
-    final t = Translations.of(context);
-    Clipboard.setData(ClipboardData(text: text));
+  void _handleCopy(BuildContext context, B06PaymentInfoDetailViewModel vm,
+      Translations t, String text) {
+    vm.copyToClipboard(text);
     AppToast.showSuccess(context, t.success.copied);
   }
 
@@ -115,11 +114,11 @@ class _B06Content extends StatelessWidget {
                           _buildCashTile(context, colorScheme, textTheme, t),
                         if (vm.info!.bankAccount != null &&
                             vm.info!.bankAccount!.isNotEmpty)
-                          _buildBankSection(context, vm.info!, colorScheme,
+                          _buildBankSection(context, vm, vm.info!, colorScheme,
                               textTheme, t, iconSize),
                         if (vm.info!.paymentApps.isNotEmpty)
-                          _buildAppsSection(context, colorScheme, textTheme, t,
-                              iconSize, vm.info!.paymentApps),
+                          _buildAppsSection(context, vm, colorScheme, textTheme,
+                              t, iconSize, vm.info!.paymentApps),
                       ],
                     ),
                   ),
@@ -151,6 +150,7 @@ class _B06Content extends StatelessWidget {
 
   Widget _buildBankSection(
       BuildContext context,
+      B06PaymentInfoDetailViewModel vm,
       PaymentInfoModel info,
       ColorScheme colorScheme,
       TextTheme textTheme,
@@ -189,8 +189,8 @@ class _B06Content extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.copy, size: iconSize),
-                  onPressed: () => _copyToClipboard(context, copyText),
-                  tooltip: t.B06_payment_info_detail.buttons.copy,
+                  onPressed: () => _handleCopy(context, vm, t, copyText),
+                  tooltip: t.common.buttons.copy,
                 ),
               ],
             ),
@@ -202,6 +202,7 @@ class _B06Content extends StatelessWidget {
 
   Widget _buildAppsSection(
       BuildContext context,
+      B06PaymentInfoDetailViewModel vm,
       ColorScheme colorScheme,
       TextTheme textTheme,
       Translations t,
@@ -242,9 +243,9 @@ class _B06Content extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.copy, size: iconSize),
-                    onPressed: () =>
-                        _copyToClipboard(context, copyText(app.name, app.link)),
-                    tooltip: t.B06_payment_info_detail.buttons.copy,
+                    onPressed: () => _handleCopy(
+                        context, vm, t, copyText(app.name, app.link)),
+                    tooltip: t.common.buttons.copy,
                   ),
                 ],
               );

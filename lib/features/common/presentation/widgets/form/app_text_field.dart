@@ -92,7 +92,7 @@ class AppTextField extends StatelessWidget {
       height: finalLineHeight,
     );
 
-    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceM;
+    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceS;
 
     final double labelRenderedHeight = AppLayout.renderedHeight(
       10.0,
@@ -100,11 +100,10 @@ class AppTextField extends StatelessWidget {
       scale,
     );
 
-    final double contentTopPadding =
-        labelTopPos + labelRenderedHeight + AppLayout.spaceXS;
+    final double contentTopPadding = labelTopPos + labelRenderedHeight;
 
     final double contentBottomPadding =
-        isEnlarged ? AppLayout.spaceL : AppLayout.spaceM;
+        isEnlarged ? AppLayout.spaceL : AppLayout.spaceS;
 
     final borderRadius = BorderRadius.circular(AppLayout.radiusL);
 

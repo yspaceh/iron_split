@@ -57,6 +57,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
 	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
+	late final TranslationsS54TaskSettingsInviteZhTw S54_TaskSettings_Invite = TranslationsS54TaskSettingsInviteZhTw.internal(_root);
 	late final TranslationsS70SystemSettingsZhTw S70_System_Settings = TranslationsS70SystemSettingsZhTw.internal(_root);
 	late final TranslationsS72TermsUpdateZhTw S72_TermsUpdate = TranslationsS72TermsUpdateZhTw.internal(_root);
 	late final TranslationsS74DeleteAccountNoticeZhTw S74_DeleteAccount_Notice = TranslationsS74DeleteAccountNoticeZhTw.internal(_root);
@@ -76,7 +77,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
-	late final TranslationsB06PaymentInfoDetailZhTw B06_payment_info_detail = TranslationsB06PaymentInfoDetailZhTw.internal(_root);
 	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsSuccessZhTw success = TranslationsSuccessZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
@@ -483,6 +483,21 @@ class TranslationsS53TaskSettingsMembersZhTw {
 	String get member_name => '成員名稱';
 }
 
+// Path: S54_TaskSettings_Invite
+class TranslationsS54TaskSettingsInviteZhTw {
+	TranslationsS54TaskSettingsInviteZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '任務邀請'
+	String get title => '任務邀請';
+
+	late final TranslationsS54TaskSettingsInviteButtonsZhTw buttons = TranslationsS54TaskSettingsInviteButtonsZhTw.internal(_root);
+	late final TranslationsS54TaskSettingsInviteLabelZhTw label = TranslationsS54TaskSettingsInviteLabelZhTw.internal(_root);
+}
+
 // Path: S70_System_Settings
 class TranslationsS70SystemSettingsZhTw {
 	TranslationsS70SystemSettingsZhTw.internal(this._root);
@@ -775,16 +790,6 @@ class TranslationsB04PaymentMergeZhTw {
 	late final TranslationsB04PaymentMergeLabelZhTw label = TranslationsB04PaymentMergeLabelZhTw.internal(_root);
 }
 
-// Path: B06_payment_info_detail
-class TranslationsB06PaymentInfoDetailZhTw {
-	TranslationsB06PaymentInfoDetailZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-	late final TranslationsB06PaymentInfoDetailButtonsZhTw buttons = TranslationsB06PaymentInfoDetailButtonsZhTw.internal(_root);
-}
-
 // Path: B07_PaymentMethod_Edit
 class TranslationsB07PaymentMethodEditZhTw {
 	TranslationsB07PaymentMethodEditZhTw.internal(this._root);
@@ -903,6 +908,9 @@ class TranslationsCommonButtonsZhTw {
 
 	/// zh-TW: '新增紀錄'
 	String get add_record => '新增紀錄';
+
+	/// zh-TW: '複製'
+	String get copy => '複製';
 }
 
 // Path: common.label
@@ -2021,6 +2029,36 @@ class TranslationsS53TaskSettingsMembersLabelZhTw {
 	String get default_ratio => '預設比例';
 }
 
+// Path: S54_TaskSettings_Invite.buttons
+class TranslationsS54TaskSettingsInviteButtonsZhTw {
+	TranslationsS54TaskSettingsInviteButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '分享'
+	String get share => '分享';
+
+	/// zh-TW: '重新產生'
+	String get regenerate => '重新產生';
+}
+
+// Path: S54_TaskSettings_Invite.label
+class TranslationsS54TaskSettingsInviteLabelZhTw {
+	TranslationsS54TaskSettingsInviteLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '有效期限'
+	String get expires_in => '有效期限';
+
+	/// zh-TW: '邀請碼已過期'
+	String get invite_expired => '邀請碼已過期';
+}
+
 // Path: S70_System_Settings.section
 class TranslationsS70SystemSettingsSectionZhTw {
 	TranslationsS70SystemSettingsSectionZhTw.internal(this._root);
@@ -2195,18 +2233,6 @@ class TranslationsB04PaymentMergeLabelZhTw {
 	String get merge_amount => '合併總額';
 }
 
-// Path: B06_payment_info_detail.buttons
-class TranslationsB06PaymentInfoDetailButtonsZhTw {
-	TranslationsB06PaymentInfoDetailButtonsZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '複製'
-	String get copy => '複製';
-}
-
 // Path: B07_PaymentMethod_Edit.label
 class TranslationsB07PaymentMethodEditLabelZhTw {
 	TranslationsB07PaymentMethodEditLabelZhTw.internal(this._root);
@@ -2338,8 +2364,8 @@ class TranslationsErrorMessageZhTw {
 	/// zh-TW: '邀請碼無效，請確認連結是否正確。'
 	String get invalid_code => '邀請碼無效，請確認連結是否正確。';
 
-	/// zh-TW: '邀請連結已過期（超過 15 分鐘），請隊長重新分享。'
-	String get expired_code => '邀請連結已過期（超過 15 分鐘），請隊長重新分享。';
+	/// zh-TW: '邀請連結已過期（超過 {expiry_minutes} 分鐘），請隊長重新分享。'
+	String expired_code({required Object expiry_minutes}) => '邀請連結已過期（超過 ${expiry_minutes} 分鐘），請隊長重新分享。';
 
 	/// zh-TW: '任務人數已滿（上限{limit}人）。'
 	String task_full({required Object limit}) => '任務人數已滿（上限${limit}人）。';
@@ -2752,6 +2778,7 @@ extension on Translations {
 			'common.buttons.agree' => '同意',
 			'common.buttons.decline' => '不同意',
 			'common.buttons.add_record' => '新增紀錄',
+			'common.buttons.copy' => '複製',
 			'common.label.task_name' => '任務名稱',
 			'common.label.item_name' => '項目名稱',
 			'common.label.sub_item' => '細項名稱',
@@ -3052,6 +3079,11 @@ extension on Translations {
 			'S53_TaskSettings_Members.label.default_ratio' => '預設比例',
 			'S53_TaskSettings_Members.member_default_name' => '成員',
 			'S53_TaskSettings_Members.member_name' => '成員名稱',
+			'S54_TaskSettings_Invite.title' => '任務邀請',
+			'S54_TaskSettings_Invite.buttons.share' => '分享',
+			'S54_TaskSettings_Invite.buttons.regenerate' => '重新產生',
+			'S54_TaskSettings_Invite.label.expires_in' => '有效期限',
+			'S54_TaskSettings_Invite.label.invite_expired' => '邀請碼已過期',
 			'S70_System_Settings.title' => '系統設定',
 			'S70_System_Settings.section.basic' => '基本設定',
 			'S70_System_Settings.section.legal' => '相關條款',
@@ -3107,7 +3139,6 @@ extension on Translations {
 			'B04_payment_merge.title' => '合併成員款項',
 			'B04_payment_merge.label.head_member' => '代表',
 			'B04_payment_merge.label.merge_amount' => '合併總額',
-			'B06_payment_info_detail.buttons.copy' => '複製',
 			'B07_PaymentMethod_Edit.title' => '資金來源設定',
 			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '預收款餘額：${amount}',
 			'B07_PaymentMethod_Edit.payer_member' => '代墊成員',
@@ -3163,7 +3194,7 @@ extension on Translations {
 			'error.message.length_exceeded' => ({required Object max}) => '最多 ${max} 個字。',
 			'error.message.invalid_char' => '包含無效字元。',
 			'error.message.invalid_code' => '邀請碼無效，請確認連結是否正確。',
-			'error.message.expired_code' => '邀請連結已過期（超過 15 分鐘），請隊長重新分享。',
+			'error.message.expired_code' => ({required Object expiry_minutes}) => '邀請連結已過期（超過 ${expiry_minutes} 分鐘），請隊長重新分享。',
 			'error.message.task_full' => ({required Object limit}) => '任務人數已滿（上限${limit}人）。',
 			'error.message.auth_required' => '登入狀態異常，請重新啟動 App。',
 			'error.message.init_failed' => '載入失敗，請稍後再試。',

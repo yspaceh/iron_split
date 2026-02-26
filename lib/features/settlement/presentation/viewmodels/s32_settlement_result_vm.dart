@@ -179,12 +179,12 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   SettlementMember _reconstructMember(String uid, {double? amountOverride}) {
     final memberData = _task?.members[uid] ??
         TaskMember(
-          id: uid,
-          displayName: 'Unknown Member', // 或使用多國語系字串
-          isLinked: false,
-          role: 'member',
-          joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
-        );
+            id: uid,
+            displayName: 'Unknown Member', // 或使用多國語系字串
+            isLinked: false,
+            role: 'member',
+            joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+            createdAt: DateTime.now());
     final snapshotAmount = amountOverride ??
         (_task?.settlement?['allocations']?[uid] as num?)?.toDouble() ??
         0.0;

@@ -5,7 +5,6 @@ import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
-import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -13,11 +12,8 @@ import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
-import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
-import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -43,9 +39,6 @@ class S14TaskSettingsPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
-        inviteRepo: context.read<InviteRepository>(),
-        deepLinkService: context.read<DeepLinkService>(),
-        shareService: context.read<ShareService>(),
       )..init(),
       child: const _S14Content(),
     );
@@ -142,19 +135,14 @@ class _S14ContentState extends State<_S14Content> {
     }
   }
 
-  Future<void> _handleInviteMember(
-      BuildContext context, S14TaskSettingsViewModel vm, Translations t) async {
+  Future<void> _redirectToInvite(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
     try {
-      final inviteCode = await vm.inviteMember();
-      final message = t.common.share.invite.content(
-        taskName: vm.nameController.value.text,
-        code: inviteCode,
-        link: vm.link,
-      );
-      // 2. 委派 VM 執行
-      await vm.notifyMembers(
-        message: message,
-        subject: t.common.share.invite.subject,
+      await vm.checkMaxMembers();
+      if (!context.mounted) return;
+      context.pushNamed(
+        'S54',
+        pathParameters: {'taskId': vm.taskId},
       );
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;
@@ -201,132 +189,121 @@ class _S14ContentState extends State<_S14Content> {
       onErrorAction: () => vm.init(),
       child: AppKeyboardActionsWrapper(
         focusNodes: [_nameFocusNode],
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-                centerTitle: true,
-              ),
-              body: ListView(
-                padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
-                children: [
-                  SectionWrapper(
-                      title: t.S14_Task_Settings.section.task_name,
-                      children: [
-                        TaskNameInput(
-                          controller: vm.nameController,
-                          focusNode: _nameFocusNode,
-                          label: t.common.label.task_name,
-                          hint: t.S16_TaskCreate_Edit.hint.name,
-                          maxLength: TaskConstants.maxTaskNameLength,
-                          enabled: vm.taskStatus != TaskStatus.settled &&
-                              vm.taskStatus != TaskStatus.closed,
-                        ),
-                        if (vm.taskStatus != TaskStatus.settled &&
-                            vm.taskStatus != TaskStatus.closed) ...[
-                          SizedBox(
-                              height: isEnlarged
-                                  ? AppLayout.spaceL
-                                  : AppLayout.spaceS),
-                          NavTile(
-                            title: t.S14_Task_Settings.menu.invite,
-                            onTap: () => _handleInviteMember(context, vm, t),
-                          ),
-                        ]
-                      ]),
-                  SectionWrapper(
-                      title: t.S14_Task_Settings.section.task_period,
-                      children: [
-                        if (vm.startDate != null && vm.endDate != null) ...[
-                          TaskDateInput(
-                            label: t.common.label.start_date,
-                            date: vm.startDate!,
-                            onDateChanged: (val) => _handleUpdateDateRange(
-                                context, vm,
-                                start: val, end: vm.endDate!),
-                            enabled: vm.taskStatus != TaskStatus.settled &&
-                                vm.taskStatus != TaskStatus.closed,
-                          ),
-                          SizedBox(
-                              height: isEnlarged
-                                  ? AppLayout.spaceL
-                                  : AppLayout.spaceS),
-                          TaskDateInput(
-                            label: t.common.label.end_date,
-                            date: vm.endDate!,
-                            onDateChanged: (val) => _handleUpdateDateRange(
-                                context, vm,
-                                start: vm.startDate!, end: val),
-                            enabled: vm.taskStatus != TaskStatus.settled &&
-                                vm.taskStatus != TaskStatus.closed,
-                          ),
-                        ],
-                      ]),
-                  SectionWrapper(
-                      title: t.S14_Task_Settings.section.settlement,
-                      children: [
-                        if (vm.currency != null) ...[
-                          TaskCurrencyInput(
-                            currency: vm.currency!,
-                            onCurrencyChanged: (val) =>
-                                _showCurrencyChangeConfirmDialog(
-                                    context, vm, val),
-                            enabled: vm.taskStatus != TaskStatus.settled &&
-                                vm.taskStatus != TaskStatus.closed,
-                          ),
-                          SizedBox(
-                              height: isEnlarged
-                                  ? AppLayout.spaceL
-                                  : AppLayout.spaceS),
-                        ],
-                        TaskRemainderRuleInput(
-                          rule: RemainderRuleConstants.getLabel(
-                              context, vm.remainderRule),
-                          onTap: () =>
-                              _showRemainderRuleChangeBottomSheet(context, vm),
-                          enabled: vm.taskStatus != TaskStatus.settled &&
-                              vm.taskStatus != TaskStatus.closed,
-                        ),
-                      ]),
-                  SectionWrapper(
-                    title: t.S14_Task_Settings.section.other,
-                    children: [
-                      if (vm.taskStatus != TaskStatus.settled &&
-                          vm.taskStatus != TaskStatus.closed) ...[
-                        NavTile(
-                          title: t.S14_Task_Settings.menu.member_settings,
-                          onTap: () => _redirectToMemberSettings(context, vm),
-                        ),
-                        SizedBox(
-                            height: isEnlarged
-                                ? AppLayout.spaceL
-                                : AppLayout.spaceS),
-                      ],
-                      NavTile(
-                          title: t.S14_Task_Settings.menu.history,
-                          onTap: () => _redirectToHistory(context, vm)),
-                    ],
-                  ),
-                  // Settings Navigation
-
-                  if (vm.isOwner &&
-                      (vm.taskStatus != TaskStatus.settled &&
-                          vm.taskStatus != TaskStatus.closed)) ...[
-                    const SizedBox(height: AppLayout.spaceL),
-                    NavTile(
-                      title: t.S14_Task_Settings.menu.close_task,
-                      isDestructive: true,
-                      onTap: () => _redirectToCloseTask(context, vm),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            centerTitle: true,
+          ),
+          body: ListView(
+            padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+            children: [
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.task_name,
+                  children: [
+                    TaskNameInput(
+                      controller: vm.nameController,
+                      focusNode: _nameFocusNode,
+                      label: t.common.label.task_name,
+                      hint: t.S16_TaskCreate_Edit.hint.name,
+                      maxLength: TaskConstants.maxTaskNameLength,
+                      enabled: vm.taskStatus != TaskStatus.settled &&
+                          vm.taskStatus != TaskStatus.closed,
                     ),
+                    if (vm.taskStatus != TaskStatus.settled &&
+                        vm.taskStatus != TaskStatus.closed) ...[
+                      SizedBox(
+                          height:
+                              isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
+                      NavTile(
+                          title: t.S14_Task_Settings.menu.invite,
+                          onTap: () => _redirectToInvite(context, vm)),
+                    ]
+                  ]),
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.task_period,
+                  children: [
+                    if (vm.startDate != null && vm.endDate != null) ...[
+                      TaskDateInput(
+                        label: t.common.label.start_date,
+                        date: vm.startDate!,
+                        onDateChanged: (val) => _handleUpdateDateRange(
+                            context, vm,
+                            start: val, end: vm.endDate!),
+                        enabled: vm.taskStatus != TaskStatus.settled &&
+                            vm.taskStatus != TaskStatus.closed,
+                      ),
+                      SizedBox(
+                          height:
+                              isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
+                      TaskDateInput(
+                        label: t.common.label.end_date,
+                        date: vm.endDate!,
+                        onDateChanged: (val) => _handleUpdateDateRange(
+                            context, vm,
+                            start: vm.startDate!, end: val),
+                        enabled: vm.taskStatus != TaskStatus.settled &&
+                            vm.taskStatus != TaskStatus.closed,
+                      ),
+                    ],
+                  ]),
+              SectionWrapper(
+                  title: t.S14_Task_Settings.section.settlement,
+                  children: [
+                    if (vm.currency != null) ...[
+                      TaskCurrencyInput(
+                        currency: vm.currency!,
+                        onCurrencyChanged: (val) =>
+                            _showCurrencyChangeConfirmDialog(context, vm, val),
+                        enabled: vm.taskStatus != TaskStatus.settled &&
+                            vm.taskStatus != TaskStatus.closed,
+                      ),
+                      SizedBox(
+                          height:
+                              isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
+                    ],
+                    TaskRemainderRuleInput(
+                      rule: RemainderRuleConstants.getLabel(
+                          context, vm.remainderRule),
+                      onTap: () =>
+                          _showRemainderRuleChangeBottomSheet(context, vm),
+                      enabled: vm.taskStatus != TaskStatus.settled &&
+                          vm.taskStatus != TaskStatus.closed,
+                    ),
+                  ]),
+              SectionWrapper(
+                title: t.S14_Task_Settings.section.other,
+                children: [
+                  if (vm.taskStatus != TaskStatus.settled &&
+                      vm.taskStatus != TaskStatus.closed) ...[
+                    NavTile(
+                      title: t.S14_Task_Settings.menu.member_settings,
+                      onTap: () => _redirectToMemberSettings(context, vm),
+                    ),
+                    SizedBox(
+                        height:
+                            isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   ],
-
-                  const SizedBox(height: 32),
+                  NavTile(
+                      title: t.S14_Task_Settings.menu.history,
+                      onTap: () => _redirectToHistory(context, vm)),
                 ],
               ),
-            ),
-            if (vm.inviteMemberStatus == LoadStatus.loading) SharePreparing(),
-          ],
+              // Settings Navigation
+
+              if (vm.isOwner &&
+                  (vm.taskStatus != TaskStatus.settled &&
+                      vm.taskStatus != TaskStatus.closed)) ...[
+                const SizedBox(height: AppLayout.spaceL),
+                NavTile(
+                  title: t.S14_Task_Settings.menu.close_task,
+                  isDestructive: true,
+                  onTap: () => _redirectToCloseTask(context, vm),
+                ),
+              ],
+
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

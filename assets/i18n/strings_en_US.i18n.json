@@ -18,7 +18,8 @@
       "done": "Done",
       "agree": "Agree",
       "decline": "Decline",
-      "add_record": "Add"
+      "add_record": "Add",
+      "copy": "Copy"
     },
     "label": {
       "task_name": "Task name",
@@ -481,6 +482,17 @@
     "member_default_name": "Member",
     "member_name": "Member Name"
   },
+  "S54_TaskSettings_Invite": {
+    "title": "Task Invite",
+    "buttons": {
+      "share": "Share",
+      "regenerate": "Regenerate"
+    },
+    "label": {
+      "expires_in": "Expires in",
+      "invite_expired": "Invite code has expired"
+    }
+  },
   "S70_System_Settings": {
     "title": "Settings",
     "section": {
@@ -598,11 +610,6 @@
       "merge_amount": "Total Amount"
     }
   },
-  "B06_payment_info_detail": {
-    "buttons": {
-      "copy": "Copy"
-    }
-  },
   "B07_PaymentMethod_Edit": {
     "title": "Funding Source",
     "prepay_balance": "Prepaid Balance: {amount}",
@@ -688,7 +695,7 @@
       "length_exceeded": "Max {max} characters.",
       "invalid_char": "Invalid characters.",
       "invalid_code": "Invalid invite code. Please check if the link is correct.",
-      "expired_code": "Invite link expired (over 15 minutes). Please ask the task leader to share again.",
+      "expired_code": "Invite link expired (over {expiry_minutes} minutes). Please ask the task leader to share again.",
       "task_full": "Task is full (max {limit} members).",
       "auth_required": "Authentication failed. Please restart the app.",
       "init_failed": "Loading failed. Please try again.",

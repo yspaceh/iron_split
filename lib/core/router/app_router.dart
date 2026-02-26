@@ -39,6 +39,7 @@ import 'package:iron_split/features/record/presentation/pages/s15_record_edit_pa
 import 'package:iron_split/features/settlement/presentation/pages/s30_settlement_confirm_page.dart';
 import 'package:iron_split/features/settlement/presentation/pages/s31_settlement_payment_info_page.dart';
 import 'package:iron_split/features/settlement/presentation/pages/s32_settlement_result_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s54_task_settings_invite_page.dart';
 
 /// Page Key System: Sxx
 class AppRouter {
@@ -127,6 +128,15 @@ class AppRouter {
               return S14TaskSettingsPage(taskId: taskId);
             },
             routes: [
+              // S54_TaskSettings.Invite
+              GoRoute(
+                path: 'invite', // Full: /task/:taskId/settings/invite
+                name: 'S54',
+                builder: (context, state) {
+                  final taskId = state.pathParameters['taskId']!;
+                  return S54TaskSettingsInvitePage(taskId: taskId);
+                },
+              ),
               // S53_TaskSettings.Members
               GoRoute(
                 path: 'members', // Full: /task/:taskId/settings/members

@@ -40,6 +40,7 @@ class TaskListItem extends StatelessWidget {
           isLinked: false,
           role: 'member',
           joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+          createdAt: DateTime.now(),
         );
 
     // 2. 還原：日期區間顯示邏輯

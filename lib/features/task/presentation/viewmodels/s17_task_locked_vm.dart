@@ -214,6 +214,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
           isLinked: false,
           role: 'member',
           joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+          createdAt: DateTime.now(),
         );
     final snapshotAmount = amountOverride ??
         (_task?.settlement?['allocations']?[uid] as num?)?.toDouble() ??

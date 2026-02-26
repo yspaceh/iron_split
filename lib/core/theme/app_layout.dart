@@ -26,8 +26,7 @@ class AppLayout {
   /// [height] TextStyle 中的行高倍率
   /// [scale] 系統目前的 TextScaler 倍率
   static double renderedHeight(double fontSize, double? height, double scale) {
-    // 若 height 為 null，M3 預設通常約為 1.2
-    final double effectiveHeight = height ?? 1.2;
+    final double effectiveHeight = height ?? 1;
     return fontSize * scale * effectiveHeight;
   }
 

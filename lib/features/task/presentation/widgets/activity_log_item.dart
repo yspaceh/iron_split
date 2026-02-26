@@ -36,12 +36,12 @@ class ActivityLogItem extends StatelessWidget {
 
     final member = members?[log.operatorUid] ??
         TaskMember(
-          id: log.operatorUid,
-          displayName: 'Unknown Member', // 或使用多國語系字串
-          isLinked: false,
-          role: 'member',
-          joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
-        );
+            id: log.operatorUid,
+            displayName: 'Unknown Member', // 或使用多國語系字串
+            isLinked: false,
+            role: 'member',
+            joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+            createdAt: DateTime.now());
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),

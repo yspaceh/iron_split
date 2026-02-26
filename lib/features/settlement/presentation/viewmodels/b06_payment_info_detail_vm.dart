@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
@@ -62,5 +63,9 @@ class B06PaymentInfoDetailViewModel extends ChangeNotifier {
       _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
+  }
+
+  void copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
   }
 }

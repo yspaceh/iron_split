@@ -18,7 +18,8 @@
       "done": "完了",
       "agree": "同意",
       "decline": "拒否",
-      "add_record": "追加"
+      "add_record": "追加",
+      "copy": "コピー"
     },
     "label": {
       "task_name": "タスク名",
@@ -482,6 +483,17 @@
     "member_default_name": "メンバー",
     "member_name": "メンバー名"
   },
+  "S54_TaskSettings_Invite": {
+    "title": "タスク招待",
+    "buttons": {
+      "share": "共有",
+      "regenerate": "再生成"
+    },
+    "label": {
+      "expires_in": "有效期限",
+      "invite_expired": "有効期限が切れました"
+    }
+  },
   "S70_System_Settings": {
     "title": "システム設定",
     "section": {
@@ -599,11 +611,6 @@
       "merge_amount": "統合金額"
     }
   },
-  "B06_payment_info_detail": {
-    "buttons": {
-      "copy": "コピー"
-    }
-  },
   "B07_PaymentMethod_Edit": {
     "title": "資金源を選択",
     "prepay_balance": "前受金残高：{amount}",
@@ -689,7 +696,7 @@
       "length_exceeded": "{max}文字以内で入力してください。",
       "invalid_char": "無効な文字が含まれています。",
       "invalid_code": "招待コードが無効です。リンクが正しいか確認してください。",
-      "expired_code": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
+      "expired_code": "招待リンクの期限（{expiry_minutes}分）が切れています。リーダーに再送を依頼してください。",
       "task_full": "定員オーバーです（上限{limit}名）。",
       "auth_required": "認証に失敗しました。アプリを再起動してください。",
       "init_failed": "読み込みに失敗しました。もう一度お試しください。",

@@ -18,7 +18,8 @@
       "done": "完成",
       "agree": "同意",
       "decline": "不同意",
-      "add_record": "新增紀錄"
+      "add_record": "新增紀錄",
+      "copy": "複製"
     },
     "label": {
       "task_name": "任務名稱",
@@ -483,6 +484,17 @@
     "member_default_name": "成員",
     "member_name": "成員名稱"
   },
+  "S54_TaskSettings_Invite": {
+    "title": "任務邀請",
+    "buttons": {
+      "share": "分享",
+      "regenerate": "重新產生"
+    },
+    "label": {
+      "expires_in": "有效期限",
+      "invite_expired": "邀請碼已過期"
+    }
+  },
   "S70_System_Settings": {
     "title": "系統設定",
     "section":{
@@ -600,11 +612,6 @@
       "merge_amount": "合併總額"
     }
   },
-  "B06_payment_info_detail": {
-    "buttons": {
-      "copy": "複製"
-    }
-  },
   "B07_PaymentMethod_Edit": {
     "title": "資金來源設定",
     "prepay_balance": "預收款餘額：{amount}",
@@ -690,7 +697,7 @@
       "length_exceeded": "最多 {max} 個字。",
       "invalid_char": "包含無效字元。",
       "invalid_code": "邀請碼無效，請確認連結是否正確。",
-      "expired_code": "邀請連結已過期（超過 15 分鐘），請隊長重新分享。",
+      "expired_code": "邀請連結已過期（超過 {expiry_minutes} 分鐘），請隊長重新分享。",
       "task_full": "任務人數已滿（上限{limit}人）。",
       "auth_required": "登入狀態異常，請重新啟動 App。",
       "init_failed": "載入失敗，請稍後再試。",

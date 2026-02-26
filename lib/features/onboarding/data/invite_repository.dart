@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/invite_code_model.dart';
 
 class InviteRepository extends BaseRepository {
   final FirebaseFunctions _functions;
@@ -43,15 +44,15 @@ class InviteRepository extends BaseRepository {
     }, AppErrorCodes.joinFailed);
   }
 
-  Future<String> createInviteCode(String taskId) async {
+  Future<InviteCodeDetail> createInviteCode(String taskId) async {
     return await safeRun(() async {
       final callable = _functions.httpsCallable('createInviteCode');
       final result = await callable.call({'taskId': taskId});
-      final code = result.data?['code'];
-      if (code is String) {
-        return code;
+      if (result.data is Map) {
+        final data = Map<String, dynamic>.from(result.data as Map);
+        return InviteCodeDetail.fromMap(data);
       } else {
-        throw AppErrorCodes.inviteCreateFailed; // 或其他更具體的錯誤
+        throw AppErrorCodes.inviteCreateFailed;
       }
     }, AppErrorCodes.inviteCreateFailed);
   }

@@ -53,6 +53,7 @@ dependencies:
   keyboard_actions: ^4.2.1
   firebase_crashlytics: ^5.0.7
   currency_text_input_formatter: ^2.3.0
+  pretty_qr_code: ^3.6.0
 
 dev_dependencies:
   flutter_test:
@@ -68,4 +69,5 @@ flutter:
     - assets/images/
     - assets/images/avatars/
     - assets/images/iron/
+    - assets/images/icon/
     - assets/i18n/

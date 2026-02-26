@@ -5,6 +5,7 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/models/invite_code_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -34,7 +35,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
-  String inviteCode = '';
+  InviteCodeDetail? inviteCodeDetail;
 
   // Getters
   DateTime get startDate => _startDate;
@@ -46,7 +47,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   LoadStatus get shareStatus => _shareStatus;
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
-  String get link => _deepLinkService.generateJoinLink(inviteCode);
+  String get link =>
+      _deepLinkService.generateJoinLink(inviteCodeDetail?.code ?? '');
 
   S16TaskCreateEditViewModel({
     required TaskRepository taskRepo,
@@ -124,9 +126,9 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   }
 
   // 定義一個私有變數，用來存放「正在進行中」的任務
-  Future<({String taskId, String? inviteCode})?>? _ongoingTask;
+  Future<({String taskId, InviteCodeDetail? inviteCodeDetail})?>? _ongoingTask;
 
-  Future<({String taskId, String? inviteCode})?> createTask(
+  Future<({String taskId, InviteCodeDetail? inviteCodeDetail})?> createTask(
       String taskName) async {
     //  這是「升級版」的 Guard Clause：
     // 如果任務正在跑，就直接回傳同一個 Future 給呼叫者，而不是結束它。
@@ -146,7 +148,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   }
 
   /// 核心邏輯：建立任務
-  Future<({String taskId, String? inviteCode})?> _createTask(
+  Future<({String taskId, InviteCodeDetail? inviteCodeDetail})?> _createTask(
       String taskName) async {
     if (taskName.isEmpty) throw AppErrorCodes.fieldRequired;
     _createStatus = LoadStatus.loading;
@@ -217,12 +219,12 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
       // 4. Invite Code & Share
       if (_memberCount > 1) {
-        inviteCode = await _inviteRepo.createInviteCode(taskId);
+        inviteCodeDetail = await _inviteRepo.createInviteCode(taskId);
       }
 
       _createStatus = LoadStatus.success;
       notifyListeners();
-      return (taskId: taskId, inviteCode: inviteCode);
+      return (taskId: taskId, inviteCodeDetail: inviteCodeDetail);
     } on AppErrorCodes {
       _createStatus = LoadStatus.error;
       notifyListeners();

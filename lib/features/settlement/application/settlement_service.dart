@@ -160,6 +160,7 @@ class SettlementService {
             isLinked: false,
             role: 'member',
             joinedAt: DateTime.now(), // 這裡只是為了符合建構子，UI 結算頁面用不到
+            createdAt: DateTime.now(),
           );
 
       // 檢查是否為 Random 模式 (決定是否要在 UI 上標示為隱藏/抽獎中)

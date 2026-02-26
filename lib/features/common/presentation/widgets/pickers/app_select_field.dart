@@ -64,18 +64,17 @@ class AppSelectField extends StatelessWidget {
           fontSize: 10,
         ) ??
         const TextStyle(fontSize: 10);
-    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceM;
+    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceS;
 
     final double labelRenderedHeight = AppLayout.renderedHeight(
       10.0,
       labelStyle.height,
       scale,
     );
-    final double contentTopPadding =
-        labelTopPos + labelRenderedHeight + AppLayout.spaceXS;
+    final double contentTopPadding = labelTopPos + labelRenderedHeight;
 
     final double contentBottomPadding =
-        isEnlarged ? AppLayout.spaceL : AppLayout.spaceM;
+        isEnlarged ? AppLayout.spaceL : AppLayout.spaceS;
 
     final borderRadius = BorderRadius.circular(AppLayout.radiusL);
 
@@ -151,9 +150,9 @@ class AppSelectField extends StatelessWidget {
                     const SizedBox(width: AppLayout.spaceM),
                   ],
                 ),
-                suffixIconConstraints: const BoxConstraints(
-                  minHeight: 48,
-                  minWidth: 48,
+                suffixIconConstraints: BoxConstraints(
+                  minHeight: isEnlarged ? 48 : 36,
+                  minWidth: isEnlarged ? 48 : 36,
                 ),
 
                 border: normalBorderStyle,

@@ -56,6 +56,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteJaJp S54_TaskSettings_Invite = _TranslationsS54TaskSettingsInviteJaJp._(_root);
 	@override late final _TranslationsS70SystemSettingsJaJp S70_System_Settings = _TranslationsS70SystemSettingsJaJp._(_root);
 	@override late final _TranslationsS72TermsUpdateJaJp S72_TermsUpdate = _TranslationsS72TermsUpdateJaJp._(_root);
 	@override late final _TranslationsS74DeleteAccountNoticeJaJp S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeJaJp._(_root);
@@ -75,7 +76,6 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
-	@override late final _TranslationsB06PaymentInfoDetailJaJp B06_payment_info_detail = _TranslationsB06PaymentInfoDetailJaJp._(_root);
 	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
 	@override late final _TranslationsSuccessJaJp success = _TranslationsSuccessJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
@@ -347,6 +347,18 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	@override String get member_name => 'メンバー名';
 }
 
+// Path: S54_TaskSettings_Invite
+class _TranslationsS54TaskSettingsInviteJaJp extends TranslationsS54TaskSettingsInviteZhTw {
+	_TranslationsS54TaskSettingsInviteJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク招待';
+	@override late final _TranslationsS54TaskSettingsInviteButtonsJaJp buttons = _TranslationsS54TaskSettingsInviteButtonsJaJp._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteLabelJaJp label = _TranslationsS54TaskSettingsInviteLabelJaJp._(_root);
+}
+
 // Path: S70_System_Settings
 class _TranslationsS70SystemSettingsJaJp extends TranslationsS70SystemSettingsZhTw {
 	_TranslationsS70SystemSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -563,16 +575,6 @@ class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	@override late final _TranslationsB04PaymentMergeLabelJaJp label = _TranslationsB04PaymentMergeLabelJaJp._(_root);
 }
 
-// Path: B06_payment_info_detail
-class _TranslationsB06PaymentInfoDetailJaJp extends TranslationsB06PaymentInfoDetailZhTw {
-	_TranslationsB06PaymentInfoDetailJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override late final _TranslationsB06PaymentInfoDetailButtonsJaJp buttons = _TranslationsB06PaymentInfoDetailButtonsJaJp._(_root);
-}
-
 // Path: B07_PaymentMethod_Edit
 class _TranslationsB07PaymentMethodEditJaJp extends TranslationsB07PaymentMethodEditZhTw {
 	_TranslationsB07PaymentMethodEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -637,6 +639,7 @@ class _TranslationsCommonButtonsJaJp extends TranslationsCommonButtonsZhTw {
 	@override String get agree => '同意';
 	@override String get decline => '拒否';
 	@override String get add_record => '追加';
+	@override String get copy => 'コピー';
 }
 
 // Path: common.label
@@ -1342,6 +1345,28 @@ class _TranslationsS53TaskSettingsMembersLabelJaJp extends TranslationsS53TaskSe
 	@override String get default_ratio => 'デフォルト比率';
 }
 
+// Path: S54_TaskSettings_Invite.buttons
+class _TranslationsS54TaskSettingsInviteButtonsJaJp extends TranslationsS54TaskSettingsInviteButtonsZhTw {
+	_TranslationsS54TaskSettingsInviteButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get share => '共有';
+	@override String get regenerate => '再生成';
+}
+
+// Path: S54_TaskSettings_Invite.label
+class _TranslationsS54TaskSettingsInviteLabelJaJp extends TranslationsS54TaskSettingsInviteLabelZhTw {
+	_TranslationsS54TaskSettingsInviteLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get expires_in => '有效期限';
+	@override String get invite_expired => '有効期限が切れました';
+}
+
 // Path: S70_System_Settings.section
 class _TranslationsS70SystemSettingsSectionJaJp extends TranslationsS70SystemSettingsSectionZhTw {
 	_TranslationsS70SystemSettingsSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1472,16 +1497,6 @@ class _TranslationsB04PaymentMergeLabelJaJp extends TranslationsB04PaymentMergeL
 	@override String get merge_amount => '統合金額';
 }
 
-// Path: B06_payment_info_detail.buttons
-class _TranslationsB06PaymentInfoDetailButtonsJaJp extends TranslationsB06PaymentInfoDetailButtonsZhTw {
-	_TranslationsB06PaymentInfoDetailButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get copy => 'コピー';
-}
-
 // Path: B07_PaymentMethod_Edit.label
 class _TranslationsB07PaymentMethodEditLabelJaJp extends TranslationsB07PaymentMethodEditLabelZhTw {
 	_TranslationsB07PaymentMethodEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1554,7 +1569,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String length_exceeded({required Object max}) => '${max}文字以内で入力してください。';
 	@override String get invalid_char => '無効な文字が含まれています。';
 	@override String get invalid_code => '招待コードが無効です。リンクが正しいか確認してください。';
-	@override String get expired_code => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
+	@override String expired_code({required Object expiry_minutes}) => '招待リンクの期限（${expiry_minutes}分）が切れています。リーダーに再送を依頼してください。';
 	@override String task_full({required Object limit}) => '定員オーバーです（上限${limit}名）。';
 	@override String get auth_required => '認証に失敗しました。アプリを再起動してください。';
 	@override String get init_failed => '読み込みに失敗しました。もう一度お試しください。';
@@ -1831,6 +1846,7 @@ extension on TranslationsJaJp {
 			'common.buttons.agree' => '同意',
 			'common.buttons.decline' => '拒否',
 			'common.buttons.add_record' => '追加',
+			'common.buttons.copy' => 'コピー',
 			'common.label.task_name' => 'タスク名',
 			'common.label.item_name' => '項目名',
 			'common.label.sub_item' => '子項目名',
@@ -2130,6 +2146,11 @@ extension on TranslationsJaJp {
 			'S53_TaskSettings_Members.label.default_ratio' => 'デフォルト比率',
 			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
 			'S53_TaskSettings_Members.member_name' => 'メンバー名',
+			'S54_TaskSettings_Invite.title' => 'タスク招待',
+			'S54_TaskSettings_Invite.buttons.share' => '共有',
+			'S54_TaskSettings_Invite.buttons.regenerate' => '再生成',
+			'S54_TaskSettings_Invite.label.expires_in' => '有效期限',
+			'S54_TaskSettings_Invite.label.invite_expired' => '有効期限が切れました',
 			'S70_System_Settings.title' => 'システム設定',
 			'S70_System_Settings.section.basic' => '基本設定',
 			'S70_System_Settings.section.legal' => '関連規約',
@@ -2185,7 +2206,6 @@ extension on TranslationsJaJp {
 			'B04_payment_merge.title' => '支払い統合',
 			'B04_payment_merge.label.head_member' => '代表メンバー',
 			'B04_payment_merge.label.merge_amount' => '統合金額',
-			'B06_payment_info_detail.buttons.copy' => 'コピー',
 			'B07_PaymentMethod_Edit.title' => '資金源を選択',
 			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '前受金残高：${amount}',
 			'B07_PaymentMethod_Edit.payer_member' => '支払者',
@@ -2241,7 +2261,7 @@ extension on TranslationsJaJp {
 			'error.message.length_exceeded' => ({required Object max}) => '${max}文字以内で入力してください。',
 			'error.message.invalid_char' => '無効な文字が含まれています。',
 			'error.message.invalid_code' => '招待コードが無効です。リンクが正しいか確認してください。',
-			'error.message.expired_code' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
+			'error.message.expired_code' => ({required Object expiry_minutes}) => '招待リンクの期限（${expiry_minutes}分）が切れています。リーダーに再送を依頼してください。',
 			'error.message.task_full' => ({required Object limit}) => '定員オーバーです（上限${limit}名）。',
 			'error.message.auth_required' => '認証に失敗しました。アプリを再起動してください。',
 			'error.message.init_failed' => '読み込みに失敗しました。もう一度お試しください。',

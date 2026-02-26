@@ -20,6 +20,8 @@ class TaskModel {
   final DateTime? endDate;
   final int memberCount; // Added for convenience
   final Map<String, dynamic>? settlement; // [Bible 7.4] 結算快照
+  final String? activeInviteCode;
+  final DateTime? activeInviteExpiresAt;
 
   TaskModel({
     required this.id,
@@ -38,6 +40,8 @@ class TaskModel {
     this.memberCount = 1,
     this.remainderAbsorberId,
     this.settlement,
+    this.activeInviteCode,
+    this.activeInviteExpiresAt,
   });
 
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
@@ -64,16 +68,8 @@ class TaskModel {
     // 邏輯：先抓 Linked (保持原順序)，再抓 Unlinked (保持原順序)，最後組合成新的 Map
     Map<String, TaskMember> sortMembers(Map<String, TaskMember> members) {
       final entries = members.entries.toList();
-
-      // 1. 連結成員 (Linked)
-      final linked = entries.where((e) => e.value.isLinked);
-
-      // 2. 未連結成員 (Unlinked)
-      final unlinked = entries.where((e) => !e.value.isLinked);
-
-      // 3. 重新組裝成有序的 Map
-      // Map.fromEntries 會依照 List 的順序建立 Key，確保遍歷順序正確
-      return Map.fromEntries([...linked, ...unlinked]);
+      entries.sort((a, b) => TaskModel.compareMembers(a.value, b.value));
+      return Map.fromEntries(entries);
     }
 
     // 取得原始 Map
@@ -132,6 +128,10 @@ class TaskModel {
           : null,
       memberCount:
           (data['memberCount'] as num?)?.toInt() ?? parsedMemberIds.length,
+      activeInviteCode: data['activeInviteCode'] as String?,
+      activeInviteExpiresAt: data['activeInviteExpiresAt'] != null
+          ? parseDate(data['activeInviteExpiresAt'])
+          : null,
     );
   }
 
@@ -153,18 +153,39 @@ class TaskModel {
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
       'memberCount': memberCount,
       'settlement': settlement,
+      'activeInviteCode': activeInviteCode,
+      'activeInviteExpiresAt': activeInviteExpiresAt != null
+          ? Timestamp.fromDate(activeInviteExpiresAt!)
+          : null,
     };
   }
 
   //  靜態排序邏輯 (讓外部也能用)
   static int compareMembers(TaskMember a, TaskMember b) {
-    // 1. 狀態不同：已連結優先
+    // 1. 狀態不同：已連結優先 (a 跟 b 狀態不一樣時，必定是一個 true 一個 false)
     if (a.isLinked != b.isLinked) {
       return a.isLinked ? -1 : 1;
     }
 
-    // 2. 狀態相同：比較加入時間
-    return a.joinedAt.compareTo(b.joinedAt);
+    // --- 此時 a 和 b 的 isLinked 狀態必定「完全相同」 ---
+
+    int timeDiff;
+
+    if (a.isLinked) {
+      // 2a. 兩人都是「已連結 (true)」：比較 joinedAt
+      timeDiff = a.joinedAt.compareTo(b.joinedAt);
+    } else {
+      // 2b. 兩人都是「未連結 (false)」：比較 createdAt
+      timeDiff = a.createdAt.compareTo(b.createdAt);
+    }
+
+    // 如果時間分得出先後，就直接回傳
+    if (timeDiff != 0) {
+      return timeDiff;
+    }
+
+    // 3. 時間「完全相同」：比較名字 (確保順序絕對穩定，不會亂跳)
+    return a.displayName.compareTo(b.displayName);
   }
 
   // 直接把 Getter 寫在 TaskModel 類別裡面，不使用 Extension
@@ -199,6 +220,7 @@ class TaskMember {
   final bool isLinked;
   final String role; // 'captain' | 'member'
   final DateTime joinedAt;
+  final DateTime createdAt;
   final double prepaid;
   final double expense;
   final bool hasSeenRoleIntro;
@@ -213,6 +235,7 @@ class TaskMember {
     required this.isLinked,
     required this.role,
     required this.joinedAt,
+    required this.createdAt,
     this.prepaid = 0.0,
     this.expense = 0.0,
     this.hasSeenRoleIntro = false,
@@ -231,6 +254,7 @@ class TaskMember {
       isLinked: data['isLinked'] as bool? ?? false,
       role: data['role'] as String? ?? 'member',
       joinedAt: _parseTime(data['joinedAt']),
+      createdAt: _parseTime(data['createdAt']),
       prepaid: (data['prepaid'] as num?)?.toDouble() ?? 0.0,
       expense: (data['expense'] as num?)?.toDouble() ?? 0.0,
       hasSeenRoleIntro: data['hasSeenRoleIntro'] as bool? ?? false,
@@ -247,9 +271,19 @@ class TaskMember {
 
   // 時間解析 helper
   static DateTime _parseTime(dynamic val) {
+    if (val == null) return DateTime.fromMillisecondsSinceEpoch(0);
     if (val is Timestamp) return val.toDate();
-    if (val is String) return DateTime.tryParse(val) ?? DateTime.now();
-    return DateTime.now();
+    if (val is String) {
+      return DateTime.tryParse(val) ?? DateTime.fromMillisecondsSinceEpoch(0);
+    }
+    if (val is int) {
+      // 兼容微秒與毫秒
+      if (val > 10000000000000) {
+        return DateTime.fromMicrosecondsSinceEpoch(val);
+      }
+      return DateTime.fromMillisecondsSinceEpoch(val);
+    }
+    return DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   // 轉回 Map (寫入 DB 用)
@@ -261,6 +295,7 @@ class TaskMember {
       'isLinked': isLinked,
       'role': role,
       'joinedAt': Timestamp.fromDate(joinedAt),
+      'createdAt': Timestamp.fromDate(createdAt),
       'prepaid': prepaid,
       'expense': expense,
       'hasSeenRoleIntro': hasSeenRoleIntro,

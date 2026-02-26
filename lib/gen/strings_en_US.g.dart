@@ -56,6 +56,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteEnUs S54_TaskSettings_Invite = _TranslationsS54TaskSettingsInviteEnUs._(_root);
 	@override late final _TranslationsS70SystemSettingsEnUs S70_System_Settings = _TranslationsS70SystemSettingsEnUs._(_root);
 	@override late final _TranslationsS72TermsUpdateEnUs S72_TermsUpdate = _TranslationsS72TermsUpdateEnUs._(_root);
 	@override late final _TranslationsS74DeleteAccountNoticeEnUs S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeEnUs._(_root);
@@ -75,7 +76,6 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
-	@override late final _TranslationsB06PaymentInfoDetailEnUs B06_payment_info_detail = _TranslationsB06PaymentInfoDetailEnUs._(_root);
 	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
 	@override late final _TranslationsSuccessEnUs success = _TranslationsSuccessEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
@@ -347,6 +347,18 @@ class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSetting
 	@override String get member_name => 'Member Name';
 }
 
+// Path: S54_TaskSettings_Invite
+class _TranslationsS54TaskSettingsInviteEnUs extends TranslationsS54TaskSettingsInviteZhTw {
+	_TranslationsS54TaskSettingsInviteEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Task Invite';
+	@override late final _TranslationsS54TaskSettingsInviteButtonsEnUs buttons = _TranslationsS54TaskSettingsInviteButtonsEnUs._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteLabelEnUs label = _TranslationsS54TaskSettingsInviteLabelEnUs._(_root);
+}
+
 // Path: S70_System_Settings
 class _TranslationsS70SystemSettingsEnUs extends TranslationsS70SystemSettingsZhTw {
 	_TranslationsS70SystemSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -563,16 +575,6 @@ class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 	@override late final _TranslationsB04PaymentMergeLabelEnUs label = _TranslationsB04PaymentMergeLabelEnUs._(_root);
 }
 
-// Path: B06_payment_info_detail
-class _TranslationsB06PaymentInfoDetailEnUs extends TranslationsB06PaymentInfoDetailZhTw {
-	_TranslationsB06PaymentInfoDetailEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override late final _TranslationsB06PaymentInfoDetailButtonsEnUs buttons = _TranslationsB06PaymentInfoDetailButtonsEnUs._(_root);
-}
-
 // Path: B07_PaymentMethod_Edit
 class _TranslationsB07PaymentMethodEditEnUs extends TranslationsB07PaymentMethodEditZhTw {
 	_TranslationsB07PaymentMethodEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -637,6 +639,7 @@ class _TranslationsCommonButtonsEnUs extends TranslationsCommonButtonsZhTw {
 	@override String get agree => 'Agree';
 	@override String get decline => 'Decline';
 	@override String get add_record => 'Add';
+	@override String get copy => 'Copy';
 }
 
 // Path: common.label
@@ -1341,6 +1344,28 @@ class _TranslationsS53TaskSettingsMembersLabelEnUs extends TranslationsS53TaskSe
 	@override String get default_ratio => 'Default Ratio';
 }
 
+// Path: S54_TaskSettings_Invite.buttons
+class _TranslationsS54TaskSettingsInviteButtonsEnUs extends TranslationsS54TaskSettingsInviteButtonsZhTw {
+	_TranslationsS54TaskSettingsInviteButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get share => 'Share';
+	@override String get regenerate => 'Regenerate';
+}
+
+// Path: S54_TaskSettings_Invite.label
+class _TranslationsS54TaskSettingsInviteLabelEnUs extends TranslationsS54TaskSettingsInviteLabelZhTw {
+	_TranslationsS54TaskSettingsInviteLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get expires_in => 'Expires in';
+	@override String get invite_expired => 'Invite code has expired';
+}
+
 // Path: S70_System_Settings.section
 class _TranslationsS70SystemSettingsSectionEnUs extends TranslationsS70SystemSettingsSectionZhTw {
 	_TranslationsS70SystemSettingsSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1471,16 +1496,6 @@ class _TranslationsB04PaymentMergeLabelEnUs extends TranslationsB04PaymentMergeL
 	@override String get merge_amount => 'Total Amount';
 }
 
-// Path: B06_payment_info_detail.buttons
-class _TranslationsB06PaymentInfoDetailButtonsEnUs extends TranslationsB06PaymentInfoDetailButtonsZhTw {
-	_TranslationsB06PaymentInfoDetailButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get copy => 'Copy';
-}
-
 // Path: B07_PaymentMethod_Edit.label
 class _TranslationsB07PaymentMethodEditLabelEnUs extends TranslationsB07PaymentMethodEditLabelZhTw {
 	_TranslationsB07PaymentMethodEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1553,7 +1568,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String length_exceeded({required Object max}) => 'Max ${max} characters.';
 	@override String get invalid_char => 'Invalid characters.';
 	@override String get invalid_code => 'Invalid invite code. Please check if the link is correct.';
-	@override String get expired_code => 'Invite link expired (over 15 minutes). Please ask the task leader to share again.';
+	@override String expired_code({required Object expiry_minutes}) => 'Invite link expired (over ${expiry_minutes} minutes). Please ask the task leader to share again.';
 	@override String task_full({required Object limit}) => 'Task is full (max ${limit} members).';
 	@override String get auth_required => 'Authentication failed. Please restart the app.';
 	@override String get init_failed => 'Loading failed. Please try again.';
@@ -1830,6 +1845,7 @@ extension on TranslationsEnUs {
 			'common.buttons.agree' => 'Agree',
 			'common.buttons.decline' => 'Decline',
 			'common.buttons.add_record' => 'Add',
+			'common.buttons.copy' => 'Copy',
 			'common.label.task_name' => 'Task name',
 			'common.label.item_name' => 'Item Name',
 			'common.label.sub_item' => 'Sub Item Name',
@@ -2128,6 +2144,11 @@ extension on TranslationsEnUs {
 			'S53_TaskSettings_Members.label.default_ratio' => 'Default Ratio',
 			'S53_TaskSettings_Members.member_default_name' => 'Member',
 			'S53_TaskSettings_Members.member_name' => 'Member Name',
+			'S54_TaskSettings_Invite.title' => 'Task Invite',
+			'S54_TaskSettings_Invite.buttons.share' => 'Share',
+			'S54_TaskSettings_Invite.buttons.regenerate' => 'Regenerate',
+			'S54_TaskSettings_Invite.label.expires_in' => 'Expires in',
+			'S54_TaskSettings_Invite.label.invite_expired' => 'Invite code has expired',
 			'S70_System_Settings.title' => 'Settings',
 			'S70_System_Settings.section.basic' => 'General Settings',
 			'S70_System_Settings.section.legal' => 'Legal',
@@ -2183,7 +2204,6 @@ extension on TranslationsEnUs {
 			'B04_payment_merge.title' => 'Merge Member Payments',
 			'B04_payment_merge.label.head_member' => 'Representative',
 			'B04_payment_merge.label.merge_amount' => 'Total Amount',
-			'B06_payment_info_detail.buttons.copy' => 'Copy',
 			'B07_PaymentMethod_Edit.title' => 'Funding Source',
 			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => 'Prepaid Balance: ${amount}',
 			'B07_PaymentMethod_Edit.payer_member' => 'Payer',
@@ -2239,7 +2259,7 @@ extension on TranslationsEnUs {
 			'error.message.length_exceeded' => ({required Object max}) => 'Max ${max} characters.',
 			'error.message.invalid_char' => 'Invalid characters.',
 			'error.message.invalid_code' => 'Invalid invite code. Please check if the link is correct.',
-			'error.message.expired_code' => 'Invite link expired (over 15 minutes). Please ask the task leader to share again.',
+			'error.message.expired_code' => ({required Object expiry_minutes}) => 'Invite link expired (over ${expiry_minutes} minutes). Please ask the task leader to share again.',
 			'error.message.task_full' => ({required Object limit}) => 'Task is full (max ${limit} members).',
 			'error.message.auth_required' => 'Authentication failed. Please restart the app.',
 			'error.message.init_failed' => 'Loading failed. Please try again.',
