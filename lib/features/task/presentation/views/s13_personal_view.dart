@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -20,17 +22,41 @@ class S13PersonalView extends StatelessWidget {
   const S13PersonalView({super.key});
 
   static const double _kCardHeight = 176.0;
-  static const double _kDateStripHeight = 56.0;
+  static const double _kDateStripHeightStandard = 56.0;
+  static const double _kDateStripHeightEnlarged = 96.0;
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<S13TaskDashboardViewModel>();
+    final theme = Theme.of(context);
     final task = vm.task;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
+    final double dateStripHeight =
+        isEnlarged ? _kDateStripHeightEnlarged : _kDateStripHeightStandard;
 
     if (task == null) return const SizedBox.shrink();
 
     // Member Data Logic (從 Task members Map 裡抓)
     final memberData = task.members[vm.currentUserId];
+
+    // 1. 將卡片內容獨立出來，讓兩種 Sliver 共用
+    final Widget balanceCardWidget = Container(
+      color: theme.scaffoldBackgroundColor,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+        child: PersonalBalanceCard(
+          baseCurrency: vm.baseCurrency,
+          netBalance: vm.personalNetBalance,
+          totalExpense: vm.personalTotalExpense,
+          totalPrepay: vm.personalTotalPrepay,
+          uid: vm.currentUserId,
+          memberData: memberData,
+          fixedHeight: isEnlarged ? null : _kCardHeight,
+        ),
+      ),
+    );
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -39,35 +65,32 @@ class S13PersonalView extends StatelessWidget {
         return CustomScrollView(
           controller: vm.personalScrollController, // 共用 VM Controller
           slivers: [
-            // Sticky Header 1 (Personal Balance)
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: StickyHeaderDelegate(
-                height: _kCardHeight,
-                child: Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+            if (!isEnlarged) ...[
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: StickyHeaderDelegate(
                   height: _kCardHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: PersonalBalanceCard(
-                      baseCurrency: vm.baseCurrency,
-                      netBalance: vm.personalNetBalance,
-                      totalExpense: vm.personalTotalExpense,
-                      totalPrepay: vm.personalTotalPrepay,
-                      uid: vm.currentUserId,
-                      memberData: memberData,
-                      fixedHeight: _kCardHeight, // 傳入 Map
+                  child: Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    height: _kCardHeight,
+                    child: SizedBox(
+                      height: _kCardHeight,
+                      child: balanceCardWidget,
                     ),
                   ),
                 ),
               ),
-            ),
+            ] else ...[
+              SliverToBoxAdapter(
+                child: balanceCardWidget,
+              ),
+            ],
 
             // Sticky Header 2 (Date Strip)
             SliverPersistentHeader(
               pinned: true,
               delegate: CommonDateStripDelegate(
-                height: _kDateStripHeight,
+                height: dateStripHeight,
                 startDate: task.startDate ?? DateTime.now(),
                 endDate: task.endDate ?? DateTime.now(),
                 selectedDate: vm.selectedDateInStrip,
@@ -77,6 +100,7 @@ class S13PersonalView extends StatelessWidget {
                         targetDate: date, taskId: task.id);
                   });
                 },
+                isEnlarged: isEnlarged,
               ),
             ),
 
@@ -102,7 +126,8 @@ class S13PersonalView extends StatelessWidget {
                         final DualAmount displayAmount =
                             vm.getPersonalRecordDisplayAmount(record);
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppLayout.spaceL),
                           child: RecordItem(
                             record: record,
                             baseCurrency: vm.baseCurrency,

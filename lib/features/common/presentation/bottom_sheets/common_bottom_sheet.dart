@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class CommonBottomSheet extends StatelessWidget {
   /// 標題文字
@@ -30,6 +33,9 @@ class CommonBottomSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
 
     // 1. 裁切頂部圓角
     return Padding(
@@ -81,7 +87,7 @@ class CommonBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: Icon(Icons.close, size: iconSize),
                       onPressed: onBackPressed ?? () => Navigator.pop(context),
                     ),
                   ],
@@ -98,7 +104,7 @@ class CommonBottomSheet extends StatelessWidget {
                     : null,
               ),
               body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
                 child: children,
               ),
               bottomNavigationBar: bottomActionBar,

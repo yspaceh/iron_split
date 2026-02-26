@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -44,7 +46,7 @@ class _S11Content extends StatelessWidget {
   const _S11Content();
 
   Future<void> _handleJoin(BuildContext context, S11InviteConfirmViewModel vm,
-      Translations t, ThemeData theme) async {
+      Translations t, TextTheme textTheme, double finalLineHeight) async {
     try {
       final taskId = await vm.confirmJoin();
       if (taskId == null) return;
@@ -69,7 +71,7 @@ class _S11Content extends StatelessWidget {
         ],
         content: Text(
           msg,
-          style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+          style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
         ),
       );
     }
@@ -87,6 +89,13 @@ class _S11Content extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final vm = context.watch<S11InviteConfirmViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final dateFormat = DateFormat('yyyy/MM/dd');
 
     final title = t.S11_Invite_Confirm.title;
@@ -122,23 +131,24 @@ class _S11Content extends StatelessWidget {
               isLoading: vm.joinStatus == LoadStatus.loading,
               // 按鈕狀態由 VM 決定 (是否已選 Ghost)
               onPressed: vm.canConfirm
-                  ? () => _handleJoin(context, vm, t, theme)
+                  ? () =>
+                      _handleJoin(context, vm, t, textTheme, finalLineHeight)
                   : null,
             ),
           ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: AppLayout.spaceL, horizontal: AppLayout.spaceL),
                   decoration: BoxDecoration(
                     color: colorScheme.surface, // 純白背景
-                    borderRadius: BorderRadius.circular(16), // 精緻圓角
+                    borderRadius: BorderRadius.circular(AppLayout.radiusL),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.03),
@@ -152,7 +162,7 @@ class _S11Content extends StatelessWidget {
                     children: [
                       _buildColumn(context, t.common.label.task_name,
                           vm.taskName, colorScheme, textTheme),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppLayout.spaceS),
                       _buildColumn(
                           context,
                           t.common.label.period,
@@ -163,7 +173,7 @@ class _S11Content extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: AppLayout.spaceL),
 
                 // --- B. Ghost Selection (如果需要) ---
                 if (vm.showGhostSelection) ...[

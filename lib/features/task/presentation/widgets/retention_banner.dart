@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class RetentionBanner extends StatelessWidget {
   final int days;
@@ -14,16 +17,21 @@ class RetentionBanner extends StatelessWidget {
     final textTheme = theme.textTheme;
     final isUrgent = days <= 7;
     final color = isUrgent ? colorScheme.error : colorScheme.onSurfaceVariant;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: EdgeInsets.symmetric(
+          vertical: AppLayout.spaceS, horizontal: horizontalMargin),
       color: colorScheme.surfaceContainerLow,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.timer_outlined, size: 16, color: color),
-          const SizedBox(width: 4),
+          Icon(Icons.timer_outlined, size: iconSize, color: color),
+          const SizedBox(width: AppLayout.spaceXS),
           Expanded(
             child: Text(
               t.S17_Task_Locked.retention_notice(days: days),

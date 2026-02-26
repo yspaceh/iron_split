@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -53,17 +55,18 @@ class _S12Content extends StatelessWidget {
     }
   }
 
-  void _showConfirmDialog(
-      BuildContext context, S12TaskCloseNoticeViewModel vm) {
+  void _showConfirmDialog(BuildContext context, S12TaskCloseNoticeViewModel vm,
+      double finalLineHeight) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     CommonAlertDialog.show(
       context,
       title: t.D08_TaskClosed_Confirm.title,
       content: Text(
         t.D08_TaskClosed_Confirm.content,
-        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
         AppButton(
@@ -84,7 +87,16 @@ class _S12Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final vm = context.watch<S12TaskCloseNoticeViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S12_TaskClose_Notice.title;
 
     return CommonStateView(
@@ -107,18 +119,20 @@ class _S12Content extends StatelessWidget {
               text: t.S12_TaskClose_Notice.buttons.close_task,
               type: AppButtonType.primary,
               isLoading: vm.closeStatus == LoadStatus.loading,
-              onPressed: () => _showConfirmDialog(context, vm),
+              onPressed: () => _showConfirmDialog(context, vm, finalLineHeight),
             ),
           ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalMargin, vertical: AppLayout.spaceL),
             child: Column(
               children: [
                 Text(
                   t.S12_TaskClose_Notice.content,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style:
+                      textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
               ],
             ),

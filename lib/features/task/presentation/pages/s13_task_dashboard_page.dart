@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -73,8 +76,7 @@ class _S13ContentState extends State<_S13Content> {
 
     // 處理結算自動跳轉
     if (_vm.shouldNavigateToS17) {
-      context
-          .pushReplacementNamed('S17', pathParameters: {'taskId': _vm.taskId});
+      context.goNamed('S17', pathParameters: {'taskId': _vm.taskId});
       return; // 跳轉了就不用管後面的
     }
 
@@ -140,6 +142,9 @@ class _S13ContentState extends State<_S13Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S13TaskDashboardViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final isCaptain = vm.isCaptain;
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back), // 沒有上一頁時，顯示「回首頁」
@@ -173,6 +178,7 @@ class _S13ContentState extends State<_S13Content> {
               AppButton(
                 text: t.common.buttons.settlement,
                 type: AppButtonType.secondary,
+                isLoading: vm.startSettlementStatus == LoadStatus.loading,
                 onPressed: () => _handleStartSettlement(context, vm),
               ),
             ],
@@ -187,7 +193,8 @@ class _S13ContentState extends State<_S13Content> {
           children: [
             // Segmented Button
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalMargin, vertical: 8),
               // [修正] 改用 CustomSlidingSegment
               child: CustomSlidingSegment<int>(
                 selectedValue: vm.segmentedIndex,

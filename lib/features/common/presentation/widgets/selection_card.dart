@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_indicator.dart';
 
 /// 可展開的選擇卡片
@@ -34,23 +35,23 @@ class SelectionCard extends StatelessWidget {
         color: isSelected
             ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
             : backgroundColor ?? colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppLayout.radiusL),
       ),
       child: Column(
         children: [
           // Header (Always visible)
           InkWell(
             onTap: onToggle,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppLayout.radiusL),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppLayout.spaceL),
               child: Row(
                 children: [
                   SelectionIndicator(
                     isSelected: isSelected,
                     isRadio: isRadio, // 傳遞樣式
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppLayout.spaceS),
                   Text(
                     title,
                     style: textTheme.titleMedium?.copyWith(
@@ -66,7 +67,7 @@ class SelectionCard extends StatelessWidget {
           // Expanded Body
           if (isSelected)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppLayout.spaceL),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,9 +75,9 @@ class SelectionCard extends StatelessWidget {
                     height: 1,
                     color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppLayout.spaceS),
                   child,
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppLayout.spaceL),
                 ],
               ),
             ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:iron_split/gen/strings.g.dart'; // 引入翻譯
+import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart'; // 引入翻譯
 
 class AppKeyboardActionsWrapper extends StatelessWidget {
   final Widget child;
@@ -19,6 +22,9 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     return KeyboardActions(
       // 1. 設定全域通用的樣式
@@ -36,31 +42,31 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
             toolbarButtons: [
               // 2. 統一的「完成」按鈕
               (node) {
-                return Padding(
-                  // 使用 Padding 把膠囊往左上方推一點，讓它不要死貼著鍵盤和螢幕邊緣
-                  padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-                  child: Material(
-                    // 加上 Material 來產生優雅的陰影和背景色
-                    elevation: 4.0,
-                    shadowColor: Colors.black45,
-                    borderRadius: BorderRadius.circular(24.0), // 圓角膠囊形狀
-                    color: colorScheme.primary,
-
-                    child: InkWell(
-                      // 加上水波紋點擊效果
-                      borderRadius: BorderRadius.circular(24.0),
-                      onTap: () => node.unfocus(),
-                      child: Padding(
-                        // 膠囊內部的文字留白
+                final safeTextScaler =
+                    MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2);
+                return MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(textScaler: safeTextScaler),
+                  child: Container(
+                    alignment: Alignment.center, // 確保在工具列內絕對垂直置中
+                    padding: EdgeInsets.only(right: horizontalMargin),
+                    child: FilledButton(
+                      onPressed: () => node.unfocus(),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(64, 32),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8.0),
-                        child: Text(
-                          t.common.buttons.done, // "完成"
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
+                            horizontal: AppLayout.spaceL),
+                        shape: const StadiumBorder(),
+                        elevation: 2,
+                      ),
+                      child: Text(
+                        t.common.buttons.done, // "完成"
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          height: 1.2,
                         ),
                       ),
                     ),

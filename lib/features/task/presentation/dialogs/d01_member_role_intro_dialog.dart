@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/avatar_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -105,8 +107,16 @@ class _D01DialogContentState extends State<_D01DialogContent>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final t = Translations.of(context);
     final vm = context.watch<D01MemberRoleIntroViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     return PopScope(
       canPop: false,
@@ -125,14 +135,14 @@ class _D01DialogContentState extends State<_D01DialogContent>
                 isLinked: true,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppLayout.spaceL),
 
             Text(
               t.D01_MemberRole_Intro.content(
                 avatar: AvatarConstants.getName(t, vm.currentAvatar),
               ),
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
             ),
             const SizedBox(height: 24),
 

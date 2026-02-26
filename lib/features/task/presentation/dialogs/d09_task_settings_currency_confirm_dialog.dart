@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -70,13 +72,21 @@ class _D09Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final vm = context.watch<D09TaskSettingsCurrencyConfirmViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     return CommonAlertDialog(
       title: t.D09_TaskSettings_CurrencyConfirm.title,
       content: Text(
         "${t.D09_TaskSettings_CurrencyConfirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})",
-        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
         AppButton(

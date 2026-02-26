@@ -46,6 +46,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   Map<String, TaskMember> _membersData = {};
 
   double _currentRemainder = 0.0;
+  TaskStatus _taskStatus = TaskStatus.ongoing;
 
   // Getters
   DateTime? get startDate => _startDate;
@@ -63,6 +64,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   LoadStatus get updateRemainderStatus => _updateRemainderStatus;
 
   String get link => _deepLinkService.generateJoinLink(inviteCode);
+  TaskStatus get taskStatus => _taskStatus;
 
   List<TaskMember> get membersList {
     return _membersData.entries.map((m) => m.value).toList();
@@ -101,6 +103,8 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
       final task = await _taskRepo.streamTask(taskId).first;
       if (task == null) throw AppErrorCodes.dataNotFound;
+
+      _taskStatus = task.status;
 
       nameController.text = task.name;
       _initialName = task.name;

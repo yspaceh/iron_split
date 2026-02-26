@@ -1,6 +1,7 @@
 // lib/features/common/presentation/widgets/app_stepper.dart
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class AppStepper extends StatelessWidget {
   final VoidCallback? onDecrease;
@@ -32,7 +33,7 @@ class AppStepper extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppLayout.radiusXL),
         border: Border.all(color: dividerColor),
       ),
       child: Row(
@@ -42,8 +43,8 @@ class AppStepper extends StatelessWidget {
           _buildButton(
             icon: Icons.remove,
             onTap: onDecrease,
-            borderRadius:
-                const BorderRadius.horizontal(left: Radius.circular(20)),
+            borderRadius: const BorderRadius.horizontal(
+                left: Radius.circular(AppLayout.radiusXL)),
             color: enabled ? colorScheme.onSurface : disableColor,
           ),
 
@@ -54,7 +55,7 @@ class AppStepper extends StatelessWidget {
             // 數值顯示區 (固定最小寬度以防跳動)
             Container(
               constraints: const BoxConstraints(minWidth: 40),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: AppLayout.spaceS),
               alignment: Alignment.center,
               child: Text(
                 text!,
@@ -75,8 +76,8 @@ class AppStepper extends StatelessWidget {
           _buildButton(
             icon: Icons.add,
             onTap: onIncrease,
-            borderRadius:
-                const BorderRadius.horizontal(right: Radius.circular(20)),
+            borderRadius: const BorderRadius.horizontal(
+                right: Radius.circular(AppLayout.radiusXL)),
             color: enabled ? colorScheme.onSurface : disableColor,
           ),
         ],

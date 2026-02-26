@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class AppSelectField extends StatelessWidget {
   final String text;
@@ -10,6 +13,7 @@ class AppSelectField extends StatelessWidget {
   final Color? fillColor;
   final Widget? trailing;
   final AutovalidateMode? autovalidateMode;
+  final bool enabled;
 
   const AppSelectField({
     super.key,
@@ -22,6 +26,7 @@ class AppSelectField extends StatelessWidget {
     this.fillColor,
     this.trailing,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.enabled = true,
   });
 
   @override
@@ -30,8 +35,49 @@ class AppSelectField extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final bool isEmpty = text.isEmpty;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final scale = displayState.scale;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final Color textColor = enabled
+        ? colorScheme.onSurface
+        : colorScheme.onSurface.withValues(alpha: 0.38);
 
-    final borderRadius = BorderRadius.circular(16);
+    final contentStyle = textTheme.bodyLarge?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: textColor,
+      height: finalLineHeight,
+    );
+
+    final Color iconColor = enabled
+        ? colorScheme.onSurfaceVariant
+        : colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
+
+    final labelStyle = textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w600,
+          fontSize: 10,
+        ) ??
+        const TextStyle(fontSize: 10);
+    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceM;
+
+    final double labelRenderedHeight = AppLayout.renderedHeight(
+      10.0,
+      labelStyle.height,
+      scale,
+    );
+    final double contentTopPadding =
+        labelTopPos + labelRenderedHeight + AppLayout.spaceXS;
+
+    final double contentBottomPadding =
+        isEnlarged ? AppLayout.spaceL : AppLayout.spaceM;
+
+    final borderRadius = BorderRadius.circular(AppLayout.radiusL);
 
     // 1. 正常狀態：透明邊框
     final normalBorderStyle = OutlineInputBorder(
@@ -52,7 +98,7 @@ class AppSelectField extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       borderRadius: borderRadius,
       child: Stack(
         children: [
@@ -64,16 +110,14 @@ class AppSelectField extends StatelessWidget {
               readOnly: true,
               autovalidateMode: autovalidateMode,
               textAlignVertical: TextAlignVertical.bottom,
-              style: textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: colorScheme.onSurface,
-                height: 1.5,
-              ),
+              style: contentStyle,
               decoration: InputDecoration(
                 labelText: null, // 禁用內建 Label
-
-                contentPadding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 28, bottom: 12),
+                contentPadding: EdgeInsets.only(
+                    left: AppLayout.spaceL,
+                    right: AppLayout.spaceL,
+                    top: contentTopPadding,
+                    bottom: contentBottomPadding),
 
                 hintText: isEmpty ? hintText : null,
                 hintStyle: TextStyle(
@@ -81,11 +125,15 @@ class AppSelectField extends StatelessWidget {
                     fontSize: 14),
 
                 filled: true,
-                fillColor: fillColor ?? colorScheme.surface,
+                fillColor: fillColor != null
+                    ? (enabled ? fillColor : fillColor!.withValues(alpha: 0.3))
+                    : (enabled
+                        ? colorScheme.surface
+                        : colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.3)),
 
                 prefixIcon: prefixIcon != null
-                    ? Icon(prefixIcon,
-                        color: colorScheme.onSurfaceVariant, size: 20)
+                    ? Icon(prefixIcon, color: iconColor, size: iconSize)
                     : null,
 
                 suffixIcon: Row(
@@ -93,13 +141,14 @@ class AppSelectField extends StatelessWidget {
                   children: [
                     if (trailing != null) ...[
                       trailing!,
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppLayout.spaceS),
                     ],
                     Icon(
                       Icons.expand_more_rounded,
-                      color: colorScheme.onSurfaceVariant,
+                      size: iconSize,
+                      color: iconColor,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppLayout.spaceM),
                   ],
                 ),
                 suffixIconConstraints: const BoxConstraints(
@@ -124,14 +173,12 @@ class AppSelectField extends StatelessWidget {
           if (labelText != null)
             Positioned(
               top: 12,
-              left: (prefixIcon != null) ? 48 : 20,
+              left: (prefixIcon != null)
+                  ? AppLayout.gridUnit * 6
+                  : AppLayout.spaceXL,
               child: Text(
                 labelText!,
-                style: textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 10,
-                ),
+                style: labelStyle,
               ),
             ),
         ],

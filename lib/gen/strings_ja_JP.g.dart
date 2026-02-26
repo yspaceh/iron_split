@@ -71,6 +71,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
 	@override late final _TranslationsD12LogoutConfirmJaJp D12_logout_confirm = _TranslationsD12LogoutConfirmJaJp._(_root);
 	@override late final _TranslationsD13DeleteAccountConfirmJaJp D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmJaJp._(_root);
+	@override late final _TranslationsD14DateSelectJaJp D14_Date_Select = _TranslationsD14DateSelectJaJp._(_root);
 	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
 	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
 	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
@@ -97,6 +98,7 @@ class _TranslationsCommonJaJp extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonPaymentMethodJaJp payment_method = _TranslationsCommonPaymentMethodJaJp._(_root);
 	@override late final _TranslationsCommonLanguageJaJp language = _TranslationsCommonLanguageJaJp._(_root);
 	@override late final _TranslationsCommonThemeJaJp theme = _TranslationsCommonThemeJaJp._(_root);
+	@override late final _TranslationsCommonDisplayJaJp display = _TranslationsCommonDisplayJaJp._(_root);
 	@override late final _TranslationsCommonPaymentInfoJaJp payment_info = _TranslationsCommonPaymentInfoJaJp._(_root);
 	@override late final _TranslationsCommonPaymentStatusJaJp payment_status = _TranslationsCommonPaymentStatusJaJp._(_root);
 	@override late final _TranslationsCommonTermsJaJp terms = _TranslationsCommonTermsJaJp._(_root);
@@ -514,6 +516,16 @@ class _TranslationsD13DeleteAccountConfirmJaJp extends TranslationsD13DeleteAcco
 	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？';
 }
 
+// Path: D14_Date_Select
+class _TranslationsD14DateSelectJaJp extends TranslationsD14DateSelectZhTw {
+	_TranslationsD14DateSelectJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '日付の選択';
+}
+
 // Path: B02_SplitExpense_Edit
 class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEditZhTw {
 	_TranslationsB02SplitExpenseEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -753,8 +765,8 @@ class _TranslationsCommonSplitMethodJaJp extends TranslationsCommonSplitMethodZh
 
 	// Translations
 	@override String get even => '均等';
-	@override String get percent => '割合';
-	@override String get exact => '金額指定';
+	@override String get percent => '比例';
+	@override String get exact => '實額';
 }
 
 // Path: common.payment_method
@@ -793,6 +805,19 @@ class _TranslationsCommonThemeJaJp extends TranslationsCommonThemeZhTw {
 	@override String get system => 'システム設定';
 	@override String get light => 'ライトモード';
 	@override String get dark => 'ダークモード';
+}
+
+// Path: common.display
+class _TranslationsCommonDisplayJaJp extends TranslationsCommonDisplayZhTw {
+	_TranslationsCommonDisplayJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '表示設定';
+	@override String get system => 'システム設定';
+	@override String get enlarged => '拡大表示';
+	@override String get standard => '標準表示';
 }
 
 // Path: common.payment_info
@@ -926,8 +951,8 @@ class _TranslationsS13TaskDashboardEmptyJaJp extends TranslationsS13TaskDashboar
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get records => '記録がありません';
-	@override String get personal_records => '関連する記録はありません';
+	@override String get records => '該当なし';
+	@override String get personal_records => '該当なし';
 }
 
 // Path: S13_Task_Dashboard.section
@@ -1530,7 +1555,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get invalid_char => '無効な文字が含まれています。';
 	@override String get invalid_code => '招待コードが無効です。リンクが正しいか確認してください。';
 	@override String get expired_code => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。';
-	@override String get task_full => '定員オーバーです（上限15名）。参加できません。';
+	@override String task_full({required Object limit}) => '定員オーバーです（上限${limit}名）。';
 	@override String get auth_required => '認証に失敗しました。アプリを再起動してください。';
 	@override String get init_failed => '読み込みに失敗しました。もう一度お試しください。';
 	@override String get unauthorized => 'ログインしていません。再度ログインしてください。';
@@ -1885,8 +1910,8 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます',
 			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました',
 			'common.split_method.even' => '均等',
-			'common.split_method.percent' => '割合',
-			'common.split_method.exact' => '金額指定',
+			'common.split_method.percent' => '比例',
+			'common.split_method.exact' => '實額',
 			'common.payment_method.member' => 'メンバー立替',
 			'common.payment_method.prepay' => '前受金払い',
 			'common.payment_method.mixed' => '混合支払',
@@ -1898,6 +1923,10 @@ extension on TranslationsJaJp {
 			'common.theme.system' => 'システム設定',
 			'common.theme.light' => 'ライトモード',
 			'common.theme.dark' => 'ダークモード',
+			'common.display.title' => '表示設定',
+			'common.display.system' => 'システム設定',
+			'common.display.enlarged' => '拡大表示',
+			'common.display.standard' => '標準表示',
 			'common.payment_info.mode.private' => '個別連絡',
 			'common.payment_info.mode.public' => '支払い情報を共有',
 			'common.payment_info.content.private' => '詳細は表示されません。メンバーから直接連絡してもらいます',
@@ -1964,8 +1993,8 @@ extension on TranslationsJaJp {
 			'S13_Task_Dashboard.label.total_prepay' => '総前受金',
 			'S13_Task_Dashboard.label.total_expense_personal' => '総費用',
 			'S13_Task_Dashboard.label.total_prepay_personal' => '総前受金（立替含）',
-			'S13_Task_Dashboard.empty.records' => '記録がありません',
-			'S13_Task_Dashboard.empty.personal_records' => '関連する記録はありません',
+			'S13_Task_Dashboard.empty.records' => '該当なし',
+			'S13_Task_Dashboard.empty.personal_records' => '該当なし',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S13_Task_Dashboard.dialog_balance_detail' => '通貨別収支明細',
 			'S13_Task_Dashboard.section.expense' => '支払い通貨',
@@ -2144,6 +2173,7 @@ extension on TranslationsJaJp {
 			'D12_logout_confirm.buttons.logout' => 'ログアウト',
 			'D13_DeleteAccount_Confirm.title' => 'アカウント削除確認',
 			'D13_DeleteAccount_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？',
+			'D14_Date_Select.title' => '日付の選択',
 			'B02_SplitExpense_Edit.title' => '明細編集',
 			'B02_SplitExpense_Edit.buttons.confirm_split' => '決定',
 			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してください',
@@ -2212,7 +2242,7 @@ extension on TranslationsJaJp {
 			'error.message.invalid_char' => '無効な文字が含まれています。',
 			'error.message.invalid_code' => '招待コードが無効です。リンクが正しいか確認してください。',
 			'error.message.expired_code' => '招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。',
-			'error.message.task_full' => '定員オーバーです（上限15名）。参加できません。',
+			'error.message.task_full' => ({required Object limit}) => '定員オーバーです（上限${limit}名）。',
 			'error.message.auth_required' => '認証に失敗しました。アプリを再起動してください。',
 			'error.message.init_failed' => '読み込みに失敗しました。もう一度お試しください。',
 			'error.message.unauthorized' => 'ログインしていません。再度ログインしてください。',

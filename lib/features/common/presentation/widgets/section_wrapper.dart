@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class SectionWrapper extends StatelessWidget {
   final List<Widget> children;
@@ -17,7 +18,7 @@ class SectionWrapper extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,7 +28,7 @@ class SectionWrapper extends StatelessWidget {
               style: textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurface, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppLayout.spaceS),
           ],
           Column(
             mainAxisSize: MainAxisSize.min,

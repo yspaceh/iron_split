@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -186,6 +189,9 @@ class _S14ContentState extends State<_S14Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S14TaskSettingsViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S14_Task_Settings.title;
 
     return CommonStateView(
@@ -195,15 +201,15 @@ class _S14ContentState extends State<_S14Content> {
       onErrorAction: () => vm.init(),
       child: AppKeyboardActionsWrapper(
         focusNodes: [_nameFocusNode],
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            centerTitle: true,
-          ),
-          body: Stack(
-            children: [
-              ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                title: Text(title),
+                centerTitle: true,
+              ),
+              body: ListView(
+                padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
                 children: [
                   SectionWrapper(
                       title: t.S14_Task_Settings.section.task_name,
@@ -213,13 +219,21 @@ class _S14ContentState extends State<_S14Content> {
                           focusNode: _nameFocusNode,
                           label: t.common.label.task_name,
                           hint: t.S16_TaskCreate_Edit.hint.name,
-                          maxLength: 20,
+                          maxLength: TaskConstants.maxTaskNameLength,
+                          enabled: vm.taskStatus != TaskStatus.settled &&
+                              vm.taskStatus != TaskStatus.closed,
                         ),
-                        const SizedBox(height: 8),
-                        NavTile(
-                          title: t.S14_Task_Settings.menu.invite,
-                          onTap: () => _handleInviteMember(context, vm, t),
-                        ),
+                        if (vm.taskStatus != TaskStatus.settled &&
+                            vm.taskStatus != TaskStatus.closed) ...[
+                          SizedBox(
+                              height: isEnlarged
+                                  ? AppLayout.spaceL
+                                  : AppLayout.spaceS),
+                          NavTile(
+                            title: t.S14_Task_Settings.menu.invite,
+                            onTap: () => _handleInviteMember(context, vm, t),
+                          ),
+                        ]
                       ]),
                   SectionWrapper(
                       title: t.S14_Task_Settings.section.task_period,
@@ -231,14 +245,21 @@ class _S14ContentState extends State<_S14Content> {
                             onDateChanged: (val) => _handleUpdateDateRange(
                                 context, vm,
                                 start: val, end: vm.endDate!),
+                            enabled: vm.taskStatus != TaskStatus.settled &&
+                                vm.taskStatus != TaskStatus.closed,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(
+                              height: isEnlarged
+                                  ? AppLayout.spaceL
+                                  : AppLayout.spaceS),
                           TaskDateInput(
                             label: t.common.label.end_date,
                             date: vm.endDate!,
                             onDateChanged: (val) => _handleUpdateDateRange(
                                 context, vm,
                                 start: vm.startDate!, end: val),
+                            enabled: vm.taskStatus != TaskStatus.settled &&
+                                vm.taskStatus != TaskStatus.closed,
                           ),
                         ],
                       ]),
@@ -251,25 +272,37 @@ class _S14ContentState extends State<_S14Content> {
                             onCurrencyChanged: (val) =>
                                 _showCurrencyChangeConfirmDialog(
                                     context, vm, val),
-                            enabled: true,
+                            enabled: vm.taskStatus != TaskStatus.settled &&
+                                vm.taskStatus != TaskStatus.closed,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(
+                              height: isEnlarged
+                                  ? AppLayout.spaceL
+                                  : AppLayout.spaceS),
                         ],
                         TaskRemainderRuleInput(
                           rule: RemainderRuleConstants.getLabel(
                               context, vm.remainderRule),
                           onTap: () =>
                               _showRemainderRuleChangeBottomSheet(context, vm),
+                          enabled: vm.taskStatus != TaskStatus.settled &&
+                              vm.taskStatus != TaskStatus.closed,
                         ),
                       ]),
                   SectionWrapper(
                     title: t.S14_Task_Settings.section.other,
                     children: [
-                      NavTile(
-                        title: t.S14_Task_Settings.menu.member_settings,
-                        onTap: () => _redirectToMemberSettings(context, vm),
-                      ),
-                      const SizedBox(height: 8),
+                      if (vm.taskStatus != TaskStatus.settled &&
+                          vm.taskStatus != TaskStatus.closed) ...[
+                        NavTile(
+                          title: t.S14_Task_Settings.menu.member_settings,
+                          onTap: () => _redirectToMemberSettings(context, vm),
+                        ),
+                        SizedBox(
+                            height: isEnlarged
+                                ? AppLayout.spaceL
+                                : AppLayout.spaceS),
+                      ],
                       NavTile(
                           title: t.S14_Task_Settings.menu.history,
                           onTap: () => _redirectToHistory(context, vm)),
@@ -277,8 +310,10 @@ class _S14ContentState extends State<_S14Content> {
                   ),
                   // Settings Navigation
 
-                  if (vm.isOwner) ...[
-                    const SizedBox(height: 16),
+                  if (vm.isOwner &&
+                      (vm.taskStatus != TaskStatus.settled &&
+                          vm.taskStatus != TaskStatus.closed)) ...[
+                    const SizedBox(height: AppLayout.spaceL),
                     NavTile(
                       title: t.S14_Task_Settings.menu.close_task,
                       isDestructive: true,
@@ -289,9 +324,9 @@ class _S14ContentState extends State<_S14Content> {
                   const SizedBox(height: 32),
                 ],
               ),
-              if (vm.inviteMemberStatus == LoadStatus.loading) SharePreparing(),
-            ],
-          ),
+            ),
+            if (vm.inviteMemberStatus == LoadStatus.loading) SharePreparing(),
+          ],
         ),
       ),
     );

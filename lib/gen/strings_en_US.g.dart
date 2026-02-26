@@ -71,6 +71,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
 	@override late final _TranslationsD12LogoutConfirmEnUs D12_logout_confirm = _TranslationsD12LogoutConfirmEnUs._(_root);
 	@override late final _TranslationsD13DeleteAccountConfirmEnUs D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmEnUs._(_root);
+	@override late final _TranslationsD14DateSelectEnUs D14_Date_Select = _TranslationsD14DateSelectEnUs._(_root);
 	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
 	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
 	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
@@ -99,6 +100,7 @@ class _TranslationsCommonEnUs extends TranslationsCommonZhTw {
 	@override late final _TranslationsCommonPaymentMethodEnUs payment_method = _TranslationsCommonPaymentMethodEnUs._(_root);
 	@override late final _TranslationsCommonLanguageEnUs language = _TranslationsCommonLanguageEnUs._(_root);
 	@override late final _TranslationsCommonThemeEnUs theme = _TranslationsCommonThemeEnUs._(_root);
+	@override late final _TranslationsCommonDisplayEnUs display = _TranslationsCommonDisplayEnUs._(_root);
 	@override late final _TranslationsCommonTermsEnUs terms = _TranslationsCommonTermsEnUs._(_root);
 	@override late final _TranslationsCommonShareEnUs share = _TranslationsCommonShareEnUs._(_root);
 	@override String get preparing => 'Preparing...';
@@ -514,6 +516,16 @@ class _TranslationsD13DeleteAccountConfirmEnUs extends TranslationsD13DeleteAcco
 	@override String get content => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?';
 }
 
+// Path: D14_Date_Select
+class _TranslationsD14DateSelectEnUs extends TranslationsD14DateSelectZhTw {
+	_TranslationsD14DateSelectEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Select Date';
+}
+
 // Path: B02_SplitExpense_Edit
 class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEditZhTw {
 	_TranslationsB02SplitExpenseEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -776,9 +788,9 @@ class _TranslationsCommonSplitMethodEnUs extends TranslationsCommonSplitMethodZh
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get even => 'Even';
-	@override String get percent => 'By Percentage';
-	@override String get exact => 'Exact Amount';
+	@override String get even => 'Equal';
+	@override String get percent => 'Ratio';
+	@override String get exact => 'Custom';
 }
 
 // Path: common.payment_method
@@ -817,6 +829,19 @@ class _TranslationsCommonThemeEnUs extends TranslationsCommonThemeZhTw {
 	@override String get system => 'System Default';
 	@override String get light => 'Light Mode';
 	@override String get dark => 'Dark Mode';
+}
+
+// Path: common.display
+class _TranslationsCommonDisplayEnUs extends TranslationsCommonDisplayZhTw {
+	_TranslationsCommonDisplayEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Display Settings';
+	@override String get system => 'Follow System';
+	@override String get enlarged => 'Enlarged';
+	@override String get standard => 'Standard';
 }
 
 // Path: common.terms
@@ -926,7 +951,7 @@ class _TranslationsS13TaskDashboardEmptyEnUs extends TranslationsS13TaskDashboar
 
 	// Translations
 	@override String get records => 'No records';
-	@override String get personal_records => 'No records on this day';
+	@override String get personal_records => 'No records';
 }
 
 // Path: S13_Task_Dashboard.section
@@ -1529,7 +1554,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get invalid_char => 'Invalid characters.';
 	@override String get invalid_code => 'Invalid invite code. Please check if the link is correct.';
 	@override String get expired_code => 'Invite link expired (over 15 minutes). Please ask the task leader to share again.';
-	@override String get task_full => 'Task is full (max 15 members). Cannot join.';
+	@override String task_full({required Object limit}) => 'Task is full (max ${limit} members).';
 	@override String get auth_required => 'Authentication failed. Please restart the app.';
 	@override String get init_failed => 'Loading failed. Please try again.';
 	@override String get unauthorized => 'Not logged in. Log in again.';
@@ -1899,9 +1924,9 @@ extension on TranslationsEnUs {
 			'common.remainder_rule.content.member' => 'Select a specific member to always absorb the remainder.',
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => 'Remainder ${amount} will be temporarily stored and distributed at settlement.',
 			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.',
-			'common.split_method.even' => 'Even',
-			'common.split_method.percent' => 'By Percentage',
-			'common.split_method.exact' => 'Exact Amount',
+			'common.split_method.even' => 'Equal',
+			'common.split_method.percent' => 'Ratio',
+			'common.split_method.exact' => 'Custom',
 			'common.payment_method.member' => 'Member Advance',
 			'common.payment_method.prepay' => 'Prepaid',
 			'common.payment_method.mixed' => 'Mixed Payment',
@@ -1913,6 +1938,10 @@ extension on TranslationsEnUs {
 			'common.theme.system' => 'System Default',
 			'common.theme.light' => 'Light Mode',
 			'common.theme.dark' => 'Dark Mode',
+			'common.display.title' => 'Display Settings',
+			'common.display.system' => 'Follow System',
+			'common.display.enlarged' => 'Enlarged',
+			'common.display.standard' => 'Standard',
 			'common.terms.label.terms' => 'Terms of Service',
 			'common.terms.label.privacy' => 'Privacy Policy',
 			'common.terms.label.both' => 'Legal Terms',
@@ -1963,7 +1992,7 @@ extension on TranslationsEnUs {
 			'S13_Task_Dashboard.label.total_expense_personal' => 'Total Expense',
 			'S13_Task_Dashboard.label.total_prepay_personal' => 'Total Prepaid (incl. Reimbursed)',
 			'S13_Task_Dashboard.empty.records' => 'No records',
-			'S13_Task_Dashboard.empty.personal_records' => 'No records on this day',
+			'S13_Task_Dashboard.empty.personal_records' => 'No records',
 			'S13_Task_Dashboard.daily_expense_label' => 'Expense',
 			'S13_Task_Dashboard.dialog_balance_detail' => 'Balance Details',
 			'S13_Task_Dashboard.section.expense' => 'Expense Details',
@@ -2142,6 +2171,7 @@ extension on TranslationsEnUs {
 			'D12_logout_confirm.buttons.logout' => 'Log out',
 			'D13_DeleteAccount_Confirm.title' => 'Delete Account',
 			'D13_DeleteAccount_Confirm.content' => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?',
+			'D14_Date_Select.title' => 'Select Date',
 			'B02_SplitExpense_Edit.title' => 'Edit Sub Item',
 			'B02_SplitExpense_Edit.buttons.confirm_split' => 'Confirm Split',
 			'B02_SplitExpense_Edit.item_name_empty' => 'Parent item name is empty',
@@ -2210,7 +2240,7 @@ extension on TranslationsEnUs {
 			'error.message.invalid_char' => 'Invalid characters.',
 			'error.message.invalid_code' => 'Invalid invite code. Please check if the link is correct.',
 			'error.message.expired_code' => 'Invite link expired (over 15 minutes). Please ask the task leader to share again.',
-			'error.message.task_full' => 'Task is full (max 15 members). Cannot join.',
+			'error.message.task_full' => ({required Object limit}) => 'Task is full (max ${limit} members).',
 			'error.message.auth_required' => 'Authentication failed. Please restart the app.',
 			'error.message.init_failed' => 'Loading failed. Please try again.',
 			'error.message.unauthorized' => 'Not logged in. Log in again.',

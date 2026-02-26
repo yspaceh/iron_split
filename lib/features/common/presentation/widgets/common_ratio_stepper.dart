@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class CommonRatioStepper extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;
   final bool enabled;
+  final bool isEnlarged;
 
   const CommonRatioStepper({
     super.key,
     required this.value,
     required this.onChanged,
     this.enabled = true,
+    required this.isEnlarged,
   });
 
   void _updateValue(double delta) {
@@ -29,7 +32,7 @@ class CommonRatioStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
     final isMin = value <= 0.0;
     final isMax = value >= 2.0;
     final borderColor = colorScheme.outlineVariant;
@@ -40,7 +43,7 @@ class CommonRatioStepper extends StatelessWidget {
         color: enabled
             ? null
             : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppLayout.radiusS),
         border: Border.all(color: borderColor),
       ),
       child: Row(
@@ -51,6 +54,7 @@ class CommonRatioStepper extends StatelessWidget {
             context,
             colorScheme,
             icon: Icons.remove,
+            iconSize: iconSize,
             onTap: (enabled && !isMin) ? () => _updateValue(-0.5) : null,
             radius: const BorderRadius.horizontal(left: Radius.circular(7)),
           ),
@@ -67,6 +71,7 @@ class CommonRatioStepper extends StatelessWidget {
             context,
             colorScheme,
             icon: Icons.add,
+            iconSize: iconSize,
             onTap: (enabled && !isMax) ? () => _updateValue(0.5) : null,
             radius: const BorderRadius.horizontal(right: Radius.circular(7)),
           ),
@@ -81,6 +86,7 @@ class CommonRatioStepper extends StatelessWidget {
     required IconData icon,
     required VoidCallback? onTap,
     required BorderRadius radius,
+    required double iconSize,
   }) {
     final isDisabled = onTap == null;
 
@@ -93,7 +99,7 @@ class CommonRatioStepper extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10), // 調整寬度以好點擊
           child: Icon(
             icon,
-            size: 18, // B03 size
+            size: iconSize,
             color: isDisabled
                 ? colorScheme.outline.withValues(alpha: 0.3)
                 : colorScheme.onSurface,

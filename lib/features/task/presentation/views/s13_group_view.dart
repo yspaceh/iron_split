@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -26,12 +28,19 @@ class S13GroupView extends StatelessWidget {
   /// ! CRITICAL LAYOUT CONFIGURATION !
   /// Used by S13Page to calculate Sticky Header size.
   static const double _kCardHeight = 176.0;
-  static const double _kDateStripHeight = 56.0;
+  static const double _kDateStripHeightStandard = 56.0;
+  static const double _kDateStripHeightEnlarged = 96.0;
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<S13TaskDashboardViewModel>();
+    final theme = Theme.of(context);
     final task = vm.task;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
+    final double dateStripHeight =
+        isEnlarged ? _kDateStripHeightEnlarged : _kDateStripHeightStandard;
 
     if (task == null) return const Center(child: CircularProgressIndicator());
 
@@ -70,6 +79,21 @@ class S13GroupView extends StatelessWidget {
       );
     }
 
+    // 1. 將卡片內容獨立出來，讓兩種 Sliver 共用
+    final Widget balanceCardWidget = Container(
+      color: theme.scaffoldBackgroundColor,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+        child: GroupBalanceCard(
+          state: vm.balanceState, // 使用 VM 的 State
+          onCurrencyTap: showCurrencyPicker,
+          onRuleTap: () => onRemainderRuleChange(vm),
+          fixedHeight: isEnlarged ? null : _kCardHeight,
+          isEnlarged: isEnlarged,
+        ),
+      ),
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double bottomPadding = constraints.maxHeight;
@@ -78,31 +102,28 @@ class S13GroupView extends StatelessWidget {
           controller: vm.groupScrollController,
           slivers: [
             // Sticky Header 1 (Card)
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: StickyHeaderDelegate(
-                height: _kCardHeight,
-                child: Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+            if (!isEnlarged) ...[
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: StickyHeaderDelegate(
                   height: _kCardHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: GroupBalanceCard(
-                      state: vm.balanceState, // 使用 VM 的 State
-                      onCurrencyTap: showCurrencyPicker,
-                      onRuleTap: () => onRemainderRuleChange(vm),
-                      fixedHeight: _kCardHeight,
-                    ),
+                  child: SizedBox(
+                    height: _kCardHeight,
+                    child: balanceCardWidget,
                   ),
                 ),
               ),
-            ),
+            ] else ...[
+              SliverToBoxAdapter(
+                child: balanceCardWidget,
+              ),
+            ],
 
             // Sticky Header 2 (Date Strip)
             SliverPersistentHeader(
               pinned: true,
               delegate: CommonDateStripDelegate(
-                height: _kDateStripHeight,
+                height: dateStripHeight,
                 startDate: task.startDate ?? DateTime.now(),
                 endDate: task.endDate ?? DateTime.now(),
                 selectedDate: vm.selectedDateInStrip,
@@ -112,6 +133,7 @@ class S13GroupView extends StatelessWidget {
                         targetDate: date, taskId: task.id);
                   });
                 },
+                isEnlarged: isEnlarged,
               ),
             ),
 
@@ -141,7 +163,8 @@ class S13GroupView extends StatelessWidget {
                       ),
                       ...dayRecords.map((record) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppLayout.spaceL),
                           child: RecordItem(
                             record: record,
                             baseCurrency: vm.baseCurrency,
@@ -194,7 +217,8 @@ class S13GroupView extends StatelessWidget {
                           ),
                         );
                       }),
-                      if (dayRecords.isNotEmpty) const SizedBox(height: 8),
+                      if (dayRecords.isNotEmpty)
+                        const SizedBox(height: AppLayout.spaceS),
                     ],
                   );
                 }).toList(),

@@ -36,9 +36,11 @@ class TaskCurrencyInput extends StatelessWidget {
 
     // [重構] 直接使用 AppSelectField
     return AppSelectField(
-        labelText: t.common.label.currency,
-        text: currency.code,
-        onTap: enabled ? () => _showCurrencyPicker(context) : null,
-        fillColor: fillColor);
+      labelText: t.common.label.currency,
+      text: currency.code,
+      onTap: enabled ? () => _showCurrencyPicker(context) : null,
+      fillColor: fillColor,
+      enabled: enabled,
+    );
   }
 }

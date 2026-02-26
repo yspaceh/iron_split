@@ -3,11 +3,16 @@ import 'package:iron_split/features/common/presentation/widgets/pickers/app_sele
 import 'package:iron_split/gen/strings.g.dart';
 
 class TaskRemainderRuleInput extends StatelessWidget {
-  const TaskRemainderRuleInput(
-      {super.key, required this.rule, required this.onTap});
+  const TaskRemainderRuleInput({
+    super.key,
+    required this.rule,
+    required this.onTap,
+    this.enabled = true,
+  });
 
   final String rule;
   final VoidCallback onTap;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +21,7 @@ class TaskRemainderRuleInput extends StatelessWidget {
       labelText: t.common.remainder_rule.title, // 標題：零頭處理
       text: rule,
       onTap: onTap,
+      enabled: enabled,
     );
   }
 }

@@ -93,7 +93,9 @@ class _B05ContentState extends State<_B05Content> {
   }
 
   Future<void> _handleSave(
-      BuildContext context, B05PaymentInfoEditViewModel vm) async {
+    BuildContext context,
+    B05PaymentInfoEditViewModel vm,
+  ) async {
     try {
       await vm.save();
 

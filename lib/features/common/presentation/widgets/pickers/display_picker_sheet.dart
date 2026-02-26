@@ -3,17 +3,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
-import 'package:iron_split/core/constants/theme_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
 import 'package:provider/provider.dart';
 // 引入 AppLocale
 
-class ThemePickerSheet {
+class DisplayPickerSheet {
   static void show({
     required BuildContext context,
-    required ThemeMode initialTheme, // [修改] 型別改為 AppLocale
-    required Function(ThemeMode selected) onSelected, // [修改] 回傳 AppLocale
+    required DisplayMode initialDisplay, // [修改] 型別改為 AppLocale
+    required Function(DisplayMode selected) onSelected, // [修改] 回傳 AppLocale
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -21,13 +21,13 @@ class ThemePickerSheet {
     final isEnlarged = displayState.isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
-    int selectedIndex = ThemeConstants.allThemes.indexOf(initialTheme);
+    int selectedIndex = DisplayConstants.allDisplays.indexOf(initialDisplay);
     if (selectedIndex == -1) selectedIndex = 0;
 
     showCommonWheelPicker(
       context: context,
       onConfirm: () {
-        onSelected(ThemeConstants.allThemes[selectedIndex]);
+        onSelected(DisplayConstants.allDisplays[selectedIndex]);
       },
       child: CupertinoPicker(
         magnification: 1.22,
@@ -45,10 +45,10 @@ class ThemePickerSheet {
             borderRadius: BorderRadius.circular(AppLayout.radiusS),
           ),
         ),
-        children: ThemeConstants.allThemes.map((locale) {
+        children: DisplayConstants.allDisplays.map((locale) {
           return Center(
             child: Text(
-              ThemeConstants.getLabel(context, locale),
+              DisplayConstants.getLabel(context, locale),
               style: TextStyle(
                 color: colorScheme.onSurface,
                 fontSize: 18,

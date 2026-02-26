@@ -37,6 +37,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   BalanceSummaryState _balanceState = BalanceSummaryState.initial();
   Map<DateTime, List<RecordModel>> _groupedRecords = {};
   List<DateTime> _displayDates = [];
+  LoadStatus _startSettlementStatus = LoadStatus.initial;
 
   // Scroll State
   final Map<String, GlobalKey> _dateKeys = {};
@@ -63,8 +64,6 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   String _remainderRule = RemainderRuleConstants.defaultRule;
   String? _remainderAbsorberId;
 
-  bool get shouldNavigateToS17 => _task?.status == TaskStatus.settled;
-
   // Getters
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
@@ -86,6 +85,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   String? get remainderAbsorberId => _remainderAbsorberId;
   Map<String, TaskMember> get membersData => _task?.members ?? {};
   String get currentUserId => _currentUserId;
+  LoadStatus get startSettlementStatus => _startSettlementStatus;
 
   // 新增：為了支援 UI 顯示 Currency Symbol
   CurrencyConstants get baseCurrency {
@@ -98,8 +98,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   // 新增：為了支援 RecordBlock (暫時給空值或從 State 拿)
   Map<String, double> get poolBalances => _balanceState.poolDetail;
 
-  StreamSubscription? _taskSub;
-  StreamSubscription? _recordSub;
+  StreamSubscription? _taskSubscription;
+  StreamSubscription? _recordSubscription;
   bool _hasTaskEmitted = false; // Task 流是否已發送過資料
   bool _hasRecordsEmitted = false; // Records 流是否已發送過資料
 
@@ -116,6 +116,12 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     if (memberData == null) return false;
     final bool hasSeen = memberData.hasSeenRoleIntro;
     return !hasSeen;
+  }
+
+  bool get shouldNavigateToS17 {
+    if (_task?.status != TaskStatus.settled) return false;
+    if (!isCaptain) return true;
+    return false;
   }
 
   S13TaskDashboardViewModel({
@@ -143,7 +149,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
       _currentUserId = user.uid;
 
-      _taskSub = _taskRepo.streamTask(taskId).listen((taskData) {
+      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
         if (taskData != null) {
           _task = taskData;
           _remainderRule = taskData.remainderRule;
@@ -153,7 +159,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
         }
       });
 
-      _recordSub = _recordRepo.streamRecords(taskId).listen((records) {
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
         _records = records;
         _hasRecordsEmitted = true;
         _recalculate();
@@ -395,12 +401,21 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   }
 
   Future<void> lockTaskAndStartSettlement() async {
+    if (_startSettlementStatus == LoadStatus.loading) return;
+    _startSettlementStatus = LoadStatus.loading;
+    notifyListeners();
     try {
       // 1. 鎖定房間 (ongoing -> pending)
       await _taskRepo.updateTaskStatus(taskId, 'pending');
+      _startSettlementStatus = LoadStatus.success;
+      notifyListeners();
     } on AppErrorCodes {
+      _startSettlementStatus = LoadStatus.error;
+      notifyListeners();
       rethrow;
     } catch (e) {
+      _startSettlementStatus = LoadStatus.error;
+      notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
     }
   }
@@ -417,8 +432,8 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _taskSub?.cancel();
-    _recordSub?.cancel();
+    _taskSubscription?.cancel();
+    _recordSubscription?.cancel();
     groupScrollController.dispose();
     personalScrollController.dispose();
     super.dispose();

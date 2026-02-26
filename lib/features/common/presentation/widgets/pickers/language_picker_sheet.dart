@@ -2,9 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/language_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
-import 'package:iron_split/gen/strings.g.dart'; // 引入 AppLocale
+import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
+// 引入 AppLocale
 
 class LanguagePickerSheet {
   static void show({
@@ -14,6 +18,9 @@ class LanguagePickerSheet {
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     int selectedIndex = LanguageConstants.allLanguages.indexOf(initialLanguage);
     if (selectedIndex == -1) selectedIndex = 0;
@@ -33,10 +40,10 @@ class LanguagePickerSheet {
           selectedIndex = index;
         },
         selectionOverlay: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
+          margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppLayout.radiusS),
           ),
         ),
         children: LanguageConstants.allLanguages.map((locale) {

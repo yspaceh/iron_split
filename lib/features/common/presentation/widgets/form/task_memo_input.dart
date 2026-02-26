@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -8,7 +9,7 @@ class TaskMemoInput extends StatelessWidget {
     required this.memoController,
     this.fillColor,
     this.focusNode,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsets.all(AppLayout.spaceXL),
   });
   final TextEditingController memoController;
   final Color? fillColor;

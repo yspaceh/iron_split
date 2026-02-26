@@ -143,9 +143,9 @@
       "message_zero_balance": "Remaining amount {amount} has been automatically offset against payment differences."
     },
     "split_method": {
-      "even": "Even",
-      "percent": "By Percentage",
-      "exact": "Exact Amount"
+      "even": "Equal",
+      "percent": "Ratio",
+      "exact": "Custom"
     },
     "payment_method": {
       "member": "Member Advance",
@@ -163,6 +163,12 @@
       "system": "System Default",
       "light": "Light Mode",
       "dark": "Dark Mode"
+    },
+    "display": {
+      "title": "Display Settings",
+      "system": "Follow System",
+      "enlarged": "Enlarged",
+      "standard": "Standard"
     },
     "terms": {
       "label": {
@@ -249,7 +255,7 @@
     },
     "empty": {
       "records": "No records",
-      "personal_records": "No records on this day"
+      "personal_records": "No records"
     },
     "daily_expense_label": "Expense",
     "dialog_balance_detail": "Balance Details",
@@ -562,6 +568,9 @@
     "title": "Delete Account",
     "content": "This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?"
   },
+  "D14_Date_Select": {
+    "title": "Select Date"
+  },
   "B02_SplitExpense_Edit": {
     "title": "Edit Sub Item",
     "buttons": {
@@ -680,7 +689,7 @@
       "invalid_char": "Invalid characters.",
       "invalid_code": "Invalid invite code. Please check if the link is correct.",
       "expired_code": "Invite link expired (over 15 minutes). Please ask the task leader to share again.",
-      "task_full": "Task is full (max 15 members). Cannot join.",
+      "task_full": "Task is full (max {limit} members).",
       "auth_required": "Authentication failed. Please restart the app.",
       "init_failed": "Loading failed. Please try again.",
       "unauthorized": "Not logged in. Log in again.",

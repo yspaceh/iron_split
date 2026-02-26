@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -62,8 +64,14 @@ class _S50Content extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-
     final vm = context.watch<S50OnboardingConsentViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     // 定義連結文字的樣式 (使用 Primary Color 讓它看起來像連結)
     final linkStyle = textTheme.bodyMedium?.copyWith(
@@ -71,10 +79,10 @@ class _S50Content extends StatelessWidget {
         fontWeight: FontWeight.bold,
         decoration: TextDecoration.underline, // 可選：加底線更像連結
         decorationColor: colorScheme.primary,
-        height: 1.5);
+        height: finalLineHeight);
 
     // 定義一般文字樣式
-    final normalStyle = textTheme.bodyMedium?.copyWith(height: 1.5);
+    final normalStyle = textTheme.bodyMedium?.copyWith(height: finalLineHeight);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,51 +101,65 @@ class _S50Content extends StatelessWidget {
       ),
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const StateVisual(
-              assetPath: 'assets/images/iron/iron_image_intro.png',
-            ),
+            if (!isEnlarged) ...[
+              const StateVisual(
+                assetPath: 'assets/images/iron/iron_image_intro.png',
+              ),
+            ],
             Expanded(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: // 2. 條款文字區域 (RichText)
-                      RichText(
-                    textAlign: TextAlign.left, // 文字置中
-                    text: TextSpan(
-                      style: normalStyle,
-                      children: [
-                        // A. 前綴: "Read our "
-                        TextSpan(text: t.S50_Onboarding_Consent.content.prefix),
-
-                        // B. 連結: "Terms of Service"
+                child: Column(
+                  children: [
+                    if (isEnlarged) ...[
+                      const StateVisual(
+                        assetPath: 'assets/images/iron/iron_image_intro.png',
+                      ),
+                    ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: AppLayout.spaceL),
+                      child: // 2. 條款文字區域 (RichText)
+                          Text.rich(
                         TextSpan(
-                          text: t.common.terms.label.terms,
-                          style: linkStyle,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _redirectToTerms(context),
+                          style: normalStyle,
+                          children: [
+                            // A. 前綴: "Read our "
+                            TextSpan(
+                                text: t.S50_Onboarding_Consent.content.prefix),
+
+                            // B. 連結: "Terms of Service"
+                            TextSpan(
+                              text: t.common.terms.label.terms,
+                              style: linkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => _redirectToTerms(context),
+                            ),
+
+                            // C. 中間: " and "
+                            TextSpan(text: t.common.terms.and),
+
+                            // D. 連結: "Privacy Policy"
+                            TextSpan(
+                              text: t.common.terms.label.privacy,
+                              style: linkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => _redirectToPrivacy(context),
+                            ),
+
+                            // E. 後綴: ". Tap 'Agree' to accept."
+                            TextSpan(
+                                text: t.S50_Onboarding_Consent.content.suffix),
+                          ],
                         ),
-
-                        // C. 中間: " and "
-                        TextSpan(text: t.common.terms.and),
-
-                        // D. 連結: "Privacy Policy"
-                        TextSpan(
-                          text: t.common.terms.label.privacy,
-                          style: linkStyle,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _redirectToPrivacy(context),
-                        ),
-
-                        // E. 後綴: ". Tap 'Agree' to accept."
-                        TextSpan(text: t.S50_Onboarding_Consent.content.suffix),
-                      ],
+                        textAlign: TextAlign.left, // 文字置中
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

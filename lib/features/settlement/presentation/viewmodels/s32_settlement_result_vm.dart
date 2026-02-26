@@ -28,7 +28,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
   StreamSubscription? _taskSubscription;
-  bool _hasmarkedAsSeen = false;
+  bool _isWritingStatus = false;
   bool _isRevealed = false;
   bool get isRevealed => _isRevealed;
   LoadStatus _shareStatus = LoadStatus.initial;
@@ -133,12 +133,18 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     try {
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
-      final uid = user.uid;
 
       // 監聽 Task 變化 (通常 S32 進來時資料已經是 settled/pending)
       _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
         _task = taskData;
-        _autoMarkAsSeen(uid);
+        if (_initStatus != LoadStatus.success) {
+          // 如果根本不需要秀輪盤，就直接揭曉結果
+          if (!shouldShowRoulette) {
+            _isRevealed = true;
+          }
+          _initStatus = LoadStatus.success;
+          notifyListeners();
+        }
       });
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
@@ -151,39 +157,21 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     }
   }
 
-  void _autoMarkAsSeen(String uid) {
-    if (_hasmarkedAsSeen || _task == null || _task!.settlement == null) return;
-    bool shouldNotify = false;
-    final viewStatus =
-        _task!.settlement!['viewStatus'] as Map<String, dynamic>? ?? {};
+  Future<void> markCurrentUserAsSeen() async {
+    if (_isWritingStatus) return;
 
-    // 如果目前雲端紀錄我還沒看過
-    if (viewStatus[uid] != true) {
-      _hasmarkedAsSeen = true; // 先設為 true，防止串流多次觸發
-      markAsSeen(uid);
-      shouldNotify = true;
-    }
-    if (!shouldShowRoulette) {
-      _isRevealed = true;
-      shouldNotify = true;
-    }
-    if (_initStatus != LoadStatus.success) {
-      _initStatus = LoadStatus.success;
-      shouldNotify = true;
-    }
-    if (shouldNotify) {
-      notifyListeners();
-    }
-  }
+    final user = _authRepo.currentUser;
+    if (user == null) return;
 
-  Future<void> markAsSeen(String uid) async {
+    _isWritingStatus = true; // 上鎖
     try {
       await _settlementService.markSettlementAsSeen(
         taskId: taskId,
-        memberId: uid,
+        memberId: user.uid,
       );
+      // 寫入成功後不需要解鎖，因為使用者馬上就會被導向 S17 離開此頁了
     } catch (e) {
-      _hasmarkedAsSeen = false; // 萬一失敗，允許下次重試
+      _isWritingStatus = false; // 萬一寫入失敗才解鎖，允許他再按一次離開
     }
   }
 

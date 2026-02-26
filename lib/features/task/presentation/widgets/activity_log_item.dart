@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart'; // 確保路徑正確
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +8,13 @@ import 'package:intl/intl.dart';
 class ActivityLogItem extends StatelessWidget {
   final ActivityLogModel log;
   final Map<String, TaskMember>? members; // 用於顯示頭像 (Optional)
+  final bool isEnlarged;
 
   const ActivityLogItem({
     super.key,
     required this.log,
     this.members,
+    required this.isEnlarged,
   });
 
   @override
@@ -19,6 +22,12 @@ class ActivityLogItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+
     // 1. 獲取三段式顯示資料
     final info = log.getDisplayInfo(context);
 
@@ -94,8 +103,8 @@ class ActivityLogItem extends StatelessWidget {
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant
                             .withValues(alpha: 0.8), // 稍微淡一點
-                        height: 1.5, // 增加行距讓多行好讀
-                        fontFamily: 'RobotoMono', // (選填) 如果想要對齊數字可用等寬字體
+                        height: finalLineHeight,
+                        fontFamily: 'RobotoMono',
                       ),
                     ),
                   ),

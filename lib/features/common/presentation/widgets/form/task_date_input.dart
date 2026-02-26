@@ -10,12 +10,14 @@ class TaskDateInput extends StatelessWidget {
     required this.date,
     required this.onDateChanged,
     this.iconData,
+    this.enabled = true,
   });
 
   final String label;
   final DateTime date;
   final ValueChanged<DateTime> onDateChanged;
   final IconData? iconData;
+  final bool enabled;
 
   void _showDatePicker(BuildContext context) {
     // 這裡不需要 tempDate，因為是 Stateless，每次開啟都是拿最新的 date
@@ -28,7 +30,6 @@ class TaskDateInput extends StatelessWidget {
         onDateChanged(tempDate);
       },
       child: CupertinoDatePicker(
-        // 確保 Picker 打開時是選中目前的 date
         initialDateTime: date,
         mode: CupertinoDatePickerMode.date,
         onDateTimeChanged: (val) {
@@ -45,10 +46,9 @@ class TaskDateInput extends StatelessWidget {
 
     return AppSelectField(
       labelText: label,
-      // 直接使用外部傳入的 date，確保畫面永遠跟 ViewModel 同步
       text: dateFormat.format(date).toUpperCase(),
-      // prefixIcon: iconData ?? Icons.calendar_today_outlined,
       onTap: () => _showDatePicker(context),
+      enabled: enabled,
     );
   }
 }

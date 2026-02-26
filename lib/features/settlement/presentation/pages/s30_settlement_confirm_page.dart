@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -61,8 +63,8 @@ class _S30Content extends StatelessWidget {
   const _S30Content();
 
   // 呼叫 D09 (與 S13 邏輯一致)
-  void _showCurrencyPicker(
-      BuildContext context, S30SettlementConfirmViewModel vm) {
+  void _showCurrencyPicker(BuildContext context,
+      S30SettlementConfirmViewModel vm, double horizontalMargin) {
     if (vm.task == null) return;
 
     CurrencyPickerSheet.show(
@@ -192,7 +194,44 @@ class _S30Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S30SettlementConfirmViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S30_settlement_confirm.title;
+    final headerSection = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GroupBalanceCard(
+          isSettlement: true,
+          state: vm.balanceState,
+          onCurrencyTap: () =>
+              _showCurrencyPicker(context, vm, horizontalMargin),
+          onRuleTap: vm.balanceState.remainder > 0
+              ? () => _showRemainderRuleChangeBottomSheet(context, vm)
+              : null,
+          isEnlarged: isEnlarged,
+        ),
+        vm.balanceState.poolBalance != 0
+            ? InfoBar(
+                icon: Icons.wallet_outlined,
+                text: Text(
+                  "${t.S13_Task_Dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
+                ),
+              )
+            : vm.remainderRule == RemainderRuleConstants.random &&
+                    vm.balanceState.remainder.abs() > 0
+                ? Container()
+                : const SizedBox(height: AppLayout.spaceL),
+        vm.remainderRule == RemainderRuleConstants.random &&
+                vm.balanceState.remainder.abs() > 0
+            ? InfoBar(
+                icon: Icons.savings_outlined,
+                text: Text(
+                  t.S30_settlement_confirm.warning.random_reveal,
+                ),
+              )
+            : const SizedBox(height: AppLayout.spaceL)
+      ],
+    );
 
     return PopScope(
       canPop: false, // 禁止直接返回，我們要自己處理
@@ -209,80 +248,71 @@ class _S30Content extends StatelessWidget {
             title: Text(title),
             centerTitle: true,
             actions: [
-              StepDots(currentStep: 1),
+              StepDots(
+                currentStep: 1,
+                isEnlarged: isEnlarged,
+              ),
               const SizedBox(width: 24),
             ],
           ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                // [M3]: 調整 Padding 和背景，讓 Card 浮在 Surface 上
-                GroupBalanceCard(
-                  isSettlement: true,
-                  state: vm.balanceState,
-                  onCurrencyTap: () => _showCurrencyPicker(context, vm),
-                  onRuleTap: vm.balanceState.remainder > 0
-                      ? () => _showRemainderRuleChangeBottomSheet(context, vm)
-                      : null,
-                ),
-
-                // 3. 隨機模式提示
-                if (vm.balanceState.poolBalance != 0) ...[
-                  InfoBar(
-                    icon: Icons.wallet_outlined,
-                    text: Text(
-                      "${t.S13_Task_Dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
-                    ),
-                  ),
-                ] else ...[
-                  if (vm.remainderRule == RemainderRuleConstants.random &&
-                      vm.balanceState.remainder.abs() > 0) ...[
-                    Container(),
-                  ] else ...[
-                    const SizedBox(height: 16)
-                  ]
-                ],
-
-                // 3. 隨機模式提示
-                if (vm.remainderRule == RemainderRuleConstants.random &&
-                    vm.balanceState.remainder.abs() > 0) ...[
-                  InfoBar(
-                    icon: Icons.savings_outlined,
-                    text: Text(
-                      t.S30_settlement_confirm.warning.random_reveal,
-                    ),
-                  ),
-                ] else ...[
-                  const SizedBox(height: 16),
-                ],
-
-                // 4. 成員列表
-                Expanded(
-                  child: ListView.separated(
-                    // 底部留白讓最後一個項目不會被 BottomBar 擋住
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemCount: vm.settlementMembers.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final member = vm.settlementMembers[index];
-
-                      //  檢查是否有候選人
+          body: isEnlarged
+              ? ListView(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+                  children: [
+                    headerSection,
+                    // 把 List 直接展開塞進去
+                    ...vm.settlementMembers.map((member) {
                       final candidates = vm.getMergeCandidates(member);
                       final bool canMerge = candidates.isNotEmpty;
-                      return SettlementMemberItem(
-                        member: member,
-                        baseCurrency: vm.baseCurrency,
-                        isActionEnabled: canMerge,
-                        onActionTap: () =>
-                            _showMergeSettings(context, vm, member),
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: isEnlarged
+                                ? AppLayout.spaceL
+                                : AppLayout.spaceS),
+                        child: SettlementMemberItem(
+                          member: member,
+                          baseCurrency: vm.baseCurrency,
+                          isActionEnabled: canMerge,
+                          onActionTap: () =>
+                              _showMergeSettings(context, vm, member),
+                        ),
                       );
-                    },
+                    }),
+                    const SizedBox(height: 24),
+                  ],
+                )
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+                  child: Column(
+                    children: [
+                      headerSection,
+                      // 4. 成員列表
+                      Expanded(
+                        child: ListView.separated(
+                          // 底部留白讓最後一個項目不會被 BottomBar 擋住
+                          padding: const EdgeInsets.only(bottom: 24),
+                          itemCount: vm.settlementMembers.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: AppLayout.spaceS),
+                          itemBuilder: (context, index) {
+                            final member = vm.settlementMembers[index];
+
+                            //  檢查是否有候選人
+                            final candidates = vm.getMergeCandidates(member);
+                            final bool canMerge = candidates.isNotEmpty;
+                            return SettlementMemberItem(
+                              member: member,
+                              baseCurrency: vm.baseCurrency,
+                              isActionEnabled: canMerge,
+                              onActionTap: () =>
+                                  _showMergeSettings(context, vm, member),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
           bottomNavigationBar: StickyBottomActionBar(
             children: [
               // 左邊：取消 (次要按鈕)

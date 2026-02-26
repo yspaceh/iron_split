@@ -1,7 +1,10 @@
 // lib/features/common/presentation/widgets/selection_tile.dart
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_indicator.dart';
+import 'package:provider/provider.dart';
 
 class SelectionTile extends StatelessWidget {
   final bool isSelected;
@@ -35,48 +38,77 @@ class SelectionTile extends StatelessWidget {
         ? isSelectedBackgroundColor ?? colorScheme.surfaceContainerLow
         : backgroundColor ?? colorScheme.surface;
     final double opacity = isDisabled ? 0.8 : 1.0;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final name = Text(
+      title,
+      style: textTheme.titleMedium?.copyWith(
+        // [修改] 使用 titleMedium 讓文字更有份量
+        // [修改] 選中時變色 (Primary Color)，與 SelectionCard 一致
+        color: colorScheme.onSurface,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
+
+    final indicator = SelectionIndicator(
+      isSelected: isSelected,
+      isRadio: isRadio, // 傳遞樣式
+    );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(
+          vertical: isEnlarged ? AppLayout.spaceS : AppLayout.spaceXS),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16), // [修改] 統一為 16
+        borderRadius: BorderRadius.circular(AppLayout.radiusL),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           // [修改] 內距加大，符合卡片風格
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.spaceL, vertical: AppLayout.spaceM),
           decoration: BoxDecoration(
             color: effectiveBackgroundColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppLayout.radiusL),
           ),
           child: Opacity(
             opacity: opacity,
-            child: Row(
-              children: [
-                SelectionIndicator(
-                  isSelected: isSelected,
-                  isRadio: isRadio, // 傳遞樣式
-                ),
-                const SizedBox(width: 8),
-                if (leading != null) ...[
-                  leading ?? Container(),
-                  const SizedBox(width: 8),
-                ],
-                Expanded(
-                  child: Text(
-                    title,
-                    style: textTheme.titleMedium?.copyWith(
-                      // [修改] 使用 titleMedium 讓文字更有份量
-                      // [修改] 選中時變色 (Primary Color)，與 SelectionCard 一致
-                      color: colorScheme.onSurface,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
+            child: isEnlarged
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          indicator,
+                          const SizedBox(width: AppLayout.spaceS),
+                          if (leading != null) ...[
+                            leading ?? Container(),
+                            const SizedBox(width: AppLayout.spaceS),
+                          ],
+                          Expanded(
+                            child: name,
+                          ),
+                        ],
+                      ),
+                      if (trailing != null) ...[
+                        const SizedBox(height: AppLayout.spaceS),
+                        trailing!,
+                      ]
+                    ],
+                  )
+                : Row(
+                    children: [
+                      indicator,
+                      const SizedBox(width: AppLayout.spaceS),
+                      if (leading != null) ...[
+                        leading ?? Container(),
+                        const SizedBox(width: AppLayout.spaceS),
+                      ],
+                      Expanded(
+                        child: name,
+                      ),
+                      if (trailing != null) trailing!,
+                    ],
                   ),
-                ),
-                if (trailing != null) trailing!,
-              ],
-            ),
           ),
         ),
       ),

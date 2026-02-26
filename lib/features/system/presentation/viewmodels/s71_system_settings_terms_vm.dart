@@ -3,11 +3,8 @@ import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
-import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 
 class S71SystemSettingsTermsViewModel extends ChangeNotifier {
-  final AuthRepository _authRepo;
-
   // 狀態管理 (Rule 5)
   LoadStatus _initStatus = LoadStatus.initial;
   AppErrorCodes? _initErrorCode;
@@ -17,8 +14,7 @@ class S71SystemSettingsTermsViewModel extends ChangeNotifier {
   AppErrorCodes? get initErrorCode => _initErrorCode;
   String? get targetUrl => _targetUrl;
 
-  S71SystemSettingsTermsViewModel({required AuthRepository authRepo})
-      : _authRepo = authRepo;
+  S71SystemSettingsTermsViewModel();
 
   /// 初始化：生成 URL 並檢查權限
   /// [locale] 從 UI 傳入，用於判斷語系
@@ -34,10 +30,6 @@ class S71SystemSettingsTermsViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // 1. 檢查登入 (Rule 6)
-      final user = _authRepo.currentUser;
-      if (user == null) throw AppErrorCodes.unauthorized;
-
       // 2. 處理 URL 生成邏輯 (Rule 1: 邏輯移出 UI)
       final String folder = isTerms ? 'terms' : 'privacy';
 

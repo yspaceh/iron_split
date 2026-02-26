@@ -3,7 +3,7 @@ import 'package:iron_split/gen/strings.g.dart';
 
 class ThemeConstants {
   // 定義預設語系
-  static const ThemeMode defaultLocale = ThemeMode.system;
+  static const ThemeMode defaultTheme = ThemeMode.system;
 
   // 定義清單 (直接使用 Enum)
   static const List<ThemeMode> allThemes = [

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 enum AppButtonType { primary, secondary }
 
@@ -24,10 +27,16 @@ class AppButton extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
 
     // M3 標準高度: 40
     // Flutter 的 FilledButton 預設就是 40，但我們明確指定以防萬一
-    const height = 40.0;
+    final double minHeight =
+        isEnlarged ? AppLayout.gridUnit * 7 : AppLayout.gridUnit * 5;
+    final Size minimumSize = Size.fromHeight(minHeight);
+
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
 
     // 通用樣式設定
     final ButtonStyle baseStyle;
@@ -35,7 +44,7 @@ class AppButton extends StatelessWidget {
     if (type == AppButtonType.primary) {
       // [Primary] -> FilledButton
       baseStyle = FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(height), // 高度 40
+        minimumSize: minimumSize, // 高度 40
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         shape: const StadiumBorder(),
@@ -44,7 +53,7 @@ class AppButton extends StatelessWidget {
     } else {
       // [Secondary] -> OutlinedButton
       baseStyle = OutlinedButton.styleFrom(
-        minimumSize: const Size.fromHeight(height), // 高度 40
+        minimumSize: minimumSize, // 高度 40
         side: BorderSide(color: colorScheme.outline),
         foregroundColor: colorScheme.primary,
         shape: const StadiumBorder(),
@@ -59,35 +68,44 @@ class AppButton extends StatelessWidget {
           };
 
     // 根據類型回傳對應的 Flutter M3 元件
-    Widget buttonContent = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    Widget buttonContent = Stack(
+      alignment: Alignment.center,
       children: [
-        if (isLoading) ...[
+        Opacity(
+          opacity: isLoading ? 0.0 : 1.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min, // 保持緊湊以確保 Stack 完美置中
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: iconSize),
+                const SizedBox(width: 8),
+              ],
+              if (text != null) ...[
+                Text(
+                  text!,
+                  style: textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: type == AppButtonType.primary
+                        ? colorScheme.onPrimary
+                        : colorScheme.primary,
+                  ),
+                ),
+              ]
+            ],
+          ),
+        ),
+        if (isLoading)
           SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: type == AppButtonType.primary
-                      ? colorScheme.onPrimary
-                      : colorScheme.primary)),
-          const SizedBox(width: 8),
-        ] else if (icon != null) ...[
-          Icon(icon, size: 18), // M3 Icon 建議 18dp
-          const SizedBox(width: 8), // M3 間距 8dp
-        ],
-        if (text != null && isLoading == false) ...[
-          Text(
-            text ?? '',
-            style: textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w500, // M3 Label Large
-              // 確保顏色跟隨 Button 樣式
+            width: iconSize,
+            height: iconSize,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
               color: type == AppButtonType.primary
                   ? colorScheme.onPrimary
                   : colorScheme.primary,
             ),
           ),
-        ]
       ],
     );
 

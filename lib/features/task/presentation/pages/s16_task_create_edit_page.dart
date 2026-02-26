@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -138,6 +141,9 @@ class _S16ContentState extends State<_S16Content> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<S16TaskCreateEditViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S16_TaskCreate_Edit.title;
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back),
@@ -175,7 +181,9 @@ class _S16ContentState extends State<_S16Content> {
                   child: Form(
                     key: _formKey,
                     child: ListView(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalMargin,
+                          vertical: AppLayout.spaceL),
                       children: [
                         SectionWrapper(
                             title: t.S16_TaskCreate_Edit.section.task_name,
@@ -185,7 +193,7 @@ class _S16ContentState extends State<_S16Content> {
                                 focusNode: _nameFocusNode,
                                 label: t.common.label.task_name,
                                 hint: t.S16_TaskCreate_Edit.hint.name,
-                                maxLength: 20,
+                                maxLength: TaskConstants.maxTaskNameLength,
                               )
                             ]),
                         SectionWrapper(
@@ -204,7 +212,10 @@ class _S16ContentState extends State<_S16Content> {
                                   }
                                 },
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(
+                                  height: isEnlarged
+                                      ? AppLayout.spaceL
+                                      : AppLayout.spaceS),
                               TaskDateInput(
                                 label: t.common.label.end_date,
                                 date: vm.endDate,
@@ -227,7 +238,10 @@ class _S16ContentState extends State<_S16Content> {
                                 onCurrencyChanged: vm.updateCurrency,
                                 enabled: vm.isCurrencyEnabled,
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(
+                                  height: isEnlarged
+                                      ? AppLayout.spaceL
+                                      : AppLayout.spaceS),
                               TaskMemberCountInput(
                                 value: vm.memberCount,
                                 onChanged: vm.updateMemberCount,

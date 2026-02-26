@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -72,6 +74,8 @@ class _S52Content extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
     final vm = context.watch<S52TaskSettingsLogViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S52_TaskSettings_Log.title;
 
     return CommonStateView(
@@ -83,26 +87,29 @@ class _S52Content extends StatelessWidget {
           title: Text(title),
           centerTitle: true,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: vm.logs.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1,
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+                  itemCount: vm.logs.length,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                  ),
+                  itemBuilder: (context, index) {
+                    final log = vm.logs[index];
+                    return ActivityLogItem(
+                      log: log,
+                      members: vm.membersData,
+                      isEnlarged: isEnlarged, // Use data from VM
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final log = vm.logs[index];
-                  return ActivityLogItem(
-                    log: log,
-                    members: vm.membersData, // Use data from VM
-                  );
-                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         extendBody: true,
         bottomNavigationBar: StickyBottomActionBar(

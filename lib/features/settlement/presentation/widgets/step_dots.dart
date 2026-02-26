@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class StepDots extends StatelessWidget {
   final int totalSteps;
   final int currentStep;
   final Color? activeColor;
+  final bool isEnlarged;
 
   const StepDots({
     super.key,
     this.totalSteps = 2,
     required this.currentStep,
     this.activeColor,
+    required this.isEnlarged,
   });
 
   @override
@@ -17,6 +20,11 @@ class StepDots extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final primaryColor = activeColor ?? colorScheme.primary;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     return SizedBox(
       width: 24, // 鎖定寬度，避免在 AppBar 裡飄移
@@ -50,7 +58,7 @@ class StepDots extends StatelessWidget {
           // 奇數索引 (1, 3, 5...) 是連接線
           return Expanded(
             child: Container(
-              height: 1.5,
+              height: finalLineHeight,
               color: primaryColor.withValues(alpha: 0.2),
             ),
           );

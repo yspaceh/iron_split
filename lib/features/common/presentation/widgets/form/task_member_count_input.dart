@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_stepper.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -13,8 +15,8 @@ class TaskMemberCountInput extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    this.min = 1,
-    this.max = 15,
+    this.min = TaskConstants.minMembers,
+    this.max = TaskConstants.maxMembers,
     this.fillColor,
   });
 
@@ -27,10 +29,11 @@ class TaskMemberCountInput extends StatelessWidget {
 
     // [風格統一]：使用與 AppTextField/AppSelectField 一致的高度與外觀
     return Container(
-      padding: const EdgeInsets.all(16), // 右邊 padding 稍微小一點，因為按鈕本身有 padding
+      padding: const EdgeInsets.all(
+          AppLayout.spaceL), // 右邊 padding 稍微小一點，因為按鈕本身有 padding
       decoration: BoxDecoration(
         color: fillColor ?? colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppLayout.radiusL),
       ),
       child: Row(
         children: [

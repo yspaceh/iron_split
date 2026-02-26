@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/core/viewmodels/display_vm.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
+import 'package:iron_split/features/common/presentation/widgets/form/task_display_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_theme_input.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/system/data/system_repository.dart';
@@ -95,6 +101,17 @@ class _S70ContentState extends State<_S70Content> {
     }
   }
 
+  Future<void> _handleUpdateDisplay(BuildContext context,
+      DisplayViewModel displayVm, DisplayMode newDisplay) async {
+    try {
+      await displayVm.setDisplayMode(newDisplay);
+    } on AppErrorCodes catch (code) {
+      if (!context.mounted) return;
+      final msg = ErrorMapper.map(context, code: code);
+      AppToast.showError(context, msg);
+    }
+  }
+
   void _redirectToPaymentInfo(BuildContext context) {
     context.pushNamed('S73');
   }
@@ -121,7 +138,11 @@ class _S70ContentState extends State<_S70Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final vm = context.watch<S70SystemSettingsViewModel>();
+    final displayStatus = context.watch<DisplayState>();
+    final isEnlarged = displayStatus.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final themeVm = context.watch<ThemeViewModel>();
+    final displayVm = context.watch<DisplayViewModel>();
     final localeVm = context.watch<LocaleViewModel>();
     final title = t.S70_System_Settings.title;
 
@@ -138,7 +159,7 @@ class _S70ContentState extends State<_S70Content> {
         body: AppKeyboardActionsWrapper(
           focusNodes: [_nameFocusNode],
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             children: [
               SectionWrapper(
                 title: t.S70_System_Settings.section.basic,
@@ -149,31 +170,42 @@ class _S70ContentState extends State<_S70Content> {
                     focusNode: _nameFocusNode,
                     label: t.S70_System_Settings.menu.user_name,
                     hint: t.S51_Onboarding_Name.hint,
-                    maxLength: 20,
+                    maxLength: AppConstants.maxUserNameLength,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   // 收款資料
                   NavTile(
                     title: t.S70_System_Settings.menu.payment_info,
                     onTap: () => _redirectToPaymentInfo(context),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   // 語言設定
                   TaskLanguageInput(
                     language: localeVm.currentLocale,
                     onLanguageChanged: (newLocale) =>
                         _handleUpdateLanguage(context, localeVm, newLocale),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   // 深淺模式
                   TaskThemeInput(
                     theme: themeVm.themeMode,
                     onThemeChanged: (newTheme) =>
                         _handleUpdateTheme(context, themeVm, newTheme),
                   ),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
+                  // 深淺模式
+                  TaskDisplayInput(
+                    display: displayVm.displayMode,
+                    onDisplayChanged: (newDisplay) =>
+                        _handleUpdateDisplay(context, displayVm, newDisplay),
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppLayout.spaceL),
               SectionWrapper(
                   title: t.S70_System_Settings.section.legal,
                   children: [
@@ -181,13 +213,13 @@ class _S70ContentState extends State<_S70Content> {
                       title: t.S70_System_Settings.menu.terms,
                       onTap: () => _redirectToTerms(context),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppLayout.spaceS),
                     NavTile(
                       title: t.S70_System_Settings.menu.privacy,
                       onTap: () => _redirectToPrivacy(context),
                     ),
                   ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppLayout.spaceL),
               SectionWrapper(
                   title: t.S70_System_Settings.section.account,
                   children: [

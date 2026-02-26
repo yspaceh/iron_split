@@ -27,27 +27,34 @@ class SummaryRow extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
+    final safeTextScaler =
+        MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: textTheme.bodyMedium?.copyWith(
-              color: labelColor ?? colorScheme.onSurface,
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaler: safeTextScaler),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: textTheme.bodyMedium?.copyWith(
+                color: labelColor ?? colorScheme.onSurface,
+              ),
             ),
-          ),
-          Text(
-            customValueText ??
-                CurrencyConstants.formatAmount(amount, currencyConstants.code),
-            style: textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: valueColor ?? colorScheme.onSurface,
-              height: 1.2,
+            Text(
+              customValueText ??
+                  CurrencyConstants.formatAmount(
+                      amount, currencyConstants.code),
+              style: textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: valueColor ?? colorScheme.onSurface,
+                height: 1.2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

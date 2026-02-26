@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
@@ -102,6 +103,9 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
     try {
       if (_task == null) throw AppErrorCodes.dataNotFound;
+      if (_membersMap.length >= TaskConstants.maxMembers) {
+        throw AppErrorCodes.maxMembersReached; // 拋出專屬的錯誤碼
+      }
       final nextNumber = (_task?.memberCount ?? 0) + 1;
       final virtualId = MemberService.generateVirtualId();
       final displayName = "${t.common.member_prefix} $nextNumber";

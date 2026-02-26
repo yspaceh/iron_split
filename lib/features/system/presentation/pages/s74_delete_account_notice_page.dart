@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -45,14 +47,18 @@ class _S74Content extends StatelessWidget {
     }
   }
 
-  void _showConfirmDialog(BuildContext context,
-      S74DeleteAccountNoticeViewModel vm, Translations t, ThemeData theme) {
+  void _showConfirmDialog(
+      BuildContext context,
+      S74DeleteAccountNoticeViewModel vm,
+      Translations t,
+      TextTheme textTheme,
+      double finalLineHeight) {
     CommonAlertDialog.show(
       context,
       title: t.D13_DeleteAccount_Confirm.title,
       content: Text(
         t.D13_DeleteAccount_Confirm.content,
-        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
         AppButton(
@@ -76,7 +82,15 @@ class _S74Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final vm = context.watch<S74DeleteAccountNoticeViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,18 +108,20 @@ class _S74Content extends StatelessWidget {
             text: t.S74_DeleteAccount_Notice.buttons.delete_account,
             type: AppButtonType.primary,
             isLoading: vm.deleteStatus == LoadStatus.loading,
-            onPressed: () => _showConfirmDialog(context, vm, t, theme),
+            onPressed: () =>
+                _showConfirmDialog(context, vm, t, textTheme, finalLineHeight),
           ),
         ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalMargin, vertical: AppLayout.spaceL),
           child: Column(
             children: [
               Text(
                 t.S74_DeleteAccount_Notice.content,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
               ),
             ],
           ),

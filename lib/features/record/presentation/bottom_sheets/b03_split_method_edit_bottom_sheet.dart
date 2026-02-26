@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/split_ratio_helper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -137,7 +139,6 @@ class _B03ContentState extends State<_B03Content> {
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
     final title = t.B03_SplitMethod_Edit.title;
     final activeNodes = vm.allMembers.map((m) => _getFocusNode(m.id)).toList();
-
     //  使用 CommonBottomSheet
     return AppKeyboardActionsWrapper(
       focusNodes: activeNodes,
@@ -207,7 +208,7 @@ class _B03ContentState extends State<_B03Content> {
                         ),
                       ),
                     ],
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppLayout.spaceL),
                     Divider(
                       height: 1,
                       color:
@@ -319,6 +320,8 @@ class _B03ContentState extends State<_B03Content> {
           final isSelected = weight > 0;
           final amount = memberAmounts[id]?.original ?? 0.0;
           final baseAmount = memberAmounts[id]?.base ?? 0.0;
+          final displayState = context.watch<DisplayState>();
+          final isEnglarged = displayState.isEnlarged;
 
           return SelectionTile(
             isSelected: isSelected,
@@ -331,6 +334,9 @@ class _B03ContentState extends State<_B03Content> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Row(
+                  mainAxisAlignment: isEnglarged
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.start,
                   children: [
                     if (isSelected) ...[
                       Column(
@@ -357,7 +363,7 @@ class _B03ContentState extends State<_B03Content> {
                     ]
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppLayout.spaceS),
                 AppStepper(
                   text: SplitRatioHelper.format(weight),
                   onDecrease: () => vm.updatePercent(id, false),
@@ -393,7 +399,7 @@ class _B03ContentState extends State<_B03Content> {
           customValueText: isMatched ? "OK" : t.B03_SplitMethod_Edit.mismatch,
           valueColor: isMatched ? colorScheme.tertiary : colorScheme.error,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         ...vm.allMembers.map((m) {
           final id = m.id;
           final isSelected = vm.selectedMemberIds.contains(id);

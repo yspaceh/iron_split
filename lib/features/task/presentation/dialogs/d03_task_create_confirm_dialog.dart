@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 /// Page Key: D03_TaskCreate.Confirm
 /// 職責：單純顯示確認資訊，不處理業務邏輯
@@ -47,7 +50,17 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final dateFormat = DateFormat('yyyy/MM/dd');
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     return CommonAlertDialog(
       title: t.D03_TaskCreate_Confirm.title,
@@ -56,14 +69,22 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildColumn(context, t.common.label.task_name, taskName),
-            const SizedBox(height: 16),
-            _buildColumn(context, t.common.label.period,
-                '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}'),
-            const SizedBox(height: 16),
-            _buildColumn(context, t.common.label.currency, baseCurrency.code),
-            const SizedBox(height: 16),
-            _buildColumn(context, t.common.label.member_count, '$memberCount'),
+            _buildColumn(context, t.common.label.task_name, taskName,
+                colorScheme, textTheme, finalLineHeight),
+            const SizedBox(height: AppLayout.spaceL),
+            _buildColumn(
+                context,
+                t.common.label.period,
+                '${dateFormat.format(startDate)} - ${dateFormat.format(endDate)}',
+                colorScheme,
+                textTheme,
+                finalLineHeight),
+            const SizedBox(height: AppLayout.spaceL),
+            _buildColumn(context, t.common.label.currency, baseCurrency.code,
+                colorScheme, textTheme, finalLineHeight),
+            const SizedBox(height: AppLayout.spaceL),
+            _buildColumn(context, t.common.label.member_count, '$memberCount',
+                colorScheme, textTheme, finalLineHeight),
           ],
         ),
       ),
@@ -82,18 +103,14 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildColumn(BuildContext context, String label, String value) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-
+  Widget _buildColumn(BuildContext context, String label, String value,
+      ColorScheme colorScheme, TextTheme textTheme, double finalLineHeight) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: textTheme.bodyMedium
-              ?.copyWith(color: colorScheme.onSurfaceVariant),
+          style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
         ),
         const SizedBox(height: 2),
         Text(

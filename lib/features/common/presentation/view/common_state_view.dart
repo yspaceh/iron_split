@@ -2,13 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class CommonStateView extends StatelessWidget {
   final LoadStatus status;
@@ -43,6 +46,14 @@ class CommonStateView extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     switch (status) {
       case LoadStatus.initial:
@@ -87,10 +98,11 @@ class CommonStateView extends StatelessWidget {
                   )
                 : null,
             children: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalMargin, vertical: AppLayout.spaceS),
               child: Text(
                 ErrorMapper.map(context, code: errorCode),
-                style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
               ),
             ),
           );
@@ -115,11 +127,13 @@ class CommonStateView extends StatelessWidget {
                 : null,
             body: SafeArea(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalMargin,
+                    vertical: AppLayout.iconSizeS),
                 child: Text(
                   ErrorMapper.map(context, code: errorCode),
-                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style:
+                      textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
               ),
             ),

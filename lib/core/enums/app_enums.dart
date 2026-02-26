@@ -12,6 +12,8 @@ enum LegalTab { terms, privacy }
 
 enum TaskStatus { ongoing, pending, settled, closed }
 
+enum DisplayMode { system, enlarged, standard }
+
 enum BootstrapDestination {
   onboarding, // 去 S50 (同意條款)
   setupName, // 去 S51 (取名)

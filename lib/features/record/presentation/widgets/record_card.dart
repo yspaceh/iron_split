@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -18,6 +19,7 @@ class RecordCard extends StatelessWidget {
   final CurrencyConstants selectedCurrencyConstants;
   final List<TaskMember> members;
   final bool isPrepay;
+  final bool isEnlarged;
 
   const RecordCard({
     super.key,
@@ -33,6 +35,7 @@ class RecordCard extends StatelessWidget {
     this.isBaseCard = false,
     this.showSplitAction = false,
     this.isPrepay = false,
+    required this.isEnlarged,
   });
 
   @override
@@ -40,6 +43,7 @@ class RecordCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
 
     // [風格調整]：Blueprint / Outlined Style
     // 背景純白，搭配細灰色邊框，強調這是「計算結果/容器」而非輸入框
@@ -48,7 +52,7 @@ class RecordCard extends StatelessWidget {
       color: colorScheme.surface, // 純白背景
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppLayout.radiusL),
         // 加上淡灰色邊框 (Outline)
         side: BorderSide(
           color: colorScheme.outlineVariant.withValues(alpha: 0.6),
@@ -61,7 +65,7 @@ class RecordCard extends StatelessWidget {
           InkWell(
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppLayout.spaceL),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,26 +74,34 @@ class RecordCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // 金額顯示
-                      Text(
-                        "${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(amount, selectedCurrencyConstants.code)}",
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: isPrepay
-                              ? colorScheme.tertiary
-                              : colorScheme.primary,
-                          letterSpacing: -0.5, // 稍微緊湊一點的數字感
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${selectedCurrencyConstants.symbol} ${CurrencyConstants.formatAmount(amount, selectedCurrencyConstants.code)}",
+                            style: textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: isPrepay
+                                  ? colorScheme.tertiary
+                                  : colorScheme.primary,
+                              letterSpacing: -0.5, // 稍微緊湊一點的數字感
+                            ),
+                          ),
                         ),
                       ),
 
                       // [風格調整] 分帳標籤：淡色膠囊
                       Container(
+                        margin: const EdgeInsets.only(left: AppLayout.spaceXS),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4), // 稍微寬一點
-                        decoration: BoxDecoration(
-                          // 使用淡色背景 (SecondaryContainer 或 PrimaryContainer)
+                            horizontal: AppLayout.spaceS,
+                            vertical: AppLayout.spaceXS), // 稍微寬一點
+                        decoration: ShapeDecoration(
                           color: colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(16),
+                          shape: StadiumBorder(),
                         ),
+
                         child: Text(
                           SplitMethodConstant.getLabel(context, methodLabel, t),
                           style: textTheme.labelSmall?.copyWith(
@@ -102,7 +114,7 @@ class RecordCard extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppLayout.spaceM),
 
                   // Row 2: 名稱 + 成員頭像
                   Row(
@@ -143,7 +155,7 @@ class RecordCard extends StatelessWidget {
                           child: CommonAvatarStack(
                             allMembers: members,
                             targetMemberIds: memberIds,
-                            radius: 11, // 頭像大小維持
+                            radius: AppLayout.radiusM,
                             fontSize: 10,
                           ),
                         ),
@@ -169,17 +181,18 @@ class RecordCard extends StatelessWidget {
                   colorScheme.primary.withValues(alpha: 0.05)),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14), // 增加點擊高度
+                padding: const EdgeInsets.symmetric(
+                    vertical: AppLayout.spaceL), // 增加點擊高度
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.add, // 改用圓框加號，更有按鈕感
-                      size: 16,
+                      Icons.add,
+                      size: iconSize,
                       color: colorScheme.primary,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppLayout.spaceS),
                     Text(
                       t.S15_Record_Edit.buttons.add_item,
                       style: TextStyle(

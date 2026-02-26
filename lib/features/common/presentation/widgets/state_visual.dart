@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 /// 用於全 App 統一顯示狀態圖示的元件
 class StateVisual extends StatelessWidget {
@@ -18,7 +19,7 @@ class StateVisual extends StatelessWidget {
           // 統一的底色 (圖片載入前或透明圖的背景)
           color: colorScheme.surfaceContainerLow,
           // 統一的圓角 (例如 24)
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppLayout.radiusXXL),
         ),
         // 裁切圖片以符合圓角
         clipBehavior: Clip.antiAlias,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -78,16 +80,14 @@ class _S72ContentState extends State<_S72Content> {
     }
   }
 
-  void _showDeclineDialog(BuildContext context, S72TermsUpdateViewModel vm) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
+  void _showDeclineDialog(BuildContext context, S72TermsUpdateViewModel vm,
+      TextTheme textTheme, Translations t, double finalLineHeight) {
     CommonAlertDialog.show(
       context,
       title: t.D12_logout_confirm.title,
       content: Text(
         t.D12_logout_confirm.content,
-        style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+        style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
         AppButton(
@@ -114,7 +114,16 @@ class _S72ContentState extends State<_S72Content> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final vm = context.watch<S72TermsUpdateViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     String getTitleTypeLabel(S72TermsUpdateViewModel vm) {
       switch (vm.type) {
@@ -158,7 +167,8 @@ class _S72ContentState extends State<_S72Content> {
             AppButton(
               text: t.common.buttons.decline,
               type: AppButtonType.secondary,
-              onPressed: () => _showDeclineDialog(context, vm),
+              onPressed: () => _showDeclineDialog(
+                  context, vm, textTheme, t, finalLineHeight),
             ),
             // 同意
             AppButton(
@@ -171,12 +181,12 @@ class _S72ContentState extends State<_S72Content> {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             child: Column(
               children: [
                 Text(description),
                 if (vm.type == UpdateType.both) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppLayout.spaceS),
                   CustomSlidingSegment<LegalTab>(
                     selectedValue: vm.currentTab,
                     segments: {
@@ -186,7 +196,7 @@ class _S72ContentState extends State<_S72Content> {
                     onValueChanged: (tab) => _handleSetTab(vm, tab),
                   ),
                 ],
-                const SizedBox(height: 8),
+                const SizedBox(height: AppLayout.spaceS),
                 Expanded(
                   child: S71SettingsTermsPage(
                     isTerms: _isTermsVisible(vm),

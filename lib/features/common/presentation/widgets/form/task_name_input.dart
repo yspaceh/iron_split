@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -13,6 +14,7 @@ class TaskNameInput extends StatelessWidget {
     this.fillColor,
     this.autofocus = false,
     this.focusNode,
+    this.enabled = true,
   });
 
   final TextEditingController controller;
@@ -22,11 +24,12 @@ class TaskNameInput extends StatelessWidget {
   final Color? fillColor;
   final bool autofocus;
   final FocusNode? focusNode;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     // 定義最大長度，方便維護
-    int inputMaxLength = maxLength ?? 20;
+    int inputMaxLength = maxLength ?? TaskConstants.maxTaskNameLength;
 
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
@@ -46,6 +49,7 @@ class TaskNameInput extends StatelessWidget {
               ? t.error.message.empty(key: label)
               : null,
           focusNode: focusNode,
+          enabled: enabled,
         );
       },
     );

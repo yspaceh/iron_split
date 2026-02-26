@@ -72,6 +72,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsD11RandomResultZhTw D11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
 	late final TranslationsD12LogoutConfirmZhTw D12_logout_confirm = TranslationsD12LogoutConfirmZhTw.internal(_root);
 	late final TranslationsD13DeleteAccountConfirmZhTw D13_DeleteAccount_Confirm = TranslationsD13DeleteAccountConfirmZhTw.internal(_root);
+	late final TranslationsD14DateSelectZhTw D14_Date_Select = TranslationsD14DateSelectZhTw.internal(_root);
 	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
 	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
 	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
@@ -98,6 +99,7 @@ class TranslationsCommonZhTw {
 	late final TranslationsCommonPaymentMethodZhTw payment_method = TranslationsCommonPaymentMethodZhTw.internal(_root);
 	late final TranslationsCommonLanguageZhTw language = TranslationsCommonLanguageZhTw.internal(_root);
 	late final TranslationsCommonThemeZhTw theme = TranslationsCommonThemeZhTw.internal(_root);
+	late final TranslationsCommonDisplayZhTw display = TranslationsCommonDisplayZhTw.internal(_root);
 	late final TranslationsCommonPaymentInfoZhTw payment_info = TranslationsCommonPaymentInfoZhTw.internal(_root);
 	late final TranslationsCommonPaymentStatusZhTw payment_status = TranslationsCommonPaymentStatusZhTw.internal(_root);
 	late final TranslationsCommonTermsZhTw terms = TranslationsCommonTermsZhTw.internal(_root);
@@ -710,6 +712,18 @@ class TranslationsD13DeleteAccountConfirmZhTw {
 	String get content => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？';
 }
 
+// Path: D14_Date_Select
+class TranslationsD14DateSelectZhTw {
+	TranslationsD14DateSelectZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '選擇日期'
+	String get title => '選擇日期';
+}
+
 // Path: B02_SplitExpense_Edit
 class TranslationsB02SplitExpenseEditZhTw {
 	TranslationsB02SplitExpenseEditZhTw.internal(this._root);
@@ -1160,14 +1174,14 @@ class TranslationsCommonSplitMethodZhTw {
 
 	// Translations
 
-	/// zh-TW: '平均分攤'
-	String get even => '平均分攤';
+	/// zh-TW: '均分'
+	String get even => '均分';
 
-	/// zh-TW: '比例分攤'
-	String get percent => '比例分攤';
+	/// zh-TW: '比例'
+	String get percent => '比例';
 
-	/// zh-TW: '指定金額'
-	String get exact => '指定金額';
+	/// zh-TW: '指定'
+	String get exact => '指定';
 }
 
 // Path: common.payment_method
@@ -1228,6 +1242,27 @@ class TranslationsCommonThemeZhTw {
 
 	/// zh-TW: '深色模式'
 	String get dark => '深色模式';
+}
+
+// Path: common.display
+class TranslationsCommonDisplayZhTw {
+	TranslationsCommonDisplayZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '顯示設定'
+	String get title => '顯示設定';
+
+	/// zh-TW: '系統預設'
+	String get system => '系統預設';
+
+	/// zh-TW: '放大顯示'
+	String get enlarged => '放大顯示';
+
+	/// zh-TW: '標準顯示'
+	String get standard => '標準顯示';
 }
 
 // Path: common.payment_info
@@ -1396,11 +1431,11 @@ class TranslationsS13TaskDashboardEmptyZhTw {
 
 	// Translations
 
-	/// zh-TW: '尚無收支紀錄'
-	String get records => '尚無收支紀錄';
+	/// zh-TW: '尚無紀錄'
+	String get records => '尚無紀錄';
 
-	/// zh-TW: '沒有相關紀錄'
-	String get personal_records => '沒有相關紀錄';
+	/// zh-TW: '尚無紀錄'
+	String get personal_records => '尚無紀錄';
 }
 
 // Path: S13_Task_Dashboard.section
@@ -2306,8 +2341,8 @@ class TranslationsErrorMessageZhTw {
 	/// zh-TW: '邀請連結已過期（超過 15 分鐘），請隊長重新分享。'
 	String get expired_code => '邀請連結已過期（超過 15 分鐘），請隊長重新分享。';
 
-	/// zh-TW: '任務人數已滿（上限 15 人），無法加入。'
-	String get task_full => '任務人數已滿（上限 15 人），無法加入。';
+	/// zh-TW: '任務人數已滿（上限{limit}人）。'
+	String task_full({required Object limit}) => '任務人數已滿（上限${limit}人）。';
 
 	/// zh-TW: '登入狀態異常，請重新啟動 App。'
 	String get auth_required => '登入狀態異常，請重新啟動 App。';
@@ -2795,9 +2830,9 @@ extension on Translations {
 			'common.remainder_rule.content.member' => '指定一位成員固定承擔所有零頭差額。',
 			'common.remainder_rule.message_remainder' => ({required Object amount}) => '零頭 ${amount} 將暫存，於結算時分配。',
 			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷。',
-			'common.split_method.even' => '平均分攤',
-			'common.split_method.percent' => '比例分攤',
-			'common.split_method.exact' => '指定金額',
+			'common.split_method.even' => '均分',
+			'common.split_method.percent' => '比例',
+			'common.split_method.exact' => '指定',
 			'common.payment_method.member' => '成員代墊',
 			'common.payment_method.prepay' => '預收款支付',
 			'common.payment_method.mixed' => '混合支付',
@@ -2809,6 +2844,10 @@ extension on Translations {
 			'common.theme.system' => '系統預設',
 			'common.theme.light' => '淺色模式',
 			'common.theme.dark' => '深色模式',
+			'common.display.title' => '顯示設定',
+			'common.display.system' => '系統預設',
+			'common.display.enlarged' => '放大顯示',
+			'common.display.standard' => '標準顯示',
 			'common.payment_info.mode.private' => '請直接私訊聯絡',
 			'common.payment_info.mode.public' => '提供收款資訊',
 			'common.payment_info.content.private' => '不顯示詳細資訊，請成員直接聯繫',
@@ -2875,8 +2914,8 @@ extension on Translations {
 			'S13_Task_Dashboard.label.total_prepay' => '總預收',
 			'S13_Task_Dashboard.label.total_expense_personal' => '總費用',
 			'S13_Task_Dashboard.label.total_prepay_personal' => '總預收（含代墊）',
-			'S13_Task_Dashboard.empty.records' => '尚無收支紀錄',
-			'S13_Task_Dashboard.empty.personal_records' => '沒有相關紀錄',
+			'S13_Task_Dashboard.empty.records' => '尚無紀錄',
+			'S13_Task_Dashboard.empty.personal_records' => '尚無紀錄',
 			'S13_Task_Dashboard.daily_expense_label' => '支出',
 			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
 			'S13_Task_Dashboard.section.expense' => '支出明細',
@@ -3056,6 +3095,7 @@ extension on Translations {
 			'D12_logout_confirm.buttons.logout' => '確認登出',
 			'D13_DeleteAccount_Confirm.title' => '刪除帳號確認',
 			'D13_DeleteAccount_Confirm.content' => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？',
+			'D14_Date_Select.title' => '選擇日期',
 			'B02_SplitExpense_Edit.title' => '編輯細項',
 			'B02_SplitExpense_Edit.buttons.confirm_split' => '確認分拆',
 			'B02_SplitExpense_Edit.item_name_empty' => '項目名稱尚未輸入',
@@ -3124,7 +3164,7 @@ extension on Translations {
 			'error.message.invalid_char' => '包含無效字元。',
 			'error.message.invalid_code' => '邀請碼無效，請確認連結是否正確。',
 			'error.message.expired_code' => '邀請連結已過期（超過 15 分鐘），請隊長重新分享。',
-			'error.message.task_full' => '任務人數已滿（上限 15 人），無法加入。',
+			'error.message.task_full' => ({required Object limit}) => '任務人數已滿（上限${limit}人）。',
 			'error.message.auth_required' => '登入狀態異常，請重新啟動 App。',
 			'error.message.init_failed' => '載入失敗，請稍後再試。',
 			'error.message.unauthorized' => '帳號未登入，請重新登入。',

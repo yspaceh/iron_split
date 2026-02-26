@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
@@ -98,10 +99,10 @@ class _B04Content extends StatelessWidget {
           ],
         ),
         children: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceL),
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
               child: Column(
                 children: [
                   SummaryRow(

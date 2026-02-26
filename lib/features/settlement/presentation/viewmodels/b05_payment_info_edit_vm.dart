@@ -68,6 +68,9 @@ class B05PaymentInfoEditViewModel extends ChangeNotifier {
       if (user == null) throw AppErrorCodes.unauthorized;
 
       _loadedDefault = await _systemRepo.getDefaultPaymentInfo();
+      if (_loadedDefault != null) {
+        formController.loadData(_loadedDefault);
+      }
       _initStatus = LoadStatus.success;
       notifyListeners();
     } on AppErrorCodes catch (code) {

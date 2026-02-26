@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class CommonAlertDialog extends StatelessWidget {
   final String title;
@@ -32,29 +35,74 @@ class CommonAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double standardPadding = AppLayout.spaceXL;
 
-    return AlertDialog(
-      title: Text(title, style: theme.textTheme.titleLarge),
-      content: content, // 如果 content 為 null，AlertDialog 會自動處理佈局
-      scrollable: true,
-      actionsAlignment: MainAxisAlignment.end,
-      actions: [
-        if (actions == null) const SizedBox.shrink(),
-        Row(
-          children: actions!.map((child) {
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: child == actions!.last ? 0 : 12.0,
-                ),
-                child: child,
-              ),
-            );
-          }).toList(),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppLayout.radiusXXL),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
         ),
-      ],
-      actionsPadding:
-          const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 12),
+      ),
+      backgroundColor: theme.colorScheme.surface,
+      insetPadding: EdgeInsets.symmetric(
+          horizontal: standardPadding, vertical: standardPadding),
+      child: Padding(
+        padding: const EdgeInsets.all(standardPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // 高度隨內容自動緊縮
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 水平拉滿
+          children: [
+            // --- 1. 標題區 ---
+            Text(
+              title,
+              style: textTheme.titleLarge,
+            ),
+
+            // --- 2. 內容區 ---
+            if (content != null) ...[
+              const SizedBox(height: AppLayout.spaceL),
+              Flexible(child: content!),
+            ],
+
+            // --- 3. 按鈕區 (完全客製化排版) ---
+            if (actions != null && actions!.isNotEmpty) ...[
+              const SizedBox(height: AppLayout.spaceXL),
+              isEnlarged
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: actions!.map((child) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom:
+                                child == actions!.last ? 0 : AppLayout.spaceM,
+                          ),
+                          child: child,
+                        );
+                      }).toList(),
+                    )
+                  : Row(
+                      children: actions!.map((child) {
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right:
+                                  child == actions!.last ? 0 : AppLayout.spaceM,
+                            ),
+                            child: child,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+            ],
+          ],
+        ),
+      ), // 對話框與螢幕邊緣的安全距離
     );
   }
 }

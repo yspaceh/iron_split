@@ -4,6 +4,9 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class D10RecordDeleteConfirmDialog extends StatelessWidget {
   final String recordTitle;
@@ -31,6 +34,14 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     return CommonAlertDialog(
         title: t.D10_RecordDelete_Confirm.title,
@@ -39,7 +50,7 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
               title: recordTitle,
               amount:
                   "${currency.symbol} ${CurrencyConstants.formatAmount(amount, currency.code)}"),
-          style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+          style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
         ),
         actions: [
           AppButton(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class HorizontalDateList extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
+  final bool isEnlarged;
 
   const HorizontalDateList({
     super.key,
@@ -13,6 +15,7 @@ class HorizontalDateList extends StatefulWidget {
     required this.endDate,
     required this.selectedDate,
     required this.onDateSelected,
+    required this.isEnlarged,
   });
 
   @override
@@ -22,7 +25,10 @@ class HorizontalDateList extends StatefulWidget {
 class _HorizontalDateListState extends State<HorizontalDateList> {
   final ScrollController _scrollController = ScrollController();
 
-  static const double _itemWidth = 48;
+  double get _itemWidth {
+    if (!mounted) return 48.0;
+    return widget.isEnlarged ? 72.0 : 48.0; // 放大時給予 72 寬度
+  }
 
   @override
   void initState() {
@@ -90,6 +96,14 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
     final days = widget.endDate.difference(widget.startDate).inDays + 1;
     final dates = List.generate(days > 0 ? days : 1,
         (index) => widget.startDate.add(Duration(days: index)));
+    final double itemWidth = widget.isEnlarged ? 72.0 : 48.0;
+    final double pillWidth = widget.isEnlarged ? 56.0 : 32.0;
+    final double pillHeight =
+        widget.isEnlarged ? 80.0 : 40.0; // 給予高達 80 的高度，徹底消滅 Overflow
+    final double pillRadius = widget.isEnlarged ? 16.0 : 10.0; // 圓角也跟著微調
+    final double weekTopPos = widget.isEnlarged ? 18.0 : 10; // 星期幾的位置向下移，避免撞到頂部
+    final double dotBottomPos = widget.isEnlarged ? 18.0 : 11.0; // 點點往上移
+    final double dayBottomMargin = widget.isEnlarged ? 12.0 : 5.0; // 日期的底部留白加大
 
     return ListView.builder(
       controller: _scrollController,
@@ -108,25 +122,21 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
 
         return InkWell(
           onTap: () => widget.onDateSelected(date),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppLayout.radiusM),
           child: SizedBox(
-            width: _itemWidth,
+            width: itemWidth,
             child: Stack(
               children: [
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    height: 40, // 豎向膠囊高度
-                    width: 32, // 寬度
+                    height: pillHeight, // 豎向膠囊高度
+                    width: pillWidth, // 寬度
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary // 選中：酒紅底
                           : Colors.transparent, // 未選：透明
-                      borderRadius: BorderRadius.circular(10), // 圓角矩形
-                      // 如果是今天但未選中，可以加個外框？(可選)
-                      // border: isToday && !isSelected
-                      //    ? Border.all(color: colorScheme.outline, width: 1)
-                      //    : null,
+                      borderRadius: BorderRadius.circular(pillRadius), // 圓角矩形
                     ),
                     child: Center(
                       child: Column(
@@ -141,14 +151,14 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                                   : colorScheme.onSurface, // 未選：深灰字
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          SizedBox(height: dayBottomMargin),
                         ],
                       ),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 12,
+                  top: weekTopPos,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -166,13 +176,13 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                 ),
                 if (isToday)
                   Positioned(
-                    bottom: 11,
+                    bottom: dotBottomPos,
                     left: 0,
                     right: 0,
                     child: Center(
                       child: Container(
-                        width: 4,
-                        height: 4,
+                        width: widget.isEnlarged ? 6 : 4,
+                        height: widget.isEnlarged ? 6 : 4,
                         decoration: BoxDecoration(
                           color: isSelected
                               ? colorScheme.onPrimary.withValues(alpha: 0.9)

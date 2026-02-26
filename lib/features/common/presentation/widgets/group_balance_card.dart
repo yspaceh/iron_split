@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -16,6 +17,7 @@ class GroupBalanceCard extends StatelessWidget {
   final VoidCallback? onRuleTap;
   final double? fixedHeight;
   final bool? isSettlement;
+  final bool isEnlarged;
 
   const GroupBalanceCard({
     super.key,
@@ -24,6 +26,7 @@ class GroupBalanceCard extends StatelessWidget {
     this.onRuleTap,
     this.fixedHeight,
     this.isSettlement = false,
+    required this.isEnlarged,
   });
 
   @override
@@ -32,7 +35,12 @@ class GroupBalanceCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
     // 透過 State 判斷是否鎖定 (若 onCurrencyTap 為空通常也代表鎖定，雙重確認)
     final bool isCurrencyTapLocked = onCurrencyTap == null;
     final bool isRuleTapLocked = onRuleTap == null;
@@ -84,13 +92,15 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.expenseDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style:
+                      textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
               ] else ...[
                 ...state.expenseDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${getAmountWithSymbol(state.expenseDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style:
+                        textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                   ),
                 ),
               ],
@@ -103,13 +113,15 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.prepayDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style:
+                      textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
               ] else ...[
                 ...state.prepayDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${getAmountWithSymbol(state.prepayDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style:
+                        textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                   ),
                 ),
               ],
@@ -122,13 +134,15 @@ class GroupBalanceCard extends StatelessWidget {
               if (state.poolDetail.entries.isEmpty) ...[
                 Text(
                   t.S13_Task_Dashboard.section.no_data,
-                  style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                  style:
+                      textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
               ] else ...[
                 ...state.poolDetail.entries.map(
                   (e) => Text(
                     "${e.key} ${getAmountWithSymbol(state.poolDetail.isEmpty ? 0 : e.value.abs(), e.key)}",
-                    style: textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style:
+                        textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                   ),
                 ),
               ],
@@ -139,8 +153,8 @@ class GroupBalanceCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: colorScheme.surface, // [修改] 統一使用純白
-        borderRadius: BorderRadius.circular(20), // 大卡片維持 20 的圓角，比較大氣
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppLayout.radiusXL),
         // [修改] 加入與 MemberItem 一致的極淡陰影
         boxShadow: [
           BoxShadow(
@@ -151,10 +165,10 @@ class GroupBalanceCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppLayout.radiusXL),
         child: InkWell(
           onTap: showBalanceDetails,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppLayout.radiusXL),
           child: SizedBox(
             height: fixedHeight,
             child: Column(
@@ -171,16 +185,17 @@ class GroupBalanceCard extends StatelessWidget {
                           const Spacer(),
                           InkWell(
                             onTap: isCurrencyTapLocked ? null : onCurrencyTap,
-                            borderRadius: BorderRadius.circular(16),
+                            customBorder: const StadiumBorder(),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: footerBgColor, // 使用變數
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: borderColor, // 使用變數
-                                  width: 1,
+                              decoration: ShapeDecoration(
+                                color: footerBgColor,
+                                shape: StadiumBorder(
+                                  side: BorderSide(
+                                    color: borderColor,
+                                    width: 1,
+                                  ),
                                 ),
                               ),
                               child: Row(
@@ -194,9 +209,10 @@ class GroupBalanceCard extends StatelessWidget {
                                     ),
                                   ),
                                   if (!isCurrencyTapLocked) ...[
-                                    const SizedBox(width: 4),
+                                    const SizedBox(width: AppLayout.spaceXS),
                                     Icon(Icons.keyboard_arrow_down,
-                                        size: 14, color: colorScheme.onSurface),
+                                        size: iconSize,
+                                        color: colorScheme.onSurface),
                                   ],
                                 ],
                               ),
@@ -207,80 +223,121 @@ class GroupBalanceCard extends StatelessWidget {
 
                       // (B) Core: Big Number (Net Balance)
                       Center(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: state.currencySymbol,
-                                style: textTheme.titleLarge?.copyWith(
-                                  // 使用變數判斷顏色
-                                  color: netBalance < 0
-                                      ? expenseColor
-                                      : (netBalance > 0
-                                          ? prepayColor
-                                          : neutralColor),
-                                  fontWeight: FontWeight.bold,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.center,
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: state.currencySymbol,
+                                  style: textTheme.titleLarge?.copyWith(
+                                    // 使用變數判斷顏色
+                                    color: netBalance < 0
+                                        ? expenseColor
+                                        : (netBalance > 0
+                                            ? prepayColor
+                                            : neutralColor),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const TextSpan(text: " "),
-                              TextSpan(
-                                text: CurrencyConstants.formatAmount(
-                                    netBalance.abs(), state.currencyCode),
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  fontFamily: 'RobotoMono',
-                                  fontWeight: FontWeight.w700,
-                                  // 使用變數判斷顏色
-                                  color: netBalance < 0
-                                      ? expenseColor
-                                      : (netBalance > 0
-                                          ? prepayColor
-                                          : neutralColor),
-                                  letterSpacing: -1.0,
+                                const TextSpan(text: " "),
+                                TextSpan(
+                                  text: CurrencyConstants.formatAmount(
+                                      netBalance.abs(), state.currencyCode),
+                                  style: TextStyle(
+                                    fontSize: 36,
+                                    height: 1,
+                                    fontFamily: 'RobotoMono',
+                                    fontWeight: FontWeight.w700,
+                                    // 使用變數判斷顏色
+                                    color: netBalance < 0
+                                        ? expenseColor
+                                        : (netBalance > 0
+                                            ? prepayColor
+                                            : neutralColor),
+                                    letterSpacing: -1.0,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${t.S13_Task_Dashboard.label.total_expense} ",
-                            style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
+                      const SizedBox(height: AppLayout.spaceS),
+                      if (isEnlarged) ...[
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${t.S13_Task_Dashboard.label.total_expense} ",
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              Text(
+                                "${state.currencySymbol}${CurrencyConstants.formatAmount(totalExpense.abs(), state.currencyCode)}",
+                                style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ]),
+                        const SizedBox(height: AppLayout.spaceS),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${t.S13_Task_Dashboard.label.total_prepay} ",
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              Text(
+                                "${state.currencySymbol}${CurrencyConstants.formatAmount(totalPrepay.abs(), state.currencyCode)}",
+                                style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ]),
+                      ] else ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${t.S13_Task_Dashboard.label.total_expense} ",
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalExpense.abs(), state.currencyCode)}",
-                            style: textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              "${state.currencySymbol}${CurrencyConstants.formatAmount(totalExpense.abs(), state.currencyCode)}",
+                              style: textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "|",
-                            style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
+                            const SizedBox(width: 4),
+                            Text(
+                              "|",
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "${t.S13_Task_Dashboard.label.total_prepay} ",
-                            style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
+                            const SizedBox(width: 4),
+                            Text(
+                              "${t.S13_Task_Dashboard.label.total_prepay} ",
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${state.currencySymbol}${CurrencyConstants.formatAmount(totalPrepay.abs(), state.currencyCode)}",
-                            style: textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              "${state.currencySymbol}${CurrencyConstants.formatAmount(totalPrepay.abs(), state.currencyCode)}",
+                              style: textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -288,7 +345,7 @@ class GroupBalanceCard extends StatelessWidget {
                 if (fixedHeight != null)
                   const Spacer()
                 else
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppLayout.spaceL),
 
                 // --- Bottom Footer ---
                 InkWell(
@@ -313,7 +370,8 @@ class GroupBalanceCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(Icons.savings_outlined,
-                            size: 18, color: colorScheme.onSurfaceVariant),
+                            size: iconSize,
+                            color: colorScheme.onSurfaceVariant),
                         const SizedBox(width: 8),
                         Text(
                           "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
@@ -343,9 +401,10 @@ class GroupBalanceCard extends StatelessWidget {
                               ),
                             ),
                           if (!isRuleTapLocked) ...[
-                            const SizedBox(width: 4),
-                            Icon(Icons.chevron_right,
-                                size: 16, color: colorScheme.onSurfaceVariant),
+                            const SizedBox(width: AppLayout.spaceXS),
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                size: iconSize,
+                                color: colorScheme.onSurfaceVariant),
                           ],
                         ],
                       ],

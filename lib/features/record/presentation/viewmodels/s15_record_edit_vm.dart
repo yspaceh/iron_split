@@ -92,7 +92,11 @@ class S15RecordEditViewModel extends ChangeNotifier {
   Map<String, double> get baseRawDetails => _baseRawDetails;
 
   // Computed Properties
-  double get totalAmount => double.tryParse(amountController.text) ?? 0.0;
+  double get totalAmount {
+    final rawText = amountController.text;
+    final cleanText = rawText.replaceAll(',', '');
+    return double.tryParse(cleanText) ?? 0.0;
+  }
 
   double get exchangeRateValue =>
       double.tryParse(exchangeRateController.text) ?? 1.0;

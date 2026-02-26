@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -38,13 +41,10 @@ class _S51Content extends StatefulWidget {
 
 class _S51ContentState extends State<_S51Content> {
   final _controller = TextEditingController();
-  late S51OnboardingNameViewModel _vm;
 
   @override
   void initState() {
     super.initState();
-    _vm = context.read<S51OnboardingNameViewModel>();
-    _vm.init();
     _controller.addListener(_onTextChanged);
   }
 
@@ -77,7 +77,15 @@ class _S51ContentState extends State<_S51Content> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final vm = context.watch<S51OnboardingNameViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S51_Onboarding_Name.title;
 
     return CommonStateView(
@@ -115,19 +123,20 @@ class _S51ContentState extends State<_S51Content> {
             SliverFillRemaining(
               hasScrollBody: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       t.S51_Onboarding_Name.content,
-                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                      style: textTheme.bodyMedium
+                          ?.copyWith(height: finalLineHeight),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppLayout.spaceL),
                     TaskNameInput(
                       controller: _controller,
-                      maxLength: 10,
+                      maxLength: AppConstants.maxUserNameLength,
                       label: t.S51_Onboarding_Name.title,
                       hint: t.S51_Onboarding_Name.hint, // "例如：Iron Man"
                     ),

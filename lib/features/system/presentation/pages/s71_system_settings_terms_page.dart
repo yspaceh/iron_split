@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
-import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s71_system_settings_terms_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -21,9 +20,7 @@ class S71SettingsTermsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => S71SystemSettingsTermsViewModel(
-        authRepo: context.read<AuthRepository>(),
-      ),
+      create: (context) => S71SystemSettingsTermsViewModel(),
       child: _S71Content(isTerms: isTerms, isEmbedded: isEmbedded),
     );
   }
@@ -45,6 +42,23 @@ class _S71ContentState extends State<_S71Content> {
   late final S71SystemSettingsTermsViewModel _vm;
   bool _hasFetched = false;
 
+  void _injectTextScaleIntoWebView() {
+    if (!mounted) return;
+
+    // 1. 取得 Flutter 目前的字體放大倍率
+    // 利用 scale(100) 的小技巧：如果倍率是 1.35，算出來就是 135；如果是 3.0，就是 300。
+    final scalePercent = MediaQuery.textScalerOf(context).scale(100).toInt();
+
+    // 2. 透過 JavaScript 動態修改網頁 body 的 fontSize
+    // 加上 '-webkit-text-size-adjust: none' 防止 iOS Safari 雞婆二次縮放
+    final jsString = '''
+      document.body.style.fontSize = '$scalePercent%';
+      document.body.style.webkitTextSizeAdjust = 'none';
+    ''';
+
+    _controller.runJavaScript(jsString);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +66,14 @@ class _S71ContentState extends State<_S71Content> {
     // 初始化 WebView
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          // 當網頁載入完成時觸發
+          onPageFinished: (String url) {
+            _injectTextScaleIntoWebView();
+          },
+        ),
+      )
       ..setBackgroundColor(Colors.transparent);
     _vm.addListener(_onStateChanged);
   }
@@ -62,14 +84,14 @@ class _S71ContentState extends State<_S71Content> {
     // 在這裡取得 Locale 並觸發 VM init
     if (!_hasFetched) {
       _hasFetched = true;
-      _initData();
-    }
-  }
+      // 1. 先安全地取得 Locale (此時 Context 已經準備好)
+      final locale = Localizations.localeOf(context);
 
-  // 觸發初始化 (包含 Try-Catch 處理 Rethrow)
-  Future<void> _initData() async {
-    final locale = Localizations.localeOf(context);
-    await _vm.init(widget.isTerms, locale);
+      // 2. 把會觸發 notifyListeners() 的動作推遲到下一幀 (Frame)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.init(widget.isTerms, locale);
+      });
+    }
   }
 
   // 監聽並反應狀態 (載入 URL)

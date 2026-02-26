@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_name_input.dart';
@@ -64,7 +65,7 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
         width: double.maxFinite,
         child: TaskNameInput(
           controller: _controller,
-          maxLength: 10,
+          maxLength: AppConstants.maxUserNameLength,
           fillColor: colorScheme.surfaceContainerLow,
           label: t.S53_TaskSettings_Members.member_name,
           hint: t.S53_TaskSettings_Members.member_name,

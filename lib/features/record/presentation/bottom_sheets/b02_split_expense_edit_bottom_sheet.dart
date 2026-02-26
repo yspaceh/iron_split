@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -205,6 +207,8 @@ class _B02ContentState extends State<_B02Content> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final vm = context.watch<B02SplitExpenseEditViewModel>();
+    final displayStatus = context.watch<DisplayState>();
+    final isEnlarged = displayStatus.isEnlarged;
     final title = t.B02_SplitExpense_Edit.title;
     final actions = [
       if (widget.isEditMode)
@@ -255,12 +259,12 @@ class _B02ContentState extends State<_B02Content> {
                       valueColor: colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppLayout.spaceL),
                   Divider(
                     height: 1,
                     color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppLayout.spaceL),
 
                   // 2. Name
                   AppTextField(
@@ -272,7 +276,8 @@ class _B02ContentState extends State<_B02Content> {
                     validator: (v) =>
                         v?.isEmpty == true ? t.error.message.required : null,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
 
                   // 3. Amount
                   TaskAmountInput(
@@ -289,7 +294,8 @@ class _B02ContentState extends State<_B02Content> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
 
                   // 4. Split Config Button
                   AppSelectField(
@@ -305,7 +311,8 @@ class _B02ContentState extends State<_B02Content> {
                       fontSize: 10,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
 
                   // 5. Memo
                   TaskMemoInput(

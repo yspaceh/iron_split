@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_ratio_stepper.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -11,6 +12,7 @@ class MemberItem extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final bool isProcessing;
+  final bool isEnlarged;
 
   const MemberItem({
     super.key,
@@ -20,6 +22,7 @@ class MemberItem extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     required this.isProcessing,
+    required this.isEnlarged,
   });
 
   @override
@@ -31,14 +34,15 @@ class MemberItem extends StatelessWidget {
     final isLinked = member.isLinked;
     final avatarId = member.avatar;
     final ratio = member.defaultSplitRatio;
-
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
     String displayLabel = member.displayName;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppLayout.spaceM, vertical: AppLayout.spaceS),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppLayout.radiusM),
         border: Border.all(
             color: colorScheme.outlineVariant.withValues(alpha: 0.3)),
       ),
@@ -47,10 +51,10 @@ class MemberItem extends StatelessWidget {
           CommonAvatar(
             avatarId: avatarId,
             name: displayLabel,
-            radius: 20,
+            radius: AppLayout.radiusXL,
             isLinked: isLinked,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppLayout.spaceM),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,11 +79,11 @@ class MemberItem extends StatelessWidget {
                         ),
                       ),
                       if (isOwner) ...[
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppLayout.spaceS),
                         Icon(Icons.star_rounded,
                             size: 14, color: colorScheme.primary),
                       ] else if (!isLinked) ...[
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppLayout.spaceS),
                         Icon(Icons.edit_rounded,
                             size: 14,
                             color: colorScheme.primary.withValues(alpha: 0.7)),
@@ -99,15 +103,16 @@ class MemberItem extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppLayout.spaceS),
               CommonRatioStepper(
                 value: ratio,
+                isEnlarged: isEnlarged,
                 onChanged: isProcessing ? (_) {} : onRatioChanged,
                 enabled: !isProcessing,
               ),
             ],
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppLayout.spaceS),
           if (isOwner)
             const SizedBox(width: 40, height: 40)
           else
@@ -116,7 +121,7 @@ class MemberItem extends StatelessWidget {
               icon: Icon(
                 Icons.delete_outline,
                 color: colorScheme.error,
-                size: 20,
+                size: iconSize,
               ),
               tooltip: t.common.buttons.delete,
             ),

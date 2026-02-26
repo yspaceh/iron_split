@@ -1,6 +1,7 @@
 // error_mapper.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
@@ -114,9 +115,11 @@ class ErrorMapper {
 
       // 邀請流程
       case AppErrorCodes.inviteTaskFull:
-        return t.error.dialog.task_full.content(limit: '15');
+        return t.error.dialog.task_full
+            .content(limit: TaskConstants.maxMembers);
       case AppErrorCodes.inviteExpired:
-        return t.error.dialog.expired_code.content(minutes: '30');
+        return t.error.dialog.expired_code
+            .content(minutes: TaskConstants.inviteCodeExpiryMinutes);
       case AppErrorCodes.inviteInvalid:
         return t.error.dialog.invalid_code.content;
       case AppErrorCodes.joinFailed:
@@ -125,7 +128,10 @@ class ErrorMapper {
         return t.error.message.invite_create_failed;
 
       case AppErrorCodes.nameLengthExceeded:
-        return t.error.message.length_exceeded(max: 10);
+        return t.error.message
+            .length_exceeded(max: TaskConstants.maxTaskNameLength);
+      case AppErrorCodes.maxMembersReached:
+        return t.error.message.task_full(limit: TaskConstants.maxMembers);
       case AppErrorCodes.invalidChar:
         return t.error.message.invalid_char;
       case AppErrorCodes.fieldRequired:

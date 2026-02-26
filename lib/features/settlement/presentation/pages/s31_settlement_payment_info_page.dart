@@ -1,8 +1,10 @@
 // lib/features/settlement/presentation/pages/s31_settlement_payment_info_page.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -106,7 +108,8 @@ class _S31ContentState extends State<_S31Content> {
       BuildContext context,
       S31SettlementPaymentInfoViewModel vm,
       Translations t,
-      TextTheme textTheme) async {
+      TextTheme textTheme,
+      double finalLineHeight) async {
     try {
       // 執行結算
       await vm.executeSettlement();
@@ -122,7 +125,7 @@ class _S31ContentState extends State<_S31Content> {
             title: t.error.dialog.data_conflict.title,
             content: Text(
               t.error.dialog.data_conflict.content,
-              style: textTheme.bodyMedium?.copyWith(height: 1.5),
+              style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
             ),
             actions: [
               AppButton(
@@ -164,7 +167,8 @@ class _S31ContentState extends State<_S31Content> {
       BuildContext context,
       S31SettlementPaymentInfoViewModel vm,
       Translations t,
-      TextTheme textTheme) async {
+      TextTheme textTheme,
+      double finalLineHeight) async {
     await CommonAlertDialog.show(
           context,
           title: t.D06_settlement_confirm.title, // "結算確認"
@@ -184,7 +188,9 @@ class _S31ContentState extends State<_S31Content> {
             AppButton(
               text: t.common.buttons.settlement, // "確定結算"
               type: AppButtonType.primary,
-              onPressed: () => _handleSettlement(context, vm, t, textTheme),
+              isLoading: vm.settlementStatus == LoadStatus.loading,
+              onPressed: () =>
+                  _handleSettlement(context, vm, t, textTheme, finalLineHeight),
             ),
           ],
         ) ??
@@ -197,8 +203,14 @@ class _S31ContentState extends State<_S31Content> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-
     final vm = context.watch<S31SettlementPaymentInfoViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     final allNodes = [
       _bankNameNode,
@@ -222,15 +234,27 @@ class _S31ContentState extends State<_S31Content> {
             title: Text(title), // 需新增 i18n
             centerTitle: true,
             actions: [
-              StepDots(currentStep: 2, totalSteps: 2), // Step 2/2
-              const SizedBox(width: 24),
+              StepDots(
+                currentStep: 2,
+                totalSteps: 2,
+                isEnlarged: isEnlarged,
+              ), // Step 2/2
+              const SizedBox(width: AppLayout.spaceXXL),
             ],
           ),
           body: SingleChildScrollView(
-            child: PaymentInfoForm(
-              controller: vm.formController,
-              isSelectedBackgroundColor: colorScheme.surface,
-              backgroundColor: colorScheme.surfaceContainerLow,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+              child: Column(
+                children: [
+                  PaymentInfoForm(
+                    controller: vm.formController,
+                    isSelectedBackgroundColor: colorScheme.surface,
+                    backgroundColor: colorScheme.surfaceContainerLow,
+                  ),
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: Column(
@@ -262,8 +286,8 @@ class _S31ContentState extends State<_S31Content> {
                     text: t.common.buttons.settlement, // "結算"
                     type: AppButtonType.primary,
                     isLoading: vm.settlementStatus == LoadStatus.loading,
-                    onPressed: () =>
-                        _showRateInfoDialog(context, vm, t, textTheme),
+                    onPressed: () => _showRateInfoDialog(
+                        context, vm, t, textTheme, finalLineHeight),
                   ),
                 ],
               ),

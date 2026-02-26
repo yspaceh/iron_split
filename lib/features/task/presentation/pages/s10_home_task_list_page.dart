@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -54,6 +56,8 @@ class _S10Content extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final vm = context.watch<S10TaskListViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = t.S10_Home_TaskList.title;
     final actions = [
       IconButton(
@@ -84,7 +88,7 @@ class _S10Content extends StatelessWidget {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             child: Column(
               children: [
                 // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)

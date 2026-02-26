@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -26,6 +29,7 @@ class AppTextField extends StatelessWidget {
   final Color? fillColor;
   final FocusNode? focusNode;
   final AutovalidateMode? autovalidateMode;
+  final bool enabled;
 
   const AppTextField({
     super.key,
@@ -49,7 +53,8 @@ class AppTextField extends StatelessWidget {
     this.focusNode,
     this.prefixText,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsets.all(AppLayout.spaceXL),
+    this.enabled = true,
   });
 
   @override
@@ -58,8 +63,50 @@ class AppTextField extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final scale = displayState.scale;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
 
-    final borderRadius = BorderRadius.circular(16);
+    final labelStyle = textTheme.labelMedium?.copyWith(
+          color: enabled
+              ? colorScheme.onSurfaceVariant
+              : colorScheme.onSurfaceVariant.withValues(alpha: 0.38),
+          fontWeight: FontWeight.w600,
+          fontSize: 10,
+        ) ??
+        const TextStyle(fontSize: 10);
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
+
+    final Color textColor = enabled
+        ? colorScheme.onSurface
+        : colorScheme.onSurface.withValues(alpha: 0.38);
+
+    final contentStyle = textTheme.bodyLarge?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: textColor,
+      height: finalLineHeight,
+    );
+
+    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceM;
+
+    final double labelRenderedHeight = AppLayout.renderedHeight(
+      10.0,
+      labelStyle.height,
+      scale,
+    );
+
+    final double contentTopPadding =
+        labelTopPos + labelRenderedHeight + AppLayout.spaceXS;
+
+    final double contentBottomPadding =
+        isEnlarged ? AppLayout.spaceL : AppLayout.spaceM;
+
+    final borderRadius = BorderRadius.circular(AppLayout.radiusL);
 
     // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
     final normalBorderStyle = OutlineInputBorder(
@@ -92,7 +139,8 @@ class AppTextField extends StatelessWidget {
     Widget? buildPrefix() {
       if (leading != null) return leading;
       if (prefixIcon != null) {
-        return Icon(prefixIcon, color: colorScheme.onSurfaceVariant, size: 20);
+        return Icon(prefixIcon,
+            color: colorScheme.onSurfaceVariant, size: iconSize);
       }
       return null;
     }
@@ -102,6 +150,7 @@ class AppTextField extends StatelessWidget {
       children: [
         // Layer 1: 輸入框本體
         TextFormField(
+          enabled: enabled,
           controller: controller,
           focusNode: focusNode,
           obscureText: obscureText,
@@ -115,20 +164,14 @@ class AppTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           autofocus: autofocus,
           textAlignVertical: TextAlignVertical.bottom,
-          style: textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: colorScheme.onSurface,
-            height: 1.5,
-          ),
+          style: contentStyle,
           decoration: InputDecoration(
-            // [關鍵] 不使用內建 labelText，避免 OutlineBorder 切出缺口
             labelText: null,
-            // [關鍵] 使用 contentPadding 把輸入文字往下推
-            // Top: 26 (留位置給上面的 Label)
-            // Bottom: 10 (下方留白)
-            // 這樣整體高度大約會是 64px 左右
-            contentPadding:
-                const EdgeInsets.only(left: 16, right: 16, top: 28, bottom: 12),
+            contentPadding: EdgeInsets.only(
+                left: AppLayout.spaceL,
+                right: AppLayout.spaceL,
+                top: contentTopPadding,
+                bottom: contentBottomPadding),
 
             hintText: hintText,
             hintStyle: TextStyle(
@@ -145,17 +188,20 @@ class AppTextField extends StatelessWidget {
             ),
             prefixText: prefixText,
             prefixIcon: buildPrefix(),
-            prefixStyle: textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: colorScheme.onSurface,
-              height: 1.5,
-            ),
+            prefixStyle: contentStyle,
 
             filled: true,
-            fillColor: fillColor ?? colorScheme.surface,
+            fillColor: fillColor != null
+                ? (enabled ? fillColor : fillColor!.withValues(alpha: 0.3))
+                : (enabled
+                    ? colorScheme.surface
+                    : colorScheme.surfaceContainerHighest
+                        .withValues(alpha: 0.3)),
+            errorMaxLines: 3,
 
             // 邊框設定
             border: normalBorderStyle,
+            disabledBorder: normalBorderStyle,
             enabledBorder: normalBorderStyle,
             focusedBorder: normalBorderStyle,
 
@@ -168,19 +214,14 @@ class AppTextField extends StatelessWidget {
         // Layer 2: 手動繪製 Label (固定在左上角)
         if (labelText != null)
           Positioned(
-            top: 12, // 距離頂部
+            top: labelTopPos, // 距離頂部
             left: (prefixIcon != null || leading != null)
-                ? 48
-                : 20, // 如果有 icon 要避開
+                ? AppLayout.gridUnit * 6
+                : AppLayout.spaceXL, // 如果有 icon 要避開
             child: IgnorePointer(
-              // 讓點擊穿透 Label，直接點到輸入框
               child: Text(
                 labelText!,
-                style: textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 10, // 小字體
-                ),
+                style: labelStyle,
               ),
             ),
           ),

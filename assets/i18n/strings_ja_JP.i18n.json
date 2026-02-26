@@ -114,8 +114,8 @@
     },
     "split_method": {
       "even": "均等",
-      "percent": "割合",
-      "exact": "金額指定"
+      "percent": "比例",
+      "exact": "實額"
     },
     "payment_method": {
       "member": "メンバー立替",
@@ -133,6 +133,12 @@
       "system": "システム設定",
       "light": "ライトモード",
       "dark": "ダークモード"
+    },
+    "display": {
+      "title": "表示設定",
+      "system": "システム設定",
+      "enlarged": "拡大表示",
+      "standard": "標準表示"
     },
     "payment_info": {
       "mode": {
@@ -249,8 +255,8 @@
       "total_prepay_personal": "総前受金（立替含）"
     },
     "empty": {
-      "records": "記録がありません",
-      "personal_records": "関連する記録はありません"
+      "records": "該当なし",
+      "personal_records": "該当なし"
     },
     "daily_expense_label": "支出",
     "dialog_balance_detail": "通貨別収支明細",
@@ -563,6 +569,9 @@
     "title": "アカウント削除確認",
     "content": "この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？"
   },
+  "D14_Date_Select": {
+    "title": "日付の選択"
+  },
   "B02_SplitExpense_Edit": {
     "title": "明細編集",
     "buttons": {
@@ -681,7 +690,7 @@
       "invalid_char": "無効な文字が含まれています。",
       "invalid_code": "招待コードが無効です。リンクが正しいか確認してください。",
       "expired_code": "招待リンクの期限（15分）が切れています。リーダーに再送を依頼してください。",
-      "task_full": "定員オーバーです（上限15名）。参加できません。",
+      "task_full": "定員オーバーです（上限{limit}名）。",
       "auth_required": "認証に失敗しました。アプリを再起動してください。",
       "init_failed": "読み込みに失敗しました。もう一度お試しください。",
       "unauthorized": "ログインしていません。再度ログインしてください。",

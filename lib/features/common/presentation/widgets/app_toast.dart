@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class AppToast {
   AppToast._();
@@ -50,6 +53,9 @@ class AppToast {
     required Color backgroundColor,
     required IconData icon,
   }) {
+    final isEnlarged = context.read<DisplayState>().isEnlarged;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     // 先隱藏舊的，避免堆疊
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -62,17 +68,18 @@ class AppToast {
 
         // 圓角：配合您的 Input Border (16px)
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppLayout.radiusL),
         ),
 
         // 留白：讓它浮在內容之上
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        margin: EdgeInsets.symmetric(
+            horizontal: horizontalMargin, vertical: AppLayout.spaceL),
 
         // 內容佈局
         content: Row(
           children: [
-            Icon(icon, color: colorScheme.surface, size: 20),
-            const SizedBox(width: 12),
+            Icon(icon, color: colorScheme.surface, size: iconSize),
+            const SizedBox(width: AppLayout.spaceM),
             Expanded(
               child: Text(
                 message,
@@ -81,8 +88,8 @@ class AppToast {
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                maxLines: isEnlarged ? null : 2,
+                overflow: isEnlarged ? null : TextOverflow.ellipsis,
               ),
             ),
           ],

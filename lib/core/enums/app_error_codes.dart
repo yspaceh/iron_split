@@ -27,6 +27,7 @@ enum AppErrorCodes {
   inviteCreateFailed,
 
   nameLengthExceeded, // 長度超過限制
+  maxMembersReached, // 任務人數限制
   invalidChar, // 包含無效字元
   fieldRequired, // 必填欄位為空
 

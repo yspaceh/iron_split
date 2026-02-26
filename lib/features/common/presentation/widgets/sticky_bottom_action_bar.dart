@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 class StickyBottomActionBar extends StatelessWidget {
   final List<Widget> children;
@@ -29,25 +32,42 @@ class StickyBottomActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     // 內容本體 (按鈕列)
     Widget content = SafeArea(
       top: false,
       bottom: useSafeArea,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: children.map((child) {
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: child == children.last ? 0 : 12.0,
-                ),
-                child: child,
+        padding: EdgeInsets.symmetric(
+            horizontal: horizontalMargin, vertical: AppLayout.spaceM),
+        child: isEnlarged
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children.map((child) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: child == children.last ? 0 : AppLayout.spaceM,
+                    ),
+                    child: child,
+                  );
+                }).toList(),
+              )
+            : Row(
+                children: children.map((child) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: child == children.last ? 0 : AppLayout.spaceM,
+                      ),
+                      child: child,
+                    ),
+                  );
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
       ),
     );
 
@@ -63,8 +83,8 @@ class StickyBottomActionBar extends StatelessWidget {
             Divider(
               height: 1, // 佔用高度
               thickness: 1, // 線條粗細
-              indent: 16, // 左邊留白
-              endIndent: 16, // 右邊留白
+              indent: horizontalMargin, // 左邊留白
+              endIndent: horizontalMargin, // 右邊留白
               color: colorScheme.outlineVariant.withValues(alpha: 0.3),
             ),
             content,

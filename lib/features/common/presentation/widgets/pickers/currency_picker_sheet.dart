@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/common_wheel_picker.dart';
+import 'package:provider/provider.dart';
 
 class CurrencyPickerSheet {
   /// 彈出統一的幣別選擇器
@@ -12,6 +15,9 @@ class CurrencyPickerSheet {
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     int selectedIndex =
         kSupportedCurrencies.indexWhere((e) => e.code == initialCode);
@@ -33,10 +39,10 @@ class CurrencyPickerSheet {
           selectedIndex = index;
         },
         selectionOverlay: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
+          margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppLayout.radiusS),
           ),
         ),
         children: kSupportedCurrencies.map((e) {

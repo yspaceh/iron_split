@@ -113,9 +113,9 @@
       "message_zero_balance": "零頭 {amount} 已與支付匯差自動抵銷。"
     },
     "split_method": {
-      "even": "平均分攤",
-      "percent": "比例分攤",
-      "exact": "指定金額"
+      "even": "均分",
+      "percent": "比例",
+      "exact": "指定"
     },
     "payment_method": {
       "member": "成員代墊",
@@ -133,6 +133,12 @@
       "system": "系統預設",
       "light": "淺色模式",
       "dark": "深色模式"
+    },
+    "display": {
+      "title": "顯示設定",
+      "system": "系統預設",
+      "enlarged": "放大顯示",
+      "standard": "標準顯示"
     },
     "payment_info": {
       "mode": {
@@ -249,8 +255,8 @@
       "total_prepay_personal": "總預收（含代墊）"
     },
     "empty": {
-      "records": "尚無收支紀錄",
-      "personal_records": "沒有相關紀錄"
+      "records": "尚無紀錄",
+      "personal_records": "尚無紀錄"
     },
     "daily_expense_label": "支出",
     "dialog_balance_detail": "收支幣別明細",
@@ -564,6 +570,9 @@
     "title": "刪除帳號確認",
     "content": "此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？"
   },
+  "D14_Date_Select": {
+    "title": "選擇日期" 
+  },
   "B02_SplitExpense_Edit": {
     "title": "編輯細項",
     "buttons": {
@@ -682,7 +691,7 @@
       "invalid_char": "包含無效字元。",
       "invalid_code": "邀請碼無效，請確認連結是否正確。",
       "expired_code": "邀請連結已過期（超過 15 分鐘），請隊長重新分享。",
-      "task_full": "任務人數已滿（上限 15 人），無法加入。",
+      "task_full": "任務人數已滿（上限{limit}人）。",
       "auth_required": "登入狀態異常，請重新啟動 App。",
       "init_failed": "載入失敗，請稍後再試。",
       "unauthorized": "帳號未登入，請重新登入。",

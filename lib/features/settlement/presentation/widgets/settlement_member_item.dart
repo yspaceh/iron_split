@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar_stack.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class SettlementMemberItem extends StatelessWidget {
   final SettlementMember member;
@@ -28,12 +31,14 @@ class SettlementMemberItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final bool isGroup = member.subMembers.isNotEmpty;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
 
     return Container(
       // [關鍵] 1. 裝飾層：與 RecordItem 一致的白底、圓角 16、極淡陰影
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16), //  圓角 16
+        borderRadius: BorderRadius.circular(AppLayout.radiusL), //  圓角 16
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03), //  極淡陰影 (3%)
@@ -44,57 +49,74 @@ class SettlementMemberItem extends StatelessWidget {
       ),
       // [關鍵] 2. 裁切層：確保內容不會超出圓角
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16), //  圓角 16
+        borderRadius: BorderRadius.circular(AppLayout.radiusL), //  圓角 16
         child: isGroup
-            ? _buildGroupContent(context, colorScheme)
-            : _buildSingleRow(context, colorScheme),
+            ? _buildGroupContent(context, colorScheme, isEnlarged)
+            : _buildSingleRow(context, colorScheme, isEnlarged),
       ),
     );
   }
 
   // --- 1. 單人顯示模式 ---
-  Widget _buildSingleRow(BuildContext context, ColorScheme colorScheme) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Padding(
-              //  垂直內距 12 + 頭像 40 = 高度 64px (與 RecordItem 一致)
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: _buildInfoContent(
-                context,
-                avatarWidget: CommonAvatar(
-                  avatarId: member.memberData.avatar,
-                  name: member.memberData.displayName,
-                  isLinked: member.memberData.isLinked,
-                  radius: 20, //  直徑 40px
-                ),
-                name: member.memberData.displayName,
-                amount: member.finalAmount,
-                colorScheme: colorScheme,
-              ),
-            ),
-          ),
-
-          // 分隔線
-          VerticalDivider(
-            width: 1,
-            thickness: 1,
-            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-            indent: 8,
-            endIndent: 8,
-          ),
-
-          // 右側按鈕
-          _buildActionButton(context, colorScheme),
-        ],
+  Widget _buildSingleRow(
+      BuildContext context, ColorScheme colorScheme, bool isEnlarged) {
+    final infoContent = _buildInfoContent(
+      context,
+      isEnlarged: isEnlarged,
+      avatarWidget: CommonAvatar(
+        avatarId: member.memberData.avatar,
+        name: member.memberData.displayName,
+        isLinked: member.memberData.isLinked,
+        radius: AppLayout.radiusXL, //  直徑 40px
       ),
+      name: member.memberData.displayName,
+      amount: member.finalAmount,
+      colorScheme: colorScheme,
     );
+    return isEnlarged
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppLayout.spaceL, vertical: AppLayout.spaceM),
+                child: infoContent,
+              ),
+              Divider(
+                height: 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+              ),
+              _buildActionButton(context, colorScheme, isEnlarged),
+            ],
+          )
+        : IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppLayout.spaceL,
+                        vertical: AppLayout.spaceM),
+                    child: infoContent,
+                  ),
+                ),
+                VerticalDivider(
+                  width: 1,
+                  thickness: 1,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+                  indent: 8,
+                  endIndent: 8,
+                ),
+                _buildActionButton(context, colorScheme, isEnlarged),
+              ],
+            ),
+          );
   }
 
   // --- 2. 群組顯示模式 (邏輯不變，僅樣式微調) ---
-  Widget _buildGroupContent(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildGroupContent(
+      BuildContext context, ColorScheme colorScheme, bool isEnlarged) {
     final double childrenSum =
         member.subMembers.fold(0.0, (sum, child) => sum + child.finalAmount);
     final double headIndividualAmount = member.finalAmount - childrenSum;
@@ -113,6 +135,21 @@ class SettlementMemberItem extends StatelessWidget {
 
     final validMembers = allSubMembers.map((m) => m.memberData).toList();
     final allIds = validMembers.map((m) => m.id).toList();
+    final infoContent = _buildInfoContent(
+      context,
+      isEnlarged: isEnlarged,
+      avatarWidget: CommonAvatarStack(
+        allMembers: validMembers,
+        targetMemberIds: allIds,
+        overlapRatio: 0.5,
+        radius: AppLayout.radiusXL,
+        type: AvatarStackType.stack,
+        limit: 3,
+      ),
+      name: member.memberData.displayName,
+      amount: member.finalAmount,
+      colorScheme: colorScheme,
+    );
 
     return Column(
       children: [
@@ -124,32 +161,21 @@ class SettlementMemberItem extends StatelessWidget {
               Expanded(
                 child: Padding(
                   //  Header 保持一致的高度設定
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: _buildInfoContent(
-                    context,
-                    avatarWidget: CommonAvatarStack(
-                      allMembers: validMembers,
-                      targetMemberIds: allIds,
-                      overlapRatio: 0.5,
-                      radius: 20,
-                      type: AvatarStackType.stack,
-                      limit: 3,
-                    ),
-                    name: member.memberData.displayName,
-                    amount: member.finalAmount,
-                    colorScheme: colorScheme,
-                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppLayout.spaceL, vertical: AppLayout.spaceM),
+                  child: infoContent,
                 ),
               ),
-              VerticalDivider(
-                width: 1,
-                thickness: 1,
-                color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-                indent: 8,
-                endIndent: 8,
-              ),
-              _buildActionButton(context, colorScheme),
+              if (!isEnlarged) ...[
+                VerticalDivider(
+                  width: 1,
+                  thickness: 1,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+                  indent: 8,
+                  endIndent: 8,
+                ),
+                _buildActionButton(context, colorScheme, isEnlarged),
+              ]
             ],
           ),
         ),
@@ -165,9 +191,18 @@ class SettlementMemberItem extends StatelessWidget {
         ...allSubMembers.map((sub) {
           return Padding(
             padding: EdgeInsets.zero,
-            child: _buildSubMemberRow(context, sub, colorScheme),
+            child: _buildSubMemberRow(context, sub, colorScheme, isEnlarged),
           );
         }),
+
+        if (!isEnlarged) ...[
+          const SizedBox(height: AppLayout.spaceS),
+          Divider(
+            height: 1,
+            color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+          ),
+          _buildActionButton(context, colorScheme, isEnlarged),
+        ]
       ],
     );
   }
@@ -179,6 +214,7 @@ class SettlementMemberItem extends StatelessWidget {
     required String name,
     required double amount,
     required ColorScheme colorScheme,
+    required bool isEnlarged,
   }) {
     final t = Translations.of(context);
     final textTheme = Theme.of(context).textTheme;
@@ -193,51 +229,59 @@ class SettlementMemberItem extends StatelessWidget {
 
     final displayAmount =
         CurrencyConstants.formatAmount(amount.abs(), baseCurrency.code);
+    final nameWidget = Text(
+      name,
+      style: textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: colorScheme.onSurface,
+      ),
+      maxLines: isEnlarged ? null : 1,
+      overflow: isEnlarged ? null : TextOverflow.ellipsis,
+    );
 
-    return Row(
+    final amountWidget = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        avatarWidget,
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            name,
-            style: textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        Text(
+          statusText,
+          style: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppLayout.spaceXS),
+        Text(
+          '${baseCurrency.symbol} $displayAmount',
+          style: textTheme.titleMedium?.copyWith(
+            color: amountColor,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'RobotoMono',
+          ),
+        ),
+      ],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              statusText,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${baseCurrency.symbol} $displayAmount',
-              style: textTheme.titleMedium?.copyWith(
-                color: amountColor,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'RobotoMono',
-              ),
+            avatarWidget,
+            const SizedBox(width: AppLayout.spaceM),
+            Expanded(
+              child: nameWidget,
             ),
           ],
         ),
+        const SizedBox(height: AppLayout.spaceS),
+        amountWidget,
       ],
     );
   }
 
   // --- 子成員細項 ---
-  Widget _buildSubMemberRow(
-      BuildContext context, SettlementMember sub, ColorScheme colorScheme) {
+  Widget _buildSubMemberRow(BuildContext context, SettlementMember sub,
+      ColorScheme colorScheme, bool isEnlarged) {
     final textTheme = Theme.of(context).textTheme;
     final isReceiving = sub.finalAmount > 0;
     final amountColor = isReceiving ? colorScheme.tertiary : colorScheme.error;
@@ -253,25 +297,26 @@ class SettlementMemberItem extends StatelessWidget {
         color: colorScheme.surfaceContainerLow.withValues(alpha: 0.3),
       ),
       // 子項目高度：Vertical 12 + Avatar 32 (radius 16) + Vertical 12 = 56px (稍矮一點，符合層級感)
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppLayout.spaceL, vertical: AppLayout.spaceM),
       child: Row(
         children: [
-          const SizedBox(width: 16), // 縮排
+          const SizedBox(width: AppLayout.spaceL), // 縮排
           CommonAvatar(
             avatarId: sub.memberData.avatar,
             name: sub.memberData.displayName,
             isLinked: sub.memberData.isLinked,
             radius: 16,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppLayout.spaceM),
           Expanded(
             child: Text(
               sub.memberData.displayName,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              maxLines: isEnlarged ? null : 1,
+              overflow: isEnlarged ? null : TextOverflow.ellipsis,
             ),
           ),
           Text(
@@ -287,7 +332,8 @@ class SettlementMemberItem extends StatelessWidget {
   }
 
   // --- 動作按鈕 ---
-  Widget _buildActionButton(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildActionButton(
+      BuildContext context, ColorScheme colorScheme, bool isEnlarged) {
     final iconColor = isActionEnabled
         ? colorScheme.primary
         : colorScheme.onSurfaceVariant.withValues(alpha: 0.2);
@@ -297,11 +343,12 @@ class SettlementMemberItem extends StatelessWidget {
       child: InkWell(
         onTap: isActionEnabled ? onActionTap : null,
         child: Container(
-          width: 56,
+          width: isEnlarged ? double.infinity : 56,
+          padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceM),
           alignment: Alignment.center,
           child: Icon(
             actionIcon,
-            size: 24,
+            size: AppLayout.iconSizeM,
             color: iconColor,
           ),
         ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -62,8 +64,13 @@ class _B06Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final vm = context.watch<B06PaymentInfoDetailViewModel>();
     final title = t.S31_settlement_payment_info.title;
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    final double iconSize = AppLayout.inlineIconSize(isEnlarged);
 
     return CommonStateView(
       status: vm.initStatus,
@@ -91,8 +98,8 @@ class _B06Content extends StatelessWidget {
             ),
           ],
         ),
-        children: Container(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+        children: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceM),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,12 +111,15 @@ class _B06Content extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        if (vm.info!.acceptCash) _buildCashTile(context, t),
+                        if (vm.info!.acceptCash)
+                          _buildCashTile(context, colorScheme, textTheme, t),
                         if (vm.info!.bankAccount != null &&
                             vm.info!.bankAccount!.isNotEmpty)
-                          _buildBankSection(context, vm.info!, theme, t),
+                          _buildBankSection(context, vm.info!, colorScheme,
+                              textTheme, t, iconSize),
                         if (vm.info!.paymentApps.isNotEmpty)
-                          _buildAppsSection(context, vm.info!.paymentApps),
+                          _buildAppsSection(context, colorScheme, textTheme, t,
+                              iconSize, vm.info!.paymentApps),
                       ],
                     ),
                   ),
@@ -121,72 +131,124 @@ class _B06Content extends StatelessWidget {
     );
   }
 
-  Widget _buildAppsSection(BuildContext context, List<PaymentAppInfo> apps) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        ...apps.map((app) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(Icons.apps_outlined),
-              ),
-              title: Text(app.name),
-              subtitle: app.link.isNotEmpty ? Text(app.link) : null,
-              trailing: IconButton(
-                icon: const Icon(Icons.copy),
-                onPressed: () => _copyToClipboard(
-                    context, app.link.isNotEmpty ? app.link : app.name),
-              ),
-            )),
-      ],
+  Widget _buildCashTile(BuildContext context, ColorScheme colorScheme,
+      TextTheme textTheme, Translations t) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceL),
+      padding: const EdgeInsets.all(AppLayout.spaceL),
+      decoration: BoxDecoration(
+          border: Border.all(color: colorScheme.outlineVariant),
+          borderRadius: BorderRadius.circular(AppLayout.radiusM),
+          color: colorScheme.surfaceContainerLow),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.common.payment_info.type.cash, style: textTheme.labelLarge),
+        ],
+      ),
     );
   }
 
-  Widget _buildCashTile(BuildContext context, Translations t) {
-    return ListTile(
-      leading: const Icon(Icons.money),
-      title: Text(t.common.payment_info.type.cash),
-      contentPadding: EdgeInsets.zero,
-    );
-  }
-
-  Widget _buildBankSection(BuildContext context, PaymentInfoModel info,
-      ThemeData theme, Translations t) {
+  Widget _buildBankSection(
+      BuildContext context,
+      PaymentInfoModel info,
+      ColorScheme colorScheme,
+      TextTheme textTheme,
+      Translations t,
+      double iconSize) {
     final copyText = "${info.bankName ?? ''}\n${info.bankAccount}".trim();
 
     return Container(
-      margin: const EdgeInsets.only(top: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceL),
+      padding: const EdgeInsets.all(AppLayout.spaceL),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(12),
-      ),
+          border: Border.all(color: colorScheme.outlineVariant),
+          borderRadius: BorderRadius.circular(AppLayout.radiusM),
+          color: colorScheme.surfaceContainerLow),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(t.common.payment_info.type.bank,
-                  style: theme.textTheme.labelLarge),
-              IconButton(
-                icon: const Icon(Icons.copy, size: 20),
-                onPressed: () => _copyToClipboard(context, copyText),
-                tooltip: t.B06_payment_info_detail.buttons.copy,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          if (info.bankName != null && info.bankName!.isNotEmpty)
-            Text(info.bankName!, style: theme.textTheme.bodyMedium),
-          Text(
-            info.bankAccount!,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'RobotoMono',
+          Text(t.common.payment_info.type.bank, style: textTheme.labelLarge),
+          if (info.bankName != null && info.bankName!.isNotEmpty) ...[
+            const SizedBox(height: AppLayout.spaceXS),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(info.bankName!, style: textTheme.bodyMedium),
+                    Text(
+                      info.bankAccount!,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.copy, size: iconSize),
+                  onPressed: () => _copyToClipboard(context, copyText),
+                  tooltip: t.B06_payment_info_detail.buttons.copy,
+                ),
+              ],
             ),
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppsSection(
+      BuildContext context,
+      ColorScheme colorScheme,
+      TextTheme textTheme,
+      Translations t,
+      double iconSize,
+      List<PaymentAppInfo> apps) {
+    String copyText(String? appName, String? appLink) {
+      return "${appName ?? ''}\n${appLink ?? ''}".trim();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(AppLayout.spaceL),
+      decoration: BoxDecoration(
+          border: Border.all(color: colorScheme.outlineVariant),
+          borderRadius: BorderRadius.circular(AppLayout.radiusM),
+          color: colorScheme.surfaceContainerLow),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.common.payment_info.type.apps, style: textTheme.labelLarge),
+          const SizedBox(height: AppLayout.spaceXS),
+          ...apps.map(
+            (app) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(app.name, style: textTheme.bodyMedium),
+                      Text(
+                        app.link,
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'RobotoMono',
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.copy, size: iconSize),
+                    onPressed: () =>
+                        _copyToClipboard(context, copyText(app.name, app.link)),
+                    tooltip: t.B06_payment_info_detail.buttons.copy,
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),

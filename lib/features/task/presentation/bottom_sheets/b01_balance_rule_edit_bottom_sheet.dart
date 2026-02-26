@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
@@ -127,7 +128,7 @@ class _B01BalanceRuleEditBottomSheetState
                   "${widget.baseCurrency.code}${widget.baseCurrency.symbol} ${CurrencyConstants.formatAmount(widget.currentRemainder, widget.baseCurrency.code)}",
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppLayout.spaceL),
           SelectionCard(
             title: RemainderRuleConstants.getLabel(
                 context, RemainderRuleConstants.random),
@@ -141,7 +142,7 @@ class _B01BalanceRuleEditBottomSheetState
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppLayout.spaceL),
           SelectionCard(
             title: RemainderRuleConstants.getLabel(
                 context, RemainderRuleConstants.order),
@@ -155,7 +156,7 @@ class _B01BalanceRuleEditBottomSheetState
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppLayout.spaceL),
           SelectionCard(
             title: RemainderRuleConstants.getLabel(
                 context, RemainderRuleConstants.member),

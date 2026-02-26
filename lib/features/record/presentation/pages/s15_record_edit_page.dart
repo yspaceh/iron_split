@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_info_dialog.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d04_common_unsaved_confirm_dialog.dart';
@@ -167,9 +169,7 @@ class _S15ContentState extends State<_S15Content> {
       S15RecordEditViewModel vm, RecordDetail? detail) async {
     if (vm.baseRemainingAmount <= 0) {
       AppToast.showError(
-        context,
-        t.error.message.enter_first(key: t.common.label.amount),
-      );
+          context, t.error.message.enter_first(key: t.common.label.amount));
       return;
     }
 
@@ -239,9 +239,7 @@ class _S15ContentState extends State<_S15Content> {
       BuildContext context, S15RecordEditViewModel vm) async {
     if (vm.totalAmount <= 0) {
       AppToast.showError(
-        context,
-        t.error.message.enter_first(key: t.common.label.amount),
-      );
+          context, t.error.message.enter_first(key: t.common.label.amount));
       return;
     }
 
@@ -343,6 +341,9 @@ class _S15ContentState extends State<_S15Content> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final vm = context.watch<S15RecordEditViewModel>();
+    final displayStatus = context.watch<DisplayState>();
+    final isEnlarged = displayStatus.isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = vm.recordId == null
         ? t.S15_Record_Edit.title.add
         : t.S15_Record_Edit.title.edit;
@@ -389,8 +390,8 @@ class _S15ContentState extends State<_S15Content> {
             child: Column(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalMargin, vertical: 8),
                   // [修正] 改用 CustomSlidingSegment
                   child: CustomSlidingSegment<int>(
                     selectedValue: vm.segmentedIndex,

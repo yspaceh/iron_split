@@ -6,8 +6,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
+import 'package:iron_split/core/viewmodels/display_vm.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
@@ -116,13 +119,14 @@ void main() async {
         Provider<PreferencesService>(
           create: (_) => PreferencesService(prefs),
         ),
-        // ✅ [新增] 註冊 SystemRepository
+        // 註冊 SystemRepository
         // 使用 ProxyProvider 因為它依賴上面的 PreferencesService
         ProxyProvider<PreferencesService, SystemRepository>(
           update: (context, prefsService, previous) =>
               previous ?? SystemRepository(prefsService),
         ),
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
+        ChangeNotifierProvider(create: (_) => DisplayViewModel()),
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),
         // 註冊 PendingInviteProvider 並執行 init
         ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
@@ -194,18 +198,45 @@ class _IronSplitAppState extends State<IronSplitApp> {
   Widget build(BuildContext context) {
     final themeVm = context.watch<ThemeViewModel>();
     final localeVm = context.watch<LocaleViewModel>();
+    final displayVm = context.watch<DisplayViewModel>();
+    final displayMode = displayVm.displayMode;
+    final systemTextScaler = MediaQuery.textScalerOf(context);
+    final systemScale = systemTextScaler.scale(1.0);
+
+    final bool isEnlargedActive = displayMode == DisplayMode.enlarged ||
+        (displayMode == DisplayMode.system && systemScale > 1.2);
+    final TextScaler safeTextScaler;
+    if (isEnlargedActive) {
+      // 放大顯示模式：允許字體放到很大，例如 2.0 倍
+      safeTextScaler = systemTextScaler.clamp(maxScaleFactor: 2.0);
+    } else {
+      // 標準顯示模式：鎖定在 1.2 倍，保護精緻 UI 不破版
+      safeTextScaler = systemTextScaler.clamp(maxScaleFactor: 1.2);
+    }
+
+    final double finalSafeScale = safeTextScaler.scale(1.0);
     // 使用 MaterialApp.router 整合 GoRouter
     return MaterialApp.router(
       title: 'Iron Split',
-      // 設定語系支援
       locale: localeVm.currentLocale.flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       routerConfig: _appRouter.router,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.getTheme(isDark: false, isEnlarged: isEnlargedActive),
+      darkTheme: AppTheme.getTheme(isDark: true, isEnlarged: isEnlargedActive),
       themeMode: themeVm.themeMode,
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        return Provider<DisplayState>.value(
+          value:
+              DisplayState(isEnlarged: isEnlargedActive, scale: finalSafeScale),
+          child: MediaQuery(
+            // 覆寫系統的 textScaler 為我們計算好的 safeTextScaler
+            data: MediaQuery.of(context).copyWith(textScaler: safeTextScaler),
+            child: child!,
+          ),
+        );
+      },
     );
   }
 }

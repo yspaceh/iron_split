@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
@@ -93,8 +95,9 @@ class _S73ContentState extends State<_S73Content> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
     final vm = context.watch<S73SystemSettingsPaymentInfoViewModel>();
+    final isEnlarged = context.watch<DisplayState>().isEnlarged;
+    final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
 
     final allNodes = [
       _bankNameNode,
@@ -119,15 +122,18 @@ class _S73ContentState extends State<_S73Content> {
             centerTitle: true,
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                PaymentInfoForm(
-                  controller: vm.formController,
-                  isSelectedBackgroundColor: colorScheme.surface,
-                  backgroundColor: colorScheme.surfaceContainerLow,
-                ),
-                const SizedBox(height: 80),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
+              child: Column(
+                children: [
+                  PaymentInfoForm(
+                    controller: vm.formController,
+                    isSelectedBackgroundColor: colorScheme.surface,
+                    backgroundColor: colorScheme.surfaceContainerLow,
+                  ),
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: StickyBottomActionBar(

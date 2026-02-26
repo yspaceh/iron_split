@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For Haptics
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/theme/app_theme.dart'; //  用於存取自定義顏色
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -147,6 +148,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // 單一 Item 高度
     const double itemHeight = 180.0;
@@ -162,7 +164,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
             width: double.maxFinite,
             decoration: BoxDecoration(
               color: colorScheme.surface, // [修改] 淺灰跑道背景
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppLayout.radiusXL),
             ),
             clipBehavior: Clip.hardEdge,
             child: Stack(
@@ -176,7 +178,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                   decoration: BoxDecoration(
                     color: colorScheme.onSurfaceVariant
                         .withValues(alpha: 0.1), // [修改] 純白背景
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppLayout.radiusL),
                     boxShadow: [
                       BoxShadow(
                         color:
@@ -234,8 +236,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                                   const SizedBox(height: 4),
                                   Text(
                                     member.memberData.displayName,
-                                    style:
-                                        theme.textTheme.titleMedium?.copyWith(
+                                    style: textTheme.titleMedium?.copyWith(
                                       color: colorScheme.onSurface,
                                       fontWeight: FontWeight.w600,
                                     ),

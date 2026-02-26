@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class InfoCard extends StatelessWidget {
   final IconData? icon;
@@ -22,10 +23,10 @@ class InfoCard extends StatelessWidget {
     final bgColor = backgroundColor ?? colorScheme.surface;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppLayout.spaceL),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppLayout.radiusM),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start, // 讓 Icon 對齊文字頂部
@@ -33,10 +34,10 @@ class InfoCard extends StatelessWidget {
           // 1. 左側 Icon (隱私/安全相關)
           Icon(
             icon, // 或 verified_user_outlined
-            size: 24,
+            size: AppLayout.iconSizeM,
             color: colorScheme.primary,
           ),
-          const SizedBox(width: 8), // M3 標準間距
+          const SizedBox(width: AppLayout.spaceS), // M3 標準間距
 
           // 2. 右側說明文字
           Expanded(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
@@ -13,6 +15,7 @@ import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/app_select_field.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class S15ExpenseForm extends StatelessWidget {
   // 1. 接收控制器 (讓 Parent 可以讀取輸入值)
@@ -163,6 +166,8 @@ class S15ExpenseForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. 取得翻譯與主題
     final t = Translations.of(context); // 這裡定義 t
+    final displayStatus = context.watch<DisplayState>();
+    final isEnlarged = displayStatus.isEnlarged;
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
@@ -171,14 +176,14 @@ class S15ExpenseForm extends StatelessWidget {
 
     // 2. 貼上你原本的 ListView
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppLayout.spaceL),
       children: [
         TaskDateInput(
           label: t.common.label.date,
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         TaskAmountInput(
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
@@ -186,13 +191,14 @@ class S15ExpenseForm extends StatelessWidget {
           selectedCurrencyConstants: selectedCurrencyConstants,
           isPrepay: false,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         TaskItemInput(
-            onCategoryChanged: onCategoryChanged,
-            titleController: titleController,
-            focusNode: titleFocusNode,
-            selectedCategoryId: selectedCategoryId),
-        const SizedBox(height: 8),
+          onCategoryChanged: onCategoryChanged,
+          titleController: titleController,
+          focusNode: titleFocusNode,
+          selectedCategoryId: selectedCategoryId,
+        ),
+        const SizedBox(height: AppLayout.spaceS),
         AppSelectField(
           labelText: t.common.label.payment_method,
           text: _getPayerDisplayName(t, payerType, payersId),
@@ -202,7 +208,7 @@ class S15ExpenseForm extends StatelessWidget {
               : null,
         ),
         if (isForeign) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppLayout.spaceS),
           TaskExchangeRateInput(
             controller: exchangeRateController,
             baseCurrency: baseCurrency,
@@ -215,7 +221,7 @@ class S15ExpenseForm extends StatelessWidget {
             isPrepay: false,
           ),
         ],
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         if (details.isNotEmpty) ...[
           ...details.map(
             (detail) => Padding(
@@ -231,6 +237,7 @@ class S15ExpenseForm extends StatelessWidget {
                 isBaseCard: false,
                 onTap: () => onDetailEditTap(detail),
                 isPrepay: false,
+                isEnlarged: isEnlarged,
               ),
             ),
           ),
@@ -250,10 +257,11 @@ class S15ExpenseForm extends StatelessWidget {
             showSplitAction: baseRemainingAmount > 0,
             onSplitTap: onAddItemTap,
             isPrepay: false,
+            isEnlarged: isEnlarged,
           ),
         ],
         buildRemainderInfo(),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         TaskMemoInput(
           memoController: memoController,
           focusNode: memoFocusNode,

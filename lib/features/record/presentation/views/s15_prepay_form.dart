@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_amount_input.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/task_date_input.dart';
@@ -9,6 +11,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_memo_i
 import 'package:iron_split/features/common/presentation/widgets/info_bar.dart';
 import 'package:iron_split/features/record/presentation/widgets/record_card.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class S15PrepayForm extends StatelessWidget {
   // 1. Controllers (接收外部控制器)
@@ -102,6 +105,8 @@ class S15PrepayForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. 取得翻譯與主題
     final t = Translations.of(context); // 這裡定義 t
+    final displayStatus = context.watch<DisplayState>();
+    final isEnlarged = displayStatus.isEnlarged;
 
     // 2. 準備顯示用變數
     final isForeign = selectedCurrencyConstants != baseCurrency;
@@ -110,14 +115,14 @@ class S15PrepayForm extends StatelessWidget {
 
     // 2. 貼上你原本的 ListView
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppLayout.spaceL),
       children: [
         TaskDateInput(
           label: t.common.label.date,
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         TaskAmountInput(
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
@@ -126,7 +131,7 @@ class S15PrepayForm extends StatelessWidget {
           isPrepay: true,
         ),
         if (isForeign) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppLayout.spaceS),
           TaskExchangeRateInput(
             controller: exchangeRateController,
             baseCurrency: baseCurrency,
@@ -139,7 +144,7 @@ class S15PrepayForm extends StatelessWidget {
             isPrepay: true,
           ),
         ],
-        const SizedBox(height: 8),
+        const SizedBox(height: AppLayout.spaceS),
         if (baseRemainingAmount > 0) ...[
           RecordCard(
             t: t,
@@ -154,13 +159,14 @@ class S15PrepayForm extends StatelessWidget {
             showSplitAction: false,
             onSplitTap: null,
             isPrepay: true,
+            isEnlarged: isEnlarged,
           ),
           Builder(
             builder: (context) {
               return buildRemainderInfo();
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppLayout.spaceL),
         ],
         TaskMemoInput(
           memoController: memoController,

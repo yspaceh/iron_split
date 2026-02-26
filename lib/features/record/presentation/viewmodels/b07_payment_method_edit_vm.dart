@@ -52,7 +52,13 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
     required this.poolBalancesByCurrency,
     required this.members,
     required this.selectedCurrency,
-  }) : _authRepo = authRepo;
+  }) : _authRepo = authRepo {
+    prepayController.addListener(_onPrepayTextChanged);
+  }
+
+  void _onPrepayTextChanged() {
+    onPrepayAmountChanged(prepayController.text);
+  }
 
   /// 初始化 (Rule 6: 登入確認)
   Future<void> init({
@@ -248,6 +254,7 @@ class B07PaymentMethodEditViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    prepayController.removeListener(_onPrepayTextChanged);
     prepayController.dispose();
     for (var c in memberControllers.values) {
       c.dispose();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/common/presentation/bottom_sheets/common_bottom_sheet.dart';
@@ -125,6 +127,9 @@ class _B07ContentState extends State<_B07Content> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final vm = context.watch<B07PaymentMethodEditViewModel>();
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+
     final allNodes = [
       _prepayFocusNode,
       ..._memberFocusNodes.values, // 把 Map 裡所有的 Node 攤平加進來
@@ -161,7 +166,7 @@ class _B07ContentState extends State<_B07Content> {
                     amount: vm.totalAmount,
                     currencyConstants: vm.selectedCurrency,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppLayout.spaceS),
                   // 即使金額為0也顯示，保持高度穩定
                   SummaryRow(
                     label: t.B07_PaymentMethod_Edit.label.prepay,
@@ -199,7 +204,7 @@ class _B07ContentState extends State<_B07Content> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppLayout.spaceL),
 
             // 2. 選擇區域
             Expanded(
@@ -228,8 +233,7 @@ class _B07ContentState extends State<_B07Content> {
                                 : colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        // 重用 TaskAmountInput
+                        const SizedBox(height: AppLayout.spaceS),
                         TaskAmountInput(
                           amountController: vm.prepayController,
                           selectedCurrencyConstants: vm.selectedCurrency,
@@ -246,7 +250,7 @@ class _B07ContentState extends State<_B07Content> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppLayout.spaceL),
 
                   // B. 成員墊付卡片
                   SelectionCard(
@@ -257,44 +261,65 @@ class _B07ContentState extends State<_B07Content> {
                     child: Column(
                       children: vm.members.map((m) {
                         final id = m.id;
+                        final avatar = CommonAvatar(
+                          avatarId: m.avatar,
+                          name: m.displayName,
+                          radius: 18,
+                          fontSize: 14,
+                          isLinked: m.isLinked,
+                        );
+                        final name =
+                            Text(m.displayName, style: textTheme.bodyLarge);
+                        final amountInput = CompactAmountInput(
+                          controller: vm.memberControllers[id],
+                          focusNode: _memberFocusNodes[id],
+                          onChanged: (val) =>
+                              vm.onMemberAdvanceChanged(id, val),
+                          hintText: '0',
+                          currencyConstants: vm.selectedCurrency,
+                        );
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            children: [
-                              CommonAvatar(
-                                avatarId: m.avatar,
-                                name: m.displayName,
-                                radius: 18,
-                                fontSize: 14,
-                                isLinked: m.isLinked,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(m.displayName,
-                                    style: textTheme.bodyLarge),
-                              ),
-                              const SizedBox(width: 8),
-                              // 使用 Compact Input
-                              SizedBox(
-                                width: 120, // 限制寬度
-                                child: CompactAmountInput(
-                                  controller: vm.memberControllers[id],
-                                  focusNode: _memberFocusNodes[id],
-                                  onChanged: (val) =>
-                                      vm.onMemberAdvanceChanged(id, val),
-                                  hintText: '0',
-                                  currencyConstants: vm.selectedCurrency,
+                          padding: EdgeInsets.symmetric(
+                              vertical: isEnlarged
+                                  ? AppLayout.spaceL
+                                  : AppLayout.spaceS),
+                          child: isEnlarged
+                              ? Column(
+                                  children: [
+                                    Row(children: [
+                                      avatar,
+                                      const SizedBox(width: AppLayout.spaceS),
+                                      Expanded(
+                                        child: name,
+                                      ),
+                                    ]),
+                                    const SizedBox(height: AppLayout.spaceL),
+                                    // 使用 Compact Input
+                                    amountInput,
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    avatar,
+                                    const SizedBox(width: AppLayout.spaceS),
+                                    Expanded(
+                                      child: name,
+                                    ),
+                                    const SizedBox(width: AppLayout.spaceS),
+                                    // 使用 Compact Input
+                                    SizedBox(
+                                      width: 120, // 限制寬度
+                                      child: amountInput,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         );
                       }).toList(),
                     ),
                   ),
 
                   // 底部留白
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),

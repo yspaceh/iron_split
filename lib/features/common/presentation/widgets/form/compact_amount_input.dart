@@ -1,6 +1,9 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
+import 'package:provider/provider.dart';
 
 /// 緊湊型金額輸入框 (模仿 AppTextField 風格，但適合列表使用)
 class CompactAmountInput extends StatelessWidget {
@@ -28,7 +31,14 @@ class CompactAmountInput extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final borderRadius = BorderRadius.circular(12); // 稍微小一點的圓角
+    final borderRadius = BorderRadius.circular(AppLayout.radiusM);
+    final displayState = context.watch<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+    const double componentBaseHeight = 1.5;
+    final double finalLineHeight = AppLayout.dynamicLineHeight(
+      componentBaseHeight,
+      isEnlarged,
+    );
 
     // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
     final normalBorderStyle = OutlineInputBorder(
@@ -53,18 +63,22 @@ class CompactAmountInput extends StatelessWidget {
       keyboardType: TextInputType.numberWithOptions(
           decimal: currencyConstants.decimalDigits > 0),
       inputFormatters: [
-        currencyConstants.decimalDigits > 0
-            ? FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))
-            : FilteringTextInputFormatter.digitsOnly,
+        CurrencyTextInputFormatter.currency(
+          symbol: '',
+          decimalDigits: currencyConstants.decimalDigits,
+        ),
       ],
       style: textTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
-        height: 1.5,
+        height: finalLineHeight,
       ),
       focusNode: focusNode,
       autovalidateMode: autovalidateMode,
-      onChanged: onChanged,
+      onChanged: (value) {
+        final cleanValue = value.replaceAll(',', '');
+        onChanged(cleanValue);
+      },
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
@@ -78,9 +92,10 @@ class CompactAmountInput extends StatelessWidget {
         prefixStyle: textTheme.bodyLarge?.copyWith(
           fontWeight: FontWeight.w500,
           color: colorScheme.onSurface,
-          height: 1.5,
+          height: finalLineHeight,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppLayout.spaceS, vertical: AppLayout.spaceM),
         // 邊框設定
         border: normalBorderStyle,
         enabledBorder: normalBorderStyle,
