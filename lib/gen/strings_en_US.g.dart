@@ -138,10 +138,9 @@ class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 
 	// Translations
 	@override String get title => 'Task List';
-	@override String get tab_in_progress => 'Active';
-	@override String get tab_completed => 'Finished';
-	@override String get empty_in_progress => 'No active tasks';
-	@override String get empty_completed => 'No finished tasks';
+	@override late final _TranslationsS10HomeTaskListTabEnUs tab = _TranslationsS10HomeTaskListTabEnUs._(_root);
+	@override late final _TranslationsS10HomeTaskListEmptyEnUs empty = _TranslationsS10HomeTaskListEmptyEnUs._(_root);
+	@override late final _TranslationsS10HomeTaskListButtonsEnUs buttons = _TranslationsS10HomeTaskListButtonsEnUs._(_root);
 	@override String get date_tbd => 'Date TBD';
 	@override late final _TranslationsS10HomeTaskListLabelEnUs label = _TranslationsS10HomeTaskListLabelEnUs._(_root);
 }
@@ -867,6 +866,39 @@ class _TranslationsCommonShareEnUs extends TranslationsCommonShareZhTw {
 	// Translations
 	@override late final _TranslationsCommonShareInviteEnUs invite = _TranslationsCommonShareInviteEnUs._(_root);
 	@override late final _TranslationsCommonShareSettlementEnUs settlement = _TranslationsCommonShareSettlementEnUs._(_root);
+}
+
+// Path: S10_Home_TaskList.tab
+class _TranslationsS10HomeTaskListTabEnUs extends TranslationsS10HomeTaskListTabZhTw {
+	_TranslationsS10HomeTaskListTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get in_progress => 'Active';
+	@override String get completed => 'Finished';
+}
+
+// Path: S10_Home_TaskList.empty
+class _TranslationsS10HomeTaskListEmptyEnUs extends TranslationsS10HomeTaskListEmptyZhTw {
+	_TranslationsS10HomeTaskListEmptyEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get in_progress => 'No active tasks';
+	@override String get completed => 'No finished tasks';
+}
+
+// Path: S10_Home_TaskList.buttons
+class _TranslationsS10HomeTaskListButtonsEnUs extends TranslationsS10HomeTaskListButtonsZhTw {
+	_TranslationsS10HomeTaskListButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get add_task => 'Add Task';
+	@override String get join_task => 'Join Task';
 }
 
 // Path: S10_Home_TaskList.label
@@ -1983,10 +2015,12 @@ extension on TranslationsEnUs {
 			'log_action.unknown' => 'Unknown Action',
 			'log_action.close_task' => 'Close Task',
 			'S10_Home_TaskList.title' => 'Task List',
-			'S10_Home_TaskList.tab_in_progress' => 'Active',
-			'S10_Home_TaskList.tab_completed' => 'Finished',
-			'S10_Home_TaskList.empty_in_progress' => 'No active tasks',
-			'S10_Home_TaskList.empty_completed' => 'No finished tasks',
+			'S10_Home_TaskList.tab.in_progress' => 'Active',
+			'S10_Home_TaskList.tab.completed' => 'Finished',
+			'S10_Home_TaskList.empty.in_progress' => 'No active tasks',
+			'S10_Home_TaskList.empty.completed' => 'No finished tasks',
+			'S10_Home_TaskList.buttons.add_task' => 'Add Task',
+			'S10_Home_TaskList.buttons.join_task' => 'Join Task',
 			'S10_Home_TaskList.date_tbd' => 'Date TBD',
 			'S10_Home_TaskList.label.settlement' => 'Settlement',
 			'S11_Invite_Confirm.title' => 'Join Task',

@@ -99,7 +99,7 @@ class RecordItem extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        margin: const EdgeInsets.symmetric(vertical: 6),
+        margin: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
         decoration: BoxDecoration(
           color: colorScheme.error,
           borderRadius: BorderRadius.circular(AppLayout.radiusL),

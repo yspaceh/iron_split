@@ -179,7 +179,7 @@ class _S53Content extends StatelessWidget {
                       isLinked: memberData.isLinked,
                       radius: 32,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppLayout.spaceM),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -66,7 +66,6 @@ class AppKeyboardActionsWrapper extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
-                          height: 1.2,
                         ),
                       ),
                     ),

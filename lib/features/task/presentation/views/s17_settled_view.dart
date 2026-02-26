@@ -156,7 +156,9 @@ class _S17SettledViewState extends State<S17SettledView> {
                   children: [
                     if (_selectedIndex == 0 && displayList.isNotEmpty) ...[
                       paymentInfoWidget,
-                      const SizedBox(height: AppLayout.spaceS),
+                      SizedBox(
+                          height:
+                              isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                     ],
 
                     for (var member in displayList) ...[
@@ -172,10 +174,12 @@ class _S17SettledViewState extends State<S17SettledView> {
                           isShowingPending,
                         ),
                       ),
-                      const SizedBox(height: AppLayout.spaceS),
+                      SizedBox(
+                          height:
+                              isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                     ],
 
-                    const SizedBox(height: 80), // Bottom padding
+                    const SizedBox(height: 32), // Bottom padding
                   ],
                 ),
               ),

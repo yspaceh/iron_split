@@ -124,7 +124,7 @@ class CustomSlidingSegment<T> extends StatelessWidget {
                                     ? colorScheme.primary
                                     : colorScheme.onSurfaceVariant,
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: AppLayout.spaceS),
                             ],
                             Flexible(
                               // 防止文字超長溢出

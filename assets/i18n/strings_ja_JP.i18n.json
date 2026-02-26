@@ -211,10 +211,18 @@
   },
   "S10_Home_TaskList": {
     "title": "タスク一覧",
-    "tab_in_progress": "進行中",
-    "tab_completed": "完了済",
-    "empty_in_progress": "進行中のタスクはありません",
-    "empty_completed": "完了したタスクはありません",
+    "tab": {
+      "in_progress": "進行中",
+      "completed": "完了済"
+    },
+    "empty": {
+      "in_progress": "進行中のタスクはありません",
+      "completed": "完了したタスクはありません"
+    },
+    "buttons": {
+      "add_task": "タスク追加",
+      "join_task": "タスク参加"
+    },
     "date_tbd": "日付未定",
     "label": {
       "settlement": "精算済み"

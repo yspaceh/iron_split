@@ -4,7 +4,9 @@ import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
+import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
+import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,10 @@ class _S10Content extends StatelessWidget {
     context.pushNamed(nav.routeName, pathParameters: nav.params);
   }
 
+  void _redirectToJoinTask(BuildContext context) {
+    context.pushNamed('S18');
+  }
+
   void _redirectToCreateTask(BuildContext context) {
     context.pushNamed('S16');
   }
@@ -53,8 +59,6 @@ class _S10Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final vm = context.watch<S10TaskListViewModel>();
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
@@ -77,14 +81,20 @@ class _S10Content extends StatelessWidget {
           centerTitle: true,
           actions: actions,
         ),
-        // 還原 FAB
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _redirectToCreateTask(context),
-          icon: const Icon(Icons.add),
-          label: Text(t.S16_TaskCreate_Edit.title),
-          shape: const StadiumBorder(),
-          backgroundColor: colorScheme.primary,
-          foregroundColor: colorScheme.onPrimary,
+        bottomNavigationBar: StickyBottomActionBar(
+          isSheetMode: false,
+          children: [
+            AppButton(
+              text: t.S10_Home_TaskList.buttons.join_task,
+              type: AppButtonType.secondary,
+              onPressed: () => _redirectToJoinTask(context),
+            ),
+            AppButton(
+              text: t.S10_Home_TaskList.buttons.add_task,
+              type: AppButtonType.primary,
+              onPressed: () => _redirectToCreateTask(context),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
@@ -93,15 +103,16 @@ class _S10Content extends StatelessWidget {
               children: [
                 // 1. 頂部裝飾區塊 (Mascot & SegmentedButton)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
                   // [修正] 改用 CustomSlidingSegment
                   child: CustomSlidingSegment<int>(
                     selectedValue: vm.segmentedIndex,
                     onValueChanged: (val) =>
                         _handleSwitchSegmentedIndex(vm, val),
                     segments: {
-                      0: t.S10_Home_TaskList.tab_in_progress,
-                      1: t.S10_Home_TaskList.tab_completed,
+                      0: t.S10_Home_TaskList.tab.in_progress,
+                      1: t.S10_Home_TaskList.tab.completed,
                     },
                   ),
                 ),
@@ -112,16 +123,16 @@ class _S10Content extends StatelessWidget {
                       ? Center(
                           child: Text(
                             vm.segmentedIndex == 0
-                                ? t.S10_Home_TaskList.empty_in_progress
-                                : t.S10_Home_TaskList.empty_completed,
+                                ? t.S10_Home_TaskList.empty.in_progress
+                                : t.S10_Home_TaskList.empty.completed,
                           ),
                         )
                       : ListView.separated(
                           padding: const EdgeInsets.only(
-                              top: 8, bottom: 80), // 底部留白給 FAB
+                              top: AppLayout.spaceS, bottom: 32),
                           itemCount: vm.displayTasks.length,
                           separatorBuilder: (_, __) =>
-                              const SizedBox(height: 4),
+                              const SizedBox(height: AppLayout.spaceXS),
                           itemBuilder: (context, index) {
                             final task = vm.displayTasks[index];
                             return TaskListItem(

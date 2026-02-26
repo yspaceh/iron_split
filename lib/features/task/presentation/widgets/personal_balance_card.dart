@@ -51,7 +51,7 @@ class PersonalBalanceCard extends StatelessWidget {
 
     final avatarSection = Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: AppLayout.spaceM),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -60,7 +60,7 @@ class PersonalBalanceCard extends StatelessWidget {
               name: displayName,
               radius: 48,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppLayout.spaceXS),
             Text(
               displayName,
               style:
@@ -76,7 +76,8 @@ class PersonalBalanceCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.spaceS, vertical: AppLayout.spaceXS),
           decoration: BoxDecoration(
             color: footerBgColor, // 使用變數
             borderRadius: BorderRadius.circular(AppLayout.radiusL),
@@ -98,7 +99,7 @@ class PersonalBalanceCard extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppLayout.spaceM),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -149,7 +150,7 @@ class PersonalBalanceCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppLayout.spaceXS),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

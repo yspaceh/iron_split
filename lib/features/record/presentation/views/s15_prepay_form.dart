@@ -122,7 +122,7 @@ class S15PrepayForm extends StatelessWidget {
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         TaskAmountInput(
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
@@ -131,7 +131,7 @@ class S15PrepayForm extends StatelessWidget {
           isPrepay: true,
         ),
         if (isForeign) ...[
-          const SizedBox(height: AppLayout.spaceS),
+          SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
           TaskExchangeRateInput(
             controller: exchangeRateController,
             baseCurrency: baseCurrency,
@@ -144,7 +144,7 @@ class S15PrepayForm extends StatelessWidget {
             isPrepay: true,
           ),
         ],
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         if (baseRemainingAmount > 0) ...[
           RecordCard(
             t: t,

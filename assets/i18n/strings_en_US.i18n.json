@@ -210,10 +210,18 @@
   },
   "S10_Home_TaskList": {
     "title": "Task List",
-    "tab_in_progress": "Active",
-    "tab_completed": "Finished",
-    "empty_in_progress": "No active tasks",
-    "empty_completed": "No finished tasks",
+    "tab": {
+      "in_progress": "Active",
+      "completed": "Finished"
+    },
+    "empty": {
+      "in_progress": "No active tasks",
+      "completed": "No finished tasks"
+    },
+    "buttons": {
+      "add_task": "Add Task",
+      "join_task": "Join Task"
+    },
     "date_tbd": "Date TBD",
     "label": {
       "settlement": "Settlement"

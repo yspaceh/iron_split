@@ -1,6 +1,7 @@
 // 路徑: lib/features/settlement/presentation/widgets/payment_info_form.dart
 
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
@@ -8,6 +9,7 @@ import 'package:iron_split/features/common/presentation/widgets/selection_card.d
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart';
 import 'package:iron_split/features/settlement/presentation/controllers/payment_info_form_controller.dart';
 import 'package:iron_split/gen/strings.g.dart';
+import 'package:provider/provider.dart';
 
 class PaymentInfoForm extends StatelessWidget {
   final PaymentInfoFormController controller;
@@ -26,6 +28,8 @@ class PaymentInfoForm extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
 
     return ListenableBuilder(
       listenable: controller,
@@ -79,7 +83,8 @@ class PaymentInfoForm extends StatelessWidget {
                     title: t.common.payment_info.type.cash,
                   ),
 
-                  const SizedBox(height: AppLayout.spaceS),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
 
                   // B. Bank
                   SelectionCard(
@@ -90,7 +95,10 @@ class PaymentInfoForm extends StatelessWidget {
                     isRadio: false,
                     child: Column(
                       children: [
-                        const SizedBox(height: AppLayout.spaceS),
+                        SizedBox(
+                            height: isEnlarged
+                                ? AppLayout.spaceL
+                                : AppLayout.spaceS),
                         Column(
                           children: [
                             AppTextField(
@@ -123,7 +131,10 @@ class PaymentInfoForm extends StatelessWidget {
                     isRadio: false,
                     child: Column(
                       children: [
-                        const SizedBox(height: AppLayout.spaceS),
+                        SizedBox(
+                            height: isEnlarged
+                                ? AppLayout.spaceL
+                                : AppLayout.spaceS),
                         ...controller.appControllers
                             .asMap()
                             .entries

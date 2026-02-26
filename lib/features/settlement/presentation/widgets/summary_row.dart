@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 
 class SummaryRow extends StatelessWidget {
   final String label;
@@ -31,7 +32,7 @@ class SummaryRow extends StatelessWidget {
         MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppLayout.spaceS),
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: safeTextScaler),
         child: Row(
@@ -50,7 +51,6 @@ class SummaryRow extends StatelessWidget {
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: valueColor ?? colorScheme.onSurface,
-                height: 1.2,
               ),
             ),
           ],

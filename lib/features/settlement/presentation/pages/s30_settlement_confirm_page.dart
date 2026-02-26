@@ -252,7 +252,7 @@ class _S30Content extends StatelessWidget {
                 currentStep: 1,
                 isEnlarged: isEnlarged,
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: AppLayout.spaceXXL),
             ],
           ),
           body: isEnlarged
@@ -278,7 +278,7 @@ class _S30Content extends StatelessWidget {
                         ),
                       );
                     }),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppLayout.spaceXXL),
                   ],
                 )
               : Padding(
@@ -290,7 +290,8 @@ class _S30Content extends StatelessWidget {
                       Expanded(
                         child: ListView.separated(
                           // 底部留白讓最後一個項目不會被 BottomBar 擋住
-                          padding: const EdgeInsets.only(bottom: 24),
+                          padding:
+                              const EdgeInsets.only(bottom: AppLayout.spaceXXL),
                           itemCount: vm.settlementMembers.length,
                           separatorBuilder: (_, __) =>
                               const SizedBox(height: AppLayout.spaceS),

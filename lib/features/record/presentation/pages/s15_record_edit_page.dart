@@ -391,7 +391,7 @@ class _S15ContentState extends State<_S15Content> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: horizontalMargin, vertical: 8),
+                      horizontal: horizontalMargin, vertical: AppLayout.spaceS),
                   // [修正] 改用 CustomSlidingSegment
                   child: CustomSlidingSegment<int>(
                     selectedValue: vm.segmentedIndex,

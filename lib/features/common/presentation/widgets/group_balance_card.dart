@@ -188,7 +188,8 @@ class GroupBalanceCard extends StatelessWidget {
                             customBorder: const StadiumBorder(),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
+                                  horizontal: AppLayout.spaceS,
+                                  vertical: AppLayout.spaceXS),
                               decoration: ShapeDecoration(
                                 color: footerBgColor,
                                 shape: StadiumBorder(
@@ -315,14 +316,14 @@ class GroupBalanceCard extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: AppLayout.spaceXS),
                             Text(
                               "|",
                               style: textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: AppLayout.spaceXS),
                             Text(
                               "${t.S13_Task_Dashboard.label.total_prepay} ",
                               style: textTheme.bodySmall?.copyWith(
@@ -350,12 +351,13 @@ class GroupBalanceCard extends StatelessWidget {
                 // --- Bottom Footer ---
                 InkWell(
                   onTap: onRuleTap,
-                  borderRadius:
-                      const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(AppLayout.radiusXL)),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                        horizontal: AppLayout.spaceL,
+                        vertical: AppLayout.spaceM),
                     decoration: BoxDecoration(
                       color: colorScheme.surface, // 使用變數
                       border: Border(
@@ -365,14 +367,14 @@ class GroupBalanceCard extends StatelessWidget {
                         ),
                       ),
                       borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(20)),
+                          bottom: Radius.circular(AppLayout.radiusXL)),
                     ),
                     child: Row(
                       children: [
                         Icon(Icons.savings_outlined,
                             size: iconSize,
                             color: colorScheme.onSurfaceVariant),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppLayout.spaceS),
                         Text(
                           "${state.currencySymbol} ${CurrencyConstants.formatAmount(state.remainder, state.currencyCode)}",
                           style: textTheme.bodySmall?.copyWith(

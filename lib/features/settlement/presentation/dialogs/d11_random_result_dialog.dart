@@ -233,7 +233,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
                                     isLinked: member.memberData.isLinked,
                                     radius: 48, // [修改] 適中大小
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: AppLayout.spaceXS),
                                   Text(
                                     member.memberData.displayName,
                                     style: textTheme.titleMedium?.copyWith(

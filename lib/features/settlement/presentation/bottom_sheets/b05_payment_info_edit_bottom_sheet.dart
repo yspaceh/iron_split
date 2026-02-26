@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
@@ -141,8 +142,9 @@ class _B05ContentState extends State<_B05Content> {
               if (vm.showSyncOption)
                 Container(
                   color: colorScheme.surfaceContainerLow,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppLayout.spaceL,
+                      vertical: AppLayout.spaceXS),
                   child: CheckboxListTile(
                     value: vm.isSyncChecked,
                     onChanged: vm.toggleSync,

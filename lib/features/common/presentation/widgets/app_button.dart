@@ -79,7 +79,7 @@ class AppButton extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 Icon(icon, size: iconSize),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppLayout.spaceS),
               ],
               if (text != null) ...[
                 Text(

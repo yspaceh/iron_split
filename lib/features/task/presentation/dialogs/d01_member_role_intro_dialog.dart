@@ -144,7 +144,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppLayout.spaceXXL),
 
             // Reroll Button
             TextButton.icon(

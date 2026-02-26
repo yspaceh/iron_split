@@ -211,10 +211,18 @@
   },
   "S10_Home_TaskList": {
     "title": "任務列表",
-    "tab_in_progress": "進行中",
-    "tab_completed": "已完成",
-    "empty_in_progress": "目前沒有進行中的任務",
-    "empty_completed": "沒有已完成的任務",
+    "tab": {
+      "in_progress": "進行中",
+      "completed": "已完成"
+    },
+    "empty": {
+      "in_progress": "目前沒有進行中的任務",
+      "completed": "沒有已完成的任務"
+    },
+    "buttons": {
+      "add_task": "新增任務",
+      "join_task": "加入任務"
+    },
     "date_tbd": "日期未定",
     "label": {
       "settlement": "已結算"

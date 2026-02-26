@@ -194,7 +194,7 @@ class _S13ContentState extends State<_S13Content> {
             // Segmented Button
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: horizontalMargin, vertical: 8),
+                  horizontal: horizontalMargin, vertical: AppLayout.spaceS),
               // [修正] 改用 CustomSlidingSegment
               child: CustomSlidingSegment<int>(
                 selectedValue: vm.segmentedIndex,

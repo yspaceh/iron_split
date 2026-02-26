@@ -34,7 +34,8 @@ class InfoBar extends StatelessWidget {
 
     return Container(
       // 內距維持舒適
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppLayout.spaceM, vertical: AppLayout.spaceS),
       decoration: BoxDecoration(
         color: effectiveBgColor,
         borderRadius:
@@ -44,7 +45,7 @@ class InfoBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center, // 垂直置中
         children: [
           Icon(icon, color: effectiveContentColor, size: iconSize),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppLayout.spaceS),
           Expanded(
             // 強制讓傳入的 Text 使用我們定義的顏色 (如果 Text 本身沒設 style)
             child: DefaultTextStyle.merge(

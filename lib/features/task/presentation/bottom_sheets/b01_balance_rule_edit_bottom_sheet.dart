@@ -120,7 +120,7 @@ class _B01BalanceRuleEditBottomSheetState
         ],
       ),
       children: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
         children: [
           Text(
             t.common.remainder_rule.content.remainder(
@@ -170,7 +170,7 @@ class _B01BalanceRuleEditBottomSheetState
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppLayout.spaceM),
               // 成員清單
               ...widget.members.map((m) {
                 final id = m.id;

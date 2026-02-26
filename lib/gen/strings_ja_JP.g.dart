@@ -138,10 +138,9 @@ class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 
 	// Translations
 	@override String get title => 'タスク一覧';
-	@override String get tab_in_progress => '進行中';
-	@override String get tab_completed => '完了済';
-	@override String get empty_in_progress => '進行中のタスクはありません';
-	@override String get empty_completed => '完了したタスクはありません';
+	@override late final _TranslationsS10HomeTaskListTabJaJp tab = _TranslationsS10HomeTaskListTabJaJp._(_root);
+	@override late final _TranslationsS10HomeTaskListEmptyJaJp empty = _TranslationsS10HomeTaskListEmptyJaJp._(_root);
+	@override late final _TranslationsS10HomeTaskListButtonsJaJp buttons = _TranslationsS10HomeTaskListButtonsJaJp._(_root);
 	@override String get date_tbd => '日付未定';
 	@override late final _TranslationsS10HomeTaskListLabelJaJp label = _TranslationsS10HomeTaskListLabelJaJp._(_root);
 }
@@ -868,6 +867,39 @@ class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
 	// Translations
 	@override late final _TranslationsCommonShareInviteJaJp invite = _TranslationsCommonShareInviteJaJp._(_root);
 	@override late final _TranslationsCommonShareSettlementJaJp settlement = _TranslationsCommonShareSettlementJaJp._(_root);
+}
+
+// Path: S10_Home_TaskList.tab
+class _TranslationsS10HomeTaskListTabJaJp extends TranslationsS10HomeTaskListTabZhTw {
+	_TranslationsS10HomeTaskListTabJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get in_progress => '進行中';
+	@override String get completed => '完了済';
+}
+
+// Path: S10_Home_TaskList.empty
+class _TranslationsS10HomeTaskListEmptyJaJp extends TranslationsS10HomeTaskListEmptyZhTw {
+	_TranslationsS10HomeTaskListEmptyJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get in_progress => '進行中のタスクはありません';
+	@override String get completed => '完了したタスクはありません';
+}
+
+// Path: S10_Home_TaskList.buttons
+class _TranslationsS10HomeTaskListButtonsJaJp extends TranslationsS10HomeTaskListButtonsZhTw {
+	_TranslationsS10HomeTaskListButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get add_task => 'タスク追加';
+	@override String get join_task => 'タスク参加';
 }
 
 // Path: S10_Home_TaskList.label
@@ -1985,10 +2017,12 @@ extension on TranslationsJaJp {
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
 			'S10_Home_TaskList.title' => 'タスク一覧',
-			'S10_Home_TaskList.tab_in_progress' => '進行中',
-			'S10_Home_TaskList.tab_completed' => '完了済',
-			'S10_Home_TaskList.empty_in_progress' => '進行中のタスクはありません',
-			'S10_Home_TaskList.empty_completed' => '完了したタスクはありません',
+			'S10_Home_TaskList.tab.in_progress' => '進行中',
+			'S10_Home_TaskList.tab.completed' => '完了済',
+			'S10_Home_TaskList.empty.in_progress' => '進行中のタスクはありません',
+			'S10_Home_TaskList.empty.completed' => '完了したタスクはありません',
+			'S10_Home_TaskList.buttons.add_task' => 'タスク追加',
+			'S10_Home_TaskList.buttons.join_task' => 'タスク参加',
 			'S10_Home_TaskList.date_tbd' => '日付未定',
 			'S10_Home_TaskList.label.settlement' => '精算済み',
 			'S11_Invite_Confirm.title' => 'タスクに参加',

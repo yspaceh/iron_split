@@ -73,7 +73,7 @@ class TaskItemInput extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 8),
+          const SizedBox(width: AppLayout.spaceS),
 
           // 右側：標題輸入 (使用 AppTextField)
           Expanded(

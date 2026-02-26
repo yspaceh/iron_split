@@ -44,21 +44,21 @@ class ActivityLogItem extends StatelessWidget {
             createdAt: DateTime.now());
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceM),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // A. 頭像 (Avatar)
           Padding(
-            padding: const EdgeInsets.only(top: 4.0),
+            padding: const EdgeInsets.only(top: AppLayout.spaceXS),
             child: CommonAvatar(
               avatarId: member.avatar, // 這裡需依照您的專案邏輯取得操作者頭像
               name: member.displayName,
               isLinked: member.isLinked,
-              radius: 20,
+              radius: AppLayout.radiusXL,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppLayout.spaceM),
 
           // B. 文字內容 (Text Content)
           Expanded(
@@ -73,7 +73,7 @@ class ActivityLogItem extends StatelessWidget {
                     color: colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppLayout.spaceXS),
 
                 // 2. 主要內容 (Main Line) - 例如 "晚餐 (3000) • 支付..."
                 Text(
@@ -87,7 +87,7 @@ class ActivityLogItem extends StatelessWidget {
                 // 3. 詳細內容 (Sub Line) - 例如 "- drink (...)\n- base (...)"
                 // 只有在有資料時才顯示
                 if (info.subLine != null) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppLayout.spaceXS),
                   Container(
                     padding: const EdgeInsets.only(left: 8, top: 2, bottom: 2),
                     decoration: BoxDecoration(
@@ -110,7 +110,7 @@ class ActivityLogItem extends StatelessWidget {
                   ),
                 ],
 
-                const SizedBox(height: 4),
+                const SizedBox(height: AppLayout.spaceXS),
 
                 // 4. 時間與操作者 (Footer)
                 Text(

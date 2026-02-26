@@ -139,6 +139,9 @@ class _B03ContentState extends State<_B03Content> {
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
     final title = t.B03_SplitMethod_Edit.title;
     final activeNodes = vm.allMembers.map((m) => _getFocusNode(m.id)).toList();
+    final displayState = context.read<DisplayState>();
+    final isEnlarged = displayState.isEnlarged;
+
     //  使用 CommonBottomSheet
     return AppKeyboardActionsWrapper(
       focusNodes: activeNodes,
@@ -170,7 +173,7 @@ class _B03ContentState extends State<_B03Content> {
           children: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
                 child: CustomSlidingSegment<int>(
                   selectedValue: selectedIndex,
                   isSheetMode: true,
@@ -187,7 +190,7 @@ class _B03ContentState extends State<_B03Content> {
               ),
               // 1. Info Bar (金額 & 方式) - 固定在上方
               Padding(
-                padding: EdgeInsets.only(top: 8),
+                padding: EdgeInsets.only(top: AppLayout.spaceS),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -196,9 +199,10 @@ class _B03ContentState extends State<_B03Content> {
                         amount: vm.totalAmount,
                         currencyConstants: vm.selectedCurrency),
                     if (vm.exchangeRate != 1.0) ...[
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppLayout.spaceXS),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.spaceS),
                         child: Text(
                           "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(result.totalAmount.base, vm.baseCurrency.code)}",
                           style: textTheme.bodySmall?.copyWith(
@@ -238,10 +242,12 @@ class _B03ContentState extends State<_B03Content> {
                     if (vm.splitMethod == SplitMethodConstant.even)
                       _buildEvenSection(vm, colorScheme, textTheme),
                     if (vm.splitMethod == SplitMethodConstant.percent)
-                      _buildPercentSection(vm, colorScheme, textTheme),
+                      _buildPercentSection(
+                          vm, colorScheme, textTheme, isEnlarged),
                     if (vm.splitMethod == SplitMethodConstant.exact)
-                      _buildExactSection(vm, t, colorScheme, textTheme),
-                    const SizedBox(height: 40),
+                      _buildExactSection(
+                          vm, t, colorScheme, textTheme, isEnlarged),
+                    const SizedBox(height: 32),
                   ],
                 ),
               ),
@@ -307,7 +313,7 @@ class _B03ContentState extends State<_B03Content> {
 
   // --- Method 2: Percent (比例) ---
   Widget _buildPercentSection(B03SplitMethodEditViewModel vm,
-      ColorScheme colorScheme, TextTheme textTheme) {
+      ColorScheme colorScheme, TextTheme textTheme, bool isEnlarged) {
     final result = vm.getSplitResult();
     final memberAmounts = result.memberAmounts;
 
@@ -363,7 +369,8 @@ class _B03ContentState extends State<_B03Content> {
                     ]
                   ],
                 ),
-                const SizedBox(height: AppLayout.spaceS),
+                SizedBox(
+                    height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                 AppStepper(
                   text: SplitRatioHelper.format(weight),
                   onDecrease: () => vm.updatePercent(id, false),
@@ -379,7 +386,7 @@ class _B03ContentState extends State<_B03Content> {
 
   // --- Method 3: Exact (金額) ---
   Widget _buildExactSection(B03SplitMethodEditViewModel vm, Translations t,
-      ColorScheme colorScheme, TextTheme textTheme) {
+      ColorScheme colorScheme, TextTheme textTheme, bool isEnlarged) {
     final currentSum = vm.details.values.fold(0.0, (sum, v) => sum + v);
     final isMatched = (vm.totalAmount - currentSum).abs() < 0.1;
     final result = vm.getSplitResult();
@@ -387,7 +394,7 @@ class _B03ContentState extends State<_B03Content> {
 
     return Column(
       children: [
-        const SizedBox(height: 12),
+        const SizedBox(height: AppLayout.spaceM),
         SummaryRow(
           label: t.B03_SplitMethod_Edit.label.total(
               current: CurrencyConstants.formatAmount(
@@ -399,7 +406,7 @@ class _B03ContentState extends State<_B03Content> {
           customValueText: isMatched ? "OK" : t.B03_SplitMethod_Edit.mismatch,
           valueColor: isMatched ? colorScheme.tertiary : colorScheme.error,
         ),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         ...vm.allMembers.map((m) {
           final id = m.id;
           final isSelected = vm.selectedMemberIds.contains(id);
@@ -428,7 +435,8 @@ class _B03ContentState extends State<_B03Content> {
                     Builder(
                       builder: (context) {
                         return Padding(
-                          padding: const EdgeInsets.only(top: 4),
+                          padding:
+                              const EdgeInsets.only(top: AppLayout.spaceXS),
                           child: Text(
                             "≈ ${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(baseAmount, vm.baseCurrency.code)}",
                             style: textTheme.bodySmall

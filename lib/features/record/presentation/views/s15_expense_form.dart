@@ -183,7 +183,7 @@ class S15ExpenseForm extends StatelessWidget {
           date: selectedDate,
           onDateChanged: onDateChanged,
         ),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         TaskAmountInput(
           onCurrencyChanged: onCurrencyChanged,
           amountController: amountController,
@@ -191,14 +191,14 @@ class S15ExpenseForm extends StatelessWidget {
           selectedCurrencyConstants: selectedCurrencyConstants,
           isPrepay: false,
         ),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         TaskItemInput(
           onCategoryChanged: onCategoryChanged,
           titleController: titleController,
           focusNode: titleFocusNode,
           selectedCategoryId: selectedCategoryId,
         ),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         AppSelectField(
           labelText: t.common.label.payment_method,
           text: _getPayerDisplayName(t, payerType, payersId),
@@ -208,7 +208,7 @@ class S15ExpenseForm extends StatelessWidget {
               : null,
         ),
         if (isForeign) ...[
-          const SizedBox(height: AppLayout.spaceS),
+          SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
           TaskExchangeRateInput(
             controller: exchangeRateController,
             baseCurrency: baseCurrency,
@@ -221,7 +221,7 @@ class S15ExpenseForm extends StatelessWidget {
             isPrepay: false,
           ),
         ],
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         if (details.isNotEmpty) ...[
           ...details.map(
             (detail) => Padding(
@@ -261,7 +261,7 @@ class S15ExpenseForm extends StatelessWidget {
           ),
         ],
         buildRemainderInfo(),
-        const SizedBox(height: AppLayout.spaceS),
+        SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
         TaskMemoInput(
           memoController: memoController,
           focusNode: memoFocusNode,

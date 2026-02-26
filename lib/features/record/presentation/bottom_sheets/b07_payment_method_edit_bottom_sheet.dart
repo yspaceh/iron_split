@@ -158,7 +158,7 @@ class _B07ContentState extends State<_B07Content> {
           children: [
             // 1. 固定高度的 Header
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceS),
               child: Column(
                 children: [
                   SummaryRow(
@@ -173,14 +173,14 @@ class _B07ContentState extends State<_B07Content> {
                     amount: vm.usePrepay ? vm.prepayAmount : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppLayout.spaceXS),
                   SummaryRow(
                     label: t.B07_PaymentMethod_Edit.label.total_advance,
                     amount: vm.useAdvance ? vm.currentAdvanceTotal : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: AppLayout.spaceM),
                     child: Divider(
                       height: 1,
                       color:

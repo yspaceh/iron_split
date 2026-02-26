@@ -174,17 +174,9 @@ class TranslationsS10HomeTaskListZhTw {
 	/// zh-TW: '任務列表'
 	String get title => '任務列表';
 
-	/// zh-TW: '進行中'
-	String get tab_in_progress => '進行中';
-
-	/// zh-TW: '已完成'
-	String get tab_completed => '已完成';
-
-	/// zh-TW: '目前沒有進行中的任務'
-	String get empty_in_progress => '目前沒有進行中的任務';
-
-	/// zh-TW: '沒有已完成的任務'
-	String get empty_completed => '沒有已完成的任務';
+	late final TranslationsS10HomeTaskListTabZhTw tab = TranslationsS10HomeTaskListTabZhTw.internal(_root);
+	late final TranslationsS10HomeTaskListEmptyZhTw empty = TranslationsS10HomeTaskListEmptyZhTw.internal(_root);
+	late final TranslationsS10HomeTaskListButtonsZhTw buttons = TranslationsS10HomeTaskListButtonsZhTw.internal(_root);
 
 	/// zh-TW: '日期未定'
 	String get date_tbd => '日期未定';
@@ -1324,6 +1316,51 @@ class TranslationsCommonShareZhTw {
 	// Translations
 	late final TranslationsCommonShareInviteZhTw invite = TranslationsCommonShareInviteZhTw.internal(_root);
 	late final TranslationsCommonShareSettlementZhTw settlement = TranslationsCommonShareSettlementZhTw.internal(_root);
+}
+
+// Path: S10_Home_TaskList.tab
+class TranslationsS10HomeTaskListTabZhTw {
+	TranslationsS10HomeTaskListTabZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '進行中'
+	String get in_progress => '進行中';
+
+	/// zh-TW: '已完成'
+	String get completed => '已完成';
+}
+
+// Path: S10_Home_TaskList.empty
+class TranslationsS10HomeTaskListEmptyZhTw {
+	TranslationsS10HomeTaskListEmptyZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '目前沒有進行中的任務'
+	String get in_progress => '目前沒有進行中的任務';
+
+	/// zh-TW: '沒有已完成的任務'
+	String get completed => '沒有已完成的任務';
+}
+
+// Path: S10_Home_TaskList.buttons
+class TranslationsS10HomeTaskListButtonsZhTw {
+	TranslationsS10HomeTaskListButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '新增任務'
+	String get add_task => '新增任務';
+
+	/// zh-TW: '加入任務'
+	String get join_task => '加入任務';
 }
 
 // Path: S10_Home_TaskList.label
@@ -2917,10 +2954,12 @@ extension on Translations {
 			'log_action.unknown' => '未知操作',
 			'log_action.close_task' => '結束任務',
 			'S10_Home_TaskList.title' => '任務列表',
-			'S10_Home_TaskList.tab_in_progress' => '進行中',
-			'S10_Home_TaskList.tab_completed' => '已完成',
-			'S10_Home_TaskList.empty_in_progress' => '目前沒有進行中的任務',
-			'S10_Home_TaskList.empty_completed' => '沒有已完成的任務',
+			'S10_Home_TaskList.tab.in_progress' => '進行中',
+			'S10_Home_TaskList.tab.completed' => '已完成',
+			'S10_Home_TaskList.empty.in_progress' => '目前沒有進行中的任務',
+			'S10_Home_TaskList.empty.completed' => '沒有已完成的任務',
+			'S10_Home_TaskList.buttons.add_task' => '新增任務',
+			'S10_Home_TaskList.buttons.join_task' => '加入任務',
 			'S10_Home_TaskList.date_tbd' => '日期未定',
 			'S10_Home_TaskList.label.settlement' => '已結算',
 			'S11_Invite_Confirm.title' => '加入任務',

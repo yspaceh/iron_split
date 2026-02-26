@@ -96,12 +96,11 @@ class RecordCard extends StatelessWidget {
                         margin: const EdgeInsets.only(left: AppLayout.spaceXS),
                         padding: const EdgeInsets.symmetric(
                             horizontal: AppLayout.spaceS,
-                            vertical: AppLayout.spaceXS), // 稍微寬一點
+                            vertical: AppLayout.spaceXS),
                         decoration: ShapeDecoration(
                           color: colorScheme.surfaceContainerHighest,
                           shape: StadiumBorder(),
                         ),
-
                         child: Text(
                           SplitMethodConstant.getLabel(context, methodLabel, t),
                           style: textTheme.labelSmall?.copyWith(
@@ -145,7 +144,7 @@ class RecordCard extends StatelessWidget {
                                 : const SizedBox.shrink()),
                       ),
 
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppLayout.spaceS),
 
                       // 右邊：成員頭像 (維持原樣)
                       Expanded(
@@ -181,8 +180,7 @@ class RecordCard extends StatelessWidget {
                   colorScheme.primary.withValues(alpha: 0.05)),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                    vertical: AppLayout.spaceL), // 增加點擊高度
+                padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceL),
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

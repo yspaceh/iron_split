@@ -118,7 +118,7 @@ class _B04Content extends StatelessWidget {
             ),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: AppLayout.spaceM),
               child: Divider(
                 height: 1,
                 color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),

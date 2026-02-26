@@ -88,7 +88,8 @@ class DailyHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppLayout.radiusM),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 4, horizontal: AppLayout.spaceS),
+                        vertical: AppLayout.spaceXS,
+                        horizontal: AppLayout.spaceS),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(AppLayout.radiusM),
                     ),
