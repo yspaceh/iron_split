@@ -55,9 +55,9 @@ class _S74Content extends StatelessWidget {
       double finalLineHeight) {
     CommonAlertDialog.show(
       context,
-      title: t.D13_DeleteAccount_Confirm.title,
+      title: t.d13_delete_account_confirm.title,
       content: Text(
-        t.D13_DeleteAccount_Confirm.content,
+        t.d13_delete_account_confirm.content,
         style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
@@ -94,7 +94,7 @@ class _S74Content extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S74_DeleteAccount_Notice.title),
+        title: Text(t.s74_delete_account_notice.title),
         centerTitle: true,
       ),
       bottomNavigationBar: StickyBottomActionBar(
@@ -105,7 +105,7 @@ class _S74Content extends StatelessWidget {
             onPressed: () => context.pop(),
           ),
           AppButton(
-            text: t.S74_DeleteAccount_Notice.buttons.delete_account,
+            text: t.s74_delete_account_notice.buttons.delete_account,
             type: AppButtonType.primary,
             isLoading: vm.deleteStatus == LoadStatus.loading,
             onPressed: () =>
@@ -120,7 +120,7 @@ class _S74Content extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                t.S74_DeleteAccount_Notice.content,
+                t.s74_delete_account_notice.content,
                 style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
               ),
             ],

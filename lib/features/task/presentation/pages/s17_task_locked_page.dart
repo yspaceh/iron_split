@@ -95,7 +95,7 @@ class _S17ContentState extends State<_S17Content> {
 
   Future<void> _handleExport(
       BuildContext context, S17TaskLockedViewModel vm, Translations t) async {
-    final l = t.S17_Task_Locked.export;
+    final l = t.s17_task_locked.export;
 
     try {
       await vm.exportSettlementRecord(
@@ -248,7 +248,7 @@ class _S17ContentState extends State<_S17Content> {
                     children: [
                       // 通知成員
                       AppButton(
-                        text: t.S17_Task_Locked.buttons.notify_members,
+                        text: t.s17_task_locked.buttons.notify_members,
                         type: AppButtonType.secondary,
                         isLoading: vm.shareStatus == LoadStatus.loading,
                         onPressed: () => _handleShare(context, vm, t),

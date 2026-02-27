@@ -208,7 +208,7 @@
     "unknown": "Unknown Action",
     "close_task": "Close Task"
   },
-  "S10_Home_TaskList": {
+  "s10_home_task_list": {
     "title": "Task List",
     "tab": {
       "in_progress": "Active",
@@ -227,7 +227,7 @@
       "settlement": "Settlement"
     }
   },
-  "S11_Invite_Confirm": {
+  "s11_invite_confirm": {
     "title": "Join Task",
     "subtitle": "Invitation to join:",
     "buttons": {
@@ -240,14 +240,14 @@
       "expense": "Expense"
     }
   },
-  "S12_TaskClose_Notice": {
+  "s12_task_close_notice": {
     "title": "Close Task",
     "buttons": {
       "close_task": "Close Task"
     },
     "content": "Closing this task will lock all records and settings. The task will enter read-only mode, and no data can be added or edited."
   },
-  "S13_Task_Dashboard": {
+  "s13_task_dashboard": {
     "title": "Dashboard",
     "buttons": {
       "add":"Add"
@@ -275,7 +275,7 @@
       "no_data": "No data"
     }
   },
-  "S14_Task_Settings": {
+  "s14_task_settings": {
     "title": "Task Settings",
     "section":{
       "task_name": "Task Name",
@@ -290,7 +290,7 @@
       "close_task": "End Task"
     }
   },
-  "S15_Record_Edit": {
+  "s15_record_edit": {
     "title": {
       "add": "Add Record",
       "edit": "Edit Record"
@@ -338,7 +338,7 @@
       "memo": "e.g. Notes"
     }
   },
-  "S16_TaskCreate_Edit": {
+  "s16_task_create_edit": {
     "title": "New Task",
     "section":{
       "task_name": "Task Name",
@@ -352,7 +352,7 @@
       "name": "e.g. Tokyo Trip"
     }
   },
-   "S17_Task_Locked": {
+   "s17_task_locked": {
      "buttons": {
       "notify_members": "Notify Members",
       "view_payment_info": "View Payment Details"
@@ -395,7 +395,7 @@
       "mixed": "Mixed Payment"
     }
   },
-  "S18_Task_Join": {
+  "s18_task_join": {
     "title": "Join Task",
     "tabs": {
       "input": "Enter Code",
@@ -411,7 +411,7 @@
       "scan": "Frame the QR code to scan automatically"
     }
   },
-  "S30_settlement_confirm": {
+  "s30_settlement_confirm": {
     "title": "Confirm Settlement",
     "buttons": {
       "set_payment_info": "Payment Info"
@@ -431,7 +431,7 @@
       "remainder": "Remainder"
     }
   },
-  "S31_settlement_payment_info": {
+  "s31_settlement_payment_info": {
     "title": "Payment Information",
     "setup_instruction": "Used for this settlement only. Default data is encrypted and stored locally.",
     "sync_save": "Save as default payment information (stored on this device)",
@@ -440,7 +440,7 @@
       "prev_step": "Previous Step"
     }
   },
-  "S32_settlement_result": {
+  "s32_settlement_result": {
     "title": "Settlement Complete",
     "content": "All records are finalized. Please notify members to complete payment.",
     "waiting_reveal": "Revealing result...",
@@ -452,7 +452,7 @@
       "back_task_dashboard": "Back to Task"
     }
   },
-  "S50_Onboarding_Consent": {
+  "s50_onboarding_consent": {
     "title": "Welcome to Iron Split",
     "buttons": {
       "start": "Start"
@@ -462,13 +462,13 @@
       "suffix": ". We use anonymous login to protect your privacy."
     }
   },
-  "S51_Onboarding_Name": {
+  "s51_onboarding_name": {
     "title": "Set Your Name",
     "content": "Enter display name.",
     "hint": "Enter nickname",
     "counter": "{current}/{max}"
   },
-  "S52_TaskSettings_Log": {
+  "s52_task_settings_log": {
     "title": "Activity Log",
     "buttons": {
       "export_csv": "Export CSV"
@@ -495,7 +495,7 @@
       "items": "items"
     }
   },
-  "S53_TaskSettings_Members": {
+  "s53_task_settings_members": {
     "title": "Member Management",
     "buttons": {
       "add_member": "Add Member"
@@ -506,7 +506,7 @@
     "member_default_name": "Member",
     "member_name": "Member Name"
   },
-  "S54_TaskSettings_Invite": {
+  "s54_task_settings_invite": {
     "title": "Task Invite",
     "buttons": {
       "share": "Share",
@@ -517,7 +517,7 @@
       "invite_expired": "Invite code has expired"
     }
   },
-  "S70_System_Settings": {
+  "s70_system_settings": {
     "title": "Settings",
     "section": {
       "basic": "General Settings",
@@ -534,18 +534,18 @@
       "delete_account": "Delete Account"
     }
   },
-  "S72_TermsUpdate": {
+  "s72_terms_update": {
     "title": "{type} Updated",
     "content": "We have updated the {type}. Please review and accept it to continue using the app."
   },
-  "S74_DeleteAccount_Notice": {
+  "s74_delete_account_notice": {
     "title": "Delete Account",
     "content": "This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).",
     "buttons": {
       "delete_account": "Delete Account"
     }
   },
-  "D01_MemberRole_Intro": {
+  "d01_member_role_intro": {
     "title": "Your Character",
     "buttons": {
       "reroll": "Change Animal",
@@ -556,58 +556,58 @@
       "empty": "No chances left"
     }
   },
-  "D02_Invite_Result": {
+  "d02_invite_result": {
     "title": "Join Failed"
   },
-  "D03_TaskCreate_Confirm": {
+  "d03_task_create_confirm": {
     "title": "Create Task",
     "buttons": {
       "back_edit": "Edit"
     }
   },
-  "D04_CommonUnsaved_Confirm": {
+  "d04_common_unsaved_confirm": {
     "title": "Unsaved Changes",
     "content": "Changes you made will not be saved."
   },
-  "D05_DateJump_NoResult": {
+  "d05_date_jump_no_result": {
     "title": "No Record",
     "content": "No record found for this date. Add one?"
   },
-  "D06_settlement_confirm": {
+  "d06_settlement_confirm": {
     "title": "Settlement",
     "content": "The task will be locked upon settlement. Records cannot be added, deleted, or edited after settlement.\nPlease ensure all details are correct."
   },
-  "D08_TaskClosed_Confirm": {
+  "d08_task_closed_confirm": {
     "title": "Close Task",
     "content": "This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?"
   },
-  "D09_TaskSettings_CurrencyConfirm": {
+  "d09_task_settings_currency_confirm": {
     "title": "Change Base Currency",
     "content": "Changing currency will reset all exchange rates. This may affect current balances. Are you sure?"
   },
-  "D10_RecordDelete_Confirm": {
+  "d10_record_delete_confirm": {
     "title": "Delete Record",
     "content": "Are you sure you want to delete {title} ({amount})?"
   },
-  "D11_random_result": {
+  "d11_random_result": {
     "title": "Remainder Result",
     "skip": "Skip"
   },
-  "D12_logout_confirm": {
+  "d12_logout_confirm": {
     "title": "Log Out",
     "content": "If you do not agree to the updated terms, you will not be able to continue using this app.\nLogout will proceed.",
     "buttons": {
       "logout": "Log out"
     }
   },
-  "D13_DeleteAccount_Confirm": {
+  "d13_delete_account_confirm": {
     "title": "Delete Account",
     "content": "This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?"
   },
-  "D14_Date_Select": {
+  "d14_date_select": {
     "title": "Select Date"
   },
-  "B02_SplitExpense_Edit": {
+  "b02_split_expense_edit": {
     "title": "Edit Sub Item",
     "buttons": {
       "confirm_split": "Confirm Split"
@@ -617,7 +617,7 @@
       "sub_item": "e.g. Sub-item"
     }
   },
-  "B03_SplitMethod_Edit": {
+  "b03_split_method_edit": {
     "title": "Split Method",
     "buttons": {
       "adjust_weight": "Adjust Weight"
@@ -627,14 +627,14 @@
     },
     "mismatch": "Mismatch"
   },
-  "B04_payment_merge": {
+  "b04_payment_merge": {
     "title": "Merge Member Payments",
     "label": {
       "head_member": "Representative",
       "merge_amount": "Total Amount"
     }
   },
-  "B07_PaymentMethod_Edit": {
+  "b07_payment_method_edit": {
     "title": "Funding Source",
     "prepay_balance": "Prepaid Balance: {amount}",
     "payer_member": "Payer",

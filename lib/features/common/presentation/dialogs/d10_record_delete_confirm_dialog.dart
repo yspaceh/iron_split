@@ -44,9 +44,9 @@ class D10RecordDeleteConfirmDialog extends StatelessWidget {
     );
 
     return CommonAlertDialog(
-        title: t.D10_RecordDelete_Confirm.title,
+        title: t.d10_record_delete_confirm.title,
         content: Text(
-          t.D10_RecordDelete_Confirm.content(
+          t.d10_record_delete_confirm.content(
               title: recordTitle,
               amount:
                   "${currency.symbol} ${CurrencyConstants.formatAmount(amount, currency.code)}"),

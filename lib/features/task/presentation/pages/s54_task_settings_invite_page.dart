@@ -84,7 +84,7 @@ class _S54Content extends StatelessWidget {
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double iconSize = AppLayout.inlineIconSize(isEnlarged);
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S54_TaskSettings_Invite.title;
+    final title = t.s54_task_settings_invite.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -173,13 +173,13 @@ class _S54Content extends StatelessWidget {
               isSheetMode: false,
               children: [
                 AppButton(
-                  text: t.S54_TaskSettings_Invite.buttons.regenerate,
+                  text: t.s54_task_settings_invite.buttons.regenerate,
                   type: AppButtonType.secondary,
                   isLoading: vm.generateStatus == LoadStatus.loading,
                   onPressed: () => vm.generateNewInviteCode(),
                 ),
                 AppButton(
-                  text: t.S54_TaskSettings_Invite.buttons.share,
+                  text: t.s54_task_settings_invite.buttons.share,
                   type: AppButtonType.primary,
                   onPressed: vm.isExpired || vm.initStatus != LoadStatus.success
                       ? null

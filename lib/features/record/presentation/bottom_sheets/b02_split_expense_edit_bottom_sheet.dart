@@ -209,7 +209,7 @@ class _B02ContentState extends State<_B02Content> {
     final vm = context.watch<B02SplitExpenseEditViewModel>();
     final displayStatus = context.watch<DisplayState>();
     final isEnlarged = displayStatus.isEnlarged;
-    final title = t.B02_SplitExpense_Edit.title;
+    final title = t.b02_split_expense_edit.title;
     final actions = [
       if (widget.isEditMode)
         IconButton(
@@ -234,7 +234,7 @@ class _B02ContentState extends State<_B02Content> {
           bottomActionBar: StickyBottomActionBar.sheet(
             children: [
               AppButton(
-                text: t.B02_SplitExpense_Edit.buttons.confirm_split,
+                text: t.b02_split_expense_edit.buttons.confirm_split,
                 type: AppButtonType.primary,
                 onPressed: () => _handleSave(context, vm),
               ),
@@ -250,7 +250,7 @@ class _B02ContentState extends State<_B02Content> {
                     child: SummaryRow(
                       label: widget.parentTitle.isNotEmpty
                           ? widget.parentTitle
-                          : t.B02_SplitExpense_Edit.item_name_empty,
+                          : t.b02_split_expense_edit.item_name_empty,
                       amount: widget.availableAmount,
                       currencyConstants: vm.selectedCurrency,
                       labelColor: widget.parentTitle.isEmpty
@@ -272,7 +272,7 @@ class _B02ContentState extends State<_B02Content> {
                     focusNode: _nameNode,
                     fillColor: colorScheme.surfaceContainerLow,
                     labelText: t.common.label.sub_item,
-                    hintText: t.B02_SplitExpense_Edit.hint.sub_item,
+                    hintText: t.b02_split_expense_edit.hint.sub_item,
                     validator: (v) =>
                         v?.isEmpty == true ? t.error.message.required : null,
                   ),

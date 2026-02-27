@@ -144,7 +144,7 @@ class _S70ContentState extends State<_S70Content> {
     final themeVm = context.watch<ThemeViewModel>();
     final displayVm = context.watch<DisplayViewModel>();
     final localeVm = context.watch<LocaleViewModel>();
-    final title = t.S70_System_Settings.title;
+    final title = t.s70_system_settings.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -152,7 +152,7 @@ class _S70ContentState extends State<_S70Content> {
       title: title,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(title), // 或 t.S70_System_Settings.title
+          title: Text(title), // 或 t.s70_system_settings.title
           centerTitle: true,
         ),
         // 點擊空白處收起鍵盤 (這會觸發 FocusNode 的 listener -> updateName)
@@ -162,14 +162,14 @@ class _S70ContentState extends State<_S70Content> {
             padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             children: [
               SectionWrapper(
-                title: t.S70_System_Settings.section.basic,
+                title: t.s70_system_settings.section.basic,
                 children: [
                   // 顯示名稱
                   TaskNameInput(
                     controller: vm.nameController,
                     focusNode: _nameFocusNode,
-                    label: t.S70_System_Settings.menu.user_name,
-                    hint: t.S51_Onboarding_Name.hint,
+                    label: t.s70_system_settings.menu.user_name,
+                    hint: t.s51_onboarding_name.hint,
                     maxLength: AppConstants.maxUserNameLength,
                   ),
                   SizedBox(
@@ -200,31 +200,31 @@ class _S70ContentState extends State<_S70Content> {
                       height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   // 收款資料
                   NavTile(
-                    title: t.S70_System_Settings.menu.payment_info,
+                    title: t.s70_system_settings.menu.payment_info,
                     onTap: () => _redirectToPaymentInfo(context),
                   ),
                 ],
               ),
               const SizedBox(height: AppLayout.spaceL),
               SectionWrapper(
-                  title: t.S70_System_Settings.section.legal,
+                  title: t.s70_system_settings.section.legal,
                   children: [
                     NavTile(
-                      title: t.S70_System_Settings.menu.terms,
+                      title: t.s70_system_settings.menu.terms,
                       onTap: () => _redirectToTerms(context),
                     ),
                     const SizedBox(height: AppLayout.spaceS),
                     NavTile(
-                      title: t.S70_System_Settings.menu.privacy,
+                      title: t.s70_system_settings.menu.privacy,
                       onTap: () => _redirectToPrivacy(context),
                     ),
                   ]),
               const SizedBox(height: AppLayout.spaceL),
               SectionWrapper(
-                  title: t.S70_System_Settings.section.account,
+                  title: t.s70_system_settings.section.account,
                   children: [
                     NavTile(
-                      title: t.S70_System_Settings.menu.delete_account,
+                      title: t.s70_system_settings.menu.delete_account,
                       isDestructive: true,
                       onTap: () => _redirectToDeleteAccount(context),
                     ),

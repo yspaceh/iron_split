@@ -128,7 +128,7 @@ class _S53Content extends StatelessWidget {
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double iconSize = AppLayout.inlineIconSize(isEnlarged);
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S53_TaskSettings_Members.title;
+    final title = t.s53_task_settings_members.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -281,7 +281,7 @@ class _S53Content extends StatelessWidget {
           isSheetMode: false,
           children: [
             AppButton(
-              text: t.S53_TaskSettings_Members.buttons.add_member,
+              text: t.s53_task_settings_members.buttons.add_member,
               type: AppButtonType.primary,
               isLoading: vm.addMemberStatus == LoadStatus.loading,
               onPressed: () => _handleAdd(context, vm),

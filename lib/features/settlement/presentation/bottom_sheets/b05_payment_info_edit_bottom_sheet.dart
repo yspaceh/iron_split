@@ -115,7 +115,7 @@ class _B05ContentState extends State<_B05Content> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final title = t.S31_settlement_payment_info.title;
+    final title = t.s31_settlement_payment_info.title;
 
     final allNodes = [
       _bankNameNode,
@@ -134,7 +134,7 @@ class _B05ContentState extends State<_B05Content> {
         errorCode: vm.initErrorCode,
         isSheetMode: true,
         child: CommonBottomSheet(
-          title: t.S31_settlement_payment_info.title,
+          title: t.s31_settlement_payment_info.title,
           bottomActionBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -150,9 +150,9 @@ class _B05ContentState extends State<_B05Content> {
                     onChanged: vm.toggleSync,
                     title: Text(
                       vm.isUpdate
-                          ? t.S31_settlement_payment_info
+                          ? t.s31_settlement_payment_info
                               .sync_update // "更新我的預設收款資訊"
-                          : t.S31_settlement_payment_info
+                          : t.s31_settlement_payment_info
                               .sync_save, // "儲存為預設收款資訊"
                       style: textTheme.bodySmall
                           ?.copyWith(fontWeight: FontWeight.bold),

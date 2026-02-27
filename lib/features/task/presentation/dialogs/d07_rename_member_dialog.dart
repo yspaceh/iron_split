@@ -60,15 +60,15 @@ class _D07RenameMemberDialogState extends State<D07RenameMemberDialog> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return CommonAlertDialog(
-      title: t.S53_TaskSettings_Members.title,
+      title: t.s53_task_settings_members.title,
       content: SizedBox(
         width: double.maxFinite,
         child: TaskNameInput(
           controller: _controller,
           maxLength: AppConstants.maxUserNameLength,
           fillColor: colorScheme.surfaceContainerLow,
-          label: t.S53_TaskSettings_Members.member_name,
-          hint: t.S53_TaskSettings_Members.member_name,
+          label: t.s53_task_settings_members.member_name,
+          hint: t.s53_task_settings_members.member_name,
         ),
       ),
       actions: [

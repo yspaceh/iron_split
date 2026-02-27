@@ -66,7 +66,7 @@ class _B06Content extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final vm = context.watch<B06PaymentInfoDetailViewModel>();
-    final title = t.S31_settlement_payment_info.title;
+    final title = t.s31_settlement_payment_info.title;
     final displayState = context.watch<DisplayState>();
     final isEnlarged = displayState.isEnlarged;
     final double iconSize = AppLayout.inlineIconSize(isEnlarged);

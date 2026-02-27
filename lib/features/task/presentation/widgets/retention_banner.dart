@@ -34,7 +34,7 @@ class RetentionBanner extends StatelessWidget {
           const SizedBox(width: AppLayout.spaceXS),
           Expanded(
             child: Text(
-              t.S17_Task_Locked.retention_notice(days: days),
+              t.s17_task_locked.retention_notice(days: days),
               style: textTheme.bodyMedium?.copyWith(
                 color: color,
                 fontWeight: isUrgent ? FontWeight.bold : null,

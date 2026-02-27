@@ -24,7 +24,7 @@ class TaskMemoInput extends StatelessWidget {
       scrollPadding: scrollPadding,
       fillColor: fillColor,
       labelText: t.common.label.memo, // 標題
-      hintText: t.S15_Record_Edit.hint.memo, // 增加一點提示 (Optional)
+      hintText: t.s15_record_edit.hint.memo, // 增加一點提示 (Optional)
       keyboardType: TextInputType.multiline,
       maxLines: 3,
       focusNode: focusNode,

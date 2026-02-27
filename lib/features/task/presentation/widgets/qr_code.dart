@@ -71,7 +71,7 @@ class QrCode extends StatelessWidget {
                         shape: StadiumBorder(),
                       ),
                       child: Text(
-                        t.S54_TaskSettings_Invite.label.invite_expired,
+                        t.s54_task_settings_invite.label.invite_expired,
                         style: textTheme.labelLarge?.copyWith(
                           color: colorScheme.onError,
                           fontWeight: FontWeight.bold,

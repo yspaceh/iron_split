@@ -71,8 +71,8 @@ class _S17SettledViewState extends State<S17SettledView> {
           });
         },
         segments: {
-          0: "${t.S17_Task_Locked.section.pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
-          1: "${t.S17_Task_Locked.section.cleared} (${widget.clearedMembers.length})", // "已處理"
+          0: "${t.s17_task_locked.section.pending} (${widget.pendingMembers.length})", // "待處理" (不含數字，保持乾淨)
+          1: "${t.s17_task_locked.section.cleared} (${widget.clearedMembers.length})", // "已處理"
         },
       ),
     );
@@ -100,7 +100,7 @@ class _S17SettledViewState extends State<S17SettledView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              t.S17_Task_Locked.buttons.view_payment_info,
+              t.s17_task_locked.buttons.view_payment_info,
               style:
                   textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
             ),

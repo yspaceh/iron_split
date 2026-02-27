@@ -160,12 +160,12 @@ class _S13ContentState extends State<_S13Content> {
     return CommonStateView(
       status: vm.initStatus,
       errorCode: vm.initErrorCode,
-      title: vm.task?.name ?? t.S13_Task_Dashboard.title,
+      title: vm.task?.name ?? t.s13_task_dashboard.title,
       leading: leading,
       actions: actions,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(vm.task?.name ?? t.S13_Task_Dashboard.title),
+          title: Text(vm.task?.name ?? t.s13_task_dashboard.title),
           centerTitle: true,
           leading: leading,
           actions: actions,
@@ -200,8 +200,8 @@ class _S13ContentState extends State<_S13Content> {
                 selectedValue: vm.segmentedIndex,
                 onValueChanged: (val) => _handleSwitchSegmentedIndex(vm, val),
                 segments: {
-                  0: t.S13_Task_Dashboard.tab.group,
-                  1: t.S13_Task_Dashboard.tab.personal,
+                  0: t.s13_task_dashboard.tab.group,
+                  1: t.s13_task_dashboard.tab.personal,
                 },
               ),
             ),

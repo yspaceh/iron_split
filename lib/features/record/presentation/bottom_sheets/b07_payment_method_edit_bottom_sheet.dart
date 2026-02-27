@@ -138,7 +138,7 @@ class _B07ContentState extends State<_B07Content> {
     return AppKeyboardActionsWrapper(
       focusNodes: allNodes,
       child: CommonBottomSheet(
-        title: t.B07_PaymentMethod_Edit.title,
+        title: t.b07_payment_method_edit.title,
         bottomActionBar: StickyBottomActionBar.sheet(
           children: [
             AppButton(
@@ -162,20 +162,20 @@ class _B07ContentState extends State<_B07Content> {
               child: Column(
                 children: [
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.label.amount,
+                    label: t.b07_payment_method_edit.label.amount,
                     amount: vm.totalAmount,
                     currencyConstants: vm.selectedCurrency,
                   ),
                   const SizedBox(height: AppLayout.spaceS),
                   // 即使金額為0也顯示，保持高度穩定
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.label.prepay,
+                    label: t.b07_payment_method_edit.label.prepay,
                     amount: vm.usePrepay ? vm.prepayAmount : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
                   const SizedBox(height: AppLayout.spaceXS),
                   SummaryRow(
-                    label: t.B07_PaymentMethod_Edit.label.total_advance,
+                    label: t.b07_payment_method_edit.label.total_advance,
                     amount: vm.useAdvance ? vm.currentAdvanceTotal : 0.0,
                     currencyConstants: vm.selectedCurrency,
                   ),
@@ -189,8 +189,8 @@ class _B07ContentState extends State<_B07Content> {
                   ),
                   SummaryRow(
                     label: vm.isValid
-                        ? t.B07_PaymentMethod_Edit.status.balanced
-                        : t.B07_PaymentMethod_Edit.status.remaining(
+                        ? t.b07_payment_method_edit.status.balanced
+                        : t.b07_payment_method_edit.status.remaining(
                             amount: CurrencyConstants.formatAmount(
                                 vm.remaining.abs(), vm.selectedCurrency.code)),
                     amount: vm.remaining,
@@ -222,7 +222,7 @@ class _B07ContentState extends State<_B07Content> {
                       children: [
                         // 餘額提示
                         Text(
-                          t.B07_PaymentMethod_Edit.prepay_balance(
+                          t.b07_payment_method_edit.prepay_balance(
                               amount:
                                   "${vm.selectedCurrency.code}${vm.selectedCurrency.symbol} ${CurrencyConstants.formatAmount(vm.currentCurrencyPoolBalance, vm.selectedCurrency.code)}"),
                           style: TextStyle(
@@ -241,7 +241,8 @@ class _B07ContentState extends State<_B07Content> {
                           showCurrencyPicker: false, // 隱藏幣別選擇器
                           externalValidator: (val) {
                             if (val > vm.currentCurrencyPoolBalance) {
-                              return t.B07_PaymentMethod_Edit.status.not_enough;
+                              return t
+                                  .b07_payment_method_edit.status.not_enough;
                             }
                             return null;
                           },

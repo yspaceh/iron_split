@@ -47,7 +47,7 @@ class PersonalBalanceCard extends StatelessWidget {
     // 邊框色
     final Color borderColor = colorScheme.outlineVariant.withValues(alpha: 0.5);
     final displayName = memberData?.displayName ??
-        t.S53_TaskSettings_Members.member_default_name;
+        t.s53_task_settings_members.member_default_name;
 
     final avatarSection = Center(
       child: Padding(
@@ -155,7 +155,7 @@ class PersonalBalanceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  "${t.S13_Task_Dashboard.label.total_expense} ",
+                  "${t.s13_task_dashboard.label.total_expense} ",
                   style: textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -173,7 +173,7 @@ class PersonalBalanceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  "${t.S13_Task_Dashboard.label.total_prepay} ",
+                  "${t.s13_task_dashboard.label.total_prepay} ",
                   style: textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),

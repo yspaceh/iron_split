@@ -108,7 +108,7 @@ class _S73ContentState extends State<_S73Content> {
           vm.formController.appControllers.length, (i) => _getAppLinkNode(i)),
     ];
 
-    final title = t.S70_System_Settings.menu.payment_info;
+    final title = t.s70_system_settings.menu.payment_info;
 
     return CommonStateView(
       status: vm.initStatus,

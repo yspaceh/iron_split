@@ -32,7 +32,7 @@ class D14DateSelectDialog extends StatelessWidget {
     DateTime tempSelectedDate = selectedDate;
 
     return CommonAlertDialog(
-        title: t.D14_Date_Select.title,
+        title: t.d14_date_select.title,
         content: SizedBox(
           width: double.maxFinite,
           child: MediaQuery(

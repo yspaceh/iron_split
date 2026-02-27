@@ -62,7 +62,7 @@ class _S10Content extends StatelessWidget {
     final vm = context.watch<S10TaskListViewModel>();
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S10_Home_TaskList.title;
+    final title = t.s10_home_task_list.title;
     final actions = [
       IconButton(
         icon: const Icon(Icons.settings_outlined),
@@ -85,12 +85,12 @@ class _S10Content extends StatelessWidget {
           isSheetMode: false,
           children: [
             AppButton(
-              text: t.S10_Home_TaskList.buttons.join_task,
+              text: t.s10_home_task_list.buttons.join_task,
               type: AppButtonType.secondary,
               onPressed: () => _redirectToJoinTask(context),
             ),
             AppButton(
-              text: t.S10_Home_TaskList.buttons.add_task,
+              text: t.s10_home_task_list.buttons.add_task,
               type: AppButtonType.primary,
               onPressed: () => _redirectToCreateTask(context),
             ),
@@ -111,8 +111,8 @@ class _S10Content extends StatelessWidget {
                     onValueChanged: (val) =>
                         _handleSwitchSegmentedIndex(vm, val),
                     segments: {
-                      0: t.S10_Home_TaskList.tab.in_progress,
-                      1: t.S10_Home_TaskList.tab.completed,
+                      0: t.s10_home_task_list.tab.in_progress,
+                      1: t.s10_home_task_list.tab.completed,
                     },
                   ),
                 ),
@@ -123,8 +123,8 @@ class _S10Content extends StatelessWidget {
                       ? Center(
                           child: Text(
                             vm.segmentedIndex == 0
-                                ? t.S10_Home_TaskList.empty.in_progress
-                                : t.S10_Home_TaskList.empty.completed,
+                                ? t.s10_home_task_list.empty.in_progress
+                                : t.s10_home_task_list.empty.completed,
                           ),
                         )
                       : ListView.separated(

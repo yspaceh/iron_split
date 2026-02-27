@@ -74,7 +74,7 @@ class GroupBalanceCard extends StatelessWidget {
     // Dialog: 收支明細
     void showBalanceDetails() {
       CommonAlertDialog.show(context,
-          title: t.S13_Task_Dashboard.dialog_balance_detail,
+          title: t.s13_task_dashboard.dialog_balance_detail,
           actions: [
             AppButton(
               text: t.common.buttons.close,
@@ -87,11 +87,11 @@ class GroupBalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 支出區塊
-              Text(t.S13_Task_Dashboard.section.expense,
+              Text(t.s13_task_dashboard.section.expense,
                   style: textTheme.titleSmall?.copyWith(color: expenseColor)),
               if (state.expenseDetail.entries.isEmpty) ...[
                 Text(
-                  t.S13_Task_Dashboard.section.no_data,
+                  t.s13_task_dashboard.section.no_data,
                   style:
                       textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
@@ -108,11 +108,11 @@ class GroupBalanceCard extends StatelessWidget {
               const Divider(),
 
               // 收入區塊
-              Text(t.S13_Task_Dashboard.section.prepay,
+              Text(t.s13_task_dashboard.section.prepay,
                   style: textTheme.titleSmall?.copyWith(color: prepayColor)),
               if (state.prepayDetail.entries.isEmpty) ...[
                 Text(
-                  t.S13_Task_Dashboard.section.no_data,
+                  t.s13_task_dashboard.section.no_data,
                   style:
                       textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
@@ -129,11 +129,11 @@ class GroupBalanceCard extends StatelessWidget {
 
               // 預收款餘額 (庫存)
               Text(
-                  t.S13_Task_Dashboard.section.prepay_balance, // 使用 "餘額" 或類似的標題
+                  t.s13_task_dashboard.section.prepay_balance, // 使用 "餘額" 或類似的標題
                   style: textTheme.titleSmall),
               if (state.poolDetail.entries.isEmpty) ...[
                 Text(
-                  t.S13_Task_Dashboard.section.no_data,
+                  t.s13_task_dashboard.section.no_data,
                   style:
                       textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),
@@ -271,7 +271,7 @@ class GroupBalanceCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "${t.S13_Task_Dashboard.label.total_expense} ",
+                                "${t.s13_task_dashboard.label.total_expense} ",
                                 style: textTheme.bodySmall?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -288,7 +288,7 @@ class GroupBalanceCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "${t.S13_Task_Dashboard.label.total_prepay} ",
+                                "${t.s13_task_dashboard.label.total_prepay} ",
                                 style: textTheme.bodySmall?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -305,7 +305,7 @@ class GroupBalanceCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${t.S13_Task_Dashboard.label.total_expense} ",
+                              "${t.s13_task_dashboard.label.total_expense} ",
                               style: textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
@@ -325,7 +325,7 @@ class GroupBalanceCard extends StatelessWidget {
                             ),
                             const SizedBox(width: AppLayout.spaceXS),
                             Text(
-                              "${t.S13_Task_Dashboard.label.total_prepay} ",
+                              "${t.s13_task_dashboard.label.total_prepay} ",
                               style: textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
@@ -386,7 +386,7 @@ class GroupBalanceCard extends StatelessWidget {
                         if (state.remainder.abs() > 0.001) ...[
                           if (state.isLocked && state.absorbedBy != null)
                             Text(
-                              t.S17_Task_Locked.remainder_absorbed_by(
+                              t.s17_task_locked.remainder_absorbed_by(
                                   name: state.absorbedBy ?? ""),
                               style: textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,

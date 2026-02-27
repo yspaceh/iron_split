@@ -75,7 +75,7 @@ class _B04Content extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final vm = context.watch<B04PaymentMergeViewModel>();
-    final title = t.B04_payment_merge.title;
+    final title = t.b04_payment_merge.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -106,7 +106,7 @@ class _B04Content extends StatelessWidget {
               child: Column(
                 children: [
                   SummaryRow(
-                    label: t.B04_payment_merge.label.merge_amount,
+                    label: t.b04_payment_merge.label.merge_amount,
                     amount: vm.totalAmount,
                     currencyConstants: vm.baseCurrency,
                     valueColor: vm.headMember.finalAmount > 0
@@ -140,7 +140,7 @@ class _B04Content extends StatelessWidget {
               ),
               // [修改] 標題加上 "(代表成員)"
               title:
-                  "${vm.headMember.memberData.displayName} - ${t.B04_payment_merge.label.head_member}",
+                  "${vm.headMember.memberData.displayName} - ${t.b04_payment_merge.label.head_member}",
               trailing: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,

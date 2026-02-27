@@ -454,7 +454,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
       draftRecord = draftRecord.copyWith(
         title: _segmentedIndex == 1
-            ? t.S15_Record_Edit.type_prepay
+            ? t.s15_record_edit.type_prepay
             : titleController.text,
         createdBy: _originalRecord?.createdBy ?? user.uid,
       );
@@ -568,7 +568,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
     return {
       'recordName':
-          isPrepay ? t.S15_Record_Edit.type_prepay : titleController.text,
+          isPrepay ? t.s15_record_edit.type_prepay : titleController.text,
       'amount': totalAmount,
       'currency': _selectedCurrencyConstants.code,
       'recordType': isPrepay ? 'prepay' : 'expense',
@@ -674,7 +674,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   String _getMemberName(List<String> payersId, Translations t) {
     if (payersId.length > 1) {
-      return t.S15_Record_Edit.payer_multiple;
+      return t.s15_record_edit.payer_multiple;
     }
     final m = _taskMembers.where((e) => e.id == payersId.first).firstOrNull;
     return m?.displayName ?? 'Unknown Member';

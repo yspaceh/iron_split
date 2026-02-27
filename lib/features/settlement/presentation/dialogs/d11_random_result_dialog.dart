@@ -154,7 +154,7 @@ class _D11RandomResultDialogState extends State<D11RandomResultDialog> {
     const double itemHeight = 180.0;
 
     return CommonAlertDialog(
-      title: t.D11_random_result.title,
+      title: t.d11_random_result.title,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

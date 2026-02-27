@@ -49,7 +49,7 @@
       - `lib/gen/strings.i18n.json` (English)
       - `lib/gen/strings_zh.i18n.json` (Traditional Chinese)
       - `lib/gen/strings_ja.i18n.json` (Japanese)
-  3.  **Naming**: Use PageKey as prefix (e.g., `B02_SplitExpense_Edit.title`).
+  3.  **Naming**: Use PageKey as prefix (e.g., `b02_split_expense_edit.title`).
   4.  Run `dart run slang` after JSON updates.
 
 ## 5. Data Model & Schema (Bible Sec 7.4)

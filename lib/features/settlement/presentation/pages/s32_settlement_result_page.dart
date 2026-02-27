@@ -154,13 +154,13 @@ class _S32ContentState extends State<_S32Content> {
       final String total =
           '${currency.code} ${currency.symbol}${CurrencyConstants.formatAmount(amount, currency.code)}';
 
-      winnerTotalText = t.S32_settlement_result.remainder_winner_total(
+      winnerTotalText = t.s32_settlement_result.remainder_winner_total(
           winnerName: winner.memberData.displayName,
           total: total,
           prefix: prefix);
     }
 
-    final title = t.S32_settlement_result.title;
+    final title = t.s32_settlement_result.title;
     final leading = IconButton(
       icon: const Icon(Icons.close),
       onPressed: () => _redirectToTask(context, vm),
@@ -182,7 +182,7 @@ class _S32ContentState extends State<_S32Content> {
             Scaffold(
               appBar: AppBar(
                 leading: leading,
-                title: Text(t.S32_settlement_result.title),
+                title: Text(t.s32_settlement_result.title),
                 centerTitle: true,
               ),
               body: SafeArea(
@@ -211,7 +211,7 @@ class _S32ContentState extends State<_S32Content> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: AppLayout.spaceL),
-                                child: Text(t.S32_settlement_result.content),
+                                child: Text(t.s32_settlement_result.content),
                               ),
                               if (vm.shouldShowRoulette)
                                 if (showWinnerCard) ...[
@@ -221,7 +221,7 @@ class _S32ContentState extends State<_S32Content> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(t.S32_settlement_result
+                                        Text(t.s32_settlement_result
                                             .remainder_winner_prefix),
                                         SizedBox(
                                             height: isEnlarged
@@ -262,7 +262,7 @@ class _S32ContentState extends State<_S32Content> {
                                     padding:
                                         const EdgeInsets.all(AppLayout.spaceL),
                                     child: Text(
-                                        t.S32_settlement_result.waiting_reveal),
+                                        t.s32_settlement_result.waiting_reveal),
                                   ),
                                 ],
                               const SizedBox(height: 32),
@@ -277,12 +277,12 @@ class _S32ContentState extends State<_S32Content> {
               bottomNavigationBar: StickyBottomActionBar(
                 children: [
                   AppButton(
-                    text: t.S32_settlement_result.buttons.share,
+                    text: t.s32_settlement_result.buttons.share,
                     type: AppButtonType.secondary,
                     onPressed: () => _handleShare(context, vm),
                   ),
                   AppButton(
-                    text: t.S32_settlement_result.buttons.back_task_dashboard,
+                    text: t.s32_settlement_result.buttons.back_task_dashboard,
                     type: AppButtonType.primary,
                     onPressed: () => _redirectToTask(context, vm),
                   ),

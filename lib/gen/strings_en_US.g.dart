@@ -41,43 +41,43 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCommonEnUs common = _TranslationsCommonEnUs._(_root);
 	@override late final _TranslationsLogActionEnUs log_action = _TranslationsLogActionEnUs._(_root);
-	@override late final _TranslationsS10HomeTaskListEnUs S10_Home_TaskList = _TranslationsS10HomeTaskListEnUs._(_root);
-	@override late final _TranslationsS11InviteConfirmEnUs S11_Invite_Confirm = _TranslationsS11InviteConfirmEnUs._(_root);
-	@override late final _TranslationsS12TaskCloseNoticeEnUs S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeEnUs._(_root);
-	@override late final _TranslationsS13TaskDashboardEnUs S13_Task_Dashboard = _TranslationsS13TaskDashboardEnUs._(_root);
-	@override late final _TranslationsS14TaskSettingsEnUs S14_Task_Settings = _TranslationsS14TaskSettingsEnUs._(_root);
-	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
-	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
-	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
-	@override late final _TranslationsS18TaskJoinEnUs S18_Task_Join = _TranslationsS18TaskJoinEnUs._(_root);
-	@override late final _TranslationsS30SettlementConfirmEnUs S30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
-	@override late final _TranslationsS31SettlementPaymentInfoEnUs S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
-	@override late final _TranslationsS32SettlementResultEnUs S32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
-	@override late final _TranslationsS50OnboardingConsentEnUs S50_Onboarding_Consent = _TranslationsS50OnboardingConsentEnUs._(_root);
-	@override late final _TranslationsS51OnboardingNameEnUs S51_Onboarding_Name = _TranslationsS51OnboardingNameEnUs._(_root);
-	@override late final _TranslationsS52TaskSettingsLogEnUs S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogEnUs._(_root);
-	@override late final _TranslationsS53TaskSettingsMembersEnUs S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
-	@override late final _TranslationsS54TaskSettingsInviteEnUs S54_TaskSettings_Invite = _TranslationsS54TaskSettingsInviteEnUs._(_root);
-	@override late final _TranslationsS70SystemSettingsEnUs S70_System_Settings = _TranslationsS70SystemSettingsEnUs._(_root);
-	@override late final _TranslationsS72TermsUpdateEnUs S72_TermsUpdate = _TranslationsS72TermsUpdateEnUs._(_root);
-	@override late final _TranslationsS74DeleteAccountNoticeEnUs S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeEnUs._(_root);
-	@override late final _TranslationsD01MemberRoleIntroEnUs D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
-	@override late final _TranslationsD02InviteResultEnUs D02_Invite_Result = _TranslationsD02InviteResultEnUs._(_root);
-	@override late final _TranslationsD03TaskCreateConfirmEnUs D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
-	@override late final _TranslationsD04CommonUnsavedConfirmEnUs D04_CommonUnsaved_Confirm = _TranslationsD04CommonUnsavedConfirmEnUs._(_root);
-	@override late final _TranslationsD05DateJumpNoResultEnUs D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultEnUs._(_root);
-	@override late final _TranslationsD06SettlementConfirmEnUs D06_settlement_confirm = _TranslationsD06SettlementConfirmEnUs._(_root);
-	@override late final _TranslationsD08TaskClosedConfirmEnUs D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmEnUs._(_root);
-	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
-	@override late final _TranslationsD10RecordDeleteConfirmEnUs D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
-	@override late final _TranslationsD11RandomResultEnUs D11_random_result = _TranslationsD11RandomResultEnUs._(_root);
-	@override late final _TranslationsD12LogoutConfirmEnUs D12_logout_confirm = _TranslationsD12LogoutConfirmEnUs._(_root);
-	@override late final _TranslationsD13DeleteAccountConfirmEnUs D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmEnUs._(_root);
-	@override late final _TranslationsD14DateSelectEnUs D14_Date_Select = _TranslationsD14DateSelectEnUs._(_root);
-	@override late final _TranslationsB02SplitExpenseEditEnUs B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
-	@override late final _TranslationsB03SplitMethodEditEnUs B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditEnUs._(_root);
-	@override late final _TranslationsB04PaymentMergeEnUs B04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
-	@override late final _TranslationsB07PaymentMethodEditEnUs B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
+	@override late final _TranslationsS10HomeTaskListEnUs s10_home_task_list = _TranslationsS10HomeTaskListEnUs._(_root);
+	@override late final _TranslationsS11InviteConfirmEnUs s11_invite_confirm = _TranslationsS11InviteConfirmEnUs._(_root);
+	@override late final _TranslationsS12TaskCloseNoticeEnUs s12_task_close_notice = _TranslationsS12TaskCloseNoticeEnUs._(_root);
+	@override late final _TranslationsS13TaskDashboardEnUs s13_task_dashboard = _TranslationsS13TaskDashboardEnUs._(_root);
+	@override late final _TranslationsS14TaskSettingsEnUs s14_task_settings = _TranslationsS14TaskSettingsEnUs._(_root);
+	@override late final _TranslationsS15RecordEditEnUs s15_record_edit = _TranslationsS15RecordEditEnUs._(_root);
+	@override late final _TranslationsS16TaskCreateEditEnUs s16_task_create_edit = _TranslationsS16TaskCreateEditEnUs._(_root);
+	@override late final _TranslationsS17TaskLockedEnUs s17_task_locked = _TranslationsS17TaskLockedEnUs._(_root);
+	@override late final _TranslationsS18TaskJoinEnUs s18_task_join = _TranslationsS18TaskJoinEnUs._(_root);
+	@override late final _TranslationsS30SettlementConfirmEnUs s30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoEnUs s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
+	@override late final _TranslationsS32SettlementResultEnUs s32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
+	@override late final _TranslationsS50OnboardingConsentEnUs s50_onboarding_consent = _TranslationsS50OnboardingConsentEnUs._(_root);
+	@override late final _TranslationsS51OnboardingNameEnUs s51_onboarding_name = _TranslationsS51OnboardingNameEnUs._(_root);
+	@override late final _TranslationsS52TaskSettingsLogEnUs s52_task_settings_log = _TranslationsS52TaskSettingsLogEnUs._(_root);
+	@override late final _TranslationsS53TaskSettingsMembersEnUs s53_task_settings_members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteEnUs s54_task_settings_invite = _TranslationsS54TaskSettingsInviteEnUs._(_root);
+	@override late final _TranslationsS70SystemSettingsEnUs s70_system_settings = _TranslationsS70SystemSettingsEnUs._(_root);
+	@override late final _TranslationsS72TermsUpdateEnUs s72_terms_update = _TranslationsS72TermsUpdateEnUs._(_root);
+	@override late final _TranslationsS74DeleteAccountNoticeEnUs s74_delete_account_notice = _TranslationsS74DeleteAccountNoticeEnUs._(_root);
+	@override late final _TranslationsD01MemberRoleIntroEnUs d01_member_role_intro = _TranslationsD01MemberRoleIntroEnUs._(_root);
+	@override late final _TranslationsD02InviteResultEnUs d02_invite_result = _TranslationsD02InviteResultEnUs._(_root);
+	@override late final _TranslationsD03TaskCreateConfirmEnUs d03_task_create_confirm = _TranslationsD03TaskCreateConfirmEnUs._(_root);
+	@override late final _TranslationsD04CommonUnsavedConfirmEnUs d04_common_unsaved_confirm = _TranslationsD04CommonUnsavedConfirmEnUs._(_root);
+	@override late final _TranslationsD05DateJumpNoResultEnUs d05_date_jump_no_result = _TranslationsD05DateJumpNoResultEnUs._(_root);
+	@override late final _TranslationsD06SettlementConfirmEnUs d06_settlement_confirm = _TranslationsD06SettlementConfirmEnUs._(_root);
+	@override late final _TranslationsD08TaskClosedConfirmEnUs d08_task_closed_confirm = _TranslationsD08TaskClosedConfirmEnUs._(_root);
+	@override late final _TranslationsD09TaskSettingsCurrencyConfirmEnUs d09_task_settings_currency_confirm = _TranslationsD09TaskSettingsCurrencyConfirmEnUs._(_root);
+	@override late final _TranslationsD10RecordDeleteConfirmEnUs d10_record_delete_confirm = _TranslationsD10RecordDeleteConfirmEnUs._(_root);
+	@override late final _TranslationsD11RandomResultEnUs d11_random_result = _TranslationsD11RandomResultEnUs._(_root);
+	@override late final _TranslationsD12LogoutConfirmEnUs d12_logout_confirm = _TranslationsD12LogoutConfirmEnUs._(_root);
+	@override late final _TranslationsD13DeleteAccountConfirmEnUs d13_delete_account_confirm = _TranslationsD13DeleteAccountConfirmEnUs._(_root);
+	@override late final _TranslationsD14DateSelectEnUs d14_date_select = _TranslationsD14DateSelectEnUs._(_root);
+	@override late final _TranslationsB02SplitExpenseEditEnUs b02_split_expense_edit = _TranslationsB02SplitExpenseEditEnUs._(_root);
+	@override late final _TranslationsB03SplitMethodEditEnUs b03_split_method_edit = _TranslationsB03SplitMethodEditEnUs._(_root);
+	@override late final _TranslationsB04PaymentMergeEnUs b04_payment_merge = _TranslationsB04PaymentMergeEnUs._(_root);
+	@override late final _TranslationsB07PaymentMethodEditEnUs b07_payment_method_edit = _TranslationsB07PaymentMethodEditEnUs._(_root);
 	@override late final _TranslationsSuccessEnUs success = _TranslationsSuccessEnUs._(_root);
 	@override late final _TranslationsErrorEnUs error = _TranslationsErrorEnUs._(_root);
 }
@@ -131,7 +131,7 @@ class _TranslationsLogActionEnUs extends TranslationsLogActionZhTw {
 	@override String get close_task => 'Close Task';
 }
 
-// Path: S10_Home_TaskList
+// Path: s10_home_task_list
 class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 	_TranslationsS10HomeTaskListEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -146,7 +146,7 @@ class _TranslationsS10HomeTaskListEnUs extends TranslationsS10HomeTaskListZhTw {
 	@override late final _TranslationsS10HomeTaskListLabelEnUs label = _TranslationsS10HomeTaskListLabelEnUs._(_root);
 }
 
-// Path: S11_Invite_Confirm
+// Path: s11_invite_confirm
 class _TranslationsS11InviteConfirmEnUs extends TranslationsS11InviteConfirmZhTw {
 	_TranslationsS11InviteConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -159,7 +159,7 @@ class _TranslationsS11InviteConfirmEnUs extends TranslationsS11InviteConfirmZhTw
 	@override late final _TranslationsS11InviteConfirmLabelEnUs label = _TranslationsS11InviteConfirmLabelEnUs._(_root);
 }
 
-// Path: S12_TaskClose_Notice
+// Path: s12_task_close_notice
 class _TranslationsS12TaskCloseNoticeEnUs extends TranslationsS12TaskCloseNoticeZhTw {
 	_TranslationsS12TaskCloseNoticeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -171,7 +171,7 @@ class _TranslationsS12TaskCloseNoticeEnUs extends TranslationsS12TaskCloseNotice
 	@override String get content => 'Closing this task will lock all records and settings. The task will enter read-only mode, and no data can be added or edited.';
 }
 
-// Path: S13_Task_Dashboard
+// Path: s13_task_dashboard
 class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw {
 	_TranslationsS13TaskDashboardEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -188,7 +188,7 @@ class _TranslationsS13TaskDashboardEnUs extends TranslationsS13TaskDashboardZhTw
 	@override late final _TranslationsS13TaskDashboardSectionEnUs section = _TranslationsS13TaskDashboardSectionEnUs._(_root);
 }
 
-// Path: S14_Task_Settings
+// Path: s14_task_settings
 class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
 	_TranslationsS14TaskSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -200,7 +200,7 @@ class _TranslationsS14TaskSettingsEnUs extends TranslationsS14TaskSettingsZhTw {
 	@override late final _TranslationsS14TaskSettingsMenuEnUs menu = _TranslationsS14TaskSettingsMenuEnUs._(_root);
 }
 
-// Path: S15_Record_Edit
+// Path: s15_record_edit
 class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	_TranslationsS15RecordEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -220,7 +220,7 @@ class _TranslationsS15RecordEditEnUs extends TranslationsS15RecordEditZhTw {
 	@override late final _TranslationsS15RecordEditHintEnUs hint = _TranslationsS15RecordEditHintEnUs._(_root);
 }
 
-// Path: S16_TaskCreate_Edit
+// Path: s16_task_create_edit
 class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZhTw {
 	_TranslationsS16TaskCreateEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -233,7 +233,7 @@ class _TranslationsS16TaskCreateEditEnUs extends TranslationsS16TaskCreateEditZh
 	@override late final _TranslationsS16TaskCreateEditHintEnUs hint = _TranslationsS16TaskCreateEditHintEnUs._(_root);
 }
 
-// Path: S17_Task_Locked
+// Path: s17_task_locked
 class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	_TranslationsS17TaskLockedEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -247,7 +247,7 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	@override late final _TranslationsS17TaskLockedExportEnUs export = _TranslationsS17TaskLockedExportEnUs._(_root);
 }
 
-// Path: S18_Task_Join
+// Path: s18_task_join
 class _TranslationsS18TaskJoinEnUs extends TranslationsS18TaskJoinZhTw {
 	_TranslationsS18TaskJoinEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -261,7 +261,7 @@ class _TranslationsS18TaskJoinEnUs extends TranslationsS18TaskJoinZhTw {
 	@override late final _TranslationsS18TaskJoinContentEnUs content = _TranslationsS18TaskJoinContentEnUs._(_root);
 }
 
-// Path: S30_settlement_confirm
+// Path: s30_settlement_confirm
 class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementConfirmZhTw {
 	_TranslationsS30SettlementConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -275,7 +275,7 @@ class _TranslationsS30SettlementConfirmEnUs extends TranslationsS30SettlementCon
 	@override late final _TranslationsS30SettlementConfirmListItemEnUs list_item = _TranslationsS30SettlementConfirmListItemEnUs._(_root);
 }
 
-// Path: S31_settlement_payment_info
+// Path: s31_settlement_payment_info
 class _TranslationsS31SettlementPaymentInfoEnUs extends TranslationsS31SettlementPaymentInfoZhTw {
 	_TranslationsS31SettlementPaymentInfoEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -289,7 +289,7 @@ class _TranslationsS31SettlementPaymentInfoEnUs extends TranslationsS31Settlemen
 	@override late final _TranslationsS31SettlementPaymentInfoButtonsEnUs buttons = _TranslationsS31SettlementPaymentInfoButtonsEnUs._(_root);
 }
 
-// Path: S32_settlement_result
+// Path: s32_settlement_result
 class _TranslationsS32SettlementResultEnUs extends TranslationsS32SettlementResultZhTw {
 	_TranslationsS32SettlementResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -305,7 +305,7 @@ class _TranslationsS32SettlementResultEnUs extends TranslationsS32SettlementResu
 	@override late final _TranslationsS32SettlementResultButtonsEnUs buttons = _TranslationsS32SettlementResultButtonsEnUs._(_root);
 }
 
-// Path: S50_Onboarding_Consent
+// Path: s50_onboarding_consent
 class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingConsentZhTw {
 	_TranslationsS50OnboardingConsentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -317,7 +317,7 @@ class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingCon
 	@override late final _TranslationsS50OnboardingConsentContentEnUs content = _TranslationsS50OnboardingConsentContentEnUs._(_root);
 }
 
-// Path: S51_Onboarding_Name
+// Path: s51_onboarding_name
 class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZhTw {
 	_TranslationsS51OnboardingNameEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -330,7 +330,7 @@ class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZh
 	@override String counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S52_TaskSettings_Log
+// Path: s52_task_settings_log
 class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -347,7 +347,7 @@ class _TranslationsS52TaskSettingsLogEnUs extends TranslationsS52TaskSettingsLog
 	@override late final _TranslationsS52TaskSettingsLogUnitEnUs unit = _TranslationsS52TaskSettingsLogUnitEnUs._(_root);
 }
 
-// Path: S53_TaskSettings_Members
+// Path: s53_task_settings_members
 class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSettingsMembersZhTw {
 	_TranslationsS53TaskSettingsMembersEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -361,7 +361,7 @@ class _TranslationsS53TaskSettingsMembersEnUs extends TranslationsS53TaskSetting
 	@override String get member_name => 'Member Name';
 }
 
-// Path: S54_TaskSettings_Invite
+// Path: s54_task_settings_invite
 class _TranslationsS54TaskSettingsInviteEnUs extends TranslationsS54TaskSettingsInviteZhTw {
 	_TranslationsS54TaskSettingsInviteEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -373,7 +373,7 @@ class _TranslationsS54TaskSettingsInviteEnUs extends TranslationsS54TaskSettings
 	@override late final _TranslationsS54TaskSettingsInviteLabelEnUs label = _TranslationsS54TaskSettingsInviteLabelEnUs._(_root);
 }
 
-// Path: S70_System_Settings
+// Path: s70_system_settings
 class _TranslationsS70SystemSettingsEnUs extends TranslationsS70SystemSettingsZhTw {
 	_TranslationsS70SystemSettingsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -385,7 +385,7 @@ class _TranslationsS70SystemSettingsEnUs extends TranslationsS70SystemSettingsZh
 	@override late final _TranslationsS70SystemSettingsMenuEnUs menu = _TranslationsS70SystemSettingsMenuEnUs._(_root);
 }
 
-// Path: S72_TermsUpdate
+// Path: s72_terms_update
 class _TranslationsS72TermsUpdateEnUs extends TranslationsS72TermsUpdateZhTw {
 	_TranslationsS72TermsUpdateEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -396,7 +396,7 @@ class _TranslationsS72TermsUpdateEnUs extends TranslationsS72TermsUpdateZhTw {
 	@override String content({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.';
 }
 
-// Path: S74_DeleteAccount_Notice
+// Path: s74_delete_account_notice
 class _TranslationsS74DeleteAccountNoticeEnUs extends TranslationsS74DeleteAccountNoticeZhTw {
 	_TranslationsS74DeleteAccountNoticeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -408,7 +408,7 @@ class _TranslationsS74DeleteAccountNoticeEnUs extends TranslationsS74DeleteAccou
 	@override late final _TranslationsS74DeleteAccountNoticeButtonsEnUs buttons = _TranslationsS74DeleteAccountNoticeButtonsEnUs._(_root);
 }
 
-// Path: D01_MemberRole_Intro
+// Path: d01_member_role_intro
 class _TranslationsD01MemberRoleIntroEnUs extends TranslationsD01MemberRoleIntroZhTw {
 	_TranslationsD01MemberRoleIntroEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -421,7 +421,7 @@ class _TranslationsD01MemberRoleIntroEnUs extends TranslationsD01MemberRoleIntro
 	@override late final _TranslationsD01MemberRoleIntroRerollEnUs reroll = _TranslationsD01MemberRoleIntroRerollEnUs._(_root);
 }
 
-// Path: D02_Invite_Result
+// Path: d02_invite_result
 class _TranslationsD02InviteResultEnUs extends TranslationsD02InviteResultZhTw {
 	_TranslationsD02InviteResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -431,7 +431,7 @@ class _TranslationsD02InviteResultEnUs extends TranslationsD02InviteResultZhTw {
 	@override String get title => 'Join Failed';
 }
 
-// Path: D03_TaskCreate_Confirm
+// Path: d03_task_create_confirm
 class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateConfirmZhTw {
 	_TranslationsD03TaskCreateConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -442,7 +442,7 @@ class _TranslationsD03TaskCreateConfirmEnUs extends TranslationsD03TaskCreateCon
 	@override late final _TranslationsD03TaskCreateConfirmButtonsEnUs buttons = _TranslationsD03TaskCreateConfirmButtonsEnUs._(_root);
 }
 
-// Path: D04_CommonUnsaved_Confirm
+// Path: d04_common_unsaved_confirm
 class _TranslationsD04CommonUnsavedConfirmEnUs extends TranslationsD04CommonUnsavedConfirmZhTw {
 	_TranslationsD04CommonUnsavedConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -453,7 +453,7 @@ class _TranslationsD04CommonUnsavedConfirmEnUs extends TranslationsD04CommonUnsa
 	@override String get content => 'Changes you made will not be saved.';
 }
 
-// Path: D05_DateJump_NoResult
+// Path: d05_date_jump_no_result
 class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResultZhTw {
 	_TranslationsD05DateJumpNoResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -464,7 +464,7 @@ class _TranslationsD05DateJumpNoResultEnUs extends TranslationsD05DateJumpNoResu
 	@override String get content => 'No record found for this date. Add one?';
 }
 
-// Path: D06_settlement_confirm
+// Path: d06_settlement_confirm
 class _TranslationsD06SettlementConfirmEnUs extends TranslationsD06SettlementConfirmZhTw {
 	_TranslationsD06SettlementConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -475,7 +475,7 @@ class _TranslationsD06SettlementConfirmEnUs extends TranslationsD06SettlementCon
 	@override String get content => 'The task will be locked upon settlement. Records cannot be added, deleted, or edited after settlement.\nPlease ensure all details are correct.';
 }
 
-// Path: D08_TaskClosed_Confirm
+// Path: d08_task_closed_confirm
 class _TranslationsD08TaskClosedConfirmEnUs extends TranslationsD08TaskClosedConfirmZhTw {
 	_TranslationsD08TaskClosedConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -486,7 +486,7 @@ class _TranslationsD08TaskClosedConfirmEnUs extends TranslationsD08TaskClosedCon
 	@override String get content => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?';
 }
 
-// Path: D09_TaskSettings_CurrencyConfirm
+// Path: d09_task_settings_currency_confirm
 class _TranslationsD09TaskSettingsCurrencyConfirmEnUs extends TranslationsD09TaskSettingsCurrencyConfirmZhTw {
 	_TranslationsD09TaskSettingsCurrencyConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -497,7 +497,7 @@ class _TranslationsD09TaskSettingsCurrencyConfirmEnUs extends TranslationsD09Tas
 	@override String get content => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?';
 }
 
-// Path: D10_RecordDelete_Confirm
+// Path: d10_record_delete_confirm
 class _TranslationsD10RecordDeleteConfirmEnUs extends TranslationsD10RecordDeleteConfirmZhTw {
 	_TranslationsD10RecordDeleteConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -508,7 +508,7 @@ class _TranslationsD10RecordDeleteConfirmEnUs extends TranslationsD10RecordDelet
 	@override String content({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?';
 }
 
-// Path: D11_random_result
+// Path: d11_random_result
 class _TranslationsD11RandomResultEnUs extends TranslationsD11RandomResultZhTw {
 	_TranslationsD11RandomResultEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -519,7 +519,7 @@ class _TranslationsD11RandomResultEnUs extends TranslationsD11RandomResultZhTw {
 	@override String get skip => 'Skip';
 }
 
-// Path: D12_logout_confirm
+// Path: d12_logout_confirm
 class _TranslationsD12LogoutConfirmEnUs extends TranslationsD12LogoutConfirmZhTw {
 	_TranslationsD12LogoutConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -531,7 +531,7 @@ class _TranslationsD12LogoutConfirmEnUs extends TranslationsD12LogoutConfirmZhTw
 	@override late final _TranslationsD12LogoutConfirmButtonsEnUs buttons = _TranslationsD12LogoutConfirmButtonsEnUs._(_root);
 }
 
-// Path: D13_DeleteAccount_Confirm
+// Path: d13_delete_account_confirm
 class _TranslationsD13DeleteAccountConfirmEnUs extends TranslationsD13DeleteAccountConfirmZhTw {
 	_TranslationsD13DeleteAccountConfirmEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -542,7 +542,7 @@ class _TranslationsD13DeleteAccountConfirmEnUs extends TranslationsD13DeleteAcco
 	@override String get content => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?';
 }
 
-// Path: D14_Date_Select
+// Path: d14_date_select
 class _TranslationsD14DateSelectEnUs extends TranslationsD14DateSelectZhTw {
 	_TranslationsD14DateSelectEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -552,7 +552,7 @@ class _TranslationsD14DateSelectEnUs extends TranslationsD14DateSelectZhTw {
 	@override String get title => 'Select Date';
 }
 
-// Path: B02_SplitExpense_Edit
+// Path: b02_split_expense_edit
 class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEditZhTw {
 	_TranslationsB02SplitExpenseEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -565,7 +565,7 @@ class _TranslationsB02SplitExpenseEditEnUs extends TranslationsB02SplitExpenseEd
 	@override late final _TranslationsB02SplitExpenseEditHintEnUs hint = _TranslationsB02SplitExpenseEditHintEnUs._(_root);
 }
 
-// Path: B03_SplitMethod_Edit
+// Path: b03_split_method_edit
 class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEditZhTw {
 	_TranslationsB03SplitMethodEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -578,7 +578,7 @@ class _TranslationsB03SplitMethodEditEnUs extends TranslationsB03SplitMethodEdit
 	@override String get mismatch => 'Mismatch';
 }
 
-// Path: B04_payment_merge
+// Path: b04_payment_merge
 class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 	_TranslationsB04PaymentMergeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -589,7 +589,7 @@ class _TranslationsB04PaymentMergeEnUs extends TranslationsB04PaymentMergeZhTw {
 	@override late final _TranslationsB04PaymentMergeLabelEnUs label = _TranslationsB04PaymentMergeLabelEnUs._(_root);
 }
 
-// Path: B07_PaymentMethod_Edit
+// Path: b07_payment_method_edit
 class _TranslationsB07PaymentMethodEditEnUs extends TranslationsB07PaymentMethodEditZhTw {
 	_TranslationsB07PaymentMethodEditEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -883,7 +883,7 @@ class _TranslationsCommonShareEnUs extends TranslationsCommonShareZhTw {
 	@override late final _TranslationsCommonShareSettlementEnUs settlement = _TranslationsCommonShareSettlementEnUs._(_root);
 }
 
-// Path: S10_Home_TaskList.tab
+// Path: s10_home_task_list.tab
 class _TranslationsS10HomeTaskListTabEnUs extends TranslationsS10HomeTaskListTabZhTw {
 	_TranslationsS10HomeTaskListTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -894,7 +894,7 @@ class _TranslationsS10HomeTaskListTabEnUs extends TranslationsS10HomeTaskListTab
 	@override String get completed => 'Finished';
 }
 
-// Path: S10_Home_TaskList.empty
+// Path: s10_home_task_list.empty
 class _TranslationsS10HomeTaskListEmptyEnUs extends TranslationsS10HomeTaskListEmptyZhTw {
 	_TranslationsS10HomeTaskListEmptyEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -905,7 +905,7 @@ class _TranslationsS10HomeTaskListEmptyEnUs extends TranslationsS10HomeTaskListE
 	@override String get completed => 'No finished tasks';
 }
 
-// Path: S10_Home_TaskList.buttons
+// Path: s10_home_task_list.buttons
 class _TranslationsS10HomeTaskListButtonsEnUs extends TranslationsS10HomeTaskListButtonsZhTw {
 	_TranslationsS10HomeTaskListButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -916,7 +916,7 @@ class _TranslationsS10HomeTaskListButtonsEnUs extends TranslationsS10HomeTaskLis
 	@override String get join_task => 'Join Task';
 }
 
-// Path: S10_Home_TaskList.label
+// Path: s10_home_task_list.label
 class _TranslationsS10HomeTaskListLabelEnUs extends TranslationsS10HomeTaskListLabelZhTw {
 	_TranslationsS10HomeTaskListLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -926,7 +926,7 @@ class _TranslationsS10HomeTaskListLabelEnUs extends TranslationsS10HomeTaskListL
 	@override String get settlement => 'Settlement';
 }
 
-// Path: S11_Invite_Confirm.buttons
+// Path: s11_invite_confirm.buttons
 class _TranslationsS11InviteConfirmButtonsEnUs extends TranslationsS11InviteConfirmButtonsZhTw {
 	_TranslationsS11InviteConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -937,7 +937,7 @@ class _TranslationsS11InviteConfirmButtonsEnUs extends TranslationsS11InviteConf
 	@override String get back_task_list => 'Home';
 }
 
-// Path: S11_Invite_Confirm.label
+// Path: s11_invite_confirm.label
 class _TranslationsS11InviteConfirmLabelEnUs extends TranslationsS11InviteConfirmLabelZhTw {
 	_TranslationsS11InviteConfirmLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -949,7 +949,7 @@ class _TranslationsS11InviteConfirmLabelEnUs extends TranslationsS11InviteConfir
 	@override String get expense => 'Expense';
 }
 
-// Path: S12_TaskClose_Notice.buttons
+// Path: s12_task_close_notice.buttons
 class _TranslationsS12TaskCloseNoticeButtonsEnUs extends TranslationsS12TaskCloseNoticeButtonsZhTw {
 	_TranslationsS12TaskCloseNoticeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -959,7 +959,7 @@ class _TranslationsS12TaskCloseNoticeButtonsEnUs extends TranslationsS12TaskClos
 	@override String get close_task => 'Close Task';
 }
 
-// Path: S13_Task_Dashboard.buttons
+// Path: s13_task_dashboard.buttons
 class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashboardButtonsZhTw {
 	_TranslationsS13TaskDashboardButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -969,7 +969,7 @@ class _TranslationsS13TaskDashboardButtonsEnUs extends TranslationsS13TaskDashbo
 	@override String get add => 'Add';
 }
 
-// Path: S13_Task_Dashboard.tab
+// Path: s13_task_dashboard.tab
 class _TranslationsS13TaskDashboardTabEnUs extends TranslationsS13TaskDashboardTabZhTw {
 	_TranslationsS13TaskDashboardTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -980,7 +980,7 @@ class _TranslationsS13TaskDashboardTabEnUs extends TranslationsS13TaskDashboardT
 	@override String get personal => 'Personal';
 }
 
-// Path: S13_Task_Dashboard.label
+// Path: s13_task_dashboard.label
 class _TranslationsS13TaskDashboardLabelEnUs extends TranslationsS13TaskDashboardLabelZhTw {
 	_TranslationsS13TaskDashboardLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -993,7 +993,7 @@ class _TranslationsS13TaskDashboardLabelEnUs extends TranslationsS13TaskDashboar
 	@override String get total_prepay_personal => 'Total Prepaid (incl. Reimbursed)';
 }
 
-// Path: S13_Task_Dashboard.empty
+// Path: s13_task_dashboard.empty
 class _TranslationsS13TaskDashboardEmptyEnUs extends TranslationsS13TaskDashboardEmptyZhTw {
 	_TranslationsS13TaskDashboardEmptyEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1004,7 +1004,7 @@ class _TranslationsS13TaskDashboardEmptyEnUs extends TranslationsS13TaskDashboar
 	@override String get personal_records => 'No records';
 }
 
-// Path: S13_Task_Dashboard.section
+// Path: s13_task_dashboard.section
 class _TranslationsS13TaskDashboardSectionEnUs extends TranslationsS13TaskDashboardSectionZhTw {
 	_TranslationsS13TaskDashboardSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1017,7 +1017,7 @@ class _TranslationsS13TaskDashboardSectionEnUs extends TranslationsS13TaskDashbo
 	@override String get no_data => 'No data';
 }
 
-// Path: S14_Task_Settings.section
+// Path: s14_task_settings.section
 class _TranslationsS14TaskSettingsSectionEnUs extends TranslationsS14TaskSettingsSectionZhTw {
 	_TranslationsS14TaskSettingsSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1030,7 +1030,7 @@ class _TranslationsS14TaskSettingsSectionEnUs extends TranslationsS14TaskSetting
 	@override String get other => 'Other Settings';
 }
 
-// Path: S14_Task_Settings.menu
+// Path: s14_task_settings.menu
 class _TranslationsS14TaskSettingsMenuEnUs extends TranslationsS14TaskSettingsMenuZhTw {
 	_TranslationsS14TaskSettingsMenuEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1043,7 +1043,7 @@ class _TranslationsS14TaskSettingsMenuEnUs extends TranslationsS14TaskSettingsMe
 	@override String get close_task => 'End Task';
 }
 
-// Path: S15_Record_Edit.title
+// Path: s15_record_edit.title
 class _TranslationsS15RecordEditTitleEnUs extends TranslationsS15RecordEditTitleZhTw {
 	_TranslationsS15RecordEditTitleEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1054,7 +1054,7 @@ class _TranslationsS15RecordEditTitleEnUs extends TranslationsS15RecordEditTitle
 	@override String get edit => 'Edit Record';
 }
 
-// Path: S15_Record_Edit.buttons
+// Path: s15_record_edit.buttons
 class _TranslationsS15RecordEditButtonsEnUs extends TranslationsS15RecordEditButtonsZhTw {
 	_TranslationsS15RecordEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1064,7 +1064,7 @@ class _TranslationsS15RecordEditButtonsEnUs extends TranslationsS15RecordEditBut
 	@override String get add_item => 'Add Item';
 }
 
-// Path: S15_Record_Edit.section
+// Path: s15_record_edit.section
 class _TranslationsS15RecordEditSectionEnUs extends TranslationsS15RecordEditSectionZhTw {
 	_TranslationsS15RecordEditSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1075,7 +1075,7 @@ class _TranslationsS15RecordEditSectionEnUs extends TranslationsS15RecordEditSec
 	@override String get items => 'Itemized Split';
 }
 
-// Path: S15_Record_Edit.val
+// Path: s15_record_edit.val
 class _TranslationsS15RecordEditValEnUs extends TranslationsS15RecordEditValZhTw {
 	_TranslationsS15RecordEditValEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1091,7 +1091,7 @@ class _TranslationsS15RecordEditValEnUs extends TranslationsS15RecordEditValZhTw
 	@override String get mock_note => 'Item description';
 }
 
-// Path: S15_Record_Edit.tab
+// Path: s15_record_edit.tab
 class _TranslationsS15RecordEditTabEnUs extends TranslationsS15RecordEditTabZhTw {
 	_TranslationsS15RecordEditTabEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1102,7 +1102,7 @@ class _TranslationsS15RecordEditTabEnUs extends TranslationsS15RecordEditTabZhTw
 	@override String get prepay => 'Prepaid';
 }
 
-// Path: S15_Record_Edit.rate_dialog
+// Path: s15_record_edit.rate_dialog
 class _TranslationsS15RecordEditRateDialogEnUs extends TranslationsS15RecordEditRateDialogZhTw {
 	_TranslationsS15RecordEditRateDialogEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1113,7 +1113,7 @@ class _TranslationsS15RecordEditRateDialogEnUs extends TranslationsS15RecordEdit
 	@override String get content => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.';
 }
 
-// Path: S15_Record_Edit.label
+// Path: s15_record_edit.label
 class _TranslationsS15RecordEditLabelEnUs extends TranslationsS15RecordEditLabelZhTw {
 	_TranslationsS15RecordEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1123,7 +1123,7 @@ class _TranslationsS15RecordEditLabelEnUs extends TranslationsS15RecordEditLabel
 	@override String rate_with_base({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})';
 }
 
-// Path: S15_Record_Edit.hint
+// Path: s15_record_edit.hint
 class _TranslationsS15RecordEditHintEnUs extends TranslationsS15RecordEditHintZhTw {
 	_TranslationsS15RecordEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1135,7 +1135,7 @@ class _TranslationsS15RecordEditHintEnUs extends TranslationsS15RecordEditHintZh
 	@override String get memo => 'e.g. Notes';
 }
 
-// Path: S16_TaskCreate_Edit.section
+// Path: s16_task_create_edit.section
 class _TranslationsS16TaskCreateEditSectionEnUs extends TranslationsS16TaskCreateEditSectionZhTw {
 	_TranslationsS16TaskCreateEditSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1147,7 +1147,7 @@ class _TranslationsS16TaskCreateEditSectionEnUs extends TranslationsS16TaskCreat
 	@override String get settlement => 'Settlement Settings';
 }
 
-// Path: S16_TaskCreate_Edit.label
+// Path: s16_task_create_edit.label
 class _TranslationsS16TaskCreateEditLabelEnUs extends TranslationsS16TaskCreateEditLabelZhTw {
 	_TranslationsS16TaskCreateEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1157,7 +1157,7 @@ class _TranslationsS16TaskCreateEditLabelEnUs extends TranslationsS16TaskCreateE
 	@override String name_counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S16_TaskCreate_Edit.hint
+// Path: s16_task_create_edit.hint
 class _TranslationsS16TaskCreateEditHintEnUs extends TranslationsS16TaskCreateEditHintZhTw {
 	_TranslationsS16TaskCreateEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1167,7 +1167,7 @@ class _TranslationsS16TaskCreateEditHintEnUs extends TranslationsS16TaskCreateEd
 	@override String get name => 'e.g. Tokyo Trip';
 }
 
-// Path: S17_Task_Locked.buttons
+// Path: s17_task_locked.buttons
 class _TranslationsS17TaskLockedButtonsEnUs extends TranslationsS17TaskLockedButtonsZhTw {
 	_TranslationsS17TaskLockedButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1178,7 +1178,7 @@ class _TranslationsS17TaskLockedButtonsEnUs extends TranslationsS17TaskLockedBut
 	@override String get view_payment_info => 'View Payment Details';
 }
 
-// Path: S17_Task_Locked.section
+// Path: s17_task_locked.section
 class _TranslationsS17TaskLockedSectionEnUs extends TranslationsS17TaskLockedSectionZhTw {
 	_TranslationsS17TaskLockedSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1189,7 +1189,7 @@ class _TranslationsS17TaskLockedSectionEnUs extends TranslationsS17TaskLockedSec
 	@override String get cleared => 'Cleared';
 }
 
-// Path: S17_Task_Locked.export
+// Path: s17_task_locked.export
 class _TranslationsS17TaskLockedExportEnUs extends TranslationsS17TaskLockedExportZhTw {
 	_TranslationsS17TaskLockedExportEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1227,7 +1227,7 @@ class _TranslationsS17TaskLockedExportEnUs extends TranslationsS17TaskLockedExpo
 	@override String get mixed => 'Mixed Payment';
 }
 
-// Path: S18_Task_Join.tabs
+// Path: s18_task_join.tabs
 class _TranslationsS18TaskJoinTabsEnUs extends TranslationsS18TaskJoinTabsZhTw {
 	_TranslationsS18TaskJoinTabsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1238,7 +1238,7 @@ class _TranslationsS18TaskJoinTabsEnUs extends TranslationsS18TaskJoinTabsZhTw {
 	@override String get scan => 'Scan QR';
 }
 
-// Path: S18_Task_Join.label
+// Path: s18_task_join.label
 class _TranslationsS18TaskJoinLabelEnUs extends TranslationsS18TaskJoinLabelZhTw {
 	_TranslationsS18TaskJoinLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1248,7 +1248,7 @@ class _TranslationsS18TaskJoinLabelEnUs extends TranslationsS18TaskJoinLabelZhTw
 	@override String get input => 'Invite code';
 }
 
-// Path: S18_Task_Join.hint
+// Path: s18_task_join.hint
 class _TranslationsS18TaskJoinHintEnUs extends TranslationsS18TaskJoinHintZhTw {
 	_TranslationsS18TaskJoinHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1258,7 +1258,7 @@ class _TranslationsS18TaskJoinHintEnUs extends TranslationsS18TaskJoinHintZhTw {
 	@override String get input => 'Enter 8-digit invite code';
 }
 
-// Path: S18_Task_Join.content
+// Path: s18_task_join.content
 class _TranslationsS18TaskJoinContentEnUs extends TranslationsS18TaskJoinContentZhTw {
 	_TranslationsS18TaskJoinContentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1268,7 +1268,7 @@ class _TranslationsS18TaskJoinContentEnUs extends TranslationsS18TaskJoinContent
 	@override String get scan => 'Frame the QR code to scan automatically';
 }
 
-// Path: S30_settlement_confirm.buttons
+// Path: s30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1278,7 +1278,7 @@ class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30Settle
 	@override String get set_payment_info => 'Payment Info';
 }
 
-// Path: S30_settlement_confirm.steps
+// Path: s30_settlement_confirm.steps
 class _TranslationsS30SettlementConfirmStepsEnUs extends TranslationsS30SettlementConfirmStepsZhTw {
 	_TranslationsS30SettlementConfirmStepsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1289,7 +1289,7 @@ class _TranslationsS30SettlementConfirmStepsEnUs extends TranslationsS30Settleme
 	@override String get payment_info => 'Payment Info';
 }
 
-// Path: S30_settlement_confirm.warning
+// Path: s30_settlement_confirm.warning
 class _TranslationsS30SettlementConfirmWarningEnUs extends TranslationsS30SettlementConfirmWarningZhTw {
 	_TranslationsS30SettlementConfirmWarningEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1299,7 +1299,7 @@ class _TranslationsS30SettlementConfirmWarningEnUs extends TranslationsS30Settle
 	@override String get random_reveal => 'Remainder will be revealed after settlement.';
 }
 
-// Path: S30_settlement_confirm.list_item
+// Path: s30_settlement_confirm.list_item
 class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30SettlementConfirmListItemZhTw {
 	_TranslationsS30SettlementConfirmListItemEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1313,7 +1313,7 @@ class _TranslationsS30SettlementConfirmListItemEnUs extends TranslationsS30Settl
 	@override String get remainder => 'Remainder';
 }
 
-// Path: S31_settlement_payment_info.buttons
+// Path: s31_settlement_payment_info.buttons
 class _TranslationsS31SettlementPaymentInfoButtonsEnUs extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	_TranslationsS31SettlementPaymentInfoButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1323,7 +1323,7 @@ class _TranslationsS31SettlementPaymentInfoButtonsEnUs extends TranslationsS31Se
 	@override String get prev_step => 'Previous Step';
 }
 
-// Path: S32_settlement_result.buttons
+// Path: s32_settlement_result.buttons
 class _TranslationsS32SettlementResultButtonsEnUs extends TranslationsS32SettlementResultButtonsZhTw {
 	_TranslationsS32SettlementResultButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1334,7 +1334,7 @@ class _TranslationsS32SettlementResultButtonsEnUs extends TranslationsS32Settlem
 	@override String get back_task_dashboard => 'Back to Task';
 }
 
-// Path: S50_Onboarding_Consent.buttons
+// Path: s50_onboarding_consent.buttons
 class _TranslationsS50OnboardingConsentButtonsEnUs extends TranslationsS50OnboardingConsentButtonsZhTw {
 	_TranslationsS50OnboardingConsentButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1344,7 +1344,7 @@ class _TranslationsS50OnboardingConsentButtonsEnUs extends TranslationsS50Onboar
 	@override String get start => 'Start';
 }
 
-// Path: S50_Onboarding_Consent.content
+// Path: s50_onboarding_consent.content
 class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50OnboardingConsentContentZhTw {
 	_TranslationsS50OnboardingConsentContentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1355,7 +1355,7 @@ class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50Onboar
 	@override String get suffix => '. We use anonymous login to protect your privacy.';
 }
 
-// Path: S52_TaskSettings_Log.buttons
+// Path: s52_task_settings_log.buttons
 class _TranslationsS52TaskSettingsLogButtonsEnUs extends TranslationsS52TaskSettingsLogButtonsZhTw {
 	_TranslationsS52TaskSettingsLogButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1365,7 +1365,7 @@ class _TranslationsS52TaskSettingsLogButtonsEnUs extends TranslationsS52TaskSett
 	@override String get export_csv => 'Export CSV';
 }
 
-// Path: S52_TaskSettings_Log.csv_header
+// Path: s52_task_settings_log.csv_header
 class _TranslationsS52TaskSettingsLogCsvHeaderEnUs extends TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	_TranslationsS52TaskSettingsLogCsvHeaderEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1378,7 +1378,7 @@ class _TranslationsS52TaskSettingsLogCsvHeaderEnUs extends TranslationsS52TaskSe
 	@override String get details => 'Details';
 }
 
-// Path: S52_TaskSettings_Log.type
+// Path: s52_task_settings_log.type
 class _TranslationsS52TaskSettingsLogTypeEnUs extends TranslationsS52TaskSettingsLogTypeZhTw {
 	_TranslationsS52TaskSettingsLogTypeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1389,7 +1389,7 @@ class _TranslationsS52TaskSettingsLogTypeEnUs extends TranslationsS52TaskSetting
 	@override String get expense => 'Expense';
 }
 
-// Path: S52_TaskSettings_Log.payment_type
+// Path: s52_task_settings_log.payment_type
 class _TranslationsS52TaskSettingsLogPaymentTypeEnUs extends TranslationsS52TaskSettingsLogPaymentTypeZhTw {
 	_TranslationsS52TaskSettingsLogPaymentTypeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1401,7 +1401,7 @@ class _TranslationsS52TaskSettingsLogPaymentTypeEnUs extends TranslationsS52Task
 	@override String get multiple => 'Multiple Payers';
 }
 
-// Path: S52_TaskSettings_Log.unit
+// Path: s52_task_settings_log.unit
 class _TranslationsS52TaskSettingsLogUnitEnUs extends TranslationsS52TaskSettingsLogUnitZhTw {
 	_TranslationsS52TaskSettingsLogUnitEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1412,7 +1412,7 @@ class _TranslationsS52TaskSettingsLogUnitEnUs extends TranslationsS52TaskSetting
 	@override String get items => 'items';
 }
 
-// Path: S53_TaskSettings_Members.buttons
+// Path: s53_task_settings_members.buttons
 class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53TaskSettingsMembersButtonsZhTw {
 	_TranslationsS53TaskSettingsMembersButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1422,7 +1422,7 @@ class _TranslationsS53TaskSettingsMembersButtonsEnUs extends TranslationsS53Task
 	@override String get add_member => 'Add Member';
 }
 
-// Path: S53_TaskSettings_Members.label
+// Path: s53_task_settings_members.label
 class _TranslationsS53TaskSettingsMembersLabelEnUs extends TranslationsS53TaskSettingsMembersLabelZhTw {
 	_TranslationsS53TaskSettingsMembersLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1432,7 +1432,7 @@ class _TranslationsS53TaskSettingsMembersLabelEnUs extends TranslationsS53TaskSe
 	@override String get default_ratio => 'Default Ratio';
 }
 
-// Path: S54_TaskSettings_Invite.buttons
+// Path: s54_task_settings_invite.buttons
 class _TranslationsS54TaskSettingsInviteButtonsEnUs extends TranslationsS54TaskSettingsInviteButtonsZhTw {
 	_TranslationsS54TaskSettingsInviteButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1443,7 +1443,7 @@ class _TranslationsS54TaskSettingsInviteButtonsEnUs extends TranslationsS54TaskS
 	@override String get regenerate => 'Regenerate';
 }
 
-// Path: S54_TaskSettings_Invite.label
+// Path: s54_task_settings_invite.label
 class _TranslationsS54TaskSettingsInviteLabelEnUs extends TranslationsS54TaskSettingsInviteLabelZhTw {
 	_TranslationsS54TaskSettingsInviteLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1454,7 +1454,7 @@ class _TranslationsS54TaskSettingsInviteLabelEnUs extends TranslationsS54TaskSet
 	@override String get invite_expired => 'Invite code has expired';
 }
 
-// Path: S70_System_Settings.section
+// Path: s70_system_settings.section
 class _TranslationsS70SystemSettingsSectionEnUs extends TranslationsS70SystemSettingsSectionZhTw {
 	_TranslationsS70SystemSettingsSectionEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1466,7 +1466,7 @@ class _TranslationsS70SystemSettingsSectionEnUs extends TranslationsS70SystemSet
 	@override String get account => 'Account Settings';
 }
 
-// Path: S70_System_Settings.menu
+// Path: s70_system_settings.menu
 class _TranslationsS70SystemSettingsMenuEnUs extends TranslationsS70SystemSettingsMenuZhTw {
 	_TranslationsS70SystemSettingsMenuEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1482,7 +1482,7 @@ class _TranslationsS70SystemSettingsMenuEnUs extends TranslationsS70SystemSettin
 	@override String get delete_account => 'Delete Account';
 }
 
-// Path: S74_DeleteAccount_Notice.buttons
+// Path: s74_delete_account_notice.buttons
 class _TranslationsS74DeleteAccountNoticeButtonsEnUs extends TranslationsS74DeleteAccountNoticeButtonsZhTw {
 	_TranslationsS74DeleteAccountNoticeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1492,7 +1492,7 @@ class _TranslationsS74DeleteAccountNoticeButtonsEnUs extends TranslationsS74Dele
 	@override String get delete_account => 'Delete Account';
 }
 
-// Path: D01_MemberRole_Intro.buttons
+// Path: d01_member_role_intro.buttons
 class _TranslationsD01MemberRoleIntroButtonsEnUs extends TranslationsD01MemberRoleIntroButtonsZhTw {
 	_TranslationsD01MemberRoleIntroButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1503,7 +1503,7 @@ class _TranslationsD01MemberRoleIntroButtonsEnUs extends TranslationsD01MemberRo
 	@override String get enter => 'Enter Task';
 }
 
-// Path: D01_MemberRole_Intro.reroll
+// Path: d01_member_role_intro.reroll
 class _TranslationsD01MemberRoleIntroRerollEnUs extends TranslationsD01MemberRoleIntroRerollZhTw {
 	_TranslationsD01MemberRoleIntroRerollEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1513,7 +1513,7 @@ class _TranslationsD01MemberRoleIntroRerollEnUs extends TranslationsD01MemberRol
 	@override String get empty => 'No chances left';
 }
 
-// Path: D03_TaskCreate_Confirm.buttons
+// Path: d03_task_create_confirm.buttons
 class _TranslationsD03TaskCreateConfirmButtonsEnUs extends TranslationsD03TaskCreateConfirmButtonsZhTw {
 	_TranslationsD03TaskCreateConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1523,7 +1523,7 @@ class _TranslationsD03TaskCreateConfirmButtonsEnUs extends TranslationsD03TaskCr
 	@override String get back_edit => 'Edit';
 }
 
-// Path: D12_logout_confirm.buttons
+// Path: d12_logout_confirm.buttons
 class _TranslationsD12LogoutConfirmButtonsEnUs extends TranslationsD12LogoutConfirmButtonsZhTw {
 	_TranslationsD12LogoutConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1533,7 +1533,7 @@ class _TranslationsD12LogoutConfirmButtonsEnUs extends TranslationsD12LogoutConf
 	@override String get logout => 'Log out';
 }
 
-// Path: B02_SplitExpense_Edit.buttons
+// Path: b02_split_expense_edit.buttons
 class _TranslationsB02SplitExpenseEditButtonsEnUs extends TranslationsB02SplitExpenseEditButtonsZhTw {
 	_TranslationsB02SplitExpenseEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1543,7 +1543,7 @@ class _TranslationsB02SplitExpenseEditButtonsEnUs extends TranslationsB02SplitEx
 	@override String get confirm_split => 'Confirm Split';
 }
 
-// Path: B02_SplitExpense_Edit.hint
+// Path: b02_split_expense_edit.hint
 class _TranslationsB02SplitExpenseEditHintEnUs extends TranslationsB02SplitExpenseEditHintZhTw {
 	_TranslationsB02SplitExpenseEditHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1553,7 +1553,7 @@ class _TranslationsB02SplitExpenseEditHintEnUs extends TranslationsB02SplitExpen
 	@override String get sub_item => 'e.g. Sub-item';
 }
 
-// Path: B03_SplitMethod_Edit.buttons
+// Path: b03_split_method_edit.buttons
 class _TranslationsB03SplitMethodEditButtonsEnUs extends TranslationsB03SplitMethodEditButtonsZhTw {
 	_TranslationsB03SplitMethodEditButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1563,7 +1563,7 @@ class _TranslationsB03SplitMethodEditButtonsEnUs extends TranslationsB03SplitMet
 	@override String get adjust_weight => 'Adjust Weight';
 }
 
-// Path: B03_SplitMethod_Edit.label
+// Path: b03_split_method_edit.label
 class _TranslationsB03SplitMethodEditLabelEnUs extends TranslationsB03SplitMethodEditLabelZhTw {
 	_TranslationsB03SplitMethodEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1573,7 +1573,7 @@ class _TranslationsB03SplitMethodEditLabelEnUs extends TranslationsB03SplitMetho
 	@override String total({required Object current, required Object target}) => 'Total: ${current}/${target}';
 }
 
-// Path: B04_payment_merge.label
+// Path: b04_payment_merge.label
 class _TranslationsB04PaymentMergeLabelEnUs extends TranslationsB04PaymentMergeLabelZhTw {
 	_TranslationsB04PaymentMergeLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1584,7 +1584,7 @@ class _TranslationsB04PaymentMergeLabelEnUs extends TranslationsB04PaymentMergeL
 	@override String get merge_amount => 'Total Amount';
 }
 
-// Path: B07_PaymentMethod_Edit.label
+// Path: b07_payment_method_edit.label
 class _TranslationsB07PaymentMethodEditLabelEnUs extends TranslationsB07PaymentMethodEditLabelZhTw {
 	_TranslationsB07PaymentMethodEditLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1597,7 +1597,7 @@ class _TranslationsB07PaymentMethodEditLabelEnUs extends TranslationsB07PaymentM
 	@override String get total_advance => 'Total Advance';
 }
 
-// Path: B07_PaymentMethod_Edit.status
+// Path: b07_payment_method_edit.status
 class _TranslationsB07PaymentMethodEditStatusEnUs extends TranslationsB07PaymentMethodEditStatusZhTw {
 	_TranslationsB07PaymentMethodEditStatusEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -1796,7 +1796,7 @@ class _TranslationsCommonShareSettlementEnUs extends TranslationsCommonShareSett
 	@override String content({required Object taskName, required Object link}) => 'Settlement completed.\nPlease open Iron Split to check your payment for "${taskName}".\nLink: ${link}';
 }
 
-// Path: S15_Record_Edit.hint.category
+// Path: s15_record_edit.hint.category
 class _TranslationsS15RecordEditHintCategoryEnUs extends TranslationsS15RecordEditHintCategoryZhTw {
 	_TranslationsS15RecordEditHintCategoryEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
@@ -2073,246 +2073,246 @@ extension on TranslationsEnUs {
 			'log_action.settle_up' => 'Settle Up',
 			'log_action.unknown' => 'Unknown Action',
 			'log_action.close_task' => 'Close Task',
-			'S10_Home_TaskList.title' => 'Task List',
-			'S10_Home_TaskList.tab.in_progress' => 'Active',
-			'S10_Home_TaskList.tab.completed' => 'Finished',
-			'S10_Home_TaskList.empty.in_progress' => 'No active tasks',
-			'S10_Home_TaskList.empty.completed' => 'No finished tasks',
-			'S10_Home_TaskList.buttons.add_task' => 'Add Task',
-			'S10_Home_TaskList.buttons.join_task' => 'Join Task',
-			'S10_Home_TaskList.date_tbd' => 'Date TBD',
-			'S10_Home_TaskList.label.settlement' => 'Settlement',
-			'S11_Invite_Confirm.title' => 'Join Task',
-			'S11_Invite_Confirm.subtitle' => 'Invitation to join:',
-			'S11_Invite_Confirm.buttons.join' => 'Join',
-			'S11_Invite_Confirm.buttons.back_task_list' => 'Home',
-			'S11_Invite_Confirm.label.select_ghost' => 'Select Member to Inherit',
-			'S11_Invite_Confirm.label.prepaid' => 'Prepaid',
-			'S11_Invite_Confirm.label.expense' => 'Expense',
-			'S12_TaskClose_Notice.title' => 'Close Task',
-			'S12_TaskClose_Notice.buttons.close_task' => 'Close Task',
-			'S12_TaskClose_Notice.content' => 'Closing this task will lock all records and settings. The task will enter read-only mode, and no data can be added or edited.',
-			'S13_Task_Dashboard.title' => 'Dashboard',
-			'S13_Task_Dashboard.buttons.add' => 'Add',
-			'S13_Task_Dashboard.tab.group' => 'Group',
-			'S13_Task_Dashboard.tab.personal' => 'Personal',
-			'S13_Task_Dashboard.label.total_expense' => 'Total Expense',
-			'S13_Task_Dashboard.label.total_prepay' => 'Total Prepaid',
-			'S13_Task_Dashboard.label.total_expense_personal' => 'Total Expense',
-			'S13_Task_Dashboard.label.total_prepay_personal' => 'Total Prepaid (incl. Reimbursed)',
-			'S13_Task_Dashboard.empty.records' => 'No records',
-			'S13_Task_Dashboard.empty.personal_records' => 'No records',
-			'S13_Task_Dashboard.daily_expense_label' => 'Expense',
-			'S13_Task_Dashboard.dialog_balance_detail' => 'Balance Details',
-			'S13_Task_Dashboard.section.expense' => 'Expense Details',
-			'S13_Task_Dashboard.section.prepay' => 'Prepaid Details',
-			'S13_Task_Dashboard.section.prepay_balance' => 'Prepaid Balance',
-			'S13_Task_Dashboard.section.no_data' => 'No data',
-			'S14_Task_Settings.title' => 'Task Settings',
-			'S14_Task_Settings.section.task_name' => 'Task Name',
-			'S14_Task_Settings.section.task_period' => 'Task Period',
-			'S14_Task_Settings.section.settlement' => 'Settlement Settings',
-			'S14_Task_Settings.section.other' => 'Other Settings',
-			'S14_Task_Settings.menu.invite' => 'Invite',
-			'S14_Task_Settings.menu.member_settings' => 'Member Settings',
-			'S14_Task_Settings.menu.history' => 'History',
-			'S14_Task_Settings.menu.close_task' => 'End Task',
-			'S15_Record_Edit.title.add' => 'Add Record',
-			'S15_Record_Edit.title.edit' => 'Edit Record',
-			'S15_Record_Edit.buttons.add_item' => 'Add Item',
-			'S15_Record_Edit.section.split' => 'Split Information',
-			'S15_Record_Edit.section.items' => 'Itemized Split',
-			'S15_Record_Edit.val.prepay' => 'Prepaid',
-			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} paid',
-			'S15_Record_Edit.val.split_details' => 'Itemized Split',
-			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => 'Total ${amount} split by ${method}',
-			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val.split_remaining' => 'Remaining Amount',
-			'S15_Record_Edit.val.mock_note' => 'Item description',
-			'S15_Record_Edit.tab.expense' => 'Expense',
-			'S15_Record_Edit.tab.prepay' => 'Prepaid',
-			'S15_Record_Edit.base_card' => 'Remaining Amount',
-			'S15_Record_Edit.type_prepay' => 'Prepaid',
-			'S15_Record_Edit.payer_multiple' => 'Multiple',
-			'S15_Record_Edit.rate_dialog.title' => 'Exchange Rate Source',
-			'S15_Record_Edit.rate_dialog.content' => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.',
-			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
-			'S15_Record_Edit.hint.category.food' => 'Dinner',
-			'S15_Record_Edit.hint.category.transport' => 'Transportation',
-			'S15_Record_Edit.hint.category.shopping' => 'Souvenirs',
-			'S15_Record_Edit.hint.category.entertainment' => 'Tickets',
-			'S15_Record_Edit.hint.category.accommodation' => 'Accommodation',
-			'S15_Record_Edit.hint.category.others' => 'Other expenses',
-			'S15_Record_Edit.hint.item' => ({required Object category}) => 'e.g. ${category}',
-			'S15_Record_Edit.hint.memo' => 'e.g. Notes',
-			'S16_TaskCreate_Edit.title' => 'New Task',
-			'S16_TaskCreate_Edit.section.task_name' => 'Task Name',
-			'S16_TaskCreate_Edit.section.task_period' => 'Task Period',
-			'S16_TaskCreate_Edit.section.settlement' => 'Settlement Settings',
-			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S16_TaskCreate_Edit.hint.name' => 'e.g. Tokyo Trip',
-			'S17_Task_Locked.buttons.notify_members' => 'Notify Members',
-			'S17_Task_Locked.buttons.view_payment_info' => 'View Payment Details',
-			'S17_Task_Locked.section.pending' => 'Pending',
-			'S17_Task_Locked.section.cleared' => 'Cleared',
-			'S17_Task_Locked.retention_notice' => ({required Object days}) => 'Data will be deleted in ${days} days. Download data before deletion.',
-			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => 'Absorbed by ${name}',
-			'S17_Task_Locked.export.report_info' => 'Report Information',
-			'S17_Task_Locked.export.task_name' => 'Task Name',
-			'S17_Task_Locked.export.export_time' => 'Export Time',
-			'S17_Task_Locked.export.base_currency' => 'Base Currency',
-			'S17_Task_Locked.export.settlement_summary' => 'Settlement Summary',
-			'S17_Task_Locked.export.member' => 'Member',
-			'S17_Task_Locked.export.role' => 'Role',
-			'S17_Task_Locked.export.net_amount' => 'Net Amount',
-			'S17_Task_Locked.export.status' => 'Status',
-			'S17_Task_Locked.export.receiver' => 'Receivable',
-			'S17_Task_Locked.export.payer' => 'Payable',
-			'S17_Task_Locked.export.cleared' => 'Cleared',
-			'S17_Task_Locked.export.pending' => 'Pending',
-			'S17_Task_Locked.export.fund_analysis' => 'Funds & Remainders',
-			'S17_Task_Locked.export.total_expense' => 'Total Expense',
-			'S17_Task_Locked.export.total_prepay' => 'Total Prepaid',
-			'S17_Task_Locked.export.remainder_buffer' => 'Total Remainder',
-			'S17_Task_Locked.export.remainder_absorbed_by' => 'Remainder Recipient',
-			'S17_Task_Locked.export.transaction_details' => 'Transaction Details',
-			'S17_Task_Locked.export.date' => 'Date',
-			'S17_Task_Locked.export.title' => 'Title',
-			'S17_Task_Locked.export.type' => 'Type',
-			'S17_Task_Locked.export.original_amount' => 'Original Amount',
-			'S17_Task_Locked.export.currency' => 'Currency',
-			'S17_Task_Locked.export.rate' => 'Exchange Rate',
-			'S17_Task_Locked.export.base_amount' => 'Base Currency Amount',
-			'S17_Task_Locked.export.net_remainder' => 'Remainder',
-			'S17_Task_Locked.export.pool' => 'Prepaid Pool',
-			'S17_Task_Locked.export.mixed' => 'Mixed Payment',
-			'S18_Task_Join.title' => 'Join Task',
-			'S18_Task_Join.tabs.input' => 'Enter Code',
-			'S18_Task_Join.tabs.scan' => 'Scan QR',
-			'S18_Task_Join.label.input' => 'Invite code',
-			'S18_Task_Join.hint.input' => 'Enter 8-digit invite code',
-			'S18_Task_Join.content.scan' => 'Frame the QR code to scan automatically',
-			'S30_settlement_confirm.title' => 'Confirm Settlement',
-			'S30_settlement_confirm.buttons.set_payment_info' => 'Payment Info',
-			'S30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
-			'S30_settlement_confirm.steps.payment_info' => 'Payment Info',
-			'S30_settlement_confirm.warning.random_reveal' => 'Remainder will be revealed after settlement.',
-			'S30_settlement_confirm.list_item.merged_label' => 'Representative',
-			'S30_settlement_confirm.list_item.includes' => 'Includes:',
-			'S30_settlement_confirm.list_item.principal' => 'Principal',
-			'S30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
-			'S30_settlement_confirm.list_item.remainder' => 'Remainder',
-			'S31_settlement_payment_info.title' => 'Payment Information',
-			'S31_settlement_payment_info.setup_instruction' => 'Used for this settlement only. Default data is encrypted and stored locally.',
-			'S31_settlement_payment_info.sync_save' => 'Save as default payment information (stored on this device)',
-			'S31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
-			'S31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
-			'S32_settlement_result.title' => 'Settlement Complete',
-			'S32_settlement_result.content' => 'All records are finalized. Please notify members to complete payment.',
-			'S32_settlement_result.waiting_reveal' => 'Revealing result...',
-			'S32_settlement_result.remainder_winner_prefix' => 'Remainder recipient:',
-			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}\'s final amount: ${prefix}${total}',
-			'S32_settlement_result.total_label' => 'Total Settlement Amount',
-			'S32_settlement_result.buttons.share' => 'Send Settlement Notification',
-			'S32_settlement_result.buttons.back_task_dashboard' => 'Back to Task',
-			'S50_Onboarding_Consent.title' => 'Welcome to Iron Split',
-			'S50_Onboarding_Consent.buttons.start' => 'Start',
-			'S50_Onboarding_Consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Rooster. I manage the records and splits here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be simple and clear.\n\nBy clicking Start, you agree to our ',
-			'S50_Onboarding_Consent.content.suffix' => '. We use anonymous login to protect your privacy.',
-			'S51_Onboarding_Name.title' => 'Set Your Name',
-			'S51_Onboarding_Name.content' => 'Enter display name.',
-			'S51_Onboarding_Name.hint' => 'Enter nickname',
-			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S52_TaskSettings_Log.title' => 'Activity Log',
-			'S52_TaskSettings_Log.buttons.export_csv' => 'Export CSV',
-			'S52_TaskSettings_Log.empty_log' => 'No activity logs found',
-			'S52_TaskSettings_Log.export_file_prefix' => 'ActivityLog',
-			'S52_TaskSettings_Log.csv_header.time' => 'Time',
-			'S52_TaskSettings_Log.csv_header.user' => 'User',
-			'S52_TaskSettings_Log.csv_header.action' => 'Action',
-			'S52_TaskSettings_Log.csv_header.details' => 'Details',
-			'S52_TaskSettings_Log.type.prepay' => 'Prepaid',
-			'S52_TaskSettings_Log.type.expense' => 'Expense',
-			'S52_TaskSettings_Log.payment_type.prepay' => 'Paid from Pool',
-			'S52_TaskSettings_Log.payment_type.single_suffix' => 'paid',
-			'S52_TaskSettings_Log.payment_type.multiple' => 'Multiple Payers',
-			'S52_TaskSettings_Log.unit.members' => 'members',
-			'S52_TaskSettings_Log.unit.items' => 'items',
-			'S53_TaskSettings_Members.title' => 'Member Management',
-			'S53_TaskSettings_Members.buttons.add_member' => 'Add Member',
-			'S53_TaskSettings_Members.label.default_ratio' => 'Default Ratio',
-			'S53_TaskSettings_Members.member_default_name' => 'Member',
-			'S53_TaskSettings_Members.member_name' => 'Member Name',
-			'S54_TaskSettings_Invite.title' => 'Task Invite',
-			'S54_TaskSettings_Invite.buttons.share' => 'Share',
-			'S54_TaskSettings_Invite.buttons.regenerate' => 'Regenerate',
-			'S54_TaskSettings_Invite.label.expires_in' => 'Expires in',
-			'S54_TaskSettings_Invite.label.invite_expired' => 'Invite code has expired',
-			'S70_System_Settings.title' => 'Settings',
-			'S70_System_Settings.section.basic' => 'General Settings',
-			'S70_System_Settings.section.legal' => 'Legal',
-			'S70_System_Settings.section.account' => 'Account Settings',
-			'S70_System_Settings.menu.user_name' => 'Display Name',
-			'S70_System_Settings.menu.language' => 'Display Language',
-			'S70_System_Settings.menu.theme' => 'Theme',
-			'S70_System_Settings.menu.terms' => 'Terms of Service',
-			'S70_System_Settings.menu.privacy' => 'Privacy Policy',
-			'S70_System_Settings.menu.payment_info' => 'Payment Information Settings',
-			'S70_System_Settings.menu.delete_account' => 'Delete Account',
-			'S72_TermsUpdate.title' => ({required Object type}) => '${type} Updated',
-			'S72_TermsUpdate.content' => ({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.',
-			'S74_DeleteAccount_Notice.title' => 'Delete Account',
-			'S74_DeleteAccount_Notice.content' => 'This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).',
-			'S74_DeleteAccount_Notice.buttons.delete_account' => 'Delete Account',
-			'D01_MemberRole_Intro.title' => 'Your Character',
-			'D01_MemberRole_Intro.buttons.reroll' => 'Change Animal',
-			'D01_MemberRole_Intro.buttons.enter' => 'Enter Task',
-			'D01_MemberRole_Intro.content' => ({required Object avatar}) => 'This is your avatar ${avatar} for this task.\n${avatar} will represent you in all records.',
-			'D01_MemberRole_Intro.reroll.empty' => 'No chances left',
-			'D02_Invite_Result.title' => 'Join Failed',
-			'D03_TaskCreate_Confirm.title' => 'Create Task',
-			'D03_TaskCreate_Confirm.buttons.back_edit' => 'Edit',
-			'D04_CommonUnsaved_Confirm.title' => 'Unsaved Changes',
-			'D04_CommonUnsaved_Confirm.content' => 'Changes you made will not be saved.',
-			'D05_DateJump_NoResult.title' => 'No Record',
-			'D05_DateJump_NoResult.content' => 'No record found for this date. Add one?',
-			'D06_settlement_confirm.title' => 'Settlement',
-			'D06_settlement_confirm.content' => 'The task will be locked upon settlement. Records cannot be added, deleted, or edited after settlement.\nPlease ensure all details are correct.',
-			'D08_TaskClosed_Confirm.title' => 'Close Task',
-			'D08_TaskClosed_Confirm.content' => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?',
-			'D09_TaskSettings_CurrencyConfirm.title' => 'Change Base Currency',
-			'D09_TaskSettings_CurrencyConfirm.content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
-			'D10_RecordDelete_Confirm.title' => 'Delete Record',
-			'D10_RecordDelete_Confirm.content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
-			'D11_random_result.title' => 'Remainder Result',
-			'D11_random_result.skip' => 'Skip',
-			'D12_logout_confirm.title' => 'Log Out',
-			'D12_logout_confirm.content' => 'If you do not agree to the updated terms, you will not be able to continue using this app.\nLogout will proceed.',
-			'D12_logout_confirm.buttons.logout' => 'Log out',
-			'D13_DeleteAccount_Confirm.title' => 'Delete Account',
-			'D13_DeleteAccount_Confirm.content' => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?',
-			'D14_Date_Select.title' => 'Select Date',
-			'B02_SplitExpense_Edit.title' => 'Edit Sub Item',
-			'B02_SplitExpense_Edit.buttons.confirm_split' => 'Confirm Split',
-			'B02_SplitExpense_Edit.item_name_empty' => 'Parent item name is empty',
-			'B02_SplitExpense_Edit.hint.sub_item' => 'e.g. Sub-item',
-			'B03_SplitMethod_Edit.title' => 'Split Method',
-			'B03_SplitMethod_Edit.buttons.adjust_weight' => 'Adjust Weight',
-			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
-			'B03_SplitMethod_Edit.mismatch' => 'Mismatch',
-			'B04_payment_merge.title' => 'Merge Member Payments',
-			'B04_payment_merge.label.head_member' => 'Representative',
-			'B04_payment_merge.label.merge_amount' => 'Total Amount',
-			'B07_PaymentMethod_Edit.title' => 'Funding Source',
-			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => 'Prepaid Balance: ${amount}',
-			'B07_PaymentMethod_Edit.payer_member' => 'Payer',
-			'B07_PaymentMethod_Edit.label.amount' => 'Payment Amount',
-			'B07_PaymentMethod_Edit.label.total_expense' => 'Total Amount',
-			'B07_PaymentMethod_Edit.label.prepay' => 'Prepaid',
-			'B07_PaymentMethod_Edit.label.total_advance' => 'Total Advance',
-			'B07_PaymentMethod_Edit.status.not_enough' => 'Insufficient Balance',
-			'B07_PaymentMethod_Edit.status.balanced' => 'Balanced',
-			'B07_PaymentMethod_Edit.status.remaining' => ({required Object amount}) => 'Remaining: ${amount}',
+			's10_home_task_list.title' => 'Task List',
+			's10_home_task_list.tab.in_progress' => 'Active',
+			's10_home_task_list.tab.completed' => 'Finished',
+			's10_home_task_list.empty.in_progress' => 'No active tasks',
+			's10_home_task_list.empty.completed' => 'No finished tasks',
+			's10_home_task_list.buttons.add_task' => 'Add Task',
+			's10_home_task_list.buttons.join_task' => 'Join Task',
+			's10_home_task_list.date_tbd' => 'Date TBD',
+			's10_home_task_list.label.settlement' => 'Settlement',
+			's11_invite_confirm.title' => 'Join Task',
+			's11_invite_confirm.subtitle' => 'Invitation to join:',
+			's11_invite_confirm.buttons.join' => 'Join',
+			's11_invite_confirm.buttons.back_task_list' => 'Home',
+			's11_invite_confirm.label.select_ghost' => 'Select Member to Inherit',
+			's11_invite_confirm.label.prepaid' => 'Prepaid',
+			's11_invite_confirm.label.expense' => 'Expense',
+			's12_task_close_notice.title' => 'Close Task',
+			's12_task_close_notice.buttons.close_task' => 'Close Task',
+			's12_task_close_notice.content' => 'Closing this task will lock all records and settings. The task will enter read-only mode, and no data can be added or edited.',
+			's13_task_dashboard.title' => 'Dashboard',
+			's13_task_dashboard.buttons.add' => 'Add',
+			's13_task_dashboard.tab.group' => 'Group',
+			's13_task_dashboard.tab.personal' => 'Personal',
+			's13_task_dashboard.label.total_expense' => 'Total Expense',
+			's13_task_dashboard.label.total_prepay' => 'Total Prepaid',
+			's13_task_dashboard.label.total_expense_personal' => 'Total Expense',
+			's13_task_dashboard.label.total_prepay_personal' => 'Total Prepaid (incl. Reimbursed)',
+			's13_task_dashboard.empty.records' => 'No records',
+			's13_task_dashboard.empty.personal_records' => 'No records',
+			's13_task_dashboard.daily_expense_label' => 'Expense',
+			's13_task_dashboard.dialog_balance_detail' => 'Balance Details',
+			's13_task_dashboard.section.expense' => 'Expense Details',
+			's13_task_dashboard.section.prepay' => 'Prepaid Details',
+			's13_task_dashboard.section.prepay_balance' => 'Prepaid Balance',
+			's13_task_dashboard.section.no_data' => 'No data',
+			's14_task_settings.title' => 'Task Settings',
+			's14_task_settings.section.task_name' => 'Task Name',
+			's14_task_settings.section.task_period' => 'Task Period',
+			's14_task_settings.section.settlement' => 'Settlement Settings',
+			's14_task_settings.section.other' => 'Other Settings',
+			's14_task_settings.menu.invite' => 'Invite',
+			's14_task_settings.menu.member_settings' => 'Member Settings',
+			's14_task_settings.menu.history' => 'History',
+			's14_task_settings.menu.close_task' => 'End Task',
+			's15_record_edit.title.add' => 'Add Record',
+			's15_record_edit.title.edit' => 'Edit Record',
+			's15_record_edit.buttons.add_item' => 'Add Item',
+			's15_record_edit.section.split' => 'Split Information',
+			's15_record_edit.section.items' => 'Itemized Split',
+			's15_record_edit.val.prepay' => 'Prepaid',
+			's15_record_edit.val.member_paid' => ({required Object name}) => '${name} paid',
+			's15_record_edit.val.split_details' => 'Itemized Split',
+			's15_record_edit.val.split_summary' => ({required Object amount, required Object method}) => 'Total ${amount} split by ${method}',
+			's15_record_edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			's15_record_edit.val.split_remaining' => 'Remaining Amount',
+			's15_record_edit.val.mock_note' => 'Item description',
+			's15_record_edit.tab.expense' => 'Expense',
+			's15_record_edit.tab.prepay' => 'Prepaid',
+			's15_record_edit.base_card' => 'Remaining Amount',
+			's15_record_edit.type_prepay' => 'Prepaid',
+			's15_record_edit.payer_multiple' => 'Multiple',
+			's15_record_edit.rate_dialog.title' => 'Exchange Rate Source',
+			's15_record_edit.rate_dialog.content' => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.',
+			's15_record_edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
+			's15_record_edit.hint.category.food' => 'Dinner',
+			's15_record_edit.hint.category.transport' => 'Transportation',
+			's15_record_edit.hint.category.shopping' => 'Souvenirs',
+			's15_record_edit.hint.category.entertainment' => 'Tickets',
+			's15_record_edit.hint.category.accommodation' => 'Accommodation',
+			's15_record_edit.hint.category.others' => 'Other expenses',
+			's15_record_edit.hint.item' => ({required Object category}) => 'e.g. ${category}',
+			's15_record_edit.hint.memo' => 'e.g. Notes',
+			's16_task_create_edit.title' => 'New Task',
+			's16_task_create_edit.section.task_name' => 'Task Name',
+			's16_task_create_edit.section.task_period' => 'Task Period',
+			's16_task_create_edit.section.settlement' => 'Settlement Settings',
+			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's16_task_create_edit.hint.name' => 'e.g. Tokyo Trip',
+			's17_task_locked.buttons.notify_members' => 'Notify Members',
+			's17_task_locked.buttons.view_payment_info' => 'View Payment Details',
+			's17_task_locked.section.pending' => 'Pending',
+			's17_task_locked.section.cleared' => 'Cleared',
+			's17_task_locked.retention_notice' => ({required Object days}) => 'Data will be deleted in ${days} days. Download data before deletion.',
+			's17_task_locked.remainder_absorbed_by' => ({required Object name}) => 'Absorbed by ${name}',
+			's17_task_locked.export.report_info' => 'Report Information',
+			's17_task_locked.export.task_name' => 'Task Name',
+			's17_task_locked.export.export_time' => 'Export Time',
+			's17_task_locked.export.base_currency' => 'Base Currency',
+			's17_task_locked.export.settlement_summary' => 'Settlement Summary',
+			's17_task_locked.export.member' => 'Member',
+			's17_task_locked.export.role' => 'Role',
+			's17_task_locked.export.net_amount' => 'Net Amount',
+			's17_task_locked.export.status' => 'Status',
+			's17_task_locked.export.receiver' => 'Receivable',
+			's17_task_locked.export.payer' => 'Payable',
+			's17_task_locked.export.cleared' => 'Cleared',
+			's17_task_locked.export.pending' => 'Pending',
+			's17_task_locked.export.fund_analysis' => 'Funds & Remainders',
+			's17_task_locked.export.total_expense' => 'Total Expense',
+			's17_task_locked.export.total_prepay' => 'Total Prepaid',
+			's17_task_locked.export.remainder_buffer' => 'Total Remainder',
+			's17_task_locked.export.remainder_absorbed_by' => 'Remainder Recipient',
+			's17_task_locked.export.transaction_details' => 'Transaction Details',
+			's17_task_locked.export.date' => 'Date',
+			's17_task_locked.export.title' => 'Title',
+			's17_task_locked.export.type' => 'Type',
+			's17_task_locked.export.original_amount' => 'Original Amount',
+			's17_task_locked.export.currency' => 'Currency',
+			's17_task_locked.export.rate' => 'Exchange Rate',
+			's17_task_locked.export.base_amount' => 'Base Currency Amount',
+			's17_task_locked.export.net_remainder' => 'Remainder',
+			's17_task_locked.export.pool' => 'Prepaid Pool',
+			's17_task_locked.export.mixed' => 'Mixed Payment',
+			's18_task_join.title' => 'Join Task',
+			's18_task_join.tabs.input' => 'Enter Code',
+			's18_task_join.tabs.scan' => 'Scan QR',
+			's18_task_join.label.input' => 'Invite code',
+			's18_task_join.hint.input' => 'Enter 8-digit invite code',
+			's18_task_join.content.scan' => 'Frame the QR code to scan automatically',
+			's30_settlement_confirm.title' => 'Confirm Settlement',
+			's30_settlement_confirm.buttons.set_payment_info' => 'Payment Info',
+			's30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
+			's30_settlement_confirm.steps.payment_info' => 'Payment Info',
+			's30_settlement_confirm.warning.random_reveal' => 'Remainder will be revealed after settlement.',
+			's30_settlement_confirm.list_item.merged_label' => 'Representative',
+			's30_settlement_confirm.list_item.includes' => 'Includes:',
+			's30_settlement_confirm.list_item.principal' => 'Principal',
+			's30_settlement_confirm.list_item.random_remainder' => 'Random Remainder',
+			's30_settlement_confirm.list_item.remainder' => 'Remainder',
+			's31_settlement_payment_info.title' => 'Payment Information',
+			's31_settlement_payment_info.setup_instruction' => 'Used for this settlement only. Default data is encrypted and stored locally.',
+			's31_settlement_payment_info.sync_save' => 'Save as default payment information (stored on this device)',
+			's31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
+			's31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
+			's32_settlement_result.title' => 'Settlement Complete',
+			's32_settlement_result.content' => 'All records are finalized. Please notify members to complete payment.',
+			's32_settlement_result.waiting_reveal' => 'Revealing result...',
+			's32_settlement_result.remainder_winner_prefix' => 'Remainder recipient:',
+			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}\'s final amount: ${prefix}${total}',
+			's32_settlement_result.total_label' => 'Total Settlement Amount',
+			's32_settlement_result.buttons.share' => 'Send Settlement Notification',
+			's32_settlement_result.buttons.back_task_dashboard' => 'Back to Task',
+			's50_onboarding_consent.title' => 'Welcome to Iron Split',
+			's50_onboarding_consent.buttons.start' => 'Start',
+			's50_onboarding_consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Rooster. I manage the records and splits here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be simple and clear.\n\nBy clicking Start, you agree to our ',
+			's50_onboarding_consent.content.suffix' => '. We use anonymous login to protect your privacy.',
+			's51_onboarding_name.title' => 'Set Your Name',
+			's51_onboarding_name.content' => 'Enter display name.',
+			's51_onboarding_name.hint' => 'Enter nickname',
+			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's52_task_settings_log.title' => 'Activity Log',
+			's52_task_settings_log.buttons.export_csv' => 'Export CSV',
+			's52_task_settings_log.empty_log' => 'No activity logs found',
+			's52_task_settings_log.export_file_prefix' => 'ActivityLog',
+			's52_task_settings_log.csv_header.time' => 'Time',
+			's52_task_settings_log.csv_header.user' => 'User',
+			's52_task_settings_log.csv_header.action' => 'Action',
+			's52_task_settings_log.csv_header.details' => 'Details',
+			's52_task_settings_log.type.prepay' => 'Prepaid',
+			's52_task_settings_log.type.expense' => 'Expense',
+			's52_task_settings_log.payment_type.prepay' => 'Paid from Pool',
+			's52_task_settings_log.payment_type.single_suffix' => 'paid',
+			's52_task_settings_log.payment_type.multiple' => 'Multiple Payers',
+			's52_task_settings_log.unit.members' => 'members',
+			's52_task_settings_log.unit.items' => 'items',
+			's53_task_settings_members.title' => 'Member Management',
+			's53_task_settings_members.buttons.add_member' => 'Add Member',
+			's53_task_settings_members.label.default_ratio' => 'Default Ratio',
+			's53_task_settings_members.member_default_name' => 'Member',
+			's53_task_settings_members.member_name' => 'Member Name',
+			's54_task_settings_invite.title' => 'Task Invite',
+			's54_task_settings_invite.buttons.share' => 'Share',
+			's54_task_settings_invite.buttons.regenerate' => 'Regenerate',
+			's54_task_settings_invite.label.expires_in' => 'Expires in',
+			's54_task_settings_invite.label.invite_expired' => 'Invite code has expired',
+			's70_system_settings.title' => 'Settings',
+			's70_system_settings.section.basic' => 'General Settings',
+			's70_system_settings.section.legal' => 'Legal',
+			's70_system_settings.section.account' => 'Account Settings',
+			's70_system_settings.menu.user_name' => 'Display Name',
+			's70_system_settings.menu.language' => 'Display Language',
+			's70_system_settings.menu.theme' => 'Theme',
+			's70_system_settings.menu.terms' => 'Terms of Service',
+			's70_system_settings.menu.privacy' => 'Privacy Policy',
+			's70_system_settings.menu.payment_info' => 'Payment Information Settings',
+			's70_system_settings.menu.delete_account' => 'Delete Account',
+			's72_terms_update.title' => ({required Object type}) => '${type} Updated',
+			's72_terms_update.content' => ({required Object type}) => 'We have updated the ${type}. Please review and accept it to continue using the app.',
+			's74_delete_account_notice.title' => 'Delete Account',
+			's74_delete_account_notice.content' => 'This action cannot be undone. Your personal data will be deleted. Leader privileges will be automatically transferred to another member, while records in shared ledgers will remain (as unlinked entries).',
+			's74_delete_account_notice.buttons.delete_account' => 'Delete Account',
+			'd01_member_role_intro.title' => 'Your Character',
+			'd01_member_role_intro.buttons.reroll' => 'Change Animal',
+			'd01_member_role_intro.buttons.enter' => 'Enter Task',
+			'd01_member_role_intro.content' => ({required Object avatar}) => 'This is your avatar ${avatar} for this task.\n${avatar} will represent you in all records.',
+			'd01_member_role_intro.reroll.empty' => 'No chances left',
+			'd02_invite_result.title' => 'Join Failed',
+			'd03_task_create_confirm.title' => 'Create Task',
+			'd03_task_create_confirm.buttons.back_edit' => 'Edit',
+			'd04_common_unsaved_confirm.title' => 'Unsaved Changes',
+			'd04_common_unsaved_confirm.content' => 'Changes you made will not be saved.',
+			'd05_date_jump_no_result.title' => 'No Record',
+			'd05_date_jump_no_result.content' => 'No record found for this date. Add one?',
+			'd06_settlement_confirm.title' => 'Settlement',
+			'd06_settlement_confirm.content' => 'The task will be locked upon settlement. Records cannot be added, deleted, or edited after settlement.\nPlease ensure all details are correct.',
+			'd08_task_closed_confirm.title' => 'Close Task',
+			'd08_task_closed_confirm.content' => 'This action cannot be undone. All data will be locked permanently.\n\nAre you sure you want to proceed?',
+			'd09_task_settings_currency_confirm.title' => 'Change Base Currency',
+			'd09_task_settings_currency_confirm.content' => 'Changing currency will reset all exchange rates. This may affect current balances. Are you sure?',
+			'd10_record_delete_confirm.title' => 'Delete Record',
+			'd10_record_delete_confirm.content' => ({required Object title, required Object amount}) => 'Are you sure you want to delete ${title} (${amount})?',
+			'd11_random_result.title' => 'Remainder Result',
+			'd11_random_result.skip' => 'Skip',
+			'd12_logout_confirm.title' => 'Log Out',
+			'd12_logout_confirm.content' => 'If you do not agree to the updated terms, you will not be able to continue using this app.\nLogout will proceed.',
+			'd12_logout_confirm.buttons.logout' => 'Log out',
+			'd13_delete_account_confirm.title' => 'Delete Account',
+			'd13_delete_account_confirm.content' => 'This action cannot be undone. All data will be deleted permanently.\n\nAre you sure you want to proceed?',
+			'd14_date_select.title' => 'Select Date',
+			'b02_split_expense_edit.title' => 'Edit Sub Item',
+			'b02_split_expense_edit.buttons.confirm_split' => 'Confirm Split',
+			'b02_split_expense_edit.item_name_empty' => 'Parent item name is empty',
+			'b02_split_expense_edit.hint.sub_item' => 'e.g. Sub-item',
+			'b03_split_method_edit.title' => 'Split Method',
+			'b03_split_method_edit.buttons.adjust_weight' => 'Adjust Weight',
+			'b03_split_method_edit.label.total' => ({required Object current, required Object target}) => 'Total: ${current}/${target}',
+			'b03_split_method_edit.mismatch' => 'Mismatch',
+			'b04_payment_merge.title' => 'Merge Member Payments',
+			'b04_payment_merge.label.head_member' => 'Representative',
+			'b04_payment_merge.label.merge_amount' => 'Total Amount',
+			'b07_payment_method_edit.title' => 'Funding Source',
+			'b07_payment_method_edit.prepay_balance' => ({required Object amount}) => 'Prepaid Balance: ${amount}',
+			'b07_payment_method_edit.payer_member' => 'Payer',
+			'b07_payment_method_edit.label.amount' => 'Payment Amount',
+			'b07_payment_method_edit.label.total_expense' => 'Total Amount',
+			'b07_payment_method_edit.label.prepay' => 'Prepaid',
+			'b07_payment_method_edit.label.total_advance' => 'Total Advance',
+			'b07_payment_method_edit.status.not_enough' => 'Insufficient Balance',
+			'b07_payment_method_edit.status.balanced' => 'Balanced',
+			'b07_payment_method_edit.status.remaining' => ({required Object amount}) => 'Remaining: ${amount}',
 			'success.saved' => 'Saved',
 			'success.deleted' => 'Deleted',
 			'success.copied' => 'Copied',

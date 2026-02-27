@@ -86,7 +86,7 @@ class _S51ContentState extends State<_S51Content> {
       isEnlarged,
     );
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S51_Onboarding_Name.title;
+    final title = t.s51_onboarding_name.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -96,7 +96,7 @@ class _S51ContentState extends State<_S51Content> {
       title: title,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(t.S51_Onboarding_Name.title),
+          title: Text(t.s51_onboarding_name.title),
           centerTitle: true,
         ),
         bottomNavigationBar: StickyBottomActionBar(
@@ -129,7 +129,7 @@ class _S51ContentState extends State<_S51Content> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.S51_Onboarding_Name.content,
+                      t.s51_onboarding_name.content,
                       style: textTheme.bodyMedium
                           ?.copyWith(height: finalLineHeight),
                     ),
@@ -137,8 +137,8 @@ class _S51ContentState extends State<_S51Content> {
                     TaskNameInput(
                       controller: _controller,
                       maxLength: AppConstants.maxUserNameLength,
-                      label: t.S51_Onboarding_Name.title,
-                      hint: t.S51_Onboarding_Name.hint, // "例如：Iron Man"
+                      label: t.s51_onboarding_name.title,
+                      hint: t.s51_onboarding_name.hint, // "例如：Iron Man"
                     ),
                   ],
                 ),

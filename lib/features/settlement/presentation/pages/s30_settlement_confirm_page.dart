@@ -196,7 +196,7 @@ class _S30Content extends StatelessWidget {
     final vm = context.watch<S30SettlementConfirmViewModel>();
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S30_settlement_confirm.title;
+    final title = t.s30_settlement_confirm.title;
     final headerSection = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -214,7 +214,7 @@ class _S30Content extends StatelessWidget {
             ? InfoBar(
                 icon: Icons.wallet_outlined,
                 text: Text(
-                  "${t.S13_Task_Dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
+                  "${t.s13_task_dashboard.section.prepay_balance}: ${CurrencyConstants.formatAmount(vm.balanceState.poolBalance, vm.baseCurrency.code)}",
                 ),
               )
             : vm.remainderRule == RemainderRuleConstants.random &&
@@ -226,7 +226,7 @@ class _S30Content extends StatelessWidget {
             ? InfoBar(
                 icon: Icons.savings_outlined,
                 text: Text(
-                  t.S30_settlement_confirm.warning.random_reveal,
+                  t.s30_settlement_confirm.warning.random_reveal,
                 ),
               )
             : const SizedBox(height: AppLayout.spaceL)
@@ -325,7 +325,7 @@ class _S30Content extends StatelessWidget {
 
               // 右邊：下一步 (主要按鈕)
               AppButton(
-                text: t.S30_settlement_confirm.buttons.set_payment_info,
+                text: t.s30_settlement_confirm.buttons.set_payment_info,
                 type: AppButtonType.primary,
                 onPressed: () => _redirectToPaymentInfo(context, vm),
               ),

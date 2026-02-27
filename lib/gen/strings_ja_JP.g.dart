@@ -41,43 +41,43 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	// Translations
 	@override late final _TranslationsCommonJaJp common = _TranslationsCommonJaJp._(_root);
 	@override late final _TranslationsLogActionJaJp log_action = _TranslationsLogActionJaJp._(_root);
-	@override late final _TranslationsS10HomeTaskListJaJp S10_Home_TaskList = _TranslationsS10HomeTaskListJaJp._(_root);
-	@override late final _TranslationsS11InviteConfirmJaJp S11_Invite_Confirm = _TranslationsS11InviteConfirmJaJp._(_root);
-	@override late final _TranslationsS12TaskCloseNoticeJaJp S12_TaskClose_Notice = _TranslationsS12TaskCloseNoticeJaJp._(_root);
-	@override late final _TranslationsS13TaskDashboardJaJp S13_Task_Dashboard = _TranslationsS13TaskDashboardJaJp._(_root);
-	@override late final _TranslationsS14TaskSettingsJaJp S14_Task_Settings = _TranslationsS14TaskSettingsJaJp._(_root);
-	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
-	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
-	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
-	@override late final _TranslationsS18TaskJoinJaJp S18_Task_Join = _TranslationsS18TaskJoinJaJp._(_root);
-	@override late final _TranslationsS30SettlementConfirmJaJp S30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
-	@override late final _TranslationsS31SettlementPaymentInfoJaJp S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
-	@override late final _TranslationsS32SettlementResultJaJp S32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
-	@override late final _TranslationsS50OnboardingConsentJaJp S50_Onboarding_Consent = _TranslationsS50OnboardingConsentJaJp._(_root);
-	@override late final _TranslationsS51OnboardingNameJaJp S51_Onboarding_Name = _TranslationsS51OnboardingNameJaJp._(_root);
-	@override late final _TranslationsS52TaskSettingsLogJaJp S52_TaskSettings_Log = _TranslationsS52TaskSettingsLogJaJp._(_root);
-	@override late final _TranslationsS53TaskSettingsMembersJaJp S53_TaskSettings_Members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
-	@override late final _TranslationsS54TaskSettingsInviteJaJp S54_TaskSettings_Invite = _TranslationsS54TaskSettingsInviteJaJp._(_root);
-	@override late final _TranslationsS70SystemSettingsJaJp S70_System_Settings = _TranslationsS70SystemSettingsJaJp._(_root);
-	@override late final _TranslationsS72TermsUpdateJaJp S72_TermsUpdate = _TranslationsS72TermsUpdateJaJp._(_root);
-	@override late final _TranslationsS74DeleteAccountNoticeJaJp S74_DeleteAccount_Notice = _TranslationsS74DeleteAccountNoticeJaJp._(_root);
-	@override late final _TranslationsD01MemberRoleIntroJaJp D01_MemberRole_Intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
-	@override late final _TranslationsD02InviteResultJaJp D02_Invite_Result = _TranslationsD02InviteResultJaJp._(_root);
-	@override late final _TranslationsD03TaskCreateConfirmJaJp D03_TaskCreate_Confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
-	@override late final _TranslationsD04CommonUnsavedConfirmJaJp D04_CommonUnsaved_Confirm = _TranslationsD04CommonUnsavedConfirmJaJp._(_root);
-	@override late final _TranslationsD05DateJumpNoResultJaJp D05_DateJump_NoResult = _TranslationsD05DateJumpNoResultJaJp._(_root);
-	@override late final _TranslationsD06SettlementConfirmJaJp D06_settlement_confirm = _TranslationsD06SettlementConfirmJaJp._(_root);
-	@override late final _TranslationsD08TaskClosedConfirmJaJp D08_TaskClosed_Confirm = _TranslationsD08TaskClosedConfirmJaJp._(_root);
-	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp D09_TaskSettings_CurrencyConfirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
-	@override late final _TranslationsD10RecordDeleteConfirmJaJp D10_RecordDelete_Confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
-	@override late final _TranslationsD11RandomResultJaJp D11_random_result = _TranslationsD11RandomResultJaJp._(_root);
-	@override late final _TranslationsD12LogoutConfirmJaJp D12_logout_confirm = _TranslationsD12LogoutConfirmJaJp._(_root);
-	@override late final _TranslationsD13DeleteAccountConfirmJaJp D13_DeleteAccount_Confirm = _TranslationsD13DeleteAccountConfirmJaJp._(_root);
-	@override late final _TranslationsD14DateSelectJaJp D14_Date_Select = _TranslationsD14DateSelectJaJp._(_root);
-	@override late final _TranslationsB02SplitExpenseEditJaJp B02_SplitExpense_Edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
-	@override late final _TranslationsB03SplitMethodEditJaJp B03_SplitMethod_Edit = _TranslationsB03SplitMethodEditJaJp._(_root);
-	@override late final _TranslationsB04PaymentMergeJaJp B04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
-	@override late final _TranslationsB07PaymentMethodEditJaJp B07_PaymentMethod_Edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
+	@override late final _TranslationsS10HomeTaskListJaJp s10_home_task_list = _TranslationsS10HomeTaskListJaJp._(_root);
+	@override late final _TranslationsS11InviteConfirmJaJp s11_invite_confirm = _TranslationsS11InviteConfirmJaJp._(_root);
+	@override late final _TranslationsS12TaskCloseNoticeJaJp s12_task_close_notice = _TranslationsS12TaskCloseNoticeJaJp._(_root);
+	@override late final _TranslationsS13TaskDashboardJaJp s13_task_dashboard = _TranslationsS13TaskDashboardJaJp._(_root);
+	@override late final _TranslationsS14TaskSettingsJaJp s14_task_settings = _TranslationsS14TaskSettingsJaJp._(_root);
+	@override late final _TranslationsS15RecordEditJaJp s15_record_edit = _TranslationsS15RecordEditJaJp._(_root);
+	@override late final _TranslationsS16TaskCreateEditJaJp s16_task_create_edit = _TranslationsS16TaskCreateEditJaJp._(_root);
+	@override late final _TranslationsS17TaskLockedJaJp s17_task_locked = _TranslationsS17TaskLockedJaJp._(_root);
+	@override late final _TranslationsS18TaskJoinJaJp s18_task_join = _TranslationsS18TaskJoinJaJp._(_root);
+	@override late final _TranslationsS30SettlementConfirmJaJp s30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
+	@override late final _TranslationsS31SettlementPaymentInfoJaJp s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
+	@override late final _TranslationsS32SettlementResultJaJp s32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
+	@override late final _TranslationsS50OnboardingConsentJaJp s50_onboarding_consent = _TranslationsS50OnboardingConsentJaJp._(_root);
+	@override late final _TranslationsS51OnboardingNameJaJp s51_onboarding_name = _TranslationsS51OnboardingNameJaJp._(_root);
+	@override late final _TranslationsS52TaskSettingsLogJaJp s52_task_settings_log = _TranslationsS52TaskSettingsLogJaJp._(_root);
+	@override late final _TranslationsS53TaskSettingsMembersJaJp s53_task_settings_members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
+	@override late final _TranslationsS54TaskSettingsInviteJaJp s54_task_settings_invite = _TranslationsS54TaskSettingsInviteJaJp._(_root);
+	@override late final _TranslationsS70SystemSettingsJaJp s70_system_settings = _TranslationsS70SystemSettingsJaJp._(_root);
+	@override late final _TranslationsS72TermsUpdateJaJp s72_terms_update = _TranslationsS72TermsUpdateJaJp._(_root);
+	@override late final _TranslationsS74DeleteAccountNoticeJaJp s74_delete_account_notice = _TranslationsS74DeleteAccountNoticeJaJp._(_root);
+	@override late final _TranslationsD01MemberRoleIntroJaJp d01_member_role_intro = _TranslationsD01MemberRoleIntroJaJp._(_root);
+	@override late final _TranslationsD02InviteResultJaJp d02_invite_result = _TranslationsD02InviteResultJaJp._(_root);
+	@override late final _TranslationsD03TaskCreateConfirmJaJp d03_task_create_confirm = _TranslationsD03TaskCreateConfirmJaJp._(_root);
+	@override late final _TranslationsD04CommonUnsavedConfirmJaJp d04_common_unsaved_confirm = _TranslationsD04CommonUnsavedConfirmJaJp._(_root);
+	@override late final _TranslationsD05DateJumpNoResultJaJp d05_date_jump_no_result = _TranslationsD05DateJumpNoResultJaJp._(_root);
+	@override late final _TranslationsD06SettlementConfirmJaJp d06_settlement_confirm = _TranslationsD06SettlementConfirmJaJp._(_root);
+	@override late final _TranslationsD08TaskClosedConfirmJaJp d08_task_closed_confirm = _TranslationsD08TaskClosedConfirmJaJp._(_root);
+	@override late final _TranslationsD09TaskSettingsCurrencyConfirmJaJp d09_task_settings_currency_confirm = _TranslationsD09TaskSettingsCurrencyConfirmJaJp._(_root);
+	@override late final _TranslationsD10RecordDeleteConfirmJaJp d10_record_delete_confirm = _TranslationsD10RecordDeleteConfirmJaJp._(_root);
+	@override late final _TranslationsD11RandomResultJaJp d11_random_result = _TranslationsD11RandomResultJaJp._(_root);
+	@override late final _TranslationsD12LogoutConfirmJaJp d12_logout_confirm = _TranslationsD12LogoutConfirmJaJp._(_root);
+	@override late final _TranslationsD13DeleteAccountConfirmJaJp d13_delete_account_confirm = _TranslationsD13DeleteAccountConfirmJaJp._(_root);
+	@override late final _TranslationsD14DateSelectJaJp d14_date_select = _TranslationsD14DateSelectJaJp._(_root);
+	@override late final _TranslationsB02SplitExpenseEditJaJp b02_split_expense_edit = _TranslationsB02SplitExpenseEditJaJp._(_root);
+	@override late final _TranslationsB03SplitMethodEditJaJp b03_split_method_edit = _TranslationsB03SplitMethodEditJaJp._(_root);
+	@override late final _TranslationsB04PaymentMergeJaJp b04_payment_merge = _TranslationsB04PaymentMergeJaJp._(_root);
+	@override late final _TranslationsB07PaymentMethodEditJaJp b07_payment_method_edit = _TranslationsB07PaymentMethodEditJaJp._(_root);
 	@override late final _TranslationsSuccessJaJp success = _TranslationsSuccessJaJp._(_root);
 	@override late final _TranslationsErrorJaJp error = _TranslationsErrorJaJp._(_root);
 }
@@ -131,7 +131,7 @@ class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
 	@override String get close_task => 'タスク終了';
 }
 
-// Path: S10_Home_TaskList
+// Path: s10_home_task_list
 class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 	_TranslationsS10HomeTaskListJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -146,7 +146,7 @@ class _TranslationsS10HomeTaskListJaJp extends TranslationsS10HomeTaskListZhTw {
 	@override late final _TranslationsS10HomeTaskListLabelJaJp label = _TranslationsS10HomeTaskListLabelJaJp._(_root);
 }
 
-// Path: S11_Invite_Confirm
+// Path: s11_invite_confirm
 class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw {
 	_TranslationsS11InviteConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -159,7 +159,7 @@ class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw
 	@override late final _TranslationsS11InviteConfirmLabelJaJp label = _TranslationsS11InviteConfirmLabelJaJp._(_root);
 }
 
-// Path: S12_TaskClose_Notice
+// Path: s12_task_close_notice
 class _TranslationsS12TaskCloseNoticeJaJp extends TranslationsS12TaskCloseNoticeZhTw {
 	_TranslationsS12TaskCloseNoticeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -171,7 +171,7 @@ class _TranslationsS12TaskCloseNoticeJaJp extends TranslationsS12TaskCloseNotice
 	@override String get content => 'このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。';
 }
 
-// Path: S13_Task_Dashboard
+// Path: s13_task_dashboard
 class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw {
 	_TranslationsS13TaskDashboardJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -188,7 +188,7 @@ class _TranslationsS13TaskDashboardJaJp extends TranslationsS13TaskDashboardZhTw
 	@override late final _TranslationsS13TaskDashboardSectionJaJp section = _TranslationsS13TaskDashboardSectionJaJp._(_root);
 }
 
-// Path: S14_Task_Settings
+// Path: s14_task_settings
 class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
 	_TranslationsS14TaskSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -200,7 +200,7 @@ class _TranslationsS14TaskSettingsJaJp extends TranslationsS14TaskSettingsZhTw {
 	@override late final _TranslationsS14TaskSettingsMenuJaJp menu = _TranslationsS14TaskSettingsMenuJaJp._(_root);
 }
 
-// Path: S15_Record_Edit
+// Path: s15_record_edit
 class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	_TranslationsS15RecordEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -220,7 +220,7 @@ class _TranslationsS15RecordEditJaJp extends TranslationsS15RecordEditZhTw {
 	@override late final _TranslationsS15RecordEditHintJaJp hint = _TranslationsS15RecordEditHintJaJp._(_root);
 }
 
-// Path: S16_TaskCreate_Edit
+// Path: s16_task_create_edit
 class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZhTw {
 	_TranslationsS16TaskCreateEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -233,7 +233,7 @@ class _TranslationsS16TaskCreateEditJaJp extends TranslationsS16TaskCreateEditZh
 	@override late final _TranslationsS16TaskCreateEditHintJaJp hint = _TranslationsS16TaskCreateEditHintJaJp._(_root);
 }
 
-// Path: S17_Task_Locked
+// Path: s17_task_locked
 class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	_TranslationsS17TaskLockedJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -247,7 +247,7 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	@override late final _TranslationsS17TaskLockedExportJaJp export = _TranslationsS17TaskLockedExportJaJp._(_root);
 }
 
-// Path: S18_Task_Join
+// Path: s18_task_join
 class _TranslationsS18TaskJoinJaJp extends TranslationsS18TaskJoinZhTw {
 	_TranslationsS18TaskJoinJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -261,7 +261,7 @@ class _TranslationsS18TaskJoinJaJp extends TranslationsS18TaskJoinZhTw {
 	@override late final _TranslationsS18TaskJoinContentJaJp content = _TranslationsS18TaskJoinContentJaJp._(_root);
 }
 
-// Path: S30_settlement_confirm
+// Path: s30_settlement_confirm
 class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementConfirmZhTw {
 	_TranslationsS30SettlementConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -275,7 +275,7 @@ class _TranslationsS30SettlementConfirmJaJp extends TranslationsS30SettlementCon
 	@override late final _TranslationsS30SettlementConfirmListItemJaJp list_item = _TranslationsS30SettlementConfirmListItemJaJp._(_root);
 }
 
-// Path: S31_settlement_payment_info
+// Path: s31_settlement_payment_info
 class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31SettlementPaymentInfoZhTw {
 	_TranslationsS31SettlementPaymentInfoJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -289,7 +289,7 @@ class _TranslationsS31SettlementPaymentInfoJaJp extends TranslationsS31Settlemen
 	@override late final _TranslationsS31SettlementPaymentInfoButtonsJaJp buttons = _TranslationsS31SettlementPaymentInfoButtonsJaJp._(_root);
 }
 
-// Path: S32_settlement_result
+// Path: s32_settlement_result
 class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResultZhTw {
 	_TranslationsS32SettlementResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -305,7 +305,7 @@ class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResu
 	@override late final _TranslationsS32SettlementResultButtonsJaJp buttons = _TranslationsS32SettlementResultButtonsJaJp._(_root);
 }
 
-// Path: S50_Onboarding_Consent
+// Path: s50_onboarding_consent
 class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingConsentZhTw {
 	_TranslationsS50OnboardingConsentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -317,7 +317,7 @@ class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingCon
 	@override late final _TranslationsS50OnboardingConsentContentJaJp content = _TranslationsS50OnboardingConsentContentJaJp._(_root);
 }
 
-// Path: S51_Onboarding_Name
+// Path: s51_onboarding_name
 class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZhTw {
 	_TranslationsS51OnboardingNameJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -330,7 +330,7 @@ class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZh
 	@override String counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S52_TaskSettings_Log
+// Path: s52_task_settings_log
 class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLogZhTw {
 	_TranslationsS52TaskSettingsLogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -347,7 +347,7 @@ class _TranslationsS52TaskSettingsLogJaJp extends TranslationsS52TaskSettingsLog
 	@override late final _TranslationsS52TaskSettingsLogUnitJaJp unit = _TranslationsS52TaskSettingsLogUnitJaJp._(_root);
 }
 
-// Path: S53_TaskSettings_Members
+// Path: s53_task_settings_members
 class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSettingsMembersZhTw {
 	_TranslationsS53TaskSettingsMembersJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -361,7 +361,7 @@ class _TranslationsS53TaskSettingsMembersJaJp extends TranslationsS53TaskSetting
 	@override String get member_name => 'メンバー名';
 }
 
-// Path: S54_TaskSettings_Invite
+// Path: s54_task_settings_invite
 class _TranslationsS54TaskSettingsInviteJaJp extends TranslationsS54TaskSettingsInviteZhTw {
 	_TranslationsS54TaskSettingsInviteJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -373,7 +373,7 @@ class _TranslationsS54TaskSettingsInviteJaJp extends TranslationsS54TaskSettings
 	@override late final _TranslationsS54TaskSettingsInviteLabelJaJp label = _TranslationsS54TaskSettingsInviteLabelJaJp._(_root);
 }
 
-// Path: S70_System_Settings
+// Path: s70_system_settings
 class _TranslationsS70SystemSettingsJaJp extends TranslationsS70SystemSettingsZhTw {
 	_TranslationsS70SystemSettingsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -385,7 +385,7 @@ class _TranslationsS70SystemSettingsJaJp extends TranslationsS70SystemSettingsZh
 	@override late final _TranslationsS70SystemSettingsMenuJaJp menu = _TranslationsS70SystemSettingsMenuJaJp._(_root);
 }
 
-// Path: S72_TermsUpdate
+// Path: s72_terms_update
 class _TranslationsS72TermsUpdateJaJp extends TranslationsS72TermsUpdateZhTw {
 	_TranslationsS72TermsUpdateJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -396,7 +396,7 @@ class _TranslationsS72TermsUpdateJaJp extends TranslationsS72TermsUpdateZhTw {
 	@override String content({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。';
 }
 
-// Path: S74_DeleteAccount_Notice
+// Path: s74_delete_account_notice
 class _TranslationsS74DeleteAccountNoticeJaJp extends TranslationsS74DeleteAccountNoticeZhTw {
 	_TranslationsS74DeleteAccountNoticeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -408,7 +408,7 @@ class _TranslationsS74DeleteAccountNoticeJaJp extends TranslationsS74DeleteAccou
 	@override late final _TranslationsS74DeleteAccountNoticeButtonsJaJp buttons = _TranslationsS74DeleteAccountNoticeButtonsJaJp._(_root);
 }
 
-// Path: D01_MemberRole_Intro
+// Path: d01_member_role_intro
 class _TranslationsD01MemberRoleIntroJaJp extends TranslationsD01MemberRoleIntroZhTw {
 	_TranslationsD01MemberRoleIntroJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -421,7 +421,7 @@ class _TranslationsD01MemberRoleIntroJaJp extends TranslationsD01MemberRoleIntro
 	@override late final _TranslationsD01MemberRoleIntroRerollJaJp reroll = _TranslationsD01MemberRoleIntroRerollJaJp._(_root);
 }
 
-// Path: D02_Invite_Result
+// Path: d02_invite_result
 class _TranslationsD02InviteResultJaJp extends TranslationsD02InviteResultZhTw {
 	_TranslationsD02InviteResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -431,7 +431,7 @@ class _TranslationsD02InviteResultJaJp extends TranslationsD02InviteResultZhTw {
 	@override String get title => '参加失敗';
 }
 
-// Path: D03_TaskCreate_Confirm
+// Path: d03_task_create_confirm
 class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateConfirmZhTw {
 	_TranslationsD03TaskCreateConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -442,7 +442,7 @@ class _TranslationsD03TaskCreateConfirmJaJp extends TranslationsD03TaskCreateCon
 	@override late final _TranslationsD03TaskCreateConfirmButtonsJaJp buttons = _TranslationsD03TaskCreateConfirmButtonsJaJp._(_root);
 }
 
-// Path: D04_CommonUnsaved_Confirm
+// Path: d04_common_unsaved_confirm
 class _TranslationsD04CommonUnsavedConfirmJaJp extends TranslationsD04CommonUnsavedConfirmZhTw {
 	_TranslationsD04CommonUnsavedConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -453,7 +453,7 @@ class _TranslationsD04CommonUnsavedConfirmJaJp extends TranslationsD04CommonUnsa
 	@override String get content => '変更内容は保存されません。';
 }
 
-// Path: D05_DateJump_NoResult
+// Path: d05_date_jump_no_result
 class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResultZhTw {
 	_TranslationsD05DateJumpNoResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -464,7 +464,7 @@ class _TranslationsD05DateJumpNoResultJaJp extends TranslationsD05DateJumpNoResu
 	@override String get content => 'この日付の記録は見つかりませんでした。追加しますか？';
 }
 
-// Path: D06_settlement_confirm
+// Path: d06_settlement_confirm
 class _TranslationsD06SettlementConfirmJaJp extends TranslationsD06SettlementConfirmZhTw {
 	_TranslationsD06SettlementConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -475,7 +475,7 @@ class _TranslationsD06SettlementConfirmJaJp extends TranslationsD06SettlementCon
 	@override String get content => '精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。';
 }
 
-// Path: D08_TaskClosed_Confirm
+// Path: d08_task_closed_confirm
 class _TranslationsD08TaskClosedConfirmJaJp extends TranslationsD08TaskClosedConfirmZhTw {
 	_TranslationsD08TaskClosedConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -486,7 +486,7 @@ class _TranslationsD08TaskClosedConfirmJaJp extends TranslationsD08TaskClosedCon
 	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？';
 }
 
-// Path: D09_TaskSettings_CurrencyConfirm
+// Path: d09_task_settings_currency_confirm
 class _TranslationsD09TaskSettingsCurrencyConfirmJaJp extends TranslationsD09TaskSettingsCurrencyConfirmZhTw {
 	_TranslationsD09TaskSettingsCurrencyConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -497,7 +497,7 @@ class _TranslationsD09TaskSettingsCurrencyConfirmJaJp extends TranslationsD09Tas
 	@override String get content => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？';
 }
 
-// Path: D10_RecordDelete_Confirm
+// Path: d10_record_delete_confirm
 class _TranslationsD10RecordDeleteConfirmJaJp extends TranslationsD10RecordDeleteConfirmZhTw {
 	_TranslationsD10RecordDeleteConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -508,7 +508,7 @@ class _TranslationsD10RecordDeleteConfirmJaJp extends TranslationsD10RecordDelet
 	@override String content({required Object title, required Object amount}) => '${title} （${amount}）を削除してもよろしいですか？';
 }
 
-// Path: D11_random_result
+// Path: d11_random_result
 class _TranslationsD11RandomResultJaJp extends TranslationsD11RandomResultZhTw {
 	_TranslationsD11RandomResultJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -519,7 +519,7 @@ class _TranslationsD11RandomResultJaJp extends TranslationsD11RandomResultZhTw {
 	@override String get skip => 'スキップ';
 }
 
-// Path: D12_logout_confirm
+// Path: d12_logout_confirm
 class _TranslationsD12LogoutConfirmJaJp extends TranslationsD12LogoutConfirmZhTw {
 	_TranslationsD12LogoutConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -531,7 +531,7 @@ class _TranslationsD12LogoutConfirmJaJp extends TranslationsD12LogoutConfirmZhTw
 	@override late final _TranslationsD12LogoutConfirmButtonsJaJp buttons = _TranslationsD12LogoutConfirmButtonsJaJp._(_root);
 }
 
-// Path: D13_DeleteAccount_Confirm
+// Path: d13_delete_account_confirm
 class _TranslationsD13DeleteAccountConfirmJaJp extends TranslationsD13DeleteAccountConfirmZhTw {
 	_TranslationsD13DeleteAccountConfirmJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -542,7 +542,7 @@ class _TranslationsD13DeleteAccountConfirmJaJp extends TranslationsD13DeleteAcco
 	@override String get content => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？';
 }
 
-// Path: D14_Date_Select
+// Path: d14_date_select
 class _TranslationsD14DateSelectJaJp extends TranslationsD14DateSelectZhTw {
 	_TranslationsD14DateSelectJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -552,7 +552,7 @@ class _TranslationsD14DateSelectJaJp extends TranslationsD14DateSelectZhTw {
 	@override String get title => '日付の選択';
 }
 
-// Path: B02_SplitExpense_Edit
+// Path: b02_split_expense_edit
 class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEditZhTw {
 	_TranslationsB02SplitExpenseEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -565,7 +565,7 @@ class _TranslationsB02SplitExpenseEditJaJp extends TranslationsB02SplitExpenseEd
 	@override late final _TranslationsB02SplitExpenseEditHintJaJp hint = _TranslationsB02SplitExpenseEditHintJaJp._(_root);
 }
 
-// Path: B03_SplitMethod_Edit
+// Path: b03_split_method_edit
 class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEditZhTw {
 	_TranslationsB03SplitMethodEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -578,7 +578,7 @@ class _TranslationsB03SplitMethodEditJaJp extends TranslationsB03SplitMethodEdit
 	@override String get mismatch => '一致しません';
 }
 
-// Path: B04_payment_merge
+// Path: b04_payment_merge
 class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	_TranslationsB04PaymentMergeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -589,7 +589,7 @@ class _TranslationsB04PaymentMergeJaJp extends TranslationsB04PaymentMergeZhTw {
 	@override late final _TranslationsB04PaymentMergeLabelJaJp label = _TranslationsB04PaymentMergeLabelJaJp._(_root);
 }
 
-// Path: B07_PaymentMethod_Edit
+// Path: b07_payment_method_edit
 class _TranslationsB07PaymentMethodEditJaJp extends TranslationsB07PaymentMethodEditZhTw {
 	_TranslationsB07PaymentMethodEditJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -884,7 +884,7 @@ class _TranslationsCommonShareJaJp extends TranslationsCommonShareZhTw {
 	@override late final _TranslationsCommonShareSettlementJaJp settlement = _TranslationsCommonShareSettlementJaJp._(_root);
 }
 
-// Path: S10_Home_TaskList.tab
+// Path: s10_home_task_list.tab
 class _TranslationsS10HomeTaskListTabJaJp extends TranslationsS10HomeTaskListTabZhTw {
 	_TranslationsS10HomeTaskListTabJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -895,7 +895,7 @@ class _TranslationsS10HomeTaskListTabJaJp extends TranslationsS10HomeTaskListTab
 	@override String get completed => '完了済';
 }
 
-// Path: S10_Home_TaskList.empty
+// Path: s10_home_task_list.empty
 class _TranslationsS10HomeTaskListEmptyJaJp extends TranslationsS10HomeTaskListEmptyZhTw {
 	_TranslationsS10HomeTaskListEmptyJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -906,7 +906,7 @@ class _TranslationsS10HomeTaskListEmptyJaJp extends TranslationsS10HomeTaskListE
 	@override String get completed => '完了したタスクはありません';
 }
 
-// Path: S10_Home_TaskList.buttons
+// Path: s10_home_task_list.buttons
 class _TranslationsS10HomeTaskListButtonsJaJp extends TranslationsS10HomeTaskListButtonsZhTw {
 	_TranslationsS10HomeTaskListButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -917,7 +917,7 @@ class _TranslationsS10HomeTaskListButtonsJaJp extends TranslationsS10HomeTaskLis
 	@override String get join_task => 'タスク参加';
 }
 
-// Path: S10_Home_TaskList.label
+// Path: s10_home_task_list.label
 class _TranslationsS10HomeTaskListLabelJaJp extends TranslationsS10HomeTaskListLabelZhTw {
 	_TranslationsS10HomeTaskListLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -927,7 +927,7 @@ class _TranslationsS10HomeTaskListLabelJaJp extends TranslationsS10HomeTaskListL
 	@override String get settlement => '精算済み';
 }
 
-// Path: S11_Invite_Confirm.buttons
+// Path: s11_invite_confirm.buttons
 class _TranslationsS11InviteConfirmButtonsJaJp extends TranslationsS11InviteConfirmButtonsZhTw {
 	_TranslationsS11InviteConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -938,7 +938,7 @@ class _TranslationsS11InviteConfirmButtonsJaJp extends TranslationsS11InviteConf
 	@override String get back_task_list => 'タスク一覧へ';
 }
 
-// Path: S11_Invite_Confirm.label
+// Path: s11_invite_confirm.label
 class _TranslationsS11InviteConfirmLabelJaJp extends TranslationsS11InviteConfirmLabelZhTw {
 	_TranslationsS11InviteConfirmLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -950,7 +950,7 @@ class _TranslationsS11InviteConfirmLabelJaJp extends TranslationsS11InviteConfir
 	@override String get expense => '支出';
 }
 
-// Path: S12_TaskClose_Notice.buttons
+// Path: s12_task_close_notice.buttons
 class _TranslationsS12TaskCloseNoticeButtonsJaJp extends TranslationsS12TaskCloseNoticeButtonsZhTw {
 	_TranslationsS12TaskCloseNoticeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -960,7 +960,7 @@ class _TranslationsS12TaskCloseNoticeButtonsJaJp extends TranslationsS12TaskClos
 	@override String get close_task => 'タスク終了';
 }
 
-// Path: S13_Task_Dashboard.buttons
+// Path: s13_task_dashboard.buttons
 class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashboardButtonsZhTw {
 	_TranslationsS13TaskDashboardButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -970,7 +970,7 @@ class _TranslationsS13TaskDashboardButtonsJaJp extends TranslationsS13TaskDashbo
 	@override String get add => '追加';
 }
 
-// Path: S13_Task_Dashboard.tab
+// Path: s13_task_dashboard.tab
 class _TranslationsS13TaskDashboardTabJaJp extends TranslationsS13TaskDashboardTabZhTw {
 	_TranslationsS13TaskDashboardTabJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -981,7 +981,7 @@ class _TranslationsS13TaskDashboardTabJaJp extends TranslationsS13TaskDashboardT
 	@override String get personal => '個人';
 }
 
-// Path: S13_Task_Dashboard.label
+// Path: s13_task_dashboard.label
 class _TranslationsS13TaskDashboardLabelJaJp extends TranslationsS13TaskDashboardLabelZhTw {
 	_TranslationsS13TaskDashboardLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -994,7 +994,7 @@ class _TranslationsS13TaskDashboardLabelJaJp extends TranslationsS13TaskDashboar
 	@override String get total_prepay_personal => '総前受金（立替含）';
 }
 
-// Path: S13_Task_Dashboard.empty
+// Path: s13_task_dashboard.empty
 class _TranslationsS13TaskDashboardEmptyJaJp extends TranslationsS13TaskDashboardEmptyZhTw {
 	_TranslationsS13TaskDashboardEmptyJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1005,7 +1005,7 @@ class _TranslationsS13TaskDashboardEmptyJaJp extends TranslationsS13TaskDashboar
 	@override String get personal_records => '該当なし';
 }
 
-// Path: S13_Task_Dashboard.section
+// Path: s13_task_dashboard.section
 class _TranslationsS13TaskDashboardSectionJaJp extends TranslationsS13TaskDashboardSectionZhTw {
 	_TranslationsS13TaskDashboardSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1018,7 +1018,7 @@ class _TranslationsS13TaskDashboardSectionJaJp extends TranslationsS13TaskDashbo
 	@override String get no_data => 'データなし';
 }
 
-// Path: S14_Task_Settings.section
+// Path: s14_task_settings.section
 class _TranslationsS14TaskSettingsSectionJaJp extends TranslationsS14TaskSettingsSectionZhTw {
 	_TranslationsS14TaskSettingsSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1031,7 +1031,7 @@ class _TranslationsS14TaskSettingsSectionJaJp extends TranslationsS14TaskSetting
 	@override String get other => 'その他設定';
 }
 
-// Path: S14_Task_Settings.menu
+// Path: s14_task_settings.menu
 class _TranslationsS14TaskSettingsMenuJaJp extends TranslationsS14TaskSettingsMenuZhTw {
 	_TranslationsS14TaskSettingsMenuJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1044,7 +1044,7 @@ class _TranslationsS14TaskSettingsMenuJaJp extends TranslationsS14TaskSettingsMe
 	@override String get close_task => 'タスク終了';
 }
 
-// Path: S15_Record_Edit.title
+// Path: s15_record_edit.title
 class _TranslationsS15RecordEditTitleJaJp extends TranslationsS15RecordEditTitleZhTw {
 	_TranslationsS15RecordEditTitleJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1055,7 +1055,7 @@ class _TranslationsS15RecordEditTitleJaJp extends TranslationsS15RecordEditTitle
 	@override String get edit => '記録編集';
 }
 
-// Path: S15_Record_Edit.buttons
+// Path: s15_record_edit.buttons
 class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditButtonsZhTw {
 	_TranslationsS15RecordEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1065,7 +1065,7 @@ class _TranslationsS15RecordEditButtonsJaJp extends TranslationsS15RecordEditBut
 	@override String get add_item => '内訳を追加';
 }
 
-// Path: S15_Record_Edit.section
+// Path: s15_record_edit.section
 class _TranslationsS15RecordEditSectionJaJp extends TranslationsS15RecordEditSectionZhTw {
 	_TranslationsS15RecordEditSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1076,7 +1076,7 @@ class _TranslationsS15RecordEditSectionJaJp extends TranslationsS15RecordEditSec
 	@override String get items => '内訳分割';
 }
 
-// Path: S15_Record_Edit.val
+// Path: s15_record_edit.val
 class _TranslationsS15RecordEditValJaJp extends TranslationsS15RecordEditValZhTw {
 	_TranslationsS15RecordEditValJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1092,7 +1092,7 @@ class _TranslationsS15RecordEditValJaJp extends TranslationsS15RecordEditValZhTw
 	@override String get mock_note => '内訳の説明';
 }
 
-// Path: S15_Record_Edit.tab
+// Path: s15_record_edit.tab
 class _TranslationsS15RecordEditTabJaJp extends TranslationsS15RecordEditTabZhTw {
 	_TranslationsS15RecordEditTabJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1103,7 +1103,7 @@ class _TranslationsS15RecordEditTabJaJp extends TranslationsS15RecordEditTabZhTw
 	@override String get prepay => '前受金';
 }
 
-// Path: S15_Record_Edit.rate_dialog
+// Path: s15_record_edit.rate_dialog
 class _TranslationsS15RecordEditRateDialogJaJp extends TranslationsS15RecordEditRateDialogZhTw {
 	_TranslationsS15RecordEditRateDialogJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1114,7 +1114,7 @@ class _TranslationsS15RecordEditRateDialogJaJp extends TranslationsS15RecordEdit
 	@override String get content => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。';
 }
 
-// Path: S15_Record_Edit.label
+// Path: s15_record_edit.label
 class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabelZhTw {
 	_TranslationsS15RecordEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1124,7 +1124,7 @@ class _TranslationsS15RecordEditLabelJaJp extends TranslationsS15RecordEditLabel
 	@override String rate_with_base({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）';
 }
 
-// Path: S15_Record_Edit.hint
+// Path: s15_record_edit.hint
 class _TranslationsS15RecordEditHintJaJp extends TranslationsS15RecordEditHintZhTw {
 	_TranslationsS15RecordEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1136,7 +1136,7 @@ class _TranslationsS15RecordEditHintJaJp extends TranslationsS15RecordEditHintZh
 	@override String get memo => '例：補足事項';
 }
 
-// Path: S16_TaskCreate_Edit.section
+// Path: s16_task_create_edit.section
 class _TranslationsS16TaskCreateEditSectionJaJp extends TranslationsS16TaskCreateEditSectionZhTw {
 	_TranslationsS16TaskCreateEditSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1148,7 +1148,7 @@ class _TranslationsS16TaskCreateEditSectionJaJp extends TranslationsS16TaskCreat
 	@override String get settlement => '精算設定';
 }
 
-// Path: S16_TaskCreate_Edit.label
+// Path: s16_task_create_edit.label
 class _TranslationsS16TaskCreateEditLabelJaJp extends TranslationsS16TaskCreateEditLabelZhTw {
 	_TranslationsS16TaskCreateEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1158,7 +1158,7 @@ class _TranslationsS16TaskCreateEditLabelJaJp extends TranslationsS16TaskCreateE
 	@override String name_counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S16_TaskCreate_Edit.hint
+// Path: s16_task_create_edit.hint
 class _TranslationsS16TaskCreateEditHintJaJp extends TranslationsS16TaskCreateEditHintZhTw {
 	_TranslationsS16TaskCreateEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1168,7 +1168,7 @@ class _TranslationsS16TaskCreateEditHintJaJp extends TranslationsS16TaskCreateEd
 	@override String get name => '例：東京5日間の旅';
 }
 
-// Path: S17_Task_Locked.buttons
+// Path: s17_task_locked.buttons
 class _TranslationsS17TaskLockedButtonsJaJp extends TranslationsS17TaskLockedButtonsZhTw {
 	_TranslationsS17TaskLockedButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1179,7 +1179,7 @@ class _TranslationsS17TaskLockedButtonsJaJp extends TranslationsS17TaskLockedBut
 	@override String get view_payment_info => '受取口座確認';
 }
 
-// Path: S17_Task_Locked.section
+// Path: s17_task_locked.section
 class _TranslationsS17TaskLockedSectionJaJp extends TranslationsS17TaskLockedSectionZhTw {
 	_TranslationsS17TaskLockedSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1190,7 +1190,7 @@ class _TranslationsS17TaskLockedSectionJaJp extends TranslationsS17TaskLockedSec
 	@override String get cleared => '完了';
 }
 
-// Path: S17_Task_Locked.export
+// Path: s17_task_locked.export
 class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExportZhTw {
 	_TranslationsS17TaskLockedExportJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1228,7 +1228,7 @@ class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExpo
 	@override String get mixed => '混合支払い';
 }
 
-// Path: S18_Task_Join.tabs
+// Path: s18_task_join.tabs
 class _TranslationsS18TaskJoinTabsJaJp extends TranslationsS18TaskJoinTabsZhTw {
 	_TranslationsS18TaskJoinTabsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1239,7 +1239,7 @@ class _TranslationsS18TaskJoinTabsJaJp extends TranslationsS18TaskJoinTabsZhTw {
 	@override String get scan => 'スキャン';
 }
 
-// Path: S18_Task_Join.label
+// Path: s18_task_join.label
 class _TranslationsS18TaskJoinLabelJaJp extends TranslationsS18TaskJoinLabelZhTw {
 	_TranslationsS18TaskJoinLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1249,7 +1249,7 @@ class _TranslationsS18TaskJoinLabelJaJp extends TranslationsS18TaskJoinLabelZhTw
 	@override String get input => '招待コード';
 }
 
-// Path: S18_Task_Join.hint
+// Path: s18_task_join.hint
 class _TranslationsS18TaskJoinHintJaJp extends TranslationsS18TaskJoinHintZhTw {
 	_TranslationsS18TaskJoinHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1259,7 +1259,7 @@ class _TranslationsS18TaskJoinHintJaJp extends TranslationsS18TaskJoinHintZhTw {
 	@override String get input => '8桁の招待コードを入力してください';
 }
 
-// Path: S18_Task_Join.content
+// Path: s18_task_join.content
 class _TranslationsS18TaskJoinContentJaJp extends TranslationsS18TaskJoinContentZhTw {
 	_TranslationsS18TaskJoinContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1269,7 +1269,7 @@ class _TranslationsS18TaskJoinContentJaJp extends TranslationsS18TaskJoinContent
 	@override String get scan => 'QRコードを枠内に配置すると自動的にスキャンされます';
 }
 
-// Path: S30_settlement_confirm.buttons
+// Path: s30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1279,7 +1279,7 @@ class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30Settle
 	@override String get set_payment_info => '受取設定';
 }
 
-// Path: S30_settlement_confirm.steps
+// Path: s30_settlement_confirm.steps
 class _TranslationsS30SettlementConfirmStepsJaJp extends TranslationsS30SettlementConfirmStepsZhTw {
 	_TranslationsS30SettlementConfirmStepsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1290,7 +1290,7 @@ class _TranslationsS30SettlementConfirmStepsJaJp extends TranslationsS30Settleme
 	@override String get payment_info => '受取設定';
 }
 
-// Path: S30_settlement_confirm.warning
+// Path: s30_settlement_confirm.warning
 class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30SettlementConfirmWarningZhTw {
 	_TranslationsS30SettlementConfirmWarningJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1300,7 +1300,7 @@ class _TranslationsS30SettlementConfirmWarningJaJp extends TranslationsS30Settle
 	@override String get random_reveal => '端数は決済確定後に公開されます。';
 }
 
-// Path: S30_settlement_confirm.list_item
+// Path: s30_settlement_confirm.list_item
 class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30SettlementConfirmListItemZhTw {
 	_TranslationsS30SettlementConfirmListItemJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1314,7 +1314,7 @@ class _TranslationsS30SettlementConfirmListItemJaJp extends TranslationsS30Settl
 	@override String get remainder => '端数';
 }
 
-// Path: S31_settlement_payment_info.buttons
+// Path: s31_settlement_payment_info.buttons
 class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	_TranslationsS31SettlementPaymentInfoButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1324,7 +1324,7 @@ class _TranslationsS31SettlementPaymentInfoButtonsJaJp extends TranslationsS31Se
 	@override String get prev_step => '前へ戻る';
 }
 
-// Path: S32_settlement_result.buttons
+// Path: s32_settlement_result.buttons
 class _TranslationsS32SettlementResultButtonsJaJp extends TranslationsS32SettlementResultButtonsZhTw {
 	_TranslationsS32SettlementResultButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1335,7 +1335,7 @@ class _TranslationsS32SettlementResultButtonsJaJp extends TranslationsS32Settlem
 	@override String get back_task_dashboard => 'タスクに戻る';
 }
 
-// Path: S50_Onboarding_Consent.buttons
+// Path: s50_onboarding_consent.buttons
 class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50OnboardingConsentButtonsZhTw {
 	_TranslationsS50OnboardingConsentButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1345,7 +1345,7 @@ class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50Onboar
 	@override String get start => 'はじめる';
 }
 
-// Path: S50_Onboarding_Consent.content
+// Path: s50_onboarding_consent.content
 class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50OnboardingConsentContentZhTw {
 	_TranslationsS50OnboardingConsentContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1356,7 +1356,7 @@ class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50Onboar
 	@override String get suffix => ' に同意したものとみなされます。';
 }
 
-// Path: S52_TaskSettings_Log.buttons
+// Path: s52_task_settings_log.buttons
 class _TranslationsS52TaskSettingsLogButtonsJaJp extends TranslationsS52TaskSettingsLogButtonsZhTw {
 	_TranslationsS52TaskSettingsLogButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1366,7 +1366,7 @@ class _TranslationsS52TaskSettingsLogButtonsJaJp extends TranslationsS52TaskSett
 	@override String get export_csv => 'CSV出力';
 }
 
-// Path: S52_TaskSettings_Log.csv_header
+// Path: s52_task_settings_log.csv_header
 class _TranslationsS52TaskSettingsLogCsvHeaderJaJp extends TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	_TranslationsS52TaskSettingsLogCsvHeaderJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1379,7 +1379,7 @@ class _TranslationsS52TaskSettingsLogCsvHeaderJaJp extends TranslationsS52TaskSe
 	@override String get details => '詳細';
 }
 
-// Path: S52_TaskSettings_Log.type
+// Path: s52_task_settings_log.type
 class _TranslationsS52TaskSettingsLogTypeJaJp extends TranslationsS52TaskSettingsLogTypeZhTw {
 	_TranslationsS52TaskSettingsLogTypeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1390,7 +1390,7 @@ class _TranslationsS52TaskSettingsLogTypeJaJp extends TranslationsS52TaskSetting
 	@override String get expense => '支出';
 }
 
-// Path: S52_TaskSettings_Log.payment_type
+// Path: s52_task_settings_log.payment_type
 class _TranslationsS52TaskSettingsLogPaymentTypeJaJp extends TranslationsS52TaskSettingsLogPaymentTypeZhTw {
 	_TranslationsS52TaskSettingsLogPaymentTypeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1402,7 +1402,7 @@ class _TranslationsS52TaskSettingsLogPaymentTypeJaJp extends TranslationsS52Task
 	@override String get multiple => '複数立替';
 }
 
-// Path: S52_TaskSettings_Log.unit
+// Path: s52_task_settings_log.unit
 class _TranslationsS52TaskSettingsLogUnitJaJp extends TranslationsS52TaskSettingsLogUnitZhTw {
 	_TranslationsS52TaskSettingsLogUnitJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1413,7 +1413,7 @@ class _TranslationsS52TaskSettingsLogUnitJaJp extends TranslationsS52TaskSetting
 	@override String get items => '項目';
 }
 
-// Path: S53_TaskSettings_Members.buttons
+// Path: s53_task_settings_members.buttons
 class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53TaskSettingsMembersButtonsZhTw {
 	_TranslationsS53TaskSettingsMembersButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1423,7 +1423,7 @@ class _TranslationsS53TaskSettingsMembersButtonsJaJp extends TranslationsS53Task
 	@override String get add_member => 'メンバー追加';
 }
 
-// Path: S53_TaskSettings_Members.label
+// Path: s53_task_settings_members.label
 class _TranslationsS53TaskSettingsMembersLabelJaJp extends TranslationsS53TaskSettingsMembersLabelZhTw {
 	_TranslationsS53TaskSettingsMembersLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1433,7 +1433,7 @@ class _TranslationsS53TaskSettingsMembersLabelJaJp extends TranslationsS53TaskSe
 	@override String get default_ratio => 'デフォルト比率';
 }
 
-// Path: S54_TaskSettings_Invite.buttons
+// Path: s54_task_settings_invite.buttons
 class _TranslationsS54TaskSettingsInviteButtonsJaJp extends TranslationsS54TaskSettingsInviteButtonsZhTw {
 	_TranslationsS54TaskSettingsInviteButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1444,7 +1444,7 @@ class _TranslationsS54TaskSettingsInviteButtonsJaJp extends TranslationsS54TaskS
 	@override String get regenerate => '再生成';
 }
 
-// Path: S54_TaskSettings_Invite.label
+// Path: s54_task_settings_invite.label
 class _TranslationsS54TaskSettingsInviteLabelJaJp extends TranslationsS54TaskSettingsInviteLabelZhTw {
 	_TranslationsS54TaskSettingsInviteLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1455,7 +1455,7 @@ class _TranslationsS54TaskSettingsInviteLabelJaJp extends TranslationsS54TaskSet
 	@override String get invite_expired => '有効期限が切れました';
 }
 
-// Path: S70_System_Settings.section
+// Path: s70_system_settings.section
 class _TranslationsS70SystemSettingsSectionJaJp extends TranslationsS70SystemSettingsSectionZhTw {
 	_TranslationsS70SystemSettingsSectionJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1467,7 +1467,7 @@ class _TranslationsS70SystemSettingsSectionJaJp extends TranslationsS70SystemSet
 	@override String get account => 'アカウント設定';
 }
 
-// Path: S70_System_Settings.menu
+// Path: s70_system_settings.menu
 class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettingsMenuZhTw {
 	_TranslationsS70SystemSettingsMenuJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1483,7 +1483,7 @@ class _TranslationsS70SystemSettingsMenuJaJp extends TranslationsS70SystemSettin
 	@override String get delete_account => 'アカウント削除';
 }
 
-// Path: S74_DeleteAccount_Notice.buttons
+// Path: s74_delete_account_notice.buttons
 class _TranslationsS74DeleteAccountNoticeButtonsJaJp extends TranslationsS74DeleteAccountNoticeButtonsZhTw {
 	_TranslationsS74DeleteAccountNoticeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1493,7 +1493,7 @@ class _TranslationsS74DeleteAccountNoticeButtonsJaJp extends TranslationsS74Dele
 	@override String get delete_account => 'アカウント削除';
 }
 
-// Path: D01_MemberRole_Intro.buttons
+// Path: d01_member_role_intro.buttons
 class _TranslationsD01MemberRoleIntroButtonsJaJp extends TranslationsD01MemberRoleIntroButtonsZhTw {
 	_TranslationsD01MemberRoleIntroButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1504,7 +1504,7 @@ class _TranslationsD01MemberRoleIntroButtonsJaJp extends TranslationsD01MemberRo
 	@override String get enter => 'タスクへ進む';
 }
 
-// Path: D01_MemberRole_Intro.reroll
+// Path: d01_member_role_intro.reroll
 class _TranslationsD01MemberRoleIntroRerollJaJp extends TranslationsD01MemberRoleIntroRerollZhTw {
 	_TranslationsD01MemberRoleIntroRerollJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1514,7 +1514,7 @@ class _TranslationsD01MemberRoleIntroRerollJaJp extends TranslationsD01MemberRol
 	@override String get empty => '変更不可';
 }
 
-// Path: D03_TaskCreate_Confirm.buttons
+// Path: d03_task_create_confirm.buttons
 class _TranslationsD03TaskCreateConfirmButtonsJaJp extends TranslationsD03TaskCreateConfirmButtonsZhTw {
 	_TranslationsD03TaskCreateConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1524,7 +1524,7 @@ class _TranslationsD03TaskCreateConfirmButtonsJaJp extends TranslationsD03TaskCr
 	@override String get back_edit => '編集に戻る';
 }
 
-// Path: D12_logout_confirm.buttons
+// Path: d12_logout_confirm.buttons
 class _TranslationsD12LogoutConfirmButtonsJaJp extends TranslationsD12LogoutConfirmButtonsZhTw {
 	_TranslationsD12LogoutConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1534,7 +1534,7 @@ class _TranslationsD12LogoutConfirmButtonsJaJp extends TranslationsD12LogoutConf
 	@override String get logout => 'ログアウト';
 }
 
-// Path: B02_SplitExpense_Edit.buttons
+// Path: b02_split_expense_edit.buttons
 class _TranslationsB02SplitExpenseEditButtonsJaJp extends TranslationsB02SplitExpenseEditButtonsZhTw {
 	_TranslationsB02SplitExpenseEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1544,7 +1544,7 @@ class _TranslationsB02SplitExpenseEditButtonsJaJp extends TranslationsB02SplitEx
 	@override String get confirm_split => '決定';
 }
 
-// Path: B02_SplitExpense_Edit.hint
+// Path: b02_split_expense_edit.hint
 class _TranslationsB02SplitExpenseEditHintJaJp extends TranslationsB02SplitExpenseEditHintZhTw {
 	_TranslationsB02SplitExpenseEditHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1554,7 +1554,7 @@ class _TranslationsB02SplitExpenseEditHintJaJp extends TranslationsB02SplitExpen
 	@override String get sub_item => '例：内訳';
 }
 
-// Path: B03_SplitMethod_Edit.buttons
+// Path: b03_split_method_edit.buttons
 class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMethodEditButtonsZhTw {
 	_TranslationsB03SplitMethodEditButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1564,7 +1564,7 @@ class _TranslationsB03SplitMethodEditButtonsJaJp extends TranslationsB03SplitMet
 	@override String get adjust_weight => '比率調整';
 }
 
-// Path: B03_SplitMethod_Edit.label
+// Path: b03_split_method_edit.label
 class _TranslationsB03SplitMethodEditLabelJaJp extends TranslationsB03SplitMethodEditLabelZhTw {
 	_TranslationsB03SplitMethodEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1574,7 +1574,7 @@ class _TranslationsB03SplitMethodEditLabelJaJp extends TranslationsB03SplitMetho
 	@override String total({required Object current, required Object target}) => '${current} / ${target}';
 }
 
-// Path: B04_payment_merge.label
+// Path: b04_payment_merge.label
 class _TranslationsB04PaymentMergeLabelJaJp extends TranslationsB04PaymentMergeLabelZhTw {
 	_TranslationsB04PaymentMergeLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1585,7 +1585,7 @@ class _TranslationsB04PaymentMergeLabelJaJp extends TranslationsB04PaymentMergeL
 	@override String get merge_amount => '統合金額';
 }
 
-// Path: B07_PaymentMethod_Edit.label
+// Path: b07_payment_method_edit.label
 class _TranslationsB07PaymentMethodEditLabelJaJp extends TranslationsB07PaymentMethodEditLabelZhTw {
 	_TranslationsB07PaymentMethodEditLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1598,7 +1598,7 @@ class _TranslationsB07PaymentMethodEditLabelJaJp extends TranslationsB07PaymentM
 	@override String get total_advance => '立替合計';
 }
 
-// Path: B07_PaymentMethod_Edit.status
+// Path: b07_payment_method_edit.status
 class _TranslationsB07PaymentMethodEditStatusJaJp extends TranslationsB07PaymentMethodEditStatusZhTw {
 	_TranslationsB07PaymentMethodEditStatusJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -1797,7 +1797,7 @@ class _TranslationsCommonShareSettlementJaJp extends TranslationsCommonShareSett
 	@override String content({required Object taskName, required Object link}) => '精算が完了しました。\nIron Split アプリを開き、「${taskName}」の支払金額をご確認ください。\nリンク：${link}';
 }
 
-// Path: S15_Record_Edit.hint.category
+// Path: s15_record_edit.hint.category
 class _TranslationsS15RecordEditHintCategoryJaJp extends TranslationsS15RecordEditHintCategoryZhTw {
 	_TranslationsS15RecordEditHintCategoryJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
@@ -2075,246 +2075,246 @@ extension on TranslationsJaJp {
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
-			'S10_Home_TaskList.title' => 'タスク一覧',
-			'S10_Home_TaskList.tab.in_progress' => '進行中',
-			'S10_Home_TaskList.tab.completed' => '完了済',
-			'S10_Home_TaskList.empty.in_progress' => '進行中のタスクはありません',
-			'S10_Home_TaskList.empty.completed' => '完了したタスクはありません',
-			'S10_Home_TaskList.buttons.add_task' => 'タスク追加',
-			'S10_Home_TaskList.buttons.join_task' => 'タスク参加',
-			'S10_Home_TaskList.date_tbd' => '日付未定',
-			'S10_Home_TaskList.label.settlement' => '精算済み',
-			'S11_Invite_Confirm.title' => 'タスク参加',
-			'S11_Invite_Confirm.subtitle' => '以下のタスクへの招待',
-			'S11_Invite_Confirm.buttons.join' => '参加',
-			'S11_Invite_Confirm.buttons.back_task_list' => 'タスク一覧へ',
-			'S11_Invite_Confirm.label.select_ghost' => '引き継ぐメンバーを選択',
-			'S11_Invite_Confirm.label.prepaid' => '前受金',
-			'S11_Invite_Confirm.label.expense' => '支出',
-			'S12_TaskClose_Notice.title' => 'タスク終了',
-			'S12_TaskClose_Notice.buttons.close_task' => 'タスク終了',
-			'S12_TaskClose_Notice.content' => 'このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
-			'S13_Task_Dashboard.title' => 'ダッシュボード',
-			'S13_Task_Dashboard.buttons.add' => '追加',
-			'S13_Task_Dashboard.tab.group' => 'グループ',
-			'S13_Task_Dashboard.tab.personal' => '個人',
-			'S13_Task_Dashboard.label.total_expense' => '総費用',
-			'S13_Task_Dashboard.label.total_prepay' => '総前受金',
-			'S13_Task_Dashboard.label.total_expense_personal' => '総費用',
-			'S13_Task_Dashboard.label.total_prepay_personal' => '総前受金（立替含）',
-			'S13_Task_Dashboard.empty.records' => '該当なし',
-			'S13_Task_Dashboard.empty.personal_records' => '該当なし',
-			'S13_Task_Dashboard.daily_expense_label' => '支出',
-			'S13_Task_Dashboard.dialog_balance_detail' => '通貨別収支明細',
-			'S13_Task_Dashboard.section.expense' => '支払い通貨',
-			'S13_Task_Dashboard.section.prepay' => '前受金通貨',
-			'S13_Task_Dashboard.section.prepay_balance' => '前受金残高',
-			'S13_Task_Dashboard.section.no_data' => 'データなし',
-			'S14_Task_Settings.title' => 'タスク設定',
-			'S14_Task_Settings.section.task_name' => 'タスク名',
-			'S14_Task_Settings.section.task_period' => 'タスク期間',
-			'S14_Task_Settings.section.settlement' => '精算設定',
-			'S14_Task_Settings.section.other' => 'その他設定',
-			'S14_Task_Settings.menu.invite' => '招待送信',
-			'S14_Task_Settings.menu.member_settings' => 'メンバー設定',
-			'S14_Task_Settings.menu.history' => '履歴',
-			'S14_Task_Settings.menu.close_task' => 'タスク終了',
-			'S15_Record_Edit.title.add' => '記録追加',
-			'S15_Record_Edit.title.edit' => '記録編集',
-			'S15_Record_Edit.buttons.add_item' => '内訳を追加',
-			'S15_Record_Edit.section.split' => '分担情報',
-			'S15_Record_Edit.section.items' => '内訳分割',
-			'S15_Record_Edit.val.prepay' => '前受金',
-			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} が立替',
-			'S15_Record_Edit.val.split_details' => '内訳分割',
-			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担',
-			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val.split_remaining' => '残額',
-			'S15_Record_Edit.val.mock_note' => '内訳の説明',
-			'S15_Record_Edit.tab.expense' => '費用',
-			'S15_Record_Edit.tab.prepay' => '前受金',
-			'S15_Record_Edit.base_card' => '残額',
-			'S15_Record_Edit.type_prepay' => '前受金',
-			'S15_Record_Edit.payer_multiple' => '複数人',
-			'S15_Record_Edit.rate_dialog.title' => '為替レートの出典',
-			'S15_Record_Edit.rate_dialog.content' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
-			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
-			'S15_Record_Edit.hint.category.food' => '夕食',
-			'S15_Record_Edit.hint.category.transport' => '交通費',
-			'S15_Record_Edit.hint.category.shopping' => 'お土産',
-			'S15_Record_Edit.hint.category.entertainment' => 'チケット',
-			'S15_Record_Edit.hint.category.accommodation' => '宿泊費',
-			'S15_Record_Edit.hint.category.others' => 'その他費用',
-			'S15_Record_Edit.hint.item' => ({required Object category}) => '例：${category}',
-			'S15_Record_Edit.hint.memo' => '例：補足事項',
-			'S16_TaskCreate_Edit.title' => 'タスク作成',
-			'S16_TaskCreate_Edit.section.task_name' => 'タスク名',
-			'S16_TaskCreate_Edit.section.task_period' => 'タスク期間',
-			'S16_TaskCreate_Edit.section.settlement' => '精算設定',
-			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S16_TaskCreate_Edit.hint.name' => '例：東京5日間の旅',
-			'S17_Task_Locked.buttons.notify_members' => 'メンバーに通知',
-			'S17_Task_Locked.buttons.view_payment_info' => '受取口座確認',
-			'S17_Task_Locked.section.pending' => '未完了',
-			'S17_Task_Locked.section.cleared' => '完了',
-			'S17_Task_Locked.retention_notice' => ({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。',
-			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => '${name} が負担',
-			'S17_Task_Locked.export.report_info' => 'レポート情報',
-			'S17_Task_Locked.export.task_name' => 'タスク名',
-			'S17_Task_Locked.export.export_time' => 'レポート作成日時',
-			'S17_Task_Locked.export.base_currency' => '基準通貨',
-			'S17_Task_Locked.export.settlement_summary' => '精算サマリー',
-			'S17_Task_Locked.export.member' => 'メンバー',
-			'S17_Task_Locked.export.role' => '役割',
-			'S17_Task_Locked.export.net_amount' => '純額',
-			'S17_Task_Locked.export.status' => 'ステータス',
-			'S17_Task_Locked.export.receiver' => '返金対象',
-			'S17_Task_Locked.export.payer' => '支払対象',
-			'S17_Task_Locked.export.cleared' => '処理済み',
-			'S17_Task_Locked.export.pending' => '未処理',
-			'S17_Task_Locked.export.fund_analysis' => '資金および端数',
-			'S17_Task_Locked.export.total_expense' => '総支出',
-			'S17_Task_Locked.export.total_prepay' => '総前受金',
-			'S17_Task_Locked.export.remainder_buffer' => '端数合計',
-			'S17_Task_Locked.export.remainder_absorbed_by' => '端数受取人',
-			'S17_Task_Locked.export.transaction_details' => '取引明細',
-			'S17_Task_Locked.export.date' => '日付',
-			'S17_Task_Locked.export.title' => 'タイトル',
-			'S17_Task_Locked.export.type' => '種別',
-			'S17_Task_Locked.export.original_amount' => '原通貨金額',
-			'S17_Task_Locked.export.currency' => '通貨',
-			'S17_Task_Locked.export.rate' => '為替レート',
-			'S17_Task_Locked.export.base_amount' => '基準通貨金額',
-			'S17_Task_Locked.export.net_remainder' => '端数',
-			'S17_Task_Locked.export.pool' => '前受金',
-			'S17_Task_Locked.export.mixed' => '混合支払い',
-			'S18_Task_Join.title' => 'タスク参加',
-			'S18_Task_Join.tabs.input' => '入力',
-			'S18_Task_Join.tabs.scan' => 'スキャン',
-			'S18_Task_Join.label.input' => '招待コード',
-			'S18_Task_Join.hint.input' => '8桁の招待コードを入力してください',
-			'S18_Task_Join.content.scan' => 'QRコードを枠内に配置すると自動的にスキャンされます',
-			'S30_settlement_confirm.title' => '精算確認',
-			'S30_settlement_confirm.buttons.set_payment_info' => '受取設定',
-			'S30_settlement_confirm.steps.confirm_amount' => '金額確認',
-			'S30_settlement_confirm.steps.payment_info' => '受取設定',
-			'S30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます。',
-			'S30_settlement_confirm.list_item.merged_label' => '代表メンバー',
-			'S30_settlement_confirm.list_item.includes' => '内訳：',
-			'S30_settlement_confirm.list_item.principal' => '元金',
-			'S30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
-			'S30_settlement_confirm.list_item.remainder' => '端数',
-			'S31_settlement_payment_info.title' => '受取情報',
-			'S31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
-			'S31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
-			'S31_settlement_payment_info.sync_update' => 'デフォルト受取情報を更新',
-			'S31_settlement_payment_info.buttons.prev_step' => '前へ戻る',
-			'S32_settlement_result.title' => '精算完了',
-			'S32_settlement_result.content' => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。',
-			'S32_settlement_result.waiting_reveal' => '結果を確認中...',
-			'S32_settlement_result.remainder_winner_prefix' => '端数の受取先：',
-			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}',
-			'S32_settlement_result.total_label' => '今回の精算合計額',
-			'S32_settlement_result.buttons.share' => '通知送信',
-			'S32_settlement_result.buttons.back_task_dashboard' => 'タスクに戻る',
-			'S50_Onboarding_Consent.title' => 'Iron Split へようこそ',
-			'S50_Onboarding_Consent.buttons.start' => 'はじめる',
-			'S50_Onboarding_Consent.content.prefix' => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、',
-			'S50_Onboarding_Consent.content.suffix' => ' に同意したものとみなされます。',
-			'S51_Onboarding_Name.title' => '名前設定',
-			'S51_Onboarding_Name.content' => 'アプリ内で表示する名前を入力（1–10文字）',
-			'S51_Onboarding_Name.hint' => 'ニックネームを入力',
-			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S52_TaskSettings_Log.title' => '活動履歴',
-			'S52_TaskSettings_Log.buttons.export_csv' => 'CSV出力',
-			'S52_TaskSettings_Log.empty_log' => '活動履歴はありません',
-			'S52_TaskSettings_Log.export_file_prefix' => '活動履歴',
-			'S52_TaskSettings_Log.csv_header.time' => '日時',
-			'S52_TaskSettings_Log.csv_header.user' => '操作者',
-			'S52_TaskSettings_Log.csv_header.action' => '操作',
-			'S52_TaskSettings_Log.csv_header.details' => '詳細',
-			'S52_TaskSettings_Log.type.prepay' => '収入',
-			'S52_TaskSettings_Log.type.expense' => '支出',
-			'S52_TaskSettings_Log.payment_type.prepay' => '前受金',
-			'S52_TaskSettings_Log.payment_type.single_suffix' => '立替',
-			'S52_TaskSettings_Log.payment_type.multiple' => '複数立替',
-			'S52_TaskSettings_Log.unit.members' => '名',
-			'S52_TaskSettings_Log.unit.items' => '項目',
-			'S53_TaskSettings_Members.title' => 'メンバー管理',
-			'S53_TaskSettings_Members.buttons.add_member' => 'メンバー追加',
-			'S53_TaskSettings_Members.label.default_ratio' => 'デフォルト比率',
-			'S53_TaskSettings_Members.member_default_name' => 'メンバー',
-			'S53_TaskSettings_Members.member_name' => 'メンバー名',
-			'S54_TaskSettings_Invite.title' => 'タスク招待',
-			'S54_TaskSettings_Invite.buttons.share' => '共有',
-			'S54_TaskSettings_Invite.buttons.regenerate' => '再生成',
-			'S54_TaskSettings_Invite.label.expires_in' => '有效期限',
-			'S54_TaskSettings_Invite.label.invite_expired' => '有効期限が切れました',
-			'S70_System_Settings.title' => 'システム設定',
-			'S70_System_Settings.section.basic' => '基本設定',
-			'S70_System_Settings.section.legal' => '関連規約',
-			'S70_System_Settings.section.account' => 'アカウント設定',
-			'S70_System_Settings.menu.user_name' => '表示名前',
-			'S70_System_Settings.menu.language' => '表示言語',
-			'S70_System_Settings.menu.theme' => 'テーマ',
-			'S70_System_Settings.menu.terms' => '利用規約',
-			'S70_System_Settings.menu.privacy' => 'プライバシーポリシー',
-			'S70_System_Settings.menu.payment_info' => '支払/受取口座設定',
-			'S70_System_Settings.menu.delete_account' => 'アカウント削除',
-			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
-			'S72_TermsUpdate.content' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
-			'S74_DeleteAccount_Notice.title' => 'アカウント削除確認',
-			'S74_DeleteAccount_Notice.content' => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。',
-			'S74_DeleteAccount_Notice.buttons.delete_account' => 'アカウント削除',
-			'D01_MemberRole_Intro.title' => '今回のキャラクター',
-			'D01_MemberRole_Intro.buttons.reroll' => '動物を変える',
-			'D01_MemberRole_Intro.buttons.enter' => 'タスクへ進む',
-			'D01_MemberRole_Intro.content' => ({required Object avatar}) => '今回のタスクでのアイコン${avatar}です。\n記録には${avatar}が表示されます。',
-			'D01_MemberRole_Intro.reroll.empty' => '変更不可',
-			'D02_Invite_Result.title' => '参加失敗',
-			'D03_TaskCreate_Confirm.title' => '設定の確認',
-			'D03_TaskCreate_Confirm.buttons.back_edit' => '編集に戻る',
-			'D04_CommonUnsaved_Confirm.title' => '未保存の変更',
-			'D04_CommonUnsaved_Confirm.content' => '変更内容は保存されません。',
-			'D05_DateJump_NoResult.title' => '記録なし',
-			'D05_DateJump_NoResult.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
-			'D06_settlement_confirm.title' => '精算確認',
-			'D06_settlement_confirm.content' => '精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。',
-			'D08_TaskClosed_Confirm.title' => 'タスク終了確認',
-			'D08_TaskClosed_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？',
-			'D09_TaskSettings_CurrencyConfirm.title' => '決済通貨変更',
-			'D09_TaskSettings_CurrencyConfirm.content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
-			'D10_RecordDelete_Confirm.title' => '記録削除確認',
-			'D10_RecordDelete_Confirm.content' => ({required Object title, required Object amount}) => '${title} （${amount}）を削除してもよろしいですか？',
-			'D11_random_result.title' => '当選者',
-			'D11_random_result.skip' => 'スキップ',
-			'D12_logout_confirm.title' => 'ログアウト確認',
-			'D12_logout_confirm.content' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。',
-			'D12_logout_confirm.buttons.logout' => 'ログアウト',
-			'D13_DeleteAccount_Confirm.title' => 'アカウント削除確認',
-			'D13_DeleteAccount_Confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？',
-			'D14_Date_Select.title' => '日付の選択',
-			'B02_SplitExpense_Edit.title' => '明細編集',
-			'B02_SplitExpense_Edit.buttons.confirm_split' => '決定',
-			'B02_SplitExpense_Edit.item_name_empty' => '親項目名を入力してください',
-			'B02_SplitExpense_Edit.hint.sub_item' => '例：内訳',
-			'B03_SplitMethod_Edit.title' => '割り勘方法',
-			'B03_SplitMethod_Edit.buttons.adjust_weight' => '比率調整',
-			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
-			'B03_SplitMethod_Edit.mismatch' => '一致しません',
-			'B04_payment_merge.title' => '支払い統合',
-			'B04_payment_merge.label.head_member' => '代表メンバー',
-			'B04_payment_merge.label.merge_amount' => '統合金額',
-			'B07_PaymentMethod_Edit.title' => '資金源を選択',
-			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '前受金残高：${amount}',
-			'B07_PaymentMethod_Edit.payer_member' => '支払者',
-			'B07_PaymentMethod_Edit.label.amount' => '支払金額',
-			'B07_PaymentMethod_Edit.label.total_expense' => '合計金額',
-			'B07_PaymentMethod_Edit.label.prepay' => '前受金払い',
-			'B07_PaymentMethod_Edit.label.total_advance' => '立替合計',
-			'B07_PaymentMethod_Edit.status.not_enough' => '残高不足',
-			'B07_PaymentMethod_Edit.status.balanced' => '一致',
-			'B07_PaymentMethod_Edit.status.remaining' => ({required Object amount}) => '残り ${amount}',
+			's10_home_task_list.title' => 'タスク一覧',
+			's10_home_task_list.tab.in_progress' => '進行中',
+			's10_home_task_list.tab.completed' => '完了済',
+			's10_home_task_list.empty.in_progress' => '進行中のタスクはありません',
+			's10_home_task_list.empty.completed' => '完了したタスクはありません',
+			's10_home_task_list.buttons.add_task' => 'タスク追加',
+			's10_home_task_list.buttons.join_task' => 'タスク参加',
+			's10_home_task_list.date_tbd' => '日付未定',
+			's10_home_task_list.label.settlement' => '精算済み',
+			's11_invite_confirm.title' => 'タスク参加',
+			's11_invite_confirm.subtitle' => '以下のタスクへの招待',
+			's11_invite_confirm.buttons.join' => '参加',
+			's11_invite_confirm.buttons.back_task_list' => 'タスク一覧へ',
+			's11_invite_confirm.label.select_ghost' => '引き継ぐメンバーを選択',
+			's11_invite_confirm.label.prepaid' => '前受金',
+			's11_invite_confirm.label.expense' => '支出',
+			's12_task_close_notice.title' => 'タスク終了',
+			's12_task_close_notice.buttons.close_task' => 'タスク終了',
+			's12_task_close_notice.content' => 'このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。',
+			's13_task_dashboard.title' => 'ダッシュボード',
+			's13_task_dashboard.buttons.add' => '追加',
+			's13_task_dashboard.tab.group' => 'グループ',
+			's13_task_dashboard.tab.personal' => '個人',
+			's13_task_dashboard.label.total_expense' => '総費用',
+			's13_task_dashboard.label.total_prepay' => '総前受金',
+			's13_task_dashboard.label.total_expense_personal' => '総費用',
+			's13_task_dashboard.label.total_prepay_personal' => '総前受金（立替含）',
+			's13_task_dashboard.empty.records' => '該当なし',
+			's13_task_dashboard.empty.personal_records' => '該当なし',
+			's13_task_dashboard.daily_expense_label' => '支出',
+			's13_task_dashboard.dialog_balance_detail' => '通貨別収支明細',
+			's13_task_dashboard.section.expense' => '支払い通貨',
+			's13_task_dashboard.section.prepay' => '前受金通貨',
+			's13_task_dashboard.section.prepay_balance' => '前受金残高',
+			's13_task_dashboard.section.no_data' => 'データなし',
+			's14_task_settings.title' => 'タスク設定',
+			's14_task_settings.section.task_name' => 'タスク名',
+			's14_task_settings.section.task_period' => 'タスク期間',
+			's14_task_settings.section.settlement' => '精算設定',
+			's14_task_settings.section.other' => 'その他設定',
+			's14_task_settings.menu.invite' => '招待送信',
+			's14_task_settings.menu.member_settings' => 'メンバー設定',
+			's14_task_settings.menu.history' => '履歴',
+			's14_task_settings.menu.close_task' => 'タスク終了',
+			's15_record_edit.title.add' => '記録追加',
+			's15_record_edit.title.edit' => '記録編集',
+			's15_record_edit.buttons.add_item' => '内訳を追加',
+			's15_record_edit.section.split' => '分担情報',
+			's15_record_edit.section.items' => '内訳分割',
+			's15_record_edit.val.prepay' => '前受金',
+			's15_record_edit.val.member_paid' => ({required Object name}) => '${name} が立替',
+			's15_record_edit.val.split_details' => '内訳分割',
+			's15_record_edit.val.split_summary' => ({required Object amount, required Object method}) => '合計 ${amount} を ${method} で分担',
+			's15_record_edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			's15_record_edit.val.split_remaining' => '残額',
+			's15_record_edit.val.mock_note' => '内訳の説明',
+			's15_record_edit.tab.expense' => '費用',
+			's15_record_edit.tab.prepay' => '前受金',
+			's15_record_edit.base_card' => '残額',
+			's15_record_edit.type_prepay' => '前受金',
+			's15_record_edit.payer_multiple' => '複数人',
+			's15_record_edit.rate_dialog.title' => '為替レートの出典',
+			's15_record_edit.rate_dialog.content' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
+			's15_record_edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
+			's15_record_edit.hint.category.food' => '夕食',
+			's15_record_edit.hint.category.transport' => '交通費',
+			's15_record_edit.hint.category.shopping' => 'お土産',
+			's15_record_edit.hint.category.entertainment' => 'チケット',
+			's15_record_edit.hint.category.accommodation' => '宿泊費',
+			's15_record_edit.hint.category.others' => 'その他費用',
+			's15_record_edit.hint.item' => ({required Object category}) => '例：${category}',
+			's15_record_edit.hint.memo' => '例：補足事項',
+			's16_task_create_edit.title' => 'タスク作成',
+			's16_task_create_edit.section.task_name' => 'タスク名',
+			's16_task_create_edit.section.task_period' => 'タスク期間',
+			's16_task_create_edit.section.settlement' => '精算設定',
+			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's16_task_create_edit.hint.name' => '例：東京5日間の旅',
+			's17_task_locked.buttons.notify_members' => 'メンバーに通知',
+			's17_task_locked.buttons.view_payment_info' => '受取口座確認',
+			's17_task_locked.section.pending' => '未完了',
+			's17_task_locked.section.cleared' => '完了',
+			's17_task_locked.retention_notice' => ({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。',
+			's17_task_locked.remainder_absorbed_by' => ({required Object name}) => '${name} が負担',
+			's17_task_locked.export.report_info' => 'レポート情報',
+			's17_task_locked.export.task_name' => 'タスク名',
+			's17_task_locked.export.export_time' => 'レポート作成日時',
+			's17_task_locked.export.base_currency' => '基準通貨',
+			's17_task_locked.export.settlement_summary' => '精算サマリー',
+			's17_task_locked.export.member' => 'メンバー',
+			's17_task_locked.export.role' => '役割',
+			's17_task_locked.export.net_amount' => '純額',
+			's17_task_locked.export.status' => 'ステータス',
+			's17_task_locked.export.receiver' => '返金対象',
+			's17_task_locked.export.payer' => '支払対象',
+			's17_task_locked.export.cleared' => '処理済み',
+			's17_task_locked.export.pending' => '未処理',
+			's17_task_locked.export.fund_analysis' => '資金および端数',
+			's17_task_locked.export.total_expense' => '総支出',
+			's17_task_locked.export.total_prepay' => '総前受金',
+			's17_task_locked.export.remainder_buffer' => '端数合計',
+			's17_task_locked.export.remainder_absorbed_by' => '端数受取人',
+			's17_task_locked.export.transaction_details' => '取引明細',
+			's17_task_locked.export.date' => '日付',
+			's17_task_locked.export.title' => 'タイトル',
+			's17_task_locked.export.type' => '種別',
+			's17_task_locked.export.original_amount' => '原通貨金額',
+			's17_task_locked.export.currency' => '通貨',
+			's17_task_locked.export.rate' => '為替レート',
+			's17_task_locked.export.base_amount' => '基準通貨金額',
+			's17_task_locked.export.net_remainder' => '端数',
+			's17_task_locked.export.pool' => '前受金',
+			's17_task_locked.export.mixed' => '混合支払い',
+			's18_task_join.title' => 'タスク参加',
+			's18_task_join.tabs.input' => '入力',
+			's18_task_join.tabs.scan' => 'スキャン',
+			's18_task_join.label.input' => '招待コード',
+			's18_task_join.hint.input' => '8桁の招待コードを入力してください',
+			's18_task_join.content.scan' => 'QRコードを枠内に配置すると自動的にスキャンされます',
+			's30_settlement_confirm.title' => '精算確認',
+			's30_settlement_confirm.buttons.set_payment_info' => '受取設定',
+			's30_settlement_confirm.steps.confirm_amount' => '金額確認',
+			's30_settlement_confirm.steps.payment_info' => '受取設定',
+			's30_settlement_confirm.warning.random_reveal' => '端数は決済確定後に公開されます。',
+			's30_settlement_confirm.list_item.merged_label' => '代表メンバー',
+			's30_settlement_confirm.list_item.includes' => '内訳：',
+			's30_settlement_confirm.list_item.principal' => '元金',
+			's30_settlement_confirm.list_item.random_remainder' => 'ランダム端数',
+			's30_settlement_confirm.list_item.remainder' => '端数',
+			's31_settlement_payment_info.title' => '受取情報',
+			's31_settlement_payment_info.setup_instruction' => '今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。',
+			's31_settlement_payment_info.sync_save' => 'デフォルトの受取情報として保存（端末内）',
+			's31_settlement_payment_info.sync_update' => 'デフォルト受取情報を更新',
+			's31_settlement_payment_info.buttons.prev_step' => '前へ戻る',
+			's32_settlement_result.title' => '精算完了',
+			's32_settlement_result.content' => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。',
+			's32_settlement_result.waiting_reveal' => '結果を確認中...',
+			's32_settlement_result.remainder_winner_prefix' => '端数の受取先：',
+			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}',
+			's32_settlement_result.total_label' => '今回の精算合計額',
+			's32_settlement_result.buttons.share' => '通知送信',
+			's32_settlement_result.buttons.back_task_dashboard' => 'タスクに戻る',
+			's50_onboarding_consent.title' => 'Iron Split へようこそ',
+			's50_onboarding_consent.buttons.start' => 'はじめる',
+			's50_onboarding_consent.content.prefix' => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、',
+			's50_onboarding_consent.content.suffix' => ' に同意したものとみなされます。',
+			's51_onboarding_name.title' => '名前設定',
+			's51_onboarding_name.content' => 'アプリ内で表示する名前を入力（1–10文字）',
+			's51_onboarding_name.hint' => 'ニックネームを入力',
+			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's52_task_settings_log.title' => '活動履歴',
+			's52_task_settings_log.buttons.export_csv' => 'CSV出力',
+			's52_task_settings_log.empty_log' => '活動履歴はありません',
+			's52_task_settings_log.export_file_prefix' => '活動履歴',
+			's52_task_settings_log.csv_header.time' => '日時',
+			's52_task_settings_log.csv_header.user' => '操作者',
+			's52_task_settings_log.csv_header.action' => '操作',
+			's52_task_settings_log.csv_header.details' => '詳細',
+			's52_task_settings_log.type.prepay' => '収入',
+			's52_task_settings_log.type.expense' => '支出',
+			's52_task_settings_log.payment_type.prepay' => '前受金',
+			's52_task_settings_log.payment_type.single_suffix' => '立替',
+			's52_task_settings_log.payment_type.multiple' => '複数立替',
+			's52_task_settings_log.unit.members' => '名',
+			's52_task_settings_log.unit.items' => '項目',
+			's53_task_settings_members.title' => 'メンバー管理',
+			's53_task_settings_members.buttons.add_member' => 'メンバー追加',
+			's53_task_settings_members.label.default_ratio' => 'デフォルト比率',
+			's53_task_settings_members.member_default_name' => 'メンバー',
+			's53_task_settings_members.member_name' => 'メンバー名',
+			's54_task_settings_invite.title' => 'タスク招待',
+			's54_task_settings_invite.buttons.share' => '共有',
+			's54_task_settings_invite.buttons.regenerate' => '再生成',
+			's54_task_settings_invite.label.expires_in' => '有效期限',
+			's54_task_settings_invite.label.invite_expired' => '有効期限が切れました',
+			's70_system_settings.title' => 'システム設定',
+			's70_system_settings.section.basic' => '基本設定',
+			's70_system_settings.section.legal' => '関連規約',
+			's70_system_settings.section.account' => 'アカウント設定',
+			's70_system_settings.menu.user_name' => '表示名前',
+			's70_system_settings.menu.language' => '表示言語',
+			's70_system_settings.menu.theme' => 'テーマ',
+			's70_system_settings.menu.terms' => '利用規約',
+			's70_system_settings.menu.privacy' => 'プライバシーポリシー',
+			's70_system_settings.menu.payment_info' => '支払/受取口座設定',
+			's70_system_settings.menu.delete_account' => 'アカウント削除',
+			's72_terms_update.title' => ({required Object type}) => '${type}更新',
+			's72_terms_update.content' => ({required Object type}) => '${type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。',
+			's74_delete_account_notice.title' => 'アカウント削除確認',
+			's74_delete_account_notice.content' => 'この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。',
+			's74_delete_account_notice.buttons.delete_account' => 'アカウント削除',
+			'd01_member_role_intro.title' => '今回のキャラクター',
+			'd01_member_role_intro.buttons.reroll' => '動物を変える',
+			'd01_member_role_intro.buttons.enter' => 'タスクへ進む',
+			'd01_member_role_intro.content' => ({required Object avatar}) => '今回のタスクでのアイコン${avatar}です。\n記録には${avatar}が表示されます。',
+			'd01_member_role_intro.reroll.empty' => '変更不可',
+			'd02_invite_result.title' => '参加失敗',
+			'd03_task_create_confirm.title' => '設定の確認',
+			'd03_task_create_confirm.buttons.back_edit' => '編集に戻る',
+			'd04_common_unsaved_confirm.title' => '未保存の変更',
+			'd04_common_unsaved_confirm.content' => '変更内容は保存されません。',
+			'd05_date_jump_no_result.title' => '記録なし',
+			'd05_date_jump_no_result.content' => 'この日付の記録は見つかりませんでした。追加しますか？',
+			'd06_settlement_confirm.title' => '精算確認',
+			'd06_settlement_confirm.content' => '精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。',
+			'd08_task_closed_confirm.title' => 'タスク終了確認',
+			'd08_task_closed_confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？',
+			'd09_task_settings_currency_confirm.title' => '決済通貨変更',
+			'd09_task_settings_currency_confirm.content' => '通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？',
+			'd10_record_delete_confirm.title' => '記録削除確認',
+			'd10_record_delete_confirm.content' => ({required Object title, required Object amount}) => '${title} （${amount}）を削除してもよろしいですか？',
+			'd11_random_result.title' => '当選者',
+			'd11_random_result.skip' => 'スキップ',
+			'd12_logout_confirm.title' => 'ログアウト確認',
+			'd12_logout_confirm.content' => '更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。',
+			'd12_logout_confirm.buttons.logout' => 'ログアウト',
+			'd13_delete_account_confirm.title' => 'アカウント削除確認',
+			'd13_delete_account_confirm.content' => 'この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？',
+			'd14_date_select.title' => '日付の選択',
+			'b02_split_expense_edit.title' => '明細編集',
+			'b02_split_expense_edit.buttons.confirm_split' => '決定',
+			'b02_split_expense_edit.item_name_empty' => '親項目名を入力してください',
+			'b02_split_expense_edit.hint.sub_item' => '例：内訳',
+			'b03_split_method_edit.title' => '割り勘方法',
+			'b03_split_method_edit.buttons.adjust_weight' => '比率調整',
+			'b03_split_method_edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
+			'b03_split_method_edit.mismatch' => '一致しません',
+			'b04_payment_merge.title' => '支払い統合',
+			'b04_payment_merge.label.head_member' => '代表メンバー',
+			'b04_payment_merge.label.merge_amount' => '統合金額',
+			'b07_payment_method_edit.title' => '資金源を選択',
+			'b07_payment_method_edit.prepay_balance' => ({required Object amount}) => '前受金残高：${amount}',
+			'b07_payment_method_edit.payer_member' => '支払者',
+			'b07_payment_method_edit.label.amount' => '支払金額',
+			'b07_payment_method_edit.label.total_expense' => '合計金額',
+			'b07_payment_method_edit.label.prepay' => '前受金払い',
+			'b07_payment_method_edit.label.total_advance' => '立替合計',
+			'b07_payment_method_edit.status.not_enough' => '残高不足',
+			'b07_payment_method_edit.status.balanced' => '一致',
+			'b07_payment_method_edit.status.remaining' => ({required Object amount}) => '残り ${amount}',
 			'success.saved' => '保存しました。',
 			'success.deleted' => '削除しました。',
 			'success.copied' => 'コピーしました',

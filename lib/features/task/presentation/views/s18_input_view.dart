@@ -23,8 +23,8 @@ class S18InputView extends StatelessWidget {
     return TaskCodeInput(
       controller: controller,
       focusNode: focusNode,
-      label: t.S18_Task_Join.label.input,
-      hint: t.S18_Task_Join.hint.input,
+      label: t.s18_task_join.label.input,
+      hint: t.s18_task_join.hint.input,
       onScanPressed: onScanPressed,
     );
   }

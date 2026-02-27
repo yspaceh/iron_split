@@ -51,15 +51,15 @@ class _S52Content extends StatelessWidget {
       S52TaskSettingsLogViewModel vm, Translations t) async {
     try {
       await vm.exportCsv(
-        subject: t.S52_TaskSettings_Log.title,
-        fileName: t.S52_TaskSettings_Log.export_file_prefix,
-        header: '${t.S52_TaskSettings_Log.csv_header.time},'
-            '${t.S52_TaskSettings_Log.csv_header.user},'
-            '${t.S52_TaskSettings_Log.csv_header.action},'
-            '${t.S52_TaskSettings_Log.csv_header.details}',
+        subject: t.s52_task_settings_log.title,
+        fileName: t.s52_task_settings_log.export_file_prefix,
+        header: '${t.s52_task_settings_log.csv_header.time},'
+            '${t.s52_task_settings_log.csv_header.user},'
+            '${t.s52_task_settings_log.csv_header.action},'
+            '${t.s52_task_settings_log.csv_header.details}',
         getAction: (log) => log.getLocalizedAction(context),
         getDetails: (log) => log.getFormattedDetails(context),
-        defaultMemberName: t.S53_TaskSettings_Members.member_default_name,
+        defaultMemberName: t.s53_task_settings_members.member_default_name,
       );
     } on AppErrorCodes catch (code) {
       if (!context.mounted) return;
@@ -76,7 +76,7 @@ class _S52Content extends StatelessWidget {
     final vm = context.watch<S52TaskSettingsLogViewModel>();
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S52_TaskSettings_Log.title;
+    final title = t.s52_task_settings_log.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -116,7 +116,7 @@ class _S52Content extends StatelessWidget {
           isSheetMode: false,
           children: [
             AppButton(
-              text: t.S52_TaskSettings_Log.buttons.export_csv,
+              text: t.s52_task_settings_log.buttons.export_csv,
               type: AppButtonType.secondary,
               isLoading: vm.exportStatus == LoadStatus.loading,
               onPressed: () => _handleExport(context, vm, t),

@@ -209,7 +209,7 @@
     "unknown": "不明な操作",
     "close_task": "タスク終了"
   },
-  "S10_Home_TaskList": {
+  "s10_home_task_list": {
     "title": "タスク一覧",
     "tab": {
       "in_progress": "進行中",
@@ -228,7 +228,7 @@
       "settlement": "精算済み"
     }
   },
-  "S11_Invite_Confirm": {
+  "s11_invite_confirm": {
     "title": "タスク参加",
     "subtitle": "以下のタスクへの招待",
     "buttons": {
@@ -241,14 +241,14 @@
       "expense": "支出"
     }
   },
-  "S12_TaskClose_Notice": {
+  "s12_task_close_notice": {
     "title": "タスク終了",
     "buttons": {
       "close_task": "タスク終了"
     },
     "content": "このタスクを終了すると、すべての記録および設定がロックされます。読み取り専用モードに移行し、データの追加や編集はできなくなります。"
   },
-  "S13_Task_Dashboard": {
+  "s13_task_dashboard": {
     "title": "ダッシュボード",
     "buttons": {
       "add":"追加"
@@ -276,7 +276,7 @@
       "no_data": "データなし"
     }
   },
-  "S14_Task_Settings": {
+  "s14_task_settings": {
     "title": "タスク設定",
     "section":{
       "task_name": "タスク名",
@@ -291,7 +291,7 @@
       "close_task": "タスク終了"
     }
   },
-  "S15_Record_Edit": {
+  "s15_record_edit": {
     "title": {
       "add": "記録追加",
       "edit": "記録編集"
@@ -339,7 +339,7 @@
       "memo": "例：補足事項"
     }
   },
-  "S16_TaskCreate_Edit": {
+  "s16_task_create_edit": {
     "title": "タスク作成",
     "section": {
       "task_name": "タスク名",
@@ -353,7 +353,7 @@
       "name": "例：東京5日間の旅"
     }
   },
-  "S17_Task_Locked": {
+  "s17_task_locked": {
     "buttons": {
       "notify_members": "メンバーに通知",
       "view_payment_info": "受取口座確認"
@@ -396,7 +396,7 @@
       "mixed": "混合支払い"
     }
   },
-  "S18_Task_Join": {
+  "s18_task_join": {
     "title": "タスク参加",
     "tabs": {
       "input": "入力",
@@ -412,7 +412,7 @@
       "scan": "QRコードを枠内に配置すると自動的にスキャンされます"
     }
   },
-  "S30_settlement_confirm": {
+  "s30_settlement_confirm": {
     "title": "精算確認",
     "buttons": {
       "set_payment_info": "受取設定"
@@ -432,7 +432,7 @@
       "remainder": "端数"
     }
   },
-  "S31_settlement_payment_info": {
+  "s31_settlement_payment_info": {
     "title": "受取情報",
     "setup_instruction": "今回の精算のみに使用されます。デフォルト情報は端末内に暗号化保存されます。",
     "sync_save": "デフォルトの受取情報として保存（端末内）",
@@ -441,7 +441,7 @@
       "prev_step": "前へ戻る"
     }
   },
-  "S32_settlement_result": {
+  "s32_settlement_result": {
     "title": "精算完了",
     "content": "すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。",
     "waiting_reveal": "結果を確認中...",
@@ -453,7 +453,7 @@
       "back_task_dashboard": "タスクに戻る"
     }
   },
-  "S50_Onboarding_Consent": {
+  "s50_onboarding_consent": {
     "title": "Iron Split へようこそ",
     "buttons": {
       "start": "はじめる"
@@ -463,13 +463,13 @@
       "suffix": " に同意したものとみなされます。"
     }
   },
-  "S51_Onboarding_Name": {
+  "s51_onboarding_name": {
     "title": "名前設定",
     "content": "アプリ内で表示する名前を入力（1–10文字）",
     "hint": "ニックネームを入力",
     "counter": "{current}/{max}"
   },
-  "S52_TaskSettings_Log": {
+  "s52_task_settings_log": {
     "title": "活動履歴",
     "buttons": {
       "export_csv": "CSV出力"
@@ -496,7 +496,7 @@
       "items": "項目"
     }
   },
-  "S53_TaskSettings_Members": {
+  "s53_task_settings_members": {
     "title": "メンバー管理",
     "buttons": {
       "add_member": "メンバー追加"
@@ -507,7 +507,7 @@
     "member_default_name": "メンバー",
     "member_name": "メンバー名"
   },
-  "S54_TaskSettings_Invite": {
+  "s54_task_settings_invite": {
     "title": "タスク招待",
     "buttons": {
       "share": "共有",
@@ -518,7 +518,7 @@
       "invite_expired": "有効期限が切れました"
     }
   },
-  "S70_System_Settings": {
+  "s70_system_settings": {
     "title": "システム設定",
     "section": {
       "basic": "基本設定",
@@ -535,18 +535,18 @@
       "delete_account": "アカウント削除"
     }
   },
-  "S72_TermsUpdate": {
+  "s72_terms_update": {
     "title": "{type}更新",
     "content": "{type} を更新しました。続けてご利用いただくには、内容をご確認のうえ同意してください。"
   },
-  "S74_DeleteAccount_Notice": {
+  "s74_delete_account_notice": {
     "title": "アカウント削除確認",
     "content": "この操作は元に戻せません。個人情報は削除されます。リーダー権限は自動的に他のメンバーへ移行されますが、共有帳簿内の記録は保持されます（未リンク状態になります）。",
     "buttons": {
       "delete_account": "アカウント削除"
     }
   },
-  "D01_MemberRole_Intro": {
+  "d01_member_role_intro": {
     "title": "今回のキャラクター",
     "buttons": {
       "reroll": "動物を変える",
@@ -557,58 +557,58 @@
       "empty": "変更不可"
     }
   },
-  "D02_Invite_Result": {
+  "d02_invite_result": {
     "title": "参加失敗"
   },
-  "D03_TaskCreate_Confirm": {
+  "d03_task_create_confirm": {
     "title": "設定の確認",
     "buttons": {
       "back_edit": "編集に戻る"
     }
   },
-  "D04_CommonUnsaved_Confirm": {
+  "d04_common_unsaved_confirm": {
     "title": "未保存の変更",
     "content": "変更内容は保存されません。"
   },
-  "D05_DateJump_NoResult": {
+  "d05_date_jump_no_result": {
     "title": "記録なし",
     "content": "この日付の記録は見つかりませんでした。追加しますか？"
   },
-  "D06_settlement_confirm": {
+  "d06_settlement_confirm": {
     "title": "精算確認",
     "content": "精算を行うとタスクはロックされ、記録の追加・削除・編集ができなくなります。\n内容をご確認ください。"
   },
-  "D08_TaskClosed_Confirm": {
+  "d08_task_closed_confirm": {
     "title": "タスク終了確認",
     "content": "この操作は取り消すことができません。すべてのデータは永久にロックされます。\n\n続行してもよろしいですか？"
   },
-  "D09_TaskSettings_CurrencyConfirm": {
+  "d09_task_settings_currency_confirm": {
     "title": "決済通貨変更",
     "content": "通貨を変更すると、すべての為替レート設定がリセットされます。現在の収支に影響する可能性があります。よろしいですか？"
   },
-  "D10_RecordDelete_Confirm": {
+  "d10_record_delete_confirm": {
     "title": "記録削除確認",
     "content": "{title} （{amount}）を削除してもよろしいですか？"
   },
-  "D11_random_result": {
+  "d11_random_result": {
     "title": "当選者",
     "skip": "スキップ"
   },
-  "D12_logout_confirm": {
+  "d12_logout_confirm": {
     "title": "ログアウト確認",
     "content": "更新後の規約に同意しない場合、本サービスを継続して利用することはできません。\nログアウトされます。",
     "buttons": {
       "logout": "ログアウト"
     }
   },
-  "D13_DeleteAccount_Confirm": {
+  "d13_delete_account_confirm": {
     "title": "アカウント削除確認",
     "content": "この操作は取り消すことができません。すべてのデータは永久に削除されます。\n\n続行してもよろしいですか？"
   },
-  "D14_Date_Select": {
+  "d14_date_select": {
     "title": "日付の選択"
   },
-  "B02_SplitExpense_Edit": {
+  "b02_split_expense_edit": {
     "title": "明細編集",
     "buttons": {
       "confirm_split": "決定"
@@ -618,7 +618,7 @@
       "sub_item": "例：内訳"
     }
   },
-  "B03_SplitMethod_Edit": {
+  "b03_split_method_edit": {
     "title": "割り勘方法",
     "buttons": {
       "adjust_weight": "比率調整"
@@ -628,14 +628,14 @@
     },
     "mismatch": "一致しません"
   },
-  "B04_payment_merge": {
+  "b04_payment_merge": {
     "title": "支払い統合",
     "label": {
       "head_member": "代表メンバー",
       "merge_amount": "統合金額"
     }
   },
-  "B07_PaymentMethod_Edit": {
+  "b07_payment_method_edit": {
     "title": "資金源を選択",
     "prepay_balance": "前受金残高：{amount}",
     "payer_member": "支払者",

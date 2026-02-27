@@ -42,43 +42,43 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	// Translations
 	late final TranslationsCommonZhTw common = TranslationsCommonZhTw.internal(_root);
 	late final TranslationsLogActionZhTw log_action = TranslationsLogActionZhTw.internal(_root);
-	late final TranslationsS10HomeTaskListZhTw S10_Home_TaskList = TranslationsS10HomeTaskListZhTw.internal(_root);
-	late final TranslationsS11InviteConfirmZhTw S11_Invite_Confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
-	late final TranslationsS12TaskCloseNoticeZhTw S12_TaskClose_Notice = TranslationsS12TaskCloseNoticeZhTw.internal(_root);
-	late final TranslationsS13TaskDashboardZhTw S13_Task_Dashboard = TranslationsS13TaskDashboardZhTw.internal(_root);
-	late final TranslationsS14TaskSettingsZhTw S14_Task_Settings = TranslationsS14TaskSettingsZhTw.internal(_root);
-	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
-	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
-	late final TranslationsS17TaskLockedZhTw S17_Task_Locked = TranslationsS17TaskLockedZhTw.internal(_root);
-	late final TranslationsS18TaskJoinZhTw S18_Task_Join = TranslationsS18TaskJoinZhTw.internal(_root);
-	late final TranslationsS30SettlementConfirmZhTw S30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
-	late final TranslationsS31SettlementPaymentInfoZhTw S31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
-	late final TranslationsS32SettlementResultZhTw S32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
-	late final TranslationsS50OnboardingConsentZhTw S50_Onboarding_Consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
-	late final TranslationsS51OnboardingNameZhTw S51_Onboarding_Name = TranslationsS51OnboardingNameZhTw.internal(_root);
-	late final TranslationsS52TaskSettingsLogZhTw S52_TaskSettings_Log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
-	late final TranslationsS53TaskSettingsMembersZhTw S53_TaskSettings_Members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
-	late final TranslationsS54TaskSettingsInviteZhTw S54_TaskSettings_Invite = TranslationsS54TaskSettingsInviteZhTw.internal(_root);
-	late final TranslationsS70SystemSettingsZhTw S70_System_Settings = TranslationsS70SystemSettingsZhTw.internal(_root);
-	late final TranslationsS72TermsUpdateZhTw S72_TermsUpdate = TranslationsS72TermsUpdateZhTw.internal(_root);
-	late final TranslationsS74DeleteAccountNoticeZhTw S74_DeleteAccount_Notice = TranslationsS74DeleteAccountNoticeZhTw.internal(_root);
-	late final TranslationsD01MemberRoleIntroZhTw D01_MemberRole_Intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
-	late final TranslationsD02InviteResultZhTw D02_Invite_Result = TranslationsD02InviteResultZhTw.internal(_root);
-	late final TranslationsD03TaskCreateConfirmZhTw D03_TaskCreate_Confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
-	late final TranslationsD04CommonUnsavedConfirmZhTw D04_CommonUnsaved_Confirm = TranslationsD04CommonUnsavedConfirmZhTw.internal(_root);
-	late final TranslationsD05DateJumpNoResultZhTw D05_DateJump_NoResult = TranslationsD05DateJumpNoResultZhTw.internal(_root);
-	late final TranslationsD06SettlementConfirmZhTw D06_settlement_confirm = TranslationsD06SettlementConfirmZhTw.internal(_root);
-	late final TranslationsD08TaskClosedConfirmZhTw D08_TaskClosed_Confirm = TranslationsD08TaskClosedConfirmZhTw.internal(_root);
-	late final TranslationsD09TaskSettingsCurrencyConfirmZhTw D09_TaskSettings_CurrencyConfirm = TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(_root);
-	late final TranslationsD10RecordDeleteConfirmZhTw D10_RecordDelete_Confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
-	late final TranslationsD11RandomResultZhTw D11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
-	late final TranslationsD12LogoutConfirmZhTw D12_logout_confirm = TranslationsD12LogoutConfirmZhTw.internal(_root);
-	late final TranslationsD13DeleteAccountConfirmZhTw D13_DeleteAccount_Confirm = TranslationsD13DeleteAccountConfirmZhTw.internal(_root);
-	late final TranslationsD14DateSelectZhTw D14_Date_Select = TranslationsD14DateSelectZhTw.internal(_root);
-	late final TranslationsB02SplitExpenseEditZhTw B02_SplitExpense_Edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
-	late final TranslationsB03SplitMethodEditZhTw B03_SplitMethod_Edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
-	late final TranslationsB04PaymentMergeZhTw B04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
-	late final TranslationsB07PaymentMethodEditZhTw B07_PaymentMethod_Edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
+	late final TranslationsS10HomeTaskListZhTw s10_home_task_list = TranslationsS10HomeTaskListZhTw.internal(_root);
+	late final TranslationsS11InviteConfirmZhTw s11_invite_confirm = TranslationsS11InviteConfirmZhTw.internal(_root);
+	late final TranslationsS12TaskCloseNoticeZhTw s12_task_close_notice = TranslationsS12TaskCloseNoticeZhTw.internal(_root);
+	late final TranslationsS13TaskDashboardZhTw s13_task_dashboard = TranslationsS13TaskDashboardZhTw.internal(_root);
+	late final TranslationsS14TaskSettingsZhTw s14_task_settings = TranslationsS14TaskSettingsZhTw.internal(_root);
+	late final TranslationsS15RecordEditZhTw s15_record_edit = TranslationsS15RecordEditZhTw.internal(_root);
+	late final TranslationsS16TaskCreateEditZhTw s16_task_create_edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
+	late final TranslationsS17TaskLockedZhTw s17_task_locked = TranslationsS17TaskLockedZhTw.internal(_root);
+	late final TranslationsS18TaskJoinZhTw s18_task_join = TranslationsS18TaskJoinZhTw.internal(_root);
+	late final TranslationsS30SettlementConfirmZhTw s30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
+	late final TranslationsS31SettlementPaymentInfoZhTw s31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
+	late final TranslationsS32SettlementResultZhTw s32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
+	late final TranslationsS50OnboardingConsentZhTw s50_onboarding_consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
+	late final TranslationsS51OnboardingNameZhTw s51_onboarding_name = TranslationsS51OnboardingNameZhTw.internal(_root);
+	late final TranslationsS52TaskSettingsLogZhTw s52_task_settings_log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
+	late final TranslationsS53TaskSettingsMembersZhTw s53_task_settings_members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
+	late final TranslationsS54TaskSettingsInviteZhTw s54_task_settings_invite = TranslationsS54TaskSettingsInviteZhTw.internal(_root);
+	late final TranslationsS70SystemSettingsZhTw s70_system_settings = TranslationsS70SystemSettingsZhTw.internal(_root);
+	late final TranslationsS72TermsUpdateZhTw s72_terms_update = TranslationsS72TermsUpdateZhTw.internal(_root);
+	late final TranslationsS74DeleteAccountNoticeZhTw s74_delete_account_notice = TranslationsS74DeleteAccountNoticeZhTw.internal(_root);
+	late final TranslationsD01MemberRoleIntroZhTw d01_member_role_intro = TranslationsD01MemberRoleIntroZhTw.internal(_root);
+	late final TranslationsD02InviteResultZhTw d02_invite_result = TranslationsD02InviteResultZhTw.internal(_root);
+	late final TranslationsD03TaskCreateConfirmZhTw d03_task_create_confirm = TranslationsD03TaskCreateConfirmZhTw.internal(_root);
+	late final TranslationsD04CommonUnsavedConfirmZhTw d04_common_unsaved_confirm = TranslationsD04CommonUnsavedConfirmZhTw.internal(_root);
+	late final TranslationsD05DateJumpNoResultZhTw d05_date_jump_no_result = TranslationsD05DateJumpNoResultZhTw.internal(_root);
+	late final TranslationsD06SettlementConfirmZhTw d06_settlement_confirm = TranslationsD06SettlementConfirmZhTw.internal(_root);
+	late final TranslationsD08TaskClosedConfirmZhTw d08_task_closed_confirm = TranslationsD08TaskClosedConfirmZhTw.internal(_root);
+	late final TranslationsD09TaskSettingsCurrencyConfirmZhTw d09_task_settings_currency_confirm = TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(_root);
+	late final TranslationsD10RecordDeleteConfirmZhTw d10_record_delete_confirm = TranslationsD10RecordDeleteConfirmZhTw.internal(_root);
+	late final TranslationsD11RandomResultZhTw d11_random_result = TranslationsD11RandomResultZhTw.internal(_root);
+	late final TranslationsD12LogoutConfirmZhTw d12_logout_confirm = TranslationsD12LogoutConfirmZhTw.internal(_root);
+	late final TranslationsD13DeleteAccountConfirmZhTw d13_delete_account_confirm = TranslationsD13DeleteAccountConfirmZhTw.internal(_root);
+	late final TranslationsD14DateSelectZhTw d14_date_select = TranslationsD14DateSelectZhTw.internal(_root);
+	late final TranslationsB02SplitExpenseEditZhTw b02_split_expense_edit = TranslationsB02SplitExpenseEditZhTw.internal(_root);
+	late final TranslationsB03SplitMethodEditZhTw b03_split_method_edit = TranslationsB03SplitMethodEditZhTw.internal(_root);
+	late final TranslationsB04PaymentMergeZhTw b04_payment_merge = TranslationsB04PaymentMergeZhTw.internal(_root);
+	late final TranslationsB07PaymentMethodEditZhTw b07_payment_method_edit = TranslationsB07PaymentMethodEditZhTw.internal(_root);
 	late final TranslationsSuccessZhTw success = TranslationsSuccessZhTw.internal(_root);
 	late final TranslationsErrorZhTw error = TranslationsErrorZhTw.internal(_root);
 }
@@ -164,7 +164,7 @@ class TranslationsLogActionZhTw {
 	String get close_task => '結束任務';
 }
 
-// Path: S10_Home_TaskList
+// Path: s10_home_task_list
 class TranslationsS10HomeTaskListZhTw {
 	TranslationsS10HomeTaskListZhTw.internal(this._root);
 
@@ -185,7 +185,7 @@ class TranslationsS10HomeTaskListZhTw {
 	late final TranslationsS10HomeTaskListLabelZhTw label = TranslationsS10HomeTaskListLabelZhTw.internal(_root);
 }
 
-// Path: S11_Invite_Confirm
+// Path: s11_invite_confirm
 class TranslationsS11InviteConfirmZhTw {
 	TranslationsS11InviteConfirmZhTw.internal(this._root);
 
@@ -203,7 +203,7 @@ class TranslationsS11InviteConfirmZhTw {
 	late final TranslationsS11InviteConfirmLabelZhTw label = TranslationsS11InviteConfirmLabelZhTw.internal(_root);
 }
 
-// Path: S12_TaskClose_Notice
+// Path: s12_task_close_notice
 class TranslationsS12TaskCloseNoticeZhTw {
 	TranslationsS12TaskCloseNoticeZhTw.internal(this._root);
 
@@ -220,7 +220,7 @@ class TranslationsS12TaskCloseNoticeZhTw {
 	late final TranslationsS12TaskCloseNoticeButtonsZhTw buttons = TranslationsS12TaskCloseNoticeButtonsZhTw.internal(_root);
 }
 
-// Path: S13_Task_Dashboard
+// Path: s13_task_dashboard
 class TranslationsS13TaskDashboardZhTw {
 	TranslationsS13TaskDashboardZhTw.internal(this._root);
 
@@ -245,7 +245,7 @@ class TranslationsS13TaskDashboardZhTw {
 	late final TranslationsS13TaskDashboardSectionZhTw section = TranslationsS13TaskDashboardSectionZhTw.internal(_root);
 }
 
-// Path: S14_Task_Settings
+// Path: s14_task_settings
 class TranslationsS14TaskSettingsZhTw {
 	TranslationsS14TaskSettingsZhTw.internal(this._root);
 
@@ -260,7 +260,7 @@ class TranslationsS14TaskSettingsZhTw {
 	late final TranslationsS14TaskSettingsMenuZhTw menu = TranslationsS14TaskSettingsMenuZhTw.internal(_root);
 }
 
-// Path: S15_Record_Edit
+// Path: s15_record_edit
 class TranslationsS15RecordEditZhTw {
 	TranslationsS15RecordEditZhTw.internal(this._root);
 
@@ -287,7 +287,7 @@ class TranslationsS15RecordEditZhTw {
 	late final TranslationsS15RecordEditHintZhTw hint = TranslationsS15RecordEditHintZhTw.internal(_root);
 }
 
-// Path: S16_TaskCreate_Edit
+// Path: s16_task_create_edit
 class TranslationsS16TaskCreateEditZhTw {
 	TranslationsS16TaskCreateEditZhTw.internal(this._root);
 
@@ -303,7 +303,7 @@ class TranslationsS16TaskCreateEditZhTw {
 	late final TranslationsS16TaskCreateEditHintZhTw hint = TranslationsS16TaskCreateEditHintZhTw.internal(_root);
 }
 
-// Path: S17_Task_Locked
+// Path: s17_task_locked
 class TranslationsS17TaskLockedZhTw {
 	TranslationsS17TaskLockedZhTw.internal(this._root);
 
@@ -322,7 +322,7 @@ class TranslationsS17TaskLockedZhTw {
 	late final TranslationsS17TaskLockedExportZhTw export = TranslationsS17TaskLockedExportZhTw.internal(_root);
 }
 
-// Path: S18_Task_Join
+// Path: s18_task_join
 class TranslationsS18TaskJoinZhTw {
 	TranslationsS18TaskJoinZhTw.internal(this._root);
 
@@ -339,7 +339,7 @@ class TranslationsS18TaskJoinZhTw {
 	late final TranslationsS18TaskJoinContentZhTw content = TranslationsS18TaskJoinContentZhTw.internal(_root);
 }
 
-// Path: S30_settlement_confirm
+// Path: s30_settlement_confirm
 class TranslationsS30SettlementConfirmZhTw {
 	TranslationsS30SettlementConfirmZhTw.internal(this._root);
 
@@ -356,7 +356,7 @@ class TranslationsS30SettlementConfirmZhTw {
 	late final TranslationsS30SettlementConfirmListItemZhTw list_item = TranslationsS30SettlementConfirmListItemZhTw.internal(_root);
 }
 
-// Path: S31_settlement_payment_info
+// Path: s31_settlement_payment_info
 class TranslationsS31SettlementPaymentInfoZhTw {
 	TranslationsS31SettlementPaymentInfoZhTw.internal(this._root);
 
@@ -379,7 +379,7 @@ class TranslationsS31SettlementPaymentInfoZhTw {
 	late final TranslationsS31SettlementPaymentInfoButtonsZhTw buttons = TranslationsS31SettlementPaymentInfoButtonsZhTw.internal(_root);
 }
 
-// Path: S32_settlement_result
+// Path: s32_settlement_result
 class TranslationsS32SettlementResultZhTw {
 	TranslationsS32SettlementResultZhTw.internal(this._root);
 
@@ -408,7 +408,7 @@ class TranslationsS32SettlementResultZhTw {
 	late final TranslationsS32SettlementResultButtonsZhTw buttons = TranslationsS32SettlementResultButtonsZhTw.internal(_root);
 }
 
-// Path: S50_Onboarding_Consent
+// Path: s50_onboarding_consent
 class TranslationsS50OnboardingConsentZhTw {
 	TranslationsS50OnboardingConsentZhTw.internal(this._root);
 
@@ -423,7 +423,7 @@ class TranslationsS50OnboardingConsentZhTw {
 	late final TranslationsS50OnboardingConsentContentZhTw content = TranslationsS50OnboardingConsentContentZhTw.internal(_root);
 }
 
-// Path: S51_Onboarding_Name
+// Path: s51_onboarding_name
 class TranslationsS51OnboardingNameZhTw {
 	TranslationsS51OnboardingNameZhTw.internal(this._root);
 
@@ -447,7 +447,7 @@ class TranslationsS51OnboardingNameZhTw {
 	String counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S52_TaskSettings_Log
+// Path: s52_task_settings_log
 class TranslationsS52TaskSettingsLogZhTw {
 	TranslationsS52TaskSettingsLogZhTw.internal(this._root);
 
@@ -472,7 +472,7 @@ class TranslationsS52TaskSettingsLogZhTw {
 	late final TranslationsS52TaskSettingsLogUnitZhTw unit = TranslationsS52TaskSettingsLogUnitZhTw.internal(_root);
 }
 
-// Path: S53_TaskSettings_Members
+// Path: s53_task_settings_members
 class TranslationsS53TaskSettingsMembersZhTw {
 	TranslationsS53TaskSettingsMembersZhTw.internal(this._root);
 
@@ -493,7 +493,7 @@ class TranslationsS53TaskSettingsMembersZhTw {
 	String get member_name => '成員名稱';
 }
 
-// Path: S54_TaskSettings_Invite
+// Path: s54_task_settings_invite
 class TranslationsS54TaskSettingsInviteZhTw {
 	TranslationsS54TaskSettingsInviteZhTw.internal(this._root);
 
@@ -508,7 +508,7 @@ class TranslationsS54TaskSettingsInviteZhTw {
 	late final TranslationsS54TaskSettingsInviteLabelZhTw label = TranslationsS54TaskSettingsInviteLabelZhTw.internal(_root);
 }
 
-// Path: S70_System_Settings
+// Path: s70_system_settings
 class TranslationsS70SystemSettingsZhTw {
 	TranslationsS70SystemSettingsZhTw.internal(this._root);
 
@@ -523,7 +523,7 @@ class TranslationsS70SystemSettingsZhTw {
 	late final TranslationsS70SystemSettingsMenuZhTw menu = TranslationsS70SystemSettingsMenuZhTw.internal(_root);
 }
 
-// Path: S72_TermsUpdate
+// Path: s72_terms_update
 class TranslationsS72TermsUpdateZhTw {
 	TranslationsS72TermsUpdateZhTw.internal(this._root);
 
@@ -538,7 +538,7 @@ class TranslationsS72TermsUpdateZhTw {
 	String content({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。';
 }
 
-// Path: S74_DeleteAccount_Notice
+// Path: s74_delete_account_notice
 class TranslationsS74DeleteAccountNoticeZhTw {
 	TranslationsS74DeleteAccountNoticeZhTw.internal(this._root);
 
@@ -555,7 +555,7 @@ class TranslationsS74DeleteAccountNoticeZhTw {
 	late final TranslationsS74DeleteAccountNoticeButtonsZhTw buttons = TranslationsS74DeleteAccountNoticeButtonsZhTw.internal(_root);
 }
 
-// Path: D01_MemberRole_Intro
+// Path: d01_member_role_intro
 class TranslationsD01MemberRoleIntroZhTw {
 	TranslationsD01MemberRoleIntroZhTw.internal(this._root);
 
@@ -574,7 +574,7 @@ class TranslationsD01MemberRoleIntroZhTw {
 	late final TranslationsD01MemberRoleIntroRerollZhTw reroll = TranslationsD01MemberRoleIntroRerollZhTw.internal(_root);
 }
 
-// Path: D02_Invite_Result
+// Path: d02_invite_result
 class TranslationsD02InviteResultZhTw {
 	TranslationsD02InviteResultZhTw.internal(this._root);
 
@@ -586,7 +586,7 @@ class TranslationsD02InviteResultZhTw {
 	String get title => '加入失敗';
 }
 
-// Path: D03_TaskCreate_Confirm
+// Path: d03_task_create_confirm
 class TranslationsD03TaskCreateConfirmZhTw {
 	TranslationsD03TaskCreateConfirmZhTw.internal(this._root);
 
@@ -600,7 +600,7 @@ class TranslationsD03TaskCreateConfirmZhTw {
 	late final TranslationsD03TaskCreateConfirmButtonsZhTw buttons = TranslationsD03TaskCreateConfirmButtonsZhTw.internal(_root);
 }
 
-// Path: D04_CommonUnsaved_Confirm
+// Path: d04_common_unsaved_confirm
 class TranslationsD04CommonUnsavedConfirmZhTw {
 	TranslationsD04CommonUnsavedConfirmZhTw.internal(this._root);
 
@@ -615,7 +615,7 @@ class TranslationsD04CommonUnsavedConfirmZhTw {
 	String get content => '變更將不會被儲存，確定要離開嗎？';
 }
 
-// Path: D05_DateJump_NoResult
+// Path: d05_date_jump_no_result
 class TranslationsD05DateJumpNoResultZhTw {
 	TranslationsD05DateJumpNoResultZhTw.internal(this._root);
 
@@ -630,7 +630,7 @@ class TranslationsD05DateJumpNoResultZhTw {
 	String get content => '此日期無紀錄。是否新增？';
 }
 
-// Path: D06_settlement_confirm
+// Path: d06_settlement_confirm
 class TranslationsD06SettlementConfirmZhTw {
 	TranslationsD06SettlementConfirmZhTw.internal(this._root);
 
@@ -645,7 +645,7 @@ class TranslationsD06SettlementConfirmZhTw {
 	String get content => '結算後任務將立即鎖定，無法新增、刪除或編輯紀錄。\n請確認帳目已核對無誤。';
 }
 
-// Path: D08_TaskClosed_Confirm
+// Path: d08_task_closed_confirm
 class TranslationsD08TaskClosedConfirmZhTw {
 	TranslationsD08TaskClosedConfirmZhTw.internal(this._root);
 
@@ -660,7 +660,7 @@ class TranslationsD08TaskClosedConfirmZhTw {
 	String get content => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？';
 }
 
-// Path: D09_TaskSettings_CurrencyConfirm
+// Path: d09_task_settings_currency_confirm
 class TranslationsD09TaskSettingsCurrencyConfirmZhTw {
 	TranslationsD09TaskSettingsCurrencyConfirmZhTw.internal(this._root);
 
@@ -675,7 +675,7 @@ class TranslationsD09TaskSettingsCurrencyConfirmZhTw {
 	String get content => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？';
 }
 
-// Path: D10_RecordDelete_Confirm
+// Path: d10_record_delete_confirm
 class TranslationsD10RecordDeleteConfirmZhTw {
 	TranslationsD10RecordDeleteConfirmZhTw.internal(this._root);
 
@@ -690,7 +690,7 @@ class TranslationsD10RecordDeleteConfirmZhTw {
 	String content({required Object title, required Object amount}) => '確定要刪除 ${title}（${amount}）嗎？';
 }
 
-// Path: D11_random_result
+// Path: d11_random_result
 class TranslationsD11RandomResultZhTw {
 	TranslationsD11RandomResultZhTw.internal(this._root);
 
@@ -705,7 +705,7 @@ class TranslationsD11RandomResultZhTw {
 	String get skip => '略過';
 }
 
-// Path: D12_logout_confirm
+// Path: d12_logout_confirm
 class TranslationsD12LogoutConfirmZhTw {
 	TranslationsD12LogoutConfirmZhTw.internal(this._root);
 
@@ -722,7 +722,7 @@ class TranslationsD12LogoutConfirmZhTw {
 	late final TranslationsD12LogoutConfirmButtonsZhTw buttons = TranslationsD12LogoutConfirmButtonsZhTw.internal(_root);
 }
 
-// Path: D13_DeleteAccount_Confirm
+// Path: d13_delete_account_confirm
 class TranslationsD13DeleteAccountConfirmZhTw {
 	TranslationsD13DeleteAccountConfirmZhTw.internal(this._root);
 
@@ -737,7 +737,7 @@ class TranslationsD13DeleteAccountConfirmZhTw {
 	String get content => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？';
 }
 
-// Path: D14_Date_Select
+// Path: d14_date_select
 class TranslationsD14DateSelectZhTw {
 	TranslationsD14DateSelectZhTw.internal(this._root);
 
@@ -749,7 +749,7 @@ class TranslationsD14DateSelectZhTw {
 	String get title => '選擇日期';
 }
 
-// Path: B02_SplitExpense_Edit
+// Path: b02_split_expense_edit
 class TranslationsB02SplitExpenseEditZhTw {
 	TranslationsB02SplitExpenseEditZhTw.internal(this._root);
 
@@ -768,7 +768,7 @@ class TranslationsB02SplitExpenseEditZhTw {
 	late final TranslationsB02SplitExpenseEditHintZhTw hint = TranslationsB02SplitExpenseEditHintZhTw.internal(_root);
 }
 
-// Path: B03_SplitMethod_Edit
+// Path: b03_split_method_edit
 class TranslationsB03SplitMethodEditZhTw {
 	TranslationsB03SplitMethodEditZhTw.internal(this._root);
 
@@ -786,7 +786,7 @@ class TranslationsB03SplitMethodEditZhTw {
 	String get mismatch => '金額不符';
 }
 
-// Path: B04_payment_merge
+// Path: b04_payment_merge
 class TranslationsB04PaymentMergeZhTw {
 	TranslationsB04PaymentMergeZhTw.internal(this._root);
 
@@ -800,7 +800,7 @@ class TranslationsB04PaymentMergeZhTw {
 	late final TranslationsB04PaymentMergeLabelZhTw label = TranslationsB04PaymentMergeLabelZhTw.internal(_root);
 }
 
-// Path: B07_PaymentMethod_Edit
+// Path: b07_payment_method_edit
 class TranslationsB07PaymentMethodEditZhTw {
 	TranslationsB07PaymentMethodEditZhTw.internal(this._root);
 
@@ -1336,7 +1336,7 @@ class TranslationsCommonShareZhTw {
 	late final TranslationsCommonShareSettlementZhTw settlement = TranslationsCommonShareSettlementZhTw.internal(_root);
 }
 
-// Path: S10_Home_TaskList.tab
+// Path: s10_home_task_list.tab
 class TranslationsS10HomeTaskListTabZhTw {
 	TranslationsS10HomeTaskListTabZhTw.internal(this._root);
 
@@ -1351,7 +1351,7 @@ class TranslationsS10HomeTaskListTabZhTw {
 	String get completed => '已完成';
 }
 
-// Path: S10_Home_TaskList.empty
+// Path: s10_home_task_list.empty
 class TranslationsS10HomeTaskListEmptyZhTw {
 	TranslationsS10HomeTaskListEmptyZhTw.internal(this._root);
 
@@ -1366,7 +1366,7 @@ class TranslationsS10HomeTaskListEmptyZhTw {
 	String get completed => '沒有已完成的任務';
 }
 
-// Path: S10_Home_TaskList.buttons
+// Path: s10_home_task_list.buttons
 class TranslationsS10HomeTaskListButtonsZhTw {
 	TranslationsS10HomeTaskListButtonsZhTw.internal(this._root);
 
@@ -1381,7 +1381,7 @@ class TranslationsS10HomeTaskListButtonsZhTw {
 	String get join_task => '加入任務';
 }
 
-// Path: S10_Home_TaskList.label
+// Path: s10_home_task_list.label
 class TranslationsS10HomeTaskListLabelZhTw {
 	TranslationsS10HomeTaskListLabelZhTw.internal(this._root);
 
@@ -1393,7 +1393,7 @@ class TranslationsS10HomeTaskListLabelZhTw {
 	String get settlement => '已結算';
 }
 
-// Path: S11_Invite_Confirm.buttons
+// Path: s11_invite_confirm.buttons
 class TranslationsS11InviteConfirmButtonsZhTw {
 	TranslationsS11InviteConfirmButtonsZhTw.internal(this._root);
 
@@ -1408,7 +1408,7 @@ class TranslationsS11InviteConfirmButtonsZhTw {
 	String get back_task_list => '回任務列表';
 }
 
-// Path: S11_Invite_Confirm.label
+// Path: s11_invite_confirm.label
 class TranslationsS11InviteConfirmLabelZhTw {
 	TranslationsS11InviteConfirmLabelZhTw.internal(this._root);
 
@@ -1426,7 +1426,7 @@ class TranslationsS11InviteConfirmLabelZhTw {
 	String get expense => '應分攤';
 }
 
-// Path: S12_TaskClose_Notice.buttons
+// Path: s12_task_close_notice.buttons
 class TranslationsS12TaskCloseNoticeButtonsZhTw {
 	TranslationsS12TaskCloseNoticeButtonsZhTw.internal(this._root);
 
@@ -1438,7 +1438,7 @@ class TranslationsS12TaskCloseNoticeButtonsZhTw {
 	String get close_task => '結束任務';
 }
 
-// Path: S13_Task_Dashboard.buttons
+// Path: s13_task_dashboard.buttons
 class TranslationsS13TaskDashboardButtonsZhTw {
 	TranslationsS13TaskDashboardButtonsZhTw.internal(this._root);
 
@@ -1450,7 +1450,7 @@ class TranslationsS13TaskDashboardButtonsZhTw {
 	String get add => '新增';
 }
 
-// Path: S13_Task_Dashboard.tab
+// Path: s13_task_dashboard.tab
 class TranslationsS13TaskDashboardTabZhTw {
 	TranslationsS13TaskDashboardTabZhTw.internal(this._root);
 
@@ -1465,7 +1465,7 @@ class TranslationsS13TaskDashboardTabZhTw {
 	String get personal => '個人';
 }
 
-// Path: S13_Task_Dashboard.label
+// Path: s13_task_dashboard.label
 class TranslationsS13TaskDashboardLabelZhTw {
 	TranslationsS13TaskDashboardLabelZhTw.internal(this._root);
 
@@ -1486,7 +1486,7 @@ class TranslationsS13TaskDashboardLabelZhTw {
 	String get total_prepay_personal => '總預收（含代墊）';
 }
 
-// Path: S13_Task_Dashboard.empty
+// Path: s13_task_dashboard.empty
 class TranslationsS13TaskDashboardEmptyZhTw {
 	TranslationsS13TaskDashboardEmptyZhTw.internal(this._root);
 
@@ -1501,7 +1501,7 @@ class TranslationsS13TaskDashboardEmptyZhTw {
 	String get personal_records => '尚無紀錄';
 }
 
-// Path: S13_Task_Dashboard.section
+// Path: s13_task_dashboard.section
 class TranslationsS13TaskDashboardSectionZhTw {
 	TranslationsS13TaskDashboardSectionZhTw.internal(this._root);
 
@@ -1522,7 +1522,7 @@ class TranslationsS13TaskDashboardSectionZhTw {
 	String get no_data => '無資料';
 }
 
-// Path: S14_Task_Settings.section
+// Path: s14_task_settings.section
 class TranslationsS14TaskSettingsSectionZhTw {
 	TranslationsS14TaskSettingsSectionZhTw.internal(this._root);
 
@@ -1543,7 +1543,7 @@ class TranslationsS14TaskSettingsSectionZhTw {
 	String get other => '其他設定';
 }
 
-// Path: S14_Task_Settings.menu
+// Path: s14_task_settings.menu
 class TranslationsS14TaskSettingsMenuZhTw {
 	TranslationsS14TaskSettingsMenuZhTw.internal(this._root);
 
@@ -1564,7 +1564,7 @@ class TranslationsS14TaskSettingsMenuZhTw {
 	String get close_task => '結束任務';
 }
 
-// Path: S15_Record_Edit.title
+// Path: s15_record_edit.title
 class TranslationsS15RecordEditTitleZhTw {
 	TranslationsS15RecordEditTitleZhTw.internal(this._root);
 
@@ -1579,7 +1579,7 @@ class TranslationsS15RecordEditTitleZhTw {
 	String get edit => '編輯紀錄';
 }
 
-// Path: S15_Record_Edit.buttons
+// Path: s15_record_edit.buttons
 class TranslationsS15RecordEditButtonsZhTw {
 	TranslationsS15RecordEditButtonsZhTw.internal(this._root);
 
@@ -1591,7 +1591,7 @@ class TranslationsS15RecordEditButtonsZhTw {
 	String get add_item => '新增細項';
 }
 
-// Path: S15_Record_Edit.section
+// Path: s15_record_edit.section
 class TranslationsS15RecordEditSectionZhTw {
 	TranslationsS15RecordEditSectionZhTw.internal(this._root);
 
@@ -1606,7 +1606,7 @@ class TranslationsS15RecordEditSectionZhTw {
 	String get items => '細項分拆';
 }
 
-// Path: S15_Record_Edit.val
+// Path: s15_record_edit.val
 class TranslationsS15RecordEditValZhTw {
 	TranslationsS15RecordEditValZhTw.internal(this._root);
 
@@ -1636,7 +1636,7 @@ class TranslationsS15RecordEditValZhTw {
 	String get mock_note => '細項說明';
 }
 
-// Path: S15_Record_Edit.tab
+// Path: s15_record_edit.tab
 class TranslationsS15RecordEditTabZhTw {
 	TranslationsS15RecordEditTabZhTw.internal(this._root);
 
@@ -1651,7 +1651,7 @@ class TranslationsS15RecordEditTabZhTw {
 	String get prepay => '預收';
 }
 
-// Path: S15_Record_Edit.rate_dialog
+// Path: s15_record_edit.rate_dialog
 class TranslationsS15RecordEditRateDialogZhTw {
 	TranslationsS15RecordEditRateDialogZhTw.internal(this._root);
 
@@ -1666,7 +1666,7 @@ class TranslationsS15RecordEditRateDialogZhTw {
 	String get content => '匯率資料來自 Open Exchange Rates（免費版），僅供參考。實際匯率請依換匯水單為準。';
 }
 
-// Path: S15_Record_Edit.label
+// Path: s15_record_edit.label
 class TranslationsS15RecordEditLabelZhTw {
 	TranslationsS15RecordEditLabelZhTw.internal(this._root);
 
@@ -1678,7 +1678,7 @@ class TranslationsS15RecordEditLabelZhTw {
 	String rate_with_base({required Object base, required Object target}) => '匯率（1 ${base} = ? ${target}）';
 }
 
-// Path: S15_Record_Edit.hint
+// Path: s15_record_edit.hint
 class TranslationsS15RecordEditHintZhTw {
 	TranslationsS15RecordEditHintZhTw.internal(this._root);
 
@@ -1694,7 +1694,7 @@ class TranslationsS15RecordEditHintZhTw {
 	String get memo => '例：備註事項';
 }
 
-// Path: S16_TaskCreate_Edit.section
+// Path: s16_task_create_edit.section
 class TranslationsS16TaskCreateEditSectionZhTw {
 	TranslationsS16TaskCreateEditSectionZhTw.internal(this._root);
 
@@ -1712,7 +1712,7 @@ class TranslationsS16TaskCreateEditSectionZhTw {
 	String get settlement => '結算設定';
 }
 
-// Path: S16_TaskCreate_Edit.label
+// Path: s16_task_create_edit.label
 class TranslationsS16TaskCreateEditLabelZhTw {
 	TranslationsS16TaskCreateEditLabelZhTw.internal(this._root);
 
@@ -1724,7 +1724,7 @@ class TranslationsS16TaskCreateEditLabelZhTw {
 	String name_counter({required Object current, required Object max}) => '${current}/${max}';
 }
 
-// Path: S16_TaskCreate_Edit.hint
+// Path: s16_task_create_edit.hint
 class TranslationsS16TaskCreateEditHintZhTw {
 	TranslationsS16TaskCreateEditHintZhTw.internal(this._root);
 
@@ -1736,7 +1736,7 @@ class TranslationsS16TaskCreateEditHintZhTw {
 	String get name => '例：東京五日遊';
 }
 
-// Path: S17_Task_Locked.buttons
+// Path: s17_task_locked.buttons
 class TranslationsS17TaskLockedButtonsZhTw {
 	TranslationsS17TaskLockedButtonsZhTw.internal(this._root);
 
@@ -1751,7 +1751,7 @@ class TranslationsS17TaskLockedButtonsZhTw {
 	String get view_payment_info => '隊長收退款帳戶';
 }
 
-// Path: S17_Task_Locked.section
+// Path: s17_task_locked.section
 class TranslationsS17TaskLockedSectionZhTw {
 	TranslationsS17TaskLockedSectionZhTw.internal(this._root);
 
@@ -1766,7 +1766,7 @@ class TranslationsS17TaskLockedSectionZhTw {
 	String get cleared => '已處理';
 }
 
-// Path: S17_Task_Locked.export
+// Path: s17_task_locked.export
 class TranslationsS17TaskLockedExportZhTw {
 	TranslationsS17TaskLockedExportZhTw.internal(this._root);
 
@@ -1862,7 +1862,7 @@ class TranslationsS17TaskLockedExportZhTw {
 	String get mixed => '混合支付';
 }
 
-// Path: S18_Task_Join.tabs
+// Path: s18_task_join.tabs
 class TranslationsS18TaskJoinTabsZhTw {
 	TranslationsS18TaskJoinTabsZhTw.internal(this._root);
 
@@ -1877,7 +1877,7 @@ class TranslationsS18TaskJoinTabsZhTw {
 	String get scan => '掃描';
 }
 
-// Path: S18_Task_Join.label
+// Path: s18_task_join.label
 class TranslationsS18TaskJoinLabelZhTw {
 	TranslationsS18TaskJoinLabelZhTw.internal(this._root);
 
@@ -1889,7 +1889,7 @@ class TranslationsS18TaskJoinLabelZhTw {
 	String get input => '邀請碼';
 }
 
-// Path: S18_Task_Join.hint
+// Path: s18_task_join.hint
 class TranslationsS18TaskJoinHintZhTw {
 	TranslationsS18TaskJoinHintZhTw.internal(this._root);
 
@@ -1901,7 +1901,7 @@ class TranslationsS18TaskJoinHintZhTw {
 	String get input => '請輸入 8 碼邀請碼';
 }
 
-// Path: S18_Task_Join.content
+// Path: s18_task_join.content
 class TranslationsS18TaskJoinContentZhTw {
 	TranslationsS18TaskJoinContentZhTw.internal(this._root);
 
@@ -1913,7 +1913,7 @@ class TranslationsS18TaskJoinContentZhTw {
 	String get scan => '請將行動條碼放入框內即可自動掃描';
 }
 
-// Path: S30_settlement_confirm.buttons
+// Path: s30_settlement_confirm.buttons
 class TranslationsS30SettlementConfirmButtonsZhTw {
 	TranslationsS30SettlementConfirmButtonsZhTw.internal(this._root);
 
@@ -1925,7 +1925,7 @@ class TranslationsS30SettlementConfirmButtonsZhTw {
 	String get set_payment_info => '收款設定';
 }
 
-// Path: S30_settlement_confirm.steps
+// Path: s30_settlement_confirm.steps
 class TranslationsS30SettlementConfirmStepsZhTw {
 	TranslationsS30SettlementConfirmStepsZhTw.internal(this._root);
 
@@ -1940,7 +1940,7 @@ class TranslationsS30SettlementConfirmStepsZhTw {
 	String get payment_info => '收款設定';
 }
 
-// Path: S30_settlement_confirm.warning
+// Path: s30_settlement_confirm.warning
 class TranslationsS30SettlementConfirmWarningZhTw {
 	TranslationsS30SettlementConfirmWarningZhTw.internal(this._root);
 
@@ -1952,7 +1952,7 @@ class TranslationsS30SettlementConfirmWarningZhTw {
 	String get random_reveal => '零頭歸屬將於下一步結算完成後揭曉。';
 }
 
-// Path: S30_settlement_confirm.list_item
+// Path: s30_settlement_confirm.list_item
 class TranslationsS30SettlementConfirmListItemZhTw {
 	TranslationsS30SettlementConfirmListItemZhTw.internal(this._root);
 
@@ -1976,7 +1976,7 @@ class TranslationsS30SettlementConfirmListItemZhTw {
 	String get remainder => '零頭';
 }
 
-// Path: S31_settlement_payment_info.buttons
+// Path: s31_settlement_payment_info.buttons
 class TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	TranslationsS31SettlementPaymentInfoButtonsZhTw.internal(this._root);
 
@@ -1988,7 +1988,7 @@ class TranslationsS31SettlementPaymentInfoButtonsZhTw {
 	String get prev_step => '上一步';
 }
 
-// Path: S32_settlement_result.buttons
+// Path: s32_settlement_result.buttons
 class TranslationsS32SettlementResultButtonsZhTw {
 	TranslationsS32SettlementResultButtonsZhTw.internal(this._root);
 
@@ -2003,7 +2003,7 @@ class TranslationsS32SettlementResultButtonsZhTw {
 	String get back_task_dashboard => '返回任務';
 }
 
-// Path: S50_Onboarding_Consent.buttons
+// Path: s50_onboarding_consent.buttons
 class TranslationsS50OnboardingConsentButtonsZhTw {
 	TranslationsS50OnboardingConsentButtonsZhTw.internal(this._root);
 
@@ -2015,7 +2015,7 @@ class TranslationsS50OnboardingConsentButtonsZhTw {
 	String get start => '開始';
 }
 
-// Path: S50_Onboarding_Consent.content
+// Path: s50_onboarding_consent.content
 class TranslationsS50OnboardingConsentContentZhTw {
 	TranslationsS50OnboardingConsentContentZhTw.internal(this._root);
 
@@ -2030,7 +2030,7 @@ class TranslationsS50OnboardingConsentContentZhTw {
 	String get suffix => '。';
 }
 
-// Path: S52_TaskSettings_Log.buttons
+// Path: s52_task_settings_log.buttons
 class TranslationsS52TaskSettingsLogButtonsZhTw {
 	TranslationsS52TaskSettingsLogButtonsZhTw.internal(this._root);
 
@@ -2042,7 +2042,7 @@ class TranslationsS52TaskSettingsLogButtonsZhTw {
 	String get export_csv => '匯出 CSV';
 }
 
-// Path: S52_TaskSettings_Log.csv_header
+// Path: s52_task_settings_log.csv_header
 class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	TranslationsS52TaskSettingsLogCsvHeaderZhTw.internal(this._root);
 
@@ -2063,7 +2063,7 @@ class TranslationsS52TaskSettingsLogCsvHeaderZhTw {
 	String get details => '內容';
 }
 
-// Path: S52_TaskSettings_Log.type
+// Path: s52_task_settings_log.type
 class TranslationsS52TaskSettingsLogTypeZhTw {
 	TranslationsS52TaskSettingsLogTypeZhTw.internal(this._root);
 
@@ -2078,7 +2078,7 @@ class TranslationsS52TaskSettingsLogTypeZhTw {
 	String get expense => '支出';
 }
 
-// Path: S52_TaskSettings_Log.payment_type
+// Path: s52_task_settings_log.payment_type
 class TranslationsS52TaskSettingsLogPaymentTypeZhTw {
 	TranslationsS52TaskSettingsLogPaymentTypeZhTw.internal(this._root);
 
@@ -2096,7 +2096,7 @@ class TranslationsS52TaskSettingsLogPaymentTypeZhTw {
 	String get multiple => '多人代墊';
 }
 
-// Path: S52_TaskSettings_Log.unit
+// Path: s52_task_settings_log.unit
 class TranslationsS52TaskSettingsLogUnitZhTw {
 	TranslationsS52TaskSettingsLogUnitZhTw.internal(this._root);
 
@@ -2111,7 +2111,7 @@ class TranslationsS52TaskSettingsLogUnitZhTw {
 	String get items => '細項';
 }
 
-// Path: S53_TaskSettings_Members.buttons
+// Path: s53_task_settings_members.buttons
 class TranslationsS53TaskSettingsMembersButtonsZhTw {
 	TranslationsS53TaskSettingsMembersButtonsZhTw.internal(this._root);
 
@@ -2123,7 +2123,7 @@ class TranslationsS53TaskSettingsMembersButtonsZhTw {
 	String get add_member => '新增成員';
 }
 
-// Path: S53_TaskSettings_Members.label
+// Path: s53_task_settings_members.label
 class TranslationsS53TaskSettingsMembersLabelZhTw {
 	TranslationsS53TaskSettingsMembersLabelZhTw.internal(this._root);
 
@@ -2135,7 +2135,7 @@ class TranslationsS53TaskSettingsMembersLabelZhTw {
 	String get default_ratio => '預設比例';
 }
 
-// Path: S54_TaskSettings_Invite.buttons
+// Path: s54_task_settings_invite.buttons
 class TranslationsS54TaskSettingsInviteButtonsZhTw {
 	TranslationsS54TaskSettingsInviteButtonsZhTw.internal(this._root);
 
@@ -2150,7 +2150,7 @@ class TranslationsS54TaskSettingsInviteButtonsZhTw {
 	String get regenerate => '重新產生';
 }
 
-// Path: S54_TaskSettings_Invite.label
+// Path: s54_task_settings_invite.label
 class TranslationsS54TaskSettingsInviteLabelZhTw {
 	TranslationsS54TaskSettingsInviteLabelZhTw.internal(this._root);
 
@@ -2165,7 +2165,7 @@ class TranslationsS54TaskSettingsInviteLabelZhTw {
 	String get invite_expired => '邀請碼已過期';
 }
 
-// Path: S70_System_Settings.section
+// Path: s70_system_settings.section
 class TranslationsS70SystemSettingsSectionZhTw {
 	TranslationsS70SystemSettingsSectionZhTw.internal(this._root);
 
@@ -2183,7 +2183,7 @@ class TranslationsS70SystemSettingsSectionZhTw {
 	String get account => '帳號設定';
 }
 
-// Path: S70_System_Settings.menu
+// Path: s70_system_settings.menu
 class TranslationsS70SystemSettingsMenuZhTw {
 	TranslationsS70SystemSettingsMenuZhTw.internal(this._root);
 
@@ -2213,7 +2213,7 @@ class TranslationsS70SystemSettingsMenuZhTw {
 	String get delete_account => '刪除帳號';
 }
 
-// Path: S74_DeleteAccount_Notice.buttons
+// Path: s74_delete_account_notice.buttons
 class TranslationsS74DeleteAccountNoticeButtonsZhTw {
 	TranslationsS74DeleteAccountNoticeButtonsZhTw.internal(this._root);
 
@@ -2225,7 +2225,7 @@ class TranslationsS74DeleteAccountNoticeButtonsZhTw {
 	String get delete_account => '刪除帳號';
 }
 
-// Path: D01_MemberRole_Intro.buttons
+// Path: d01_member_role_intro.buttons
 class TranslationsD01MemberRoleIntroButtonsZhTw {
 	TranslationsD01MemberRoleIntroButtonsZhTw.internal(this._root);
 
@@ -2240,7 +2240,7 @@ class TranslationsD01MemberRoleIntroButtonsZhTw {
 	String get enter => '進入任務';
 }
 
-// Path: D01_MemberRole_Intro.reroll
+// Path: d01_member_role_intro.reroll
 class TranslationsD01MemberRoleIntroRerollZhTw {
 	TranslationsD01MemberRoleIntroRerollZhTw.internal(this._root);
 
@@ -2252,7 +2252,7 @@ class TranslationsD01MemberRoleIntroRerollZhTw {
 	String get empty => '機會已用完';
 }
 
-// Path: D03_TaskCreate_Confirm.buttons
+// Path: d03_task_create_confirm.buttons
 class TranslationsD03TaskCreateConfirmButtonsZhTw {
 	TranslationsD03TaskCreateConfirmButtonsZhTw.internal(this._root);
 
@@ -2264,7 +2264,7 @@ class TranslationsD03TaskCreateConfirmButtonsZhTw {
 	String get back_edit => '返回編輯';
 }
 
-// Path: D12_logout_confirm.buttons
+// Path: d12_logout_confirm.buttons
 class TranslationsD12LogoutConfirmButtonsZhTw {
 	TranslationsD12LogoutConfirmButtonsZhTw.internal(this._root);
 
@@ -2276,7 +2276,7 @@ class TranslationsD12LogoutConfirmButtonsZhTw {
 	String get logout => '確認登出';
 }
 
-// Path: B02_SplitExpense_Edit.buttons
+// Path: b02_split_expense_edit.buttons
 class TranslationsB02SplitExpenseEditButtonsZhTw {
 	TranslationsB02SplitExpenseEditButtonsZhTw.internal(this._root);
 
@@ -2288,7 +2288,7 @@ class TranslationsB02SplitExpenseEditButtonsZhTw {
 	String get confirm_split => '確認分拆';
 }
 
-// Path: B02_SplitExpense_Edit.hint
+// Path: b02_split_expense_edit.hint
 class TranslationsB02SplitExpenseEditHintZhTw {
 	TranslationsB02SplitExpenseEditHintZhTw.internal(this._root);
 
@@ -2300,7 +2300,7 @@ class TranslationsB02SplitExpenseEditHintZhTw {
 	String get sub_item => '例：子項目';
 }
 
-// Path: B03_SplitMethod_Edit.buttons
+// Path: b03_split_method_edit.buttons
 class TranslationsB03SplitMethodEditButtonsZhTw {
 	TranslationsB03SplitMethodEditButtonsZhTw.internal(this._root);
 
@@ -2312,7 +2312,7 @@ class TranslationsB03SplitMethodEditButtonsZhTw {
 	String get adjust_weight => '調整權重';
 }
 
-// Path: B03_SplitMethod_Edit.label
+// Path: b03_split_method_edit.label
 class TranslationsB03SplitMethodEditLabelZhTw {
 	TranslationsB03SplitMethodEditLabelZhTw.internal(this._root);
 
@@ -2324,7 +2324,7 @@ class TranslationsB03SplitMethodEditLabelZhTw {
 	String total({required Object current, required Object target}) => '${current} / ${target}';
 }
 
-// Path: B04_payment_merge.label
+// Path: b04_payment_merge.label
 class TranslationsB04PaymentMergeLabelZhTw {
 	TranslationsB04PaymentMergeLabelZhTw.internal(this._root);
 
@@ -2339,7 +2339,7 @@ class TranslationsB04PaymentMergeLabelZhTw {
 	String get merge_amount => '合併總額';
 }
 
-// Path: B07_PaymentMethod_Edit.label
+// Path: b07_payment_method_edit.label
 class TranslationsB07PaymentMethodEditLabelZhTw {
 	TranslationsB07PaymentMethodEditLabelZhTw.internal(this._root);
 
@@ -2360,7 +2360,7 @@ class TranslationsB07PaymentMethodEditLabelZhTw {
 	String get total_advance => '代墊總計';
 }
 
-// Path: B07_PaymentMethod_Edit.status
+// Path: b07_payment_method_edit.status
 class TranslationsB07PaymentMethodEditStatusZhTw {
 	TranslationsB07PaymentMethodEditStatusZhTw.internal(this._root);
 
@@ -2705,7 +2705,7 @@ class TranslationsCommonShareSettlementZhTw {
 	String content({required Object taskName, required Object link}) => '結算已完成。\n請開啟 Iron Split App 確認「${taskName}」的支付金額。\n連結：${link}';
 }
 
-// Path: S15_Record_Edit.hint.category
+// Path: s15_record_edit.hint.category
 class TranslationsS15RecordEditHintCategoryZhTw {
 	TranslationsS15RecordEditHintCategoryZhTw.internal(this._root);
 
@@ -3031,247 +3031,247 @@ extension on Translations {
 			'log_action.settle_up' => '執行結算',
 			'log_action.unknown' => '未知操作',
 			'log_action.close_task' => '結束任務',
-			'S10_Home_TaskList.title' => '任務列表',
-			'S10_Home_TaskList.tab.in_progress' => '進行中',
-			'S10_Home_TaskList.tab.completed' => '已完成',
-			'S10_Home_TaskList.empty.in_progress' => '目前沒有進行中的任務',
-			'S10_Home_TaskList.empty.completed' => '沒有已完成的任務',
-			'S10_Home_TaskList.buttons.add_task' => '新增任務',
-			'S10_Home_TaskList.buttons.join_task' => '加入任務',
-			'S10_Home_TaskList.date_tbd' => '日期未定',
-			'S10_Home_TaskList.label.settlement' => '已結算',
-			'S11_Invite_Confirm.title' => '加入任務',
-			'S11_Invite_Confirm.subtitle' => '受邀加入以下任務',
-			'S11_Invite_Confirm.buttons.join' => '加入',
-			'S11_Invite_Confirm.buttons.back_task_list' => '回任務列表',
-			'S11_Invite_Confirm.label.select_ghost' => '選擇要繼承的成員',
-			'S11_Invite_Confirm.label.prepaid' => '已代墊',
-			'S11_Invite_Confirm.label.expense' => '應分攤',
-			'S12_TaskClose_Notice.title' => '結束任務確認',
-			'S12_TaskClose_Notice.content' => '結束任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，將無法新增或編輯任何資料。',
-			'S12_TaskClose_Notice.buttons.close_task' => '結束任務',
-			'S13_Task_Dashboard.title' => '任務總覽',
-			'S13_Task_Dashboard.buttons.add' => '新增',
-			'S13_Task_Dashboard.tab.group' => '群組',
-			'S13_Task_Dashboard.tab.personal' => '個人',
-			'S13_Task_Dashboard.label.total_expense' => '總費用',
-			'S13_Task_Dashboard.label.total_prepay' => '總預收',
-			'S13_Task_Dashboard.label.total_expense_personal' => '總費用',
-			'S13_Task_Dashboard.label.total_prepay_personal' => '總預收（含代墊）',
-			'S13_Task_Dashboard.empty.records' => '尚無紀錄',
-			'S13_Task_Dashboard.empty.personal_records' => '尚無紀錄',
-			'S13_Task_Dashboard.daily_expense_label' => '支出',
-			'S13_Task_Dashboard.dialog_balance_detail' => '收支幣別明細',
-			'S13_Task_Dashboard.section.expense' => '支出明細',
-			'S13_Task_Dashboard.section.prepay' => '預收明細',
-			'S13_Task_Dashboard.section.prepay_balance' => '預收餘額',
-			'S13_Task_Dashboard.section.no_data' => '無資料',
-			'S14_Task_Settings.title' => '任務設定',
-			'S14_Task_Settings.section.task_name' => '任務名稱',
-			'S14_Task_Settings.section.task_period' => '任務期間',
-			'S14_Task_Settings.section.settlement' => '結算設定',
-			'S14_Task_Settings.section.other' => '其他設定',
-			'S14_Task_Settings.menu.invite' => '發送邀請',
-			'S14_Task_Settings.menu.member_settings' => '成員設定',
-			'S14_Task_Settings.menu.history' => '歷史紀錄',
-			'S14_Task_Settings.menu.close_task' => '結束任務',
-			'S15_Record_Edit.title.add' => '新增紀錄',
-			'S15_Record_Edit.title.edit' => '編輯紀錄',
-			'S15_Record_Edit.buttons.add_item' => '新增細項',
-			'S15_Record_Edit.section.split' => '分攤資訊',
-			'S15_Record_Edit.section.items' => '細項分拆',
-			'S15_Record_Edit.val.prepay' => '預收',
-			'S15_Record_Edit.val.member_paid' => ({required Object name}) => '${name} 代墊',
-			'S15_Record_Edit.val.split_details' => '細項分拆',
-			'S15_Record_Edit.val.split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
-			'S15_Record_Edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
-			'S15_Record_Edit.val.split_remaining' => '剩餘金額',
-			'S15_Record_Edit.val.mock_note' => '細項說明',
-			'S15_Record_Edit.tab.expense' => '費用',
-			'S15_Record_Edit.tab.prepay' => '預收',
-			'S15_Record_Edit.base_card' => '剩餘金額',
-			'S15_Record_Edit.type_prepay' => '預收款',
-			'S15_Record_Edit.payer_multiple' => '多人',
-			'S15_Record_Edit.rate_dialog.title' => '匯率來源',
-			'S15_Record_Edit.rate_dialog.content' => '匯率資料來自 Open Exchange Rates（免費版），僅供參考。實際匯率請依換匯水單為準。',
-			'S15_Record_Edit.label.rate_with_base' => ({required Object base, required Object target}) => '匯率（1 ${base} = ? ${target}）',
-			'S15_Record_Edit.hint.category.food' => '晚餐',
-			'S15_Record_Edit.hint.category.transport' => '車費',
-			'S15_Record_Edit.hint.category.shopping' => '紀念品',
-			'S15_Record_Edit.hint.category.entertainment' => '門票',
-			'S15_Record_Edit.hint.category.accommodation' => '住宿費',
-			'S15_Record_Edit.hint.category.others' => '其他費用',
-			'S15_Record_Edit.hint.item' => ({required Object category}) => '例：${category}',
-			'S15_Record_Edit.hint.memo' => '例：備註事項',
-			'S16_TaskCreate_Edit.title' => '新增任務',
-			'S16_TaskCreate_Edit.section.task_name' => '任務名稱',
-			'S16_TaskCreate_Edit.section.task_period' => '任務期間',
-			'S16_TaskCreate_Edit.section.settlement' => '結算設定',
-			'S16_TaskCreate_Edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S16_TaskCreate_Edit.hint.name' => '例：東京五日遊',
-			'S17_Task_Locked.buttons.notify_members' => '通知成員',
-			'S17_Task_Locked.buttons.view_payment_info' => '隊長收退款帳戶',
-			'S17_Task_Locked.section.pending' => '待處理',
-			'S17_Task_Locked.section.cleared' => '已處理',
-			'S17_Task_Locked.retention_notice' => ({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載任務紀錄',
-			'S17_Task_Locked.remainder_absorbed_by' => ({required Object name}) => '由 ${name} 承擔',
-			'S17_Task_Locked.export.report_info' => '報表資訊',
-			'S17_Task_Locked.export.task_name' => '任務名稱',
-			'S17_Task_Locked.export.export_time' => '報表製作時間',
-			'S17_Task_Locked.export.base_currency' => '結算幣別',
-			'S17_Task_Locked.export.settlement_summary' => '結算總表',
-			'S17_Task_Locked.export.member' => '成員',
-			'S17_Task_Locked.export.role' => '角色',
-			'S17_Task_Locked.export.net_amount' => '淨額',
-			'S17_Task_Locked.export.status' => '狀態',
-			'S17_Task_Locked.export.receiver' => '可退',
-			'S17_Task_Locked.export.payer' => '應付',
-			'S17_Task_Locked.export.cleared' => '已處理',
-			'S17_Task_Locked.export.pending' => '未處理',
-			'S17_Task_Locked.export.fund_analysis' => '資金與零頭',
-			'S17_Task_Locked.export.total_expense' => '總費用',
-			'S17_Task_Locked.export.total_prepay' => '總預收',
-			'S17_Task_Locked.export.remainder_buffer' => '零頭總額',
-			'S17_Task_Locked.export.remainder_absorbed_by' => '零頭得主',
-			'S17_Task_Locked.export.transaction_details' => '交易流水帳',
-			'S17_Task_Locked.export.date' => '日期',
-			'S17_Task_Locked.export.title' => '標題',
-			'S17_Task_Locked.export.type' => '類型',
-			'S17_Task_Locked.export.original_amount' => '原始金額',
-			'S17_Task_Locked.export.currency' => '幣別',
-			'S17_Task_Locked.export.rate' => '匯率',
-			'S17_Task_Locked.export.base_amount' => '結算幣別金額',
-			'S17_Task_Locked.export.net_remainder' => '零頭',
-			'S17_Task_Locked.export.pool' => '預收款',
-			'S17_Task_Locked.export.mixed' => '混合支付',
-			'S18_Task_Join.title' => '加入任務',
-			'S18_Task_Join.tabs.input' => '輸入',
-			'S18_Task_Join.tabs.scan' => '掃描',
-			'S18_Task_Join.label.input' => '邀請碼',
-			'S18_Task_Join.hint.input' => '請輸入 8 碼邀請碼',
-			'S18_Task_Join.content.scan' => '請將行動條碼放入框內即可自動掃描',
-			'S30_settlement_confirm.title' => '結算確認',
-			'S30_settlement_confirm.buttons.set_payment_info' => '收款設定',
-			'S30_settlement_confirm.steps.confirm_amount' => '確認金額',
-			'S30_settlement_confirm.steps.payment_info' => '收款設定',
-			'S30_settlement_confirm.warning.random_reveal' => '零頭歸屬將於下一步結算完成後揭曉。',
-			'S30_settlement_confirm.list_item.merged_label' => '合併',
-			'S30_settlement_confirm.list_item.includes' => '包含：',
-			'S30_settlement_confirm.list_item.principal' => '本金',
-			'S30_settlement_confirm.list_item.random_remainder' => '隨機零頭',
-			'S30_settlement_confirm.list_item.remainder' => '零頭',
-			'S31_settlement_payment_info.title' => '收款資訊',
-			'S31_settlement_payment_info.setup_instruction' => '收款資訊僅供本次結算使用。預設資料加密儲存於本機。',
-			'S31_settlement_payment_info.sync_save' => '設為預設收款資訊（僅儲存於本機）',
-			'S31_settlement_payment_info.sync_update' => '同步更新預設收款資訊',
-			'S31_settlement_payment_info.buttons.prev_step' => '上一步',
-			'S32_settlement_result.title' => '結算成功',
-			'S32_settlement_result.content' => '帳目已確認。請通知成員完成付款。',
-			'S32_settlement_result.waiting_reveal' => '等待揭曉...',
-			'S32_settlement_result.remainder_winner_prefix' => '零頭歸屬：',
-			'S32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額為：${prefix}${total}',
-			'S32_settlement_result.total_label' => '本次結算總額',
-			'S32_settlement_result.buttons.share' => '發送結算通知',
-			'S32_settlement_result.buttons.back_task_dashboard' => '返回任務',
-			'S50_Onboarding_Consent.title' => '歡迎使用 Iron Split',
-			'S50_Onboarding_Consent.buttons.start' => '開始',
-			'S50_Onboarding_Consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，負責記帳與分攤。\n無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。\n\n分帳，本該清楚。\n\n點擊「開始」即表示同意我們的 ',
-			'S50_Onboarding_Consent.content.suffix' => '。',
-			'S51_Onboarding_Name.title' => '名稱設定',
-			'S51_Onboarding_Name.content' => '請輸入顯示名稱。',
-			'S51_Onboarding_Name.label' => '顯示名稱',
-			'S51_Onboarding_Name.hint' => '輸入暱稱',
-			'S51_Onboarding_Name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			'S52_TaskSettings_Log.title' => '活動紀錄',
-			'S52_TaskSettings_Log.buttons.export_csv' => '匯出 CSV',
-			'S52_TaskSettings_Log.empty_log' => '目前沒有任何活動紀錄',
-			'S52_TaskSettings_Log.export_file_prefix' => '活動紀錄',
-			'S52_TaskSettings_Log.csv_header.time' => '時間',
-			'S52_TaskSettings_Log.csv_header.user' => '操作者',
-			'S52_TaskSettings_Log.csv_header.action' => '動作',
-			'S52_TaskSettings_Log.csv_header.details' => '內容',
-			'S52_TaskSettings_Log.type.prepay' => '預收',
-			'S52_TaskSettings_Log.type.expense' => '支出',
-			'S52_TaskSettings_Log.payment_type.prepay' => '預收款支付',
-			'S52_TaskSettings_Log.payment_type.single_suffix' => '代墊',
-			'S52_TaskSettings_Log.payment_type.multiple' => '多人代墊',
-			'S52_TaskSettings_Log.unit.members' => '人',
-			'S52_TaskSettings_Log.unit.items' => '細項',
-			'S53_TaskSettings_Members.title' => '成員管理',
-			'S53_TaskSettings_Members.buttons.add_member' => '新增成員',
-			'S53_TaskSettings_Members.label.default_ratio' => '預設比例',
-			'S53_TaskSettings_Members.member_default_name' => '成員',
-			'S53_TaskSettings_Members.member_name' => '成員名稱',
-			'S54_TaskSettings_Invite.title' => '任務邀請',
-			'S54_TaskSettings_Invite.buttons.share' => '分享',
-			'S54_TaskSettings_Invite.buttons.regenerate' => '重新產生',
-			'S54_TaskSettings_Invite.label.expires_in' => '有效期限',
-			'S54_TaskSettings_Invite.label.invite_expired' => '邀請碼已過期',
-			'S70_System_Settings.title' => '系統設定',
-			'S70_System_Settings.section.basic' => '基本設定',
-			'S70_System_Settings.section.legal' => '相關條款',
-			'S70_System_Settings.section.account' => '帳號設定',
-			'S70_System_Settings.menu.user_name' => '顯示名稱',
-			'S70_System_Settings.menu.language' => '顯示語言',
-			'S70_System_Settings.menu.theme' => '外觀主題',
-			'S70_System_Settings.menu.terms' => '服務條款',
-			'S70_System_Settings.menu.privacy' => '隱私政策',
-			'S70_System_Settings.menu.payment_info' => '收款帳戶設定',
-			'S70_System_Settings.menu.delete_account' => '刪除帳號',
-			'S72_TermsUpdate.title' => ({required Object type}) => '${type}更新',
-			'S72_TermsUpdate.content' => ({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。',
-			'S74_DeleteAccount_Notice.title' => '刪除帳號確認',
-			'S74_DeleteAccount_Notice.content' => '此動作無法復原，個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。',
-			'S74_DeleteAccount_Notice.buttons.delete_account' => '刪除帳號',
-			'D01_MemberRole_Intro.title' => '本次角色',
-			'D01_MemberRole_Intro.buttons.reroll' => '換個動物',
-			'D01_MemberRole_Intro.buttons.enter' => '進入任務',
-			'D01_MemberRole_Intro.content' => ({required Object avatar}) => '本次任務的專屬頭像${avatar}。\n分帳紀錄將以 ${avatar} 代表。',
-			'D01_MemberRole_Intro.reroll.empty' => '機會已用完',
-			'D02_Invite_Result.title' => '加入失敗',
-			'D03_TaskCreate_Confirm.title' => '任務設定確認',
-			'D03_TaskCreate_Confirm.buttons.back_edit' => '返回編輯',
-			'D04_CommonUnsaved_Confirm.title' => '尚未儲存',
-			'D04_CommonUnsaved_Confirm.content' => '變更將不會被儲存，確定要離開嗎？',
-			'D05_DateJump_NoResult.title' => '無紀錄',
-			'D05_DateJump_NoResult.content' => '此日期無紀錄。是否新增？',
-			'D06_settlement_confirm.title' => '結算確認',
-			'D06_settlement_confirm.content' => '結算後任務將立即鎖定，無法新增、刪除或編輯紀錄。\n請確認帳目已核對無誤。',
-			'D08_TaskClosed_Confirm.title' => '結束任務確認',
-			'D08_TaskClosed_Confirm.content' => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？',
-			'D09_TaskSettings_CurrencyConfirm.title' => '變更結算幣別',
-			'D09_TaskSettings_CurrencyConfirm.content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
-			'D10_RecordDelete_Confirm.title' => '刪除紀錄確認',
-			'D10_RecordDelete_Confirm.content' => ({required Object title, required Object amount}) => '確定要刪除 ${title}（${amount}）嗎？',
-			'D11_random_result.title' => '零頭得主',
-			'D11_random_result.skip' => '略過',
-			'D12_logout_confirm.title' => '登出確認',
-			'D12_logout_confirm.content' => '若不同意更新後的條款，將無法繼續使用本服務。\n帳號將會登出。',
-			'D12_logout_confirm.buttons.logout' => '確認登出',
-			'D13_DeleteAccount_Confirm.title' => '刪除帳號確認',
-			'D13_DeleteAccount_Confirm.content' => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？',
-			'D14_Date_Select.title' => '選擇日期',
-			'B02_SplitExpense_Edit.title' => '編輯細項',
-			'B02_SplitExpense_Edit.buttons.confirm_split' => '確認分拆',
-			'B02_SplitExpense_Edit.item_name_empty' => '項目名稱尚未輸入',
-			'B02_SplitExpense_Edit.hint.sub_item' => '例：子項目',
-			'B03_SplitMethod_Edit.title' => '分攤方式設定',
-			'B03_SplitMethod_Edit.buttons.adjust_weight' => '調整權重',
-			'B03_SplitMethod_Edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
-			'B03_SplitMethod_Edit.mismatch' => '金額不符',
-			'B04_payment_merge.title' => '合併成員款項',
-			'B04_payment_merge.label.head_member' => '代表',
-			'B04_payment_merge.label.merge_amount' => '合併總額',
-			'B07_PaymentMethod_Edit.title' => '資金來源設定',
-			'B07_PaymentMethod_Edit.prepay_balance' => ({required Object amount}) => '預收款餘額：${amount}',
-			'B07_PaymentMethod_Edit.payer_member' => '代墊成員',
-			'B07_PaymentMethod_Edit.label.amount' => '支付金額',
-			'B07_PaymentMethod_Edit.label.total_expense' => '費用總額',
-			'B07_PaymentMethod_Edit.label.prepay' => '預收款支付',
-			'B07_PaymentMethod_Edit.label.total_advance' => '代墊總計',
-			'B07_PaymentMethod_Edit.status.not_enough' => '餘額不足',
-			'B07_PaymentMethod_Edit.status.balanced' => '金額吻合',
-			'B07_PaymentMethod_Edit.status.remaining' => ({required Object amount}) => '差額 ${amount}',
+			's10_home_task_list.title' => '任務列表',
+			's10_home_task_list.tab.in_progress' => '進行中',
+			's10_home_task_list.tab.completed' => '已完成',
+			's10_home_task_list.empty.in_progress' => '目前沒有進行中的任務',
+			's10_home_task_list.empty.completed' => '沒有已完成的任務',
+			's10_home_task_list.buttons.add_task' => '新增任務',
+			's10_home_task_list.buttons.join_task' => '加入任務',
+			's10_home_task_list.date_tbd' => '日期未定',
+			's10_home_task_list.label.settlement' => '已結算',
+			's11_invite_confirm.title' => '加入任務',
+			's11_invite_confirm.subtitle' => '受邀加入以下任務',
+			's11_invite_confirm.buttons.join' => '加入',
+			's11_invite_confirm.buttons.back_task_list' => '回任務列表',
+			's11_invite_confirm.label.select_ghost' => '選擇要繼承的成員',
+			's11_invite_confirm.label.prepaid' => '已代墊',
+			's11_invite_confirm.label.expense' => '應分攤',
+			's12_task_close_notice.title' => '結束任務確認',
+			's12_task_close_notice.content' => '結束任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，將無法新增或編輯任何資料。',
+			's12_task_close_notice.buttons.close_task' => '結束任務',
+			's13_task_dashboard.title' => '任務總覽',
+			's13_task_dashboard.buttons.add' => '新增',
+			's13_task_dashboard.tab.group' => '群組',
+			's13_task_dashboard.tab.personal' => '個人',
+			's13_task_dashboard.label.total_expense' => '總費用',
+			's13_task_dashboard.label.total_prepay' => '總預收',
+			's13_task_dashboard.label.total_expense_personal' => '總費用',
+			's13_task_dashboard.label.total_prepay_personal' => '總預收（含代墊）',
+			's13_task_dashboard.empty.records' => '尚無紀錄',
+			's13_task_dashboard.empty.personal_records' => '尚無紀錄',
+			's13_task_dashboard.daily_expense_label' => '支出',
+			's13_task_dashboard.dialog_balance_detail' => '收支幣別明細',
+			's13_task_dashboard.section.expense' => '支出明細',
+			's13_task_dashboard.section.prepay' => '預收明細',
+			's13_task_dashboard.section.prepay_balance' => '預收餘額',
+			's13_task_dashboard.section.no_data' => '無資料',
+			's14_task_settings.title' => '任務設定',
+			's14_task_settings.section.task_name' => '任務名稱',
+			's14_task_settings.section.task_period' => '任務期間',
+			's14_task_settings.section.settlement' => '結算設定',
+			's14_task_settings.section.other' => '其他設定',
+			's14_task_settings.menu.invite' => '發送邀請',
+			's14_task_settings.menu.member_settings' => '成員設定',
+			's14_task_settings.menu.history' => '歷史紀錄',
+			's14_task_settings.menu.close_task' => '結束任務',
+			's15_record_edit.title.add' => '新增紀錄',
+			's15_record_edit.title.edit' => '編輯紀錄',
+			's15_record_edit.buttons.add_item' => '新增細項',
+			's15_record_edit.section.split' => '分攤資訊',
+			's15_record_edit.section.items' => '細項分拆',
+			's15_record_edit.val.prepay' => '預收',
+			's15_record_edit.val.member_paid' => ({required Object name}) => '${name} 代墊',
+			's15_record_edit.val.split_details' => '細項分拆',
+			's15_record_edit.val.split_summary' => ({required Object amount, required Object method}) => '總計 ${amount} 由 ${method} 分攤',
+			's15_record_edit.val.converted_amount' => ({required Object base, required Object symbol, required Object amount}) => '≈ ${base}${symbol} ${amount}',
+			's15_record_edit.val.split_remaining' => '剩餘金額',
+			's15_record_edit.val.mock_note' => '細項說明',
+			's15_record_edit.tab.expense' => '費用',
+			's15_record_edit.tab.prepay' => '預收',
+			's15_record_edit.base_card' => '剩餘金額',
+			's15_record_edit.type_prepay' => '預收款',
+			's15_record_edit.payer_multiple' => '多人',
+			's15_record_edit.rate_dialog.title' => '匯率來源',
+			's15_record_edit.rate_dialog.content' => '匯率資料來自 Open Exchange Rates（免費版），僅供參考。實際匯率請依換匯水單為準。',
+			's15_record_edit.label.rate_with_base' => ({required Object base, required Object target}) => '匯率（1 ${base} = ? ${target}）',
+			's15_record_edit.hint.category.food' => '晚餐',
+			's15_record_edit.hint.category.transport' => '車費',
+			's15_record_edit.hint.category.shopping' => '紀念品',
+			's15_record_edit.hint.category.entertainment' => '門票',
+			's15_record_edit.hint.category.accommodation' => '住宿費',
+			's15_record_edit.hint.category.others' => '其他費用',
+			's15_record_edit.hint.item' => ({required Object category}) => '例：${category}',
+			's15_record_edit.hint.memo' => '例：備註事項',
+			's16_task_create_edit.title' => '新增任務',
+			's16_task_create_edit.section.task_name' => '任務名稱',
+			's16_task_create_edit.section.task_period' => '任務期間',
+			's16_task_create_edit.section.settlement' => '結算設定',
+			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's16_task_create_edit.hint.name' => '例：東京五日遊',
+			's17_task_locked.buttons.notify_members' => '通知成員',
+			's17_task_locked.buttons.view_payment_info' => '隊長收退款帳戶',
+			's17_task_locked.section.pending' => '待處理',
+			's17_task_locked.section.cleared' => '已處理',
+			's17_task_locked.retention_notice' => ({required Object days}) => '資料將於 ${days} 天後自動刪除。請在期間內下載任務紀錄',
+			's17_task_locked.remainder_absorbed_by' => ({required Object name}) => '由 ${name} 承擔',
+			's17_task_locked.export.report_info' => '報表資訊',
+			's17_task_locked.export.task_name' => '任務名稱',
+			's17_task_locked.export.export_time' => '報表製作時間',
+			's17_task_locked.export.base_currency' => '結算幣別',
+			's17_task_locked.export.settlement_summary' => '結算總表',
+			's17_task_locked.export.member' => '成員',
+			's17_task_locked.export.role' => '角色',
+			's17_task_locked.export.net_amount' => '淨額',
+			's17_task_locked.export.status' => '狀態',
+			's17_task_locked.export.receiver' => '可退',
+			's17_task_locked.export.payer' => '應付',
+			's17_task_locked.export.cleared' => '已處理',
+			's17_task_locked.export.pending' => '未處理',
+			's17_task_locked.export.fund_analysis' => '資金與零頭',
+			's17_task_locked.export.total_expense' => '總費用',
+			's17_task_locked.export.total_prepay' => '總預收',
+			's17_task_locked.export.remainder_buffer' => '零頭總額',
+			's17_task_locked.export.remainder_absorbed_by' => '零頭得主',
+			's17_task_locked.export.transaction_details' => '交易流水帳',
+			's17_task_locked.export.date' => '日期',
+			's17_task_locked.export.title' => '標題',
+			's17_task_locked.export.type' => '類型',
+			's17_task_locked.export.original_amount' => '原始金額',
+			's17_task_locked.export.currency' => '幣別',
+			's17_task_locked.export.rate' => '匯率',
+			's17_task_locked.export.base_amount' => '結算幣別金額',
+			's17_task_locked.export.net_remainder' => '零頭',
+			's17_task_locked.export.pool' => '預收款',
+			's17_task_locked.export.mixed' => '混合支付',
+			's18_task_join.title' => '加入任務',
+			's18_task_join.tabs.input' => '輸入',
+			's18_task_join.tabs.scan' => '掃描',
+			's18_task_join.label.input' => '邀請碼',
+			's18_task_join.hint.input' => '請輸入 8 碼邀請碼',
+			's18_task_join.content.scan' => '請將行動條碼放入框內即可自動掃描',
+			's30_settlement_confirm.title' => '結算確認',
+			's30_settlement_confirm.buttons.set_payment_info' => '收款設定',
+			's30_settlement_confirm.steps.confirm_amount' => '確認金額',
+			's30_settlement_confirm.steps.payment_info' => '收款設定',
+			's30_settlement_confirm.warning.random_reveal' => '零頭歸屬將於下一步結算完成後揭曉。',
+			's30_settlement_confirm.list_item.merged_label' => '合併',
+			's30_settlement_confirm.list_item.includes' => '包含：',
+			's30_settlement_confirm.list_item.principal' => '本金',
+			's30_settlement_confirm.list_item.random_remainder' => '隨機零頭',
+			's30_settlement_confirm.list_item.remainder' => '零頭',
+			's31_settlement_payment_info.title' => '收款資訊',
+			's31_settlement_payment_info.setup_instruction' => '收款資訊僅供本次結算使用。預設資料加密儲存於本機。',
+			's31_settlement_payment_info.sync_save' => '設為預設收款資訊（僅儲存於本機）',
+			's31_settlement_payment_info.sync_update' => '同步更新預設收款資訊',
+			's31_settlement_payment_info.buttons.prev_step' => '上一步',
+			's32_settlement_result.title' => '結算成功',
+			's32_settlement_result.content' => '帳目已確認。請通知成員完成付款。',
+			's32_settlement_result.waiting_reveal' => '等待揭曉...',
+			's32_settlement_result.remainder_winner_prefix' => '零頭歸屬：',
+			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額為：${prefix}${total}',
+			's32_settlement_result.total_label' => '本次結算總額',
+			's32_settlement_result.buttons.share' => '發送結算通知',
+			's32_settlement_result.buttons.back_task_dashboard' => '返回任務',
+			's50_onboarding_consent.title' => '歡迎使用 Iron Split',
+			's50_onboarding_consent.buttons.start' => '開始',
+			's50_onboarding_consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，負責記帳與分攤。\n無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。\n\n分帳，本該清楚。\n\n點擊「開始」即表示同意我們的 ',
+			's50_onboarding_consent.content.suffix' => '。',
+			's51_onboarding_name.title' => '名稱設定',
+			's51_onboarding_name.content' => '請輸入顯示名稱。',
+			's51_onboarding_name.label' => '顯示名稱',
+			's51_onboarding_name.hint' => '輸入暱稱',
+			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's52_task_settings_log.title' => '活動紀錄',
+			's52_task_settings_log.buttons.export_csv' => '匯出 CSV',
+			's52_task_settings_log.empty_log' => '目前沒有任何活動紀錄',
+			's52_task_settings_log.export_file_prefix' => '活動紀錄',
+			's52_task_settings_log.csv_header.time' => '時間',
+			's52_task_settings_log.csv_header.user' => '操作者',
+			's52_task_settings_log.csv_header.action' => '動作',
+			's52_task_settings_log.csv_header.details' => '內容',
+			's52_task_settings_log.type.prepay' => '預收',
+			's52_task_settings_log.type.expense' => '支出',
+			's52_task_settings_log.payment_type.prepay' => '預收款支付',
+			's52_task_settings_log.payment_type.single_suffix' => '代墊',
+			's52_task_settings_log.payment_type.multiple' => '多人代墊',
+			's52_task_settings_log.unit.members' => '人',
+			's52_task_settings_log.unit.items' => '細項',
+			's53_task_settings_members.title' => '成員管理',
+			's53_task_settings_members.buttons.add_member' => '新增成員',
+			's53_task_settings_members.label.default_ratio' => '預設比例',
+			's53_task_settings_members.member_default_name' => '成員',
+			's53_task_settings_members.member_name' => '成員名稱',
+			's54_task_settings_invite.title' => '任務邀請',
+			's54_task_settings_invite.buttons.share' => '分享',
+			's54_task_settings_invite.buttons.regenerate' => '重新產生',
+			's54_task_settings_invite.label.expires_in' => '有效期限',
+			's54_task_settings_invite.label.invite_expired' => '邀請碼已過期',
+			's70_system_settings.title' => '系統設定',
+			's70_system_settings.section.basic' => '基本設定',
+			's70_system_settings.section.legal' => '相關條款',
+			's70_system_settings.section.account' => '帳號設定',
+			's70_system_settings.menu.user_name' => '顯示名稱',
+			's70_system_settings.menu.language' => '顯示語言',
+			's70_system_settings.menu.theme' => '外觀主題',
+			's70_system_settings.menu.terms' => '服務條款',
+			's70_system_settings.menu.privacy' => '隱私政策',
+			's70_system_settings.menu.payment_info' => '收款帳戶設定',
+			's70_system_settings.menu.delete_account' => '刪除帳號',
+			's72_terms_update.title' => ({required Object type}) => '${type}更新',
+			's72_terms_update.content' => ({required Object type}) => '我們更新了${type}，請閱讀並同意以繼續使用。',
+			's74_delete_account_notice.title' => '刪除帳號確認',
+			's74_delete_account_notice.content' => '此動作無法復原，個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。',
+			's74_delete_account_notice.buttons.delete_account' => '刪除帳號',
+			'd01_member_role_intro.title' => '本次角色',
+			'd01_member_role_intro.buttons.reroll' => '換個動物',
+			'd01_member_role_intro.buttons.enter' => '進入任務',
+			'd01_member_role_intro.content' => ({required Object avatar}) => '本次任務的專屬頭像${avatar}。\n分帳紀錄將以 ${avatar} 代表。',
+			'd01_member_role_intro.reroll.empty' => '機會已用完',
+			'd02_invite_result.title' => '加入失敗',
+			'd03_task_create_confirm.title' => '任務設定確認',
+			'd03_task_create_confirm.buttons.back_edit' => '返回編輯',
+			'd04_common_unsaved_confirm.title' => '尚未儲存',
+			'd04_common_unsaved_confirm.content' => '變更將不會被儲存，確定要離開嗎？',
+			'd05_date_jump_no_result.title' => '無紀錄',
+			'd05_date_jump_no_result.content' => '此日期無紀錄。是否新增？',
+			'd06_settlement_confirm.title' => '結算確認',
+			'd06_settlement_confirm.content' => '結算後任務將立即鎖定，無法新增、刪除或編輯紀錄。\n請確認帳目已核對無誤。',
+			'd08_task_closed_confirm.title' => '結束任務確認',
+			'd08_task_closed_confirm.content' => '此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？',
+			'd09_task_settings_currency_confirm.title' => '變更結算幣別',
+			'd09_task_settings_currency_confirm.content' => '變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？',
+			'd10_record_delete_confirm.title' => '刪除紀錄確認',
+			'd10_record_delete_confirm.content' => ({required Object title, required Object amount}) => '確定要刪除 ${title}（${amount}）嗎？',
+			'd11_random_result.title' => '零頭得主',
+			'd11_random_result.skip' => '略過',
+			'd12_logout_confirm.title' => '登出確認',
+			'd12_logout_confirm.content' => '若不同意更新後的條款，將無法繼續使用本服務。\n帳號將會登出。',
+			'd12_logout_confirm.buttons.logout' => '確認登出',
+			'd13_delete_account_confirm.title' => '刪除帳號確認',
+			'd13_delete_account_confirm.content' => '此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？',
+			'd14_date_select.title' => '選擇日期',
+			'b02_split_expense_edit.title' => '編輯細項',
+			'b02_split_expense_edit.buttons.confirm_split' => '確認分拆',
+			'b02_split_expense_edit.item_name_empty' => '項目名稱尚未輸入',
+			'b02_split_expense_edit.hint.sub_item' => '例：子項目',
+			'b03_split_method_edit.title' => '分攤方式設定',
+			'b03_split_method_edit.buttons.adjust_weight' => '調整權重',
+			'b03_split_method_edit.label.total' => ({required Object current, required Object target}) => '${current} / ${target}',
+			'b03_split_method_edit.mismatch' => '金額不符',
+			'b04_payment_merge.title' => '合併成員款項',
+			'b04_payment_merge.label.head_member' => '代表',
+			'b04_payment_merge.label.merge_amount' => '合併總額',
+			'b07_payment_method_edit.title' => '資金來源設定',
+			'b07_payment_method_edit.prepay_balance' => ({required Object amount}) => '預收款餘額：${amount}',
+			'b07_payment_method_edit.payer_member' => '代墊成員',
+			'b07_payment_method_edit.label.amount' => '支付金額',
+			'b07_payment_method_edit.label.total_expense' => '費用總額',
+			'b07_payment_method_edit.label.prepay' => '預收款支付',
+			'b07_payment_method_edit.label.total_advance' => '代墊總計',
+			'b07_payment_method_edit.status.not_enough' => '餘額不足',
+			'b07_payment_method_edit.status.balanced' => '金額吻合',
+			'b07_payment_method_edit.status.remaining' => ({required Object amount}) => '差額 ${amount}',
 			'success.saved' => '已成功儲存。',
 			'success.deleted' => '已成功刪除。',
 			'success.copied' => '已複製到剪貼簿',

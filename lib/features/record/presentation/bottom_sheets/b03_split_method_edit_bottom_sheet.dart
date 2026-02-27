@@ -137,7 +137,7 @@ class _B03ContentState extends State<_B03Content> {
     final result = vm.getSplitResult();
     final int selectedIndex =
         SplitMethodConstant.allRules.indexOf(vm.splitMethod);
-    final title = t.B03_SplitMethod_Edit.title;
+    final title = t.b03_split_method_edit.title;
     final activeNodes = vm.allMembers.map((m) => _getFocusNode(m.id)).toList();
     final displayState = context.read<DisplayState>();
     final isEnlarged = displayState.isEnlarged;
@@ -396,14 +396,14 @@ class _B03ContentState extends State<_B03Content> {
       children: [
         const SizedBox(height: AppLayout.spaceM),
         SummaryRow(
-          label: t.B03_SplitMethod_Edit.label.total(
+          label: t.b03_split_method_edit.label.total(
               current: CurrencyConstants.formatAmount(
                   currentSum, vm.selectedCurrency.code),
               target: CurrencyConstants.formatAmount(
                   vm.totalAmount, vm.selectedCurrency.code)),
           amount: 0,
           currencyConstants: vm.selectedCurrency,
-          customValueText: isMatched ? "OK" : t.B03_SplitMethod_Edit.mismatch,
+          customValueText: isMatched ? "OK" : t.b03_split_method_edit.mismatch,
           valueColor: isMatched ? colorScheme.tertiary : colorScheme.error,
         ),
         SizedBox(height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),

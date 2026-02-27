@@ -44,7 +44,7 @@ class TaskListItem extends StatelessWidget {
         );
 
     // 2. 還原：日期區間顯示邏輯
-    String periodText = t.S10_Home_TaskList.date_tbd; // '日期未定'
+    String periodText = t.s10_home_task_list.date_tbd; // '日期未定'
     if (task.startDate != null && task.endDate != null) {
       periodText =
           '${dateFormat.format(task.startDate!)} - ${dateFormat.format(task.endDate!)}';

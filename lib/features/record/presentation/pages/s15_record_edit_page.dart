@@ -225,8 +225,8 @@ class _S15ContentState extends State<_S15Content> {
   void _showRateInfoDialog(BuildContext context, Translations t) {
     CommonInfoDialog.show(
       context,
-      title: t.S15_Record_Edit.rate_dialog.title,
-      content: t.S15_Record_Edit.rate_dialog.content,
+      title: t.s15_record_edit.rate_dialog.title,
+      content: t.s15_record_edit.rate_dialog.content,
     );
   }
 
@@ -266,7 +266,7 @@ class _S15ContentState extends State<_S15Content> {
     final t = Translations.of(context);
 
     if (vm.segmentedIndex == 0 && vm.hasPaymentError) {
-      AppToast.showError(context, t.B07_PaymentMethod_Edit.status.not_enough);
+      AppToast.showError(context, t.b07_payment_method_edit.status.not_enough);
       return;
     }
 
@@ -345,8 +345,8 @@ class _S15ContentState extends State<_S15Content> {
     final isEnlarged = displayStatus.isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final title = vm.recordId == null
-        ? t.S15_Record_Edit.title.add
-        : t.S15_Record_Edit.title.edit;
+        ? t.s15_record_edit.title.add
+        : t.s15_record_edit.title.edit;
     final leading = IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded),
         onPressed: () => _handleClose(context, vm));
@@ -398,8 +398,8 @@ class _S15ContentState extends State<_S15Content> {
                     onValueChanged: (val) =>
                         _handleSwitchSegmentedIndex(vm, val),
                     segments: {
-                      0: t.S15_Record_Edit.tab.expense,
-                      1: t.S15_Record_Edit.tab.prepay,
+                      0: t.s15_record_edit.tab.expense,
+                      1: t.s15_record_edit.tab.prepay,
                     },
                   ),
                 ),

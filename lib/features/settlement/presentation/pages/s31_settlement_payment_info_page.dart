@@ -171,10 +171,10 @@ class _S31ContentState extends State<_S31Content> {
       double finalLineHeight) async {
     await CommonAlertDialog.show(
           context,
-          title: t.D06_settlement_confirm.title, // "結算確認"
+          title: t.d06_settlement_confirm.title, // "結算確認"
           // 直接顯示純文字警告，不用再包 Column 或顯示金額
           content: Text(
-            t.D06_settlement_confirm.content,
+            t.d06_settlement_confirm.content,
             style: textTheme.bodyMedium,
           ),
           actions: [
@@ -221,7 +221,7 @@ class _S31ContentState extends State<_S31Content> {
           vm.formController.appControllers.length, (i) => _getAppLinkNode(i)),
     ];
 
-    final title = t.S31_settlement_payment_info.title;
+    final title = t.s31_settlement_payment_info.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -268,9 +268,9 @@ class _S31ContentState extends State<_S31Content> {
                   isRadio: false, // Checkbox 模式
                   onTap: () => vm.toggleSync(!vm.isSyncChecked),
                   title: vm.isUpdate
-                      ? t.S31_settlement_payment_info
+                      ? t.s31_settlement_payment_info
                           .sync_update // "更新我的預設收款資訊"
-                      : t.S31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
+                      : t.s31_settlement_payment_info.sync_save, // "儲存為預設收款資訊"
                   backgroundColor: Colors.transparent,
                   isSelectedBackgroundColor: Colors.transparent,
                 ),
@@ -278,7 +278,7 @@ class _S31ContentState extends State<_S31Content> {
               StickyBottomActionBar(
                 children: [
                   AppButton(
-                    text: t.S31_settlement_payment_info.buttons.prev_step,
+                    text: t.s31_settlement_payment_info.buttons.prev_step,
                     type: AppButtonType.secondary,
                     onPressed: () => context.pop(),
                   ),

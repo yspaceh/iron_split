@@ -153,7 +153,7 @@ class S15PrepayForm extends StatelessWidget {
             amount: baseRemainingAmount,
             methodLabel: baseSplitMethod,
             memberIds: baseMemberIds,
-            note: t.S15_Record_Edit.type_prepay,
+            note: t.s15_record_edit.type_prepay,
             isBaseCard: true,
             onTap: onBaseSplitConfigTap,
             showSplitAction: false,

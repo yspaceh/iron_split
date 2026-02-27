@@ -135,7 +135,7 @@ class RecordCard extends StatelessWidget {
                               )
                             : (isBaseCard
                                 ? Text(
-                                    t.S15_Record_Edit.base_card,
+                                    t.s15_record_edit.base_card,
                                     style: TextStyle(
                                       color: colorScheme.onSurfaceVariant,
                                       fontWeight: FontWeight.w500,
@@ -192,7 +192,7 @@ class RecordCard extends StatelessWidget {
                     ),
                     const SizedBox(width: AppLayout.spaceS),
                     Text(
-                      t.S15_Record_Edit.buttons.add_item,
+                      t.s15_record_edit.buttons.add_item,
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w700,

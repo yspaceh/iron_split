@@ -21,7 +21,7 @@ class S17ClosedView extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppLayout.spaceL),
-              child: Text(t.S32_settlement_result.content),
+              child: Text(t.s32_settlement_result.content),
             ),
           ),
         ),

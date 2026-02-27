@@ -121,7 +121,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
     return PopScope(
       canPop: false,
       child: CommonAlertDialog(
-        title: t.D01_MemberRole_Intro.title,
+        title: t.d01_member_role_intro.title,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -138,7 +138,7 @@ class _D01DialogContentState extends State<_D01DialogContent>
             const SizedBox(height: AppLayout.spaceL),
 
             Text(
-              t.D01_MemberRole_Intro.content(
+              t.d01_member_role_intro.content(
                 avatar: AvatarConstants.getName(t, vm.currentAvatar),
               ),
               textAlign: TextAlign.center,
@@ -156,14 +156,14 @@ class _D01DialogContentState extends State<_D01DialogContent>
                       child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.refresh),
               label: Text(vm.canReroll
-                  ? t.D01_MemberRole_Intro.buttons.reroll
-                  : t.D01_MemberRole_Intro.reroll.empty),
+                  ? t.d01_member_role_intro.buttons.reroll
+                  : t.d01_member_role_intro.reroll.empty),
             ),
           ],
         ),
         actions: [
           AppButton(
-            text: t.D01_MemberRole_Intro.buttons.enter,
+            text: t.d01_member_role_intro.buttons.enter,
             type: AppButtonType.primary,
             onPressed: () => _handleEnter(context, vm),
           ),

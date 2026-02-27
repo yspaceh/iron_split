@@ -105,7 +105,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                   controller: controller,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  labelText: t.S15_Record_Edit.label.rate_with_base(
+                  labelText: t.s15_record_edit.label.rate_with_base(
                     base: baseCurrency.code,
                     target: targetCurrency.code,
                   ),
@@ -161,7 +161,7 @@ class TaskExchangeRateInput extends StatelessWidget {
                         converted, baseCurrency.code);
 
                     return Text(
-                      t.S15_Record_Edit.val.converted_amount(
+                      t.s15_record_edit.val.converted_amount(
                           base: baseCurrency.code,
                           symbol: baseCurrency.symbol,
                           amount: formattedAmount),

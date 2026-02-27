@@ -84,9 +84,9 @@ class _S72ContentState extends State<_S72Content> {
       TextTheme textTheme, Translations t, double finalLineHeight) {
     CommonAlertDialog.show(
       context,
-      title: t.D12_logout_confirm.title,
+      title: t.d12_logout_confirm.title,
       content: Text(
-        t.D12_logout_confirm.content,
+        t.d12_logout_confirm.content,
         style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
@@ -96,7 +96,7 @@ class _S72ContentState extends State<_S72Content> {
           onPressed: () => context.pop(),
         ),
         AppButton(
-          text: t.D12_logout_confirm.buttons.logout,
+          text: t.d12_logout_confirm.buttons.logout,
           type: AppButtonType.primary,
           onPressed: () => _handleLogout(context, vm),
         ),
@@ -147,9 +147,9 @@ class _S72ContentState extends State<_S72Content> {
       }
     }
 
-    String title = t.S72_TermsUpdate.title(type: getTitleTypeLabel(vm));
+    String title = t.s72_terms_update.title(type: getTitleTypeLabel(vm));
     String description =
-        t.S72_TermsUpdate.content(type: getDescriptionTypeLabel(vm));
+        t.s72_terms_update.content(type: getDescriptionTypeLabel(vm));
 
     return CommonStateView(
       status: vm.initStatus,

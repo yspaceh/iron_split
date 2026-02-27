@@ -63,7 +63,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
     );
 
     return CommonAlertDialog(
-      title: t.D03_TaskCreate_Confirm.title,
+      title: t.d03_task_create_confirm.title,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -90,7 +90,7 @@ class D03TaskCreateConfirmDialog extends StatelessWidget {
       ),
       actions: [
         AppButton(
-          text: t.D03_TaskCreate_Confirm.buttons.back_edit,
+          text: t.d03_task_create_confirm.buttons.back_edit,
           type: AppButtonType.secondary,
           onPressed: () => Navigator.pop(context, false),
         ),

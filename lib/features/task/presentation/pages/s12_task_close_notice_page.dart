@@ -63,9 +63,9 @@ class _S12Content extends StatelessWidget {
 
     CommonAlertDialog.show(
       context,
-      title: t.D08_TaskClosed_Confirm.title,
+      title: t.d08_task_closed_confirm.title,
       content: Text(
-        t.D08_TaskClosed_Confirm.content,
+        t.d08_task_closed_confirm.content,
         style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [
@@ -97,7 +97,7 @@ class _S12Content extends StatelessWidget {
       isEnlarged,
     );
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S12_TaskClose_Notice.title;
+    final title = t.s12_task_close_notice.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -116,7 +116,7 @@ class _S12Content extends StatelessWidget {
               onPressed: () => context.pop(),
             ),
             AppButton(
-              text: t.S12_TaskClose_Notice.buttons.close_task,
+              text: t.s12_task_close_notice.buttons.close_task,
               type: AppButtonType.primary,
               isLoading: vm.closeStatus == LoadStatus.loading,
               onPressed: () => _showConfirmDialog(context, vm, finalLineHeight),
@@ -130,7 +130,7 @@ class _S12Content extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  t.S12_TaskClose_Notice.content,
+                  t.s12_task_close_notice.content,
                   style:
                       textTheme.bodyMedium?.copyWith(height: finalLineHeight),
                 ),

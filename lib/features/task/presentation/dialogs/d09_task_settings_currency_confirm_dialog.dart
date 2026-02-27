@@ -83,9 +83,9 @@ class _D09Content extends StatelessWidget {
     );
 
     return CommonAlertDialog(
-      title: t.D09_TaskSettings_CurrencyConfirm.title,
+      title: t.d09_task_settings_currency_confirm.title,
       content: Text(
-        "${t.D09_TaskSettings_CurrencyConfirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})",
+        "${t.d09_task_settings_currency_confirm.content}\n\n-> ${vm.newCurrency.code} (${vm.newCurrency.symbol})",
         style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [

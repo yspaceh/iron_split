@@ -76,7 +76,7 @@ class DailyHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       vertical: AppLayout.spaceXS,
                       horizontal: AppLayout.spaceS),
-                  child: Text(t.S13_Task_Dashboard.empty.personal_records,
+                  child: Text(t.s13_task_dashboard.empty.personal_records,
                       style: textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w200,
                           color: colorScheme.onSurfaceVariant
@@ -102,7 +102,7 @@ class DailyHeader extends StatelessWidget {
                               .withValues(alpha: 0.8),
                         ),
                         const SizedBox(width: AppLayout.spaceXS),
-                        Text(t.S13_Task_Dashboard.buttons.add,
+                        Text(t.s13_task_dashboard.buttons.add,
                             style: textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w200,
                                 color: colorScheme.onSurfaceVariant

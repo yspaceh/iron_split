@@ -106,7 +106,7 @@ class _S18ContentState extends State<_S18Content> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S18_Task_Join.title),
+        title: Text(t.s18_task_join.title),
         centerTitle: true,
       ),
       bottomNavigationBar: StickyBottomActionBar(

@@ -146,7 +146,7 @@ class _S16ContentState extends State<_S16Content> {
     final displayState = context.watch<DisplayState>();
     final isEnlarged = displayState.isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S16_TaskCreate_Edit.title;
+    final title = t.s16_task_create_edit.title;
     final leading = IconButton(
       icon: Icon(Icons.adaptive.arrow_back),
       onPressed: () => _handleClose(context),
@@ -188,18 +188,18 @@ class _S16ContentState extends State<_S16Content> {
                           vertical: AppLayout.spaceL),
                       children: [
                         SectionWrapper(
-                            title: t.S16_TaskCreate_Edit.section.task_name,
+                            title: t.s16_task_create_edit.section.task_name,
                             children: [
                               TaskNameInput(
                                 controller: _nameController,
                                 focusNode: _nameFocusNode,
                                 label: t.common.label.task_name,
-                                hint: t.S16_TaskCreate_Edit.hint.name,
+                                hint: t.s16_task_create_edit.hint.name,
                                 maxLength: TaskConstants.maxTaskNameLength,
                               )
                             ]),
                         SectionWrapper(
-                            title: t.S16_TaskCreate_Edit.section.task_period,
+                            title: t.s16_task_create_edit.section.task_period,
                             children: [
                               TaskDateInput(
                                 label: t.common.label.start_date,
@@ -233,7 +233,7 @@ class _S16ContentState extends State<_S16Content> {
                               ),
                             ]),
                         SectionWrapper(
-                            title: t.S16_TaskCreate_Edit.section.settlement,
+                            title: t.s16_task_create_edit.section.settlement,
                             children: [
                               TaskCurrencyInput(
                                 currency: vm.baseCurrency,

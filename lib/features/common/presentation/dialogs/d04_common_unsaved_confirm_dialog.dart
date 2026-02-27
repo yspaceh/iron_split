@@ -32,9 +32,9 @@ class D04CommonUnsavedConfirmDialog extends StatelessWidget {
     );
 
     return CommonAlertDialog(
-        title: t.D04_CommonUnsaved_Confirm.title,
+        title: t.d04_common_unsaved_confirm.title,
         content: Text(
-          t.D04_CommonUnsaved_Confirm.content,
+          t.d04_common_unsaved_confirm.content,
           style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
         ),
         actions: [

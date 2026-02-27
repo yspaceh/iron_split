@@ -41,9 +41,9 @@ class D05DateJumpNoResultDialog extends StatelessWidget {
     );
 
     return CommonAlertDialog(
-      title: t.D05_DateJump_NoResult.title,
+      title: t.d05_date_jump_no_result.title,
       content: Text(
-        t.D05_DateJump_NoResult.content,
+        t.d05_date_jump_no_result.content,
         style: textTheme.bodyMedium?.copyWith(height: finalLineHeight),
       ),
       actions: [

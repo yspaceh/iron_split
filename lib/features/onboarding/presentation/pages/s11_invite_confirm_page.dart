@@ -58,7 +58,7 @@ class _S11Content extends StatelessWidget {
       final msg = ErrorMapper.map(context, code: code);
       CommonAlertDialog.show(
         context,
-        title: t.D02_Invite_Result.title,
+        title: t.d02_invite_result.title,
         actions: [
           AppButton(
             text: t.common.buttons.back,
@@ -98,7 +98,7 @@ class _S11Content extends StatelessWidget {
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
     final dateFormat = DateFormat('yyyy/MM/dd');
 
-    final title = t.S11_Invite_Confirm.title;
+    final title = t.s11_invite_confirm.title;
     final leading = IconButton(
       icon: const Icon(Icons.close),
       onPressed: () => _handleCancel(context, vm),
@@ -178,7 +178,7 @@ class _S11Content extends StatelessWidget {
                 // --- B. Ghost Selection (如果需要) ---
                 if (vm.showGhostSelection) ...[
                   SectionWrapper(
-                      title: t.S11_Invite_Confirm.label.select_ghost,
+                      title: t.s11_invite_confirm.label.select_ghost,
                       children: [
                         ...vm.ghosts.map((ghost) {
                           final id = ghost.id;
@@ -206,13 +206,13 @@ class _S11Content extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "${t.S11_Invite_Confirm.label.prepaid}: ${CurrencyConstants.formatAmount(prepaid, vm.baseCurrency.code)}",
+                                  "${t.s11_invite_confirm.label.prepaid}: ${CurrencyConstants.formatAmount(prepaid, vm.baseCurrency.code)}",
                                   style: textTheme.bodySmall?.copyWith(
                                     color: colorScheme.tertiary,
                                   ),
                                 ),
                                 Text(
-                                  "${t.S11_Invite_Confirm.label.expense}: ${CurrencyConstants.formatAmount(expense, vm.baseCurrency.code)}",
+                                  "${t.s11_invite_confirm.label.expense}: ${CurrencyConstants.formatAmount(expense, vm.baseCurrency.code)}",
                                   style: textTheme.bodySmall?.copyWith(
                                     color: colorScheme.primary,
                                   ),

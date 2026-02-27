@@ -86,13 +86,13 @@ class _S50Content extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.S50_Onboarding_Consent.title),
+        title: Text(t.s50_onboarding_consent.title),
         centerTitle: true,
       ),
       bottomNavigationBar: StickyBottomActionBar(
         children: [
           AppButton(
-            text: t.S50_Onboarding_Consent.buttons.start,
+            text: t.s50_onboarding_consent.buttons.start,
             type: AppButtonType.primary,
             isLoading: vm.agreeStatus == LoadStatus.loading,
             onPressed: () => _handleAgree(context, vm),
@@ -130,7 +130,7 @@ class _S50Content extends StatelessWidget {
                           children: [
                             // A. 前綴: "Read our "
                             TextSpan(
-                                text: t.S50_Onboarding_Consent.content.prefix),
+                                text: t.s50_onboarding_consent.content.prefix),
 
                             // B. 連結: "Terms of Service"
                             TextSpan(
@@ -153,7 +153,7 @@ class _S50Content extends StatelessWidget {
 
                             // E. 後綴: ". Tap 'Agree' to accept."
                             TextSpan(
-                                text: t.S50_Onboarding_Consent.content.suffix),
+                                text: t.s50_onboarding_consent.content.suffix),
                           ],
                         ),
                         textAlign: TextAlign.left, // 文字置中

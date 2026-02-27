@@ -42,18 +42,18 @@ class CategoryConstant {
   static String getHint(Translations t, String? id) {
     switch (id) {
       case 'fastfood':
-        return t.S15_Record_Edit.hint.category.food;
+        return t.s15_record_edit.hint.category.food;
       case 'directions_bus':
-        return t.S15_Record_Edit.hint.category.transport;
+        return t.s15_record_edit.hint.category.transport;
       case 'shopping_bag':
-        return t.S15_Record_Edit.hint.category.shopping;
+        return t.s15_record_edit.hint.category.shopping;
       case 'entertainment':
-        return t.S15_Record_Edit.hint.category.entertainment;
+        return t.s15_record_edit.hint.category.entertainment;
       case 'hotel':
-        return t.S15_Record_Edit.hint.category.accommodation;
+        return t.s15_record_edit.hint.category.accommodation;
       case 'more_horiz':
       default:
-        return t.S15_Record_Edit.hint.category.others;
+        return t.s15_record_edit.hint.category.others;
     }
   }
 }

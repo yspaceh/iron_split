@@ -209,7 +209,7 @@
     "unknown": "未知操作",
     "close_task": "結束任務"
   },
-  "S10_Home_TaskList": {
+  "s10_home_task_list": {
     "title": "任務列表",
     "tab": {
       "in_progress": "進行中",
@@ -228,7 +228,7 @@
       "settlement": "已結算"
     }
   },
-  "S11_Invite_Confirm": {
+  "s11_invite_confirm": {
     "title": "加入任務",
     "subtitle": "受邀加入以下任務",
     "buttons": {
@@ -241,14 +241,14 @@
       "expense": "應分攤"
     }
   },
-  "S12_TaskClose_Notice": {
+  "s12_task_close_notice": {
     "title": "結束任務確認",
     "content": "結束任務後，所有紀錄與設定將被鎖定。系統將進入唯讀模式，將無法新增或編輯任何資料。",
     "buttons": {
       "close_task": "結束任務"
     }
   },
-  "S13_Task_Dashboard": {
+  "s13_task_dashboard": {
     "title": "任務總覽",
     "buttons": {
       "add":"新增"
@@ -276,7 +276,7 @@
       "no_data": "無資料"
     }
   },
-  "S14_Task_Settings": {
+  "s14_task_settings": {
     "title": "任務設定",
     "section":{
       "task_name": "任務名稱",
@@ -291,7 +291,7 @@
       "close_task": "結束任務"
     }
   },
-  "S15_Record_Edit": {
+  "s15_record_edit": {
     "title": {
       "add": "新增紀錄",
       "edit": "編輯紀錄"
@@ -339,7 +339,7 @@
       "memo": "例：備註事項"
     }
   },
-  "S16_TaskCreate_Edit": {
+  "s16_task_create_edit": {
     "title": "新增任務",
     "section":{
       "task_name": "任務名稱",
@@ -353,7 +353,7 @@
       "name": "例：東京五日遊"
     }
   },
-  "S17_Task_Locked": {
+  "s17_task_locked": {
     "buttons": {
       "notify_members": "通知成員",
       "view_payment_info": "隊長收退款帳戶"
@@ -396,7 +396,7 @@
       "mixed": "混合支付"
     }
   },
-  "S18_Task_Join": {
+  "s18_task_join": {
     "title": "加入任務",
     "tabs": {
       "input": "輸入",
@@ -412,7 +412,7 @@
       "scan": "請將行動條碼放入框內即可自動掃描"
     }
   },
-  "S30_settlement_confirm": {
+  "s30_settlement_confirm": {
     "title": "結算確認",
     "buttons": {
       "set_payment_info": "收款設定"
@@ -432,7 +432,7 @@
       "remainder": "零頭"
     }
   },
-  "S31_settlement_payment_info": {
+  "s31_settlement_payment_info": {
     "title": "收款資訊",
     "setup_instruction": "收款資訊僅供本次結算使用。預設資料加密儲存於本機。",
     "sync_save": "設為預設收款資訊（僅儲存於本機）",
@@ -441,7 +441,7 @@
       "prev_step": "上一步"
     }
   },
-  "S32_settlement_result": {
+  "s32_settlement_result": {
     "title": "結算成功",
     "content": "帳目已確認。請通知成員完成付款。",
     "waiting_reveal": "等待揭曉...",
@@ -453,7 +453,7 @@
       "back_task_dashboard": "返回任務"
     }
   },
-  "S50_Onboarding_Consent": {
+  "s50_onboarding_consent": {
     "title": "歡迎使用 Iron Split",
     "buttons": {
       "start": "開始"
@@ -463,14 +463,14 @@
       "suffix": "。"
     }
   },
-  "S51_Onboarding_Name": {
+  "s51_onboarding_name": {
     "title": "名稱設定",
     "content": "請輸入顯示名稱。",
     "label": "顯示名稱",
     "hint": "輸入暱稱",
     "counter": "{current}/{max}"
   },
-  "S52_TaskSettings_Log": {
+  "s52_task_settings_log": {
     "title": "活動紀錄",
     "buttons": {
       "export_csv": "匯出 CSV"
@@ -497,7 +497,7 @@
       "items": "細項"
     }
   },
-  "S53_TaskSettings_Members": {
+  "s53_task_settings_members": {
     "title": "成員管理",
     "buttons": {
       "add_member": "新增成員"
@@ -508,7 +508,7 @@
     "member_default_name": "成員",
     "member_name": "成員名稱"
   },
-  "S54_TaskSettings_Invite": {
+  "s54_task_settings_invite": {
     "title": "任務邀請",
     "buttons": {
       "share": "分享",
@@ -519,7 +519,7 @@
       "invite_expired": "邀請碼已過期"
     }
   },
-  "S70_System_Settings": {
+  "s70_system_settings": {
     "title": "系統設定",
     "section":{
       "basic": "基本設定",
@@ -536,18 +536,18 @@
       "delete_account": "刪除帳號"
     }
   },
-  "S72_TermsUpdate": {
+  "s72_terms_update": {
     "title": "{type}更新",
     "content": "我們更新了{type}，請閱讀並同意以繼續使用。"
   },
-  "S74_DeleteAccount_Notice": {
+  "s74_delete_account_notice": {
     "title": "刪除帳號確認",
     "content": "此動作無法復原，個人資料將被刪除，隊長權限將會自動移轉至其他成員，但在共用帳本中的紀錄將會保留（轉為未連結狀態）。",
     "buttons": {
       "delete_account": "刪除帳號"
     }
   },
-  "D01_MemberRole_Intro": {
+  "d01_member_role_intro": {
     "title": "本次角色",
     "buttons": {
       "reroll": "換個動物",
@@ -558,58 +558,58 @@
       "empty": "機會已用完"
     }
   },
-  "D02_Invite_Result": {
+  "d02_invite_result": {
     "title": "加入失敗"
   },
-  "D03_TaskCreate_Confirm": {
+  "d03_task_create_confirm": {
     "title": "任務設定確認",
     "buttons": {
       "back_edit": "返回編輯"
     }
   },
-  "D04_CommonUnsaved_Confirm": {
+  "d04_common_unsaved_confirm": {
     "title": "尚未儲存",
     "content": "變更將不會被儲存，確定要離開嗎？"
   },
-  "D05_DateJump_NoResult": {
+  "d05_date_jump_no_result": {
     "title": "無紀錄",
     "content": "此日期無紀錄。是否新增？"
   },
-  "D06_settlement_confirm": {
+  "d06_settlement_confirm": {
     "title": "結算確認",
     "content": "結算後任務將立即鎖定，無法新增、刪除或編輯紀錄。\n請確認帳目已核對無誤。"
   },
-  "D08_TaskClosed_Confirm": {
+  "d08_task_closed_confirm": {
     "title": "結束任務確認",
     "content": "此操作無法復原。所有資料將被永久鎖定。\n\n確定要繼續嗎？"
   },
-  "D09_TaskSettings_CurrencyConfirm": {
+  "d09_task_settings_currency_confirm": {
     "title": "變更結算幣別",
     "content": "變更幣別將會重置所有匯率設定，這可能會影響目前的帳目金額。確定要變更嗎？"
   },
-  "D10_RecordDelete_Confirm": {
+  "d10_record_delete_confirm": {
     "title": "刪除紀錄確認",
     "content": "確定要刪除 {title}（{amount}）嗎？"
   },
-  "D11_random_result": {
+  "d11_random_result": {
     "title": "零頭得主",
     "skip": "略過"
   },
-  "D12_logout_confirm": {
+  "d12_logout_confirm": {
     "title": "登出確認",
     "content": "若不同意更新後的條款，將無法繼續使用本服務。\n帳號將會登出。",
     "buttons": {
       "logout": "確認登出"
     }
   },
-  "D13_DeleteAccount_Confirm": {
+  "d13_delete_account_confirm": {
     "title": "刪除帳號確認",
     "content": "此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？"
   },
-  "D14_Date_Select": {
+  "d14_date_select": {
     "title": "選擇日期" 
   },
-  "B02_SplitExpense_Edit": {
+  "b02_split_expense_edit": {
     "title": "編輯細項",
     "buttons": {
       "confirm_split": "確認分拆"
@@ -619,7 +619,7 @@
       "sub_item": "例：子項目"
     }
   },
-  "B03_SplitMethod_Edit": {
+  "b03_split_method_edit": {
     "title": "分攤方式設定",
     "buttons": {
       "adjust_weight": "調整權重"
@@ -629,14 +629,14 @@
     },
     "mismatch": "金額不符"
   },
-  "B04_payment_merge": {
+  "b04_payment_merge": {
     "title": "合併成員款項",
     "label": {
       "head_member": "代表",
       "merge_amount": "合併總額"
     }
   },
-  "B07_PaymentMethod_Edit": {
+  "b07_payment_method_edit": {
     "title": "資金來源設定",
     "prepay_balance": "預收款餘額：{amount}",
     "payer_member": "代墊成員",

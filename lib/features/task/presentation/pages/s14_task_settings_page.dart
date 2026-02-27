@@ -180,7 +180,7 @@ class _S14ContentState extends State<_S14Content> {
     final displayState = context.watch<DisplayState>();
     final isEnlarged = displayState.isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
-    final title = t.S14_Task_Settings.title;
+    final title = t.s14_task_settings.title;
 
     return CommonStateView(
       status: vm.initStatus,
@@ -198,13 +198,13 @@ class _S14ContentState extends State<_S14Content> {
             padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
             children: [
               SectionWrapper(
-                  title: t.S14_Task_Settings.section.task_name,
+                  title: t.s14_task_settings.section.task_name,
                   children: [
                     TaskNameInput(
                       controller: vm.nameController,
                       focusNode: _nameFocusNode,
                       label: t.common.label.task_name,
-                      hint: t.S16_TaskCreate_Edit.hint.name,
+                      hint: t.s16_task_create_edit.hint.name,
                       maxLength: TaskConstants.maxTaskNameLength,
                       enabled: vm.taskStatus != TaskStatus.settled &&
                           vm.taskStatus != TaskStatus.closed,
@@ -215,12 +215,12 @@ class _S14ContentState extends State<_S14Content> {
                           height:
                               isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                       NavTile(
-                          title: t.S14_Task_Settings.menu.invite,
+                          title: t.s14_task_settings.menu.invite,
                           onTap: () => _redirectToInvite(context, vm)),
                     ]
                   ]),
               SectionWrapper(
-                  title: t.S14_Task_Settings.section.task_period,
+                  title: t.s14_task_settings.section.task_period,
                   children: [
                     if (vm.startDate != null && vm.endDate != null) ...[
                       TaskDateInput(
@@ -247,7 +247,7 @@ class _S14ContentState extends State<_S14Content> {
                     ],
                   ]),
               SectionWrapper(
-                  title: t.S14_Task_Settings.section.settlement,
+                  title: t.s14_task_settings.section.settlement,
                   children: [
                     if (vm.currency != null) ...[
                       TaskCurrencyInput(
@@ -271,12 +271,12 @@ class _S14ContentState extends State<_S14Content> {
                     ),
                   ]),
               SectionWrapper(
-                title: t.S14_Task_Settings.section.other,
+                title: t.s14_task_settings.section.other,
                 children: [
                   if (vm.taskStatus != TaskStatus.settled &&
                       vm.taskStatus != TaskStatus.closed) ...[
                     NavTile(
-                      title: t.S14_Task_Settings.menu.member_settings,
+                      title: t.s14_task_settings.menu.member_settings,
                       onTap: () => _redirectToMemberSettings(context, vm),
                     ),
                     SizedBox(
@@ -284,7 +284,7 @@ class _S14ContentState extends State<_S14Content> {
                             isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   ],
                   NavTile(
-                      title: t.S14_Task_Settings.menu.history,
+                      title: t.s14_task_settings.menu.history,
                       onTap: () => _redirectToHistory(context, vm)),
                 ],
               ),
@@ -295,7 +295,7 @@ class _S14ContentState extends State<_S14Content> {
                       vm.taskStatus != TaskStatus.closed)) ...[
                 const SizedBox(height: AppLayout.spaceL),
                 NavTile(
-                  title: t.S14_Task_Settings.menu.close_task,
+                  title: t.s14_task_settings.menu.close_task,
                   isDestructive: true,
                   onTap: () => _redirectToCloseTask(context, vm),
                 ),
