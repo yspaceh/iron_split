@@ -794,8 +794,7 @@ class _TranslationsCommonRemainderRuleEnUs extends TranslationsCommonRemainderRu
 	@override String get title => 'Remainder Rule';
 	@override late final _TranslationsCommonRemainderRuleRuleEnUs rule = _TranslationsCommonRemainderRuleRuleEnUs._(_root);
 	@override late final _TranslationsCommonRemainderRuleContentEnUs content = _TranslationsCommonRemainderRuleContentEnUs._(_root);
-	@override String message_remainder({required Object amount}) => 'Remainder ${amount} will be temporarily stored and distributed at settlement.';
-	@override String message_zero_balance({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.';
+	@override late final _TranslationsCommonRemainderRuleMessageEnUs message = _TranslationsCommonRemainderRuleMessageEnUs._(_root);
 }
 
 // Path: common.split_method
@@ -1762,6 +1761,17 @@ class _TranslationsCommonRemainderRuleContentEnUs extends TranslationsCommonRema
 	@override String get member => 'Select a specific member to always absorb the remainder.';
 }
 
+// Path: common.remainder_rule.message
+class _TranslationsCommonRemainderRuleMessageEnUs extends TranslationsCommonRemainderRuleMessageZhTw {
+	_TranslationsCommonRemainderRuleMessageEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String remainder({required Object amount}) => 'Remainder ${amount} will be temporarily stored and distributed at settlement.';
+	@override String zero_balance({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.';
+}
+
 // Path: common.terms.label
 class _TranslationsCommonTermsLabelEnUs extends TranslationsCommonTermsLabelZhTw {
 	_TranslationsCommonTermsLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -2029,8 +2039,8 @@ extension on TranslationsEnUs {
 			'common.remainder_rule.content.random' => 'The system will randomly select one member to absorb the remainder.',
 			'common.remainder_rule.content.order' => 'Distributes the remainder sequentially based on the order members joined.',
 			'common.remainder_rule.content.member' => 'Select a specific member to always absorb the remainder.',
-			'common.remainder_rule.message_remainder' => ({required Object amount}) => 'Remainder ${amount} will be temporarily stored and distributed at settlement.',
-			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.',
+			'common.remainder_rule.message.remainder' => ({required Object amount}) => 'Remainder ${amount} will be temporarily stored and distributed at settlement.',
+			'common.remainder_rule.message.zero_balance' => ({required Object amount}) => 'Remaining amount ${amount} has been automatically offset against payment differences.',
 			'common.split_method.even' => 'Equal',
 			'common.split_method.percent' => 'Ratio',
 			'common.split_method.exact' => 'Custom',

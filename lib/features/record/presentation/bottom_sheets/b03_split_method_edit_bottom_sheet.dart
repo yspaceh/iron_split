@@ -222,7 +222,7 @@ class _B03ContentState extends State<_B03Content> {
                       icon: Icons.savings_outlined,
                       backgroundColor: colorScheme.surface,
                       text: Text(
-                        t.common.remainder_rule.message_remainder(
+                        t.common.remainder_rule.message.remainder(
                             amount:
                                 "${vm.baseCurrency.code}${vm.baseCurrency.symbol} ${CurrencyConstants.formatAmount(vm.selectedMemberIds.isEmpty ? 0 : result.remainder, vm.baseCurrency.code)}"),
                         style: TextStyle(fontSize: 12),

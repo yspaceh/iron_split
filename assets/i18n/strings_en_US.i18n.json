@@ -140,8 +140,10 @@
         "order": "Distributes the remainder sequentially based on the order members joined.",
         "member": "Select a specific member to always absorb the remainder."
       },
-      "message_remainder": "Remainder {amount} will be temporarily stored and distributed at settlement.",
-      "message_zero_balance": "Remaining amount {amount} has been automatically offset against payment differences."
+      "message": {
+        "remainder": "Remainder {amount} will be temporarily stored and distributed at settlement.",
+        "zero_balance": "Remaining amount {amount} has been automatically offset against payment differences."
+      }
     },
     "split_method": {
       "even": "Equal",

@@ -1176,12 +1176,7 @@ class TranslationsCommonRemainderRuleZhTw {
 
 	late final TranslationsCommonRemainderRuleRuleZhTw rule = TranslationsCommonRemainderRuleRuleZhTw.internal(_root);
 	late final TranslationsCommonRemainderRuleContentZhTw content = TranslationsCommonRemainderRuleContentZhTw.internal(_root);
-
-	/// zh-TW: '零頭 {amount} 將暫存，於結算時分配。'
-	String message_remainder({required Object amount}) => '零頭 ${amount} 將暫存，於結算時分配。';
-
-	/// zh-TW: '零頭 {amount} 已與支付匯差自動抵銷。'
-	String message_zero_balance({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷。';
+	late final TranslationsCommonRemainderRuleMessageZhTw message = TranslationsCommonRemainderRuleMessageZhTw.internal(_root);
 }
 
 // Path: common.split_method
@@ -2567,6 +2562,21 @@ class TranslationsCommonRemainderRuleContentZhTw {
 	String get member => '指定一位成員固定承擔所有零頭差額。';
 }
 
+// Path: common.remainder_rule.message
+class TranslationsCommonRemainderRuleMessageZhTw {
+	TranslationsCommonRemainderRuleMessageZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '零頭 {amount} 將暫存，於結算時分配。'
+	String remainder({required Object amount}) => '零頭 ${amount} 將暫存，於結算時分配。';
+
+	/// zh-TW: '零頭 {amount} 已與支付匯差自動抵銷。'
+	String zero_balance({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷。';
+}
+
 // Path: common.payment_info.mode
 class TranslationsCommonPaymentInfoModeZhTw {
 	TranslationsCommonPaymentInfoModeZhTw.internal(this._root);
@@ -2970,8 +2980,8 @@ extension on Translations {
 			'common.remainder_rule.content.random' => '系統將於每次結算時，隨機指定一位成員承擔零頭差額。',
 			'common.remainder_rule.content.order' => '依照成員加入的順序，將零頭依序分配，直到分完為止。',
 			'common.remainder_rule.content.member' => '指定一位成員固定承擔所有零頭差額。',
-			'common.remainder_rule.message_remainder' => ({required Object amount}) => '零頭 ${amount} 將暫存，於結算時分配。',
-			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷。',
+			'common.remainder_rule.message.remainder' => ({required Object amount}) => '零頭 ${amount} 將暫存，於結算時分配。',
+			'common.remainder_rule.message.zero_balance' => ({required Object amount}) => '零頭 ${amount} 已與支付匯差自動抵銷。',
 			'common.split_method.even' => '均分',
 			'common.split_method.percent' => '比例',
 			'common.split_method.exact' => '指定',

@@ -770,8 +770,7 @@ class _TranslationsCommonRemainderRuleJaJp extends TranslationsCommonRemainderRu
 	@override String get title => '端数処理';
 	@override late final _TranslationsCommonRemainderRuleRuleJaJp rule = _TranslationsCommonRemainderRuleRuleJaJp._(_root);
 	@override late final _TranslationsCommonRemainderRuleContentJaJp content = _TranslationsCommonRemainderRuleContentJaJp._(_root);
-	@override String message_remainder({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます';
-	@override String message_zero_balance({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました';
+	@override late final _TranslationsCommonRemainderRuleMessageJaJp message = _TranslationsCommonRemainderRuleMessageJaJp._(_root);
 }
 
 // Path: common.split_method
@@ -1256,7 +1255,7 @@ class _TranslationsS18TaskJoinHintJaJp extends TranslationsS18TaskJoinHintZhTw {
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get input => '8桁の招待コードを入力してください';
+	@override String get input => '招待コード（8桁）を入力';
 }
 
 // Path: s18_task_join.content
@@ -1703,6 +1702,17 @@ class _TranslationsCommonRemainderRuleContentJaJp extends TranslationsCommonRema
 	@override String get member => '特定のメンバーを指定し、常にその人が端数を負担するようにします。';
 }
 
+// Path: common.remainder_rule.message
+class _TranslationsCommonRemainderRuleMessageJaJp extends TranslationsCommonRemainderRuleMessageZhTw {
+	_TranslationsCommonRemainderRuleMessageJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String remainder({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます。';
+	@override String zero_balance({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました。';
+}
+
 // Path: common.payment_info.mode
 class _TranslationsCommonPaymentInfoModeJaJp extends TranslationsCommonPaymentInfoModeZhTw {
 	_TranslationsCommonPaymentInfoModeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -2014,8 +2024,8 @@ extension on TranslationsJaJp {
 			'common.remainder_rule.content.random' => '端数を負担する一人を、システムがランダムに選びます。',
 			'common.remainder_rule.content.order' => 'メンバーの参加順に、端数がなくなるまで順番に配分します。',
 			'common.remainder_rule.content.member' => '特定のメンバーを指定し、常にその人が端数を負担するようにします。',
-			'common.remainder_rule.message_remainder' => ({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます',
-			'common.remainder_rule.message_zero_balance' => ({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました',
+			'common.remainder_rule.message.remainder' => ({required Object amount}) => '端数 ${amount} は一時的に保存され、精算時に分配されます。',
+			'common.remainder_rule.message.zero_balance' => ({required Object amount}) => '端数 ${amount} は支払い差額と自動的に相殺されました。',
 			'common.split_method.even' => '均等',
 			'common.split_method.percent' => '比例',
 			'common.split_method.exact' => '實額',
@@ -2192,7 +2202,7 @@ extension on TranslationsJaJp {
 			's18_task_join.tabs.input' => '入力',
 			's18_task_join.tabs.scan' => 'スキャン',
 			's18_task_join.label.input' => '招待コード',
-			's18_task_join.hint.input' => '8桁の招待コードを入力してください',
+			's18_task_join.hint.input' => '招待コード（8桁）を入力',
 			's18_task_join.content.scan' => 'QRコードを枠内に配置すると自動的にスキャンされます',
 			's30_settlement_confirm.title' => '精算確認',
 			's30_settlement_confirm.buttons.set_payment_info' => '受取設定',

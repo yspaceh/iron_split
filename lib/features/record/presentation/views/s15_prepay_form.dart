@@ -77,7 +77,7 @@ class S15PrepayForm extends StatelessWidget {
       return InfoBar(
         icon: Icons.info_outline_rounded,
         text: Text(
-          t.common.remainder_rule.message_zero_balance(
+          t.common.remainder_rule.message.zero_balance(
               amount:
                   "$symbol ${CurrencyConstants.formatAmount(remainderDetail.consumer, baseCurrency.code)}"),
           style: TextStyle(fontSize: 12),
@@ -90,7 +90,7 @@ class S15PrepayForm extends StatelessWidget {
       return InfoBar(
         icon: Icons.savings_outlined,
         text: Text(
-          t.common.remainder_rule.message_remainder(
+          t.common.remainder_rule.message.remainder(
               amount:
                   "$symbol ${CurrencyConstants.formatAmount(remainderDetail.net, baseCurrency.code)}"),
           style: TextStyle(fontSize: 12),

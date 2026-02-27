@@ -110,8 +110,10 @@
         "order": "依照成員加入的順序，將零頭依序分配，直到分完為止。",
         "member": "指定一位成員固定承擔所有零頭差額。"
       },
-      "message_remainder": "零頭 {amount} 將暫存，於結算時分配。",
-      "message_zero_balance": "零頭 {amount} 已與支付匯差自動抵銷。"
+      "message": {
+        "remainder": "零頭 {amount} 將暫存，於結算時分配。",
+        "zero_balance": "零頭 {amount} 已與支付匯差自動抵銷。"
+      }
     },
     "split_method": {
       "even": "均分",
