@@ -38,6 +38,9 @@ enum AppErrorCodes {
   exportFailed,
   shareFailed,
   logoutFailed,
+  scanFailed,
+
+  cameraPermissionDenied,
 
   unknown,
 }

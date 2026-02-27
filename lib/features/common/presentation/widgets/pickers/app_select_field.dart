@@ -44,57 +44,34 @@ class AppSelectField extends StatelessWidget {
       componentBaseHeight,
       isEnlarged,
     );
-    final Color textColor = enabled
-        ? colorScheme.onSurface
-        : colorScheme.onSurface.withValues(alpha: 0.38);
-
-    final contentStyle = textTheme.bodyLarge?.copyWith(
-      fontWeight: FontWeight.w500,
-      color: textColor,
-      height: finalLineHeight,
+    final textColor = AppLayout.inputTextColor(colorScheme, enabled);
+    final contentStyle = AppLayout.inputContentStyle(
+      textTheme,
+      textColor,
+      finalLineHeight,
     );
 
-    final Color iconColor = enabled
-        ? colorScheme.onSurfaceVariant
-        : colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
+    final iconColor = AppLayout.inputIconColor(colorScheme, enabled);
+    final labelStyle =
+        AppLayout.inputLableStyle(colorScheme, textTheme, enabled);
+    final labelTopPos = AppLayout.inputLabelTopPos(isEnlarged);
 
-    final labelStyle = textTheme.labelMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-        ) ??
-        const TextStyle(fontSize: 10);
-    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceS;
-
-    final double labelRenderedHeight = AppLayout.renderedHeight(
+    final labelRenderedHeight = AppLayout.renderedHeight(
       10.0,
       labelStyle.height,
       scale,
     );
-    final double contentTopPadding = labelTopPos + labelRenderedHeight;
+    final contentTopPadding =
+        AppLayout.inputContentTopPadding(labelTopPos, labelRenderedHeight);
 
-    final double contentBottomPadding =
-        isEnlarged ? AppLayout.spaceL : AppLayout.spaceS;
+    final contentBottomPadding =
+        AppLayout.inputContentBottomPadding(isEnlarged);
 
-    final borderRadius = BorderRadius.circular(AppLayout.radiusL);
+    final borderRadius = AppLayout.inputBorderRadius;
 
-    // 1. 正常狀態：透明邊框
-    final normalBorderStyle = OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: const BorderSide(
-        color: Colors.transparent,
-        width: 1.0,
-      ),
-    );
-
-    // 2. 錯誤狀態：紅色邊框
-    final errorBorderStyle = OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: colorScheme.error,
-        width: 1.0,
-      ),
-    );
+    final normalBorderStyle =
+        AppLayout.inputNormalBorderStyle(fillColor, colorScheme);
+    final errorBorderStyle = AppLayout.inputErrorBorderStyle(colorScheme);
 
     return InkWell(
       onTap: enabled ? onTap : null,
@@ -105,6 +82,7 @@ class AppSelectField extends StatelessWidget {
             ignoring: true,
             child: TextFormField(
               key: ValueKey(text),
+              enabled: enabled,
               initialValue: isEmpty ? null : text,
               readOnly: true,
               autovalidateMode: autovalidateMode,
@@ -112,17 +90,10 @@ class AppSelectField extends StatelessWidget {
               style: contentStyle,
               decoration: InputDecoration(
                 labelText: null, // 禁用內建 Label
-                contentPadding: EdgeInsets.only(
-                    left: AppLayout.spaceL,
-                    right: AppLayout.spaceL,
-                    top: contentTopPadding,
-                    bottom: contentBottomPadding),
-
+                contentPadding: AppLayout.inputContentPadding(
+                    contentTopPadding, contentBottomPadding),
                 hintText: isEmpty ? hintText : null,
-                hintStyle: TextStyle(
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                    fontSize: 14),
-
+                hintStyle: AppLayout.inputHintStyle(colorScheme),
                 filled: true,
                 fillColor: fillColor != null
                     ? (enabled ? fillColor : fillColor!.withValues(alpha: 0.3))
@@ -156,13 +127,11 @@ class AppSelectField extends StatelessWidget {
                 ),
 
                 border: normalBorderStyle,
+                disabledBorder: normalBorderStyle,
                 enabledBorder: normalBorderStyle,
                 focusedBorder: normalBorderStyle,
-
-                // 錯誤狀態
                 errorBorder: errorBorderStyle,
                 focusedErrorBorder: errorBorderStyle,
-
                 errorText: errorText,
               ),
             ),
@@ -171,13 +140,15 @@ class AppSelectField extends StatelessWidget {
           // 手動繪製 Label (固定在左上)
           if (labelText != null)
             Positioned(
-              top: 12,
+              top: labelTopPos, // 距離頂部
               left: (prefixIcon != null)
                   ? AppLayout.gridUnit * 6
-                  : AppLayout.spaceXL,
-              child: Text(
-                labelText!,
-                style: labelStyle,
+                  : AppLayout.spaceXL, // 如果有 icon 要避開
+              child: IgnorePointer(
+                child: Text(
+                  labelText!,
+                  style: labelStyle,
+                ),
               ),
             ),
         ],

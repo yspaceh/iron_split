@@ -30,6 +30,7 @@ import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_con
 // Task Dashboard & Sub-pages
 import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s17_task_locked_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s18_task_join_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s53_task_settings_members_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s52_task_settings_log_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s12_task_close_notice_page.dart';
@@ -98,6 +99,13 @@ class AppRouter {
           final taskId = state.pathParameters['taskId']!;
           return S17TaskLockedPage(taskId: taskId);
         },
+      ),
+
+      // S18_Task.Join
+      GoRoute(
+        path: '/tasks/join',
+        name: 'S18',
+        builder: (context, state) => const S18TaskJoinPage(),
       ),
 
       // S11_Invite.Confirm

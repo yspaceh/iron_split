@@ -54,6 +54,7 @@ dependencies:
   firebase_crashlytics: ^5.0.7
   currency_text_input_formatter: ^2.3.0
   pretty_qr_code: ^3.6.0
+  barcode_scan2: ^4.7.2
 
 dev_dependencies:
   flutter_test:

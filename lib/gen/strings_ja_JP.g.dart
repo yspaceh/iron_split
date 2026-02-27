@@ -49,6 +49,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditJaJp S15_Record_Edit = _TranslationsS15RecordEditJaJp._(_root);
 	@override late final _TranslationsS16TaskCreateEditJaJp S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditJaJp._(_root);
 	@override late final _TranslationsS17TaskLockedJaJp S17_Task_Locked = _TranslationsS17TaskLockedJaJp._(_root);
+	@override late final _TranslationsS18TaskJoinJaJp S18_Task_Join = _TranslationsS18TaskJoinJaJp._(_root);
 	@override late final _TranslationsS30SettlementConfirmJaJp S30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsS31SettlementPaymentInfoJaJp S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
 	@override late final _TranslationsS32SettlementResultJaJp S32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
@@ -152,7 +153,7 @@ class _TranslationsS11InviteConfirmJaJp extends TranslationsS11InviteConfirmZhTw
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'タスクに参加';
+	@override String get title => 'タスク参加';
 	@override String get subtitle => '以下のタスクへの招待';
 	@override late final _TranslationsS11InviteConfirmButtonsJaJp buttons = _TranslationsS11InviteConfirmButtonsJaJp._(_root);
 	@override late final _TranslationsS11InviteConfirmLabelJaJp label = _TranslationsS11InviteConfirmLabelJaJp._(_root);
@@ -244,6 +245,20 @@ class _TranslationsS17TaskLockedJaJp extends TranslationsS17TaskLockedZhTw {
 	@override String retention_notice({required Object days}) => '${days} 日後にデータは自動削除されます。期間内にダウンロードしてください。';
 	@override String remainder_absorbed_by({required Object name}) => '${name} が負担';
 	@override late final _TranslationsS17TaskLockedExportJaJp export = _TranslationsS17TaskLockedExportJaJp._(_root);
+}
+
+// Path: S18_Task_Join
+class _TranslationsS18TaskJoinJaJp extends TranslationsS18TaskJoinZhTw {
+	_TranslationsS18TaskJoinJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク参加';
+	@override late final _TranslationsS18TaskJoinTabsJaJp tabs = _TranslationsS18TaskJoinTabsJaJp._(_root);
+	@override late final _TranslationsS18TaskJoinLabelJaJp label = _TranslationsS18TaskJoinLabelJaJp._(_root);
+	@override late final _TranslationsS18TaskJoinHintJaJp hint = _TranslationsS18TaskJoinHintJaJp._(_root);
+	@override late final _TranslationsS18TaskJoinContentJaJp content = _TranslationsS18TaskJoinContentJaJp._(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -1213,6 +1228,47 @@ class _TranslationsS17TaskLockedExportJaJp extends TranslationsS17TaskLockedExpo
 	@override String get mixed => '混合支払い';
 }
 
+// Path: S18_Task_Join.tabs
+class _TranslationsS18TaskJoinTabsJaJp extends TranslationsS18TaskJoinTabsZhTw {
+	_TranslationsS18TaskJoinTabsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => '入力';
+	@override String get scan => 'スキャン';
+}
+
+// Path: S18_Task_Join.label
+class _TranslationsS18TaskJoinLabelJaJp extends TranslationsS18TaskJoinLabelZhTw {
+	_TranslationsS18TaskJoinLabelJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => '招待コード';
+}
+
+// Path: S18_Task_Join.hint
+class _TranslationsS18TaskJoinHintJaJp extends TranslationsS18TaskJoinHintZhTw {
+	_TranslationsS18TaskJoinHintJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => '8桁の招待コードを入力してください';
+}
+
+// Path: S18_Task_Join.content
+class _TranslationsS18TaskJoinContentJaJp extends TranslationsS18TaskJoinContentZhTw {
+	_TranslationsS18TaskJoinContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get scan => 'QRコードを枠内に配置すると自動的にスキャンされます';
+}
+
 // Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1617,6 +1673,9 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get share_failed => 'シェアが失敗しました。後でもう一度お試しください。';
 	@override String get login_failed => 'ログインが失敗しました。後でもう一度お試しください。';
 	@override String get logout_failed => 'ログアウトが失敗しました。後でもう一度お試しください。';
+	@override String get scan_failed => 'スキャンが失敗しました。後でもう一度お試しください。';
+	@override String get invalid_qr_code => '無効なQRコードです。';
+	@override String get camera_permission_denied => '設定からカメラの権限を有効にしてください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2025,7 +2084,7 @@ extension on TranslationsJaJp {
 			'S10_Home_TaskList.buttons.join_task' => 'タスク参加',
 			'S10_Home_TaskList.date_tbd' => '日付未定',
 			'S10_Home_TaskList.label.settlement' => '精算済み',
-			'S11_Invite_Confirm.title' => 'タスクに参加',
+			'S11_Invite_Confirm.title' => 'タスク参加',
 			'S11_Invite_Confirm.subtitle' => '以下のタスクへの招待',
 			'S11_Invite_Confirm.buttons.join' => '参加',
 			'S11_Invite_Confirm.buttons.back_task_list' => 'タスク一覧へ',
@@ -2129,6 +2188,12 @@ extension on TranslationsJaJp {
 			'S17_Task_Locked.export.net_remainder' => '端数',
 			'S17_Task_Locked.export.pool' => '前受金',
 			'S17_Task_Locked.export.mixed' => '混合支払い',
+			'S18_Task_Join.title' => 'タスク参加',
+			'S18_Task_Join.tabs.input' => '入力',
+			'S18_Task_Join.tabs.scan' => 'スキャン',
+			'S18_Task_Join.label.input' => '招待コード',
+			'S18_Task_Join.hint.input' => '8桁の招待コードを入力してください',
+			'S18_Task_Join.content.scan' => 'QRコードを枠内に配置すると自動的にスキャンされます',
 			'S30_settlement_confirm.title' => '精算確認',
 			'S30_settlement_confirm.buttons.set_payment_info' => '受取設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '金額確認',
@@ -2311,6 +2376,9 @@ extension on TranslationsJaJp {
 			'error.message.share_failed' => 'シェアが失敗しました。後でもう一度お試しください。',
 			'error.message.login_failed' => 'ログインが失敗しました。後でもう一度お試しください。',
 			'error.message.logout_failed' => 'ログアウトが失敗しました。後でもう一度お試しください。',
+			'error.message.scan_failed' => 'スキャンが失敗しました。後でもう一度お試しください。',
+			'error.message.invalid_qr_code' => '無効なQRコードです。',
+			'error.message.camera_permission_denied' => '設定からカメラの権限を有効にしてください。',
 			_ => null,
 		};
 	}

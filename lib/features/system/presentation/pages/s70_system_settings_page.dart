@@ -174,13 +174,6 @@ class _S70ContentState extends State<_S70Content> {
                   ),
                   SizedBox(
                       height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
-                  // 收款資料
-                  NavTile(
-                    title: t.S70_System_Settings.menu.payment_info,
-                    onTap: () => _redirectToPaymentInfo(context),
-                  ),
-                  SizedBox(
-                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
                   // 語言設定
                   TaskLanguageInput(
                     language: localeVm.currentLocale,
@@ -202,6 +195,13 @@ class _S70ContentState extends State<_S70Content> {
                     display: displayVm.displayMode,
                     onDisplayChanged: (newDisplay) =>
                         _handleUpdateDisplay(context, displayVm, newDisplay),
+                  ),
+                  SizedBox(
+                      height: isEnlarged ? AppLayout.spaceL : AppLayout.spaceS),
+                  // 收款資料
+                  NavTile(
+                    title: t.S70_System_Settings.menu.payment_info,
+                    onTap: () => _redirectToPaymentInfo(context),
                   ),
                 ],
               ),

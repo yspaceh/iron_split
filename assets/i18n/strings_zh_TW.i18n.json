@@ -396,6 +396,22 @@
       "mixed": "混合支付"
     }
   },
+  "S18_Task_Join": {
+    "title": "加入任務",
+    "tabs": {
+      "input": "輸入",
+      "scan": "掃描"
+    },
+    "label" : {
+      "input": "邀請碼"
+    },
+    "hint" : {
+      "input": "請輸入 8 碼邀請碼"
+    },
+    "content": {
+      "scan": "請將行動條碼放入框內即可自動掃描"
+    }
+  },
   "S30_settlement_confirm": {
     "title": "結算確認",
     "buttons": {
@@ -720,7 +736,10 @@
       "settlement_failed": "系統錯誤，結算失敗，請稍後再試。",
       "share_failed": "分享失敗，請稍後再試。",
       "login_failed": "登入失敗，請稍後再試。",
-      "logout_failed": "登出失敗，請稍後再試。"
+      "logout_failed": "登出失敗，請稍後再試。",
+      "scan_failed": "掃描失敗，請稍後再試。",
+      "invalid_qr_code": "無效的行動條碼。",
+      "camera_permission_denied": "請於系統設定中開啟相機權限。"
     }
   }
 }

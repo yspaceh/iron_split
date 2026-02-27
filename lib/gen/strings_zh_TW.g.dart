@@ -50,6 +50,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS15RecordEditZhTw S15_Record_Edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw S16_TaskCreate_Edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS17TaskLockedZhTw S17_Task_Locked = TranslationsS17TaskLockedZhTw.internal(_root);
+	late final TranslationsS18TaskJoinZhTw S18_Task_Join = TranslationsS18TaskJoinZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmZhTw S30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
 	late final TranslationsS31SettlementPaymentInfoZhTw S31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
 	late final TranslationsS32SettlementResultZhTw S32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
@@ -319,6 +320,23 @@ class TranslationsS17TaskLockedZhTw {
 	String remainder_absorbed_by({required Object name}) => '由 ${name} 承擔';
 
 	late final TranslationsS17TaskLockedExportZhTw export = TranslationsS17TaskLockedExportZhTw.internal(_root);
+}
+
+// Path: S18_Task_Join
+class TranslationsS18TaskJoinZhTw {
+	TranslationsS18TaskJoinZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '加入任務'
+	String get title => '加入任務';
+
+	late final TranslationsS18TaskJoinTabsZhTw tabs = TranslationsS18TaskJoinTabsZhTw.internal(_root);
+	late final TranslationsS18TaskJoinLabelZhTw label = TranslationsS18TaskJoinLabelZhTw.internal(_root);
+	late final TranslationsS18TaskJoinHintZhTw hint = TranslationsS18TaskJoinHintZhTw.internal(_root);
+	late final TranslationsS18TaskJoinContentZhTw content = TranslationsS18TaskJoinContentZhTw.internal(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -1844,6 +1862,57 @@ class TranslationsS17TaskLockedExportZhTw {
 	String get mixed => '混合支付';
 }
 
+// Path: S18_Task_Join.tabs
+class TranslationsS18TaskJoinTabsZhTw {
+	TranslationsS18TaskJoinTabsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '輸入'
+	String get input => '輸入';
+
+	/// zh-TW: '掃描'
+	String get scan => '掃描';
+}
+
+// Path: S18_Task_Join.label
+class TranslationsS18TaskJoinLabelZhTw {
+	TranslationsS18TaskJoinLabelZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '邀請碼'
+	String get input => '邀請碼';
+}
+
+// Path: S18_Task_Join.hint
+class TranslationsS18TaskJoinHintZhTw {
+	TranslationsS18TaskJoinHintZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '請輸入 8 碼邀請碼'
+	String get input => '請輸入 8 碼邀請碼';
+}
+
+// Path: S18_Task_Join.content
+class TranslationsS18TaskJoinContentZhTw {
+	TranslationsS18TaskJoinContentZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '請將行動條碼放入框內即可自動掃描'
+	String get scan => '請將行動條碼放入框內即可自動掃描';
+}
+
 // Path: S30_settlement_confirm.buttons
 class TranslationsS30SettlementConfirmButtonsZhTw {
 	TranslationsS30SettlementConfirmButtonsZhTw.internal(this._root);
@@ -2448,6 +2517,15 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '登出失敗，請稍後再試。'
 	String get logout_failed => '登出失敗，請稍後再試。';
+
+	/// zh-TW: '掃描失敗，請稍後再試。'
+	String get scan_failed => '掃描失敗，請稍後再試。';
+
+	/// zh-TW: '無效的行動條碼。'
+	String get invalid_qr_code => '無效的行動條碼。';
+
+	/// zh-TW: '請於系統設定中開啟相機權限。'
+	String get camera_permission_denied => '請於系統設定中開啟相機權限。';
 }
 
 // Path: common.remainder_rule.rule
@@ -3066,6 +3144,12 @@ extension on Translations {
 			'S17_Task_Locked.export.net_remainder' => '零頭',
 			'S17_Task_Locked.export.pool' => '預收款',
 			'S17_Task_Locked.export.mixed' => '混合支付',
+			'S18_Task_Join.title' => '加入任務',
+			'S18_Task_Join.tabs.input' => '輸入',
+			'S18_Task_Join.tabs.scan' => '掃描',
+			'S18_Task_Join.label.input' => '邀請碼',
+			'S18_Task_Join.hint.input' => '請輸入 8 碼邀請碼',
+			'S18_Task_Join.content.scan' => '請將行動條碼放入框內即可自動掃描',
 			'S30_settlement_confirm.title' => '結算確認',
 			'S30_settlement_confirm.buttons.set_payment_info' => '收款設定',
 			'S30_settlement_confirm.steps.confirm_amount' => '確認金額',
@@ -3249,6 +3333,9 @@ extension on Translations {
 			'error.message.share_failed' => '分享失敗，請稍後再試。',
 			'error.message.login_failed' => '登入失敗，請稍後再試。',
 			'error.message.logout_failed' => '登出失敗，請稍後再試。',
+			'error.message.scan_failed' => '掃描失敗，請稍後再試。',
+			'error.message.invalid_qr_code' => '無效的行動條碼。',
+			'error.message.camera_permission_denied' => '請於系統設定中開啟相機權限。',
 			_ => null,
 		};
 	}

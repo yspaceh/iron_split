@@ -18,6 +18,7 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final int? maxLines;
   final EdgeInsets scrollPadding;
+  final TextCapitalization textCapitalization;
 
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
@@ -55,6 +56,7 @@ class AppTextField extends StatelessWidget {
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.scrollPadding = const EdgeInsets.all(AppLayout.spaceXL),
     this.enabled = true,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -67,63 +69,33 @@ class AppTextField extends StatelessWidget {
     final isEnlarged = displayState.isEnlarged;
     final scale = displayState.scale;
     final double iconSize = AppLayout.inlineIconSize(isEnlarged);
-
-    final labelStyle = textTheme.labelMedium?.copyWith(
-          color: enabled
-              ? colorScheme.onSurfaceVariant
-              : colorScheme.onSurfaceVariant.withValues(alpha: 0.38),
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-        ) ??
-        const TextStyle(fontSize: 10);
     const double componentBaseHeight = 1.5;
     final double finalLineHeight = AppLayout.dynamicLineHeight(
       componentBaseHeight,
       isEnlarged,
     );
-
-    final Color textColor = enabled
-        ? colorScheme.onSurface
-        : colorScheme.onSurface.withValues(alpha: 0.38);
-
-    final contentStyle = textTheme.bodyLarge?.copyWith(
-      fontWeight: FontWeight.w500,
-      color: textColor,
-      height: finalLineHeight,
+    final labelStyle =
+        AppLayout.inputLableStyle(colorScheme, textTheme, enabled);
+    final textColor = AppLayout.inputTextColor(colorScheme, enabled);
+    final contentStyle = AppLayout.inputContentStyle(
+      textTheme,
+      textColor,
+      finalLineHeight,
     );
+    final labelTopPos = AppLayout.inputLabelTopPos(isEnlarged);
 
-    final double labelTopPos = isEnlarged ? AppLayout.spaceS : AppLayout.spaceS;
-
-    final double labelRenderedHeight = AppLayout.renderedHeight(
+    final labelRenderedHeight = AppLayout.renderedHeight(
       10.0,
       labelStyle.height,
       scale,
     );
-
-    final double contentTopPadding = labelTopPos + labelRenderedHeight;
-
-    final double contentBottomPadding =
-        isEnlarged ? AppLayout.spaceL : AppLayout.spaceS;
-
-    final borderRadius = BorderRadius.circular(AppLayout.radiusL);
-
-    // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
-    final normalBorderStyle = OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: fillColor ?? colorScheme.surface,
-        width: 1.0,
-      ),
-    );
-
-    // 2. 錯誤狀態：紅色全框 (因為沒有 labelText，所以不會有缺口！)
-    final errorBorderStyle = OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: colorScheme.error,
-        width: 1.0,
-      ),
-    );
+    final contentTopPadding =
+        AppLayout.inputContentTopPadding(labelTopPos, labelRenderedHeight);
+    final contentBottomPadding =
+        AppLayout.inputContentBottomPadding(isEnlarged);
+    final normalBorderStyle =
+        AppLayout.inputNormalBorderStyle(fillColor, colorScheme);
+    final errorBorderStyle = AppLayout.inputErrorBorderStyle(colorScheme);
 
     final effectiveValidator = validator ??
         (isRequired
@@ -158,6 +130,7 @@ class AppTextField extends StatelessWidget {
           onChanged: onChanged,
           validator: effectiveValidator,
           autovalidateMode: autovalidateMode,
+          textCapitalization: textCapitalization,
           maxLines: maxLines,
           maxLength: maxLength,
           inputFormatters: inputFormatters,
@@ -166,18 +139,10 @@ class AppTextField extends StatelessWidget {
           style: contentStyle,
           decoration: InputDecoration(
             labelText: null,
-            contentPadding: EdgeInsets.only(
-                left: AppLayout.spaceL,
-                right: AppLayout.spaceL,
-                top: contentTopPadding,
-                bottom: contentBottomPadding),
-
+            contentPadding: AppLayout.inputContentPadding(
+                contentTopPadding, contentBottomPadding),
             hintText: hintText,
-            hintStyle: TextStyle(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-              fontSize: 14,
-            ),
-
+            hintStyle: AppLayout.inputHintStyle(colorScheme),
             counterText: maxLength != null ? "" : null,
             suffixIcon: suffixIcon,
             suffixText: suffixText,
@@ -188,7 +153,6 @@ class AppTextField extends StatelessWidget {
             prefixText: prefixText,
             prefixIcon: buildPrefix(),
             prefixStyle: contentStyle,
-
             filled: true,
             fillColor: fillColor != null
                 ? (enabled ? fillColor : fillColor!.withValues(alpha: 0.3))
@@ -197,14 +161,10 @@ class AppTextField extends StatelessWidget {
                     : colorScheme.surfaceContainerHighest
                         .withValues(alpha: 0.3)),
             errorMaxLines: 3,
-
-            // 邊框設定
             border: normalBorderStyle,
             disabledBorder: normalBorderStyle,
             enabledBorder: normalBorderStyle,
             focusedBorder: normalBorderStyle,
-
-            // 錯誤時顯示完整的紅框
             errorBorder: errorBorderStyle,
             focusedErrorBorder: errorBorderStyle,
           ),

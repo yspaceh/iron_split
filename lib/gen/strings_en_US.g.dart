@@ -49,6 +49,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS15RecordEditEnUs S15_Record_Edit = _TranslationsS15RecordEditEnUs._(_root);
 	@override late final _TranslationsS16TaskCreateEditEnUs S16_TaskCreate_Edit = _TranslationsS16TaskCreateEditEnUs._(_root);
 	@override late final _TranslationsS17TaskLockedEnUs S17_Task_Locked = _TranslationsS17TaskLockedEnUs._(_root);
+	@override late final _TranslationsS18TaskJoinEnUs S18_Task_Join = _TranslationsS18TaskJoinEnUs._(_root);
 	@override late final _TranslationsS30SettlementConfirmEnUs S30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
 	@override late final _TranslationsS31SettlementPaymentInfoEnUs S31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
 	@override late final _TranslationsS32SettlementResultEnUs S32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
@@ -244,6 +245,20 @@ class _TranslationsS17TaskLockedEnUs extends TranslationsS17TaskLockedZhTw {
 	@override String retention_notice({required Object days}) => 'Data will be deleted in ${days} days. Download data before deletion.';
 	@override String remainder_absorbed_by({required Object name}) => 'Absorbed by ${name}';
 	@override late final _TranslationsS17TaskLockedExportEnUs export = _TranslationsS17TaskLockedExportEnUs._(_root);
+}
+
+// Path: S18_Task_Join
+class _TranslationsS18TaskJoinEnUs extends TranslationsS18TaskJoinZhTw {
+	_TranslationsS18TaskJoinEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Join Task';
+	@override late final _TranslationsS18TaskJoinTabsEnUs tabs = _TranslationsS18TaskJoinTabsEnUs._(_root);
+	@override late final _TranslationsS18TaskJoinLabelEnUs label = _TranslationsS18TaskJoinLabelEnUs._(_root);
+	@override late final _TranslationsS18TaskJoinHintEnUs hint = _TranslationsS18TaskJoinHintEnUs._(_root);
+	@override late final _TranslationsS18TaskJoinContentEnUs content = _TranslationsS18TaskJoinContentEnUs._(_root);
 }
 
 // Path: S30_settlement_confirm
@@ -1212,6 +1227,47 @@ class _TranslationsS17TaskLockedExportEnUs extends TranslationsS17TaskLockedExpo
 	@override String get mixed => 'Mixed Payment';
 }
 
+// Path: S18_Task_Join.tabs
+class _TranslationsS18TaskJoinTabsEnUs extends TranslationsS18TaskJoinTabsZhTw {
+	_TranslationsS18TaskJoinTabsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => 'Enter Code';
+	@override String get scan => 'Scan QR';
+}
+
+// Path: S18_Task_Join.label
+class _TranslationsS18TaskJoinLabelEnUs extends TranslationsS18TaskJoinLabelZhTw {
+	_TranslationsS18TaskJoinLabelEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => 'Invite code';
+}
+
+// Path: S18_Task_Join.hint
+class _TranslationsS18TaskJoinHintEnUs extends TranslationsS18TaskJoinHintZhTw {
+	_TranslationsS18TaskJoinHintEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get input => 'Enter 8-digit invite code';
+}
+
+// Path: S18_Task_Join.content
+class _TranslationsS18TaskJoinContentEnUs extends TranslationsS18TaskJoinContentZhTw {
+	_TranslationsS18TaskJoinContentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get scan => 'Frame the QR code to scan automatically';
+}
+
 // Path: S30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1616,6 +1672,9 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get share_failed => 'Share failed. Please try again later.';
 	@override String get login_failed => 'Login failed. Please try again later.';
 	@override String get logout_failed => 'Logout failed. Please try again later.';
+	@override String get scan_failed => 'Scan failed. Please try again later.';
+	@override String get invalid_qr_code => 'Invalid QR code.';
+	@override String get camera_permission_denied => 'Enable camera permission in system settings.';
 }
 
 // Path: common.payment_info.mode
@@ -2127,6 +2186,12 @@ extension on TranslationsEnUs {
 			'S17_Task_Locked.export.net_remainder' => 'Remainder',
 			'S17_Task_Locked.export.pool' => 'Prepaid Pool',
 			'S17_Task_Locked.export.mixed' => 'Mixed Payment',
+			'S18_Task_Join.title' => 'Join Task',
+			'S18_Task_Join.tabs.input' => 'Enter Code',
+			'S18_Task_Join.tabs.scan' => 'Scan QR',
+			'S18_Task_Join.label.input' => 'Invite code',
+			'S18_Task_Join.hint.input' => 'Enter 8-digit invite code',
+			'S18_Task_Join.content.scan' => 'Frame the QR code to scan automatically',
 			'S30_settlement_confirm.title' => 'Confirm Settlement',
 			'S30_settlement_confirm.buttons.set_payment_info' => 'Payment Info',
 			'S30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
@@ -2309,6 +2374,9 @@ extension on TranslationsEnUs {
 			'error.message.share_failed' => 'Share failed. Please try again later.',
 			'error.message.login_failed' => 'Login failed. Please try again later.',
 			'error.message.logout_failed' => 'Logout failed. Please try again later.',
+			'error.message.scan_failed' => 'Scan failed. Please try again later.',
+			'error.message.invalid_qr_code' => 'Invalid QR code.',
+			'error.message.camera_permission_denied' => 'Enable camera permission in system settings.',
 			_ => null,
 		};
 	}

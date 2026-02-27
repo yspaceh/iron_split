@@ -395,6 +395,22 @@
       "mixed": "Mixed Payment"
     }
   },
+  "S18_Task_Join": {
+    "title": "Join Task",
+    "tabs": {
+      "input": "Enter Code",
+      "scan": "Scan QR"
+    },
+    "label" : {
+      "input": "Invite code"
+    },
+    "hint" : {
+      "input": "Enter 8-digit invite code"
+    },
+    "content": {
+      "scan": "Frame the QR code to scan automatically"
+    }
+  },
   "S30_settlement_confirm": {
     "title": "Confirm Settlement",
     "buttons": {
@@ -718,7 +734,10 @@
       "settlement_failed": "System error. Settlement failed. Please try again later.",
       "share_failed": "Share failed. Please try again later.",
       "login_failed": "Login failed. Please try again later.",
-      "logout_failed": "Logout failed. Please try again later."
+      "logout_failed": "Logout failed. Please try again later.",
+      "scan_failed": "Scan failed. Please try again later.",
+      "invalid_qr_code": "Invalid QR code.",
+      "camera_permission_denied": "Enable camera permission in system settings."
     }
   }
 }

@@ -84,6 +84,8 @@ class ErrorMapper {
         return t.error.message.unauthorized;
       case AppErrorCodes.permissionDenied:
         return t.error.message.permission_denied;
+      case AppErrorCodes.cameraPermissionDenied:
+        return t.error.message.camera_permission_denied;
       case AppErrorCodes.dataNotFound:
         return t.error.message.data_not_found;
       case AppErrorCodes.initFailed:
@@ -146,6 +148,8 @@ class ErrorMapper {
         return t.error.message.export_failed;
       case AppErrorCodes.shareFailed:
         return t.error.message.share_failed;
+      case AppErrorCodes.scanFailed:
+        return t.error.message.scan_failed;
       case AppErrorCodes.logoutFailed:
         return t.error.message.logout_failed;
 

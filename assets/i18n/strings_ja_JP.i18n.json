@@ -229,7 +229,7 @@
     }
   },
   "S11_Invite_Confirm": {
-    "title": "タスクに参加",
+    "title": "タスク参加",
     "subtitle": "以下のタスクへの招待",
     "buttons": {
       "join": "参加",
@@ -394,6 +394,22 @@
       "net_remainder": "端数",
       "pool": "前受金",
       "mixed": "混合支払い"
+    }
+  },
+  "S18_Task_Join": {
+    "title": "タスク参加",
+    "tabs": {
+      "input": "入力",
+      "scan": "スキャン"
+    },
+    "label" : {
+      "input": "招待コード"
+    },
+    "hint" : {
+      "input": "8桁の招待コードを入力してください"
+    },
+    "content": {
+      "scan": "QRコードを枠内に配置すると自動的にスキャンされます"
     }
   },
   "S30_settlement_confirm": {
@@ -719,8 +735,10 @@
       "settlement_failed": "システムエラーが発生しました。後でもう一度お試しください。",
       "share_failed": "シェアが失敗しました。後でもう一度お試しください。",
       "login_failed": "ログインが失敗しました。後でもう一度お試しください。",
-      "logout_failed": "ログアウトが失敗しました。後でもう一度お試しください。"
-      
+      "logout_failed": "ログアウトが失敗しました。後でもう一度お試しください。",
+      "scan_failed": "スキャンが失敗しました。後でもう一度お試しください。",
+      "invalid_qr_code": "無効なQRコードです。",
+      "camera_permission_denied": "設定からカメラの権限を有効にしてください。"
     }
   }
 }

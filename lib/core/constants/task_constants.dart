@@ -6,6 +6,7 @@ class TaskConstants {
   static const int maxMembers = 15;
 
   // 未來如果有其他與 Task 相關的限制也可以放這
+  static const int inviteCodeLength = 8;
   static const int maxTaskNameLength = 20;
   static const int inviteCodeExpiryMinutes = 15;
 }

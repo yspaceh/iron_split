@@ -1,4 +1,7 @@
 // lib/core/theme/app_layout.dart (建議新增此檔或放入 AppTheme)
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+
 class AppLayout {
   static const double gridUnit = 8.0; // 基礎網格單位
 
@@ -43,5 +46,92 @@ class AppLayout {
 
   static double inlineIconSize(bool isEnlarged) {
     return isEnlarged ? iconSizeM : iconSizeS;
+  }
+
+  static TextStyle inputLableStyle(
+      ColorScheme colorScheme, TextTheme textTheme, bool enabled) {
+    return textTheme.labelMedium?.copyWith(
+          color: enabled
+              ? colorScheme.onSurfaceVariant
+              : colorScheme.onSurfaceVariant.withValues(alpha: 0.38),
+          fontWeight: FontWeight.w600,
+          fontSize: 10,
+        ) ??
+        const TextStyle(fontSize: 10);
+  }
+
+  static TextStyle? inputContentStyle(
+      TextTheme textTheme, Color textColor, double finalLineHeight) {
+    return textTheme.bodyLarge?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: textColor,
+      height: finalLineHeight,
+    );
+  }
+
+  static Color inputTextColor(ColorScheme colorScheme, bool enabled) {
+    return enabled
+        ? colorScheme.onSurface
+        : colorScheme.onSurface.withValues(alpha: 0.38);
+  }
+
+  static Color inputIconColor(ColorScheme colorScheme, bool enabled) {
+    return enabled
+        ? colorScheme.onSurfaceVariant
+        : colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
+  }
+
+  static double inputLabelTopPos(bool isEnlarged) {
+    return isEnlarged ? spaceS : spaceM;
+  }
+
+  static double inputContentTopPadding(
+      double labelTopPos, double labelRenderedHeight) {
+    return labelTopPos + labelRenderedHeight + spaceXS;
+  }
+
+  static double inputContentBottomPadding(bool isEnlarged) {
+    return isEnlarged ? spaceL : spaceM;
+  }
+
+  static BorderRadius inputBorderRadius =
+      BorderRadius.circular(AppLayout.radiusL);
+
+  // 1. 正常狀態：透明邊框 (保留 1px 避免跳動)
+  static OutlineInputBorder inputNormalBorderStyle(
+      Color? fillColor, ColorScheme colorScheme) {
+    return OutlineInputBorder(
+      borderRadius: inputBorderRadius,
+      borderSide: BorderSide(
+        color: fillColor ?? colorScheme.surface,
+        width: 1.0,
+      ),
+    );
+  }
+
+  // 2. 錯誤狀態：紅色全框 (因為沒有 labelText，所以不會有缺口！)
+  static OutlineInputBorder inputErrorBorderStyle(ColorScheme colorScheme) {
+    return OutlineInputBorder(
+      borderRadius: inputBorderRadius,
+      borderSide: BorderSide(
+        color: colorScheme.error,
+        width: 1.0,
+      ),
+    );
+  }
+
+  static EdgeInsetsGeometry inputContentPadding(
+      double contentTopPadding, double contentBottomPadding) {
+    return EdgeInsets.only(
+        left: AppLayout.spaceL,
+        right: AppLayout.spaceL,
+        top: contentTopPadding,
+        bottom: contentBottomPadding);
+  }
+
+  static TextStyle inputHintStyle(ColorScheme colorScheme) {
+    return TextStyle(
+        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+        fontSize: 14);
   }
 }

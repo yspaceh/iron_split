@@ -1,6 +1,7 @@
 // lib/core/base/base_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -15,6 +16,24 @@ abstract class BaseRepository {
       Future<T> Function() action, AppErrorCodes fallbackError) async {
     try {
       return await action();
+    } on FirebaseFunctionsException catch (e, stackTrace) {
+      // ✅ 1. 新增：專門攔截 Cloud Functions 的錯誤
+      // 這些是後端預期的商業邏輯擋擋 (如: 無效邀請碼、任務已滿)
+      if (e.code == 'invalid-argument' ||
+          e.code == 'not-found' ||
+          e.code == 'failed-precondition' ||
+          e.code == 'already-exists') {
+        // 不送 Crashlytics，直接讓 ErrorMapper 轉譯成 AppErrorCodes 給 UI
+        throw ErrorMapper.parseErrorCode(e);
+      }
+
+      // 預期外的 Functions 錯誤才記錄
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'Cloud Functions 操作失敗 (safeRun)',
+      );
+      throw ErrorMapper.parseErrorCode(e);
     } on FirebaseException catch (e, stackTrace) {
       // 這裡可以過濾掉一些您認為「不需要紀錄的常態錯誤」
       // 例如：網路斷線 (unavailable) 或權限不足 (permission-denied)
