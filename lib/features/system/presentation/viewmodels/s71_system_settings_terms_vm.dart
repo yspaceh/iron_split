@@ -42,7 +42,7 @@ class S71SystemSettingsTermsViewModel extends ChangeNotifier {
 
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
       _targetUrl =
-          'https://${AppConstants.projectId}.web.app/legal/$folder/$filename.html?v=$timestamp';
+          '${AppConstants.baseUrl}/legal/$folder/$filename.html?v=$timestamp';
 
       _initStatus = LoadStatus.success;
       notifyListeners();

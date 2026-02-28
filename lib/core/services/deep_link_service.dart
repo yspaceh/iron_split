@@ -116,11 +116,11 @@ class DeepLinkService {
   //  產生連結的方法 (供 ViewModel 呼叫)
   // 因為目前沒有 Domain，我們產生 Custom Scheme 格式
   String generateTaskLink(String taskId) {
-    return "iron-split://task?id=$taskId";
+    return "${AppConstants.baseUrl}/task?id=$taskId";
   }
 
   String generateJoinLink(String inviteCode) {
-    return "iron-split://join?code=$inviteCode";
+    return "${AppConstants.baseUrl}/join?code=$inviteCode";
   }
 
   void dispose() => _controller.close();

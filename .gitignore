@@ -51,3 +51,19 @@ lib/firebase_options.dart
 # 環境變數 (Cline 的 Gemini Key 放在這裡)
 .env
 .env.local
+
+# ========================
+# Android Keystore & Secrets
+# ========================
+# 忽略存放密碼的設定檔
+android/key.properties
+android/app/key.properties
+
+# 忽略所有的實體金鑰檔案 (避免你不小心把 .jks 或 .keystore 上傳)
+*.jks
+*.keystore
+
+# (可選) 如果你有把 Firebase 的 service account json 放在專案裡，也順便忽略掉
+*.json
+!firebase.json
+!google-services.json

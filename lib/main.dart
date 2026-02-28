@@ -30,8 +30,9 @@ import 'package:provider/provider.dart';
 // 核心配置與服務
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:iron_split/core/router/app_router.dart';
-import 'package:iron_split/core/theme/app_theme.dart'; // 導入定義好的主題
-import 'package:iron_split/firebase_options.dart';
+import 'package:iron_split/core/theme/app_theme.dart';
+import 'package:iron_split/firebase_options_dev.dart' as dev;
+import 'package:iron_split/firebase_options_prod.dart' as prod;
 
 // 狀態管理
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
@@ -40,14 +41,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  const environment = String.fromEnvironment('ENV', defaultValue: 'dev');
+
+  final firebaseOptions = environment == 'prod'
+      ? prod.DefaultFirebaseOptions.currentPlatform
+      : dev.DefaultFirebaseOptions.currentPlatform;
+
   // 初始化 Firebase
-  final results = await Future.wait([
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    SharedPreferences.getInstance(),
-  ]);
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(options: firebaseOptions);
+  }
 
   // 讀取儲存的語言設定
-  final prefs = results[1] as SharedPreferences;
+  final prefs = await SharedPreferences.getInstance();
   final savedLocaleCode = prefs.getString('app_locale');
 
   if (savedLocaleCode != null) {

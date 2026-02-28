@@ -1,0 +1,21 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "TV5WU2T786.com.ironsplit.dev",
+                "paths": [
+                    "/task",
+                    "/join"
+                ]
+            },
+            {
+                "appID": "TV5WU2T786.com.ironsplit.app",
+                "paths": [
+                    "/task",
+                    "/join"
+                ]
+            }
+        ]
+    }
+}

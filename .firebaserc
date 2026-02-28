@@ -1,6 +1,6 @@
 {
   "projects": {
-    "dev": "iron-split",
+    "dev": "iron-split-dev",
     "default": "iron-split"
   },
   "targets": {},

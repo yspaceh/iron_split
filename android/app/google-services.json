@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "472202291632",
+    "project_id": "iron-split-dev",
+    "storage_bucket": "iron-split-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472202291632:android:1d8e2c8c2c03e6c93a8e75",
+        "android_client_info": {
+          "package_name": "com.ironsplit.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxlRRfma43bC_hPVhe_AF-zwFKUW8dKUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

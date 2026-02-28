@@ -1,7 +1,10 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { setGlobalOptions } from "firebase-functions/v2";
 import * as admin from "firebase-admin";
 import { FieldPath } from "firebase-admin/firestore";
+
+setGlobalOptions({ region: "asia-northeast1" });
 
 admin.initializeApp();
 const db = admin.firestore();

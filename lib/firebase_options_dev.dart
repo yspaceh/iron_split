@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart'
 ///
 /// Example:
 /// ```dart
-/// import 'firebase_options.dart';
+/// import 'firebase_options_dev.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
@@ -24,10 +24,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -52,13 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDxlRRfma43bC_hPVhe_AF-zwFKUW8dKUY',
+    appId: '1:472202291632:android:1d8e2c8c2c03e6c93a8e75',
+    messagingSenderId: '472202291632',
+    projectId: 'iron-split-dev',
+    storageBucket: 'iron-split-dev.firebasestorage.app',
+  );
+
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCJthXMTDF-s8Lx2mK2FNd4op7nquaviyA',
-    appId: '1:742367506307:ios:fb1ffaa897d5673a19d0b6',
-    messagingSenderId: '742367506307',
-    projectId: 'iron-split',
-    storageBucket: 'iron-split.firebasestorage.app',
-    iosBundleId: 'com.ironsplit.app',
+    apiKey: 'AIzaSyDde3_J0KcxuVCrKhF7Y_McG5ssb5xsFLQ',
+    appId: '1:472202291632:ios:dd4a7b782e600b703a8e75',
+    messagingSenderId: '472202291632',
+    projectId: 'iron-split-dev',
+    storageBucket: 'iron-split-dev.firebasestorage.app',
+    iosBundleId: 'com.ironsplit.dev',
   );
 
 }
