@@ -1,3 +1,12 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -35,21 +44,29 @@ android {
     }
 
     signingConfigs {
-       release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
+        create("release") {
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            val storeFilePath = keystoreProperties.getProperty("storeFile")
+            if (storeFilePath != null) {
+                storeFile = file(storeFilePath)
+            }
+            storePassword = keystoreProperties.getProperty("storePassword")
         }
     }
 
     buildTypes {
-        release {
-            signingConfig signingConfigs.release
+        // Kotlin 必須用 getByName 來呼叫已存在的 release 區塊
+        getByName("release") {
+            // (原本 Flutter 預設的 minifyEnabled 等設定留著就好)
+            signingConfig = signingConfigs.getByName("release")
         }
-        debug {
+        
+        getByName("debug") {
+            // debug 什麼都不用加，系統會自動處理
         }
     }
+
     flavorDimensions += "default"
 
     productFlavors {
