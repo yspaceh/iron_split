@@ -45,7 +45,7 @@ class S32SettlementResultViewModel extends ChangeNotifier {
     return CurrencyConstants.getCurrencyConstants(_task!.baseCurrency);
   }
 
-  String get link => _deepLinkService.generateTaskLink(taskId);
+  String get link => _deepLinkService.generateSettlementLink(taskId);
 
   double get snapshotRemainder {
     if (_task == null || _task!.settlement == null) return 0.0;

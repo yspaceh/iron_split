@@ -5,14 +5,14 @@
             {
                 "appID": "TV5WU2T786.com.ironsplit.dev",
                 "paths": [
-                    "/task",
+                    "/locked",
                     "/join"
                 ]
             },
             {
                 "appID": "TV5WU2T786.com.ironsplit.app",
                 "paths": [
-                    "/task",
+                    "/locked",
                     "/join"
                 ]
             }

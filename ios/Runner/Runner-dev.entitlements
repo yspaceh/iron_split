@@ -4,9 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:https://iron-split.web.app</string>
+		<string>applinks:https://iron-split-dev.web.app</string>
 	</array>
-	<key>com.apple.developer.devicecheck.appattest-environment</key>
-	<string>development</string>
 </dict>
 </plist>

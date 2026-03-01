@@ -88,9 +88,9 @@ class DeepLinkService {
     final query = uri.queryParameters;
 
     // --- Custom Scheme 處理 (iron-split://) ---
-    if (uri.scheme == AppConstants.scheme) {
+    if (uri.scheme == AppConstants.scheme || uri.scheme == 'https') {
       // Case 1: Join Task
-      if (uri.host == 'join') {
+      if (uri.host == 'join' || uri.path == '/join') {
         final code = query['code'];
         if (code != null && code.isNotEmpty) {
           return JoinTaskIntent(code);
@@ -99,12 +99,13 @@ class DeepLinkService {
 
       // Case 2:  Settlement / Task Detail
       // iron-split://task?id=TASK_ID_HERE
-      if (uri.host == 'task') {
-        final taskId = query['id'];
-        if (taskId != null && taskId.isNotEmpty) {
-          return SettlementIntent(taskId);
+      if (uri.path.startsWith('/locked/')) {
+        final segments = uri.pathSegments;
+        if (segments.length >= 2 && segments[0] == 'locked') {
+          return SettlementIntent(segments[1]);
         }
       }
+      return UnknownIntent();
     }
 
     // 如果未來有 HTTPS 網域，可以加在這裡作為備援
@@ -114,9 +115,8 @@ class DeepLinkService {
   }
 
   //  產生連結的方法 (供 ViewModel 呼叫)
-  // 因為目前沒有 Domain，我們產生 Custom Scheme 格式
-  String generateTaskLink(String taskId) {
-    return "${AppConstants.baseUrl}/task?id=$taskId";
+  String generateSettlementLink(String taskId) {
+    return "${AppConstants.baseUrl}/locked/$taskId";
   }
 
   String generateJoinLink(String inviteCode) {

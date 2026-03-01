@@ -31,6 +31,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   // Selection
   String? _selectedGhostId;
 
+  String? _alreadyJoinedTaskId;
+
   // Getters
   LoadStatus get initStatus => _initStatus;
   AppErrorCodes? get initErrorCode => _initErrorCode;
@@ -53,6 +55,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
     if (_isAutoAssign) return true; // 直接加入模式，隨時可按
     return _selectedGhostId != null; // 選擇模式，必須選一個
   }
+
+  String? get alreadyJoinedTaskId => _alreadyJoinedTaskId;
 
   S11InviteConfirmViewModel({
     required InviteRepository inviteRepo,
@@ -102,6 +106,12 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
 
       // 1. 呼叫 Repository 取得預覽
       final result = await _inviteRepo.previewInviteCode(code);
+
+      if (result['action'] == 'OPEN_TASK') {
+        _alreadyJoinedTaskId = result['taskId'];
+        notifyListeners();
+        return; // 提早結束，不跑後面的解析邏輯
+      }
 
       final rawTaskData = result['taskData'];
       if (rawTaskData is Map) {

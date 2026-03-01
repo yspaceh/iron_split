@@ -258,4 +258,13 @@ class TaskRepository extends BaseRepository {
     updateData['updatedAt'] = FieldValue.serverTimestamp();
     return updateData;
   }
+
+  // 增加一個獲取單一任務的方法
+  Future<TaskModel?> getTaskOnce(String taskId) async {
+    return await safeRun(() async {
+      final doc = await _firestore.collection('tasks').doc(taskId).get();
+      if (!doc.exists) return null;
+      return TaskModel.fromFirestore(doc);
+    }, AppErrorCodes.initFailed);
+  }
 }

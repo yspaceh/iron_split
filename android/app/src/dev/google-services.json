@@ -12,7 +12,16 @@
           "package_name": "com.ironsplit.dev"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "472202291632-h65v9ip3kg985kk9ra4f9qu507d16mre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ironsplit.dev",
+            "certificate_hash": "b993d75796e1d9c00b4bc6497a1aa64653afe581"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDxlRRfma43bC_hPVhe_AF-zwFKUW8dKUY"

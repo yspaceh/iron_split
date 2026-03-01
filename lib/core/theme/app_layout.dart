@@ -1,6 +1,5 @@
 // lib/core/theme/app_layout.dart (建議新增此檔或放入 AppTheme)
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class AppLayout {
   static const double gridUnit = 8.0; // 基礎網格單位

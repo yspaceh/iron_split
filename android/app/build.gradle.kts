@@ -19,7 +19,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ironsplit.iron_split"
+    namespace = "com.ironsplit.app" 
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -33,10 +33,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.ironsplit.iron_split"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -74,6 +70,7 @@ android {
         create("dev") {
             dimension = "default"
             applicationId = "com.ironsplit.dev"
+            manifestPlaceholders["appLinkHost"] = "iron-split-dev.web.app"
             resValue("string", "app_name", "Iron Split Dev")
         }
         
@@ -81,6 +78,7 @@ android {
         create("prod") {
             dimension = "default"
             applicationId = "com.ironsplit.app"
+            manifestPlaceholders["appLinkHost"] = "iron-split.web.app"
             resValue("string", "app_name", "Iron Split")
         }
     }

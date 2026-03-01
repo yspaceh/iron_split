@@ -7,15 +7,16 @@ class InviteRepository extends BaseRepository {
   final FirebaseFunctions _functions;
 
   InviteRepository({FirebaseFunctions? functions})
-      : _functions = functions ?? FirebaseFunctions.instance;
+      : _functions = functions ??
+            FirebaseFunctions.instanceFor(region: 'asia-northeast1');
 
   /// 呼叫 previewInviteCode
   Future<Map<String, dynamic>> previewInviteCode(String code) async {
     return await safeRun(() async {
       final callable = _functions.httpsCallable('previewInviteCode');
       final result = await callable.call({'code': code});
-      if (result.data is Map<String, dynamic>) {
-        return Map<String, dynamic>.from(result.data);
+      if (result.data is Map) {
+        return Map<String, dynamic>.from(result.data as Map);
       } else {
         throw AppErrorCodes.inviteInvalid;
       }

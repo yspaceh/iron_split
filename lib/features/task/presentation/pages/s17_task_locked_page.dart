@@ -16,6 +16,7 @@ import 'package:iron_split/features/settlement/application/settlement_service.da
 import 'package:iron_split/features/settlement/presentation/dialogs/d11_random_result_dialog.dart';
 import 'package:iron_split/features/task/application/export_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/presentation/widgets/retention_banner.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class S17TaskLockedPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
+        taskService: context.read<TaskService>(),
         shareService: context.read<ShareService>(),
         exportService: context.read<ExportService>(),
         deepLinkService: context.read<DeepLinkService>(),
@@ -58,6 +60,20 @@ class _S17Content extends StatefulWidget {
 
 class _S17ContentState extends State<_S17Content> {
   bool _dialogTriggered = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final vm = context.watch<S17TaskLockedViewModel>();
+
+    // 👈 如果發現狀態是「任務未結算」，則發動跳轉
+    if (vm.initErrorCode == AppErrorCodes.taskStatusError) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // 跳轉到普通的任務 Dashboard (S13)
+        context.goNamed('S13', pathParameters: {'taskId': vm.taskId});
+      });
+    }
+  }
 
   void _checkAndTriggerDialog(S17TaskLockedViewModel vm) {
     if (_dialogTriggered ||

@@ -104,6 +104,17 @@ class _S11Content extends StatelessWidget {
       onPressed: () => _handleCancel(context, vm),
       // 取消
     );
+    if (vm.alreadyJoinedTaskId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          // 清除暫存的邀請碼 (因為用完了)
+          vm.clearInvite();
+          // 直接導向 S13 任務儀表板
+          context.goNamed('S13',
+              pathParameters: {'taskId': vm.alreadyJoinedTaskId!});
+        }
+      });
+    }
 
     return CommonStateView(
       status: vm.initStatus,

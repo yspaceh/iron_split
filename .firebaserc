@@ -1,7 +1,8 @@
 {
   "projects": {
     "dev": "iron-split-dev",
-    "default": "iron-split"
+    "default": "iron-split",
+    "prod": "iron-split"
   },
   "targets": {},
   "etags": {}

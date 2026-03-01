@@ -195,6 +195,9 @@ export const previewInviteCode = onCall(async (request) => {
   if (taskData.activeInviteCode !== code) throw new HttpsError("invalid-argument", "INVALID_CODE");
 
   const members = taskData.members || {};
+  if (taskData.createdBy === request.auth.uid) {
+    return { taskId, action: "OPEN_TASK" };
+  }
   const activeGhosts: any[] = []; // 需要顯示在前端的
   let emptySlotAvailable = false;
   let linkedCount = 0;

@@ -19,7 +19,8 @@
             "namespace": "android_app",
             "package_name": "com.ironsplit.app",
             "sha256_cert_fingerprints": [
-                "89:CC:94:36:A2:6F:45:38:6B:FC:88:31:D8:27:63:9A:12:19:AF:FB:13:90:7A:B5:85:A4:5F:2A:1C:5A:D6:F9"
+                "89:CC:94:36:A2:6F:45:38:6B:FC:88:31:D8:27:63:9A:12:19:AF:FB:13:90:7A:B5:85:A4:5F:2A:1C:5A:D6:F9",
+                "8F:31:5B:C3:E8:DD:1C:B6:04:08:91:71:E8:6A:54:06:3B:9A:08:A5:97:6B:EB:22:27:5A:30:45:C0:DF:C0:AA"
             ]
         }
     }

@@ -1,4 +1,4 @@
-package com.ironsplit.iron_split
+package com.ironsplit.app
 
 import io.flutter.embedding.android.FlutterActivity
 

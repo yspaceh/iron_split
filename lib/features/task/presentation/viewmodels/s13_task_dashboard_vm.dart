@@ -14,6 +14,7 @@ import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/task/application/dashboard_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -23,6 +24,7 @@ import 'package:iron_split/features/task/presentation/viewmodels/balance_summary
 class S13TaskDashboardViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
+  final TaskService _taskService;
   final AuthRepository _authRepo;
   final DashboardService _dashboardService;
   final String taskId;
@@ -127,17 +129,19 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   S13TaskDashboardViewModel({
     required this.taskId,
     required TaskRepository taskRepo,
+    required TaskService taskService,
     required AuthRepository authRepo,
     required RecordRepository recordRepo,
     required DashboardService service,
   })  : _taskRepo = taskRepo,
+        _taskService = taskService,
         _authRepo = authRepo,
         _recordRepo = recordRepo,
         _dashboardService = service {
     _recordService = RecordService(_recordRepo, _taskRepo);
   }
 
-  void init() {
+  Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
@@ -149,14 +153,22 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
 
       _currentUserId = user.uid;
 
+      // 呼叫 Service 而不是 Repo
+      final task = await _taskService.getValidatedTask(taskId);
+
+      if (task == null) {
+        throw AppErrorCodes.dataNotFound;
+      }
+
       _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-        if (taskData != null) {
-          _task = taskData;
-          _remainderRule = taskData.remainderRule;
-          _remainderAbsorberId = taskData.remainderAbsorberId;
-          _hasTaskEmitted = true;
-          _recalculate();
+        if (taskData == null) {
+          throw AppErrorCodes.dataNotFound; // 讓 CommonStateView 顯示錯誤
         }
+        _task = taskData;
+        _remainderRule = taskData.remainderRule;
+        _remainderAbsorberId = taskData.remainderAbsorberId;
+        _hasTaskEmitted = true;
+        _recalculate();
       });
 
       _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {

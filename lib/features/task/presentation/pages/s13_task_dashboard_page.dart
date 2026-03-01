@@ -12,6 +12,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/custom_sliding_segment.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
@@ -34,6 +35,7 @@ class S13TaskDashboardPage extends StatelessWidget {
       create: (_) => S13TaskDashboardViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
+        taskService: context.read<TaskService>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
         service: context.read<DashboardService>(),

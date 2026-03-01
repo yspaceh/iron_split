@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:ui';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +50,20 @@ void main() async {
 
   // 初始化 Firebase
   if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(options: firebaseOptions);
+    try {
+      await Firebase.initializeApp(
+        options: firebaseOptions,
+      );
+    } catch (e) {
+      if (e.toString().contains('duplicate-app')) {
+        // 故意留空：靜靜地攔截這個錯誤，什麼都不做
+      } else {
+        rethrow;
+      }
+    }
+  } else {
+    // 如果已經存在，直接使用現有的
+    Firebase.app();
   }
 
   // 讀取儲存的語言設定
@@ -78,6 +92,16 @@ void main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: kDebugMode
+        ? AndroidDebugProvider()
+        : AndroidPlayIntegrityProvider(), // 正式環境用 Play Integrity
+
+    providerApple: kDebugMode
+        ? AppleDebugProvider()
+        : AppleAppAttestProvider(), // 正式環境用 App Attest
+  );
 
   runApp(
     MultiProvider(
@@ -179,13 +203,13 @@ class _IronSplitAppState extends State<IronSplitApp> {
 
           // 若已登入則直接跳轉至 S04 確認頁面
           if (FirebaseAuth.instance.currentUser != null) {
-            _appRouter.router.push('/invite/confirm?code=$code');
+            _appRouter.router.push('/join?code=$code');
           }
           break;
 
         case SettlementIntent(:final taskId):
           // 導向結算頁面
-          _appRouter.router.push('/tasks/$taskId/settlement');
+          _appRouter.router.push('/locked/$taskId');
           break;
 
         default:

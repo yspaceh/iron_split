@@ -1190,6 +1190,10 @@ PODS:
   - abseil/xcprivacy (1.20240722.0)
   - app_links (7.0.0):
     - Flutter
+  - AppCheckCore (11.2.0):
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - PromisesObjC (~> 2.4)
   - barcode_scan2 (0.0.1):
     - Flutter
     - SwiftProtobuf (~> 1.33)
@@ -1224,6 +1228,11 @@ PODS:
   - Firebase/Storage (12.8.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 12.8.0)
+  - firebase_app_check (0.4.1-4):
+    - Firebase/CoreOnly (~> 12.8.0)
+    - firebase_core
+    - FirebaseAppCheck (~> 12.8.0)
+    - Flutter
   - firebase_auth (6.1.3):
     - Firebase/Auth (= 12.8.0)
     - firebase_core
@@ -1239,6 +1248,12 @@ PODS:
     - Firebase/Storage (= 12.8.0)
     - firebase_core
     - Flutter
+  - FirebaseAppCheck (12.8.0):
+    - AppCheckCore (~> 11.0)
+    - FirebaseAppCheckInterop (~> 12.8.0)
+    - FirebaseCore (~> 12.8.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
   - FirebaseAppCheckInterop (12.8.0)
   - FirebaseAuth (12.8.0):
     - FirebaseAppCheckInterop (~> 12.8.0)
@@ -1472,6 +1487,7 @@ DEPENDENCIES:
   - barcode_scan2 (from `.symlinks/plugins/barcode_scan2/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
+  - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -1487,8 +1503,10 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - AppCheckCore
     - BoringSSL-GRPC
     - Firebase
+    - FirebaseAppCheck
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -1526,6 +1544,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   cloud_functions:
     :path: ".symlinks/plugins/cloud_functions/ios"
+  firebase_app_check:
+    :path: ".symlinks/plugins/firebase_app_check/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -1552,15 +1572,18 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: a05cc83bf02079535e17169a73c5be5ba47f714b
   app_links: a754cbec3c255bd4bbb4d236ecc06f28cd9a7ce8
+  AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   barcode_scan2: 4e4b850b112f4e29017833e4715f36161f987966
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
   cloud_firestore: 168ab1162c7895a7aa896f312c82c97aa738541f
   cloud_functions: ee9181b7850f017a37fdd80c0b0f88718ae76917
   Firebase: 9a58fdbc9d8655ed7b79a19cf9690bb007d3d46d
+  firebase_app_check: 21e404a225ce29ae2ec6dbad503e83fd1c4ac1fb
   firebase_auth: 5e7392257ba313bb9baa797ffa79fc37f808d6c8
   firebase_core: ee30637e6744af8e0c12a6a1e8a9718506ec2398
   firebase_crashlytics: 28b8f39df8104131376393e6af658b8b77dd120f
   firebase_storage: c4244d1b9d24c6babd2837594d40400c8dab778f
+  FirebaseAppCheck: 11da425929a45c677d537adfff3520ccd57c1690
   FirebaseAppCheckInterop: ba3dc604a89815379e61ec2365101608d365cf7d
   FirebaseAuth: 4c289b1a43f5955283244a55cf6bd616de344be5
   FirebaseAuthInterop: 95363fe96493cb4f106656666a0768b420cba090

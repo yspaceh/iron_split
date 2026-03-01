@@ -42,4 +42,14 @@ class TaskService {
   Future<void> deleteTask(String taskId) async {
     await _taskRepo.deleteTask(taskId);
   }
+
+  // 提供一個業務邏輯層的查詢
+  Future<TaskModel?> getValidatedTask(String taskId) async {
+    // 1. 透過 Repo 拿取原始資料
+    final task = await _taskRepo.getTaskOnce(taskId);
+
+    if (task == null) return null;
+
+    return task;
+  }
 }

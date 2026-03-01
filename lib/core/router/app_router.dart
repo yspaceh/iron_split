@@ -54,6 +54,14 @@ class AppRouter {
   late final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/',
+    redirect: (context, state) {
+      if (state.uri.toString().startsWith('http')) {
+        final path = state.uri.path;
+        final query = state.uri.query;
+        return '$path${query.isNotEmpty ? "?$query" : ""}';
+      }
+      return null;
+    },
     debugLogDiagnostics: true,
     routes: [
       // S00_System.Bootstrap
@@ -79,14 +87,14 @@ class AppRouter {
 
       // S10_Home.TaskList (Landing)
       GoRoute(
-        path: '/tasks',
+        path: '/task',
         name: 'S10',
         builder: (context, state) => const S10HomeTaskListPage(),
       ),
 
       // S16_TaskCreate.Edit
       GoRoute(
-        path: '/tasks/create',
+        path: '/task/create',
         name: 'S16',
         builder: (context, state) => const S16TaskCreateEditPage(),
       ),
@@ -103,14 +111,14 @@ class AppRouter {
 
       // S18_Task.Join
       GoRoute(
-        path: '/tasks/join',
+        path: '/task/join',
         name: 'S18',
         builder: (context, state) => const S18TaskJoinPage(),
       ),
 
       // S11_Invite.Confirm
       GoRoute(
-        path: '/invite/confirm',
+        path: '/join',
         name: 'S11',
         builder: (context, state) {
           final code = state.uri.queryParameters['code'] ?? '';
@@ -120,7 +128,7 @@ class AppRouter {
 
       // S13_Task.Dashboard (Dynamic :taskId)
       GoRoute(
-        path: '/tasks/:taskId',
+        path: '/task/:taskId',
         name: 'S13',
         builder: (context, state) {
           final taskId = state.pathParameters['taskId']!;
@@ -156,7 +164,7 @@ class AppRouter {
               ),
               // S52_TaskSettings.Log
               GoRoute(
-                path: 'log', // full path: /tasks/:taskId/settings/log
+                path: 'log', // full path: /task/:taskId/settings/log
                 name: 'S52',
                 builder: (context, state) {
                   final taskId = state.pathParameters['taskId']!;

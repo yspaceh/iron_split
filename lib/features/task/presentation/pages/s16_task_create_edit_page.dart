@@ -86,19 +86,18 @@ class _S16ContentState extends State<_S16Content> {
       if (result != null && mounted) {
         // 2. 如果有邀請碼 (代表多人任務)，呼叫 Helper 進行分享
         if (!context.mounted) return;
-        if (result.inviteCodeDetail?.code == null) {
-          throw AppErrorCodes.initFailed;
-        }
-        final message = t.common.share.invite.content(
-          taskName: _nameController.text.trim(),
-          code: result.inviteCodeDetail?.code ?? '',
-          link: vm.link,
-        );
+        if (result.inviteCodeDetail?.code != null) {
+          final message = t.common.share.invite.content(
+            taskName: _nameController.text.trim(),
+            code: result.inviteCodeDetail!.code, // 確定有值再拿出來
+            link: vm.link,
+          );
 
-        await vm.notifyMembers(
-          message: message,
-          subject: t.common.share.invite.subject,
-        );
+          await vm.notifyMembers(
+            message: message,
+            subject: t.common.share.invite.subject,
+          );
+        }
         // 3. 導航到任務 Dashboard
         if (!context.mounted) return;
         context.goNamed(

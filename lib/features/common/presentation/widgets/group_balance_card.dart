@@ -316,14 +316,11 @@ class GroupBalanceCard extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(width: AppLayout.spaceXS),
-                            Text(
-                              "|",
-                              style: textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(width: AppLayout.spaceXS),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Text(
                               "${t.s13_task_dashboard.label.total_prepay} ",
                               style: textTheme.bodySmall?.copyWith(

@@ -16,6 +16,7 @@ import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/task/application/export_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
@@ -25,6 +26,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
   final AuthRepository _authRepo;
+  final TaskService _taskService;
   final ExportService _exportService;
   final ShareService _shareService;
   final DeepLinkService _deepLinkService;
@@ -70,7 +72,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       _task?.settlement?['viewStatus']?[_currentUserId] ?? false;
   LoadStatus get exportStatus => _exportStatus;
   LoadStatus get shareStatus => _shareStatus;
-  String get link => _deepLinkService.generateTaskLink(taskId);
+  String get link => _deepLinkService.generateSettlementLink(taskId);
 
   bool get shouldShowRoulette {
     if (_task == null || _task!.settlement == null) return false;
@@ -145,6 +147,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
     required AuthRepository authRepo,
+    required TaskService taskService,
     required ExportService exportService,
     required ShareService shareService,
     required DeepLinkService deepLinkService,
@@ -153,12 +156,13 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
         _authRepo = authRepo,
+        _taskService = taskService,
         _exportService = exportService,
         _shareService = shareService,
         _deepLinkService = deepLinkService,
         _settlementService = settlementService;
 
-  void init() {
+  Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
     _initStatus = LoadStatus.loading;
     _initErrorCode = null;
@@ -167,34 +171,29 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
-
       _currentUserId = user.uid;
 
-      _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
-        try {
-          if (task == null) throw AppErrorCodes.dataNotFound;
-          _task = task;
-          _taskName = task.name;
+      // B. 智慧檢查：先抓取一次資料判斷狀態
+      final task = await _taskService.getValidatedTask(taskId);
 
-          _determineStatusAndParseData(task);
+      // 層面一：檢查 ID 是否存在
+      if (task == null) {
+        throw AppErrorCodes.dataNotFound; // CommonStateView 會顯示「找不到資料」
+      }
 
-          // 只有成功解析完資料才設為 success
-          _initStatus = LoadStatus.success;
-          notifyListeners();
-        } on AppErrorCodes catch (code) {
-          _initStatus = LoadStatus.error;
-          _initErrorCode = code;
-          notifyListeners();
-        } catch (e) {
-          _initStatus = LoadStatus.error;
-          _initErrorCode = ErrorMapper.parseErrorCode(e);
-          notifyListeners();
-        }
-      }, onError: (e) {
-        _initStatus = LoadStatus.error;
-        _initErrorCode = ErrorMapper.parseErrorCode(e);
+      final isLocked =
+          task.status == TaskStatus.settled || task.status == TaskStatus.closed;
+
+      if (!isLocked) {
+        // 👈 關鍵：保持 _initStatus 為 LoadStatus.loading (或設為 success)
+        // 這樣 CommonStateView 會繼續顯示轉圈圈，而不會跳出錯誤畫面
+        _initErrorCode = AppErrorCodes.taskStatusError; // 利用這個錯誤碼觸發跳轉
         notifyListeners();
-      });
+        return;
+      }
+
+      // C. 狀態正確，開啟原本的 Stream 訂閱
+      _setupTaskSubscription();
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;
@@ -204,6 +203,35 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       _initErrorCode = ErrorMapper.parseErrorCode(e);
       notifyListeners();
     }
+  }
+
+  // 將原本的訂閱邏輯抽離出來
+  void _setupTaskSubscription() {
+    _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
+      try {
+        if (task == null) throw AppErrorCodes.dataNotFound;
+        _task = task;
+        _taskName = task.name;
+
+        _determineStatusAndParseData(task);
+
+        // 只有成功解析完資料才設為 success
+        _initStatus = LoadStatus.success;
+        notifyListeners();
+      } on AppErrorCodes catch (code) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = code;
+        notifyListeners();
+      } catch (e) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = ErrorMapper.parseErrorCode(e);
+        notifyListeners();
+      }
+    }, onError: (e) {
+      _initStatus = LoadStatus.error;
+      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      notifyListeners();
+    });
   }
 
   SettlementMember _reconstructMember(String uid, {double? amountOverride}) {
