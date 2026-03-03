@@ -103,7 +103,8 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
     final double pillRadius = widget.isEnlarged ? 16.0 : 10.0; // 圓角也跟著微調
     final double weekTopPos = widget.isEnlarged ? 18.0 : 10; // 星期幾的位置向下移，避免撞到頂部
     final double dotBottomPos = widget.isEnlarged ? 18.0 : 11.0; // 點點往上移
-    final double dayBottomMargin = widget.isEnlarged ? 12.0 : 5.0; // 日期的底部留白加大
+    final double dayBottomMargin = widget.isEnlarged ? 16.0 : 8.0; // 日期的底部留白加大
+    final double weekTextSize = widget.isEnlarged ? 12 : 8;
 
     return ListView.builder(
       controller: _scrollController,
@@ -144,12 +145,19 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                         children: [
                           Text(
                             dayStr,
-                            style: textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isSelected
-                                  ? colorScheme.onPrimary // 選中：白字
-                                  : colorScheme.onSurface, // 未選：深灰字
-                            ),
+                            style: widget.isEnlarged
+                                ? textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: isSelected
+                                        ? colorScheme.onPrimary // 選中：白字
+                                        : colorScheme.onSurface, // 未選：深灰字
+                                  )
+                                : textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: isSelected
+                                        ? colorScheme.onPrimary // 選中：白字
+                                        : colorScheme.onSurface, // 未選：深灰字
+                                  ),
                           ),
                           SizedBox(height: dayBottomMargin),
                         ],
@@ -168,7 +176,7 @@ class _HorizontalDateListState extends State<HorizontalDateList> {
                         color: isSelected
                             ? colorScheme.onPrimary // 選中時星期也變紅？還是維持灰？
                             : colorScheme.onSurfaceVariant, // 灰色
-                        fontSize: 8,
+                        fontSize: weekTextSize,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

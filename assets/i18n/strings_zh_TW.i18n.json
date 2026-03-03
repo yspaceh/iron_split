@@ -170,7 +170,7 @@
         "app_link": "例：lineid12345"
       }
     },
-    "payment_status":{
+    "payment_status": {
       "payable": "應付",
       "refund": "可退"
     },
@@ -182,7 +182,7 @@
       },
       "and": "和"
     },
-    "share":{
+    "share": {
       "invite": {
         "subject": "邀請加入 Iron Split 任務",
         "content": "邀請加入 Iron Split 任務「{taskName}」。\n邀請碼：{code}\n連結：{link}"
@@ -253,7 +253,7 @@
   "s13_task_dashboard": {
     "title": "任務總覽",
     "buttons": {
-      "add":"新增"
+      "add": "新增"
     },
     "tab": {
       "group": "群組",
@@ -280,13 +280,13 @@
   },
   "s14_task_settings": {
     "title": "任務設定",
-    "section":{
+    "section": {
       "task_name": "任務名稱",
       "task_period": "任務期間",
       "settlement": "結算設定",
       "other": "其他設定"
     },
-    "menu" : {
+    "menu": {
       "invite": "發送邀請",
       "member_settings": "成員設定",
       "history": "歷史紀錄",
@@ -321,15 +321,15 @@
     "base_card": "剩餘金額",
     "type_prepay": "預收款",
     "payer_multiple": "多人",
-    "rate_dialog" : {
+    "rate_dialog": {
       "title": "匯率來源",
       "content": "匯率資料來自 Open Exchange Rates（免費版），僅供參考。實際匯率請依換匯水單為準。"
     },
-    "label" : {
+    "label": {
       "rate_with_base": "匯率（1 {base} = ? {target}）"
     },
-    "hint" : {
-      "category" : {
+    "hint": {
+      "category": {
         "food": "晚餐",
         "transport": "車費",
         "shopping": "紀念品",
@@ -343,15 +343,15 @@
   },
   "s16_task_create_edit": {
     "title": "新增任務",
-    "section":{
+    "section": {
       "task_name": "任務名稱",
       "task_period": "任務期間",
       "settlement": "結算設定"
     },
-    "label" : {
+    "label": {
       "name_counter": "{current}/{max}"
     },
-    "hint" : {
+    "hint": {
       "name": "例：東京五日遊"
     }
   },
@@ -363,7 +363,7 @@
     "section": {
       "pending": "待處理",
       "cleared": "已處理"
-    },    
+    },
     "retention_notice": "資料將於 {days} 天後自動刪除。請在期間內下載任務紀錄",
     "remainder_absorbed_by": "由 {name} 承擔",
     "export": {
@@ -390,7 +390,7 @@
       "title": "標題",
       "type": "類型",
       "original_amount": "原始金額",
-      "currency":"幣別",
+      "currency": "幣別",
       "rate": "匯率",
       "base_amount": "結算幣別金額",
       "net_remainder": "零頭",
@@ -398,18 +398,20 @@
       "mixed": "混合支付"
     }
   },
-  "s18_task_join": {
+  "s18_task_enter_code": {
     "title": "加入任務",
-    "tabs": {
-      "input": "輸入",
+    "buttons": {
       "scan": "掃描"
     },
-    "label" : {
+    "label": {
       "input": "邀請碼"
     },
-    "hint" : {
+    "hint": {
       "input": "請輸入 8 碼邀請碼"
-    },
+    }
+  },
+  "s19_task_scan_qr_code": {
+    "title": "掃描邀請碼",
     "content": {
       "scan": "請將行動條碼放入框內即可自動掃描"
     }
@@ -523,12 +525,12 @@
   },
   "s70_system_settings": {
     "title": "系統設定",
-    "section":{
+    "section": {
       "basic": "基本設定",
       "legal": "相關條款",
       "account": "帳號設定"
     },
-    "menu" : {
+    "menu": {
       "user_name": "顯示名稱",
       "language": "顯示語言",
       "theme": "外觀主題",
@@ -609,15 +611,15 @@
     "content": "此操作無法復原。所有資料將被永久刪除。\n\n確定要繼續嗎？"
   },
   "d14_date_select": {
-    "title": "選擇日期" 
+    "title": "選擇日期"
   },
   "b02_split_expense_edit": {
     "title": "編輯細項",
     "buttons": {
       "confirm_split": "確認分拆"
     },
-    "item_name_empty" : "項目名稱尚未輸入",
-    "hint" : {
+    "item_name_empty": "項目名稱尚未輸入",
+    "hint": {
       "sub_item": "例：子項目"
     }
   },
@@ -662,7 +664,7 @@
   "error": {
     "title": "錯誤",
     "unknown": "發生未知錯誤：{error}",
-    "dialog" : {
+    "dialog": {
       "task_full": {
         "title": "任務已滿",
         "content": "此任務成員數已達上限 {limit} 人，請聯繫隊長。"
@@ -712,8 +714,8 @@
       "prepay_is_used": "此筆款項已被使用或預收款不足，無法更動。",
       "data_is_used": "此成員尚有相關的記帳紀錄或款項未結清。請先修改或刪除相關紀錄後再試。",
       "permission_denied": "權限不足，無法執行此操作。",
-      "network_error" : "網路連線失敗，請檢查網路連線。",
-      "data_not_found" : "找不到相關資料。",
+      "network_error": "網路連線失敗，請檢查網路連線。",
+      "data_not_found": "找不到相關資料。",
       "enter_first": "請先輸入{key}。",
       "export_failed": "無法產生報表，請檢查儲存空間或稍後重試。",
       "save_failed": "儲存失敗，請稍後再試。",

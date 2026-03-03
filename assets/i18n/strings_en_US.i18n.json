@@ -101,7 +101,7 @@
         "app_link": "e.g. venmo-username"
       }
     },
-    "payment_status":{
+    "payment_status": {
       "payable": "Payable",
       "refund": "Refund"
     },
@@ -181,7 +181,7 @@
       },
       "and": " and "
     },
-    "share":{
+    "share": {
       "invite": {
         "subject": "Join Iron Split Task",
         "content": "Join Iron Split task \"{taskName}\".\nCode: {code}\nLink: {link}"
@@ -252,7 +252,7 @@
   "s13_task_dashboard": {
     "title": "Dashboard",
     "buttons": {
-      "add":"Add"
+      "add": "Add"
     },
     "tab": {
       "group": "Group",
@@ -279,13 +279,13 @@
   },
   "s14_task_settings": {
     "title": "Task Settings",
-    "section":{
+    "section": {
       "task_name": "Task Name",
       "task_period": "Task Period",
       "settlement": "Settlement Settings",
       "other": "Other Settings"
     },
-    "menu" : {
+    "menu": {
       "invite": "Invite",
       "member_settings": "Member Settings",
       "history": "History",
@@ -342,27 +342,27 @@
   },
   "s16_task_create_edit": {
     "title": "New Task",
-    "section":{
+    "section": {
       "task_name": "Task Name",
       "task_period": "Task Period",
       "settlement": "Settlement Settings"
     },
-    "label":{
+    "label": {
       "name_counter": "{current}/{max}"
     },
-    "hint" : {
+    "hint": {
       "name": "e.g. Tokyo Trip"
     }
   },
-   "s17_task_locked": {
-     "buttons": {
+  "s17_task_locked": {
+    "buttons": {
       "notify_members": "Notify Members",
       "view_payment_info": "View Payment Details"
     },
     "section": {
       "pending": "Pending",
       "cleared": "Cleared"
-    },    
+    },
     "retention_notice": "Data will be deleted in {days} days. Download data before deletion.",
     "remainder_absorbed_by": "Absorbed by {name}",
     "export": {
@@ -397,18 +397,20 @@
       "mixed": "Mixed Payment"
     }
   },
-  "s18_task_join": {
+  "s18_task_enter_code": {
     "title": "Join Task",
-    "tabs": {
-      "input": "Enter Code",
+    "buttons": {
       "scan": "Scan QR"
     },
-    "label" : {
+    "label": {
       "input": "Invite code"
     },
-    "hint" : {
+    "hint": {
       "input": "Enter 8-digit invite code"
-    },
+    }
+  },
+  "s19_task_scan_qr_code": {
+    "title": "Scan QR Code",
     "content": {
       "scan": "Frame the QR code to scan automatically"
     }
@@ -526,7 +528,7 @@
       "legal": "Legal",
       "account": "Account Settings"
     },
-    "menu" : {
+    "menu": {
       "user_name": "Display Name",
       "language": "Display Language",
       "theme": "Theme",
@@ -614,8 +616,8 @@
     "buttons": {
       "confirm_split": "Confirm Split"
     },
-    "item_name_empty" : "Parent item name is empty",
-    "hint" : {
+    "item_name_empty": "Parent item name is empty",
+    "hint": {
       "sub_item": "e.g. Sub-item"
     }
   },
@@ -624,7 +626,7 @@
     "buttons": {
       "adjust_weight": "Adjust Weight"
     },
-    "label":{
+    "label": {
       "total": "Total: {current}/{target}"
     },
     "mismatch": "Mismatch"
@@ -660,7 +662,7 @@
   "error": {
     "title": "Error",
     "unknown": "Unknown error: {error}",
-    "dialog" : {
+    "dialog": {
       "task_full": {
         "title": "Task Full",
         "content": "Task member limit ({limit}) reached. Please contact the task leader."
@@ -711,7 +713,7 @@
       "data_is_used": "This member still has related records or unsettled payments. Please update or delete them first.",
       "permission_denied": "Permission denied.",
       "network_error": "Network connection failed. Please check your internet connection.",
-      "data_not_found" : "Data not found. Please try again later.",
+      "data_not_found": "Data not found. Please try again later.",
       "enter_first": "Please enter {key} first.",
       "export_failed": "Failed to generate report. Please check your storage or try again later.",
       "save_failed": "Failed to save. Please try again.",

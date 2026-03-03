@@ -170,7 +170,7 @@
         "app_link": "例：paypay-id-123"
       }
     },
-    "payment_status":{
+    "payment_status": {
       "payable": "支払",
       "refund": "返金"
     },
@@ -182,7 +182,7 @@
       },
       "and": "と"
     },
-    "share":{
+    "share": {
       "invite": {
         "subject": "Iron Split タスク招待",
         "content": "Iron Split タスク「{taskName}」への招待です。\n招待コード：{code}\nリンク：{link}"
@@ -253,7 +253,7 @@
   "s13_task_dashboard": {
     "title": "ダッシュボード",
     "buttons": {
-      "add":"追加"
+      "add": "追加"
     },
     "tab": {
       "group": "グループ",
@@ -280,13 +280,13 @@
   },
   "s14_task_settings": {
     "title": "タスク設定",
-    "section":{
+    "section": {
       "task_name": "タスク名",
       "task_period": "タスク期間",
       "settlement": "精算設定",
       "other": "その他設定"
     },
-    "menu" : {
+    "menu": {
       "invite": "招待送信",
       "member_settings": "メンバー設定",
       "history": "履歴",
@@ -351,7 +351,7 @@
     "label": {
       "name_counter": "{current}/{max}"
     },
-    "hint" : {
+    "hint": {
       "name": "例：東京5日間の旅"
     }
   },
@@ -363,9 +363,9 @@
     "section": {
       "pending": "未完了",
       "cleared": "完了"
-    },    
+    },
     "retention_notice": "{days} 日後にデータは自動削除されます。期間内にダウンロードしてください。",
-   "remainder_absorbed_by": "{name} が負担",
+    "remainder_absorbed_by": "{name} が負担",
     "export": {
       "report_info": "レポート情報",
       "task_name": "タスク名",
@@ -398,20 +398,22 @@
       "mixed": "混合支払い"
     }
   },
-  "s18_task_join": {
+  "s18_task_enter_code": {
     "title": "タスク参加",
-    "tabs": {
-      "input": "入力",
+    "buttons": {
       "scan": "スキャン"
     },
-    "label" : {
+    "label": {
       "input": "招待コード"
     },
-    "hint" : {
+    "hint": {
       "input": "招待コード（8桁）を入力"
-    },
+    }
+  },
+  "s19_task_scan_qr_code": {
+    "title": "スキャン招待コード",
     "content": {
-      "scan": "QRコードを枠内に配置すると自動的にスキャンされます"
+      "scan": "QRコードを枠内に合わせてください"
     }
   },
   "s30_settlement_confirm": {
@@ -527,7 +529,7 @@
       "legal": "関連規約",
       "account": "アカウント設定"
     },
-    "menu" : {
+    "menu": {
       "user_name": "表示名前",
       "language": "表示言語",
       "theme": "テーマ",
@@ -615,8 +617,8 @@
     "buttons": {
       "confirm_split": "決定"
     },
-    "item_name_empty" : "親項目名を入力してください",
-    "hint" : {
+    "item_name_empty": "親項目名を入力してください",
+    "hint": {
       "sub_item": "例：内訳"
     }
   },
@@ -712,7 +714,7 @@
       "data_is_used": "このメンバーには、関連する記帳記録、または未精算の金額があります。該当する記録を修正または削除してから、再度お試しください。",
       "permission_denied": "権限がありません。",
       "network_error": "ネットワーク接続に失敗しました。通信状況をご確認ください。",
-      "data_not_found" : "データが見つかりませんでした。もう一度お試しください。",
+      "data_not_found": "データが見つかりませんでした。もう一度お試しください。",
       "enter_first": "{key}を先に入力してください。",
       "export_failed": "レポートの作成に失敗しました。空き容量を確認するか、後でもう一度お試しください。",
       "save_failed": "保存に失敗しました。もう一度お試しください。",

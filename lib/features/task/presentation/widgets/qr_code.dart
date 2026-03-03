@@ -22,65 +22,63 @@ class QrCode extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Center(
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Container(
-          padding: const EdgeInsets.all(AppLayout.spaceL),
-          decoration: BoxDecoration(
-            color: Colors.white, // 強制白底保證掃描成功率
-            borderRadius: BorderRadius.circular(AppLayout.radiusL),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // 繪製高質感 QR Code
-              PrettyQrView.data(
-                data: link,
-                decoration: const PrettyQrDecoration(
-                  image: PrettyQrDecorationImage(
-                      image:
-                          AssetImage('assets/images/icon/iron_split_200.png'),
-                      padding: EdgeInsets.all(AppLayout.spaceM),
-                      scale: 0.25),
-                  shape: PrettyQrSmoothSymbol(
-                    color: AppTheme.darkGray,
+      child: FractionallySizedBox(
+        widthFactor: 0.8, // 佔據父元件（通常是螢幕）寬度的 80%
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: Container(
+            padding: const EdgeInsets.all(AppLayout.spaceL),
+            decoration: BoxDecoration(
+              color: Colors.white, // 強制白底保證掃描成功率
+              borderRadius: BorderRadius.circular(AppLayout.radiusL),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // 繪製高質感 QR Code
+                PrettyQrView.data(
+                  data: link,
+                  decoration: const PrettyQrDecoration(
+                    shape: PrettyQrSmoothSymbol(
+                      color: AppTheme.darkGray,
+                    ),
                   ),
                 ),
-              ),
 
-              // 過期遮罩
-              if (isExpired)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppLayout.spaceL,
-                          vertical: AppLayout.spaceS),
-                      decoration: ShapeDecoration(
-                        color: colorScheme.error,
-                        shape: StadiumBorder(),
-                      ),
-                      child: Text(
-                        t.s54_task_settings_invite.label.invite_expired,
-                        style: textTheme.labelLarge?.copyWith(
-                          color: colorScheme.onError,
-                          fontWeight: FontWeight.bold,
+                // 過期遮罩
+                if (isExpired)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.spaceL,
+                            vertical: AppLayout.spaceS),
+                        decoration: ShapeDecoration(
+                          color: colorScheme.error,
+                          shape: StadiumBorder(),
+                        ),
+                        child: Text(
+                          t.s54_task_settings_invite.label.invite_expired,
+                          style: textTheme.labelLarge?.copyWith(
+                            color: colorScheme.onError,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

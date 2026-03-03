@@ -30,7 +30,8 @@ import 'package:iron_split/features/onboarding/presentation/pages/s11_invite_con
 // Task Dashboard & Sub-pages
 import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s17_task_locked_page.dart';
-import 'package:iron_split/features/task/presentation/pages/s18_task_join_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s18_task_enter_code_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s19_task_scan_qr_code_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s53_task_settings_members_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s52_task_settings_log_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s12_task_close_notice_page.dart';
@@ -111,9 +112,18 @@ class AppRouter {
 
       // S18_Task.Join
       GoRoute(
-        path: '/task/join',
+        path: '/task/enter-code',
         name: 'S18',
-        builder: (context, state) => const S18TaskJoinPage(),
+        builder: (context, state) => const S18TaskEnterCodePage(),
+        routes: [
+          GoRoute(
+            path: '/scan',
+            name: 'S19',
+            builder: (context, state) {
+              return S19TaskScanQrCodePage();
+            },
+          ),
+        ],
       ),
 
       // S11_Invite.Confirm

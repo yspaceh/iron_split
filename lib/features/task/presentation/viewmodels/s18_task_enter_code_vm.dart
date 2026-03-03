@@ -1,16 +1,10 @@
-import 'package:barcode_scan2/gen/protos/protos.pbenum.dart';
-import 'package:barcode_scan2/model/scan_options.dart';
-import 'package:barcode_scan2/platform_wrapper.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:iron_split/core/enums/app_error_codes.dart';
 
-class S18TaskJoinViewModel extends ChangeNotifier {
+class S18TaskEnterCodeViewModel extends ChangeNotifier {
   final TextEditingController codeController = TextEditingController();
   bool get isInputValid => codeController.text.trim().length == 8;
 
-  S18TaskJoinViewModel() {
+  S18TaskEnterCodeViewModel() {
     codeController.addListener(_onInputChanged);
   }
 
@@ -44,38 +38,6 @@ class S18TaskJoinViewModel extends ChangeNotifier {
     }
 
     return null; // 不是我們的邀請碼
-  }
-
-  Future<String?> startScan() async {
-    try {
-      final result = await BarcodeScanner.scan(
-        options: const ScanOptions(
-          restrictFormat: [BarcodeFormat.qr],
-        ),
-      );
-
-      if (result.type == ResultType.Barcode && result.rawContent.isNotEmpty) {
-        return result.rawContent;
-      }
-      return null;
-    } on PlatformException catch (e, stackTrace) {
-      if (e.code == BarcodeScanner.cameraAccessDenied) {
-        throw AppErrorCodes.cameraPermissionDenied;
-      }
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        stackTrace,
-        reason: 'BarcodeScanner 原生掃描發生 PlatformException',
-      );
-      throw AppErrorCodes.scanFailed;
-    } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        stackTrace,
-        reason: 'BarcodeScanner 發生非預期錯誤',
-      );
-      throw AppErrorCodes.scanFailed;
-    }
   }
 
   @override

@@ -14,7 +14,6 @@ class TaskCodeInput extends StatelessWidget {
     this.autofocus = false,
     this.focusNode,
     this.enabled = true,
-    this.onScanPressed,
   });
 
   final TextEditingController controller;
@@ -24,7 +23,6 @@ class TaskCodeInput extends StatelessWidget {
   final bool autofocus;
   final FocusNode? focusNode;
   final bool enabled;
-  final VoidCallback? onScanPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +38,7 @@ class TaskCodeInput extends StatelessWidget {
           textCapitalization: TextCapitalization.characters,
           maxLength: TaskConstants.inviteCodeLength,
           inputFormatters: [
+            FilteringTextInputFormatter.deny(RegExp(r'\s')),
             FilteringTextInputFormatter.deny(RegExp(r'[\x00-\x1F\x7F]')),
           ],
           validator: (val) => (val == null || val.trim().isEmpty)
@@ -47,10 +46,6 @@ class TaskCodeInput extends StatelessWidget {
               : null,
           focusNode: focusNode,
           enabled: enabled,
-          suffixIcon: IconButton(
-            onPressed: onScanPressed,
-            icon: const Icon(Icons.qr_code_scanner_outlined),
-          ),
         );
       },
     );

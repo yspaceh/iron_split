@@ -149,7 +149,7 @@ class _S54Content extends StatelessWidget {
                         vm.formattedTimer,
                         style: textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: colorScheme.onSecondaryContainer,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ] else ...[

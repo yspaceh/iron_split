@@ -50,7 +50,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS15RecordEditZhTw s15_record_edit = TranslationsS15RecordEditZhTw.internal(_root);
 	late final TranslationsS16TaskCreateEditZhTw s16_task_create_edit = TranslationsS16TaskCreateEditZhTw.internal(_root);
 	late final TranslationsS17TaskLockedZhTw s17_task_locked = TranslationsS17TaskLockedZhTw.internal(_root);
-	late final TranslationsS18TaskJoinZhTw s18_task_join = TranslationsS18TaskJoinZhTw.internal(_root);
+	late final TranslationsS18TaskEnterCodeZhTw s18_task_enter_code = TranslationsS18TaskEnterCodeZhTw.internal(_root);
+	late final TranslationsS19TaskScanQrCodeZhTw s19_task_scan_qr_code = TranslationsS19TaskScanQrCodeZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmZhTw s30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
 	late final TranslationsS31SettlementPaymentInfoZhTw s31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
 	late final TranslationsS32SettlementResultZhTw s32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
@@ -322,9 +323,9 @@ class TranslationsS17TaskLockedZhTw {
 	late final TranslationsS17TaskLockedExportZhTw export = TranslationsS17TaskLockedExportZhTw.internal(_root);
 }
 
-// Path: s18_task_join
-class TranslationsS18TaskJoinZhTw {
-	TranslationsS18TaskJoinZhTw.internal(this._root);
+// Path: s18_task_enter_code
+class TranslationsS18TaskEnterCodeZhTw {
+	TranslationsS18TaskEnterCodeZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -333,10 +334,23 @@ class TranslationsS18TaskJoinZhTw {
 	/// zh-TW: '加入任務'
 	String get title => '加入任務';
 
-	late final TranslationsS18TaskJoinTabsZhTw tabs = TranslationsS18TaskJoinTabsZhTw.internal(_root);
-	late final TranslationsS18TaskJoinLabelZhTw label = TranslationsS18TaskJoinLabelZhTw.internal(_root);
-	late final TranslationsS18TaskJoinHintZhTw hint = TranslationsS18TaskJoinHintZhTw.internal(_root);
-	late final TranslationsS18TaskJoinContentZhTw content = TranslationsS18TaskJoinContentZhTw.internal(_root);
+	late final TranslationsS18TaskEnterCodeButtonsZhTw buttons = TranslationsS18TaskEnterCodeButtonsZhTw.internal(_root);
+	late final TranslationsS18TaskEnterCodeLabelZhTw label = TranslationsS18TaskEnterCodeLabelZhTw.internal(_root);
+	late final TranslationsS18TaskEnterCodeHintZhTw hint = TranslationsS18TaskEnterCodeHintZhTw.internal(_root);
+}
+
+// Path: s19_task_scan_qr_code
+class TranslationsS19TaskScanQrCodeZhTw {
+	TranslationsS19TaskScanQrCodeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '掃描邀請碼'
+	String get title => '掃描邀請碼';
+
+	late final TranslationsS19TaskScanQrCodeContentZhTw content = TranslationsS19TaskScanQrCodeContentZhTw.internal(_root);
 }
 
 // Path: s30_settlement_confirm
@@ -1857,24 +1871,21 @@ class TranslationsS17TaskLockedExportZhTw {
 	String get mixed => '混合支付';
 }
 
-// Path: s18_task_join.tabs
-class TranslationsS18TaskJoinTabsZhTw {
-	TranslationsS18TaskJoinTabsZhTw.internal(this._root);
+// Path: s18_task_enter_code.buttons
+class TranslationsS18TaskEnterCodeButtonsZhTw {
+	TranslationsS18TaskEnterCodeButtonsZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// zh-TW: '輸入'
-	String get input => '輸入';
-
 	/// zh-TW: '掃描'
 	String get scan => '掃描';
 }
 
-// Path: s18_task_join.label
-class TranslationsS18TaskJoinLabelZhTw {
-	TranslationsS18TaskJoinLabelZhTw.internal(this._root);
+// Path: s18_task_enter_code.label
+class TranslationsS18TaskEnterCodeLabelZhTw {
+	TranslationsS18TaskEnterCodeLabelZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -1884,9 +1895,9 @@ class TranslationsS18TaskJoinLabelZhTw {
 	String get input => '邀請碼';
 }
 
-// Path: s18_task_join.hint
-class TranslationsS18TaskJoinHintZhTw {
-	TranslationsS18TaskJoinHintZhTw.internal(this._root);
+// Path: s18_task_enter_code.hint
+class TranslationsS18TaskEnterCodeHintZhTw {
+	TranslationsS18TaskEnterCodeHintZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -1896,9 +1907,9 @@ class TranslationsS18TaskJoinHintZhTw {
 	String get input => '請輸入 8 碼邀請碼';
 }
 
-// Path: s18_task_join.content
-class TranslationsS18TaskJoinContentZhTw {
-	TranslationsS18TaskJoinContentZhTw.internal(this._root);
+// Path: s19_task_scan_qr_code.content
+class TranslationsS19TaskScanQrCodeContentZhTw {
+	TranslationsS19TaskScanQrCodeContentZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -3154,12 +3165,12 @@ extension on Translations {
 			's17_task_locked.export.net_remainder' => '零頭',
 			's17_task_locked.export.pool' => '預收款',
 			's17_task_locked.export.mixed' => '混合支付',
-			's18_task_join.title' => '加入任務',
-			's18_task_join.tabs.input' => '輸入',
-			's18_task_join.tabs.scan' => '掃描',
-			's18_task_join.label.input' => '邀請碼',
-			's18_task_join.hint.input' => '請輸入 8 碼邀請碼',
-			's18_task_join.content.scan' => '請將行動條碼放入框內即可自動掃描',
+			's18_task_enter_code.title' => '加入任務',
+			's18_task_enter_code.buttons.scan' => '掃描',
+			's18_task_enter_code.label.input' => '邀請碼',
+			's18_task_enter_code.hint.input' => '請輸入 8 碼邀請碼',
+			's19_task_scan_qr_code.title' => '掃描邀請碼',
+			's19_task_scan_qr_code.content.scan' => '請將行動條碼放入框內即可自動掃描',
 			's30_settlement_confirm.title' => '結算確認',
 			's30_settlement_confirm.buttons.set_payment_info' => '收款設定',
 			's30_settlement_confirm.steps.confirm_amount' => '確認金額',
