@@ -323,7 +323,7 @@ class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingCon
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Iron Split へようこそ';
+	@override String get title => 'Iron Splitへようこそ';
 	@override late final _TranslationsS50OnboardingConsentButtonsJaJp buttons = _TranslationsS50OnboardingConsentButtonsJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentContentJaJp content = _TranslationsS50OnboardingConsentContentJaJp._(_root);
 }
@@ -1361,8 +1361,8 @@ class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50Onboar
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、';
-	@override String get suffix => ' に同意したものとみなされます。';
+	@override String get prefix => '分帳をもっとシンプルに。\n\n私はアイロン・ルースト。\n記録と割り勘をサポートする。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。\n\n分帳は、本来わかりやすい。\n\n「はじめる」をタップすると、';
+	@override String get suffix => ' に同意したことになります。';
 }
 
 // Path: s52_task_settings_log.buttons
@@ -2237,10 +2237,10 @@ extension on TranslationsJaJp {
 			's32_settlement_result.total_label' => '今回の精算合計額',
 			's32_settlement_result.buttons.share' => '通知送信',
 			's32_settlement_result.buttons.back_task_dashboard' => 'タスクに戻る',
-			's50_onboarding_consent.title' => 'Iron Split へようこそ',
+			's50_onboarding_consent.title' => 'Iron Splitへようこそ',
 			's50_onboarding_consent.buttons.start' => 'はじめる',
-			's50_onboarding_consent.content.prefix' => '分帳を、よりシンプルに。\n\n私はアイロン・ルースト。ここで記帳と分担を管理します。\n旅行、食事、共同生活など、すべての支出は明確に記録され、分担方法には明確なルールがあります。\n\n分帳は、本来わかりやすいものです。\n\n「はじめる」を押すことで、',
-			's50_onboarding_consent.content.suffix' => ' に同意したものとみなされます。',
+			's50_onboarding_consent.content.prefix' => '分帳をもっとシンプルに。\n\n私はアイロン・ルースト。\n記録と割り勘をサポートする。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。\n\n分帳は、本来わかりやすい。\n\n「はじめる」をタップすると、',
+			's50_onboarding_consent.content.suffix' => ' に同意したことになります。',
 			's51_onboarding_name.title' => '名前設定',
 			's51_onboarding_name.content' => 'アプリ内で表示する名前を入力（1–10文字）',
 			's51_onboarding_name.hint' => 'ニックネームを入力',

@@ -1330,8 +1330,8 @@ class TranslationsCommonTermsZhTw {
 	// Translations
 	late final TranslationsCommonTermsLabelZhTw label = TranslationsCommonTermsLabelZhTw.internal(_root);
 
-	/// zh-TW: '和'
-	String get and => '和';
+	/// zh-TW: '與'
+	String get and => '與';
 }
 
 // Path: common.share
@@ -2029,8 +2029,8 @@ class TranslationsS50OnboardingConsentContentZhTw {
 
 	// Translations
 
-	/// zh-TW: '讓分帳變得簡單。 我是艾隆・魯斯特，負責記帳與分攤。 無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。 分帳，本該清楚。 點擊「開始」即表示同意我們的 '
-	String get prefix => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，負責記帳與分攤。\n無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。\n\n分帳，本該清楚。\n\n點擊「開始」即表示同意我們的 ';
+	/// zh-TW: '讓分帳變得簡單。 我是艾隆・魯斯特， 協助記帳與分攤。 無論是旅行、聚餐，或一起生活， 記帳不亂，分攤不煩。 分帳，本該清楚。 點擊開始即表示同意'
+	String get prefix => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，\n協助記帳與分攤。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。\n\n分帳，本該清楚。\n\n點擊開始即表示同意';
 
 	/// zh-TW: '。'
 	String get suffix => '。';
@@ -3031,7 +3031,7 @@ extension on Translations {
 			'common.terms.label.terms' => '服務條款',
 			'common.terms.label.privacy' => '隱私政策',
 			'common.terms.label.both' => '法律條款',
-			'common.terms.and' => '和',
+			'common.terms.and' => '與',
 			'common.share.invite.subject' => '邀請加入 Iron Split 任務',
 			'common.share.invite.content' => ({required Object taskName, required Object code, required Object link}) => '邀請加入 Iron Split 任務「${taskName}」。\n邀請碼：${code}\n連結：${link}',
 			'common.share.settlement.subject' => 'Iron Split 任務結算通知',
@@ -3196,7 +3196,7 @@ extension on Translations {
 			's32_settlement_result.buttons.back_task_dashboard' => '返回任務',
 			's50_onboarding_consent.title' => '歡迎使用 Iron Split',
 			's50_onboarding_consent.buttons.start' => '開始',
-			's50_onboarding_consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，負責記帳與分攤。\n無論是旅行、聚餐、共同生活，支出將被清楚紀錄，分攤方式皆有明確規則。\n\n分帳，本該清楚。\n\n點擊「開始」即表示同意我們的 ',
+			's50_onboarding_consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，\n協助記帳與分攤。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。\n\n分帳，本該清楚。\n\n點擊開始即表示同意',
 			's50_onboarding_consent.content.suffix' => '。',
 			's51_onboarding_name.title' => '名稱設定',
 			's51_onboarding_name.content' => '請輸入顯示名稱。',

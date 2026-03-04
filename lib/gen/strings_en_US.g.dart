@@ -1360,8 +1360,8 @@ class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50Onboar
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => 'Make splitting expenses simple.\n\nI’m Iron Rooster. I manage the records and splits here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be simple and clear.\n\nBy clicking Start, you agree to our ';
-	@override String get suffix => '. We use anonymous login to protect your privacy.';
+	@override String get prefix => 'Make splitting expenses simple.\n\nI’m Iron Rooster.\nHelping with tracking and splitting.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.\n\nSplitting expenses should be clear.\n\nTapping Start indicates acceptance of the';
+	@override String get suffix => '.';
 }
 
 // Path: s52_task_settings_log.buttons
@@ -2237,8 +2237,8 @@ extension on TranslationsEnUs {
 			's32_settlement_result.buttons.back_task_dashboard' => 'Back to Task',
 			's50_onboarding_consent.title' => 'Welcome to Iron Split',
 			's50_onboarding_consent.buttons.start' => 'Start',
-			's50_onboarding_consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Rooster. I manage the records and splits here.\nWhether it’s travel, dining, or shared living, every expense is clearly recorded, and every split follows defined rules.\n\nSplitting expenses should be simple and clear.\n\nBy clicking Start, you agree to our ',
-			's50_onboarding_consent.content.suffix' => '. We use anonymous login to protect your privacy.',
+			's50_onboarding_consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Rooster.\nHelping with tracking and splitting.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.\n\nSplitting expenses should be clear.\n\nTapping Start indicates acceptance of the',
+			's50_onboarding_consent.content.suffix' => '.',
 			's51_onboarding_name.title' => 'Set Your Name',
 			's51_onboarding_name.content' => 'Enter display name.',
 			's51_onboarding_name.hint' => 'Enter nickname',

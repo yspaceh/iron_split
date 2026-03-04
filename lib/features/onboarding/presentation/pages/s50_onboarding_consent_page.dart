@@ -82,7 +82,7 @@ class _S50Content extends StatelessWidget {
         height: finalLineHeight);
 
     // 定義一般文字樣式
-    final normalStyle = textTheme.bodyMedium?.copyWith(height: finalLineHeight);
+    final normalStyle = textTheme.bodyLarge?.copyWith(height: finalLineHeight);
 
     return Scaffold(
       appBar: AppBar(
@@ -120,43 +120,54 @@ class _S50Content extends StatelessWidget {
                         assetPath: 'assets/images/iron/iron_image_intro.png',
                       ),
                     ],
+                    const SizedBox(height: AppLayout.spaceXL),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: AppLayout.spaceL),
                       child: // 2. 條款文字區域 (RichText)
-                          Text.rich(
-                        TextSpan(
-                          style: normalStyle,
+                          Center(
+                        child: Column(
                           children: [
-                            // A. 前綴: "Read our "
-                            TextSpan(
-                                text: t.s50_onboarding_consent.content.prefix),
+                            Text(t.s50_onboarding_consent.content.prefix),
+                            Text.rich(
+                              TextSpan(
+                                style: normalStyle,
+                                children: [
+                                  // A. 前綴: "Read our "
+                                  TextSpan(
+                                      text: t.s50_onboarding_consent.content
+                                          .prefix),
 
-                            // B. 連結: "Terms of Service"
-                            TextSpan(
-                              text: t.common.terms.label.terms,
-                              style: linkStyle,
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => _redirectToTerms(context),
+                                  // B. 連結: "Terms of Service"
+                                  TextSpan(
+                                    text: t.common.terms.label.terms,
+                                    style: linkStyle,
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => _redirectToTerms(context),
+                                  ),
+
+                                  // C. 中間: " and "
+                                  TextSpan(text: t.common.terms.and),
+
+                                  // D. 連結: "Privacy Policy"
+                                  TextSpan(
+                                    text: t.common.terms.label.privacy,
+                                    style: linkStyle,
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap =
+                                          () => _redirectToPrivacy(context),
+                                  ),
+
+                                  // E. 後綴: ". Tap 'Agree' to accept."
+                                  TextSpan(
+                                      text: t.s50_onboarding_consent.content
+                                          .suffix),
+                                ],
+                              ),
+                              textAlign: TextAlign.center, // 文字置中
                             ),
-
-                            // C. 中間: " and "
-                            TextSpan(text: t.common.terms.and),
-
-                            // D. 連結: "Privacy Policy"
-                            TextSpan(
-                              text: t.common.terms.label.privacy,
-                              style: linkStyle,
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => _redirectToPrivacy(context),
-                            ),
-
-                            // E. 後綴: ". Tap 'Agree' to accept."
-                            TextSpan(
-                                text: t.s50_onboarding_consent.content.suffix),
                           ],
                         ),
-                        textAlign: TextAlign.left, // 文字置中
                       ),
                     ),
                   ],

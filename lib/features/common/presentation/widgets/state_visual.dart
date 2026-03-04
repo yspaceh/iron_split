@@ -12,34 +12,39 @@ class StateVisual extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return AspectRatio(
-      aspectRatio: 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          // 統一的底色 (圖片載入前或透明圖的背景)
-          color: colorScheme.surfaceContainerLow,
-          // 統一的圓角 (例如 24)
-          borderRadius: BorderRadius.circular(AppLayout.radiusXXL),
+    return Center(
+      child: FractionallySizedBox(
+        widthFactor: 0.8, // 佔據父元件（通常是螢幕）寬度的 80%
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: Container(
+            decoration: BoxDecoration(
+              // 統一的底色 (圖片載入前或透明圖的背景)
+              color: colorScheme.surfaceContainerLow,
+              // 統一的圓角 (例如 24)
+              borderRadius: BorderRadius.circular(AppLayout.radiusXXL),
+            ),
+            // 裁切圖片以符合圓角
+            clipBehavior: Clip.antiAlias,
+            child: assetPath != null
+                ? Image.asset(
+                    assetPath!,
+                    // [關鍵] 使用 cover 讓圖片填滿整個正方形，不留白邊
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  )
+                : Container(
+                    // 預設佔位圖 (開發用)
+                    color: Colors.amber,
+                    child: Icon(
+                      Icons.image,
+                      size: 48,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+          ),
         ),
-        // 裁切圖片以符合圓角
-        clipBehavior: Clip.antiAlias,
-        child: assetPath != null
-            ? Image.asset(
-                assetPath!,
-                // [關鍵] 使用 cover 讓圖片填滿整個正方形，不留白邊
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              )
-            : Container(
-                // 預設佔位圖 (開發用)
-                color: Colors.amber,
-                child: Icon(
-                  Icons.image,
-                  size: 48,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
       ),
     );
   }
