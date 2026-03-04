@@ -1047,7 +1047,7 @@ class _TranslationsS14TaskSettingsMenuEnUs extends TranslationsS14TaskSettingsMe
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get invite => 'Invite';
+	@override String get invite => 'Invite Members';
 	@override String get member_settings => 'Member Settings';
 	@override String get history => 'History';
 	@override String get close_task => 'End Task';
@@ -2133,7 +2133,7 @@ extension on TranslationsEnUs {
 			's14_task_settings.section.task_period' => 'Task Period',
 			's14_task_settings.section.settlement' => 'Settlement Settings',
 			's14_task_settings.section.other' => 'Other Settings',
-			's14_task_settings.menu.invite' => 'Invite',
+			's14_task_settings.menu.invite' => 'Invite Members',
 			's14_task_settings.menu.member_settings' => 'Member Settings',
 			's14_task_settings.menu.history' => 'History',
 			's14_task_settings.menu.close_task' => 'End Task',

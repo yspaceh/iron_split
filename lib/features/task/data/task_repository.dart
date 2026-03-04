@@ -32,7 +32,7 @@ class TaskRepository extends BaseRepository {
       return tasks.where((t) => t.members.containsKey(userId)).toList();
     }).handleError((e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace,
-          reason: 'Task repository streamUserTasks failed');
+          reason: 'Task repository - streamUserTasks: streamUserTasks failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }
@@ -44,7 +44,7 @@ class TaskRepository extends BaseRepository {
       return TaskModel.fromFirestore(doc);
     }).handleError((e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace,
-          reason: 'Task repository streamTask failed');
+          reason: 'Task repository - streamTask: streamTask failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||
           errorStr.contains('permission_denied') ||
@@ -159,7 +159,8 @@ class TaskRepository extends BaseRepository {
           .toList();
     }).handleError((e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace,
-          reason: 'Task repository streamActivityLogs failed');
+          reason:
+              'Task repository - streamActivityLogs: streamActivityLogs failed');
       throw ErrorMapper.parseErrorCode(e);
     });
   }

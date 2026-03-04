@@ -1048,7 +1048,7 @@ class _TranslationsS14TaskSettingsMenuJaJp extends TranslationsS14TaskSettingsMe
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get invite => '招待送信';
+	@override String get invite => 'メンバー招待';
 	@override String get member_settings => 'メンバー設定';
 	@override String get history => '履歴';
 	@override String get close_task => 'タスク終了';
@@ -2135,7 +2135,7 @@ extension on TranslationsJaJp {
 			's14_task_settings.section.task_period' => 'タスク期間',
 			's14_task_settings.section.settlement' => '精算設定',
 			's14_task_settings.section.other' => 'その他設定',
-			's14_task_settings.menu.invite' => '招待送信',
+			's14_task_settings.menu.invite' => 'メンバー招待',
 			's14_task_settings.menu.member_settings' => 'メンバー設定',
 			's14_task_settings.menu.history' => '履歴',
 			's14_task_settings.menu.close_task' => 'タスク終了',

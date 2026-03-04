@@ -71,7 +71,6 @@ android {
             dimension = "default"
             applicationId = "com.ironsplit.dev"
             manifestPlaceholders["appLinkHost"] = "iron-split-dev.web.app"
-            resValue("string", "app_name", "Iron Split Dev")
         }
         
         // 3. 正式環境
@@ -79,7 +78,6 @@ android {
             dimension = "default"
             applicationId = "com.ironsplit.app"
             manifestPlaceholders["appLinkHost"] = "iron-split.web.app"
-            resValue("string", "app_name", "Iron Split")
         }
     }
 

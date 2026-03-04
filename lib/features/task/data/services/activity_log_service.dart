@@ -32,7 +32,7 @@ class ActivityLogService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '紀錄活動記錄失敗 (ActivityLogService log)',
+        reason: 'ActivityLogService - log: Failed to record activity log',
       );
     }
   }

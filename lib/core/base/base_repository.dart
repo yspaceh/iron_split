@@ -17,7 +17,7 @@ abstract class BaseRepository {
     try {
       return await action();
     } on FirebaseFunctionsException catch (e, stackTrace) {
-      // ✅ 1. 新增：專門攔截 Cloud Functions 的錯誤
+      // 1. 新增：專門攔截 Cloud Functions 的錯誤
       // 這些是後端預期的商業邏輯擋擋 (如: 無效邀請碼、任務已滿)
       if (e.code == 'invalid-argument' ||
           e.code == 'not-found' ||
@@ -31,7 +31,8 @@ abstract class BaseRepository {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: 'Cloud Functions 操作失敗 (safeRun)',
+        reason:
+            'BaseRepository - safeRun: Failed to run action (FirebaseFunctionsException)',
       );
       throw ErrorMapper.parseErrorCode(e);
     } on FirebaseException catch (e, stackTrace) {
@@ -41,7 +42,8 @@ abstract class BaseRepository {
         FirebaseCrashlytics.instance.recordError(
           e,
           stackTrace,
-          reason: 'Firestore 操作失敗 (safeRun)',
+          reason:
+              'BaseRepository - safeRun: Failed to run action (FirebaseException)',
         );
       }
       throw ErrorMapper.parseErrorCode(e);
@@ -52,7 +54,7 @@ abstract class BaseRepository {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '未知的 Repository 錯誤 (safeRun)',
+        reason: 'BaseRepository - safeRun: Failed to run action',
       );
 
       // 2. 如果是明確的系統/環境錯誤，直接往上拋 (保留精確原因，讓 UI 顯示「網路錯誤」而非「儲存失敗」)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/brightness_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -43,8 +44,42 @@ class S54TaskSettingsInvitePage extends StatelessWidget {
   }
 }
 
-class _S54Content extends StatelessWidget {
+class _S54Content extends StatefulWidget {
   const _S54Content();
+
+  @override
+  State<_S54Content> createState() => _S54ContentState();
+}
+
+class _S54ContentState extends State<_S54Content> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // 進入頁面時，立刻將螢幕調到最亮
+    BrightnessService.setMaxBrightness();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    // 離開頁面（按下返回鍵）時，恢復正常亮度
+    BrightnessService.restoreBrightness();
+    super.dispose();
+  }
+
+  // 監聽 App 退到背景或回到前景
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 從背景回到 App 時，再次調亮
+      BrightnessService.setMaxBrightness();
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      // 點擊分享跳出系統彈窗，或是退到背景時，先恢復正常亮度
+      BrightnessService.restoreBrightness();
+    }
+  }
 
   Future<void> _handleShare(BuildContext context,
       S54TaskSettingsInviteViewModel vm, Translations t) async {

@@ -1,6 +1,7 @@
 // lib/features/system/data/system_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/base/base_repository.dart'; // 參照 RecordRepository
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
@@ -21,8 +22,14 @@ class SystemRepository extends BaseRepository {
 
       try {
         return PaymentInfoModel.fromJson(jsonStr);
-      } catch (e) {
+      } catch (e, stackTrace) {
         // 雖然 PreferencesService 讀取成功，但如果 JSON 解析失敗，視為初始化失敗
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason:
+              'SystemRepository - getDefaultPaymentInfo(fromJson): Failed to parse default payment info',
+        );
         throw AppErrorCodes.initFailed;
       }
     }, AppErrorCodes.initFailed);

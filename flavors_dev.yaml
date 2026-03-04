@@ -1,0 +1,17 @@
+# 1. App Icon 設定
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icons/iron_split_app_icon_1024.png"
+  adaptive_icon_background: "#9C393F"
+  adaptive_icon_foreground: "assets/images/icons/iron_split_app_icon_432.png"
+
+# 2. 啟動畫面設定
+flutter_native_splash:
+  color: "#9C393F"
+  image: "assets/images/icons/iron_split_app_icon_432.png"
+  android_12:
+    image: "assets/images/icons/iron_split_app_icon_432.png"
+    color: "#9C393F"
+  android: true
+  ios: false

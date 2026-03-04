@@ -39,7 +39,7 @@ class CurrencyService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '取得匯率失敗 (CurrencyService fetchRate)',
+        reason: 'CurrencyService - fetchRate: Failed to fetch rate',
       );
       throw AppErrorCodes.rateFetchFailed; // 其他系統錯誤轉化後拋出
     }

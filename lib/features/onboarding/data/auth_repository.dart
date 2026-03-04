@@ -50,7 +50,6 @@ class AuthRepository extends BaseRepository {
       final user = _firebaseAuth.currentUser;
       if (user != null) {
         await user.updateDisplayName(name);
-        await user.reload();
       } else {
         throw AppErrorCodes.unauthorized;
       }
@@ -88,23 +87,19 @@ class AuthRepository extends BaseRepository {
 
   /// 登出
   Future<void> signOut() async {
-    try {
+    await safeRun(() async {
       await _firebaseAuth.signOut();
-    } catch (e) {
-      throw AppErrorCodes.logoutFailed;
-    }
+    }, AppErrorCodes.logoutFailed);
   }
 
   /// 呼叫 Cloud Function 徹底刪除使用者帳號
   /// 這會觸發後端的 deleteUserAccount 函式 (移交權限、轉幽靈等)
   Future<void> deleteUserAccountPermanently() async {
-    try {
+    await safeRun(() async {
       final functions = FirebaseFunctions.instance;
       // 呼叫對應的 Cloud Function 名稱
       final callable = functions.httpsCallable('deleteUserAccount');
       await callable.call();
-    } catch (e) {
-      throw AppErrorCodes.deleteFailed;
-    }
+    }, AppErrorCodes.deleteFailed);
   }
 }

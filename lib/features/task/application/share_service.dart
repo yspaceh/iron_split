@@ -1,5 +1,6 @@
 // core/services/share_service.dart
 import 'dart:io';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -14,7 +15,12 @@ class ShareService {
           subject: subject,
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ShareService - shareText: Failed to share text',
+      );
       throw AppErrorCodes.shareFailed;
     }
   }
@@ -39,7 +45,12 @@ class ShareService {
           files: [XFile(file.path)],
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ShareService - shareFile: Failed to share file',
+      );
       throw AppErrorCodes.shareFailed;
     }
   }

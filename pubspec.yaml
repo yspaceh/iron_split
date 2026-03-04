@@ -1,7 +1,7 @@
 name: iron_split
-description: Iron Split - 分帳助手
+description: Iron Split
 publish_to: "none"
-version: 1.0.0+7
+version: 1.0.0+8
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -56,6 +56,8 @@ dependencies:
   pretty_qr_code: ^3.6.0
   firebase_app_check: ^0.4.1+4
   mobile_scanner: ^7.2.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -71,5 +73,5 @@ flutter:
     - assets/images/
     - assets/images/avatars/
     - assets/images/iron/
-    - assets/images/icon/
+    - assets/images/icons/
     - assets/i18n/

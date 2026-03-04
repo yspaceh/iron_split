@@ -79,8 +79,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
         FirebaseCrashlytics.instance.recordError(
           Exception('Invalid date string: $val'), // 錯誤主體
           StackTrace.current, // 附上錯誤發生時的呼叫堆疊
-          reason: '[S11] _parseDate 解析失敗，已退回使用 DateTime.now()', // 給自己看的備註
-          fatal: false, // ⚠️ 關鍵：標記為 false 就不會讓 App 閃退
+          reason:
+              'S11InviteConfirmViewModel - _parseDate: Failed to parse date string, use DateTime.now()',
         );
         return DateTime.now();
       }

@@ -1,4 +1,5 @@
 // lib/core/viewmodels/theme_vm.dart
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +25,13 @@ class ThemeViewModel extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, mode.toString());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'ThemeViewModel - setThemeMode: Failed to get theme mode from shared preferences',
+      );
       throw ErrorMapper.parseErrorCode(e);
     }
   }

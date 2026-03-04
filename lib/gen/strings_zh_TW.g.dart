@@ -1560,8 +1560,8 @@ class TranslationsS14TaskSettingsMenuZhTw {
 
 	// Translations
 
-	/// zh-TW: '發送邀請'
-	String get invite => '發送邀請';
+	/// zh-TW: '邀請成員'
+	String get invite => '邀請成員';
 
 	/// zh-TW: '成員設定'
 	String get member_settings => '成員設定';
@@ -3092,7 +3092,7 @@ extension on Translations {
 			's14_task_settings.section.task_period' => '任務期間',
 			's14_task_settings.section.settlement' => '結算設定',
 			's14_task_settings.section.other' => '其他設定',
-			's14_task_settings.menu.invite' => '發送邀請',
+			's14_task_settings.menu.invite' => '邀請成員',
 			's14_task_settings.menu.member_settings' => '成員設定',
 			's14_task_settings.menu.history' => '歷史紀錄',
 			's14_task_settings.menu.close_task' => '結束任務',

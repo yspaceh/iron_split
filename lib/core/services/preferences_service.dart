@@ -26,7 +26,7 @@ class PreferencesService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '清除資料失敗 (PreferencesService clearAll)',
+        reason: 'PreferencesService - clearAll: Failed to clear all data',
       );
       throw AppErrorCodes.unknown;
     }
@@ -43,7 +43,8 @@ class PreferencesService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '儲存使用者最後使用的幣別失敗 (PreferencesService saveLastCurrency)',
+        reason:
+            'PreferencesService - saveLastCurrency: Failed to save last currency',
       );
       throw AppErrorCodes.saveFailed;
     }
@@ -58,7 +59,8 @@ class PreferencesService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '取得上次幣別失敗 (PreferencesService getLastCurrency)',
+        reason:
+            'PreferencesService - getLastCurrency: Failed to read last currency',
       );
       return null;
     }
@@ -73,7 +75,8 @@ class PreferencesService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '儲存預設收款資訊失敗 (PreferencesService saveDefaultPaymentInfo)',
+        reason:
+            'PreferencesService - saveDefaultPaymentInfo: Failed to save default payment info',
       );
       throw AppErrorCodes.saveFailed;
     }
@@ -87,7 +90,8 @@ class PreferencesService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '讀取預設收款資訊失敗 (PreferencesService saveDefaultPaymentInfo)',
+        reason:
+            'PreferencesService - getDefaultPaymentInfo: Failed to read default payment info',
       );
       return null;
     }

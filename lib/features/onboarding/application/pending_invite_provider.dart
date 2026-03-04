@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import '../data/pending_invite_local_store.dart';
@@ -28,7 +29,13 @@ class PendingInviteProvider extends ChangeNotifier {
       notifyListeners();
     } on AppErrorCodes {
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'PendingInviteProvider - saveInvite: Failed to save invite code',
+      );
       throw AppErrorCodes.saveFailed;
     }
   }
@@ -43,7 +50,12 @@ class PendingInviteProvider extends ChangeNotifier {
       notifyListeners();
     } on AppErrorCodes {
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PendingInviteProvider - clear: Failed to clear invite code',
+      );
       throw AppErrorCodes.deleteFailed;
     }
   }

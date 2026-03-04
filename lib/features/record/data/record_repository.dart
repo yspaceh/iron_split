@@ -29,7 +29,7 @@ class RecordRepository extends BaseRepository {
           .toList();
     }).handleError((e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace,
-          reason: 'Record repository streamRecords failed');
+          reason: 'Record repository - streamRecords: streamRecords failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||
           errorStr.contains('permission_denied') ||

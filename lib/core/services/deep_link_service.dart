@@ -43,7 +43,7 @@ class DeepLinkService {
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
-        reason: '設定 DeepLinkService 失敗 (DeepLinkService initialize)',
+        reason: 'DeepLinkService - initialize: Failed to get initial link',
       );
       throw AppErrorCodes.initFailed;
     }
@@ -57,7 +57,7 @@ class DeepLinkService {
         FirebaseCrashlytics.instance.recordError(
           e,
           stackTrace,
-          reason: '設定 DeepLinkService 失敗 (DeepLinkService uriLinkStream)',
+          reason: 'DeepLinkService - initialize: Stream error',
         );
         _controller.addError(AppErrorCodes.initFailed);
       },

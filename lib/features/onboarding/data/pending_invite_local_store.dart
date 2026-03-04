@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +21,13 @@ class PendingInviteLocalStore {
       }
     } on AppErrorCodes {
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'PendingInviteLocalStore - saveCode: Failed to save invite code',
+      );
       throw AppErrorCodes.saveFailed;
     }
   }
@@ -60,14 +67,25 @@ class PendingInviteLocalStore {
           await clear(); // 已過期則自動清空
           return null;
         }
-      } catch (e) {
-        // 解析失敗 (資料損壞)，清除並回傳 null
+      } catch (e, stackTrace) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason:
+              'PendingInviteLocalStore - getValidCode(jsonDecode): Failed to decode invite code',
+        );
         await clear();
         return null;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       // 若是 SharedPreferences 本身初始化失敗，視為 initFailed
       // 但為了讓 App 能繼續執行，這裡通常也建議回傳 null (視為無邀請)
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'PendingInviteLocalStore - getValidCode(sharedPreferences): Failed to get invite code form shared preferences',
+      );
       return null;
     }
   }
@@ -77,8 +95,14 @@ class PendingInviteLocalStore {
     try {
       final sp = await SharedPreferences.getInstance();
       await sp.remove(_key);
-    } catch (e) {
+    } catch (e, stackTrace) {
       // 清除失敗通常不影響業務，可選擇忽略或拋出 deleteFailed
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'PendingInviteLocalStore - getValidCode(sharedPreferences): Failed to remove invite code form shared preferences',
+      );
       throw AppErrorCodes.deleteFailed;
     }
   }

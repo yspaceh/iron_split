@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -87,7 +88,13 @@ class DashboardService {
         absorbedBy: null,
         absorbedAmount: null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'DashboardService - calculateBalanceState: Failed to calculate balance state',
+      );
       throw AppErrorCodes.initFailed;
     }
   }

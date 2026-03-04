@@ -1,4 +1,5 @@
 // lib/core/viewmodels/display_vm.dart
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -25,7 +26,13 @@ class DisplayViewModel extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, mode.toString());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason:
+            'DisplayViewModel - setDisplayMode: Failed to get display mode form shared preferences',
+      );
       throw ErrorMapper.parseErrorCode(e);
     }
   }
