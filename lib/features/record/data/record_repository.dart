@@ -204,23 +204,6 @@ class RecordRepository extends BaseRepository {
     }, AppErrorCodes.initFailed);
   }
 
-  /// 檢查此紀錄是否被其他紀錄引用 (例如作為 payerId)
-  /// 主要用於防止刪除已被使用的預收款 (Prepay/Prepay)
-  Future<void> checkRecordReferenced(String taskId, String recordId) async {
-    await safeRun(() async {
-      // 1. 檢查是否有任何紀錄的 payerId 指向此 recordId
-      final payerQuery = await _firestore
-          .collection('tasks')
-          .doc(taskId)
-          .collection('records')
-          .where('payersId', isEqualTo: recordId)
-          .limit(1)
-          .get();
-
-      if (payerQuery.docs.isNotEmpty) throw AppErrorCodes.prepayIsUsed;
-    }, AppErrorCodes.initFailed);
-  }
-
   /// 專門用於更新匯率與零頭的批次寫入
   /// Service 層算好後，把一包 (ID, 新匯率, 新零頭) 丟進來，這裡只負責寫入
   Future<void> batchUpdateRatesAndRemainders(

@@ -1,10 +1,10 @@
-import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { onSchedule } from "firebase-functions/v2/scheduler";
-import { setGlobalOptions } from "firebase-functions/v2";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import {setGlobalOptions, logger} from "firebase-functions/v2";
 import * as admin from "firebase-admin";
-import { FieldPath } from "firebase-admin/firestore";
+import {FieldPath} from "firebase-admin/firestore";
 
-setGlobalOptions({ region: "asia-northeast1" });
+setGlobalOptions({region: "asia-northeast1"});
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -60,15 +60,15 @@ const ALL_AVATARS = [
  * @param batch (選用) 如果有傳入，會併入該 Batch；否則直接寫入
  */
 const writeActivityLog = async (
-  db: admin.firestore.Firestore,
-  taskId: string,
-  operatorUid: string,
-  action: string, // 'add_member', 'remove_member', etc.
-  details: Record<string, any>,
-  batch?: admin.firestore.WriteBatch
+    db: admin.firestore.Firestore,
+    taskId: string,
+    operatorUid: string,
+    action: string, // 'add_member', 'remove_member', etc.
+    details: Record<string, any>,
+    batch?: admin.firestore.WriteBatch
 ) => {
   const logRef = db.collection("tasks").doc(taskId).collection("activity_logs").doc();
-  
+
   const logData = {
     operatorUid,
     actionType: action,
@@ -124,49 +124,72 @@ const isEmptyGhost = (m: any): boolean => {
 
 /**
  * 建立邀請碼
- * 邏輯：檢查隊長權限 -> 產生亂數代碼 -> 寫入 Firestore
+ * 邏輯：檢查成員權限 -> 產生亂數代碼 (並檢查碰撞) -> 寫入 Firestore
  */
 export const createInviteCode = onCall(async (request) => {
   if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
 
-  const { taskId } = request.data;
+  const {taskId} = request.data;
   const uid = request.auth.uid;
   const taskRef = db.collection("tasks").doc(taskId);
-  const taskDoc = await taskRef.get();
 
-  if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
-
-  // 放寬權限為「只要是這個 Task 的成員就可以產生邀請碼」
-  const members = taskDoc.data()?.members || {};
-  if (!members[uid]) {
-    throw new HttpsError("permission-denied", "NOT_MEMBER");
-  }
-
-  // 1. 這裡呼叫了 generateCode，警告就會消失
-  const code = generateCode();
-
-  // 設定 15 分鐘後過期
+  let code = "";
+  let isUnique = false;
+  let attempts = 0;
+  const maxAttempts = 5;
   const expiresAt = admin.firestore.Timestamp.fromMillis(Date.now() + 900000);
 
-  const batch = db.batch();
+  while (!isUnique && attempts < maxAttempts) {
+    code = generateCode();
+    const inviteRef = db.collection("invites").doc(code);
 
-  // 建立邀請碼對照表
-  batch.set(db.collection("invites").doc(code), {
-    taskId,
-    expiresAt,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    createdByUid: uid,
-  });
+    try {
+      await db.runTransaction(async (t) => {
+        // 1. 將讀取與權限檢查移入 Transaction 內 (解決 TOCTOU)
+        const taskDoc = await t.get(taskRef);
+        if (!taskDoc.exists) throw new HttpsError("not-found", "TASK_NOT_FOUND");
 
-  // 更新任務狀態
-  batch.update(taskRef, {
-    activeInviteCode: code,
-    activeInviteExpiresAt: expiresAt,
-  });
+        const members = taskDoc.data()?.members || {};
+        // 2. 回應 Codex 的疑問：嚴格要求 isLinked === true
+        if (!members[uid] || members[uid].isLinked !== true) {
+          throw new HttpsError("permission-denied", "NOT_MEMBER");
+        }
 
-  await batch.commit();
+        // 3. 檢查碰撞
+        const inviteSnap = await t.get(inviteRef);
+        if (inviteSnap.exists) {
+          throw new Error("COLLISION"); // 故意拋錯讓外層攔截重試
+        }
 
-  return { code, expiresAt: expiresAt.toMillis() };
+        // 4. 執行寫入
+        t.set(inviteRef, {
+          taskId,
+          expiresAt,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          createdByUid: uid,
+        });
+
+        t.update(taskRef, {
+          activeInviteCode: code,
+          activeInviteExpiresAt: expiresAt,
+        });
+      });
+
+      isUnique = true; // Transaction 成功，確定唯一並跳出迴圈
+    } catch (error: any) {
+      if (error.message === "COLLISION") {
+        attempts++;
+      } else {
+        throw error; // 將 HttpsError (如 NOT_MEMBER) 往外拋
+      }
+    }
+  }
+
+  if (!isUnique) {
+    throw new HttpsError("aborted", "GENERATE_CODE_FAILED");
+  }
+
+  return {code, expiresAt: expiresAt.toMillis()};
 });
 
 /**
@@ -176,12 +199,12 @@ export const createInviteCode = onCall(async (request) => {
 export const previewInviteCode = onCall(async (request) => {
   // [檢查 1] 身份驗證
   if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
-  const { code } = request.data;
+  const {code} = request.data;
 
   // [檢查 2] 邀請碼存在性
   const inviteDoc = await db.collection("invites").doc(code).get();
   if (!inviteDoc.exists) throw new HttpsError("invalid-argument", "INVALID_CODE");
-  const { taskId, expiresAt } = inviteDoc.data()!;
+  const {taskId, expiresAt} = inviteDoc.data()!;
 
   // [檢查 3] 任務存在性
   const taskDoc = await db.collection("tasks").doc(taskId).get();
@@ -196,7 +219,7 @@ export const previewInviteCode = onCall(async (request) => {
 
   const members = taskData.members || {};
   if (taskData.createdBy === request.auth.uid) {
-    return { taskId, action: "OPEN_TASK" };
+    return {taskId, action: "OPEN_TASK"};
   }
   const activeGhosts: any[] = []; // 需要顯示在前端的
   let emptySlotAvailable = false;
@@ -204,7 +227,7 @@ export const previewInviteCode = onCall(async (request) => {
 
   for (const [id, m] of Object.entries(members)) {
     const memberData = m as any;
-    if (memberData.uid === request.auth.uid) return { taskId, action: "OPEN_TASK" };
+    if (memberData.uid === request.auth.uid) return {taskId, action: "OPEN_TASK"};
 
     if (memberData.isLinked) {
       linkedCount++;
@@ -248,15 +271,15 @@ export const previewInviteCode = onCall(async (request) => {
  */
 export const joinByInviteCode = onCall(async (request) => {
   if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
-  const { code, displayName, targetMemberId } = request.data;
+  const {code, displayName, targetMemberId} = request.data;
   const uid = request.auth.uid;
 
-  return db.runTransaction(async (transaction) => {
+  const result = await db.runTransaction(async (transaction) => {
     // [1] 安全檢查：邀請碼驗證 (絕對不刪)
     const inviteRef = db.collection("invites").doc(code);
     const inviteDoc = await transaction.get(inviteRef);
     if (!inviteDoc.exists) throw new HttpsError("invalid-argument", "INVALID_CODE");
-    const { taskId, expiresAt } = inviteDoc.data()!;
+    const {taskId, expiresAt} = inviteDoc.data()!;
 
     if (expiresAt.toMillis() < Date.now()) throw new HttpsError("failed-precondition", "EXPIRED_CODE");
 
@@ -290,14 +313,14 @@ export const joinByInviteCode = onCall(async (request) => {
       // (雖然前端通常會擋，但後端再檢查一次比較安全)
       if (!members[finalTargetId]) throw new HttpsError("not-found", "MEMBER_NOT_FOUND");
       if ((members[finalTargetId] as TaskMember).isLinked) {
-         throw new HttpsError("already-exists", "MEMBER_ALREADY_LINKED");
+        throw new HttpsError("already-exists", "MEMBER_ALREADY_LINKED");
       }
     }
-  
+
     const ghostData = members[finalTargetId];
 
     // [修正] 手動計算新的 memberIds 陣列，避免 arrayRemove/Union 衝突
-   const currentMemberIds = taskData.memberIds || [];
+    const currentMemberIds = taskData.memberIds || [];
     const newMemberIds = currentMemberIds.filter((id: string) => id !== finalTargetId);
     if (!newMemberIds.includes(uid)) {
       newMemberIds.push(uid);
@@ -319,17 +342,11 @@ export const joinByInviteCode = onCall(async (request) => {
         role: "member",
         joinedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
-      
+
       // 2. Array 操作：直接寫入計算好的新陣列
       memberIds: newMemberIds,
       // 3. 其他欄位
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-      // 寫入 Log: 某人加入了
-    await writeActivityLog(db, taskId, uid, "add_member", {
-      memberName: displayName, // 記錄加入者的名字
-      method: "invite_code",   // 標記來源 (選用)
     });
 
     return {
@@ -339,6 +356,21 @@ export const joinByInviteCode = onCall(async (request) => {
       canReroll: true,
     };
   });
+
+  try {
+    await writeActivityLog(db, result.taskId, uid, "add_member", {
+      memberName: displayName,
+      method: "invite_code",
+    });
+  } catch (error) {
+    logger.error({
+      error: error,
+      taskId: result.taskId,
+      uid: uid,
+    });
+  }
+
+  return result;
 });
 
 /**
@@ -352,22 +384,30 @@ export const joinByInviteCode = onCall(async (request) => {
  * 4. 刪除 User Document
  * 5. 刪除 Auth 帳號
  */
-//  統一使用 v2 寫法，與您的 createInviteCode 保持一致
 export const deleteUserAccount = onCall(async (request) => {
-  // 這裡改用 request.auth，絕對能精準抓到您的登入狀態
-  if (!request.auth) {
-    throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
-  }
+  if (!request.auth) throw new HttpsError("unauthenticated", "AUTH_REQUIRED");
 
   const uid = request.auth.uid;
   const db = admin.firestore();
 
   const tasksSnapshot = await db
-    .collection("tasks")
-    .where(new FieldPath("members", uid, "isLinked"), "==", true)
-    .get();
+      .collection("tasks")
+      .where(new FieldPath("members", uid, "isLinked"), "==", true)
+      .get();
 
-  const batch = db.batch();
+  // --- 新增：Batch 分塊機制 ---
+  const batches: admin.firestore.WriteBatch[] = [db.batch()];
+  let opCount = 0;
+  const getBatch = () => {
+    if (opCount >= 400) { // Firestore 上限是 500，我們抓 400 確保安全
+      batches.push(db.batch());
+      opCount = 0;
+    }
+    opCount++;
+    return batches[batches.length - 1]; // 回傳當前最新的 Batch
+  };
+  // --------------------------
+
   const tasksToDelete: FirebaseFirestore.DocumentReference[] = [];
 
   for (const doc of tasksSnapshot.docs) {
@@ -376,7 +416,8 @@ export const deleteUserAccount = onCall(async (request) => {
     const isCaptain = taskData.captainId === uid;
 
     if (!isCaptain) {
-      batch.update(doc.ref, {
+      // 💡 注意這裡從 db.batch() 變成了 getBatch()
+      getBatch().update(doc.ref, {
         [`members.${uid}.isLinked`]: false,
         [`members.${uid}.role`]: "member",
         [`members.${uid}.displayName`]: `${members[uid].displayName}`,
@@ -385,62 +426,68 @@ export const deleteUserAccount = onCall(async (request) => {
 
       await writeActivityLog(db, doc.id, uid, "remove_member", {
         memberName: members[uid]?.displayName || "Unknown",
-        reason: "account_deleted"
-      }, batch);
+        reason: "account_deleted",
+      }, getBatch());
     } else {
       const candidates = Object.entries(members)
-        .filter(([id, m]: [string, any]) => id !== uid && m.isLinked === true)
-        .sort((a: [string, any], b: [string, any]) => {
-           const memberA = a[1] as TaskMember;
-           const memberB = b[1] as TaskMember;
-           const timeA = memberA.joinedAt?.toMillis() ?? 0;
-           const timeB = memberB.joinedAt?.toMillis() ?? 0;
-           return timeA - timeB;
-        });
+          .filter(([id, m]: [string, any]) => id !== uid && m.isLinked === true)
+          .sort((a: [string, any], b: [string, any]) => {
+            const timeA = a[1].joinedAt?.toMillis() ?? 0;
+            const timeB = b[1].joinedAt?.toMillis() ?? 0;
+            return timeA - timeB;
+          });
 
       if (candidates.length === 0) {
         tasksToDelete.push(doc.ref);
       } else {
-        const newCaptainEntry = candidates[0];
-        const newCaptainId = newCaptainEntry[0];
-        const newCaptainName = (newCaptainEntry[1] as TaskMember).displayName;
-        
-        batch.update(doc.ref, {
-            captainId: newCaptainId, 
-            [`members.${newCaptainId}.role`]: "captain", 
-            
-            [`members.${uid}.isLinked`]: false,
-            [`members.${uid}.role`]: "member",
-            [`members.${uid}.displayName`]: `${members[uid].displayName}`,
-            [`members.${uid}.avatar`]: null,
+        const newCaptainId = candidates[0][0];
+        const newCaptainName = candidates[0][1].displayName;
+
+        getBatch().update(doc.ref, {
+          captainId: newCaptainId,
+          [`members.${newCaptainId}.role`]: "captain",
+          [`members.${uid}.isLinked`]: false,
+          [`members.${uid}.role`]: "member",
+          [`members.${uid}.displayName`]: `${members[uid].displayName}`,
+          [`members.${uid}.avatar`]: null,
         });
-        
+
         await writeActivityLog(db, doc.id, uid, "update_settings", {
           settingType: "captain_transfer",
           oldCaptain: members[uid]?.displayName,
-          newCaptain: newCaptainName, 
-          newValue: newCaptainName 
-        }, batch);
+          newCaptain: newCaptainName,
+          newValue: newCaptainName,
+        }, getBatch());
 
         await writeActivityLog(db, doc.id, uid, "remove_member", {
           memberName: members[uid]?.displayName || "Unknown",
-          reason: "account_deleted"
-        }, batch);
+          reason: "account_deleted",
+        }, getBatch());
       }
     }
   }
 
-  await batch.commit();
+  try {
+    // --- 執行所有收集好的 Batch ---
+    for (const b of batches) {
+      await b.commit();
+    }
 
-  if (tasksToDelete.length > 0) {
-     const deletePromises = tasksToDelete.map(ref => db.recursiveDelete(ref));
-     await Promise.all(deletePromises);
+    if (tasksToDelete.length > 0) {
+      const deletePromises = tasksToDelete.map((ref) => db.recursiveDelete(ref));
+      await Promise.all(deletePromises);
+    }
+  } catch (error) {
+    logger.error("刪除帳號時清理任務失敗，中斷流程", {uid, error});
+    // 拋出錯誤，讓前端顯示失敗，且「絕對不會」往下執行刪除 Auth
+    throw new HttpsError("internal", "帳號資料清理未完全，請再次點擊刪除重試");
   }
 
+  // 只有上方所有 Batch 與群組刪除都 100% 成功，才真正刪除實體 User 與 Auth
   await db.collection("users").doc(uid).delete();
   await admin.auth().deleteUser(uid);
 
-  return { success: true };
+  return {success: true};
 });
 
 // index.ts 最下方
@@ -448,9 +495,9 @@ export const deleteUserAccount = onCall(async (request) => {
 /**
  * 每日排程：刪除過期任務 (v2 寫法)
  */
-export const deleteExpiredTasks = onSchedule("every 24 hours", async (event) => {
+export const deleteExpiredTasks = onSchedule("every 24 hours", async (_) => {
   const db = admin.firestore();
-  
+
   // 計算 30 天前的時間點
   const now = Date.now();
   const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
@@ -458,21 +505,21 @@ export const deleteExpiredTasks = onSchedule("every 24 hours", async (event) => 
 
   // 1. 查詢過期任務
   const snapshot = await db.collection("tasks")
-    .where("status", "==", "closed")
-    .where("finalizedAt", "<=", cutoffDate)
-    .get();
+      .where("status", "==", "closed")
+      .where("finalizedAt", "<=", cutoffDate)
+      .get();
 
   if (snapshot.empty) {
-    console.log("No expired tasks found.");
+    logger.info("No expired tasks found.");
     return;
   }
 
-  console.log(`Found ${snapshot.size} expired tasks. Deleting...`);
+  logger.info(`Found ${snapshot.size} expired tasks. Deleting...`);
 
   // 2. 執行遞迴刪除
   const deletePromises = snapshot.docs.map((doc) => db.recursiveDelete(doc.ref));
-  
+
   await Promise.all(deletePromises);
-  
-  console.log(`Successfully deleted ${snapshot.size} expired tasks.`);
+
+  logger.info(`Successfully deleted ${snapshot.size} expired tasks.`);
 });

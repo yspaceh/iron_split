@@ -49,9 +49,7 @@ class TaskRepository extends BaseRepository {
       if (errorStr.contains('permission-denied') ||
           errorStr.contains('permission_denied') ||
           (e is FirebaseException && e.code == 'permission-denied')) {
-        // 如果是因為權限不足（通常是因為文件被刪除導致規則失效），
-        // 我們選擇「吞掉」這個錯誤，不拋出，讓 Stream 靜靜結束或保持原狀。
-        return;
+        throw AppErrorCodes.permissionDenied;
       }
 
       // 其他錯誤才拋出

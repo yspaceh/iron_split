@@ -207,13 +207,18 @@ class S17TaskLockedViewModel extends ChangeNotifier {
 
   // 將原本的訂閱邏輯抽離出來
   void _setupTaskSubscription() {
-    _taskSubscription = _taskRepo.streamTask(taskId).listen((task) {
+    _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
+      if (taskData == null) {
+        _initStatus = LoadStatus.error;
+        _initErrorCode = AppErrorCodes.dataNotFound;
+        notifyListeners();
+        return;
+      }
       try {
-        if (task == null) throw AppErrorCodes.dataNotFound;
-        _task = task;
-        _taskName = task.name;
+        _task = taskData;
+        _taskName = taskData.name;
 
-        _determineStatusAndParseData(task);
+        _determineStatusAndParseData(taskData);
 
         // 只有成功解析完資料才設為 success
         _initStatus = LoadStatus.success;
@@ -229,7 +234,7 @@ class S17TaskLockedViewModel extends ChangeNotifier {
       }
     }, onError: (e) {
       _initStatus = LoadStatus.error;
-      _initErrorCode = ErrorMapper.parseErrorCode(e);
+      _initErrorCode = e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
       notifyListeners();
     });
   }
@@ -276,8 +281,6 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     _baseCurrency = CurrencyConstants.getCurrencyConstants(task.baseCurrency);
     _isCaptain = task.createdBy == currentUserId;
 
-    // 2. 如果是 Pending，進行資料解析 (原本在 Page 裡的邏輯)
-    _pageType = LockedPageType.settled;
     _parsePendingData(task, settlement);
   }
 

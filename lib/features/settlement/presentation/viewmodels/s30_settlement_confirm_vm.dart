@@ -135,14 +135,19 @@ class S30SettlementConfirmViewModel extends ChangeNotifier {
 
       _taskSubscription = _taskRepo.streamTask(taskId).listen(
         (taskData) {
-          if (taskData != null) {
-            _task = taskData;
-            _recalculate();
+          if (taskData == null) {
+            _initStatus = LoadStatus.error;
+            _initErrorCode = AppErrorCodes.dataNotFound;
+            notifyListeners();
+            return;
           }
+          _task = taskData;
+          _recalculate();
         },
         onError: (e) {
           _initStatus = LoadStatus.error;
-          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
           notifyListeners();
         },
       );

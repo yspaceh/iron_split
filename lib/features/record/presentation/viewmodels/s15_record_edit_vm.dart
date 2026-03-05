@@ -592,7 +592,6 @@ class S15RecordEditViewModel extends ChangeNotifier {
       //  [修正] 核心邏輯：委派給 Service，與 S13 保持 100% 一致
       // Service 內部會自動處理：
       //   a. 檢查是否為收入 (Prepay)
-      //   b. 檢查是否被其他紀錄引用 (checkRecordReferenced)
       //   c. 檢查公款餘額是否足夠 (prepayIsUsed)
       //   d. 執行刪除與餘額撤銷 (undo)
       await _recordService.validateAndDelete(

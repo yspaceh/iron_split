@@ -75,9 +75,7 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
         _taskRepo = taskRepo,
         _recordRepo = recordRepo,
         _authRepo = authRepo,
-        _systemRepo = systemRepo {
-    formController.addListener(notifyListeners);
-  }
+        _systemRepo = systemRepo;
 
   Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
@@ -97,17 +95,22 @@ class S31SettlementPaymentInfoViewModel extends ChangeNotifier {
 
       _taskSubscription = _taskRepo.streamTask(taskId).listen(
         (taskData) {
-          if (taskData != null) {
-            _task = taskData;
-            if (_task != null) {
-              _initStatus = LoadStatus.success;
-              notifyListeners();
-            }
+          if (taskData == null) {
+            _initStatus = LoadStatus.error;
+            _initErrorCode = AppErrorCodes.dataNotFound;
+            notifyListeners();
+            return;
+          }
+          _task = taskData;
+          if (_task != null) {
+            _initStatus = LoadStatus.success;
+            notifyListeners();
           }
         },
         onError: (e) {
           _initStatus = LoadStatus.error;
-          _initErrorCode = ErrorMapper.parseErrorCode(e);
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
           notifyListeners();
         },
       );

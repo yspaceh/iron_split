@@ -160,22 +160,41 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
         throw AppErrorCodes.dataNotFound;
       }
 
-      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-        if (taskData == null) {
-          throw AppErrorCodes.dataNotFound; // 讓 CommonStateView 顯示錯誤
-        }
-        _task = taskData;
-        _remainderRule = taskData.remainderRule;
-        _remainderAbsorberId = taskData.remainderAbsorberId;
-        _hasTaskEmitted = true;
-        _recalculate();
-      });
+      _taskSubscription = _taskRepo.streamTask(taskId).listen(
+        (taskData) {
+          if (taskData == null) {
+            _initStatus = LoadStatus.error;
+            _initErrorCode = AppErrorCodes.dataNotFound;
+            notifyListeners();
+            return;
+          }
+          _task = taskData;
+          _remainderRule = taskData.remainderRule;
+          _remainderAbsorberId = taskData.remainderAbsorberId;
+          _hasTaskEmitted = true;
+          _recalculate();
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
 
-      _recordSubscription = _recordRepo.streamRecords(taskId).listen((records) {
-        _records = records;
-        _hasRecordsEmitted = true;
-        _recalculate();
-      });
+      _recordSubscription = _recordRepo.streamRecords(taskId).listen(
+        (records) {
+          _records = records;
+          _hasRecordsEmitted = true;
+          _recalculate();
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
+          notifyListeners();
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;

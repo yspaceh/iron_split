@@ -68,14 +68,18 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
       _taskSubscription = _taskRepo.streamTask(taskId).listen(
         (taskData) {
-          if (taskData != null) {
-            _task = taskData;
-            _createdBy = _task?.createdBy ?? '';
-            _membersMap = _task?.members ?? {};
-            _membersList = _task?.sortedMembers ?? [];
-            _initStatus = LoadStatus.success;
+          if (taskData == null) {
+            _initStatus = LoadStatus.error;
+            _initErrorCode = AppErrorCodes.dataNotFound;
             notifyListeners();
+            return;
           }
+          _task = taskData;
+          _createdBy = _task?.createdBy ?? '';
+          _membersMap = _task?.members ?? {};
+          _membersList = _task?.sortedMembers ?? [];
+          _initStatus = LoadStatus.success;
+          notifyListeners();
         },
         onError: (e) {
           _initStatus = LoadStatus.error;

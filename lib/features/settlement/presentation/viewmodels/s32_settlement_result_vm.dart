@@ -135,17 +135,31 @@ class S32SettlementResultViewModel extends ChangeNotifier {
       if (user == null) throw AppErrorCodes.unauthorized;
 
       // 監聽 Task 變化 (通常 S32 進來時資料已經是 settled/pending)
-      _taskSubscription = _taskRepo.streamTask(taskId).listen((taskData) {
-        _task = taskData;
-        if (_initStatus != LoadStatus.success) {
-          // 如果根本不需要秀輪盤，就直接揭曉結果
-          if (!shouldShowRoulette) {
-            _isRevealed = true;
+      _taskSubscription = _taskRepo.streamTask(taskId).listen(
+        (taskData) {
+          if (taskData == null) {
+            _initStatus = LoadStatus.error;
+            _initErrorCode = AppErrorCodes.dataNotFound;
+            notifyListeners();
+            return;
           }
-          _initStatus = LoadStatus.success;
+          _task = taskData;
+          if (_initStatus != LoadStatus.success) {
+            // 如果根本不需要秀輪盤，就直接揭曉結果
+            if (!shouldShowRoulette) {
+              _isRevealed = true;
+            }
+            _initStatus = LoadStatus.success;
+            notifyListeners();
+          }
+        },
+        onError: (e) {
+          _initStatus = LoadStatus.error;
+          _initErrorCode =
+              e is AppErrorCodes ? e : ErrorMapper.parseErrorCode(e);
           notifyListeners();
-        }
-      });
+        },
+      );
     } on AppErrorCodes catch (code) {
       _initStatus = LoadStatus.error;
       _initErrorCode = code;

@@ -1,7 +1,5 @@
 // lib/core/base/base_repository.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -16,54 +14,22 @@ abstract class BaseRepository {
       Future<T> Function() action, AppErrorCodes fallbackError) async {
     try {
       return await action();
-    } on FirebaseFunctionsException catch (e, stackTrace) {
-      // 1. 新增：專門攔截 Cloud Functions 的錯誤
-      // 這些是後端預期的商業邏輯擋擋 (如: 無效邀請碼、任務已滿)
-      if (e.code == 'invalid-argument' ||
-          e.code == 'not-found' ||
-          e.code == 'failed-precondition' ||
-          e.code == 'already-exists') {
-        // 不送 Crashlytics，直接讓 ErrorMapper 轉譯成 AppErrorCodes 給 UI
-        throw ErrorMapper.parseErrorCode(e);
-      }
-
-      // 預期外的 Functions 錯誤才記錄
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        stackTrace,
-        reason:
-            'BaseRepository - safeRun: Failed to run action (FirebaseFunctionsException)',
-      );
-      throw ErrorMapper.parseErrorCode(e);
-    } on FirebaseException catch (e, stackTrace) {
-      // 這裡可以過濾掉一些您認為「不需要紀錄的常態錯誤」
-      // 例如：網路斷線 (unavailable) 或權限不足 (permission-denied)
-      if (e.code != 'unavailable' && e.code != 'permission-denied') {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason:
-              'BaseRepository - safeRun: Failed to run action (FirebaseException)',
-        );
-      }
-      throw ErrorMapper.parseErrorCode(e);
+    } on AppErrorCodes {
+      // 如果錯誤已經是 AppErrorCodes (例如：餘額不足、群組已滿)，
+      // 代表這是我們主動拋出的業務邏輯阻擋。
+      // 它不是系統崩潰，所以「不要」送交 Crashlytics，直接往上拋給 UI 處理即可。
+      rethrow;
     } catch (e, stackTrace) {
-      // 1. 先問 ErrorMapper 這是不是已知的底層錯誤 (如：沒權限、沒網路、額度滿了)
-      final systemCode = ErrorMapper.parseErrorCode(e);
+      // 1. 先讓 ErrorMapper 試著解析這個錯誤
+      final mappedError = ErrorMapper.parseErrorCode(e);
 
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        stackTrace,
-        reason: 'BaseRepository - safeRun: Failed to run action',
-      );
-
-      // 2. 如果是明確的系統/環境錯誤，直接往上拋 (保留精確原因，讓 UI 顯示「網路錯誤」而非「儲存失敗」)
-      if (systemCode != AppErrorCodes.unknown) {
-        throw systemCode;
+      // 2. 如果解析出來不是 unknown，代表這是我們預期的業務錯誤 (如權限不足、房間已滿)
+      if (mappedError != AppErrorCodes.unknown) {
+        throw mappedError;
       }
 
-      // 3. 如果是未知錯誤，則拋出我們指定的「動作上下文」
-      // 這樣 VM 層接到 deleteFailed，就能顯示「刪除失敗」，而不是 generic 的 unknown
+      // 3. 真的完全不認識的例外，才視為系統崩潰送 Crashlytics，並拋出 defaultError
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       throw fallbackError;
     }
   }

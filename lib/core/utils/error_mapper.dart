@@ -41,6 +41,18 @@ class ErrorMapper {
 
     if (eStr.contains('CLOSE_TASK')) return AppErrorCodes.taskCloseFailed;
 
+    // 3. 邀請相關關鍵字
+    if (eStr.contains("TASK_FULL")) return AppErrorCodes.inviteTaskFull;
+    if (eStr.contains("EXPIRED_CODE")) return AppErrorCodes.inviteExpired;
+    if (eStr.contains("INVALID_CODE")) return AppErrorCodes.inviteInvalid;
+    if (eStr.contains("GENERATE_CODE_FAILED")) {
+      return AppErrorCodes.inviteCreateFailed;
+    }
+
+    // 4. 業務與初始化收斂
+    if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.prepayIsUsed;
+    if (eStr.contains('TASK_LOCKED')) return AppErrorCodes.taskLocked;
+
     // 2. 動作關鍵字識別 (是什麼動作掛掉)
     // 當 Firebase 噴出一個 generic error 時，我們靠這些關鍵字轉譯
     if (eStr.contains('SAVE') ||
@@ -57,14 +69,6 @@ class ErrorMapper {
       return AppErrorCodes.networkError;
     }
 
-    // 3. 邀請相關關鍵字
-    if (eStr.contains("TASK_FULL")) return AppErrorCodes.inviteTaskFull;
-    if (eStr.contains("EXPIRED")) return AppErrorCodes.inviteExpired;
-    if (eStr.contains("INVALID")) return AppErrorCodes.inviteInvalid;
-
-    // 4. 業務與初始化收斂
-    if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.prepayIsUsed;
-    if (eStr.contains('TASK_LOCKED')) return AppErrorCodes.taskLocked;
     if (eStr.contains('INIT') ||
         eStr.contains('LOAD') ||
         eStr.contains('SPLIT')) {
