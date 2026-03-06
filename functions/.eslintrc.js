@@ -20,6 +20,8 @@ module.exports = {
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
     "/generated/**/*", // Ignore generated files.
+    "**/*.test.js", // Ignore JS test files (e.g. firestore.rules.test.js).
+    "rules/**/*", // Ignore Firestore rules and related test assets.
   ],
   plugins: [
     "@typescript-eslint",

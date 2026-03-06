@@ -14,6 +14,11 @@ service cloud.firestore {
       return isSignedIn() && (request.auth.uid in resource.data.memberIds);
     }
 
+    // 檢查使用者是否為該任務的 Captain
+    function isTaskCaptain(taskId) {
+      return isSignedIn() && request.auth.uid == resource.data.captainId;
+    }
+
     // 檢查使用者是否為該任務的成員 (跨路徑讀取父層)
     function isParentTaskMember(taskId) {
       return isSignedIn() &&
@@ -37,8 +42,20 @@ service cloud.firestore {
 
     // 3. 任務資料 (Tasks)
     match /tasks/{taskId} {
-      // [讀取/更新/刪除]: 必須是成員
-      allow read, update, delete: if isMemberOfTask(taskId);
+      // [讀取]: 必須是成員
+      allow read: if isMemberOfTask(taskId);
+
+      // [更新]:
+      // - 一般欄位：成員可更新
+      // - captainId/status：只有 Captain 可更新
+      allow update: if isMemberOfTask(taskId) &&
+                    (
+                      !request.resource.data.diff(resource.data).changedKeys().hasAny(["captainId", "status"]) ||
+                      isTaskCaptain(taskId)
+                    );
+
+      // [刪除]: 只有 Captain 可刪除任務
+      allow delete: if isTaskCaptain(taskId);
 
       // [建立]: 確保建立者在成員名單裡
       allow create: if isSignedIn() &&
