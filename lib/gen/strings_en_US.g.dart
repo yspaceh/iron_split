@@ -698,9 +698,12 @@ class _TranslationsCommonCategoryEnUs extends TranslationsCommonCategoryZhTw {
 	// Translations
 	@override String get food => 'Food';
 	@override String get transport => 'Transport';
-	@override String get shopping => 'Shopping';
-	@override String get entertainment => 'Entertainment';
 	@override String get accommodation => 'Accommodation';
+	@override String get rent => 'Rent';
+	@override String get entertainment => 'Entertainment';
+	@override String get shopping => 'Shopping';
+	@override String get daily => 'Daily';
+	@override String get utilities => 'Utilities';
 	@override String get others => 'Others';
 }
 
@@ -1174,7 +1177,7 @@ class _TranslationsS16TaskCreateEditHintEnUs extends TranslationsS16TaskCreateEd
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get name => 'e.g. Tokyo Trip';
+	@override String get name => 'e.g. Tokyo Trip / Club Practice';
 }
 
 // Path: s17_task_locked.buttons
@@ -1824,11 +1827,14 @@ class _TranslationsS15RecordEditHintCategoryEnUs extends TranslationsS15RecordEd
 
 	// Translations
 	@override String get food => 'Dinner';
-	@override String get transport => 'Transportation';
-	@override String get shopping => 'Souvenirs';
-	@override String get entertainment => 'Tickets';
-	@override String get accommodation => 'Accommodation';
-	@override String get others => 'Other expenses';
+	@override String get transport => 'Taxi';
+	@override String get shopping => 'Souvenir';
+	@override String get entertainment => 'Ticket / Movie';
+	@override String get accommodation => 'Hotel';
+	@override String get rent => 'Rent / Venue';
+	@override String get daily => 'Tissue / Detergent';
+	@override String get utilities => 'Electricity / Internet';
+	@override String get others => 'Other';
 }
 
 // Path: error.dialog.task_full
@@ -1972,9 +1978,12 @@ extension on TranslationsEnUs {
 			'common.label.memo' => 'Memo',
 			'common.category.food' => 'Food',
 			'common.category.transport' => 'Transport',
-			'common.category.shopping' => 'Shopping',
-			'common.category.entertainment' => 'Entertainment',
 			'common.category.accommodation' => 'Accommodation',
+			'common.category.rent' => 'Rent',
+			'common.category.entertainment' => 'Entertainment',
+			'common.category.shopping' => 'Shopping',
+			'common.category.daily' => 'Daily',
+			'common.category.utilities' => 'Utilities',
 			'common.category.others' => 'Others',
 			'common.currency.twd' => 'New Taiwan Dollar',
 			'common.currency.jpy' => 'Japanese Yen',
@@ -2158,11 +2167,14 @@ extension on TranslationsEnUs {
 			's15_record_edit.rate_dialog.content' => 'Exchange rate data is provided by Open Exchange Rates (free plan) for reference only. Please refer to your exchange receipt for the actual rate.',
 			's15_record_edit.label.rate_with_base' => ({required Object base, required Object target}) => 'Exchange Rate (1 ${base} = ? ${target})',
 			's15_record_edit.hint.category.food' => 'Dinner',
-			's15_record_edit.hint.category.transport' => 'Transportation',
-			's15_record_edit.hint.category.shopping' => 'Souvenirs',
-			's15_record_edit.hint.category.entertainment' => 'Tickets',
-			's15_record_edit.hint.category.accommodation' => 'Accommodation',
-			's15_record_edit.hint.category.others' => 'Other expenses',
+			's15_record_edit.hint.category.transport' => 'Taxi',
+			's15_record_edit.hint.category.shopping' => 'Souvenir',
+			's15_record_edit.hint.category.entertainment' => 'Ticket / Movie',
+			's15_record_edit.hint.category.accommodation' => 'Hotel',
+			's15_record_edit.hint.category.rent' => 'Rent / Venue',
+			's15_record_edit.hint.category.daily' => 'Tissue / Detergent',
+			's15_record_edit.hint.category.utilities' => 'Electricity / Internet',
+			's15_record_edit.hint.category.others' => 'Other',
 			's15_record_edit.hint.item' => ({required Object category}) => 'e.g. ${category}',
 			's15_record_edit.hint.memo' => 'e.g. Notes',
 			's16_task_create_edit.title' => 'New Task',
@@ -2170,7 +2182,7 @@ extension on TranslationsEnUs {
 			's16_task_create_edit.section.task_period' => 'Task Period',
 			's16_task_create_edit.section.settlement' => 'Settlement Settings',
 			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			's16_task_create_edit.hint.name' => 'e.g. Tokyo Trip',
+			's16_task_create_edit.hint.name' => 'e.g. Tokyo Trip / Club Practice',
 			's17_task_locked.buttons.notify_members' => 'Notify Members',
 			's17_task_locked.buttons.view_payment_info' => 'View Payment Details',
 			's17_task_locked.section.pending' => 'Pending',

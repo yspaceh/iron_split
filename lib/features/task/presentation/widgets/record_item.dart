@@ -7,7 +7,6 @@ import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
-import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/dialogs/d10_record_delete_confirm_dialog.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
@@ -40,11 +39,10 @@ class RecordItem extends StatelessWidget {
     final isPrepay = record.type == RecordType.prepay;
     final originalCurrencyConstants = CurrencyConstants.getCurrencyConstants(
         record.currencyCode); // 注意這裡用 currencyCode
-    final themeVm = context.watch<ThemeViewModel>();
-    final expenseColor = themeVm.themeMode == ThemeMode.dark
+    final expenseColor = theme.brightness == Brightness.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
-    final prepayColor = themeVm.themeMode == ThemeMode.dark
+    final prepayColor = theme.brightness == Brightness.dark
         ? AppTheme.prepayLight
         : AppTheme.prepayDeep;
 

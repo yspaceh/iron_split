@@ -33,6 +33,12 @@ class CategoryConstant {
         return t.common.category.entertainment;
       case 'hotel':
         return t.common.category.accommodation;
+      case 'daily':
+        return t.common.category.daily;
+      case 'rent':
+        return t.common.category.rent;
+      case 'utilities':
+        return t.common.category.utilities;
       case 'more_horiz':
       default:
         return t.common.category.others;
@@ -51,6 +57,12 @@ class CategoryConstant {
         return t.s15_record_edit.hint.category.entertainment;
       case 'hotel':
         return t.s15_record_edit.hint.category.accommodation;
+      case 'daily':
+        return t.s15_record_edit.hint.category.daily;
+      case 'rent':
+        return t.s15_record_edit.hint.category.rent;
+      case 'utilities':
+        return t.s15_record_edit.hint.category.utilities;
       case 'more_horiz':
       default:
         return t.s15_record_edit.hint.category.others;
@@ -80,7 +92,19 @@ const List<CategoryConstant> kAppCategories = [
       labelKey: 't.common.category.accommodation',
       icon: Icons.hotel_outlined),
   CategoryConstant(
+      id: 'daily',
+      labelKey: 't.common.category.daily',
+      icon: Icons.cleaning_services_outlined),
+  CategoryConstant(
+      id: 'rent',
+      labelKey: 't.common.category.rent',
+      icon: Icons.home_work_outlined),
+  CategoryConstant(
+      id: 'utilities',
+      labelKey: 't.common.category.utilities',
+      icon: Icons.wb_incandescent_outlined),
+  CategoryConstant(
       id: 'more_horiz',
       labelKey: 't.common.category.others',
-      icon: Icons.grid_view_outlined),
+      icon: Icons.interests_outlined),
 ];

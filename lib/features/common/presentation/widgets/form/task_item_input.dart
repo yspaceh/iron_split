@@ -3,7 +3,6 @@ import 'package:iron_split/core/constants/category_constants.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
-import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/features/common/presentation/widgets/pickers/category_picker_sheet.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -38,8 +37,7 @@ class TaskItemInput extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
-    final themeVm = context.watch<ThemeViewModel>();
-    final expenseColor = themeVm.themeMode == ThemeMode.dark
+    final expenseColor = theme.brightness == Brightness.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
     final displayState = context.read<DisplayState>();

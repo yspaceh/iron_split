@@ -699,9 +699,12 @@ class _TranslationsCommonCategoryJaJp extends TranslationsCommonCategoryZhTw {
 	// Translations
 	@override String get food => '食事';
 	@override String get transport => '交通';
-	@override String get shopping => '買い物';
-	@override String get entertainment => 'エンタメ';
 	@override String get accommodation => '宿泊';
+	@override String get rent => '家賃';
+	@override String get entertainment => 'エンタメ';
+	@override String get shopping => '買い物';
+	@override String get daily => '日用品';
+	@override String get utilities => '光熱費';
 	@override String get others => 'その他';
 }
 
@@ -1175,7 +1178,7 @@ class _TranslationsS16TaskCreateEditHintJaJp extends TranslationsS16TaskCreateEd
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get name => '例：東京5日間の旅';
+	@override String get name => '例：東京旅行 / サークル練習';
 }
 
 // Path: s17_task_locked.buttons
@@ -1825,11 +1828,14 @@ class _TranslationsS15RecordEditHintCategoryJaJp extends TranslationsS15RecordEd
 
 	// Translations
 	@override String get food => '夕食';
-	@override String get transport => '交通費';
-	@override String get shopping => 'お土産';
-	@override String get entertainment => 'チケット';
-	@override String get accommodation => '宿泊費';
-	@override String get others => 'その他費用';
+	@override String get transport => 'タクシー';
+	@override String get shopping => 'おみやげ';
+	@override String get entertainment => 'チケット / 映画';
+	@override String get accommodation => 'ホテル';
+	@override String get rent => '家賃 / 会場代';
+	@override String get daily => 'ティッシュ / 洗剤';
+	@override String get utilities => '光熱費 / ネット代';
+	@override String get others => 'その他';
 }
 
 // Path: error.dialog.task_full
@@ -1974,9 +1980,12 @@ extension on TranslationsJaJp {
 			'common.label.memo' => 'メモ',
 			'common.category.food' => '食事',
 			'common.category.transport' => '交通',
-			'common.category.shopping' => '買い物',
-			'common.category.entertainment' => 'エンタメ',
 			'common.category.accommodation' => '宿泊',
+			'common.category.rent' => '家賃',
+			'common.category.entertainment' => 'エンタメ',
+			'common.category.shopping' => '買い物',
+			'common.category.daily' => '日用品',
+			'common.category.utilities' => '光熱費',
 			'common.category.others' => 'その他',
 			'common.currency.twd' => '新台湾ドル',
 			'common.currency.jpy' => '日本円',
@@ -2160,11 +2169,14 @@ extension on TranslationsJaJp {
 			's15_record_edit.rate_dialog.content' => '為替レートは Open Exchange Rates（無料版）を参照しています。参考値としてご利用ください。実際の為替レートは両替明細をご確認ください。',
 			's15_record_edit.label.rate_with_base' => ({required Object base, required Object target}) => '為替レート（1 ${base} = ? ${target}）',
 			's15_record_edit.hint.category.food' => '夕食',
-			's15_record_edit.hint.category.transport' => '交通費',
-			's15_record_edit.hint.category.shopping' => 'お土産',
-			's15_record_edit.hint.category.entertainment' => 'チケット',
-			's15_record_edit.hint.category.accommodation' => '宿泊費',
-			's15_record_edit.hint.category.others' => 'その他費用',
+			's15_record_edit.hint.category.transport' => 'タクシー',
+			's15_record_edit.hint.category.shopping' => 'おみやげ',
+			's15_record_edit.hint.category.entertainment' => 'チケット / 映画',
+			's15_record_edit.hint.category.accommodation' => 'ホテル',
+			's15_record_edit.hint.category.rent' => '家賃 / 会場代',
+			's15_record_edit.hint.category.daily' => 'ティッシュ / 洗剤',
+			's15_record_edit.hint.category.utilities' => '光熱費 / ネット代',
+			's15_record_edit.hint.category.others' => 'その他',
 			's15_record_edit.hint.item' => ({required Object category}) => '例：${category}',
 			's15_record_edit.hint.memo' => '例：補足事項',
 			's16_task_create_edit.title' => 'タスク作成',
@@ -2172,7 +2184,7 @@ extension on TranslationsJaJp {
 			's16_task_create_edit.section.task_period' => 'タスク期間',
 			's16_task_create_edit.section.settlement' => '精算設定',
 			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			's16_task_create_edit.hint.name' => '例：東京5日間の旅',
+			's16_task_create_edit.hint.name' => '例：東京旅行 / サークル練習',
 			's17_task_locked.buttons.notify_members' => 'メンバーに通知',
 			's17_task_locked.buttons.view_payment_info' => '受取口座確認',
 			's17_task_locked.section.pending' => '未完了',

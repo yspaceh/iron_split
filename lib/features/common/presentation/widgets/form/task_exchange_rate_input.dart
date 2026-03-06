@@ -3,7 +3,6 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/theme/app_theme.dart';
-import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/common/presentation/widgets/form/app_text_field.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
@@ -35,14 +34,13 @@ class TaskExchangeRateInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final themeVm = context.watch<ThemeViewModel>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final expenseColor = themeVm.themeMode == ThemeMode.dark
+    final expenseColor = theme.brightness == Brightness.dark
         ? AppTheme.expenseLight
         : AppTheme.expenseDeep;
-    final prepayColor = themeVm.themeMode == ThemeMode.dark
+    final prepayColor = theme.brightness == Brightness.dark
         ? AppTheme.prepayLight
         : AppTheme.prepayDeep;
     final displayState = context.read<DisplayState>();
