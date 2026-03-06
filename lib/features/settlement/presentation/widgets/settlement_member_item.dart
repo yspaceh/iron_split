@@ -239,8 +239,11 @@ class SettlementMemberItem extends StatelessWidget {
       overflow: isEnlarged ? null : TextOverflow.ellipsis,
     );
 
-    final amountWidget = Row(
-      mainAxisSize: MainAxisSize.min,
+    final amountWidget = Wrap(
+      alignment: WrapAlignment.end,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: AppLayout.spaceXS,
+      runSpacing: AppLayout.spaceXS,
       children: [
         Text(
           statusText,
@@ -249,7 +252,6 @@ class SettlementMemberItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(width: AppLayout.spaceXS),
         Text(
           '${baseCurrency.symbol} $displayAmount',
           style: textTheme.titleMedium?.copyWith(
