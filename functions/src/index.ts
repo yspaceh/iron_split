@@ -289,6 +289,10 @@ export const joinByInviteCode = onCall(async (request) => {
     const taskData = taskDoc.data()!;
 
     if (taskData.activeInviteCode !== code) throw new HttpsError("invalid-argument", "INVALID_CODE");
+    const currentMemberIds: string[] = taskData.memberIds || [];
+    if (currentMemberIds.includes(uid)) {
+      throw new HttpsError("already-exists", "User is already a member.");
+    }
 
     const members = taskData.members || {};
     const emptySlots = Object.entries(members).filter(([_, m]) => !(m as TaskMember).isLinked);
@@ -320,7 +324,6 @@ export const joinByInviteCode = onCall(async (request) => {
     const ghostData = members[finalTargetId];
 
     // [修正] 手動計算新的 memberIds 陣列，避免 arrayRemove/Union 衝突
-    const currentMemberIds = taskData.memberIds || [];
     const newMemberIds = currentMemberIds.filter((id: string) => id !== finalTargetId);
     if (!newMemberIds.includes(uid)) {
       newMemberIds.push(uid);
