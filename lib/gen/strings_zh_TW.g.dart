@@ -1002,14 +1002,23 @@ class TranslationsCommonCategoryZhTw {
 	/// zh-TW: '交通'
 	String get transport => '交通';
 
-	/// zh-TW: '購物'
-	String get shopping => '購物';
+	/// zh-TW: '住宿'
+	String get accommodation => '住宿';
+
+	/// zh-TW: '租金'
+	String get rent => '租金';
 
 	/// zh-TW: '娛樂'
 	String get entertainment => '娛樂';
 
-	/// zh-TW: '住宿'
-	String get accommodation => '住宿';
+	/// zh-TW: '購物'
+	String get shopping => '購物';
+
+	/// zh-TW: '日用品'
+	String get daily => '日用品';
+
+	/// zh-TW: '水電'
+	String get utilities => '水電';
 
 	/// zh-TW: '其他'
 	String get others => '其他';
@@ -1741,8 +1750,8 @@ class TranslationsS16TaskCreateEditHintZhTw {
 
 	// Translations
 
-	/// zh-TW: '例：東京五日遊'
-	String get name => '例：東京五日遊';
+	/// zh-TW: '例：東京旅行 / 社團練習'
+	String get name => '例：東京旅行 / 社團練習';
 }
 
 // Path: s17_task_locked.buttons
@@ -2743,11 +2752,20 @@ class TranslationsS15RecordEditHintCategoryZhTw {
 	/// zh-TW: '紀念品'
 	String get shopping => '紀念品';
 
-	/// zh-TW: '門票'
-	String get entertainment => '門票';
+	/// zh-TW: '門票 / 電影'
+	String get entertainment => '門票 / 電影';
 
-	/// zh-TW: '住宿費'
-	String get accommodation => '住宿費';
+	/// zh-TW: '飯店'
+	String get accommodation => '飯店';
+
+	/// zh-TW: '房租 / 場地費'
+	String get rent => '房租 / 場地費';
+
+	/// zh-TW: '衛生紙 / 洗衣精'
+	String get daily => '衛生紙 / 洗衣精';
+
+	/// zh-TW: '水電費 / 網路費'
+	String get utilities => '水電費 / 網路費';
 
 	/// zh-TW: '其他費用'
 	String get others => '其他費用';
@@ -2931,9 +2949,12 @@ extension on Translations {
 			'common.label.memo' => '備註',
 			'common.category.food' => '飲食',
 			'common.category.transport' => '交通',
-			'common.category.shopping' => '購物',
-			'common.category.entertainment' => '娛樂',
 			'common.category.accommodation' => '住宿',
+			'common.category.rent' => '租金',
+			'common.category.entertainment' => '娛樂',
+			'common.category.shopping' => '購物',
+			'common.category.daily' => '日用品',
+			'common.category.utilities' => '水電',
 			'common.category.others' => '其他',
 			'common.currency.twd' => '新台幣',
 			'common.currency.jpy' => '日圓',
@@ -3119,8 +3140,11 @@ extension on Translations {
 			's15_record_edit.hint.category.food' => '晚餐',
 			's15_record_edit.hint.category.transport' => '車費',
 			's15_record_edit.hint.category.shopping' => '紀念品',
-			's15_record_edit.hint.category.entertainment' => '門票',
-			's15_record_edit.hint.category.accommodation' => '住宿費',
+			's15_record_edit.hint.category.entertainment' => '門票 / 電影',
+			's15_record_edit.hint.category.accommodation' => '飯店',
+			's15_record_edit.hint.category.rent' => '房租 / 場地費',
+			's15_record_edit.hint.category.daily' => '衛生紙 / 洗衣精',
+			's15_record_edit.hint.category.utilities' => '水電費 / 網路費',
 			's15_record_edit.hint.category.others' => '其他費用',
 			's15_record_edit.hint.item' => ({required Object category}) => '例：${category}',
 			's15_record_edit.hint.memo' => '例：備註事項',
@@ -3129,7 +3153,7 @@ extension on Translations {
 			's16_task_create_edit.section.task_period' => '任務期間',
 			's16_task_create_edit.section.settlement' => '結算設定',
 			's16_task_create_edit.label.name_counter' => ({required Object current, required Object max}) => '${current}/${max}',
-			's16_task_create_edit.hint.name' => '例：東京五日遊',
+			's16_task_create_edit.hint.name' => '例：東京旅行 / 社團練習',
 			's17_task_locked.buttons.notify_members' => '通知成員',
 			's17_task_locked.buttons.view_payment_info' => '隊長收退款帳戶',
 			's17_task_locked.section.pending' => '待處理',

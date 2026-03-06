@@ -7,5 +7,5 @@ class AppConstants {
       ? 'https://iron-split.web.app'
       : 'https://iron-split-dev.web.app';
 
-  static const int maxUserNameLength = 10;
+  static const int maxUserNameLength = 20;
 }
