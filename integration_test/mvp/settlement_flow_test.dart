@@ -320,6 +320,62 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      'S31 race condition: task/record streams mutate together should deterministically recover with dataConflict',
+      (tester) async {
+        final taskController = StreamController<TaskModel>.broadcast();
+        final recordsController = StreamController<List<RecordModel>>.broadcast();
+        addTearDown(taskController.close);
+        addTearDown(recordsController.close);
+
+        when(() => mockTaskRepo.streamTask('task-1'))
+            .thenAnswer((_) => taskController.stream);
+        when(() => mockRecordRepo.streamRecords('task-1'))
+            .thenAnswer((_) => recordsController.stream);
+
+        await _pumpFlowApp(tester);
+        taskController.add(_task(status: TaskStatus.ongoing));
+        recordsController.add(_records(prepayAmount: 100.0));
+        await _pumpFrames(tester, times: 5);
+
+        expect(find.text('Confirm Settlement'), findsOneWidget);
+        await tester.tap(find.text('Payment Info'));
+        await _pumpFrames(tester);
+        // Re-emit for S31 subscribers (stream does not replay old events).
+        taskController.add(_task(status: TaskStatus.ongoing));
+        recordsController.add(_records(prepayAmount: 100.0));
+        await _pumpFrames(tester, times: 5);
+        expect(find.text('Payment Information'), findsOneWidget);
+
+        final s31Settle = find.widgetWithText(FilledButton, 'Settle');
+        await tester.tap(s31Settle.first);
+        await _pumpFrames(tester, times: 2);
+
+        // Simulate near-simultaneous stream changes right before final confirm.
+        // Keep task ongoing but change records to force dataConflict deterministically.
+        recordsController.add(_records(prepayAmount: 123.0));
+        taskController.add(_task(status: TaskStatus.ongoing));
+        await _pumpFrames(tester, times: 5);
+
+        await tester.tap(s31Settle.last);
+        await _pumpFrames(tester);
+
+        expect(find.text('Data Changed'), findsOneWidget);
+        expect(find.text('Error'), findsNothing);
+        await tester.tap(find.text('Back'));
+        await _pumpFrames(tester);
+        expect(find.text('Data Changed'), findsNothing);
+
+        expect(find.text('Settlement Complete'), findsNothing);
+        verifyNever(
+          () => mockTaskRepo.settleTask(
+            taskId: any(named: 'taskId'),
+            settlementData: any(named: 'settlementData'),
+          ),
+        );
+      },
+    );
   });
 }
 

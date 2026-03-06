@@ -60,6 +60,7 @@ class _S17Content extends StatefulWidget {
 
 class _S17ContentState extends State<_S17Content> {
   bool _dialogTriggered = false;
+  bool _recoveryTriggered = false;
 
   @override
   void didChangeDependencies() {
@@ -71,6 +72,19 @@ class _S17ContentState extends State<_S17Content> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // 跳轉到普通的任務 Dashboard (S13)
         context.goNamed('S13', pathParameters: {'taskId': vm.taskId});
+      });
+    }
+
+    final shouldRecoverToTaskList = vm.initStatus == LoadStatus.error &&
+        (vm.initErrorCode == AppErrorCodes.permissionDenied ||
+            vm.initErrorCode == AppErrorCodes.dataNotFound);
+    if (shouldRecoverToTaskList && !_recoveryTriggered) {
+      _recoveryTriggered = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final message = ErrorMapper.map(context, code: vm.initErrorCode);
+        AppToast.showError(context, message);
+        context.goNamed('S10');
       });
     }
   }
