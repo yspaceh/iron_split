@@ -19,17 +19,29 @@ import 'package:iron_split/features/task/data/services/activity_log_service.dart
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
+typedef CurrencyRateFetcher = Future<double> Function({
+  required String from,
+  required String to,
+});
+
+typedef ActivityLogger = Future<void> Function({
+  required String taskId,
+  required LogAction action,
+  required Map<String, dynamic> details,
+});
+
 class S15RecordEditViewModel extends ChangeNotifier {
   // Input Controllers (Keep in VM to manage text state)
   final amountController = TextEditingController();
   final exchangeRateController = TextEditingController(text: '1.0');
   final titleController = TextEditingController();
   final memoController = TextEditingController();
-  final RecordRepository _recordRepo;
   final TaskRepository _taskRepo;
   final AuthRepository _authRepo;
   final PreferencesService _prefsService;
-  late final RecordService _recordService;
+  final RecordService _recordService;
+  final CurrencyRateFetcher _rateFetcher;
+  final ActivityLogger _activityLogger;
 
   // Basic State
   late DateTime _selectedDate;
@@ -90,6 +102,15 @@ class S15RecordEditViewModel extends ChangeNotifier {
   String get baseSplitMethod => _baseSplitMethod;
   List<String> get baseMemberIds => _baseMemberIds;
   Map<String, double> get baseRawDetails => _baseRawDetails;
+
+  bool get canSave {
+    if (_saveStatus == LoadStatus.loading) return false;
+    if (totalAmount <= 0) return false;
+    if (_segmentedIndex == 0 && titleController.text.trim().isEmpty) {
+      return false;
+    }
+    return true;
+  }
 
   // Computed Properties
   double get totalAmount {
@@ -192,17 +213,21 @@ class S15RecordEditViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required AuthRepository authRepo,
     required PreferencesService prefsService,
+    RecordService? recordService,
+    CurrencyRateFetcher? rateFetcher,
+    ActivityLogger? activityLogger,
     this.recordId,
     RecordModel? record,
     this.baseCurrency = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     DateTime? initialDate,
-  })  : _recordRepo = recordRepo,
-        _taskRepo = taskRepo,
+  })  : _taskRepo = taskRepo,
         _authRepo = authRepo,
         _prefsService = prefsService,
+        _recordService = recordService ?? RecordService(recordRepo, taskRepo),
+        _rateFetcher = rateFetcher ?? CurrencyService.fetchRate,
+        _activityLogger = activityLogger ?? ActivityLogService.log,
         _originalRecord = record {
-    _recordService = RecordService(_recordRepo, _taskRepo);
     _setupForm(initialDate);
   }
 
@@ -243,6 +268,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
     _lastKnownAmount = totalAmount;
 
     amountController.addListener(_onAmountChanged);
+    titleController.addListener(_onTitleChanged);
   }
 
   // Logic Methods
@@ -321,6 +347,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
     }
   }
 
+  void _onTitleChanged() {
+    notifyListeners();
+  }
+
   // --- UI Action Updates ---
 
   void setSegmentedIndex(int index) {
@@ -354,7 +384,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       _rateLoadStatus = LoadStatus.loading;
       notifyListeners();
 
-      final rate = await CurrencyService.fetchRate(
+      final rate = await _rateFetcher(
           from: _selectedCurrencyConstants.code, to: baseCurrency.code);
       exchangeRateController.text = rate.toString();
       _rateLoadStatus = LoadStatus.success;
@@ -468,7 +498,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         await _recordService.createRecord(
             taskId: taskId, draftRecord: draftRecord);
 
-        await ActivityLogService.log(
+        await _activityLogger(
           taskId: taskId,
           action: LogAction.createRecord,
           details: logDetails,
@@ -480,7 +510,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
             oldRecord: _originalRecord!,
             newRecord: draftRecord);
 
-        await ActivityLogService.log(
+        await _activityLogger(
           taskId: taskId,
           action: LogAction.updateRecord,
           details: logDetails,
@@ -601,7 +631,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       );
 
       // 3. 寫入 Activity Log (保持與 S13 一致的 Log 格式)
-      await ActivityLogService.log(
+      await _activityLogger(
         taskId: taskId,
         action: LogAction.deleteRecord,
         details: {
@@ -712,6 +742,8 @@ class S15RecordEditViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    amountController.removeListener(_onAmountChanged);
+    titleController.removeListener(_onTitleChanged);
     amountController.dispose();
     exchangeRateController.dispose();
     titleController.dispose();

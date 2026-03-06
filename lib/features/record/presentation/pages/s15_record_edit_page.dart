@@ -16,6 +16,7 @@ import 'package:iron_split/features/common/presentation/widgets/custom_sliding_s
 import 'package:iron_split/features/common/presentation/widgets/form/app_keyboard_actions_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
+import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -36,6 +37,9 @@ class S15RecordEditPage extends StatelessWidget {
   final CurrencyConstants baseCurrency;
   final Map<String, double> poolBalancesByCurrency;
   final DateTime? initialDate;
+  final RecordService? recordService;
+  final CurrencyRateFetcher? rateFetcher;
+  final ActivityLogger? activityLogger;
 
   const S15RecordEditPage({
     super.key,
@@ -45,6 +49,9 @@ class S15RecordEditPage extends StatelessWidget {
     this.baseCurrency = CurrencyConstants.defaultCurrencyConstants,
     this.poolBalancesByCurrency = const {},
     this.initialDate,
+    this.recordService,
+    this.rateFetcher,
+    this.activityLogger,
   });
 
   @override
@@ -61,6 +68,9 @@ class S15RecordEditPage extends StatelessWidget {
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
         prefsService: context.read<PreferencesService>(),
+        recordService: recordService ?? context.read<RecordService>(),
+        rateFetcher: rateFetcher,
+        activityLogger: activityLogger,
       )..init(),
       child: const _S15Content(),
     );
@@ -382,7 +392,7 @@ class _S15ContentState extends State<_S15Content> {
                 text: t.common.buttons.save,
                 type: AppButtonType.primary,
                 isLoading: vm.saveStatus == LoadStatus.loading,
-                onPressed: () => _handleSave(context, vm),
+                onPressed: vm.canSave ? () => _handleSave(context, vm) : null,
               ),
             ],
           ),

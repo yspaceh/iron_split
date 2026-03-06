@@ -192,22 +192,14 @@ class _S32ContentState extends State<_S32Content> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (!isEnlarged) ...[
-                        const StateVisual(
-                          assetPath:
-                              'assets/images/iron/iron_image_settlement.png',
-                        ),
-                      ],
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              if (isEnlarged) ...[
-                                const StateVisual(
-                                  assetPath:
-                                      'assets/images/iron/iron_image_settlement.png',
-                                ),
-                              ],
+                              const StateVisual(
+                                assetPath:
+                                    'assets/images/iron/iron_image_settlement.png',
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: AppLayout.spaceL),

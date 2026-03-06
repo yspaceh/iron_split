@@ -10,10 +10,10 @@ class ActivityLogService {
     required LogAction action,
     required Map<String, dynamic> details,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
       final logRef = FirebaseFirestore.instance
           .collection('tasks')
           .doc(taskId)
@@ -29,11 +29,15 @@ class ActivityLogService {
 
       await logRef.set(logData);
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
-        e,
-        stackTrace,
-        reason: 'ActivityLogService - log: Failed to record activity log',
-      );
+      try {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'ActivityLogService - log: Failed to record activity log',
+        );
+      } catch (_) {
+        // Ignore when Firebase isn't initialized (e.g. widget tests).
+      }
     }
   }
 

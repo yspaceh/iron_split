@@ -2002,8 +2002,8 @@ class TranslationsS32SettlementResultButtonsZhTw {
 
 	// Translations
 
-	/// zh-TW: '發送結算通知'
-	String get share => '發送結算通知';
+	/// zh-TW: '發送通知'
+	String get share => '發送通知';
 
 	/// zh-TW: '返回任務'
 	String get back_task_dashboard => '返回任務';
@@ -3192,7 +3192,7 @@ extension on Translations {
 			's32_settlement_result.remainder_winner_prefix' => '零頭歸屬：',
 			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額為：${prefix}${total}',
 			's32_settlement_result.total_label' => '本次結算總額',
-			's32_settlement_result.buttons.share' => '發送結算通知',
+			's32_settlement_result.buttons.share' => '發送通知',
 			's32_settlement_result.buttons.back_task_dashboard' => '返回任務',
 			's50_onboarding_consent.title' => '歡迎使用 Iron Split',
 			's50_onboarding_consent.buttons.start' => '開始',

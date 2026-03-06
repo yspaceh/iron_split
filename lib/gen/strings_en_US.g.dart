@@ -1339,7 +1339,7 @@ class _TranslationsS32SettlementResultButtonsEnUs extends TranslationsS32Settlem
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get share => 'Send Settlement Notification';
+	@override String get share => 'Share Result';
 	@override String get back_task_dashboard => 'Back to Task';
 }
 
@@ -2233,7 +2233,7 @@ extension on TranslationsEnUs {
 			's32_settlement_result.remainder_winner_prefix' => 'Remainder recipient:',
 			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}\'s final amount: ${prefix}${total}',
 			's32_settlement_result.total_label' => 'Total Settlement Amount',
-			's32_settlement_result.buttons.share' => 'Send Settlement Notification',
+			's32_settlement_result.buttons.share' => 'Share Result',
 			's32_settlement_result.buttons.back_task_dashboard' => 'Back to Task',
 			's50_onboarding_consent.title' => 'Welcome to Iron Split',
 			's50_onboarding_consent.buttons.start' => 'Start',

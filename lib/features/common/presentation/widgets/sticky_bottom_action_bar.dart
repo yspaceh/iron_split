@@ -13,6 +13,7 @@ class StickyBottomActionBar extends StatelessWidget {
   /// - false (Page): 全寬度陰影，強調底座感
   /// - true (Sheet): 內縮分隔線 (Inset Divider)，強調卡片感
   final bool isSheetMode;
+  static const double _stackBreakpoint = 420;
 
   const StickyBottomActionBar({
     super.key,
@@ -43,31 +44,39 @@ class StickyBottomActionBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: horizontalMargin, vertical: AppLayout.spaceM),
-        child: isEnlarged
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: children.map((child) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: child == children.last ? 0 : AppLayout.spaceM,
-                    ),
-                    child: child,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final shouldStack =
+                isEnlarged || constraints.maxWidth < _stackBreakpoint;
+            return shouldStack
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: children.map((child) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom:
+                              child == children.last ? 0 : AppLayout.spaceM,
+                        ),
+                        child: child,
+                      );
+                    }).toList(),
+                  )
+                : Row(
+                    children: children.map((child) {
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right:
+                                child == children.last ? 0 : AppLayout.spaceM,
+                          ),
+                          child: child,
+                        ),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
-              )
-            : Row(
-                children: children.map((child) {
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: child == children.last ? 0 : AppLayout.spaceM,
-                      ),
-                      child: child,
-                    ),
-                  );
-                }).toList(),
-              ),
+          },
+        ),
       ),
     );
 

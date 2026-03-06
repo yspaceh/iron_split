@@ -21,12 +21,32 @@ class SettlementIntent extends DeepLinkIntent {
 
 class UnknownIntent extends DeepLinkIntent {}
 
+abstract class DeepLinkSource {
+  Future<Uri?> getInitialLink();
+  Stream<Uri> get uriLinkStream;
+}
+
+class AppLinksDeepLinkSource implements DeepLinkSource {
+  final AppLinks _appLinks;
+
+  AppLinksDeepLinkSource([AppLinks? appLinks]) : _appLinks = appLinks ?? AppLinks();
+
+  @override
+  Future<Uri?> getInitialLink() => _appLinks.getInitialLink();
+
+  @override
+  Stream<Uri> get uriLinkStream => _appLinks.uriLinkStream;
+}
+
 class DeepLinkService {
-  final _appLinks = AppLinks();
+  final DeepLinkSource _source;
   final _controller = StreamController<DeepLinkIntent>.broadcast();
 
   String? _lastUri;
   DateTime? _lastTime;
+
+  DeepLinkService({DeepLinkSource? source})
+      : _source = source ?? AppLinksDeepLinkSource();
 
   Stream<DeepLinkIntent> get intentStream => _controller.stream;
 
@@ -35,12 +55,12 @@ class DeepLinkService {
     // 1. 強制手動抓取冷啟動 (Cold Start) 連結
     // 這是為了彌補 main() 裡面 Firebase 初始化的時間差
     try {
-      final initialUri = await _appLinks.getInitialLink();
+      final initialUri = await _source.getInitialLink();
       if (initialUri != null) {
         _onNewUri(initialUri);
       }
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _recordErrorSafely(
         e,
         stackTrace,
         reason: 'DeepLinkService - initialize: Failed to get initial link',
@@ -49,12 +69,12 @@ class DeepLinkService {
     }
 
     // 2. 監聽熱啟動 (Warm Start) 與後續連結
-    _appLinks.uriLinkStream.listen(
+    _source.uriLinkStream.listen(
       (uri) {
         _onNewUri(uri);
       },
       onError: (e, stackTrace) {
-        FirebaseCrashlytics.instance.recordError(
+        _recordErrorSafely(
           e,
           stackTrace,
           reason: 'DeepLinkService - initialize: Stream error',
@@ -62,6 +82,34 @@ class DeepLinkService {
         _controller.addError(AppErrorCodes.initFailed);
       },
     );
+  }
+
+  /// 提供給測試或防禦性呼叫：安全處理原始字串連結
+  /// 任何格式錯誤都不拋出，避免未捕捉例外造成崩潰。
+  void handleRawLink(String rawLink) {
+    try {
+      final uri = Uri.parse(rawLink);
+      _onNewUri(uri);
+    } catch (e, stackTrace) {
+      _recordErrorSafely(
+        e,
+        stackTrace,
+        reason: 'DeepLinkService - handleRawLink: Invalid raw deep link string',
+      );
+    }
+  }
+
+  void _recordErrorSafely(
+    Object error,
+    StackTrace stackTrace, {
+    String? reason,
+  }) {
+    try {
+      FirebaseCrashlytics.instance
+          .recordError(error, stackTrace, reason: reason);
+    } catch (_) {
+      // 測試環境或 Firebase 未初始化時，忽略記錄失敗，避免影響主流程。
+    }
   }
 
   void _onNewUri(Uri uri) {
@@ -101,7 +149,9 @@ class DeepLinkService {
       // iron-split://task?id=TASK_ID_HERE
       if (uri.path.startsWith('/locked/')) {
         final segments = uri.pathSegments;
-        if (segments.length >= 2 && segments[0] == 'locked') {
+        if (segments.length >= 2 &&
+            segments[0] == 'locked' &&
+            segments[1].isNotEmpty) {
           return SettlementIntent(segments[1]);
         }
       }
