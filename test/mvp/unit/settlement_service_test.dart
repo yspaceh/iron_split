@@ -9,15 +9,20 @@ import 'package:iron_split/features/settlement/application/settlement_service.da
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../helpers/mock_analytics_service.dart';
+
 class MockTaskRepository extends Mock implements TaskRepository {}
 
 void main() {
   late MockTaskRepository mockTaskRepo;
+  late MockAnalyticsService mockAnalyticsService;
   late SettlementService service;
 
   setUp(() {
     mockTaskRepo = MockTaskRepository();
-    service = SettlementService(mockTaskRepo);
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
+    service = SettlementService(mockTaskRepo, mockAnalyticsService);
 
     when(
       () => mockTaskRepo.settleTask(
@@ -215,6 +220,8 @@ TaskModel _buildTask({
     createdBy: 'u1',
     remainderRule: remainderRule,
     remainderAbsorberId: remainderAbsorberId,
+    startDate: now,
+    endDate: now,
     createdAt: now,
     updatedAt: now,
   );

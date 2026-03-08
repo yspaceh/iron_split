@@ -8,7 +8,9 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -31,6 +33,8 @@ class S17TaskLockedViewModel extends ChangeNotifier {
   final ShareService _shareService;
   final DeepLinkService _deepLinkService;
   final SettlementService _settlementService;
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
   final String taskId;
 
   StreamSubscription? _taskSubscription;
@@ -152,6 +156,8 @@ class S17TaskLockedViewModel extends ChangeNotifier {
     required ShareService shareService,
     required DeepLinkService deepLinkService,
     required SettlementService settlementService,
+    AnalyticsService? analyticsService,
+    LoggerService? loggerService,
     required this.taskId,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
@@ -160,7 +166,9 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         _exportService = exportService,
         _shareService = shareService,
         _deepLinkService = deepLinkService,
-        _settlementService = settlementService;
+        _settlementService = settlementService,
+        _analyticsService = analyticsService ?? AnalyticsService.instance,
+        _loggerService = loggerService ?? LoggerService.instance;
 
   Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
@@ -405,6 +413,18 @@ class S17TaskLockedViewModel extends ChangeNotifier {
         fileName: fileName,
         subject: subject,
       );
+
+      // 分享成功後，紀錄 Event（不可影響主流程）
+      try {
+        await _analyticsService.logReportExport();
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logReportExport: S17TaskLockedViewModel - exportSettlementRecord: Failed to log report export event',
+        );
+      }
 
       _exportStatus = LoadStatus.success;
       notifyListeners();

@@ -1,17 +1,19 @@
 // lib/features/system/data/system_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/base/base_repository.dart'; // 參照 RecordRepository
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/payment_info_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 
 class SystemRepository extends BaseRepository {
   final PreferencesService _prefsService;
+  final LoggerService _loggerService;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  SystemRepository(this._prefsService);
+  SystemRepository(this._prefsService, this._loggerService)
+      : super(_loggerService);
 
   /// 讀取預設收款資訊
   Future<PaymentInfoModel?> getDefaultPaymentInfo() async {
@@ -24,7 +26,7 @@ class SystemRepository extends BaseRepository {
         return PaymentInfoModel.fromJson(jsonStr);
       } catch (e, stackTrace) {
         // 雖然 PreferencesService 讀取成功，但如果 JSON 解析失敗，視為初始化失敗
-        FirebaseCrashlytics.instance.recordError(
+        _loggerService.recordError(
           e,
           stackTrace,
           reason:

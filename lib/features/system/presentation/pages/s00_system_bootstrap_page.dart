@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/system/presentation/viewmodels/s00_system_bootstrap_vm.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ class S00SystemBootstrapPage extends StatelessWidget {
       create: (context) => S00SystemBootstrapViewModel(
         authRepo: context.read<AuthRepository>(),
         pendingProvider: context.read<PendingInviteProvider>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const _S00Content(),
     );
@@ -72,7 +75,9 @@ class _S00ContentState extends State<_S00Content> {
         break;
       case BootstrapDestination.confirmInvite:
         final code = _vm.pendingCode;
-        context.goNamed('S11', queryParameters: {'code': code});
+        context.goNamed('S11',
+            queryParameters: {'code': code},
+            extra: {'inviteMethod': InviteMethod.link});
         break;
       case BootstrapDestination.home:
         context.goNamed('S10');

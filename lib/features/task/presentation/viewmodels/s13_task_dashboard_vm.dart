@@ -9,6 +9,8 @@ import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/constants/currency_constants.dart'; // 新增
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -27,6 +29,10 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
   final TaskService _taskService;
   final AuthRepository _authRepo;
   final DashboardService _dashboardService;
+  final AnalyticsService _analyticsService;
+  final ActivityLogService _activityLogService;
+  final LoggerService _loggerService;
+
   final String taskId;
   late final RecordService _recordService;
 
@@ -132,13 +138,21 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
     required TaskService taskService,
     required AuthRepository authRepo,
     required RecordRepository recordRepo,
-    required DashboardService service,
+    required DashboardService dashboardService,
+    required ActivityLogService activityLogService,
+    LoggerService? loggerService,
+    AnalyticsService? analyticsService,
   })  : _taskRepo = taskRepo,
         _taskService = taskService,
         _authRepo = authRepo,
         _recordRepo = recordRepo,
-        _dashboardService = service {
-    _recordService = RecordService(_recordRepo, _taskRepo);
+        _dashboardService = dashboardService,
+        _activityLogService = activityLogService,
+        _loggerService = loggerService ?? LoggerService.instance,
+        _analyticsService = analyticsService ?? AnalyticsService.instance {
+    // 初始化 RecordService
+    _recordService = RecordService(
+        _recordRepo, _taskRepo, _analyticsService, _loggerService);
   }
 
   Future<void> init() async {
@@ -396,7 +410,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       logDetails['absorberName'] = memberName;
     }
 
-    await ActivityLogService.log(
+    await _activityLogService.log(
       taskId: taskId,
       action: LogAction.updateSettings,
       details: logDetails,
@@ -415,7 +429,7 @@ class S13TaskDashboardViewModel extends ChangeNotifier {
       await _recordService.validateAndDelete(taskId, record, poolBalances);
 
       // 3. 寫入 Activity Log
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.deleteRecord,
         details: {

@@ -4,21 +4,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/invite_code_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
-import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/presentation/pages/s16_task_create_edit_page.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
-class MockTaskRepository extends Mock implements TaskRepository {}
+import '../helpers/mock_analytics_service.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockInviteRepository extends Mock implements InviteRepository {}
+
+class MockTaskService extends Mock implements TaskService {}
 
 class MockShareService extends Mock implements ShareService {}
 
@@ -27,28 +30,30 @@ class MockDeepLinkService extends Mock implements DeepLinkService {}
 class MockUser extends Mock implements User {}
 
 void main() {
-  late MockTaskRepository mockTaskRepo;
   late MockAuthRepository mockAuthRepo;
-  late MockInviteRepository mockInviteRepo;
+  late MockTaskService mockTaskService;
   late MockShareService mockShareService;
   late MockDeepLinkService mockDeepLinkService;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
-    mockTaskRepo = MockTaskRepository();
     mockAuthRepo = MockAuthRepository();
-    mockInviteRepo = MockInviteRepository();
+    mockTaskService = MockTaskService();
     mockShareService = MockShareService();
     mockDeepLinkService = MockDeepLinkService();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
 
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockUser.displayName).thenReturn('Captain');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
 
-    when(() => mockTaskRepo.createTask(any())).thenAnswer((_) async => 'task-1');
+    when(() => mockTaskService.createTask(any()))
+        .thenAnswer((_) async => 'task-1');
 
-    when(() => mockInviteRepo.createInviteCode('task-1')).thenAnswer(
+    when(() => mockShareService.createInviteCode('task-1')).thenAnswer(
       (_) async => InviteCodeDetail(
         code: 'INV12345',
         expiresAt: DateTime(2026, 1, 2),
@@ -58,7 +63,8 @@ void main() {
     when(() => mockDeepLinkService.generateJoinLink('INV12345'))
         .thenReturn('https://ironsplit.app/join?code=INV12345');
 
-    when(() => mockShareService.shareText(any(), subject: any(named: 'subject')))
+    when(() =>
+            mockShareService.shareText(any(), subject: any(named: 'subject')))
         .thenAnswer((_) async {});
   });
 
@@ -74,7 +80,8 @@ void main() {
         GoRoute(
           path: '/task/:taskId',
           name: 'S13',
-          builder: (context, state) => Text('S13:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S13:${state.pathParameters['taskId']}'),
         ),
       ],
     );
@@ -92,9 +99,9 @@ void main() {
       TranslationProvider(
         child: MultiProvider(
           providers: [
-            Provider<TaskRepository>.value(value: mockTaskRepo),
             Provider<AuthRepository>.value(value: mockAuthRepo),
-            Provider<InviteRepository>.value(value: mockInviteRepo),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
+            Provider<TaskService>.value(value: mockTaskService),
             Provider<ShareService>.value(value: mockShareService),
             Provider<DeepLinkService>.value(value: mockDeepLinkService),
             Provider<DisplayState>.value(
@@ -127,8 +134,8 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Confirm'));
       await tester.pumpAndSettle();
 
-      verify(() => mockTaskRepo.createTask(any())).called(1);
-      verify(() => mockInviteRepo.createInviteCode('task-1')).called(1);
+      verify(() => mockTaskService.createTask(any())).called(1);
+      verify(() => mockShareService.createInviteCode('task-1')).called(1);
 
       final captured = verify(
         () => mockShareService.shareText(

@@ -3,13 +3,15 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 
 class AuthRepository extends BaseRepository {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance; // [新增]
 
-  AuthRepository({FirebaseAuth? firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  AuthRepository({FirebaseAuth? firebaseAuth, LoggerService? loggerService})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        super(loggerService ?? LoggerService.instance);
 
   User? get currentUser => _firebaseAuth.currentUser;
 

@@ -12,6 +12,7 @@ import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_ac
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -29,8 +30,10 @@ class S12TaskCloseNoticePage extends StatelessWidget {
       create: (_) => S12TaskCloseNoticeViewModel(
         taskId: taskId,
         authRepo: context.read<AuthRepository>(),
-        record: context.read<RecordRepository>(),
+        recordRepo: context.read<RecordRepository>(),
         taskService: context.read<TaskService>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
       )..init(),
       child: const _S12Content(),
     );

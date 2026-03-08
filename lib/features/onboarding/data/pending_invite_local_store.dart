@@ -1,9 +1,13 @@
 import 'dart:convert';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PendingInviteLocalStore {
+  final LoggerService _loggerService;
+
+  PendingInviteLocalStore(this._loggerService);
+
   static const _key = 'pending_invite_data';
 
   /// 儲存邀請碼與當下時間戳記
@@ -22,7 +26,7 @@ class PendingInviteLocalStore {
     } on AppErrorCodes {
       rethrow;
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -68,7 +72,7 @@ class PendingInviteLocalStore {
           return null;
         }
       } catch (e, stackTrace) {
-        FirebaseCrashlytics.instance.recordError(
+        _loggerService.recordError(
           e,
           stackTrace,
           reason:
@@ -80,7 +84,7 @@ class PendingInviteLocalStore {
     } catch (e, stackTrace) {
       // 若是 SharedPreferences 本身初始化失敗，視為 initFailed
       // 但為了讓 App 能繼續執行，這裡通常也建議回傳 null (視為無邀請)
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -97,7 +101,7 @@ class PendingInviteLocalStore {
       await sp.remove(_key);
     } catch (e, stackTrace) {
       // 清除失敗通常不影響業務，可選擇忽略或拋出 deleteFailed
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:

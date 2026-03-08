@@ -34,4 +34,16 @@ class DisplayConstants {
         return t.common.display.standard;
     }
   }
+
+  static DisplayMode stringConvertToDisplayMode(String modeString) {
+    DisplayMode mode = defaultDisplay;
+    if (modeString == DisplayMode.standard.toString()) {
+      mode = DisplayMode.standard;
+    } else if (modeString == DisplayMode.enlarged.toString()) {
+      mode = DisplayMode.enlarged;
+    } else {
+      mode = DisplayMode.system;
+    }
+    return mode;
+  }
 }

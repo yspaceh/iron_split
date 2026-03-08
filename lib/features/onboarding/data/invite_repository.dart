@@ -2,13 +2,15 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/invite_code_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 
 class InviteRepository extends BaseRepository {
   final FirebaseFunctions _functions;
 
-  InviteRepository({FirebaseFunctions? functions})
+  InviteRepository({FirebaseFunctions? functions, LoggerService? loggerService})
       : _functions = functions ??
-            FirebaseFunctions.instanceFor(region: 'asia-northeast1');
+            FirebaseFunctions.instanceFor(region: 'asia-northeast1'),
+        super(loggerService ?? LoggerService.instance);
 
   /// 呼叫 previewInviteCode
   Future<Map<String, dynamic>> previewInviteCode(String code) async {

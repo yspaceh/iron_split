@@ -15,6 +15,7 @@ import 'package:iron_split/features/common/presentation/widgets/common_avatar.da
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d07_rename_member_dialog.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,8 @@ class S53TaskSettingsMembersPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
       )..init(),
       child: const _S53Content(),
     );

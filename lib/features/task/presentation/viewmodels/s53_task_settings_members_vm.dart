@@ -18,6 +18,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
   final AuthRepository _authRepo;
+  final ActivityLogService _activityLogService;
 
   final String taskId;
 
@@ -50,10 +51,12 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
       {required TaskRepository taskRepo,
       required RecordRepository recordRepo,
       required AuthRepository authRepo,
+      required ActivityLogService activityLogService,
       required this.taskId})
       : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        _authRepo = authRepo;
+        _authRepo = authRepo,
+        _activityLogService = activityLogService;
 
   void init() {
     if (_initStatus == LoadStatus.loading) return;
@@ -117,7 +120,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
       await _taskRepo.addMemberToTask(taskId, virtualId, newMember);
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.addMember,
         details: {'memberName': displayName},
@@ -197,7 +200,7 @@ class S53TaskSettingsMembersViewModel extends ChangeNotifier {
 
       await _taskRepo.replaceMembersMap(taskId, updatedMap);
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.removeMember,
         details: {'memberName': memberToDelete.displayName},

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -14,6 +15,8 @@ import 'package:iron_split/features/task/presentation/pages/s10_home_task_list_p
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+
+import '../helpers/mock_analytics_service.dart';
 
 class MockTaskRepository extends Mock implements TaskRepository {}
 
@@ -25,12 +28,15 @@ void main() {
   late MockTaskRepository mockTaskRepo;
   late MockAuthRepository mockAuthRepo;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
   late StreamController<List<TaskModel>> tasksController;
 
   setUp(() {
     mockTaskRepo = MockTaskRepository();
     mockAuthRepo = MockAuthRepository();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
     tasksController = StreamController<List<TaskModel>>.broadcast();
 
     when(() => mockUser.uid).thenReturn('u1');
@@ -85,8 +91,12 @@ void main() {
           providers: [
             Provider<TaskRepository>.value(value: mockTaskRepo),
             Provider<AuthRepository>.value(value: mockAuthRepo),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
             Provider<TaskService>.value(
-              value: TaskService(taskRepo: mockTaskRepo),
+              value: TaskService(
+                taskRepo: mockTaskRepo,
+                analyticsService: mockAnalyticsService,
+              ),
             ),
             Provider<DisplayState>.value(
               value: DisplayState(isEnlarged: false, scale: 1.0),

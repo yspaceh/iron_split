@@ -6,23 +6,27 @@ import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/invite_code_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/member_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 import 'package:iron_split/features/task/data/services/activity_log_service.dart';
-import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 
 class S16TaskCreateEditViewModel extends ChangeNotifier {
-  final TaskRepository _taskRepo;
-  final InviteRepository _inviteRepo;
   final AuthRepository _authRepo;
+  final TaskService _taskService;
   final ShareService _shareService;
   final DeepLinkService _deepLinkService;
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
+  final ActivityLogService _activityLogService;
 
   // State
   late DateTime _startDate;
@@ -51,16 +55,20 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       _deepLinkService.generateJoinLink(inviteCodeDetail?.code ?? '');
 
   S16TaskCreateEditViewModel({
-    required TaskRepository taskRepo,
-    required InviteRepository inviteRepo,
     required AuthRepository authRepo,
+    required TaskService taskService,
     required ShareService shareService,
     required DeepLinkService deepLinkService,
-  })  : _taskRepo = taskRepo,
-        _inviteRepo = inviteRepo,
-        _authRepo = authRepo,
+    required ActivityLogService activityLogService,
+    AnalyticsService? analyticsService,
+    LoggerService? loggerService,
+  })  : _authRepo = authRepo,
+        _taskService = taskService,
         _shareService = shareService,
-        _deepLinkService = deepLinkService;
+        _deepLinkService = deepLinkService,
+        _activityLogService = activityLogService,
+        _analyticsService = analyticsService ?? AnalyticsService.instance,
+        _loggerService = loggerService ?? LoggerService.instance;
 
   void init() {
     if (_initStatus == LoadStatus.loading) return;
@@ -200,13 +208,13 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'remainderRule': RemainderRuleConstants.defaultRule, // 預設值
       };
 
-      final taskId = await _taskRepo.createTask(taskData);
+      final taskId = await _taskService.createTask(taskData);
 
       // 3. Activity Log
       final dateStr =
           "${DateFormat('yyyy/MM/dd').format(_startDate)} - ${DateFormat('yyyy/MM/dd').format(_endDate)}";
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.createTask,
         details: {
@@ -219,7 +227,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
 
       // 4. Invite Code & Share
       if (_memberCount > 1) {
-        inviteCodeDetail = await _inviteRepo.createInviteCode(taskId);
+        inviteCodeDetail = await _shareService.createInviteCode(taskId);
       }
 
       _createStatus = LoadStatus.success;
@@ -242,8 +250,37 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
     if (_shareStatus == LoadStatus.loading) return;
     _shareStatus = LoadStatus.loading;
     notifyListeners();
+    final startTime = DateTime.now();
+    final entryPoint = InviteEntryPoint.autoAfterCreate;
     try {
+      try {
+        await _analyticsService.logInviteEntryOpen(entryPoint: entryPoint);
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteEntryOpen: S16TaskCreateEditViewModel - notifyMembersk: Failed to log entry open event',
+        );
+      }
+
       await _shareService.shareText(message, subject: subject);
+
+      try {
+        // 分享成功後，紀錄 Event
+        await _analyticsService.logInviteSend(
+          method: InviteMethod.link, // 如果都是純文字分享，通常是 link
+          entryPoint: entryPoint,
+        );
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteSend: S16TaskCreateEditViewModel - notifyMembersk: Failed to log invite send event',
+        );
+      }
+
       _shareStatus = LoadStatus.success;
       notifyListeners();
     } on AppErrorCodes {
@@ -254,6 +291,21 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       _shareStatus = LoadStatus.error;
       notifyListeners();
       throw ErrorMapper.parseErrorCode(e);
+    } finally {
+      // 3. 不管是成功分享、放棄分享、還是發生錯誤，只要選單消失了就計算停留時間
+      try {
+        final duration = DateTime.now().difference(startTime);
+        await _analyticsService.logInviteDismiss(
+          duration: duration,
+        );
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteDismiss: S16TaskCreateEditViewModel - notifyMembersk: Failed to log invite dismiss event',
+        );
+      }
     }
   }
 }

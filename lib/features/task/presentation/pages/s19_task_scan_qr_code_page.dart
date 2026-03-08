@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s19_scan_qr_code_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -71,7 +72,8 @@ class _S19ContentState extends State<_S19Content> {
                     // 如果成功拿到 8 碼，UI 負責導航
                     if (validCode != null) {
                       context.pushReplacementNamed('S11',
-                          queryParameters: {'code': validCode});
+                          queryParameters: {'code': validCode},
+                          extra: {'inviteMethod': InviteMethod.qr});
                     }
                   } on AppErrorCodes {
                     if (!context.mounted) return;

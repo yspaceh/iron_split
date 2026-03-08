@@ -1,10 +1,16 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import '../data/pending_invite_local_store.dart';
 
 class PendingInviteProvider extends ChangeNotifier {
-  final PendingInviteLocalStore _store = PendingInviteLocalStore();
+  final LoggerService _loggerService;
+  final PendingInviteLocalStore _store;
+
+  PendingInviteProvider([LoggerService? loggerService])
+      : _loggerService = loggerService ?? LoggerService.instance,
+        _store =
+            PendingInviteLocalStore(loggerService ?? LoggerService.instance);
   String? _pendingCode;
 
   String? get pendingCode => _pendingCode;
@@ -30,7 +36,7 @@ class PendingInviteProvider extends ChangeNotifier {
     } on AppErrorCodes {
       rethrow;
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -51,7 +57,7 @@ class PendingInviteProvider extends ChangeNotifier {
     } on AppErrorCodes {
       rethrow;
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason: 'PendingInviteProvider - clear: Failed to clear invite code',

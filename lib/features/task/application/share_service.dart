@@ -1,11 +1,22 @@
 // core/services/share_service.dart
 import 'dart:io';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:iron_split/core/models/invite_code_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
+import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 
 class ShareService {
+  final InviteRepository _inviteRepo;
+  final LoggerService _loggerService;
+
+  ShareService(
+    InviteRepository inviteRepo,
+    LoggerService? loggerService,
+  )   : _loggerService = loggerService ?? LoggerService.instance,
+        _inviteRepo = inviteRepo;
+
   /// [純文字分享] 用於邀請碼、文字報表
   Future<void> shareText(String text, {String? subject}) async {
     try {
@@ -16,7 +27,7 @@ class ShareService {
         ),
       );
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason: 'ShareService - shareText: Failed to share text',
@@ -46,12 +57,16 @@ class ShareService {
         ),
       );
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason: 'ShareService - shareFile: Failed to share file',
       );
       throw AppErrorCodes.shareFailed;
     }
+  }
+
+  Future<InviteCodeDetail> createInviteCode(String taskId) async {
+    return await _inviteRepo.createInviteCode(taskId);
   }
 }

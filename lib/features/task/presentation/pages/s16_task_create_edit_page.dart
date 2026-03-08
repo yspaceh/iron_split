@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -16,9 +17,9 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_date_i
 import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
-import 'package:iron_split/features/task/data/task_repository.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s16_task_create_edit_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/presentation/dialogs/d03_task_create_confirm_dialog.dart';
@@ -37,11 +38,13 @@ class S16TaskCreateEditPage extends StatelessWidget {
     // 注入 VM
     return ChangeNotifierProvider(
       create: (_) => S16TaskCreateEditViewModel(
-        taskRepo: context.read<TaskRepository>(),
         authRepo: context.read<AuthRepository>(),
-        inviteRepo: context.read<InviteRepository>(),
+        taskService: context.read<TaskService>(),
         shareService: context.read<ShareService>(),
         deepLinkService: context.read<DeepLinkService>(),
+        analyticsService: context.read<AnalyticsService>(),
+        activityLogService: context.read<ActivityLogService?>() ??
+            ActivityLogService(),
       )..init(),
       child: const _S16Content(),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
@@ -12,7 +13,6 @@ import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/s54_task_settings_invite_vm.dart';
@@ -34,10 +34,10 @@ class S54TaskSettingsInvitePage extends StatelessWidget {
       create: (_) => S54TaskSettingsInviteViewModel(
         taskId: taskId,
         taskRepo: context.read<TaskRepository>(),
-        inviteRepo: context.read<InviteRepository>(),
         authRepo: context.read<AuthRepository>(),
         shareService: context.read<ShareService>(),
         deepLinkService: context.read<DeepLinkService>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..init(),
       child: const _S54Content(),
     );

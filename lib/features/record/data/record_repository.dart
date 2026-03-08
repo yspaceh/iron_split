@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 
 class RecordRepository extends BaseRepository {
   final FirebaseFirestore _firestore;
+  final LoggerService _loggerService;
 
-  RecordRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  RecordRepository({FirebaseFirestore? firestore, LoggerService? loggerService})
+      : _loggerService = loggerService ?? LoggerService.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        super(loggerService ?? LoggerService.instance);
 
   // =========== S13 Dashboard 用 (讀取 - Stream) ===========
 
@@ -28,7 +31,7 @@ class RecordRepository extends BaseRepository {
           .map((doc) => RecordModel.fromFirestore(doc))
           .toList();
     }).handleError((e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+      _loggerService.recordError(e, stackTrace,
           reason: 'Record repository - streamRecords: streamRecords failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||

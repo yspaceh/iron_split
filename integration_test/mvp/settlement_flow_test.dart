@@ -11,6 +11,7 @@ import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -39,6 +40,8 @@ class MockDeepLinkService extends Mock implements DeepLinkService {}
 
 class MockShareService extends Mock implements ShareService {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 class MockUser extends Mock implements User {}
 
 void main() {
@@ -50,6 +53,7 @@ void main() {
   late MockSystemRepository mockSystemRepo;
   late MockDeepLinkService mockDeepLinkService;
   late MockShareService mockShareService;
+  late MockAnalyticsService mockAnalyticsService;
   late MockUser mockUser;
 
   late SettlementService settlementService;
@@ -63,8 +67,9 @@ void main() {
     mockSystemRepo = MockSystemRepository();
     mockDeepLinkService = MockDeepLinkService();
     mockShareService = MockShareService();
+    mockAnalyticsService = MockAnalyticsService();
     mockUser = MockUser();
-    settlementService = SettlementService(mockTaskRepo);
+    settlementService = SettlementService(mockTaskRepo, mockAnalyticsService);
 
     task = _task();
     records = _records();
@@ -235,7 +240,8 @@ void main() {
     testWidgets(
       'S31 dataConflict should recover to S30 and must not navigate to S32',
       (tester) async {
-        final recordsController = StreamController<List<RecordModel>>.broadcast();
+        final recordsController =
+            StreamController<List<RecordModel>>.broadcast();
         addTearDown(recordsController.close);
 
         when(() => mockRecordRepo.streamRecords('task-1'))
@@ -325,7 +331,8 @@ void main() {
       'S31 race condition: task/record streams mutate together should deterministically recover with dataConflict',
       (tester) async {
         final taskController = StreamController<TaskModel>.broadcast();
-        final recordsController = StreamController<List<RecordModel>>.broadcast();
+        final recordsController =
+            StreamController<List<RecordModel>>.broadcast();
         addTearDown(taskController.close);
         addTearDown(recordsController.close);
 

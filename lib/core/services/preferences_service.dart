@@ -1,18 +1,21 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
   final SharedPreferences _prefs;
   final FlutterSecureStorage _secureStorage;
+  final LoggerService _loggerService;
 
   static const String _keyLastCurrency = 'last_used_currency';
   static const String _keyDefaultPaymentInfo = 'user_default_payment_info';
 
   /// 建構子：注入 SharedPreferences 與 SecureStorage
-  PreferencesService(this._prefs, {FlutterSecureStorage? secureStorage})
-      : _secureStorage = secureStorage ?? const FlutterSecureStorage();
+  PreferencesService(this._prefs,
+      {FlutterSecureStorage? secureStorage, LoggerService? loggerService})
+      : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+        _loggerService = loggerService ?? LoggerService.instance;
 
   /// 清除所有本機資料 (登出或刪除帳號時使用)
   Future<void> clearAll() async {
@@ -23,7 +26,7 @@ class PreferencesService {
       // 2. 清除敏感資料 (SecureStorage)
       await _secureStorage.deleteAll();
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason: 'PreferencesService - clearAll: Failed to clear all data',
@@ -40,7 +43,7 @@ class PreferencesService {
     } on AppErrorCodes {
       rethrow;
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -56,7 +59,7 @@ class PreferencesService {
     try {
       return _prefs.getString(_keyLastCurrency);
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -72,7 +75,7 @@ class PreferencesService {
       await _secureStorage.write(
           key: _keyDefaultPaymentInfo, value: jsonString);
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -87,7 +90,7 @@ class PreferencesService {
     try {
       return await _secureStorage.read(key: _keyDefaultPaymentInfo);
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:

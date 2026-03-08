@@ -4,6 +4,8 @@ import 'package:iron_split/core/constants/avatar_constants.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -13,6 +15,7 @@ import 'package:iron_split/features/common/presentation/widgets/custom_sliding_s
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
@@ -38,7 +41,11 @@ class S13TaskDashboardPage extends StatelessWidget {
         taskService: context.read<TaskService>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
-        service: context.read<DashboardService>(),
+        analyticsService: context.read<AnalyticsService>(),
+        dashboardService: context.read<DashboardService>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
+        loggerService: context.read<LoggerService?>(),
       )..init(),
       child: const _S13Content(),
     );

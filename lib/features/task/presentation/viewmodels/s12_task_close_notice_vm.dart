@@ -11,6 +11,7 @@ import 'package:iron_split/features/task/data/services/activity_log_service.dart
 class S12TaskCloseNoticeViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final TaskService _taskService;
+  final ActivityLogService _activityLogService;
   final RecordRepository _recordRepo; // 用來檢查是否有紀錄
   final String taskId;
 
@@ -27,10 +28,12 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
   S12TaskCloseNoticeViewModel({
     required this.taskId,
     required AuthRepository authRepo,
-    required RecordRepository record,
+    required RecordRepository recordRepo,
+    required ActivityLogService activityLogService,
     required TaskService taskService,
   })  : _authRepo = authRepo,
-        _recordRepo = record,
+        _recordRepo = recordRepo,
+        _activityLogService = activityLogService,
         _taskService = taskService;
 
   void init() {
@@ -71,7 +74,7 @@ class S12TaskCloseNoticeViewModel extends ChangeNotifier {
       } else {
         await _taskService.closeTaskWithRetention(taskId);
         // 2. 寫入 Log
-        await ActivityLogService.log(
+        await _activityLogService.log(
           taskId: taskId,
           action: LogAction.closeTask,
           details: {},

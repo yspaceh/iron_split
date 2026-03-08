@@ -1,14 +1,19 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/dual_amount.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class DashboardService {
+  final LoggerService _loggerService;
+
+  DashboardService([LoggerService? loggerService])
+      : _loggerService = loggerService ?? LoggerService.instance;
+
   /// 1. [核心計算]：完全依賴 BalanceCalculator
   BalanceSummaryState calculateBalanceState({
     required TaskModel task,
@@ -89,7 +94,7 @@ class DashboardService {
         absorbedAmount: null,
       );
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:

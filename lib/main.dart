@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/viewmodels/display_vm.dart';
 import 'package:iron_split/core/viewmodels/locale_vm.dart';
@@ -25,6 +27,7 @@ import 'package:iron_split/features/task/application/dashboard_service.dart';
 import 'package:iron_split/features/task/application/export_service.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/application/task_service.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -78,14 +81,24 @@ void main() async {
     LocaleSettings.useDeviceLocale();
   }
 
+  final loggerService = LoggerService.instance;
+
   // 捕獲 Flutter 框架內的錯誤
   FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    loggerService.recordError(
+      errorDetails.exception,
+      errorDetails.stack ?? StackTrace.current,
+      reason: 'main.dart - FlutterError.onError',
+    );
   };
 
   // 捕獲非同步錯誤（例如未處理的 Future error）
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    loggerService.recordError(
+      error,
+      stack,
+      reason: 'main.dart - PlatformDispatcher.onError',
+    );
     return true;
   };
 
@@ -106,60 +119,104 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider<LoggerService>.value(
+          value: loggerService,
+        ),
+        Provider<ActivityLogService>(
+          create: (context) => ActivityLogService(
+            context.read<LoggerService>(),
+          ),
+        ),
         Provider<TaskRepository>(
-          create: (_) => TaskRepository(),
+          create: (context) =>
+              TaskRepository(loggerService: context.read<LoggerService>()),
         ),
         Provider<RecordRepository>(
-          create: (_) => RecordRepository(),
+          create: (context) =>
+              RecordRepository(loggerService: context.read<LoggerService>()),
         ),
         Provider<AuthRepository>(
-          create: (_) => AuthRepository(),
+          create: (context) =>
+              AuthRepository(loggerService: context.read<LoggerService>()),
         ),
         Provider<InviteRepository>(
-          create: (_) => InviteRepository(),
+          create: (context) =>
+              InviteRepository(loggerService: context.read<LoggerService>()),
+        ),
+        Provider<AnalyticsService>.value(
+          value: AnalyticsService.instance,
         ),
         Provider<OnboardingService>(
-          create: (context) =>
-              OnboardingService(authRepo: context.read<AuthRepository>()),
+          create: (context) => OnboardingService(
+            authRepo: context.read<AuthRepository>(),
+            inviteRepo: context.read<InviteRepository>(),
+            analyticsService: context.read<AnalyticsService>(),
+            loggerService: context.read<LoggerService>(),
+          ),
         ),
         Provider<DashboardService>(
-          create: (_) => DashboardService(),
+          create: (context) => DashboardService(context.read<LoggerService>()),
         ),
         Provider<TaskService>(
-          create: (context) =>
-              TaskService(taskRepo: context.read<TaskRepository>()),
+          create: (context) => TaskService(
+            taskRepo: context.read<TaskRepository>(),
+            analyticsService: context.read<AnalyticsService>(),
+            loggerService: context.read<LoggerService>(),
+          ),
         ),
         Provider<RecordService>(
           create: (context) => RecordService(
-              context.read<RecordRepository>(), context.read<TaskRepository>()),
+            context.read<RecordRepository>(),
+            context.read<TaskRepository>(),
+            context.read<AnalyticsService>(),
+            context.read<LoggerService>(),
+          ),
         ),
         Provider<SettlementService>(
-          create: (context) =>
-              SettlementService(context.read<TaskRepository>()),
+          create: (context) => SettlementService(context.read<TaskRepository>(),
+              context.read<AnalyticsService>(), context.read<LoggerService>()),
         ),
         Provider<ExportService>(
           create: (context) => ExportService(),
         ),
         Provider<ShareService>(
-          create: (context) => ShareService(),
+          create: (context) => ShareService(
+              context.read<InviteRepository>(), context.read<LoggerService>()),
         ),
         Provider<DeepLinkService>(
           create: (context) => DeepLinkService(),
         ),
         Provider<PreferencesService>(
-          create: (_) => PreferencesService(prefs),
+          create: (context) => PreferencesService(
+            prefs,
+            loggerService: context.read<LoggerService>(),
+          ),
         ),
         // 註冊 SystemRepository
         // 使用 ProxyProvider 因為它依賴上面的 PreferencesService
         ProxyProvider<PreferencesService, SystemRepository>(
           update: (context, prefsService, previous) =>
-              previous ?? SystemRepository(prefsService),
+              previous ??
+              SystemRepository(prefsService, context.read<LoggerService>()),
         ),
-        ChangeNotifierProvider(create: (_) => ThemeViewModel()),
-        ChangeNotifierProvider(create: (_) => DisplayViewModel()),
-        ChangeNotifierProvider(create: (_) => LocaleViewModel()),
+        ChangeNotifierProvider(
+          create: (context) =>
+              ThemeViewModel(loggerService: context.read<LoggerService>()),
+        ),
+        ChangeNotifierProvider(
+            create: (context) => DisplayViewModel(
+                  analyticsService: context.read<AnalyticsService>(),
+                  loggerService: context.read<LoggerService>(),
+                )),
+        ChangeNotifierProvider(
+            create: (context) => LocaleViewModel(
+                  analyticsService: context.read<AnalyticsService>(),
+                  loggerService: context.read<LoggerService>(),
+                )),
         // 註冊 PendingInviteProvider 並執行 init
-        ChangeNotifierProvider(create: (_) => PendingInviteProvider()..init()),
+        ChangeNotifierProvider(
+            create: (context) =>
+                PendingInviteProvider(context.read<LoggerService>())..init()),
       ],
       // 封裝 slang 語系供應器
       child: TranslationProvider(child: const IronSplitApp()),
@@ -234,7 +291,8 @@ class _IronSplitAppState extends State<IronSplitApp> {
     final systemScale = systemTextScaler.scale(1.0);
 
     final bool isEnlargedActive = displayMode == DisplayMode.enlarged ||
-        (displayMode == DisplayMode.system && systemScale > 1.2);
+        (displayMode == DisplayMode.system &&
+            systemScale > AppConstants.enlargedScale);
     final TextScaler safeTextScaler;
     if (isEnlargedActive) {
       // 放大顯示模式：允許字體放到很大，例如 2.0 倍

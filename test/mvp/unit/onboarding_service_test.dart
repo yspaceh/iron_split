@@ -7,11 +7,14 @@ import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/onboarding/data/pending_invite_local_store.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../helpers/mock_analytics_service.dart';
+
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockInviteRepository extends Mock implements InviteRepository {}
 
-class MockPendingInviteLocalStore extends Mock implements PendingInviteLocalStore {}
+class MockPendingInviteLocalStore extends Mock
+    implements PendingInviteLocalStore {}
 
 class MockUser extends Mock implements User {}
 
@@ -19,6 +22,7 @@ void main() {
   late MockAuthRepository mockAuthRepo;
   late MockInviteRepository mockInviteRepo;
   late MockPendingInviteLocalStore mockLocalStore;
+  late MockAnalyticsService mockAnalyticsService;
   late OnboardingService service;
   late MockUser mockUser;
 
@@ -26,12 +30,15 @@ void main() {
     mockAuthRepo = MockAuthRepository();
     mockInviteRepo = MockInviteRepository();
     mockLocalStore = MockPendingInviteLocalStore();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
     mockUser = MockUser();
 
     service = OnboardingService(
       authRepo: mockAuthRepo,
       inviteRepo: mockInviteRepo,
       localStore: mockLocalStore,
+      analyticsService: mockAnalyticsService,
     );
 
     when(() => mockUser.uid).thenReturn('u1');
@@ -136,13 +143,14 @@ void main() {
       when(
         () => mockInviteRepo.joinTask(
           code: 'INV123',
-          displayName: 'Captain',
+          displayName: 'New Member',
           targetMemberId: 'g1',
         ),
       ).thenAnswer((_) async => 'task-joined-1');
 
       final taskId = await service.confirmJoin(
         code: 'INV123',
+        method: InviteMethod.link,
         targetMemberId: 'g1',
       );
 
@@ -150,7 +158,7 @@ void main() {
       verify(
         () => mockInviteRepo.joinTask(
           code: 'INV123',
-          displayName: 'Captain',
+          displayName: 'New Member',
           targetMemberId: 'g1',
         ),
       ).called(1);

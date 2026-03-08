@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/system/presentation/pages/s72_terms_update_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s73_system_settings_payment_info_page.dart';
 import 'package:iron_split/features/system/presentation/pages/s74_delete_account_notice_page.dart';
@@ -126,13 +127,17 @@ class AppRouter {
         ],
       ),
 
-      // S11_Invite.Confirm
+      // S11_Invite.Confirmstate.extra
       GoRoute(
         path: '/join',
         name: 'S11',
         builder: (context, state) {
           final code = state.uri.queryParameters['code'] ?? '';
-          return S11InviteConfirmPage(inviteCode: code);
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final inviteMethod =
+              extra['inviteMethod'] as InviteMethod? ?? InviteMethod.link;
+          return S11InviteConfirmPage(
+              inviteCode: code, inviteMethod: inviteMethod);
         },
       ),
 
