@@ -1,19 +1,25 @@
 // lib/core/viewmodels/locale_vm.dart
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iron_split/gen/strings.g.dart'; // 記得 import slang 生成的檔案
 
 class LocaleViewModel extends ChangeNotifier {
   static const String _key = 'app_locale';
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
 
   // 預設語言 (通常 slang 會自動抓系統，這裡我們先設為當前 slang 的狀態)
   AppLocale _currentLocale = LocaleSettings.currentLocale;
 
   AppLocale get currentLocale => _currentLocale;
 
-  LocaleViewModel() {
+  LocaleViewModel(
+      {AnalyticsService? analyticsService, LoggerService? loggerService})
+      : _analyticsService = analyticsService ?? AnalyticsService.instance,
+        _loggerService = loggerService ?? LoggerService.instance {
     _init();
   }
 
@@ -55,9 +61,10 @@ class LocaleViewModel extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, newLocale.languageCode);
-      // 註：如果是 zh-Hant 這種複雜的，建議存 newLocale.languageTag
+      // 更新 User Properties
+      await _analyticsService.syncUserProperties().catchError((_) {});
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:

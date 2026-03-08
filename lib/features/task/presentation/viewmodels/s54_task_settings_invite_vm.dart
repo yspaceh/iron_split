@@ -4,20 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 // For default name
 
 class S54TaskSettingsInviteViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
-  final InviteRepository _inviteRepo;
   final AuthRepository _authRepo;
   final ShareService _shareService;
   final DeepLinkService _deepLinkService;
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
   final String taskId;
 
   LoadStatus _initStatus = LoadStatus.initial;
@@ -48,16 +51,18 @@ class S54TaskSettingsInviteViewModel extends ChangeNotifier {
 
   S54TaskSettingsInviteViewModel(
       {required TaskRepository taskRepo,
-      required InviteRepository inviteRepo,
       required AuthRepository authRepo,
       required ShareService shareService,
       required DeepLinkService deepLinkService,
+      AnalyticsService? analyticsService,
+      LoggerService? loggerService,
       required this.taskId})
       : _taskRepo = taskRepo,
-        _inviteRepo = inviteRepo,
         _authRepo = authRepo,
         _shareService = shareService,
-        _deepLinkService = deepLinkService;
+        _deepLinkService = deepLinkService,
+        _analyticsService = analyticsService ?? AnalyticsService.instance,
+        _loggerService = loggerService ?? LoggerService.instance;
 
   Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
@@ -112,7 +117,7 @@ class S54TaskSettingsInviteViewModel extends ChangeNotifier {
 
     try {
       // 呼叫雲端函數產生新的 Invite Code
-      final result = await _inviteRepo.createInviteCode(taskId);
+      final result = await _shareService.createInviteCode(taskId);
 
       inviteCode = result.code;
       _expiresAt = result.expiresAt;
@@ -172,7 +177,51 @@ class S54TaskSettingsInviteViewModel extends ChangeNotifier {
   /// 通知成員 (純文字分享)
   Future<void> notifyMembers(
       {required String message, required String subject}) async {
-    await _shareService.shareText(message, subject: subject);
+    final startTime = DateTime.now();
+    final entryPoint = InviteEntryPoint.manual;
+    try {
+      try {
+        await _analyticsService.logInviteEntryOpen(entryPoint: entryPoint);
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteEntryOpen: S54TaskSettingsInviteViewModel - notifyMembersk: Failed to log entry open event',
+        );
+      }
+      await _shareService.shareText(message, subject: subject);
+      // 分享成功後，紀錄 Event
+      try {
+        await _analyticsService.logInviteSend(
+          method: InviteMethod.link, // 如果都是純文字分享，通常是 link
+          entryPoint: entryPoint,
+        );
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteSend: S54TaskSettingsInviteViewModel - notifyMembersk: Failed to log invite send event',
+        );
+      }
+    } on AppErrorCodes {
+      rethrow;
+    } finally {
+      try {
+        final duration = DateTime.now().difference(startTime);
+        await _analyticsService.logInviteDismiss(
+          duration: duration,
+        );
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService - logInviteDismiss: S54TaskSettingsInviteViewModel - notifyMembersk: Failed to log invite dismiss event',
+        );
+      }
+    }
   }
 
   @override

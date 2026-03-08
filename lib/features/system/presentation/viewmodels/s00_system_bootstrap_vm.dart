@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -8,6 +9,7 @@ import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 class S00SystemBootstrapViewModel extends ChangeNotifier {
   final AuthRepository _authRepo;
   final PendingInviteProvider _pendingProvider;
+  final AnalyticsService _analyticsService;
 
   // 1. 使用 LoadStatus 管理狀態
   LoadStatus _initStatus = LoadStatus.initial;
@@ -29,8 +31,10 @@ class S00SystemBootstrapViewModel extends ChangeNotifier {
   S00SystemBootstrapViewModel({
     required AuthRepository authRepo,
     required PendingInviteProvider pendingProvider,
+    AnalyticsService? analyticsService,
   })  : _authRepo = authRepo,
-        _pendingProvider = pendingProvider;
+        _pendingProvider = pendingProvider,
+        _analyticsService = analyticsService ?? AnalyticsService.instance;
 
   /// 初始化 App 狀態，決定去向
   Future<void> initApp() async {
@@ -79,7 +83,10 @@ class S00SystemBootstrapViewModel extends ChangeNotifier {
         return;
       }
 
-      // 6. 一切正常，進入首頁
+      //  6. 一切正常，在進入首頁前，設定 Analytics 的 User Properties！
+      await _analyticsService.syncUserProperties().catchError((_) {});
+
+      // 7. 一切正常，進入首頁
       _destination = BootstrapDestination.home;
       _initStatus = LoadStatus.success;
       notifyListeners();

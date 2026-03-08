@@ -8,6 +8,7 @@ import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/viewmodels/theme_vm.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
@@ -22,6 +23,8 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+
+import '../helpers/mock_analytics_service.dart';
 
 class MockRecordService extends Mock implements RecordService {}
 
@@ -58,6 +61,7 @@ void main() {
   late MockCurrencyRateFetcher mockRateFetcher;
   late MockActivityLogger mockActivityLogger;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUpAll(() {
     registerFallbackValue(FakeRecordModel());
@@ -73,13 +77,16 @@ void main() {
     mockRateFetcher = MockCurrencyRateFetcher();
     mockActivityLogger = MockActivityLogger();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
 
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockUser.displayName).thenReturn('Tester');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
 
     when(() => mockPrefsService.getLastCurrency()).thenReturn(null);
-    when(() => mockPrefsService.saveLastCurrency(any())).thenAnswer((_) async {});
+    when(() => mockPrefsService.saveLastCurrency(any()))
+        .thenAnswer((_) async {});
     when(
       () => mockTaskRepo.streamTask(any()),
     ).thenAnswer((_) => Stream.value(_task()));
@@ -96,13 +103,15 @@ void main() {
         newRecord: any(named: 'newRecord'),
       ),
     ).thenAnswer((_) async {});
-    when(() => mockRecordService.deleteRecord(any(), any())).thenAnswer((_) async {});
+    when(() => mockRecordService.deleteRecord(any(), any()))
+        .thenAnswer((_) async {});
     when(
       () => mockRecordService.validateAndDelete(any(), any(), any()),
     ).thenAnswer((_) async {});
 
     when(
-      () => mockRateFetcher.call(from: any(named: 'from'), to: any(named: 'to')),
+      () =>
+          mockRateFetcher.call(from: any(named: 'from'), to: any(named: 'to')),
     ).thenAnswer((_) async => 150.0);
 
     when(
@@ -125,7 +134,6 @@ void main() {
             baseCurrency: CurrencyConstants.getCurrencyConstants('USD'),
             recordService: mockRecordService,
             rateFetcher: mockRateFetcher.call,
-            activityLogger: mockActivityLogger.call,
           ),
         ),
         GoRoute(
@@ -147,6 +155,7 @@ void main() {
             Provider<TaskRepository>.value(value: mockTaskRepo),
             Provider<RecordRepository>.value(value: mockRecordRepo),
             Provider<PreferencesService>.value(value: mockPrefsService),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
             Provider<RecordService>.value(value: mockRecordService),
             ChangeNotifierProvider<ThemeViewModel>(
               create: (_) => ThemeViewModel(),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/dialogs/common_alert_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:iron_split/features/common/presentation/widgets/app_button.dart'
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
@@ -46,6 +48,9 @@ class D09TaskSettingsCurrencyConfirmDialog extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         recordService: context.read<RecordService>(),
+        analyticsService: context.read<AnalyticsService>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
         newCurrency: newCurrency,
       ),
       child: const _D09Content(),

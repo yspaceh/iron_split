@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 
 class BrightnessService {
   static const platform = MethodChannel('com.ironsplit/brightness');
+  static final LoggerService _loggerService = LoggerService.instance;
   static double? _originalBrightness;
 
   /// 調到最亮 (1.0)
@@ -17,7 +18,7 @@ class BrightnessService {
       }
       await platform.invokeMethod('setBrightness', {'brightness': 1.0});
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -38,7 +39,7 @@ class BrightnessService {
             .invokeMethod('setBrightness', {'brightness': _originalBrightness});
       }
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:

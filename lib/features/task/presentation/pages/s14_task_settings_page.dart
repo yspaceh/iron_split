@@ -14,6 +14,7 @@ import 'package:iron_split/features/common/presentation/widgets/form/task_date_i
 import 'package:iron_split/features/common/presentation/widgets/nav_title.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/presentation/bottom_sheets/b01_balance_rule_edit_bottom_sheet.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,8 @@ class S14TaskSettingsPage extends StatelessWidget {
         taskRepo: context.read<TaskRepository>(),
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
       )..init(),
       child: const _S14Content(),
     );

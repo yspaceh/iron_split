@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/task/presentation/views/s18_input_view.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
@@ -50,7 +51,8 @@ class _S18ContentState extends State<_S18Content> {
     _isNavigating = true;
 
     context.pushNamed('S11',
-        queryParameters: {'code': code.toUpperCase()}).then((_) {
+        queryParameters: {'code': code.toUpperCase()},
+        extra: {'inviteMethod': InviteMethod.code}).then((_) {
       // 如果從 S11 返回，解除鎖定並根據當前 Mode 決定是否重啟相機
       _isNavigating = false;
     });

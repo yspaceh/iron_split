@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
@@ -19,6 +20,7 @@ import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/record/presentation/viewmodels/s15_record_edit_vm.dart';
+import 'package:iron_split/features/task/data/services/activity_log_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
@@ -39,7 +41,6 @@ class S15RecordEditPage extends StatelessWidget {
   final DateTime? initialDate;
   final RecordService? recordService;
   final CurrencyRateFetcher? rateFetcher;
-  final ActivityLogger? activityLogger;
 
   const S15RecordEditPage({
     super.key,
@@ -51,7 +52,6 @@ class S15RecordEditPage extends StatelessWidget {
     this.initialDate,
     this.recordService,
     this.rateFetcher,
-    this.activityLogger,
   });
 
   @override
@@ -68,9 +68,11 @@ class S15RecordEditPage extends StatelessWidget {
         recordRepo: context.read<RecordRepository>(),
         authRepo: context.read<AuthRepository>(),
         prefsService: context.read<PreferencesService>(),
+        analyticsService: context.read<AnalyticsService>(),
         recordService: recordService ?? context.read<RecordService>(),
+        activityLogService:
+            context.read<ActivityLogService?>() ?? ActivityLogService(),
         rateFetcher: rateFetcher,
-        activityLogger: activityLogger,
       )..init(),
       child: const _S15Content(),
     );

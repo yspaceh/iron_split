@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 
 // 保持 Sealed class 定義，確保對應 AppRouter 的 Intent 解析
 sealed class DeepLinkIntent {
@@ -29,7 +29,8 @@ abstract class DeepLinkSource {
 class AppLinksDeepLinkSource implements DeepLinkSource {
   final AppLinks _appLinks;
 
-  AppLinksDeepLinkSource([AppLinks? appLinks]) : _appLinks = appLinks ?? AppLinks();
+  AppLinksDeepLinkSource([AppLinks? appLinks])
+      : _appLinks = appLinks ?? AppLinks();
 
   @override
   Future<Uri?> getInitialLink() => _appLinks.getInitialLink();
@@ -39,14 +40,16 @@ class AppLinksDeepLinkSource implements DeepLinkSource {
 }
 
 class DeepLinkService {
+  final LoggerService _loggerService;
   final DeepLinkSource _source;
   final _controller = StreamController<DeepLinkIntent>.broadcast();
 
   String? _lastUri;
   DateTime? _lastTime;
 
-  DeepLinkService({DeepLinkSource? source})
-      : _source = source ?? AppLinksDeepLinkSource();
+  DeepLinkService({LoggerService? loggerService, DeepLinkSource? source})
+      : _loggerService = loggerService ?? LoggerService.instance,
+        _source = source ?? AppLinksDeepLinkSource();
 
   Stream<DeepLinkIntent> get intentStream => _controller.stream;
 
@@ -105,8 +108,7 @@ class DeepLinkService {
     String? reason,
   }) {
     try {
-      FirebaseCrashlytics.instance
-          .recordError(error, stackTrace, reason: reason);
+      _loggerService.recordError(error, stackTrace, reason: reason);
     } catch (_) {
       // 測試環境或 Firebase 未初始化時，忽略記錄失敗，避免影響主流程。
     }

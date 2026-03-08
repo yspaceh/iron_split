@@ -6,14 +6,22 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/models/settlement_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/viewmodels/balance_summary_state.dart';
 
 class SettlementService {
   final TaskRepository _taskRepo;
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
 
-  SettlementService(this._taskRepo);
+  SettlementService(
+    this._taskRepo,
+    this._analyticsService, [
+    LoggerService? loggerService,
+  ]) : _loggerService = loggerService ?? LoggerService.instance;
 
   /// 隨機選出一位餘額得主 (用於 S32 初始化時)
   String? pickRandomRemainderWinner(List<String> memberIds) {
@@ -333,6 +341,32 @@ class SettlementService {
         "dashboardSnapshot": snapshotState.toMap(),
       },
     );
+
+    try {
+      final startDate = task.startDate as DateTime;
+      final endDate = task.endDate as DateTime;
+      final actualDays = endDate.difference(startDate).inDays.abs() + 1;
+      final expenseCount =
+          records.where((r) => r.type == RecordType.expense).length;
+      final memberCount = task.members.length;
+      final linkedMemberCount =
+          task.members.values.where((m) => m.isLinked).length;
+      final remainderRule = task.remainderRule;
+
+      await _analyticsService.logExecuteSettlement(
+          actualDays: actualDays,
+          expenseCount: expenseCount,
+          memberCount: memberCount,
+          remainderRule: remainderRule,
+          linkedMemberCount: linkedMemberCount);
+    } catch (e, stackTrace) {
+      _loggerService.recordError(
+        e,
+        stackTrace,
+        reason:
+            'AnalyticsService: SettlementService - executeSettlement: Failed to log execute settlement event',
+      );
+    }
 
     return finalWinnerId;
   }

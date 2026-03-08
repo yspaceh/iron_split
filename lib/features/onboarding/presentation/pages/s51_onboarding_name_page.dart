@@ -4,6 +4,7 @@ import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -24,7 +25,10 @@ class S51OnboardingNamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => S51OnboardingNameViewModel(
-          service: OnboardingService(authRepo: context.read<AuthRepository>()),
+          service: OnboardingService(
+            authRepo: context.read<AuthRepository>(),
+            analyticsService: context.read<AnalyticsService>(),
+          ),
           authRepo: context.read<AuthRepository>())
         ..init(),
       child: const _S51Content(),

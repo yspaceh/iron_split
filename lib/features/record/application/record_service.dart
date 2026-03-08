@@ -2,6 +2,8 @@ import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/record_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
@@ -9,8 +11,15 @@ import 'package:iron_split/features/task/data/task_repository.dart';
 class RecordService {
   final RecordRepository _recordRepo;
   final TaskRepository _taskRepo;
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
 
-  RecordService(this._recordRepo, this._taskRepo);
+  RecordService(
+    this._recordRepo,
+    this._taskRepo,
+    this._analyticsService, [
+    LoggerService? loggerService,
+  ]) : _loggerService = loggerService ?? LoggerService.instance;
 
   // =========== 公開方法 (給 ViewModel 呼叫) ===========
 
@@ -28,6 +37,31 @@ class RecordService {
     final taskUpdates = _taskRepo.buildBalanceIncrementData(rawIncrements);
 
     await _recordRepo.addRecord(taskId, recordToSave, taskUpdates: taskUpdates);
+
+    try {
+      // --- 準備轉換 Analytics 所需的 Enum ---
+
+      // A. 轉換分帳方式 (請依據你的 app_enums.dart 裡的命名做對應)
+
+      final appSplitMethod = recordToSave.splitMethod.toLowerCase();
+
+      // --- 送出事件 ---
+      await _analyticsService.logExpenseAdd(
+        splitMethod: appSplitMethod,
+        subItemsLength: recordToSave.details.length, // 子明細長度
+        payerType: recordToSave.payerType,
+        category: recordToSave.categoryId, // 直接抓取分類
+        hasNote: recordToSave.memo != null &&
+            recordToSave.memo!.isNotEmpty, // 判斷備註是否為空
+      );
+    } catch (e, stackTrace) {
+      _loggerService.recordError(
+        e,
+        stackTrace,
+        reason:
+            'AnalyticsService: RecordService - createRecord: Failed to log record create event',
+      );
+    }
   }
 
   /// 更新紀錄 (撤銷舊、套用新)

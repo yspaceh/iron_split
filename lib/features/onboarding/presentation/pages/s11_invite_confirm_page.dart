@@ -14,27 +14,30 @@ import 'package:iron_split/features/common/presentation/widgets/common_avatar.da
 import 'package:iron_split/features/common/presentation/widgets/section_wrapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/selection_tile.dart'; // 使用您上傳的元件
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/onboarding/presentation/viewmodels/s11_invite_confirm_vm.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:provider/provider.dart';
 
 class S11InviteConfirmPage extends StatelessWidget {
   final String inviteCode;
+  final InviteMethod inviteMethod;
 
   const S11InviteConfirmPage({
     super.key,
     required this.inviteCode,
+    required this.inviteMethod,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => S11InviteConfirmViewModel(
-        inviteRepo: context.read<InviteRepository>(),
+        inviteMethod: inviteMethod,
         authRepo: context.read<AuthRepository>(),
+        onboardingService: context.read<OnboardingService>(),
         pendingProvider: context.read<PendingInviteProvider>(),
       )..init(inviteCode), // 初始化 VM
       child: const _S11Content(),
@@ -48,7 +51,7 @@ class _S11Content extends StatelessWidget {
   Future<void> _handleJoin(BuildContext context, S11InviteConfirmViewModel vm,
       Translations t, TextTheme textTheme, double finalLineHeight) async {
     try {
-      final taskId = await vm.confirmJoin();
+      final taskId = await vm.confirmJoin(vm.inviteMethod);
       if (taskId == null) return;
       if (!context.mounted) return;
 

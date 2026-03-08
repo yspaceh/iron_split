@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/base/base_repository.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart'; // 引用現有 Model
 
 class TaskRepository extends BaseRepository {
   final FirebaseFirestore _firestore;
+  final LoggerService _loggerService;
 
-  TaskRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  TaskRepository({FirebaseFirestore? firestore, LoggerService? loggerService})
+      : _loggerService = loggerService ?? LoggerService.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        super(loggerService ?? LoggerService.instance);
 
   /// 監聽使用者的任務列表
   Stream<List<TaskModel>> streamUserTasks(String userId) {
@@ -31,7 +34,7 @@ class TaskRepository extends BaseRepository {
       // (這是為了避免索引問題導致的權限溢出，做一層前端過濾最安全)
       return tasks.where((t) => t.members.containsKey(userId)).toList();
     }).handleError((e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+      _loggerService.recordError(e, stackTrace,
           reason: 'Task repository - streamUserTasks: streamUserTasks failed');
       throw ErrorMapper.parseErrorCode(e);
     });
@@ -43,7 +46,7 @@ class TaskRepository extends BaseRepository {
       if (!doc.exists) return null;
       return TaskModel.fromFirestore(doc);
     }).handleError((e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+      _loggerService.recordError(e, stackTrace,
           reason: 'Task repository - streamTask: streamTask failed');
       final String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('permission-denied') ||
@@ -156,7 +159,7 @@ class TaskRepository extends BaseRepository {
           .map((doc) => ActivityLogModel.fromFirestore(doc))
           .toList();
     }).handleError((e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e, stackTrace,
+      _loggerService.recordError(e, stackTrace,
           reason:
               'Task repository - streamActivityLogs: streamActivityLogs failed');
       throw ErrorMapper.parseErrorCode(e);

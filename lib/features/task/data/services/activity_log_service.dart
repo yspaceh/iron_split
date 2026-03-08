@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/features/task/data/models/activity_log_model.dart';
 
 class ActivityLogService {
+  final LoggerService _loggerService;
+
+  ActivityLogService([
+    LoggerService? loggerService,
+  ]) : _loggerService = loggerService ?? LoggerService.instance;
+
   /// 寫入一筆活動紀錄
-  static Future<void> log({
+  Future<void> log({
     required String taskId,
     required LogAction action,
     required Map<String, dynamic> details,
@@ -30,7 +36,7 @@ class ActivityLogService {
       await logRef.set(logData);
     } catch (e, stackTrace) {
       try {
-        FirebaseCrashlytics.instance.recordError(
+        _loggerService.recordError(
           e,
           stackTrace,
           reason: 'ActivityLogService - log: Failed to record activity log',

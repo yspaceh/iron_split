@@ -4,12 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/system/presentation/pages/s00_system_bootstrap_page.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+
+import '../../test/mvp/helpers/mock_analytics_service.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -28,10 +31,13 @@ void main() {
 
   late MockAuthRepository mockAuthRepo;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockAuthRepo = MockAuthRepository();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockUser.displayName).thenReturn('Captain');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
@@ -77,6 +83,7 @@ void main() {
         child: MultiProvider(
           providers: [
             Provider<AuthRepository>.value(value: mockAuthRepo),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
             ChangeNotifierProvider<PendingInviteProvider>.value(
               value: FakePendingInviteProvider(pendingCode),
             ),

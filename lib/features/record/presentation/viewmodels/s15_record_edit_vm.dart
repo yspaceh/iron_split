@@ -7,6 +7,7 @@ import 'package:iron_split/core/constants/split_method_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/record_model.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/services/preferences_service.dart';
 import 'package:iron_split/core/utils/balance_calculator.dart';
@@ -24,12 +25,6 @@ typedef CurrencyRateFetcher = Future<double> Function({
   required String to,
 });
 
-typedef ActivityLogger = Future<void> Function({
-  required String taskId,
-  required LogAction action,
-  required Map<String, dynamic> details,
-});
-
 class S15RecordEditViewModel extends ChangeNotifier {
   // Input Controllers (Keep in VM to manage text state)
   final amountController = TextEditingController();
@@ -41,7 +36,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
   final PreferencesService _prefsService;
   final RecordService _recordService;
   final CurrencyRateFetcher _rateFetcher;
-  final ActivityLogger _activityLogger;
+  final ActivityLogService _activityLogService;
 
   // Basic State
   late DateTime _selectedDate;
@@ -213,9 +208,10 @@ class S15RecordEditViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required AuthRepository authRepo,
     required PreferencesService prefsService,
+    required ActivityLogService activityLogService,
+    AnalyticsService? analyticsService,
     RecordService? recordService,
     CurrencyRateFetcher? rateFetcher,
-    ActivityLogger? activityLogger,
     this.recordId,
     RecordModel? record,
     this.baseCurrency = CurrencyConstants.defaultCurrencyConstants,
@@ -224,9 +220,11 @@ class S15RecordEditViewModel extends ChangeNotifier {
   })  : _taskRepo = taskRepo,
         _authRepo = authRepo,
         _prefsService = prefsService,
-        _recordService = recordService ?? RecordService(recordRepo, taskRepo),
+        _activityLogService = activityLogService,
+        _recordService = recordService ??
+            RecordService(recordRepo, taskRepo,
+                analyticsService ?? AnalyticsService.instance),
         _rateFetcher = rateFetcher ?? CurrencyService.fetchRate,
-        _activityLogger = activityLogger ?? ActivityLogService.log,
         _originalRecord = record {
     _setupForm(initialDate);
   }
@@ -498,7 +496,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
         await _recordService.createRecord(
             taskId: taskId, draftRecord: draftRecord);
 
-        await _activityLogger(
+        await _activityLogService.log(
           taskId: taskId,
           action: LogAction.createRecord,
           details: logDetails,
@@ -510,7 +508,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
             oldRecord: _originalRecord!,
             newRecord: draftRecord);
 
-        await _activityLogger(
+        await _activityLogService.log(
           taskId: taskId,
           action: LogAction.updateRecord,
           details: logDetails,
@@ -631,7 +629,7 @@ class S15RecordEditViewModel extends ChangeNotifier {
       );
 
       // 3. 寫入 Activity Log (保持與 S13 一致的 Log 格式)
-      await _activityLogger(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.deleteRecord,
         details: {

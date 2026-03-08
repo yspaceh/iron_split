@@ -1,12 +1,15 @@
 // lib/core/base/base_repository.dart
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 
 /// 所有 Repository 的基類
 /// 負責統一處理底層 Exception 並轉換為 AppErrorCodes
 abstract class BaseRepository {
+  final LoggerService _loggerService;
+  BaseRepository(this._loggerService);
+
   /// 通用錯誤攔截器
   /// [action]: 實際執行的資料庫動作
   /// [fallbackError]: 當發生未知錯誤時，賦予的「動作上下文」(如 saveFailed, deleteFailed)
@@ -29,7 +32,7 @@ abstract class BaseRepository {
       }
 
       // 3. 真的完全不認識的例外，才視為系統崩潰送 Crashlytics，並拋出 defaultError
-      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      _loggerService.recordError(e, stackTrace);
       throw fallbackError;
     }
   }

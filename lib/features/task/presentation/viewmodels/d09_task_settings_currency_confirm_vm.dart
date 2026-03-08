@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/currency_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/record/application/record_service.dart';
@@ -16,6 +17,8 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final RecordRepository _recordRepo;
   final RecordService _recordService;
+  final AnalyticsService _analyticsService;
+  final ActivityLogService _activityLogService;
 
   LoadStatus _confirmStatus = LoadStatus.initial;
 
@@ -26,10 +29,14 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
     required TaskRepository taskRepo,
     required RecordRepository recordRepo,
     required RecordService recordService,
+    required ActivityLogService activityLogService,
+    AnalyticsService? analyticsService,
     required this.newCurrency,
   })  : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        _recordService = recordService;
+        _recordService = recordService,
+        _activityLogService = activityLogService,
+        _analyticsService = analyticsService ?? AnalyticsService.instance;
 
   /// 執行更新邏輯
   /// Returns: true if success, false if failed
@@ -77,7 +84,7 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
       }
 
       // 3. 寫入 Activity Log
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.updateSettings,
         details: {
@@ -85,6 +92,9 @@ class D09TaskSettingsCurrencyConfirmViewModel extends ChangeNotifier {
           'newValue': newCurrency.code,
         },
       );
+
+      // 更新 User Properties
+      await _analyticsService.syncUserProperties().catchError((_) {});
 
       _confirmStatus = LoadStatus.success;
       notifyListeners();

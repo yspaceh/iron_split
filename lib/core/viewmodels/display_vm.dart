@@ -1,19 +1,27 @@
 // lib/core/viewmodels/display_vm.dart
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DisplayViewModel extends ChangeNotifier {
   static const String _key = 'display_mode';
+  final AnalyticsService _analyticsService;
+  final LoggerService _loggerService;
 
   // 預設跟隨系統
   DisplayMode _displayMode = DisplayMode.system;
 
   DisplayMode get displayMode => _displayMode;
 
-  DisplayViewModel() {
+  DisplayViewModel(
+      {AnalyticsService? analyticsService, LoggerService? loggerService})
+      : _analyticsService = analyticsService ?? AnalyticsService.instance,
+        _loggerService = loggerService ?? LoggerService.instance {
     _loadFromPrefs();
   }
 
@@ -26,8 +34,10 @@ class DisplayViewModel extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, mode.toString());
+      // 更新 User Properties
+      await _analyticsService.syncUserProperties().catchError((_) {});
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason:
@@ -42,13 +52,7 @@ class DisplayViewModel extends ChangeNotifier {
     final savedString = prefs.getString(_key);
 
     if (savedString != null) {
-      if (savedString == DisplayMode.standard.toString()) {
-        _displayMode = DisplayMode.standard;
-      } else if (savedString == DisplayMode.enlarged.toString()) {
-        _displayMode = DisplayMode.enlarged;
-      } else {
-        _displayMode = DisplayMode.system;
-      }
+      _displayMode = DisplayConstants.stringConvertToDisplayMode(savedString);
       notifyListeners();
     }
   }

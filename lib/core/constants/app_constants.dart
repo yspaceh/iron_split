@@ -8,4 +8,5 @@ class AppConstants {
       : 'https://iron-split-dev.web.app';
 
   static const int maxUserNameLength = 20;
+  static const double enlargedScale = 1.2;
 }

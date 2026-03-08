@@ -6,6 +6,7 @@ import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/record/data/record_repository.dart';
@@ -18,6 +19,8 @@ import 'package:iron_split/features/task/presentation/pages/s17_task_locked_page
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+
+import '../helpers/mock_analytics_service.dart';
 
 class MockTaskRepository extends Mock implements TaskRepository {}
 
@@ -67,6 +70,7 @@ void main() {
   late MockDeepLinkService mockDeepLinkService;
   late MockSettlementService mockSettlementService;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockTaskRepo = MockTaskRepository();
@@ -78,6 +82,8 @@ void main() {
     mockDeepLinkService = MockDeepLinkService();
     mockSettlementService = MockSettlementService();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
 
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
@@ -145,6 +151,7 @@ void main() {
             Provider<TaskRepository>.value(value: mockTaskRepo),
             Provider<RecordRepository>.value(value: mockRecordRepo),
             Provider<AuthRepository>.value(value: mockAuthRepo),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
             Provider<TaskService>.value(value: mockTaskService),
             Provider<ShareService>.value(value: mockShareService),
             Provider<ExportService>.value(value: exportService),

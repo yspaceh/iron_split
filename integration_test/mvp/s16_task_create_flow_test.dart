@@ -5,15 +5,19 @@ import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/models/invite_code_model.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 import 'package:iron_split/features/task/application/share_service.dart';
+import 'package:iron_split/features/task/application/task_service.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:iron_split/features/task/presentation/pages/s16_task_create_edit_page.dart';
 import 'package:iron_split/gen/strings.g.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+
+import '../../test/mvp/helpers/mock_analytics_service.dart';
 
 class MockTaskRepository extends Mock implements TaskRepository {}
 
@@ -36,6 +40,7 @@ void main() {
   late MockShareService mockShareService;
   late MockDeepLinkService mockDeepLinkService;
   late MockUser mockUser;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockTaskRepo = MockTaskRepository();
@@ -44,12 +49,15 @@ void main() {
     mockShareService = MockShareService();
     mockDeepLinkService = MockDeepLinkService();
     mockUser = MockUser();
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
 
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockUser.displayName).thenReturn('Captain');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
 
-    when(() => mockShareService.shareText(any(), subject: any(named: 'subject')))
+    when(() =>
+            mockShareService.shareText(any(), subject: any(named: 'subject')))
         .thenAnswer((_) async {});
   });
 
@@ -65,7 +73,8 @@ void main() {
         GoRoute(
           path: '/task/:taskId',
           name: 'S13',
-          builder: (context, state) => Text('S13:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S13:${state.pathParameters['taskId']}'),
         ),
       ],
     );
@@ -86,6 +95,13 @@ void main() {
             Provider<TaskRepository>.value(value: mockTaskRepo),
             Provider<AuthRepository>.value(value: mockAuthRepo),
             Provider<InviteRepository>.value(value: mockInviteRepo),
+            Provider<AnalyticsService>.value(value: mockAnalyticsService),
+            Provider<TaskService>.value(
+              value: TaskService(
+                taskRepo: mockTaskRepo,
+                analyticsService: mockAnalyticsService,
+              ),
+            ),
             Provider<ShareService>.value(value: mockShareService),
             Provider<DeepLinkService>.value(value: mockDeepLinkService),
             Provider<DisplayState>.value(
@@ -125,24 +141,29 @@ void main() {
   }
 
   group('MVP Integration - S16 Task Create Flow', () {
-    testWidgets('single member: should create task and navigate to S13 without invite/share',
+    testWidgets(
+        'single member: should create task and navigate to S13 without invite/share',
         (tester) async {
-      when(() => mockTaskRepo.createTask(any())).thenAnswer((_) async => 'task-single');
+      when(() => mockTaskRepo.createTask(any()))
+          .thenAnswer((_) async => 'task-single');
 
       await _pumpFlowApp(tester);
       await _createTaskFromS16(tester, taskName: 'Solo Trip');
 
       verify(() => mockTaskRepo.createTask(any())).called(1);
-      verifyNever(() => mockInviteRepo.createInviteCode(any()));
-      verifyNever(() => mockShareService.shareText(any(), subject: any(named: 'subject')));
+      verifyNever(() => mockShareService.createInviteCode(any()));
+      verifyNever(() =>
+          mockShareService.shareText(any(), subject: any(named: 'subject')));
 
       expect(find.text('S13:task-single'), findsOneWidget);
     });
 
-    testWidgets('multi member: should create invite + share then navigate to S13',
+    testWidgets(
+        'multi member: should create invite + share then navigate to S13',
         (tester) async {
-      when(() => mockTaskRepo.createTask(any())).thenAnswer((_) async => 'task-multi');
-      when(() => mockInviteRepo.createInviteCode('task-multi')).thenAnswer(
+      when(() => mockTaskRepo.createTask(any()))
+          .thenAnswer((_) async => 'task-multi');
+      when(() => mockShareService.createInviteCode('task-multi')).thenAnswer(
         (_) async => InviteCodeDetail(
           code: 'INV88888',
           expiresAt: DateTime(2026, 1, 2),
@@ -159,7 +180,7 @@ void main() {
       );
 
       verify(() => mockTaskRepo.createTask(any())).called(1);
-      verify(() => mockInviteRepo.createInviteCode('task-multi')).called(1);
+      verify(() => mockShareService.createInviteCode('task-multi')).called(1);
 
       final captured = verify(
         () => mockShareService.shareText(
@@ -174,7 +195,8 @@ void main() {
       expect(subject, 'Join Iron Split Task');
       expect(sharedMessage, contains('"Group Trip"'));
       expect(sharedMessage, contains('INV88888'));
-      expect(sharedMessage, contains('https://ironsplit.app/join?code=INV88888'));
+      expect(
+          sharedMessage, contains('https://ironsplit.app/join?code=INV88888'));
 
       expect(find.text('S13:task-multi'), findsOneWidget);
     });

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
@@ -45,6 +47,8 @@ class S17TaskLockedPage extends StatelessWidget {
         exportService: context.read<ExportService>(),
         deepLinkService: context.read<DeepLinkService>(),
         settlementService: context.read<SettlementService>(),
+        analyticsService: context.read<AnalyticsService>(),
+        loggerService: context.read<LoggerService?>(),
       )..init(),
       child: const _S17Content(),
     );

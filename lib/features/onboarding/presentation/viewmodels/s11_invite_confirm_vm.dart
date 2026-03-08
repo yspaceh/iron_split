@@ -1,19 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:iron_split/core/constants/currency_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
 import 'package:iron_split/features/onboarding/application/pending_invite_provider.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
-import 'package:iron_split/features/onboarding/data/invite_repository.dart';
 
 class S11InviteConfirmViewModel extends ChangeNotifier {
-  final InviteRepository _inviteRepo;
   final AuthRepository _authRepo;
+  final OnboardingService _onboardingService;
   final PendingInviteProvider _pendingProvider;
+  final InviteMethod inviteMethod;
+  final LoggerService _loggerService;
 
   // State
   LoadStatus _initStatus = LoadStatus.initial;
@@ -59,12 +61,15 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   String? get alreadyJoinedTaskId => _alreadyJoinedTaskId;
 
   S11InviteConfirmViewModel({
-    required InviteRepository inviteRepo,
     required AuthRepository authRepo,
+    required OnboardingService onboardingService,
     required PendingInviteProvider pendingProvider,
-  })  : _inviteRepo = inviteRepo,
-        _authRepo = authRepo,
-        _pendingProvider = pendingProvider;
+    LoggerService? loggerService,
+    required this.inviteMethod,
+  })  : _authRepo = authRepo,
+        _onboardingService = onboardingService,
+        _pendingProvider = pendingProvider,
+        _loggerService = loggerService ?? LoggerService.instance;
 
   void clearInvite() {
     _pendingProvider.clear();
@@ -75,8 +80,8 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
     if (val is String) {
       final parsed = DateTime.tryParse(val);
       if (parsed == null) {
-        // 🚀 使用 Crashlytics 紀錄非致命錯誤 (Non-fatal)
-        FirebaseCrashlytics.instance.recordError(
+        // 使用 Crashlytics 紀錄非致命錯誤 (Non-fatal)
+        _loggerService.recordError(
           Exception('Invalid date string: $val'), // 錯誤主體
           StackTrace.current, // 附上錯誤發生時的呼叫堆疊
           reason:
@@ -105,22 +110,22 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
       _currentUser = user;
 
       // 1. 呼叫 Repository 取得預覽
-      final result = await _inviteRepo.previewInviteCode(code);
+      final result = await _onboardingService.analyzeInvite(code);
 
-      if (result['action'] == 'OPEN_TASK') {
-        _alreadyJoinedTaskId = result['taskId'];
+      if (result.taskData['action'] == 'OPEN_TASK') {
+        _alreadyJoinedTaskId = result.taskData['taskId'];
         notifyListeners();
         return; // 提早結束，不跑後面的解析邏輯
       }
 
-      final rawTaskData = result['taskData'];
+      final rawTaskData = result.taskData['taskData'];
       if (rawTaskData is Map) {
         _taskData = Map<String, dynamic>.from(rawTaskData);
       }
 
       // 處理 Ghost List
-      if (result['ghosts'] is List) {
-        final rawGhosts = result['ghosts'] as List;
+      if (result.taskData['ghosts'] is List) {
+        final rawGhosts = result.taskData['ghosts'] as List;
         _ghosts = rawGhosts.map((e) {
           final map = Map<String, dynamic>.from(e as Map);
           // 透過 fromMap 轉換成 TaskMember，後端通常會把 key 放在 'id' 裡回傳
@@ -152,17 +157,18 @@ class S11InviteConfirmViewModel extends ChangeNotifier {
   }
 
   // 確認加入
-  Future<String?> confirmJoin() async {
+  Future<String?> confirmJoin(InviteMethod method) async {
     if (_joinStatus == LoadStatus.loading) return null;
     _joinStatus = LoadStatus.loading;
     notifyListeners();
 
     try {
       // 呼叫 Repository 加入
-      final taskId = await _inviteRepo.joinTask(
+      final taskId = await _onboardingService.confirmJoin(
         code: _inviteCode,
-        displayName: currentUser?.displayName ?? 'New Member',
         targetMemberId: _selectedGhostId,
+        displayName: currentUser?.displayName,
+        method: method,
       );
 
       await _pendingProvider.clear();

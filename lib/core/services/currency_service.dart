@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:http/http.dart' as http;
 import 'package:iron_split/core/enums/app_error_codes.dart';
+import 'package:iron_split/core/services/logger_service.dart';
 
 class CurrencyService {
+  static final LoggerService _loggerService = LoggerService.instance;
+
   static Future<double> fetchRate({
     required String from,
     required String to,
@@ -36,7 +38,7 @@ class CurrencyService {
     } on AppErrorCodes {
       rethrow;
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(
+      _loggerService.recordError(
         e,
         stackTrace,
         reason: 'CurrencyService - fetchRate: Failed to fetch rate',

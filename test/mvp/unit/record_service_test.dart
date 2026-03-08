@@ -8,6 +8,8 @@ import 'package:iron_split/features/record/data/record_repository.dart';
 import 'package:iron_split/features/task/data/task_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../helpers/mock_analytics_service.dart';
+
 class MockRecordRepository extends Mock implements RecordRepository {}
 
 class MockTaskRepository extends Mock implements TaskRepository {}
@@ -17,6 +19,7 @@ class FakeRecordModel extends Fake implements RecordModel {}
 void main() {
   late MockRecordRepository mockRecordRepo;
   late MockTaskRepository mockTaskRepo;
+  late MockAnalyticsService mockAnalyticsService;
   late RecordService service;
 
   setUpAll(() {
@@ -26,7 +29,9 @@ void main() {
   setUp(() {
     mockRecordRepo = MockRecordRepository();
     mockTaskRepo = MockTaskRepository();
-    service = RecordService(mockRecordRepo, mockTaskRepo);
+    mockAnalyticsService = MockAnalyticsService();
+    stubAnalyticsService(mockAnalyticsService);
+    service = RecordService(mockRecordRepo, mockTaskRepo, mockAnalyticsService);
 
     // 測試中直接把 increment map 原樣回傳，方便驗證 Service 計算結果
     when(() => mockTaskRepo.buildBalanceIncrementData(any())).thenAnswer(
@@ -157,7 +162,8 @@ void main() {
   });
 
   group('RecordService.validateAndDelete', () {
-    test('情境 A: 刪除 prepay 且餘額不足時，必須拋 prepayIsUsed 且不可呼叫 deleteRecord', () async {
+    test('情境 A: 刪除 prepay 且餘額不足時，必須拋 prepayIsUsed 且不可呼叫 deleteRecord',
+        () async {
       final prepay = _prepayRecord(
         id: 'r-prepay',
         amount: 100.0,

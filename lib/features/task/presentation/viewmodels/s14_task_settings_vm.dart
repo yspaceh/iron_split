@@ -18,6 +18,8 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
   final TaskRepository _taskRepo;
   final AuthRepository _authRepo;
   final RecordRepository _recordRepo;
+  final ActivityLogService _activityLogService;
+
   final String taskId;
 
   // UI State
@@ -69,10 +71,12 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
       {required this.taskId,
       required TaskRepository taskRepo,
       required RecordRepository recordRepo,
-      required AuthRepository authRepo})
+      required AuthRepository authRepo,
+      required ActivityLogService activityLogService})
       : _taskRepo = taskRepo,
         _recordRepo = recordRepo,
-        _authRepo = authRepo;
+        _authRepo = authRepo,
+        _activityLogService = activityLogService;
 
   Future<void> init() async {
     if (_initStatus == LoadStatus.loading) return;
@@ -137,7 +141,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
 
       await _taskRepo.updateTask(taskId, {'name': newName});
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.updateSettings,
         details: {
@@ -182,7 +186,7 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
       final dateStr =
           "${DateFormat('yyyy/MM/dd').format(start)} - ${DateFormat('yyyy/MM/dd').format(end)}";
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.updateSettings,
         details: {
@@ -236,11 +240,12 @@ class S14TaskSettingsViewModel extends ChangeNotifier {
         logDetails['absorberName'] = memberName;
       }
 
-      await ActivityLogService.log(
+      await _activityLogService.log(
         taskId: taskId,
         action: LogAction.updateSettings,
         details: logDetails,
       );
+
       _updateRemainderStatus = LoadStatus.success;
       notifyListeners();
     } on AppErrorCodes {
