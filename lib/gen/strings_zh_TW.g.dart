@@ -52,6 +52,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS17TaskLockedZhTw s17_task_locked = TranslationsS17TaskLockedZhTw.internal(_root);
 	late final TranslationsS18TaskEnterCodeZhTw s18_task_enter_code = TranslationsS18TaskEnterCodeZhTw.internal(_root);
 	late final TranslationsS19TaskScanQrCodeZhTw s19_task_scan_qr_code = TranslationsS19TaskScanQrCodeZhTw.internal(_root);
+	late final TranslationsS20TaskLeaveNoticeZhTw s20_task_leave_notice = TranslationsS20TaskLeaveNoticeZhTw.internal(_root);
 	late final TranslationsS30SettlementConfirmZhTw s30_settlement_confirm = TranslationsS30SettlementConfirmZhTw.internal(_root);
 	late final TranslationsS31SettlementPaymentInfoZhTw s31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
 	late final TranslationsS32SettlementResultZhTw s32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
@@ -162,6 +163,9 @@ class TranslationsLogActionZhTw {
 
 	/// zh-TW: '結束任務'
 	String get close_task => '結束任務';
+
+	/// zh-TW: '離開任務'
+	String get leave_task => '離開任務';
 }
 
 // Path: s10_home_task_list
@@ -350,6 +354,23 @@ class TranslationsS19TaskScanQrCodeZhTw {
 	String get title => '掃描邀請碼';
 
 	late final TranslationsS19TaskScanQrCodeContentZhTw content = TranslationsS19TaskScanQrCodeContentZhTw.internal(_root);
+}
+
+// Path: s20_task_leave_notice
+class TranslationsS20TaskLeaveNoticeZhTw {
+	TranslationsS20TaskLeaveNoticeZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '離開任務確認'
+	String get title => '離開任務確認';
+
+	/// zh-TW: '離開任務後，將無法再查看此任務的任何資料。如需再次參與，需透過邀請重新加入。'
+	String get content => '離開任務後，將無法再查看此任務的任何資料。如需再次參與，需透過邀請重新加入。';
+
+	late final TranslationsS20TaskLeaveNoticeButtonsZhTw buttons = TranslationsS20TaskLeaveNoticeButtonsZhTw.internal(_root);
 }
 
 // Path: s30_settlement_confirm
@@ -1916,6 +1937,18 @@ class TranslationsS19TaskScanQrCodeContentZhTw {
 	String get scan => '請將行動條碼放入框內即可自動掃描';
 }
 
+// Path: s20_task_leave_notice.buttons
+class TranslationsS20TaskLeaveNoticeButtonsZhTw {
+	TranslationsS20TaskLeaveNoticeButtonsZhTw.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// zh-TW: '離開任務'
+	String get close_task => '離開任務';
+}
+
 // Path: s30_settlement_confirm.buttons
 class TranslationsS30SettlementConfirmButtonsZhTw {
 	TranslationsS30SettlementConfirmButtonsZhTw.internal(this._root);
@@ -2529,6 +2562,9 @@ class TranslationsErrorMessageZhTw {
 
 	/// zh-TW: '請於系統設定中開啟相機權限。'
 	String get camera_permission_denied => '請於系統設定中開啟相機權限。';
+
+	/// zh-TW: '進行中任務已達上限（{max} 個），請先結算部分任務。'
+	String task_exceeded({required Object max}) => '進行中任務已達上限（${max} 個），請先結算部分任務。';
 }
 
 // Path: common.remainder_rule.rule
@@ -3061,6 +3097,7 @@ extension on Translations {
 			'log_action.settle_up' => '執行結算',
 			'log_action.unknown' => '未知操作',
 			'log_action.close_task' => '結束任務',
+			'log_action.leave_task' => '離開任務',
 			's10_home_task_list.title' => '任務列表',
 			's10_home_task_list.tab.in_progress' => '進行中',
 			's10_home_task_list.tab.completed' => '已完成',
@@ -3183,6 +3220,9 @@ extension on Translations {
 			's18_task_enter_code.hint.input' => '請輸入 8 碼邀請碼',
 			's19_task_scan_qr_code.title' => '掃描邀請碼',
 			's19_task_scan_qr_code.content.scan' => '請將行動條碼放入框內即可自動掃描',
+			's20_task_leave_notice.title' => '離開任務確認',
+			's20_task_leave_notice.content' => '離開任務後，將無法再查看此任務的任何資料。如需再次參與，需透過邀請重新加入。',
+			's20_task_leave_notice.buttons.close_task' => '離開任務',
 			's30_settlement_confirm.title' => '結算確認',
 			's30_settlement_confirm.buttons.set_payment_info' => '收款設定',
 			's30_settlement_confirm.steps.confirm_amount' => '確認金額',
@@ -3368,6 +3408,7 @@ extension on Translations {
 			'error.message.scan_failed' => '掃描失敗，請稍後再試。',
 			'error.message.invalid_qr_code' => '無效的行動條碼。',
 			'error.message.camera_permission_denied' => '請於系統設定中開啟相機權限。',
+			'error.message.task_exceeded' => ({required Object max}) => '進行中任務已達上限（${max} 個），請先結算部分任務。',
 			_ => null,
 		};
 	}

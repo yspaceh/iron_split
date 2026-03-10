@@ -1,6 +1,7 @@
 // error_mapper.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/constants/task_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/gen/strings.g.dart';
@@ -48,6 +49,7 @@ class ErrorMapper {
     if (eStr.contains("GENERATE_CODE_FAILED")) {
       return AppErrorCodes.inviteCreateFailed;
     }
+    if (eStr.contains("RESOURCE_EXHAUSTED")) return AppErrorCodes.tasksExceeded;
 
     // 4. 業務與初始化收斂
     if (eStr.contains('INCOME_IS_USED')) return AppErrorCodes.prepayIsUsed;
@@ -136,6 +138,8 @@ class ErrorMapper {
       case AppErrorCodes.nameLengthExceeded:
         return t.error.message
             .length_exceeded(max: TaskConstants.maxTaskNameLength);
+      case AppErrorCodes.tasksExceeded:
+        return t.error.message.task_exceeded(max: AppConstants.maxOngoingTasks);
       case AppErrorCodes.maxMembersReached:
         return t.error.message.task_full(limit: TaskConstants.maxMembers);
       case AppErrorCodes.invalidChar:

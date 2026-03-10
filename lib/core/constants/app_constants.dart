@@ -9,4 +9,5 @@ class AppConstants {
 
   static const int maxUserNameLength = 20;
   static const double enlargedScale = 1.2;
+  static const int maxOngoingTasks = 15;
 }

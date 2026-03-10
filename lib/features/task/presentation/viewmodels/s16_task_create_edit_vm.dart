@@ -31,6 +31,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
   // State
   late DateTime _startDate;
   late DateTime _endDate;
+  String _currentUserId = '';
   CurrencyConstants _baseCurrency = CurrencyConstants.defaultCurrencyConstants;
   int _memberCount = 1;
   bool _isCurrencyInitialized = false;
@@ -80,6 +81,8 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
       // 登入確認移到 VM
       final user = _authRepo.currentUser;
       if (user == null) throw AppErrorCodes.unauthorized;
+
+      _currentUserId = user.uid;
 
       // 1. 初始化日期 (今天)
       final now = DateTime.now();
@@ -208,7 +211,7 @@ class S16TaskCreateEditViewModel extends ChangeNotifier {
         'remainderRule': RemainderRuleConstants.defaultRule, // 預設值
       };
 
-      final taskId = await _taskService.createTask(taskData);
+      final taskId = await _taskService.createTask(taskData, _currentUserId);
 
       // 3. Activity Log
       final dateStr =

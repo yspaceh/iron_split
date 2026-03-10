@@ -102,6 +102,16 @@ class AnalyticsService {
     });
   }
 
+  Future<void> logTaskLeave({
+    required int memberCount,
+    required int linkedMemberCount,
+  }) async {
+    await _logEvent('task_leave', {
+      'member_count': memberCount,
+      'linked_member_count': linkedMemberCount,
+    });
+  }
+
   // ==========================================
   // Core Events: B. 記帳與無障礙設定
   // ==========================================

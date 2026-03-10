@@ -15,6 +15,7 @@ enum LogAction {
   deleteRecord,
   settleUp,
   closeTask,
+  leaveTask,
   unknown,
 }
 
@@ -95,6 +96,8 @@ class ActivityLogModel {
       case LogAction.settleUp:
         return t.log_action.settle_up;
       case LogAction.closeTask:
+        return t.log_action.close_task;
+      case LogAction.leaveTask:
         return t.log_action.close_task;
       case LogAction.unknown:
         return t.log_action.unknown;

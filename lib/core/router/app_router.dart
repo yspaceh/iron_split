@@ -32,6 +32,7 @@ import 'package:iron_split/features/task/presentation/pages/s13_task_dashboard_p
 import 'package:iron_split/features/task/presentation/pages/s17_task_locked_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s18_task_enter_code_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s19_task_scan_qr_code_page.dart';
+import 'package:iron_split/features/task/presentation/pages/s20_task_leave_notice_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s53_task_settings_members_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s52_task_settings_log_page.dart';
 import 'package:iron_split/features/task/presentation/pages/s12_task_close_notice_page.dart';
@@ -190,6 +191,15 @@ class AppRouter {
                 builder: (context, state) {
                   final taskId = state.pathParameters['taskId']!;
                   return S12TaskCloseNoticePage(taskId: taskId);
+                },
+              ),
+              // S20_TaskLeave.Notice
+              GoRoute(
+                path: 'leave', // Full: /task/:taskId/settings/leave
+                name: 'S20',
+                builder: (context, state) {
+                  final taskId = state.pathParameters['taskId']!;
+                  return S20TaskLeaveNoticePage(taskId: taskId);
                 },
               ),
             ],

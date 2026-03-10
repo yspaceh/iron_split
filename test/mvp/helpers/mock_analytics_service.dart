@@ -26,6 +26,10 @@ void stubAnalyticsService(MockAnalyticsService analytics) {
       .thenAnswer((_) async {});
   when(() => analytics.logTaskDeleteManual(durationDays: any(named: 'durationDays')))
       .thenAnswer((_) async {});
+  when(() => analytics.logTaskLeave(
+        memberCount: any(named: 'memberCount'),
+        linkedMemberCount: any(named: 'linkedMemberCount'),
+      )).thenAnswer((_) async {});
   when(() => analytics.logExpenseAdd(
         splitMethod: any(named: 'splitMethod'),
         subItemsLength: any(named: 'subItemsLength'),

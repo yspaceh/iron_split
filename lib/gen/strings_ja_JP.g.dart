@@ -51,6 +51,7 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS17TaskLockedJaJp s17_task_locked = _TranslationsS17TaskLockedJaJp._(_root);
 	@override late final _TranslationsS18TaskEnterCodeJaJp s18_task_enter_code = _TranslationsS18TaskEnterCodeJaJp._(_root);
 	@override late final _TranslationsS19TaskScanQrCodeJaJp s19_task_scan_qr_code = _TranslationsS19TaskScanQrCodeJaJp._(_root);
+	@override late final _TranslationsS20TaskLeaveNoticeJaJp s20_task_leave_notice = _TranslationsS20TaskLeaveNoticeJaJp._(_root);
 	@override late final _TranslationsS30SettlementConfirmJaJp s30_settlement_confirm = _TranslationsS30SettlementConfirmJaJp._(_root);
 	@override late final _TranslationsS31SettlementPaymentInfoJaJp s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
 	@override late final _TranslationsS32SettlementResultJaJp s32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
@@ -129,6 +130,7 @@ class _TranslationsLogActionJaJp extends TranslationsLogActionZhTw {
 	@override String get settle_up => '精算実行';
 	@override String get unknown => '不明な操作';
 	@override String get close_task => 'タスク終了';
+	@override String get leave_task => 'タスク退出';
 }
 
 // Path: s10_home_task_list
@@ -269,6 +271,18 @@ class _TranslationsS19TaskScanQrCodeJaJp extends TranslationsS19TaskScanQrCodeZh
 	// Translations
 	@override String get title => 'スキャン招待コード';
 	@override late final _TranslationsS19TaskScanQrCodeContentJaJp content = _TranslationsS19TaskScanQrCodeContentJaJp._(_root);
+}
+
+// Path: s20_task_leave_notice
+class _TranslationsS20TaskLeaveNoticeJaJp extends TranslationsS20TaskLeaveNoticeZhTw {
+	_TranslationsS20TaskLeaveNoticeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'タスク退出の確認';
+	@override String get content => 'タスクから退出すると、このタスクの情報は閲覧できなくなります。再度参加する場合は、招待から参加し直す必要があります。';
+	@override late final _TranslationsS20TaskLeaveNoticeButtonsJaJp buttons = _TranslationsS20TaskLeaveNoticeButtonsJaJp._(_root);
 }
 
 // Path: s30_settlement_confirm
@@ -1271,6 +1285,16 @@ class _TranslationsS19TaskScanQrCodeContentJaJp extends TranslationsS19TaskScanQ
 	@override String get scan => 'QRコードを枠内に合わせてください';
 }
 
+// Path: s20_task_leave_notice.buttons
+class _TranslationsS20TaskLeaveNoticeButtonsJaJp extends TranslationsS20TaskLeaveNoticeButtonsZhTw {
+	_TranslationsS20TaskLeaveNoticeButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+	final TranslationsJaJp _root; // ignore: unused_field
+
+	// Translations
+	@override String get close_task => 'タスク退出';
+}
+
 // Path: s30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsJaJp extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1678,6 +1702,7 @@ class _TranslationsErrorMessageJaJp extends TranslationsErrorMessageZhTw {
 	@override String get scan_failed => 'スキャンが失敗しました。後でもう一度お試しください。';
 	@override String get invalid_qr_code => '無効なQRコードです。';
 	@override String get camera_permission_denied => '設定からカメラの権限を有効にしてください。';
+	@override String task_exceeded({required Object max}) => '進行中のタスクが上限（${max}件）に達しました。先に精算してください。';
 }
 
 // Path: common.remainder_rule.rule
@@ -2094,6 +2119,7 @@ extension on TranslationsJaJp {
 			'log_action.settle_up' => '精算実行',
 			'log_action.unknown' => '不明な操作',
 			'log_action.close_task' => 'タスク終了',
+			'log_action.leave_task' => 'タスク退出',
 			's10_home_task_list.title' => 'タスク一覧',
 			's10_home_task_list.tab.in_progress' => '進行中',
 			's10_home_task_list.tab.completed' => '完了済',
@@ -2216,6 +2242,9 @@ extension on TranslationsJaJp {
 			's18_task_enter_code.hint.input' => '招待コード（8桁）を入力',
 			's19_task_scan_qr_code.title' => 'スキャン招待コード',
 			's19_task_scan_qr_code.content.scan' => 'QRコードを枠内に合わせてください',
+			's20_task_leave_notice.title' => 'タスク退出の確認',
+			's20_task_leave_notice.content' => 'タスクから退出すると、このタスクの情報は閲覧できなくなります。再度参加する場合は、招待から参加し直す必要があります。',
+			's20_task_leave_notice.buttons.close_task' => 'タスク退出',
 			's30_settlement_confirm.title' => '精算確認',
 			's30_settlement_confirm.buttons.set_payment_info' => '受取設定',
 			's30_settlement_confirm.steps.confirm_amount' => '金額確認',
@@ -2401,6 +2430,7 @@ extension on TranslationsJaJp {
 			'error.message.scan_failed' => 'スキャンが失敗しました。後でもう一度お試しください。',
 			'error.message.invalid_qr_code' => '無効なQRコードです。',
 			'error.message.camera_permission_denied' => '設定からカメラの権限を有効にしてください。',
+			'error.message.task_exceeded' => ({required Object max}) => '進行中のタスクが上限（${max}件）に達しました。先に精算してください。',
 			_ => null,
 		};
 	}

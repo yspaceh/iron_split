@@ -30,6 +30,7 @@ enum AppErrorCodes {
   maxMembersReached, // 任務人數限制
   invalidChar, // 包含無效字元
   fieldRequired, // 必填欄位為空
+  tasksExceeded,
 
   dataConflict, // 資料版本衝突 (原本的 SettlementDataConflictException)
   taskStatusError, // 房間狀態異常 (原本的 SettlementStatusInvalidException)

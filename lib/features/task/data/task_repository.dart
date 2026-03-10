@@ -269,4 +269,37 @@ class TaskRepository extends BaseRepository {
       return TaskModel.fromFirestore(doc);
     }, AppErrorCodes.initFailed);
   }
+
+  /// 讓一般成員離開任務
+  Future<void> leaveTask(String taskId, String uid) async {
+    await safeRun(() async {
+      final taskRef = _firestore.collection('tasks').doc(taskId);
+
+      final batch = _firestore.batch();
+      batch.update(taskRef, {
+        // 1. 從可見名單移除，這樣使用者的首頁就不會再撈到這個任務
+        'memberIds': FieldValue.arrayRemove([uid]),
+        // 2. 狀態退回未連結 (變成虛擬成員)
+        'members.$uid.isLinked': false,
+        // 3. 清除真實大頭貼，之後畫面會自動分配預設動物
+        'members.$uid.avatar': null,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      await batch.commit();
+    }, AppErrorCodes.saveFailed);
+  }
+
+  /// 取得使用者目前「進行中 (ongoing, pending)」的任務數量
+  Future<int> getOngoingTaskCount(String userId) async {
+    return await safeRun(() async {
+      final query = _firestore
+          .collection('tasks')
+          .where('memberIds', arrayContains: userId)
+          .where('status', whereIn: ['ongoing', 'pending']); // 只計算還沒結算的
+
+      final aggregateQuery = await query.count().get();
+      return aggregateQuery.count ?? 0;
+    }, AppErrorCodes.tasksExceeded); // 你可以替換成你適合的 ErrorCode
+  }
 }
