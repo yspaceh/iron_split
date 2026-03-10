@@ -52,7 +52,7 @@ void main() {
         .thenAnswer((_) => Stream.value(const []));
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/task-1',
       routes: [
@@ -64,7 +64,8 @@ void main() {
         GoRoute(
           path: '/locked/:taskId',
           name: 'S17',
-          builder: (context, state) => Text('S17:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S17:${state.pathParameters['taskId']}'),
         ),
         GoRoute(
           path: '/task/:taskId',
@@ -94,7 +95,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(
+  Future<void> pump(
     WidgetTester tester, {
     required String currentUserId,
     required TaskModel task,
@@ -127,7 +128,7 @@ void main() {
               value: DisplayState(isEnlarged: true, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -140,7 +141,7 @@ void main() {
   group('S13TaskDashboardPage widget test', () {
     testWidgets('Captain: 應顯示 Settle + Add，點擊 Settle 會鎖定並進入 S30',
         (tester) async {
-      await _pump(
+      await pump(
         tester,
         currentUserId: 'u1',
         task: _task(status: TaskStatus.ongoing, createdBy: 'u1'),
@@ -154,12 +155,13 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
       }
 
-      verify(() => mockTaskRepo.updateTaskStatus('task-1', 'pending')).called(1);
+      verify(() => mockTaskRepo.updateTaskStatus('task-1', 'pending'))
+          .called(1);
       expect(find.text('S30:task-1'), findsOneWidget);
     });
 
     testWidgets('Member: 應只顯示 Add，不顯示 Settle', (tester) async {
-      await _pump(
+      await pump(
         tester,
         currentUserId: 'u2',
         task: _task(status: TaskStatus.ongoing, createdBy: 'u1'),
@@ -170,7 +172,7 @@ void main() {
     });
 
     testWidgets('Settled 非隊長：應自動導向 S17', (tester) async {
-      await _pump(
+      await pump(
         tester,
         currentUserId: 'u2',
         task: _task(status: TaskStatus.settled, createdBy: 'u1'),

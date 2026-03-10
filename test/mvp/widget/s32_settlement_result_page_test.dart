@@ -60,7 +60,8 @@ void main() {
       ),
     ).thenAnswer((_) async {});
 
-    when(() => mockShareService.shareText(any(), subject: any(named: 'subject')))
+    when(() =>
+            mockShareService.shareText(any(), subject: any(named: 'subject')))
         .thenAnswer((_) async {});
 
     nonRandomTask = _task(rule: RemainderRuleConstants.member, remainder: 0.0);
@@ -70,24 +71,26 @@ void main() {
         .thenAnswer((_) => Stream.value(nonRandomTask));
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/result',
       routes: [
         GoRoute(
           path: '/result',
-          builder: (context, state) => const S32SettlementResultPage(taskId: 'task-1'),
+          builder: (context, state) =>
+              const S32SettlementResultPage(taskId: 'task-1'),
         ),
         GoRoute(
           path: '/locked/:taskId',
           name: 'S17',
-          builder: (context, state) => Text('S17:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S17:${state.pathParameters['taskId']}'),
         ),
       ],
     );
   }
 
-  Future<void> _pump(WidgetTester tester, {bool settle = true}) async {
+  Future<void> pump(WidgetTester tester, {bool settle = true}) async {
     tester.view.physicalSize = const Size(375, 812);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -108,7 +111,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -123,11 +126,12 @@ void main() {
 
   group('S32SettlementResultPage widget test', () {
     testWidgets('核心測試 1: 應正確渲染結算結果與操作按鈕', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('Settlement Complete'), findsOneWidget);
       expect(
-        find.text('All records are finalized. Please notify members to complete payment.'),
+        find.text(
+            'All records are finalized. Please notify members to complete payment.'),
         findsOneWidget,
       );
       expect(find.text('Share Result'), findsOneWidget);
@@ -136,7 +140,7 @@ void main() {
     });
 
     testWidgets('核心測試 2: 點擊分享應呼叫 shareText 並帶入 deep link', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Share Result'));
       await tester.pumpAndSettle();
@@ -156,8 +160,9 @@ void main() {
       expect(message, contains('https://ironsplit.app/locked/task-1'));
     });
 
-    testWidgets('核心測試 3: 點擊 Back to Task 應先 mark seen 再導航至 S17', (tester) async {
-      await _pump(tester);
+    testWidgets('核心測試 3: 點擊 Back to Task 應先 mark seen 再導航至 S17',
+        (tester) async {
+      await pump(tester);
 
       await tester.tap(find.text('Back to Task'));
       await tester.pumpAndSettle();
@@ -176,7 +181,7 @@ void main() {
       when(() => mockTaskRepo.streamTask('task-1'))
           .thenAnswer((_) => Stream.value(randomTask));
 
-      await _pump(tester, settle: false);
+      await pump(tester, settle: false);
 
       expect(find.text('Revealing result...'), findsOneWidget);
 

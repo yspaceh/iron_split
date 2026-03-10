@@ -17,7 +17,6 @@ import 'package:iron_split/features/system/presentation/pages/s71_system_setting
 
 // Auth
 import 'package:iron_split/features/onboarding/presentation/pages/s50_onboarding_consent_page.dart';
-import 'package:iron_split/features/onboarding/presentation/pages/s51_onboarding_name_page.dart';
 
 // Home / Task List
 import 'package:iron_split/features/task/presentation/pages/s10_home_task_list_page.dart';
@@ -78,13 +77,6 @@ class AppRouter {
         path: '/onboarding/consent',
         name: 'S50',
         builder: (context, state) => const S50OnboardingConsentPage(),
-      ),
-
-      // S51_Onboarding.Name
-      GoRoute(
-        path: '/onboarding/name',
-        name: 'S51',
-        builder: (context, state) => const S51OnboardingNamePage(),
       ),
 
       // S10_Home.TaskList (Landing)

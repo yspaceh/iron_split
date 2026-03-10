@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/task-1/settlement/preview',
       routes: [
@@ -14,7 +14,8 @@ void main() {
             GoRoute(
               path: 'settlement/preview',
               name: 'S30',
-              builder: (context, state) => _PushS31Button(taskId: state.pathParameters['taskId']!),
+              builder: (context, state) =>
+                  _PushS31Button(taskId: state.pathParameters['taskId']!),
               routes: [
                 GoRoute(
                   path: 'settlement/payment',
@@ -23,7 +24,8 @@ void main() {
                     final taskId = state.pathParameters['taskId']!;
                     final extra = state.extra as Map<String, dynamic>? ?? {};
                     final checkPoint = extra['checkPointPoolBalance'] as double;
-                    final mergeMap = extra['mergeMap'] as Map<String, List<String>>;
+                    final mergeMap =
+                        extra['mergeMap'] as Map<String, List<String>>;
 
                     return Column(
                       children: [
@@ -43,9 +45,10 @@ void main() {
     );
   }
 
-  testWidgets('router contract: pushNamed(S31) should carry path + extra payload',
+  testWidgets(
+      'router contract: pushNamed(S31) should carry path + extra payload',
       (tester) async {
-    await tester.pumpWidget(MaterialApp.router(routerConfig: _router()));
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Go S31'));

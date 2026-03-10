@@ -55,7 +55,6 @@ class TranslationsJaJp extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS31SettlementPaymentInfoJaJp s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoJaJp._(_root);
 	@override late final _TranslationsS32SettlementResultJaJp s32_settlement_result = _TranslationsS32SettlementResultJaJp._(_root);
 	@override late final _TranslationsS50OnboardingConsentJaJp s50_onboarding_consent = _TranslationsS50OnboardingConsentJaJp._(_root);
-	@override late final _TranslationsS51OnboardingNameJaJp s51_onboarding_name = _TranslationsS51OnboardingNameJaJp._(_root);
 	@override late final _TranslationsS52TaskSettingsLogJaJp s52_task_settings_log = _TranslationsS52TaskSettingsLogJaJp._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersJaJp s53_task_settings_members = _TranslationsS53TaskSettingsMembersJaJp._(_root);
 	@override late final _TranslationsS54TaskSettingsInviteJaJp s54_task_settings_invite = _TranslationsS54TaskSettingsInviteJaJp._(_root);
@@ -308,7 +307,7 @@ class _TranslationsS32SettlementResultJaJp extends TranslationsS32SettlementResu
 
 	// Translations
 	@override String get title => '精算完了';
-	@override String get content => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。';
+	@override String get content => 'キャプテン、おつかれさまです！\n\n精算内容を確認しました。メンバーに支払いを知らせましょう。';
 	@override String get waiting_reveal => '結果を確認中...';
 	@override String get remainder_winner_prefix => '端数の受取先：';
 	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}';
@@ -323,22 +322,13 @@ class _TranslationsS50OnboardingConsentJaJp extends TranslationsS50OnboardingCon
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Iron Splitへようこそ';
+	@override String get title => 'Iron Split へようこそ';
 	@override late final _TranslationsS50OnboardingConsentButtonsJaJp buttons = _TranslationsS50OnboardingConsentButtonsJaJp._(_root);
-	@override late final _TranslationsS50OnboardingConsentContentJaJp content = _TranslationsS50OnboardingConsentContentJaJp._(_root);
-}
-
-// Path: s51_onboarding_name
-class _TranslationsS51OnboardingNameJaJp extends TranslationsS51OnboardingNameZhTw {
-	_TranslationsS51OnboardingNameJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
-
-	final TranslationsJaJp _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '名前設定';
-	@override String get content => 'アプリ内で表示する名前を入力（1–10文字）';
+	@override String get content => '分帳をもっとシンプルに。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。';
+	@override String get label => '表示名';
 	@override String get hint => 'ニックネームを入力';
 	@override String counter({required Object current, required Object max}) => '${current}/${max}';
+	@override late final _TranslationsS50OnboardingConsentAgreeJaJp agree = _TranslationsS50OnboardingConsentAgreeJaJp._(_root);
 }
 
 // Path: s52_task_settings_log
@@ -1357,14 +1347,14 @@ class _TranslationsS50OnboardingConsentButtonsJaJp extends TranslationsS50Onboar
 	@override String get start => 'はじめる';
 }
 
-// Path: s50_onboarding_consent.content
-class _TranslationsS50OnboardingConsentContentJaJp extends TranslationsS50OnboardingConsentContentZhTw {
-	_TranslationsS50OnboardingConsentContentJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+// Path: s50_onboarding_consent.agree
+class _TranslationsS50OnboardingConsentAgreeJaJp extends TranslationsS50OnboardingConsentAgreeZhTw {
+	_TranslationsS50OnboardingConsentAgreeJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
 	final TranslationsJaJp _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => '分帳をもっとシンプルに。\n\n私はアイロン・ルースト。\n記録と割り勘をサポートする。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。\n\n分帳は、本来わかりやすい。\n\n「はじめる」をタップすると、';
+	@override String get prefix => '「はじめる」をタップすると、';
 	@override String get suffix => ' に同意したことになります。';
 }
 
@@ -2242,21 +2232,21 @@ extension on TranslationsJaJp {
 			's31_settlement_payment_info.sync_update' => 'デフォルト受取情報を更新',
 			's31_settlement_payment_info.buttons.prev_step' => '前へ戻る',
 			's32_settlement_result.title' => '精算完了',
-			's32_settlement_result.content' => 'すべての記録が確定しました。メンバーに結果を共有し、支払いを進めてください。',
+			's32_settlement_result.content' => 'キャプテン、おつかれさまです！\n\n精算内容を確認しました。メンバーに支払いを知らせましょう。',
 			's32_settlement_result.waiting_reveal' => '結果を確認中...',
 			's32_settlement_result.remainder_winner_prefix' => '端数の受取先：',
 			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName} の最終金額 ${prefix}${total}',
 			's32_settlement_result.total_label' => '今回の精算合計額',
 			's32_settlement_result.buttons.share' => '通知送信',
 			's32_settlement_result.buttons.back_task_dashboard' => 'タスクに戻る',
-			's50_onboarding_consent.title' => 'Iron Splitへようこそ',
+			's50_onboarding_consent.title' => 'Iron Split へようこそ',
 			's50_onboarding_consent.buttons.start' => 'はじめる',
-			's50_onboarding_consent.content.prefix' => '分帳をもっとシンプルに。\n\n私はアイロン・ルースト。\n記録と割り勘をサポートする。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。\n\n分帳は、本来わかりやすい。\n\n「はじめる」をタップすると、',
-			's50_onboarding_consent.content.suffix' => ' に同意したことになります。',
-			's51_onboarding_name.title' => '名前設定',
-			's51_onboarding_name.content' => 'アプリ内で表示する名前を入力（1–10文字）',
-			's51_onboarding_name.hint' => 'ニックネームを入力',
-			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.content' => '分帳をもっとシンプルに。\n\n旅行でも、食事でも、共同生活でも。\n記録も割り勘も、かんたんに。',
+			's50_onboarding_consent.label' => '表示名',
+			's50_onboarding_consent.hint' => 'ニックネームを入力',
+			's50_onboarding_consent.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.agree.prefix' => '「はじめる」をタップすると、',
+			's50_onboarding_consent.agree.suffix' => ' に同意したことになります。',
 			's52_task_settings_log.title' => '活動履歴',
 			's52_task_settings_log.buttons.export_csv' => 'CSV出力',
 			's52_task_settings_log.empty_log' => '活動履歴はありません',

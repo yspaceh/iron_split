@@ -97,7 +97,7 @@ void main() {
     ).thenAnswer((_) => currentSettlementMembers);
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/host',
       routes: [
@@ -126,7 +126,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     await tester.pumpWidget(
@@ -142,7 +142,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -152,7 +152,7 @@ void main() {
 
   group('S30SettlementConfirmPage widget test', () {
     testWidgets('應正確渲染標題、成員與底部操作按鈕', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('Confirm Settlement'), findsOneWidget);
       expect(find.text('Captain'), findsOneWidget);
@@ -162,7 +162,7 @@ void main() {
 
     testWidgets('點擊 Payment Info 應導航到 S31 並帶入 checkpoint 與 mergeMap',
         (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Payment Info'));
       await tester.pumpAndSettle();
@@ -172,7 +172,7 @@ void main() {
 
     testWidgets('點擊 Cancel 應呼叫 updateTaskStatus(taskId, ongoing)',
         (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
@@ -181,8 +181,7 @@ void main() {
           .called(1);
     });
 
-    testWidgets('random + remainder > 0 時應顯示 random_reveal 提示',
-        (tester) async {
+    testWidgets('random + remainder > 0 時應顯示 random_reveal 提示', (tester) async {
       task = _task(remainderRule: RemainderRuleConstants.random);
       currentBalanceState = _balanceState(
         rule: task.remainderRule,
@@ -193,7 +192,7 @@ void main() {
       when(() => mockTaskRepo.streamTask('task-1'))
           .thenAnswer((_) => Stream.value(task));
 
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('Remainder will be revealed after settlement.'),
           findsOneWidget);

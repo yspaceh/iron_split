@@ -49,7 +49,7 @@ void main() {
     await tasksController.close();
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task',
       routes: [
@@ -61,23 +61,30 @@ void main() {
         GoRoute(
           path: '/task/:taskId',
           name: 'S13',
-          builder: (_, state) =>
-              Text('S13:${state.pathParameters['taskId']}'),
+          builder: (_, state) => Text('S13:${state.pathParameters['taskId']}'),
         ),
         GoRoute(
           path: '/locked/:taskId',
           name: 'S17',
-          builder: (_, state) =>
-              Text('S17:${state.pathParameters['taskId']}'),
+          builder: (_, state) => Text('S17:${state.pathParameters['taskId']}'),
         ),
-        GoRoute(path: '/task/enter-code', name: 'S18', builder: (_, __) => const Text('S18')),
-        GoRoute(path: '/task/create', name: 'S16', builder: (_, __) => const Text('S16')),
-        GoRoute(path: '/settings', name: 'S70', builder: (_, __) => const Text('S70')),
+        GoRoute(
+            path: '/task/enter-code',
+            name: 'S18',
+            builder: (_, __) => const Text('S18')),
+        GoRoute(
+            path: '/task/create',
+            name: 'S16',
+            builder: (_, __) => const Text('S16')),
+        GoRoute(
+            path: '/settings',
+            name: 'S70',
+            builder: (_, __) => const Text('S70')),
       ],
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -102,7 +109,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -114,7 +121,7 @@ void main() {
 
   group('S10HomeTaskListPage widget test', () {
     testWidgets('空態：Active/Finished 都應顯示對應 empty 文案', (tester) async {
-      await _pump(tester);
+      await pump(tester);
       tasksController.add(const []);
       await tester.pumpAndSettle();
 
@@ -126,10 +133,12 @@ void main() {
     });
 
     testWidgets('有資料：應依分頁顯示 ongoing / settled 任務', (tester) async {
-      await _pump(tester);
+      await pump(tester);
       tasksController.add([
-        _task(id: 't-ongoing', name: 'Trip Ongoing', status: TaskStatus.ongoing),
-        _task(id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
+        _task(
+            id: 't-ongoing', name: 'Trip Ongoing', status: TaskStatus.ongoing),
+        _task(
+            id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
       ]);
       await tester.pumpAndSettle();
 
@@ -144,10 +153,12 @@ void main() {
     });
 
     testWidgets('點擊任務：ongoing 導 S13，settled 導 S17', (tester) async {
-      await _pump(tester);
+      await pump(tester);
       tasksController.add([
-        _task(id: 't-ongoing', name: 'Trip Ongoing', status: TaskStatus.ongoing),
-        _task(id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
+        _task(
+            id: 't-ongoing', name: 'Trip Ongoing', status: TaskStatus.ongoing),
+        _task(
+            id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
       ]);
       await tester.pumpAndSettle();
 
@@ -155,9 +166,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('S13:t-ongoing'), findsOneWidget);
 
-      await _pump(tester);
+      await pump(tester);
       tasksController.add([
-        _task(id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
+        _task(
+            id: 't-settled', name: 'Trip Settled', status: TaskStatus.settled),
       ]);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Finished'));

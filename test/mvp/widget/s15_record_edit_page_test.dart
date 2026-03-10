@@ -123,7 +123,7 @@ void main() {
     ).thenAnswer((_) async {});
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/record',
       routes: [
@@ -144,7 +144,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     await tester.pumpWidget(
@@ -164,19 +164,19 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
     await tester.pumpAndSettle();
   }
 
-  Finder _saveButtonFinder() => find.widgetWithText(FilledButton, 'Save');
+  Finder saveButtonFinder() => find.widgetWithText(FilledButton, 'Save');
 
-  FilledButton _saveButton(WidgetTester tester) =>
-      tester.widget<FilledButton>(_saveButtonFinder());
+  FilledButton saveButton(WidgetTester tester) =>
+      tester.widget<FilledButton>(saveButtonFinder());
 
-  Finder _textFieldByLabel(String label) {
+  Finder textFieldByLabel(String label) {
     final fieldStack =
         find.ancestor(of: find.text(label).first, matching: find.byType(Stack));
     return find
@@ -186,7 +186,7 @@ void main() {
 
   group('S15RecordEditPage widget', () {
     testWidgets('核心測試 1: 切換 Expense -> Prepay 時，VM 與 UI 應正確反映', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.byType(S15ExpenseForm), findsOneWidget);
       expect(find.byType(S15PrepayForm), findsNothing);
@@ -199,15 +199,15 @@ void main() {
     });
 
     testWidgets('核心測試 2: 儲存按鈕初始禁用，輸入金額與標題後啟用', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
-      expect(_saveButton(tester).onPressed, isNull);
+      expect(saveButton(tester).onPressed, isNull);
 
-      await tester.enterText(_textFieldByLabel('Amount'), '120');
-      await tester.enterText(_textFieldByLabel('Item Name'), 'Dinner');
+      await tester.enterText(textFieldByLabel('Amount'), '120');
+      await tester.enterText(textFieldByLabel('Item Name'), 'Dinner');
       await tester.pumpAndSettle();
 
-      expect(_saveButton(tester).onPressed, isNotNull);
+      expect(saveButton(tester).onPressed, isNotNull);
     });
 
     testWidgets('核心測試 3: prepayIsUsed 錯誤應被攔截並顯示提示', (tester) async {
@@ -218,18 +218,18 @@ void main() {
         ),
       ).thenThrow(AppErrorCodes.prepayIsUsed);
 
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Prepaid'));
       await tester.pumpAndSettle();
 
-      await tester.enterText(_textFieldByLabel('Amount'), '100');
+      await tester.enterText(textFieldByLabel('Amount'), '100');
       await tester.pumpAndSettle();
 
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(_saveButtonFinder());
-      await tester.tap(_saveButtonFinder());
+      await tester.ensureVisible(saveButtonFinder());
+      await tester.tap(saveButtonFinder());
       await tester.pumpAndSettle();
 
       verify(
@@ -243,7 +243,7 @@ void main() {
     });
 
     testWidgets('核心測試 4: 切換幣別後應顯示對應貨幣符號', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('USD'), findsWidgets);
 

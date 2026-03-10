@@ -44,7 +44,7 @@ void main() {
     when(() => mockAuthRepo.isTermsValid()).thenAnswer((_) async => true);
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/',
       routes: [
@@ -59,7 +59,8 @@ void main() {
           builder: (context, state) =>
               Text('JOIN:${state.uri.queryParameters['code'] ?? ''}'),
         ),
-        GoRoute(path: '/task', name: 'S10', builder: (_, __) => const Text('S10')),
+        GoRoute(
+            path: '/task', name: 'S10', builder: (_, __) => const Text('S10')),
         GoRoute(
             path: '/onboarding/consent',
             name: 'S50',
@@ -76,7 +77,7 @@ void main() {
     );
   }
 
-  Future<void> _pumpApp(WidgetTester tester, {String? pendingCode}) async {
+  Future<void> pumpApp(WidgetTester tester, {String? pendingCode}) async {
     LocaleSettings.setLocale(AppLocale.enUs);
     await tester.pumpWidget(
       TranslationProvider(
@@ -91,7 +92,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -106,7 +107,7 @@ void main() {
     testWidgets(
       'pending invite exists and logged-in user should route to /join?code=...',
       (tester) async {
-        await _pumpApp(tester, pendingCode: 'INV123');
+        await pumpApp(tester, pendingCode: 'INV123');
         expect(find.text('JOIN:INV123'), findsOneWidget);
       },
     );
@@ -114,7 +115,7 @@ void main() {
     testWidgets(
       'no pending invite and logged-in user should route to /task',
       (tester) async {
-        await _pumpApp(tester, pendingCode: null);
+        await pumpApp(tester, pendingCode: null);
         expect(find.text('S10'), findsOneWidget);
       },
     );

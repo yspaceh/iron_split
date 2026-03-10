@@ -13,7 +13,7 @@ class StickyBottomActionBar extends StatelessWidget {
   /// - false (Page): 全寬度陰影，強調底座感
   /// - true (Sheet): 內縮分隔線 (Inset Divider)，強調卡片感
   final bool isSheetMode;
-  static const double _stackBreakpoint = 420;
+  static const double _stackBreakpoint = 350;
 
   const StickyBottomActionBar({
     super.key,
@@ -55,8 +55,7 @@ class StickyBottomActionBar extends StatelessWidget {
                     children: children.map((child) {
                       return Padding(
                         padding: EdgeInsets.only(
-                          bottom:
-                              child == children.last ? 0 : AppLayout.spaceM,
+                          bottom: child == children.last ? 0 : AppLayout.spaceM,
                         ),
                         child: child,
                       );
