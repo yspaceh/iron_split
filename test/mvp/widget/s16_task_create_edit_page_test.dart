@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/invite_code_model.dart';
 import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
@@ -50,7 +52,7 @@ void main() {
     when(() => mockUser.displayName).thenReturn('Captain');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
 
-    when(() => mockTaskService.createTask(any()))
+    when(() => mockTaskService.createTask(any(), any()))
         .thenAnswer((_) async => 'task-1');
 
     when(() => mockShareService.createInviteCode('task-1')).thenAnswer(
@@ -134,7 +136,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Confirm'));
       await tester.pumpAndSettle();
 
-      verify(() => mockTaskService.createTask(any())).called(1);
+      verify(() => mockTaskService.createTask(any(), any())).called(1);
       verify(() => mockShareService.createInviteCode('task-1')).called(1);
 
       final captured = verify(
@@ -153,6 +155,37 @@ void main() {
       expect(message, contains('https://ironsplit.app/join?code=INV12345'));
 
       expect(find.text('S13:task-1'), findsOneWidget);
+    });
+
+    testWidgets('進行中任務已達上限時應顯示錯誤且停留在 S16', (tester) async {
+      when(() => mockTaskService.createTask(any(), any()))
+          .thenThrow(AppErrorCodes.tasksExceeded);
+
+      await pump(tester);
+
+      await tester.enterText(find.byType(TextFormField).first, 'Trip 2026');
+      await tester.pumpAndSettle();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Confirm'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        find.text(
+          'Active tasks limit reached (${AppConstants.maxOngoingTasks}). Please settle a task first.',
+        ),
+        findsOneWidget,
+      );
+      verify(() => mockTaskService.createTask(any(), any())).called(1);
+      verifyNever(() => mockShareService.createInviteCode(any()));
+      verifyNever(() => mockShareService.shareText(any(),
+          subject: any(named: 'subject')));
+      expect(find.text('S13:task-1'), findsNothing);
     });
   });
 }

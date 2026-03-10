@@ -21,7 +21,7 @@ const RULES_PATH = path.resolve(__dirname, '../../firestore.rules');
 
 let testEnv;
 
-function taskPayload(memberIds) {
+function taskPayload(memberIds, {member2Linked = true} = {}) {
   const now = new Date();
   return {
     id: 'task-a',
@@ -40,7 +40,7 @@ function taskPayload(memberIds) {
       u2: {
         uid: 'u2',
         displayName: 'Member',
-        isLinked: true,
+        isLinked: member2Linked,
         role: 'member',
         joinedAt: now,
         createdAt: now,
@@ -54,10 +54,10 @@ function taskPayload(memberIds) {
   };
 }
 
-async function seedTask(taskId = 'task-a', memberIds = ['u1', 'u2']) {
+async function seedTask(taskId = 'task-a', memberIds = ['u1', 'u2'], options = {}) {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
-    await setDoc(doc(db, 'tasks', taskId), taskPayload(memberIds));
+    await setDoc(doc(db, 'tasks', taskId), taskPayload(memberIds, options));
   });
 }
 
@@ -110,6 +110,19 @@ describe('Firestore Rules Contract', () => {
     const verifierDb = testEnv.authenticatedContext('u1').firestore();
     const snap = await getDoc(doc(verifierDb, 'tasks', 'task-update'));
     assert.equal(snap.data().name, 'Trip Updated');
+  });
+
+  it('left member: remains in members map but loses read and update access after memberIds removal', async () => {
+    await seedTask('task-left', ['u1'], {member2Linked: false});
+
+    const leftMemberDb = testEnv.authenticatedContext('u2').firestore();
+
+    await assertFails(getDoc(doc(leftMemberDb, 'tasks', 'task-left')));
+    await assertFails(
+      updateDoc(doc(leftMemberDb, 'tasks', 'task-left'), {
+        name: 'Should Fail',
+      }),
+    );
   });
 
   it('settlement write: member can write settlement data, non-member is denied', async () => {

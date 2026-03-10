@@ -176,6 +176,11 @@ class _S14ContentState extends State<_S14Content> {
     context.pushNamed('S12', pathParameters: {'taskId': vm.taskId});
   }
 
+  void _redirectToLeaveTask(
+      BuildContext context, S14TaskSettingsViewModel vm) async {
+    context.pushNamed('S20', pathParameters: {'taskId': vm.taskId});
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -291,19 +296,23 @@ class _S14ContentState extends State<_S14Content> {
                       onTap: () => _redirectToHistory(context, vm)),
                 ],
               ),
-              // Settings Navigation
-
-              if (vm.isOwner &&
-                  (vm.taskStatus != TaskStatus.settled &&
-                      vm.taskStatus != TaskStatus.closed)) ...[
+              if ((vm.taskStatus != TaskStatus.settled &&
+                  vm.taskStatus != TaskStatus.closed)) ...[
                 const SizedBox(height: AppLayout.spaceL),
-                NavTile(
-                  title: t.s14_task_settings.menu.close_task,
-                  isDestructive: true,
-                  onTap: () => _redirectToCloseTask(context, vm),
-                ),
+                if (vm.isOwner) ...[
+                  NavTile(
+                    title: t.s14_task_settings.menu.close_task,
+                    isDestructive: true,
+                    onTap: () => _redirectToCloseTask(context, vm),
+                  ),
+                ] else ...[
+                  NavTile(
+                    title: t.s14_task_settings.menu.close_task,
+                    isDestructive: true,
+                    onTap: () => _redirectToLeaveTask(context, vm),
+                  ),
+                ]
               ],
-
               const SizedBox(height: 32),
             ],
           ),

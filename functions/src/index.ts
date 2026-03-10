@@ -294,6 +294,20 @@ export const joinByInviteCode = onCall(async (request) => {
       throw new HttpsError("already-exists", "User is already a member.");
     }
 
+    // 👉 檢查該使用者進行中的任務數量是否已達上限 (15個)
+    const taskCountQuery = await db.collection("tasks")
+      .where("memberIds", "array-contains", uid)
+      .where("status", "in", ["ongoing", "pending"])
+      .count()
+      .get();
+
+    if (taskCountQuery.data().count >= 15) {
+      throw new HttpsError(
+        "resource-exhausted", 
+        "RESOURCE_EXHAUSTED"
+      );
+    }
+
     const members = taskData.members || {};
     const emptySlots = Object.entries(members).filter(([_, m]) => !(m as TaskMember).isLinked);
 

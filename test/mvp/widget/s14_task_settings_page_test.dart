@@ -57,6 +57,11 @@ void main() {
               builder: (context, state) => const Text('S12'),
             ),
             GoRoute(
+              path: 'leave',
+              name: 'S20',
+              builder: (context, state) => const Text('S20'),
+            ),
+            GoRoute(
               path: 'invite',
               name: 'S54',
               builder: (context, state) => const Text('S54'),
@@ -121,13 +126,20 @@ void main() {
       expect(find.text('S12'), findsOneWidget);
     });
 
-    testWidgets('非 owner 不應顯示 End Task', (tester) async {
+    testWidgets('非 owner + ongoing 應顯示 End Task，點擊可導向 S20', (tester) async {
       await pump(
         tester,
         _task(createdBy: 'u2', status: TaskStatus.ongoing),
       );
 
-      expect(find.text('End Task'), findsNothing);
+      await tester.drag(find.byType(ListView).first, const Offset(0, -1000));
+      await tester.pumpAndSettle();
+      expect(find.text('End Task'), findsOneWidget);
+
+      await tester.tap(find.text('End Task'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('S20'), findsOneWidget);
     });
 
     testWidgets('settled 狀態不應顯示 End Task', (tester) async {

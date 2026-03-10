@@ -1,6 +1,8 @@
 // features/task/application/task_service.dart
 
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
+import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/core/services/logger_service.dart';
@@ -42,17 +44,47 @@ class TaskService {
 
   /// S12: 執行結束任務的完整業務流程
   Future<void> closeTaskWithRetention(String taskId) async {
+    final task = await _taskRepo.getTaskOnce(taskId);
+
+    int durationDays = 0;
+
+    if (task != null) {
+      // 計算存活天數 (現在時間 - 建立時間)
+      durationDays = DateTime.now().difference(task.createdAt).inDays;
+    }
     await _taskRepo.closeTaskWithRetention(taskId);
+
+    if (task != null) {
+      try {
+        await _analyticsService.logTaskDeleteManual(
+          durationDays: durationDays,
+        );
+      } catch (e, stackTrace) {
+        _loggerService.recordError(
+          e,
+          stackTrace,
+          reason:
+              'AnalyticsService: TaskService - closeTaskWithRetention: Failed to log task close event',
+        );
+      }
+    }
   }
 
   /// ==========================================
   /// 建立新任務 (包含寫入 DB 與 Analytics 埋點)
   /// ==========================================
-  Future<String> createTask(Map<String, dynamic> taskData) async {
-    // 1. 執行實際的資料庫寫入 (Repository 操作)
+  Future<String> createTask(
+      Map<String, dynamic> taskData, String userId) async {
+    // 1. 先檢查使用者的進行中任務數上限，避免先建立再失敗。
+    final count = await _taskRepo.getOngoingTaskCount(userId);
+    if (count >= AppConstants.maxOngoingTasks) {
+      throw AppErrorCodes.tasksExceeded;
+    }
+
+    // 2. 執行實際的資料庫寫入 (Repository 操作)
     final taskId = await _taskRepo.createTask(taskData);
 
-    // 2. 寫入成功後，執行 Analytics 埋點
+    // 3. 寫入成功後，執行 Analytics 埋點
     try {
       // 從傳入的 Map 中計算出實際的人數，若沒有則預設 1 人
       final memberTotal = (taskData['members'] as Map?)?.length ?? 1;
@@ -74,7 +106,7 @@ class TaskService {
       );
     }
 
-    // 3. 回傳建立成功的 ID 給 ViewModel 繼續執行後續動作
+    // 4. 回傳建立成功的 ID 給 ViewModel 繼續執行後續動作
     return taskId;
   }
 
@@ -115,5 +147,35 @@ class TaskService {
     if (task == null) return null;
 
     return task;
+  }
+
+  /// ==========================================
+  /// 執行成員離開任務
+  /// ==========================================
+  Future<void> leaveTask(String taskId, String currentUserId) async {
+    final task = await _taskRepo.getTaskOnce(taskId);
+    if (task == null) throw AppErrorCodes.dataNotFound;
+
+    // 業務防護：隊長不能離開任務，只能結束、刪除或轉讓
+    if (task.createdBy == currentUserId) {
+      throw AppErrorCodes.permissionDenied;
+    }
+
+    // 執行資料庫更新
+    await _taskRepo.leaveTask(taskId, currentUserId);
+
+    try {
+      final linkedMemberCount =
+          task.members.values.where((m) => m.isLinked).length;
+      await _analyticsService.logTaskLeave(
+          memberCount: task.memberCount, linkedMemberCount: linkedMemberCount);
+    } catch (e, stackTrace) {
+      _loggerService.recordError(
+        e,
+        stackTrace,
+        reason:
+            'AnalyticsService: TaskService - leaveTask: Failed to log task leave event',
+      );
+    }
   }
 }

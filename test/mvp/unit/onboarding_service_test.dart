@@ -164,5 +164,29 @@ void main() {
       ).called(1);
       verify(() => mockLocalStore.clear()).called(1);
     });
+
+    test('進行中任務已達上限時應拋 tasksExceeded，且不清除 pending invite', () async {
+      when(() => mockInviteRepo.joinTask(
+            code: 'INV123',
+            displayName: 'New Member',
+            targetMemberId: 'g1',
+          )).thenThrow(AppErrorCodes.tasksExceeded);
+
+      await expectLater(
+        () => service.confirmJoin(
+          code: 'INV123',
+          method: InviteMethod.link,
+          targetMemberId: 'g1',
+        ),
+        throwsA(AppErrorCodes.tasksExceeded),
+      );
+
+      verify(() => mockInviteRepo.joinTask(
+            code: 'INV123',
+            displayName: 'New Member',
+            targetMemberId: 'g1',
+          )).called(1);
+      verifyNever(() => mockLocalStore.clear());
+    });
   });
 }

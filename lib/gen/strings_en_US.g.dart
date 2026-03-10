@@ -51,6 +51,7 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS17TaskLockedEnUs s17_task_locked = _TranslationsS17TaskLockedEnUs._(_root);
 	@override late final _TranslationsS18TaskEnterCodeEnUs s18_task_enter_code = _TranslationsS18TaskEnterCodeEnUs._(_root);
 	@override late final _TranslationsS19TaskScanQrCodeEnUs s19_task_scan_qr_code = _TranslationsS19TaskScanQrCodeEnUs._(_root);
+	@override late final _TranslationsS20TaskLeaveNoticeEnUs s20_task_leave_notice = _TranslationsS20TaskLeaveNoticeEnUs._(_root);
 	@override late final _TranslationsS30SettlementConfirmEnUs s30_settlement_confirm = _TranslationsS30SettlementConfirmEnUs._(_root);
 	@override late final _TranslationsS31SettlementPaymentInfoEnUs s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
 	@override late final _TranslationsS32SettlementResultEnUs s32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
@@ -129,6 +130,7 @@ class _TranslationsLogActionEnUs extends TranslationsLogActionZhTw {
 	@override String get settle_up => 'Settle Up';
 	@override String get unknown => 'Unknown Action';
 	@override String get close_task => 'Close Task';
+	@override String get leave_task => 'Leave Task';
 }
 
 // Path: s10_home_task_list
@@ -269,6 +271,18 @@ class _TranslationsS19TaskScanQrCodeEnUs extends TranslationsS19TaskScanQrCodeZh
 	// Translations
 	@override String get title => 'Scan QR Code';
 	@override late final _TranslationsS19TaskScanQrCodeContentEnUs content = _TranslationsS19TaskScanQrCodeContentEnUs._(_root);
+}
+
+// Path: s20_task_leave_notice
+class _TranslationsS20TaskLeaveNoticeEnUs extends TranslationsS20TaskLeaveNoticeZhTw {
+	_TranslationsS20TaskLeaveNoticeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Leave Task';
+	@override String get content => 'After leaving, you will no longer be able to view this task. To join again, you will need a new invitation.';
+	@override late final _TranslationsS20TaskLeaveNoticeButtonsEnUs buttons = _TranslationsS20TaskLeaveNoticeButtonsEnUs._(_root);
 }
 
 // Path: s30_settlement_confirm
@@ -1270,6 +1284,16 @@ class _TranslationsS19TaskScanQrCodeContentEnUs extends TranslationsS19TaskScanQ
 	@override String get scan => 'Frame the QR code to scan automatically';
 }
 
+// Path: s20_task_leave_notice.buttons
+class _TranslationsS20TaskLeaveNoticeButtonsEnUs extends TranslationsS20TaskLeaveNoticeButtonsZhTw {
+	_TranslationsS20TaskLeaveNoticeButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+
+	final TranslationsEnUs _root; // ignore: unused_field
+
+	// Translations
+	@override String get close_task => 'Leave Task';
+}
+
 // Path: s30_settlement_confirm.buttons
 class _TranslationsS30SettlementConfirmButtonsEnUs extends TranslationsS30SettlementConfirmButtonsZhTw {
 	_TranslationsS30SettlementConfirmButtonsEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
@@ -1677,6 +1701,7 @@ class _TranslationsErrorMessageEnUs extends TranslationsErrorMessageZhTw {
 	@override String get scan_failed => 'Scan failed. Please try again later.';
 	@override String get invalid_qr_code => 'Invalid QR code.';
 	@override String get camera_permission_denied => 'Enable camera permission in system settings.';
+	@override String task_exceeded({required Object max}) => 'Active tasks limit reached (${max}). Please settle a task first.';
 }
 
 // Path: common.payment_info.mode
@@ -2092,6 +2117,7 @@ extension on TranslationsEnUs {
 			'log_action.settle_up' => 'Settle Up',
 			'log_action.unknown' => 'Unknown Action',
 			'log_action.close_task' => 'Close Task',
+			'log_action.leave_task' => 'Leave Task',
 			's10_home_task_list.title' => 'Task List',
 			's10_home_task_list.tab.in_progress' => 'Active',
 			's10_home_task_list.tab.completed' => 'Finished',
@@ -2214,6 +2240,9 @@ extension on TranslationsEnUs {
 			's18_task_enter_code.hint.input' => 'Enter 8-digit invite code',
 			's19_task_scan_qr_code.title' => 'Scan QR Code',
 			's19_task_scan_qr_code.content.scan' => 'Frame the QR code to scan automatically',
+			's20_task_leave_notice.title' => 'Leave Task',
+			's20_task_leave_notice.content' => 'After leaving, you will no longer be able to view this task. To join again, you will need a new invitation.',
+			's20_task_leave_notice.buttons.close_task' => 'Leave Task',
 			's30_settlement_confirm.title' => 'Confirm Settlement',
 			's30_settlement_confirm.buttons.set_payment_info' => 'Payment Info',
 			's30_settlement_confirm.steps.confirm_amount' => 'Confirm Amount',
@@ -2399,6 +2428,7 @@ extension on TranslationsEnUs {
 			'error.message.scan_failed' => 'Scan failed. Please try again later.',
 			'error.message.invalid_qr_code' => 'Invalid QR code.',
 			'error.message.camera_permission_denied' => 'Enable camera permission in system settings.',
+			'error.message.task_exceeded' => ({required Object max}) => 'Active tasks limit reached (${max}). Please settle a task first.',
 			_ => null,
 		};
 	}

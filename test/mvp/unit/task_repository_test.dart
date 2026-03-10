@@ -46,6 +46,7 @@ void main() {
     when(() => mockCreateDoc.id).thenReturn('task-created-1');
     when(() => mockFirestore.batch()).thenReturn(mockBatch);
     when(() => mockBatch.update(mockAddMemberDoc, any())).thenReturn(null);
+    when(() => mockBatch.update(mockTaskDoc, any())).thenReturn(null);
     when(() => mockBatch.commit()).thenAnswer((_) async {});
   });
 
@@ -185,6 +186,24 @@ void main() {
       expect(payload['memberIds'], isA<FieldValue>());
       expect(payload['memberCount'], isA<FieldValue>());
       expect(payload['maxMembers'], isA<FieldValue>());
+      expect(payload['updatedAt'], isA<FieldValue>());
+      verify(() => mockBatch.commit()).called(1);
+    });
+  });
+
+  group('TaskRepository.leaveTask', () {
+    test('應透過 batch 移除 memberIds 權限並將 members 狀態改為 ghost', () async {
+      await repository.leaveTask('task-leave', 'u2');
+
+      verify(() => mockTaskCollection.doc('task-leave')).called(1);
+      final captured = verify(
+        () => mockBatch.update(mockTaskDoc, captureAny()),
+      ).captured;
+      final payload = Map<String, dynamic>.from(captured.single as Map);
+
+      expect(payload['memberIds'], isA<FieldValue>());
+      expect(payload['members.u2.isLinked'], isFalse);
+      expect(payload['members.u2.avatar'], isNull);
       expect(payload['updatedAt'], isA<FieldValue>());
       verify(() => mockBatch.commit()).called(1);
     });

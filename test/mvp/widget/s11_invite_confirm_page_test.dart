@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iron_split/core/constants/display_constants.dart';
+import 'package:iron_split/core/constants/app_constants.dart';
 import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/analytics_service.dart';
 import 'package:iron_split/features/onboarding/application/onboarding_service.dart';
@@ -209,6 +210,33 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byType(Dialog), findsOneWidget);
+    });
+
+    testWidgets('核心測試 5: 進行中任務已達上限時應顯示對應錯誤', (tester) async {
+      when(
+        () => mockInviteRepo.joinTask(
+          code: any(named: 'code'),
+          displayName: any(named: 'displayName'),
+          targetMemberId: any(named: 'targetMemberId'),
+        ),
+      ).thenThrow(AppErrorCodes.tasksExceeded);
+
+      final router = buildRouter();
+      await pumpPage(tester, router: router);
+
+      await tester.tap(find.text('Ghost A'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.byType(Dialog), findsOneWidget);
+      expect(
+        find.text(
+          'Active tasks limit reached (${AppConstants.maxOngoingTasks}). Please settle a task first.',
+        ),
+        findsOneWidget,
+      );
     });
   });
 }
