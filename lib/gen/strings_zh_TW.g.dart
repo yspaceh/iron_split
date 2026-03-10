@@ -56,7 +56,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsS31SettlementPaymentInfoZhTw s31_settlement_payment_info = TranslationsS31SettlementPaymentInfoZhTw.internal(_root);
 	late final TranslationsS32SettlementResultZhTw s32_settlement_result = TranslationsS32SettlementResultZhTw.internal(_root);
 	late final TranslationsS50OnboardingConsentZhTw s50_onboarding_consent = TranslationsS50OnboardingConsentZhTw.internal(_root);
-	late final TranslationsS51OnboardingNameZhTw s51_onboarding_name = TranslationsS51OnboardingNameZhTw.internal(_root);
 	late final TranslationsS52TaskSettingsLogZhTw s52_task_settings_log = TranslationsS52TaskSettingsLogZhTw.internal(_root);
 	late final TranslationsS53TaskSettingsMembersZhTw s53_task_settings_members = TranslationsS53TaskSettingsMembersZhTw.internal(_root);
 	late final TranslationsS54TaskSettingsInviteZhTw s54_task_settings_invite = TranslationsS54TaskSettingsInviteZhTw.internal(_root);
@@ -404,8 +403,8 @@ class TranslationsS32SettlementResultZhTw {
 	/// zh-TW: '結算成功'
 	String get title => '結算成功';
 
-	/// zh-TW: '帳目已確認。請通知成員完成付款。'
-	String get content => '帳目已確認。請通知成員完成付款。';
+	/// zh-TW: '隊長辛苦了！ 帳目已確認，請通知成員完成付款。'
+	String get content => '隊長辛苦了！\n\n帳目已確認，請通知成員完成付款。';
 
 	/// zh-TW: '等待揭曉...'
 	String get waiting_reveal => '等待揭曉...';
@@ -430,26 +429,13 @@ class TranslationsS50OnboardingConsentZhTw {
 
 	// Translations
 
-	/// zh-TW: '歡迎使用 Iron Split'
-	String get title => '歡迎使用 Iron Split';
+	/// zh-TW: '歡迎使用鐵公雞'
+	String get title => '歡迎使用鐵公雞';
 
 	late final TranslationsS50OnboardingConsentButtonsZhTw buttons = TranslationsS50OnboardingConsentButtonsZhTw.internal(_root);
-	late final TranslationsS50OnboardingConsentContentZhTw content = TranslationsS50OnboardingConsentContentZhTw.internal(_root);
-}
 
-// Path: s51_onboarding_name
-class TranslationsS51OnboardingNameZhTw {
-	TranslationsS51OnboardingNameZhTw.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// zh-TW: '名稱設定'
-	String get title => '名稱設定';
-
-	/// zh-TW: '請輸入顯示名稱。'
-	String get content => '請輸入顯示名稱。';
+	/// zh-TW: '讓分帳變得簡單。 無論是旅行、聚餐，或一起生活， 記帳不亂，分攤不煩。'
+	String get content => '讓分帳變得簡單。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。';
 
 	/// zh-TW: '顯示名稱'
 	String get label => '顯示名稱';
@@ -459,6 +445,8 @@ class TranslationsS51OnboardingNameZhTw {
 
 	/// zh-TW: '{current}/{max}'
 	String counter({required Object current, required Object max}) => '${current}/${max}';
+
+	late final TranslationsS50OnboardingConsentAgreeZhTw agree = TranslationsS50OnboardingConsentAgreeZhTw.internal(_root);
 }
 
 // Path: s52_task_settings_log
@@ -2030,16 +2018,16 @@ class TranslationsS50OnboardingConsentButtonsZhTw {
 	String get start => '開始';
 }
 
-// Path: s50_onboarding_consent.content
-class TranslationsS50OnboardingConsentContentZhTw {
-	TranslationsS50OnboardingConsentContentZhTw.internal(this._root);
+// Path: s50_onboarding_consent.agree
+class TranslationsS50OnboardingConsentAgreeZhTw {
+	TranslationsS50OnboardingConsentAgreeZhTw.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// zh-TW: '讓分帳變得簡單。 我是艾隆・魯斯特， 協助記帳與分攤。 無論是旅行、聚餐，或一起生活， 記帳不亂，分攤不煩。 分帳，本該清楚。 點擊開始即表示同意'
-	String get prefix => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，\n協助記帳與分攤。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。\n\n分帳，本該清楚。\n\n點擊開始即表示同意';
+	/// zh-TW: '點擊開始即表示同意'
+	String get prefix => '點擊開始即表示同意';
 
 	/// zh-TW: '。'
 	String get suffix => '。';
@@ -3211,22 +3199,21 @@ extension on Translations {
 			's31_settlement_payment_info.sync_update' => '同步更新預設收款資訊',
 			's31_settlement_payment_info.buttons.prev_step' => '上一步',
 			's32_settlement_result.title' => '結算成功',
-			's32_settlement_result.content' => '帳目已確認。請通知成員完成付款。',
+			's32_settlement_result.content' => '隊長辛苦了！\n\n帳目已確認，請通知成員完成付款。',
 			's32_settlement_result.waiting_reveal' => '等待揭曉...',
 			's32_settlement_result.remainder_winner_prefix' => '零頭歸屬：',
 			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}總金額為：${prefix}${total}',
 			's32_settlement_result.total_label' => '本次結算總額',
 			's32_settlement_result.buttons.share' => '發送通知',
 			's32_settlement_result.buttons.back_task_dashboard' => '返回任務',
-			's50_onboarding_consent.title' => '歡迎使用 Iron Split',
+			's50_onboarding_consent.title' => '歡迎使用鐵公雞',
 			's50_onboarding_consent.buttons.start' => '開始',
-			's50_onboarding_consent.content.prefix' => '讓分帳變得簡單。\n\n我是艾隆・魯斯特，\n協助記帳與分攤。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。\n\n分帳，本該清楚。\n\n點擊開始即表示同意',
-			's50_onboarding_consent.content.suffix' => '。',
-			's51_onboarding_name.title' => '名稱設定',
-			's51_onboarding_name.content' => '請輸入顯示名稱。',
-			's51_onboarding_name.label' => '顯示名稱',
-			's51_onboarding_name.hint' => '輸入暱稱',
-			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.content' => '讓分帳變得簡單。\n\n無論是旅行、聚餐，或一起生活，\n記帳不亂，分攤不煩。',
+			's50_onboarding_consent.label' => '顯示名稱',
+			's50_onboarding_consent.hint' => '輸入暱稱',
+			's50_onboarding_consent.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.agree.prefix' => '點擊開始即表示同意',
+			's50_onboarding_consent.agree.suffix' => '。',
 			's52_task_settings_log.title' => '活動紀錄',
 			's52_task_settings_log.buttons.export_csv' => '匯出 CSV',
 			's52_task_settings_log.empty_log' => '目前沒有任何活動紀錄',

@@ -55,7 +55,6 @@ class TranslationsEnUs extends Translations with BaseTranslations<AppLocale, Tra
 	@override late final _TranslationsS31SettlementPaymentInfoEnUs s31_settlement_payment_info = _TranslationsS31SettlementPaymentInfoEnUs._(_root);
 	@override late final _TranslationsS32SettlementResultEnUs s32_settlement_result = _TranslationsS32SettlementResultEnUs._(_root);
 	@override late final _TranslationsS50OnboardingConsentEnUs s50_onboarding_consent = _TranslationsS50OnboardingConsentEnUs._(_root);
-	@override late final _TranslationsS51OnboardingNameEnUs s51_onboarding_name = _TranslationsS51OnboardingNameEnUs._(_root);
 	@override late final _TranslationsS52TaskSettingsLogEnUs s52_task_settings_log = _TranslationsS52TaskSettingsLogEnUs._(_root);
 	@override late final _TranslationsS53TaskSettingsMembersEnUs s53_task_settings_members = _TranslationsS53TaskSettingsMembersEnUs._(_root);
 	@override late final _TranslationsS54TaskSettingsInviteEnUs s54_task_settings_invite = _TranslationsS54TaskSettingsInviteEnUs._(_root);
@@ -308,7 +307,7 @@ class _TranslationsS32SettlementResultEnUs extends TranslationsS32SettlementResu
 
 	// Translations
 	@override String get title => 'Settlement Complete';
-	@override String get content => 'All records are finalized. Please notify members to complete payment.';
+	@override String get content => 'Thanks, Captain!\n\nSettlement confirmed.Please notify members to complete their payments.';
 	@override String get waiting_reveal => 'Revealing result...';
 	@override String get remainder_winner_prefix => 'Remainder recipient:';
 	@override String remainder_winner_total({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}\'s final amount: ${prefix}${total}';
@@ -325,20 +324,11 @@ class _TranslationsS50OnboardingConsentEnUs extends TranslationsS50OnboardingCon
 	// Translations
 	@override String get title => 'Welcome to Iron Split';
 	@override late final _TranslationsS50OnboardingConsentButtonsEnUs buttons = _TranslationsS50OnboardingConsentButtonsEnUs._(_root);
-	@override late final _TranslationsS50OnboardingConsentContentEnUs content = _TranslationsS50OnboardingConsentContentEnUs._(_root);
-}
-
-// Path: s51_onboarding_name
-class _TranslationsS51OnboardingNameEnUs extends TranslationsS51OnboardingNameZhTw {
-	_TranslationsS51OnboardingNameEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
-
-	final TranslationsEnUs _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Set Your Name';
-	@override String get content => 'Enter display name.';
+	@override String get content => 'Make splitting expenses simple.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.';
+	@override String get label => 'Display Name';
 	@override String get hint => 'Enter nickname';
 	@override String counter({required Object current, required Object max}) => '${current}/${max}';
+	@override late final _TranslationsS50OnboardingConsentAgreeEnUs agree = _TranslationsS50OnboardingConsentAgreeEnUs._(_root);
 }
 
 // Path: s52_task_settings_log
@@ -1356,14 +1346,14 @@ class _TranslationsS50OnboardingConsentButtonsEnUs extends TranslationsS50Onboar
 	@override String get start => 'Start';
 }
 
-// Path: s50_onboarding_consent.content
-class _TranslationsS50OnboardingConsentContentEnUs extends TranslationsS50OnboardingConsentContentZhTw {
-	_TranslationsS50OnboardingConsentContentEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
+// Path: s50_onboarding_consent.agree
+class _TranslationsS50OnboardingConsentAgreeEnUs extends TranslationsS50OnboardingConsentAgreeZhTw {
+	_TranslationsS50OnboardingConsentAgreeEnUs._(TranslationsEnUs root) : this._root = root, super.internal(root);
 
 	final TranslationsEnUs _root; // ignore: unused_field
 
 	// Translations
-	@override String get prefix => 'Make splitting expenses simple.\n\nI’m Iron Rooster.\nHelping with tracking and splitting.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.\n\nSplitting expenses should be clear.\n\nTapping Start indicates acceptance of the';
+	@override String get prefix => 'Tapping Start indicates acceptance of the';
 	@override String get suffix => '.';
 }
 
@@ -2240,7 +2230,7 @@ extension on TranslationsEnUs {
 			's31_settlement_payment_info.sync_update' => 'Sync and update my default payment information',
 			's31_settlement_payment_info.buttons.prev_step' => 'Previous Step',
 			's32_settlement_result.title' => 'Settlement Complete',
-			's32_settlement_result.content' => 'All records are finalized. Please notify members to complete payment.',
+			's32_settlement_result.content' => 'Thanks, Captain!\n\nSettlement confirmed.Please notify members to complete their payments.',
 			's32_settlement_result.waiting_reveal' => 'Revealing result...',
 			's32_settlement_result.remainder_winner_prefix' => 'Remainder recipient:',
 			's32_settlement_result.remainder_winner_total' => ({required Object winnerName, required Object prefix, required Object total}) => '${winnerName}\'s final amount: ${prefix}${total}',
@@ -2249,12 +2239,12 @@ extension on TranslationsEnUs {
 			's32_settlement_result.buttons.back_task_dashboard' => 'Back to Task',
 			's50_onboarding_consent.title' => 'Welcome to Iron Split',
 			's50_onboarding_consent.buttons.start' => 'Start',
-			's50_onboarding_consent.content.prefix' => 'Make splitting expenses simple.\n\nI’m Iron Rooster.\nHelping with tracking and splitting.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.\n\nSplitting expenses should be clear.\n\nTapping Start indicates acceptance of the',
-			's50_onboarding_consent.content.suffix' => '.',
-			's51_onboarding_name.title' => 'Set Your Name',
-			's51_onboarding_name.content' => 'Enter display name.',
-			's51_onboarding_name.hint' => 'Enter nickname',
-			's51_onboarding_name.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.content' => 'Make splitting expenses simple.\n\nTrips, meals, or living together—\ntracking clear, splitting easy.',
+			's50_onboarding_consent.label' => 'Display Name',
+			's50_onboarding_consent.hint' => 'Enter nickname',
+			's50_onboarding_consent.counter' => ({required Object current, required Object max}) => '${current}/${max}',
+			's50_onboarding_consent.agree.prefix' => 'Tapping Start indicates acceptance of the',
+			's50_onboarding_consent.agree.suffix' => '.',
 			's52_task_settings_log.title' => 'Activity Log',
 			's52_task_settings_log.buttons.export_csv' => 'Export CSV',
 			's52_task_settings_log.empty_log' => 'No activity logs found',

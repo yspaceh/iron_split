@@ -37,10 +37,11 @@ void main() {
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
 
-    when(() => mockRecordRepo.getRecordsOnce('task-1')).thenAnswer((_) async => []);
+    when(() => mockRecordRepo.getRecordsOnce('task-1'))
+        .thenAnswer((_) async => []);
   });
 
-  GoRouter _router(TaskModel task) {
+  GoRouter router(TaskModel task) {
     return GoRouter(
       initialLocation: '/task/task-1/settings',
       routes: [
@@ -76,8 +77,9 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester, TaskModel task) async {
-    when(() => mockTaskRepo.streamTask('task-1')).thenAnswer((_) => Stream.value(task));
+  Future<void> pump(WidgetTester tester, TaskModel task) async {
+    when(() => mockTaskRepo.streamTask('task-1'))
+        .thenAnswer((_) => Stream.value(task));
 
     LocaleSettings.setLocale(AppLocale.enUs);
 
@@ -92,7 +94,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router(task)),
+          child: MaterialApp.router(routerConfig: router(task)),
         ),
       ),
     );
@@ -104,7 +106,7 @@ void main() {
 
   group('S14TaskSettingsPage widget test', () {
     testWidgets('owner + ongoing 應顯示 End Task，點擊可導向 S12', (tester) async {
-      await _pump(
+      await pump(
         tester,
         _task(createdBy: 'u1', status: TaskStatus.ongoing),
       );
@@ -120,7 +122,7 @@ void main() {
     });
 
     testWidgets('非 owner 不應顯示 End Task', (tester) async {
-      await _pump(
+      await pump(
         tester,
         _task(createdBy: 'u2', status: TaskStatus.ongoing),
       );
@@ -129,7 +131,7 @@ void main() {
     });
 
     testWidgets('settled 狀態不應顯示 End Task', (tester) async {
-      await _pump(
+      await pump(
         tester,
         _task(createdBy: 'u1', status: TaskStatus.settled),
       );

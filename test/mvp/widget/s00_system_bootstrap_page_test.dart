@@ -39,7 +39,7 @@ void main() {
     when(() => mockUser.uid).thenReturn('u1');
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/',
       routes: [
@@ -78,7 +78,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(
+  Future<void> pump(
     WidgetTester tester, {
     required User? user,
     required bool isTermsValid,
@@ -87,7 +87,8 @@ void main() {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     when(() => mockAuthRepo.currentUser).thenReturn(user);
-    when(() => mockAuthRepo.isTermsValid()).thenAnswer((_) async => isTermsValid);
+    when(() => mockAuthRepo.isTermsValid())
+        .thenAnswer((_) async => isTermsValid);
 
     await tester.pumpWidget(
       TranslationProvider(
@@ -102,7 +103,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -114,7 +115,7 @@ void main() {
 
   group('S00SystemBootstrapPage widget test', () {
     testWidgets('未登入應導向 S50 onboarding', (tester) async {
-      await _pump(
+      await pump(
         tester,
         user: null,
         isTermsValid: false,
@@ -127,7 +128,7 @@ void main() {
     testWidgets('已登入但條款過期應導向 S72 update terms', (tester) async {
       when(() => mockUser.displayName).thenReturn('Captain');
 
-      await _pump(
+      await pump(
         tester,
         user: mockUser,
         isTermsValid: false,
@@ -140,7 +141,7 @@ void main() {
     testWidgets('已登入且缺少名稱應導向 S51 setup name', (tester) async {
       when(() => mockUser.displayName).thenReturn('');
 
-      await _pump(
+      await pump(
         tester,
         user: mockUser,
         isTermsValid: true,
@@ -152,7 +153,7 @@ void main() {
     testWidgets('已登入且有 pending code 應導向 S11 confirm invite', (tester) async {
       when(() => mockUser.displayName).thenReturn('Captain');
 
-      await _pump(
+      await pump(
         tester,
         user: mockUser,
         isTermsValid: true,
@@ -165,7 +166,7 @@ void main() {
     testWidgets('已登入且條件皆通過應導向 S10 home', (tester) async {
       when(() => mockUser.displayName).thenReturn('Captain');
 
-      await _pump(
+      await pump(
         tester,
         user: mockUser,
         isTermsValid: true,

@@ -169,7 +169,7 @@ class _S70ContentState extends State<_S70Content> {
                     controller: vm.nameController,
                     focusNode: _nameFocusNode,
                     label: t.s70_system_settings.menu.user_name,
-                    hint: t.s51_onboarding_name.hint,
+                    hint: t.s50_onboarding_consent.hint,
                     maxLength: AppConstants.maxUserNameLength,
                   ),
                   SizedBox(

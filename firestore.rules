@@ -16,7 +16,7 @@ service cloud.firestore {
 
     // 檢查使用者是否為該任務的 Captain
     function isTaskCaptain(taskId) {
-      return isSignedIn() && request.auth.uid == resource.data.captainId;
+      return isSignedIn() && request.auth.uid == resource.data.createdBy;
     }
 
     // 檢查使用者是否為該任務的成員 (跨路徑讀取父層)
@@ -47,10 +47,10 @@ service cloud.firestore {
 
       // [更新]:
       // - 一般欄位：成員可更新
-      // - captainId/status：只有 Captain 可更新
+      // - createdBy/status：只有 Captain 可更新
       allow update: if isMemberOfTask(taskId) &&
                     (
-                      !request.resource.data.diff(resource.data).changedKeys().hasAny(["captainId", "status"]) ||
+                      !request.resource.data.diff(resource.data).changedKeys().hasAny(["createdBy", "status"]) ||
                       isTaskCaptain(taskId)
                     );
 

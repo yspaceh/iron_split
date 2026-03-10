@@ -7,6 +7,7 @@ import 'package:iron_split/core/constants/remainder_rule_constants.dart';
 import 'package:iron_split/core/enums/app_enums.dart';
 import 'package:iron_split/core/models/task_model.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
+import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
 import 'package:iron_split/features/settlement/presentation/pages/s32_settlement_result_page.dart';
@@ -28,6 +29,14 @@ class MockShareService extends Mock implements ShareService {}
 
 class MockUser extends Mock implements User {}
 
+class StubLocaleViewModel extends ChangeNotifier implements LocaleViewModel {
+  @override
+  AppLocale get currentLocale => AppLocale.enUs;
+
+  @override
+  Future<void> updateLanguage(AppLocale newLocale) async {}
+}
+
 void main() {
   late MockTaskRepository mockTaskRepo;
   late MockAuthRepository mockAuthRepo;
@@ -35,6 +44,7 @@ void main() {
   late MockSettlementService mockSettlementService;
   late MockShareService mockShareService;
   late MockUser mockUser;
+  late StubLocaleViewModel localeVm;
 
   late TaskModel nonRandomTask;
   late TaskModel randomTask;
@@ -46,6 +56,7 @@ void main() {
     mockSettlementService = MockSettlementService();
     mockShareService = MockShareService();
     mockUser = MockUser();
+    localeVm = StubLocaleViewModel();
 
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
@@ -60,7 +71,8 @@ void main() {
       ),
     ).thenAnswer((_) async {});
 
-    when(() => mockShareService.shareText(any(), subject: any(named: 'subject')))
+    when(() =>
+            mockShareService.shareText(any(), subject: any(named: 'subject')))
         .thenAnswer((_) async {});
 
     nonRandomTask = _task(rule: RemainderRuleConstants.member, remainder: 0.0);
@@ -70,24 +82,26 @@ void main() {
         .thenAnswer((_) => Stream.value(nonRandomTask));
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/result',
       routes: [
         GoRoute(
           path: '/result',
-          builder: (context, state) => const S32SettlementResultPage(taskId: 'task-1'),
+          builder: (context, state) =>
+              const S32SettlementResultPage(taskId: 'task-1'),
         ),
         GoRoute(
           path: '/locked/:taskId',
           name: 'S17',
-          builder: (context, state) => Text('S17:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S17:${state.pathParameters['taskId']}'),
         ),
       ],
     );
   }
 
-  Future<void> _pump(WidgetTester tester, {bool settle = true}) async {
+  Future<void> pump(WidgetTester tester, {bool settle = true}) async {
     tester.view.physicalSize = const Size(375, 812);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -104,11 +118,12 @@ void main() {
             Provider<DeepLinkService>.value(value: mockDeepLinkService),
             Provider<SettlementService>.value(value: mockSettlementService),
             Provider<ShareService>.value(value: mockShareService),
+            ChangeNotifierProvider<LocaleViewModel>.value(value: localeVm),
             Provider<DisplayState>.value(
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -123,11 +138,12 @@ void main() {
 
   group('S32SettlementResultPage widget test', () {
     testWidgets('核心測試 1: 應正確渲染結算結果與操作按鈕', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('Settlement Complete'), findsOneWidget);
+      expect(find.textContaining('Thanks, Captain!'), findsOneWidget);
       expect(
-        find.text('All records are finalized. Please notify members to complete payment.'),
+        find.textContaining('Please notify members to complete their payments.'),
         findsOneWidget,
       );
       expect(find.text('Share Result'), findsOneWidget);
@@ -136,7 +152,7 @@ void main() {
     });
 
     testWidgets('核心測試 2: 點擊分享應呼叫 shareText 並帶入 deep link', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Share Result'));
       await tester.pumpAndSettle();
@@ -156,8 +172,9 @@ void main() {
       expect(message, contains('https://ironsplit.app/locked/task-1'));
     });
 
-    testWidgets('核心測試 3: 點擊 Back to Task 應先 mark seen 再導航至 S17', (tester) async {
-      await _pump(tester);
+    testWidgets('核心測試 3: 點擊 Back to Task 應先 mark seen 再導航至 S17',
+        (tester) async {
+      await pump(tester);
 
       await tester.tap(find.text('Back to Task'));
       await tester.pumpAndSettle();
@@ -176,7 +193,7 @@ void main() {
       when(() => mockTaskRepo.streamTask('task-1'))
           .thenAnswer((_) => Stream.value(randomTask));
 
-      await _pump(tester, settle: false);
+      await pump(tester, settle: false);
 
       expect(find.text('Revealing result...'), findsOneWidget);
 

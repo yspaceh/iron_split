@@ -25,8 +25,8 @@ class OnboardingService {
   })  : _loggerService = loggerService ?? LoggerService.instance,
         _authRepo = authRepo,
         _inviteRepo = inviteRepo ?? InviteRepository(),
-        _localStore =
-            localStore ?? PendingInviteLocalStore(loggerService ?? LoggerService.instance),
+        _localStore = localStore ??
+            PendingInviteLocalStore(loggerService ?? LoggerService.instance),
         _analyticsService = analyticsService ?? AnalyticsService.instance;
 
   /// 驗證名字格式 (業務規則)

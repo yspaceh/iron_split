@@ -68,7 +68,7 @@ void main() {
         .thenAnswer((_) async {});
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/create',
       routes: [
@@ -87,7 +87,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -108,7 +108,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -120,7 +120,7 @@ void main() {
 
   group('S16TaskCreateEditPage widget test', () {
     testWidgets('多人建立成功：createInviteCode + share 後導向 S13', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.enterText(find.byType(TextFormField).first, 'Trip 2026');
       await tester.pumpAndSettle();

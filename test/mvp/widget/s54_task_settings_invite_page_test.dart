@@ -95,7 +95,7 @@ void main() {
     );
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/task-1/settings/invite',
       routes: [
@@ -110,7 +110,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     await tester.pumpWidget(
@@ -126,7 +126,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -150,7 +150,7 @@ void main() {
         ),
       );
 
-      await _pump(tester);
+      await pump(tester);
 
       verify(() => mockShareService.createInviteCode('task-1')).called(1);
       expect(find.text('ABCD 1234'), findsOneWidget);
@@ -175,7 +175,7 @@ void main() {
         ),
       );
 
-      await _pump(tester);
+      await pump(tester);
       expect(find.text('WXYZ 5678'), findsOneWidget);
 
       await tester.tap(find.widgetWithText(OutlinedButton, 'Regenerate'));
@@ -197,7 +197,7 @@ void main() {
         ),
       );
 
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.widgetWithText(FilledButton, 'Share'));
       await tester.pumpAndSettle();
@@ -229,7 +229,7 @@ void main() {
         ),
       );
 
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('COPY 1234'));
       await tester.pumpAndSettle();
@@ -249,7 +249,7 @@ void main() {
         ),
       );
 
-      await _pump(tester);
+      await pump(tester);
       await tester.pump(const Duration(seconds: 2));
 
       expect(find.text('Invite code has expired'), findsOneWidget);

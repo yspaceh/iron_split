@@ -61,7 +61,7 @@ void main() {
         .thenAnswer((_) async {});
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/create',
       routes: [
@@ -80,7 +80,7 @@ void main() {
     );
   }
 
-  Future<void> _pumpFlowApp(WidgetTester tester) async {
+  Future<void> pumpFlowApp(WidgetTester tester) async {
     tester.view.physicalSize = const Size(430, 1200);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -108,7 +108,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -118,7 +118,7 @@ void main() {
     }
   }
 
-  Future<void> _createTaskFromS16(
+  Future<void> createTaskFromS16(
     WidgetTester tester, {
     required String taskName,
     bool increaseMemberCount = false,
@@ -147,8 +147,8 @@ void main() {
       when(() => mockTaskRepo.createTask(any()))
           .thenAnswer((_) async => 'task-single');
 
-      await _pumpFlowApp(tester);
-      await _createTaskFromS16(tester, taskName: 'Solo Trip');
+      await pumpFlowApp(tester);
+      await createTaskFromS16(tester, taskName: 'Solo Trip');
 
       verify(() => mockTaskRepo.createTask(any())).called(1);
       verifyNever(() => mockShareService.createInviteCode(any()));
@@ -172,8 +172,8 @@ void main() {
       when(() => mockDeepLinkService.generateJoinLink('INV88888'))
           .thenReturn('https://ironsplit.app/join?code=INV88888');
 
-      await _pumpFlowApp(tester);
-      await _createTaskFromS16(
+      await pumpFlowApp(tester);
+      await createTaskFromS16(
         tester,
         taskName: 'Group Trip',
         increaseMemberCount: true,

@@ -91,7 +91,8 @@ void main() {
     when(() => mockDeepLinkService.generateSettlementLink(any()))
         .thenReturn('https://ironsplit.app/locked/task-1');
 
-    when(() => mockShareService.shareText(any(), subject: any(named: 'subject')))
+    when(() =>
+            mockShareService.shareText(any(), subject: any(named: 'subject')))
         .thenAnswer((_) async {});
     when(() => mockShareService.shareFile(
           content: any(named: 'content'),
@@ -103,7 +104,7 @@ void main() {
         .thenAnswer((_) async => []);
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/locked/task-1',
       routes: [
@@ -116,9 +117,11 @@ void main() {
         GoRoute(
           path: '/task/:taskId',
           name: 'S13',
-          builder: (context, state) => Text('S13:${state.pathParameters['taskId']}'),
+          builder: (context, state) =>
+              Text('S13:${state.pathParameters['taskId']}'),
         ),
-        GoRoute(path: '/task', name: 'S10', builder: (_, __) => const Text('S10')),
+        GoRoute(
+            path: '/task', name: 'S10', builder: (_, __) => const Text('S10')),
         GoRoute(
           path: '/task/:taskId/settings',
           name: 'S14',
@@ -128,7 +131,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(
+  Future<void> pump(
     WidgetTester tester, {
     required TaskModel task,
   }) async {
@@ -161,7 +164,7 @@ void main() {
               value: DisplayState(isEnlarged: true, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -173,7 +176,7 @@ void main() {
 
   group('S17TaskLockedPage widget test', () {
     testWidgets('task status 非 settled/closed 時，應自動導向 S13', (tester) async {
-      await _pump(
+      await pump(
         tester,
         task: _task(status: TaskStatus.ongoing),
       );
@@ -182,17 +185,18 @@ void main() {
     });
 
     testWidgets('settled 時應顯示 Notify Members 與 Download 按鈕', (tester) async {
-      await _pump(
+      await pump(
         tester,
         task: _task(status: TaskStatus.settled),
       );
 
-      expect(find.widgetWithText(OutlinedButton, 'Notify Members'), findsOneWidget);
+      expect(find.widgetWithText(OutlinedButton, 'Notify Members'),
+          findsOneWidget);
       expect(find.widgetWithText(FilledButton, 'Download'), findsOneWidget);
     });
 
     testWidgets('點擊 Notify Members / Download 應觸發通知與匯出流程', (tester) async {
-      await _pump(
+      await pump(
         tester,
         task: _task(status: TaskStatus.settled),
       );

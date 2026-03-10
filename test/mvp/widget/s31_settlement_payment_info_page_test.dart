@@ -82,7 +82,7 @@ void main() {
     ).thenAnswer((_) async => 'u1');
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/preview/payment',
       routes: [
@@ -97,7 +97,9 @@ void main() {
               builder: (context, state) => const S31SettlementPaymentInfoPage(
                 taskId: 'task-1',
                 checkPointPoolBalance: 100.0,
-                mergeMap: {'u1': ['u2']},
+                mergeMap: {
+                  'u1': ['u2']
+                },
               ),
             ),
           ],
@@ -112,7 +114,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     await tester.pumpWidget(
@@ -128,7 +130,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -136,7 +138,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> _confirmSettlement(WidgetTester tester) async {
+  Future<void> confirmSettlement(WidgetTester tester) async {
     await tester.tap(find.text('Settle').first);
     await tester.pumpAndSettle();
 
@@ -150,7 +152,7 @@ void main() {
 
   group('S31SettlementPaymentInfoPage widget test', () {
     testWidgets('核心測試 1: 點擊 Settle 應顯示結算確認 Dialog', (tester) async {
-      await _pump(tester);
+      await pump(tester);
 
       await tester.tap(find.text('Settle').first);
       await tester.pumpAndSettle();
@@ -160,16 +162,17 @@ void main() {
           findsOneWidget);
     });
 
-    testWidgets('核心測試 2: 成功結算時應呼叫 executeSettlement 並導向結果頁',
-        (tester) async {
-      await _pump(tester);
-      await _confirmSettlement(tester);
+    testWidgets('核心測試 2: 成功結算時應呼叫 executeSettlement 並導向結果頁', (tester) async {
+      await pump(tester);
+      await confirmSettlement(tester);
 
       verify(
         () => mockSettlementService.executeSettlement(
           task: any(named: 'task'),
           records: any(named: 'records'),
-          mergeMap: const {'u1': ['u2']},
+          mergeMap: const {
+            'u1': ['u2']
+          },
           captainPaymentInfoJson: any(named: 'captainPaymentInfoJson'),
           checkPointPoolBalance: 100.0,
         ),
@@ -189,8 +192,8 @@ void main() {
         ),
       ).thenThrow(AppErrorCodes.dataConflict);
 
-      await _pump(tester);
-      await _confirmSettlement(tester);
+      await pump(tester);
+      await confirmSettlement(tester);
 
       expect(find.text('Data Changed'), findsOneWidget);
       expect(
@@ -216,19 +219,19 @@ void main() {
       expect(find.text('RESULT:task-1'), findsNothing);
     });
 
-    testWidgets('核心測試 4: 切換為公開收款後，結算時應儲存預設收款資訊',
-        (tester) async {
-      await _pump(tester);
+    testWidgets('核心測試 4: 切換為公開收款後，結算時應儲存預設收款資訊', (tester) async {
+      await pump(tester);
 
       await tester.tap(find.text('Share payment details'));
       await tester.pumpAndSettle();
 
       expect(
-        find.text('Save as default payment information (stored on this device)'),
+        find.text(
+            'Save as default payment information (stored on this device)'),
         findsOneWidget,
       );
 
-      await _confirmSettlement(tester);
+      await confirmSettlement(tester);
 
       verify(() => mockSystemRepo.saveDefaultPaymentInfo(any())).called(1);
       expect(find.text('RESULT:task-1'), findsOneWidget);

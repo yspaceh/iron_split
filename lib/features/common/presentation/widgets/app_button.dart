@@ -75,20 +75,25 @@ class AppButton extends StatelessWidget {
           opacity: isLoading ? 0.0 : 1.0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min, // 保持緊湊以確保 Stack 完美置中
+            mainAxisSize: MainAxisSize.max,
             children: [
               if (icon != null) ...[
                 Icon(icon, size: iconSize),
                 const SizedBox(width: AppLayout.spaceS),
               ],
               if (text != null) ...[
-                Text(
-                  text!,
-                  style: textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: type == AppButtonType.primary
-                        ? colorScheme.onPrimary
-                        : colorScheme.primary,
+                Flexible(
+                  child: Text(
+                    text!,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: type == AppButtonType.primary
+                          ? colorScheme.onPrimary
+                          : colorScheme.primary,
+                    ),
                   ),
                 ),
               ]

@@ -70,7 +70,7 @@ void main() {
     );
   });
 
-  Future<void> _pumpPage(
+  Future<void> pumpPage(
     WidgetTester tester, {
     required GoRouter router,
   }) async {
@@ -99,7 +99,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  GoRouter _buildRouter() {
+  GoRouter buildRouter() {
     return GoRouter(
       initialLocation: '/join',
       routes: [
@@ -123,7 +123,7 @@ void main() {
     );
   }
 
-  FilledButton _confirmButton(WidgetTester tester) {
+  FilledButton confirmButton(WidgetTester tester) {
     // S11 底部 action bar 內只有一顆 primary (confirm) FilledButton
     return tester.widget<FilledButton>(find.byType(FilledButton).first);
   }
@@ -138,11 +138,11 @@ void main() {
         ),
       ).thenAnswer((_) async => 'task_001');
 
-      final router = _buildRouter();
-      await _pumpPage(tester, router: router);
+      final router = buildRouter();
+      await pumpPage(tester, router: router);
 
       expect(find.text('Ghost A'), findsOneWidget);
-      expect(_confirmButton(tester).onPressed, isNull);
+      expect(confirmButton(tester).onPressed, isNull);
     });
 
     testWidgets('核心測試 2: 選中 Ghost 後「確認加入」按鈕應啟用', (tester) async {
@@ -154,13 +154,13 @@ void main() {
         ),
       ).thenAnswer((_) async => 'task_001');
 
-      final router = _buildRouter();
-      await _pumpPage(tester, router: router);
+      final router = buildRouter();
+      await pumpPage(tester, router: router);
 
       await tester.tap(find.text('Ghost A'));
       await tester.pumpAndSettle();
 
-      expect(_confirmButton(tester).onPressed, isNotNull);
+      expect(confirmButton(tester).onPressed, isNotNull);
     });
 
     testWidgets('核心測試 3: 點擊確認後應呼叫 joinTask 並成功導航', (tester) async {
@@ -172,8 +172,8 @@ void main() {
         ),
       ).thenAnswer((_) async => 'task_999');
 
-      final router = _buildRouter();
-      await _pumpPage(tester, router: router);
+      final router = buildRouter();
+      await pumpPage(tester, router: router);
 
       await tester.tap(find.text('Ghost A'));
       await tester.pumpAndSettle();
@@ -199,8 +199,8 @@ void main() {
         ),
       ).thenThrow(AppErrorCodes.inviteExpired);
 
-      final router = _buildRouter();
-      await _pumpPage(tester, router: router);
+      final router = buildRouter();
+      await pumpPage(tester, router: router);
 
       await tester.tap(find.text('Ghost A'));
       await tester.pumpAndSettle();

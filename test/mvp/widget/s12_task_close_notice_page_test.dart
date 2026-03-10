@@ -37,10 +37,11 @@ void main() {
     when(() => mockUser.uid).thenReturn('u1');
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
     when(() => mockTaskService.deleteTask(any())).thenAnswer((_) async {});
-    when(() => mockTaskService.closeTaskWithRetention(any())).thenAnswer((_) async {});
+    when(() => mockTaskService.closeTaskWithRetention(any()))
+        .thenAnswer((_) async {});
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/task/task-1/settings/close',
       routes: [
@@ -59,7 +60,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     LocaleSettings.setLocale(AppLocale.enUs);
 
     await tester.pumpWidget(
@@ -73,7 +74,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -83,7 +84,7 @@ void main() {
     }
   }
 
-  Future<void> _confirmCloseFlow(WidgetTester tester) async {
+  Future<void> confirmCloseFlow(WidgetTester tester) async {
     await tester.tap(find.widgetWithText(FilledButton, 'Close Task'));
     await tester.pumpAndSettle();
 
@@ -96,17 +97,19 @@ void main() {
 
   group('S12TaskCloseNoticePage widget test', () {
     testWidgets('無記錄時 confirm 應呼叫 deleteTask 並導回 S00', (tester) async {
-      when(() => mockRecordRepo.getRecordsOnce('task-1')).thenAnswer((_) async => []);
+      when(() => mockRecordRepo.getRecordsOnce('task-1'))
+          .thenAnswer((_) async => []);
 
-      await _pump(tester);
-      await _confirmCloseFlow(tester);
+      await pump(tester);
+      await confirmCloseFlow(tester);
 
       verify(() => mockTaskService.deleteTask('task-1')).called(1);
       verifyNever(() => mockTaskService.closeTaskWithRetention(any()));
       expect(find.text('S00'), findsOneWidget);
     });
 
-    testWidgets('有記錄時 confirm 應呼叫 closeTaskWithRetention 並導回 S00', (tester) async {
+    testWidgets('有記錄時 confirm 應呼叫 closeTaskWithRetention 並導回 S00',
+        (tester) async {
       when(() => mockRecordRepo.getRecordsOnce('task-1')).thenAnswer(
         (_) async => [
           RecordModel(
@@ -120,8 +123,8 @@ void main() {
         ],
       );
 
-      await _pump(tester);
-      await _confirmCloseFlow(tester);
+      await pump(tester);
+      await confirmCloseFlow(tester);
 
       verify(() => mockTaskService.closeTaskWithRetention('task-1')).called(1);
       verifyNever(() => mockTaskService.deleteTask(any()));

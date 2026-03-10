@@ -19,7 +19,7 @@ interface TaskMember {
 }
 
 interface TaskData {
-  captainId: string;
+  createdBy: string;
   members: Record<string, TaskMember>;
   [key: string]: any;
 }
@@ -416,7 +416,7 @@ export const deleteUserAccount = onCall(async (request) => {
   for (const doc of tasksSnapshot.docs) {
     const taskData = doc.data() as TaskData;
     const members = taskData.members || {};
-    const isCaptain = taskData.captainId === uid;
+    const isCaptain = taskData.createdBy === uid;
 
     if (!isCaptain) {
       // 💡 注意這裡從 db.batch() 變成了 getBatch()
@@ -447,7 +447,7 @@ export const deleteUserAccount = onCall(async (request) => {
         const newCaptainName = candidates[0][1].displayName;
 
         getBatch().update(doc.ref, {
-          captainId: newCaptainId,
+          createdBy: newCaptainId,
           [`members.${newCaptainId}.role`]: "captain",
           [`members.${uid}.isLinked`]: false,
           [`members.${uid}.role`]: "member",

@@ -68,7 +68,7 @@ void main() {
     when(() => mockAuthRepo.currentUser).thenReturn(mockUser);
   });
 
-  GoRouter _router() {
+  GoRouter router() {
     return GoRouter(
       initialLocation: '/locked/task-404',
       routes: [
@@ -86,8 +86,9 @@ void main() {
         GoRoute(
           path: '/task/:taskId',
           name: 'S13',
-          builder: (_, state) =>
-              Scaffold(body: Center(child: Text('S13:${state.pathParameters['taskId']}'))),
+          builder: (_, state) => Scaffold(
+              body:
+                  Center(child: Text('S13:${state.pathParameters['taskId']}'))),
         ),
         GoRoute(
           path: '/task/:taskId/settings',
@@ -98,7 +99,7 @@ void main() {
     );
   }
 
-  Future<void> _pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -123,7 +124,7 @@ void main() {
               value: DisplayState(isEnlarged: false, scale: 1.0),
             ),
           ],
-          child: MaterialApp.router(routerConfig: _router()),
+          child: MaterialApp.router(routerConfig: router()),
         ),
       ),
     );
@@ -134,26 +135,29 @@ void main() {
   }
 
   group('MVP Integration - Deep Link Locked Recovery', () {
-    testWidgets('permissionDenied on /locked/:taskId should recover to S10 with prompt',
+    testWidgets(
+        'permissionDenied on /locked/:taskId should recover to S10 with prompt',
         (tester) async {
       when(() => mockTaskService.getValidatedTask('task-404'))
           .thenThrow(AppErrorCodes.permissionDenied);
 
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('S10'), findsOneWidget);
       expect(find.text('Permission denied.'), findsOneWidget);
     });
 
-    testWidgets('dataNotFound on /locked/:taskId should recover to S10 with prompt',
+    testWidgets(
+        'dataNotFound on /locked/:taskId should recover to S10 with prompt',
         (tester) async {
       when(() => mockTaskService.getValidatedTask('task-404'))
           .thenAnswer((_) async => null);
 
-      await _pump(tester);
+      await pump(tester);
 
       expect(find.text('S10'), findsOneWidget);
-      expect(find.text('Data not found. Please try again later.'), findsOneWidget);
+      expect(
+          find.text('Data not found. Please try again later.'), findsOneWidget);
     });
   });
 }

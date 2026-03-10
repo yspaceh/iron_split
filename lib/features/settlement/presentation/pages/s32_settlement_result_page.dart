@@ -8,8 +8,10 @@ import 'package:iron_split/core/enums/app_error_codes.dart';
 import 'package:iron_split/core/services/deep_link_service.dart';
 import 'package:iron_split/core/theme/app_layout.dart';
 import 'package:iron_split/core/utils/error_mapper.dart';
+import 'package:iron_split/core/viewmodels/locale_vm.dart';
 import 'package:iron_split/features/common/presentation/view/common_state_view.dart';
 import 'package:iron_split/features/common/presentation/widgets/app_toast.dart';
+import 'package:iron_split/features/common/presentation/widgets/image_asset_wapper.dart';
 import 'package:iron_split/features/common/presentation/widgets/share_loading.dart';
 import 'package:iron_split/features/onboarding/data/auth_repository.dart';
 import 'package:iron_split/features/settlement/application/settlement_service.dart';
@@ -27,7 +29,6 @@ import 'package:iron_split/features/settlement/presentation/viewmodels/s32_settl
 // Widgets
 import 'package:iron_split/features/common/presentation/widgets/app_button.dart';
 import 'package:iron_split/features/common/presentation/widgets/sticky_bottom_action_bar.dart';
-import 'package:iron_split/features/common/presentation/widgets/state_visual.dart';
 import 'package:iron_split/features/common/presentation/widgets/info_card.dart';
 import 'package:iron_split/features/common/presentation/widgets/common_avatar.dart';
 import 'package:iron_split/features/settlement/presentation/dialogs/d11_random_result_dialog.dart';
@@ -132,6 +133,8 @@ class _S32ContentState extends State<_S32Content> {
     final vm = context.watch<S32SettlementResultViewModel>();
     final isEnlarged = context.watch<DisplayState>().isEnlarged;
     final double horizontalMargin = AppLayout.pageMargin(isEnlarged);
+    final localeVm = context.watch<LocaleViewModel>();
+    final String currentLocaleString = localeVm.currentLocale.name;
 
     // 每次 build 都檢查是否需要觸發 Dialog
     _checkAndTriggerDialog(vm);
@@ -196,15 +199,13 @@ class _S32ContentState extends State<_S32Content> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              const StateVisual(
+                              ImageAssetWrapper(
                                 assetPath:
-                                    'assets/images/iron/iron_image_settlement.png',
+                                    'assets/images/stamp/stamp_$currentLocaleString.png',
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppLayout.spaceL),
-                                child: Text(t.s32_settlement_result.content),
-                              ),
+                              const SizedBox(height: AppLayout.spaceXL),
+                              Text(t.s32_settlement_result.content),
+                              const SizedBox(height: AppLayout.spaceXL),
                               if (vm.shouldShowRoulette)
                                 if (showWinnerCard) ...[
                                   InfoCard(
